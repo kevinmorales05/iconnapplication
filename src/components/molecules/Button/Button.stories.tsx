@@ -38,7 +38,7 @@ storiesOf('Molecules/Button', module)
   .add('Disabled', () => {
     return (
       <>
-        <Button disabled onPress={action('pressed')}>
+        <Button color='iconn_accent_principal' disabled onPress={action('pressed')}>
           Iconn Button
         </Button>
       </>
@@ -191,7 +191,7 @@ storiesOf('Molecules/Button', module)
       <>
         <Button 
           outline
-          tint={false}
+          tint={true}
           onPress={action('pressed')}>
           Iconn Button
         </Button>

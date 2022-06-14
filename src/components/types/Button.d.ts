@@ -21,7 +21,7 @@ interface ButtonProps extends AccessibilityProps {
   width?: WidthType;
   onPress: () => void;
   color?: brandColors;
-  borderColor?: string;
+  borderColor?: brandColors;
   round?: boolean;
   outline?: boolean;
   transparent?: boolean;

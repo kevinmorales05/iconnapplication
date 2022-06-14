@@ -1,6 +1,6 @@
 
 type sizes = 'xxsmall' | 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
-type textColors = 'default' | 'heading' | 'subtle' | 'grey' | 'disabled' | 'white';
+type textColors = 'dark' | 'dark_grey' | 'white' | 'paragraph' | 'link' | 'medgrey' | 'grey';
 export type brandColors = 'iconn_orange_original' | 'iconn_green_original' | 'iconn_red_original' | 'iconn_accent_principal' | 
 'iconn_accent_secondary' | 'iconn_warm_grey' | 'iconn_light_grey' | 'iconn_med_grey' | 'iconn_grey' | 'iconn_dark_grey' |
 'iconn_background' | 'iconn_white' | 'iconn_success' | 'iconn_warning' | 'iconn_error' | 'iconn_info';

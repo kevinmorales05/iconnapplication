@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableNativeFeedback,
-  Platform,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
+import { View, Text, TouchableOpacity, TouchableNativeFeedback, Platform, StyleSheet, ActivityIndicator } from 'react-native';
 import theme from '../../util/theme'
 import { ButtonProps } from 'components/types/Button';
 
@@ -17,22 +9,22 @@ const getTextStyle = (props: ButtonProps) => {
     {
       fontSize: theme.fontSize[props.size],
       margin: theme.buttonSize[props.size],
-      color: theme.textColor.white,
+      color: theme.textColor.white
     },
   ];
   if (props.outline || props.transparent) {
     textStyle.push({
-      color: theme.brandColor[props.color],
+      color: theme.brandColor[props.color]
     });
   }
   if (props.loading && props.outline) {
     textStyle.push({
-      color: theme.brandColor[props.color] + '50',
+      color: theme.textColor.white
     });
   }
   if (props.disabled) {
     textStyle.push({
-      color: theme.textColor.disabled,
+      color: theme.textColor.white,
     });
   }
   return textStyle;
@@ -72,7 +64,7 @@ const getContainerStyle = (props: ButtonProps) => {
   }
   if (round) {
     buttonStyles.push({
-      borderRadius: theme.buttonSize[size] * 2,
+      borderRadius: theme.buttonSize[size],
     });
   }
   if (outline) {
@@ -101,8 +93,8 @@ const getContainerStyle = (props: ButtonProps) => {
   }
   if (disabled) {
     buttonStyles.push({
-      backgroundColor: theme.brandColor.disabled,
-      borderColor: theme.textColor.disabled,
+      backgroundColor: theme.brandColor[color],
+      opacity: 0.5
     });
   }
   return buttonStyles;
@@ -142,7 +134,7 @@ const Button: React.FC<ButtonProps> = ({
   size = 'medium',
   length = 'long',
   width = 'medium',
-  color = 'iconn_orange_original',
+  color = 'iconn_accent_principal',
   tint = false,
   ...props
 }) => {
@@ -171,7 +163,7 @@ const styles = StyleSheet.create({
   container: {
     left: 0,
     right: 0,
-    borderRadius: 2,
+    borderRadius: 0,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
