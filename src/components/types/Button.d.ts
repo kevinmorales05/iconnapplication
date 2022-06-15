@@ -3,13 +3,14 @@ import {
   ViewStyle,
   TextStyle,
   StyleProp,
-  AccessibilityProps,
+  AccessibilityProps
 } from 'react-native';
 
-import {SizeType} from './size-type';
-import {WidthType} from './width-type';
-import {LengthType} from './length-type';
-import {IconNode} from './icon-type';
+import { SizeType } from './size-type';
+import { TypographyTypes } from './typography-type';
+import { WidthType } from './width-type';
+import { LengthType } from './length-type';
+import { IconNode } from './icon-type';
 import { brandColors } from './theme';
 
 interface ButtonProps extends AccessibilityProps {
@@ -17,6 +18,7 @@ interface ButtonProps extends AccessibilityProps {
   textStyle?: StyleProp<TextStyle>;
   children?: string;
   indicatorColor?: string;
+  fontSize?: TypographyTypes;
   size?: SizeType;
   width?: WidthType;
   onPress: () => void;

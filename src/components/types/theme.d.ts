@@ -1,37 +1,47 @@
+import { TypographyTypes } from './typography-type';
+import { SizeType } from './size-type';
+import { FontColorTypes } from './font-color-type';
+import { BrandColorTypes } from './brand-color-type';
+import { FontWeightTypes } from './font-weight-type';
 
-type sizes = 'xxsmall' | 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
-type textColors = 'dark' | 'dark_grey' | 'white' | 'paragraph' | 'link' | 'medgrey' | 'grey';
-export type brandColors = 'iconn_orange_original' | 'iconn_green_original' | 'iconn_red_original' | 'iconn_accent_principal' | 
-'iconn_accent_secondary' | 'iconn_warm_grey' | 'iconn_light_grey' | 'iconn_med_grey' | 'iconn_grey' | 'iconn_dark_grey' |
-'iconn_background' | 'iconn_white' | 'iconn_success' | 'iconn_warning' | 'iconn_error' | 'iconn_info';
+type knownFontSizes = {
+  [k in TypographyTypes]: number;
+};
+
+type knownFontWeights = {
+  [k in FontWeightTypes]: string;
+};
 
 type knownScale = {
-  [k in sizes]: number
-}
-
-type unknownScale = {
-  [size: string]: number
-}
+  [k in SizeType]: number;
+};
 
 type knownBrandColors = {
-  [k in brandColors]: string
-}
+  [k in BrandColorTypes]: string;
+};
 
-type knownTextColors = {
-  [k in textColors]: string
-}
+type knownFontColors = {
+  [k in FontColorTypes]: string;
+};
+
+type unknownScale = {
+  [size: string]: number;
+};
 
 type unknownColors = {
-  [color: string]: string
-}
+  [color: string]: string;
+};
 
+type possibleFontSizes = knownFontSizes & unknownScale;
 type possibleSizes = knownScale & unknownScale;
 type possibleSpaces = knownScale & { none: number } & unknownScale;
-type possibleTextColors = knownTextColors & unknownColors;
+type possibleFontColors = knownFontColors & unknownColors;
 type possibleBrandColors = knownBrandColors & unknownColors;
+type possibleFontWeights = knownFontWeights;
 
 export interface themeType {
-  fontSize: possibleSizes;
+  fontSize: possibleFontSizes;
+  fontWeight: possibleFontWeights;
   size: possibleSizes;
   actionButtonSize: possibleSizes;
   buttonSize: possibleSizes;
@@ -48,6 +58,6 @@ export interface themeType {
     heading: string;
     text: string;
   };
-  textColor: possibleTextColors;
+  fontColor: possibleFontColors;
   brandColor: possibleBrandColors;
 }

@@ -7,9 +7,9 @@ const getTextStyle = (props: ButtonProps) => {
 
   const textStyle: any = [
     {
-      fontSize: theme.fontSize[props.size],
+      fontSize: theme.fontSize[props.fontSize],
       margin: theme.buttonSize[props.size],
-      color: theme.textColor.white
+      color: theme.fontColor.white
     },
   ];
   if (props.outline || props.transparent) {
@@ -19,12 +19,12 @@ const getTextStyle = (props: ButtonProps) => {
   }
   if (props.loading && props.outline) {
     textStyle.push({
-      color: theme.textColor.white
+      color: theme.fontColor.white
     });
   }
   if (props.disabled) {
     textStyle.push({
-      color: theme.textColor.white,
+      color: theme.fontColor.white,
     });
   }
   return textStyle;
