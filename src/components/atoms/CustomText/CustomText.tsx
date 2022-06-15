@@ -6,7 +6,7 @@ import theme from '../../util/theme';
 import { TypographyTypes } from '../../types/typography-type';
 import { FontWeightTypes } from '../../types/font-weight-type';
 
-export interface CustomTextProps {
+interface CustomTextProps {
   text: string;
   textAlign?: TextStyle['textAlign'];
   textColor?: TextStyle['color'];
@@ -154,4 +154,5 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CustomText;
+export type { CustomTextProps };
+export { CustomText };
