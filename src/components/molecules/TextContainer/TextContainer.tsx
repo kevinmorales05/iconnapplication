@@ -55,4 +55,4 @@ const TextContainer: React.FC<TextContainerProps> = ({
   </Container>
 );
 
-export { TextContainer };
+export default TextContainer;
