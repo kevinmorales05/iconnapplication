@@ -27,6 +27,13 @@ const getTextStyle = (props: ButtonProps) => {
       color: theme.fontColor.white,
     });
   }
+  // TODO: Validate if is convenient to have a "fontWeight" in the theme interface: src/components/util/theme.ts | src/components/types/theme.d.ts
+  // Could be only a boolean, as in this component.
+  if (props.fontBold){
+    textStyle.push({
+      fontWeight: 'bold'
+    });    
+  }
   return textStyle;
 };
 

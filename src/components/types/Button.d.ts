@@ -36,6 +36,7 @@ interface ButtonProps extends AccessibilityProps {
   rightIconStyle?: StyleProp<ViewStyle>;
   leftIconStyle?: StyleProp<ViewStyle>;
   length?: LengthType;
+  fontBold?: boolean;
 }
 
 export const Button: React.FC<ButtonProps>;

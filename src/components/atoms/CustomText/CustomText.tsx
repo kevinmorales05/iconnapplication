@@ -4,14 +4,13 @@ import {
 } from 'react-native';
 import theme from '../../util/theme';
 import { TypographyTypes } from '../../types/typography-type';
-import { FontWeightTypes } from '../../types/font-weight-type';
 
 interface CustomTextProps {
   text: string;
   textAlign?: TextStyle['textAlign'];
   textColor?: TextStyle['color'];
   typography?: TypographyTypes;
-  fontWeight?: FontWeightTypes;
+  fontBold?: boolean;
   fontSize?: number;
   numberOfLines?: number;
   transform?: TextStyle['textTransform'];
@@ -28,7 +27,7 @@ const CustomText: React.FC<CustomTextProps> = ({
   typography = 'paragraph',
   textColor,
   textAlign,
-  fontWeight,
+  fontBold,
   fontSize,
   numberOfLines,
   transform,
@@ -59,12 +58,7 @@ const CustomText: React.FC<CustomTextProps> = ({
 
   if (fontSize) textStyle.push({ fontSize });
   if (textColor) textStyle.push({ color: textColor });
-
-  if (fontWeight) {
-    textStyle.push({
-      fontFamily: theme.fontWeight[fontWeight]
-    });
-  }
+  if (fontBold) textStyle.push({ fontWeight: 'bold' });
 
   return (
     <Text
@@ -89,67 +83,54 @@ const CustomText: React.FC<CustomTextProps> = ({
 const styles = StyleSheet.create({
   h1: {
     fontSize: theme.fontSize.h1,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   h2: {
     fontSize: theme.fontSize.h2,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   h3: {
     fontSize: theme.fontSize.h3,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   h4: {
     fontSize: theme.fontSize.h4,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   h5: {
     fontSize: theme.fontSize.h5,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   h6: {
     fontSize: theme.fontSize.h6,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   buttonDark: {
     fontSize: theme.fontSize.buttonDark,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   buttonWhite: {
     fontSize: theme.fontSize.buttonWhite,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   link: {
     fontSize: theme.fontSize.link,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },    
   paragraph: {
     fontSize: theme.fontSize.paragraph,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   placeholder: {
     fontSize: theme.fontSize.placeholder,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   description: {
     fontSize: theme.fontSize.description,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   },
   label: {
     fontSize: theme.fontSize.label,
-    fontFamily: theme.fontWeight.Bold,
     color: theme.fontColor.dark
   }
 });

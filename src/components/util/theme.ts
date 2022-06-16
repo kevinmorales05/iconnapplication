@@ -159,7 +159,9 @@ const theme: themeType = {
     iconn_success: '#34c28c',
     iconn_warning: '#f3d449',
     iconn_error: '#cb5e69',
-    iconn_info: '#5080b2'
+    iconn_info: '#5080b2',
+    facebook: '#3b5998',
+    google: '#e33629'    
   }
 };
 

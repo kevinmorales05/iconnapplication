@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from '../../atoms/Container';
 import { CustomTextProps, CustomText as Text } from '../../atoms/CustomText';
 
-export interface TextContainerProps extends CustomTextProps {
+interface TextContainerProps extends CustomTextProps {
   marginRight?: number;
   marginLeft?: number;
   marginTop?: number;
@@ -23,7 +23,7 @@ const TextContainer: React.FC<TextContainerProps> = ({
   typography,
   textColor,
   textAlign,
-  fontWeight,
+  fontBold,
   numberOfLines,
   transform,
   underline,
@@ -44,7 +44,7 @@ const TextContainer: React.FC<TextContainerProps> = ({
       typography={typography}
       textColor={textColor}
       textAlign={textAlign}
-      fontWeight={fontWeight}
+      fontBold={fontBold}
       numberOfLines={numberOfLines}
       transform={transform}
       underline={underline}
@@ -55,4 +55,5 @@ const TextContainer: React.FC<TextContainerProps> = ({
   </Container>
 );
 
-export default TextContainer;
+export type { TextContainerProps }
+export { TextContainer };

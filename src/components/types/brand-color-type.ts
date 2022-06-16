@@ -14,4 +14,6 @@ export type BrandColorTypes =
   | 'iconn_success'
   | 'iconn_warning'
   | 'iconn_error'
-  | 'iconn_info';
+  | 'iconn_info'
+  | 'facebook'
+  | 'google';
