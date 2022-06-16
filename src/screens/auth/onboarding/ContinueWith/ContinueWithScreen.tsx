@@ -3,7 +3,7 @@ import { Image, ScrollView } from 'react-native';
 
 // TODO: change relative path by alias path
 import { Container } from 'components/atoms/Container';
-import { ICONN_BINOMIO_LOGOS } from 'assets/images';
+import { ICONN_BINOMIO_LOGOS_LIGHT } from 'assets/images';
 import { Button } from 'components/molecules/Button';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableText } from 'components/molecules/TouchableText';
@@ -34,7 +34,7 @@ const ContinueWithScreen: React.FC<Props> = ({}) => {
       showsVerticalScrollIndicator={false}
     >
       <Container flex>
-        <Image source={ICONN_BINOMIO_LOGOS} style={{ width: 300, height: 50, alignSelf: 'center' }} resizeMode="center"/>
+        <Image source={ICONN_BINOMIO_LOGOS_LIGHT} style={{ width: 300, height: 50, alignSelf: 'center' }} resizeMode="center"/>
       </Container>
 
       <Container flex alignment="end">

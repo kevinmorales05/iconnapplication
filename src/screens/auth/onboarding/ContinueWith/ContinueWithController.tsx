@@ -4,8 +4,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'types';
 import ContinueWithScreen from './ContinueWithScreen';
 import { ImageBackground, StyleSheet } from 'react-native';
-import { ROAD } from 'assets/images';
+import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
+import LinearGradient from 'react-native-linear-gradient';
 
 const ContinueWithController: React.FC = () => {
   const { goBack, navigate } =
@@ -28,11 +29,18 @@ const ContinueWithController: React.FC = () => {
   }, []);
 
   return (
-    <ImageBackground source={ROAD} style={styles.backgroundImage}>
+    <ImageBackground source={ICONN_BACKGROUND_IMAGE} style={styles.backgroundImage}>
+       <LinearGradient 
+        colors={['#000000','#00000000', '#00000000', '#00000000', '#00000000', '#000000']} 
+        start={{ x: 0, y: 1 }}
+        end={{ x: 0, y: 0 }}
+        style={{height : '100%', width : '100%', position:'absolute'}}>
+      </LinearGradient>
       <SafeArea
         topSafeArea={false}
         bottomSafeArea={false}
         backgroundColor="transparent"
+        barStyle='light'
       >
         <ContinueWithScreen
           onPressFacebook={() => {}}
