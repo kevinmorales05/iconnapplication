@@ -7,7 +7,7 @@ import {
   TextInput,
   TextInputProps
 } from 'react-native';
-import theme from '../../util/theme';
+import theme from 'components/theme/theme'
 // import { ERROR_CROSS_ICON, EYE_OFF_ICON } from 'assets/images';
 import Collapsible from 'react-native-collapsible';
 import {

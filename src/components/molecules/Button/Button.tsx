@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, TouchableNativeFeedback, Platform, StyleSheet, ActivityIndicator } from 'react-native';
-import theme from '../../util/theme'
+import theme from 'components/theme/theme'
 import { ButtonProps } from 'components/types/Button';
 
 const getTextStyle = (props: ButtonProps) => {
@@ -9,31 +9,22 @@ const getTextStyle = (props: ButtonProps) => {
     {
       fontSize: theme.fontSize[props.fontSize],
       margin: theme.buttonSize[props.size],
-      color: theme.fontColor.white
+      color: theme.fontColor[props.fontColor]
     },
   ];
-  if (props.outline || props.transparent) {
-    textStyle.push({
-      color: theme.brandColor[props.color]
-    });
-  }
-  if (props.loading && props.outline) {
-    textStyle.push({
-      color: theme.fontColor.white
-    });
-  }
-  if (props.disabled) {
-    textStyle.push({
-      color: theme.fontColor.white,
-    });
-  }
+  
+  if (props.fontColor) textStyle.push({ color: theme.fontColor[props.fontColor] });
+
+  if (props.outline || props.transparent) textStyle.push({ color: theme.brandColor[props.color] });
+  
+  if (props.loading && props.outline) textStyle.push({ color: theme.fontColor.white });
+
+  if (props.disabled) textStyle.push({ color: theme.fontColor.white });
+  
   // TODO: Validate if is convenient to have a "fontWeight" in the theme interface: src/components/util/theme.ts | src/components/types/theme.d.ts
   // Could be only a boolean, as in this component.
-  if (props.fontBold){
-    textStyle.push({
-      fontWeight: 'bold'
-    });    
-  }
+  if (props.fontBold) textStyle.push({ fontWeight: 'bold' });
+  
   return textStyle;
 };
 
@@ -51,6 +42,10 @@ const getContainerStyle = (props: ButtonProps) => {
     color,
     tint,
     borderColor,
+    marginBottom,
+    marginLeft,
+    marginRight,
+    marginTop
   } = props;
   
   const buttonStyles: any = [styles.container];
@@ -59,26 +54,15 @@ const getContainerStyle = (props: ButtonProps) => {
     borderWidth: 1,
     borderColor: theme.brandColor[color],
   });
-  if (length === 'short') {
-    buttonStyles.push({
-      width: theme.buttonWidth[width],
-    });
-  }
-  if (borderColor) {
-    buttonStyles.push({
-      borderColor: theme.brandColor[borderColor],
-    });
-  }
-  if (round) {
-    buttonStyles.push({
-      borderRadius: theme.buttonSize[size],
-    });
-  }
-  if (outline) {
-    buttonStyles.push({
-      backgroundColor: theme.brandColor[color] + (tint ? '10' : '00'),
-    });
-  }
+  
+  if (length === 'short') buttonStyles.push({ width: theme.buttonWidth[width] });
+  
+  if (borderColor) buttonStyles.push({ borderColor: theme.brandColor[borderColor] });
+
+  if (round) buttonStyles.push({ borderRadius: theme.buttonSize[size] });
+
+  if (outline) buttonStyles.push({ backgroundColor: theme.brandColor[color] + (tint ? '10' : '00') });
+
   if (loading) {
     buttonStyles.push({
       borderWidth: 0,
@@ -104,6 +88,11 @@ const getContainerStyle = (props: ButtonProps) => {
       opacity: 0.5
     });
   }
+  if (marginBottom) buttonStyles.push({ marginBottom: marginBottom});
+  if (marginTop) buttonStyles.push({ marginTop: marginTop});
+  if (marginLeft) buttonStyles.push({ marginLeft: marginLeft});
+  if (marginRight) buttonStyles.push({ marginRight: marginRight});
+
   return buttonStyles;
 };
 
@@ -143,10 +132,11 @@ const Button: React.FC<ButtonProps> = ({
   width = 'medium',
   color = 'iconn_accent_principal',
   tint = false,
+  fontColor = 'white',
   ...props
 }) => {
 
-  ({ ...props } = { style, children, size, length, width, color, tint, ...props});
+  ({ ...props } = { style, children, size, length, width, color, tint, fontColor, ...props});
   
   const TouchableElement: any =
     Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;

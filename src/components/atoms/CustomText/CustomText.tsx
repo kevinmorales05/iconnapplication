@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Text, TextStyle, StyleProp, StyleSheet, FlexAlignType
 } from 'react-native';
-import theme from '../../util/theme';
+import theme from 'components/theme/theme';
 import { TypographyTypes } from '../../types/typography-type';
 
 interface CustomTextProps {

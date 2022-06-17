@@ -3,7 +3,7 @@ import {
   ColorValue,
   Platform, Pressable, TouchableOpacity, View, ViewStyle
 } from 'react-native';
-import theme from '../../util/theme';
+import theme from 'components/theme/theme';
 
 export interface TouchableProps {
   children?: ReactNode;

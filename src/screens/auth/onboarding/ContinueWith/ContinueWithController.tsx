@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'types';
@@ -7,46 +7,68 @@ import { ImageBackground, StyleSheet } from 'react-native';
 import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
+import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
 
 const ContinueWithController: React.FC = () => {
   const { goBack, navigate } =
     useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+  const [otherMethodsVisible, setotherMethodsVisible] =
+    useState<boolean>(false);
 
-  const onPressUnavailableItem = () => {
-    // alert.show({
-    //   title: t('global:sorry'),
-    //   message: t('global:functionalityNotAvailable')
-    // });
+  const onPressOtherMethods = () => {
+    console.log('onPressOtherMethods');
+    setotherMethodsVisible(true);
   };
-
-  const onSubmit = (amount: number) => {
-    // navigate('QrCode', { amount });
+  const onContinueWithEmail = () => {
+    console.log('onContinueWithEmail');
   };
-
-  useEffect(() => {
-    // doSomething();
-    // doAnotherThing();
-  }, []);
+  const onContinueAsGuest = () => {
+    console.log('onContinueAsGuest');
+  };
+  const onIhaveAccount = () => {
+    console.log('OnIhaveAccount');
+  };
+  const onPressOut = () => {
+    console.log('onPressOut');
+    setotherMethodsVisible(false);
+  };
 
   return (
-    <ImageBackground source={ICONN_BACKGROUND_IMAGE} style={styles.backgroundImage}>
-       <LinearGradient 
-        colors={['#000000','#00000000', '#00000000', '#00000000', '#00000000', '#000000']} 
+    <ImageBackground
+      source={ICONN_BACKGROUND_IMAGE}
+      style={styles.backgroundImage}
+    >
+      <LinearGradient
+        colors={[
+          '#000000',
+          '#00000000',
+          '#00000000',
+          '#00000000',
+          '#00000000',
+          '#000000'
+        ]}
         start={{ x: 0, y: 1 }}
         end={{ x: 0, y: 0 }}
-        style={{height : '100%', width : '100%', position:'absolute'}}>
-      </LinearGradient>
+        style={{ height: '100%', width: '100%', position: 'absolute' }}
+      ></LinearGradient>
       <SafeArea
         topSafeArea={false}
         bottomSafeArea={false}
         backgroundColor="transparent"
-        barStyle='light'
+        barStyle="light"
       >
         <ContinueWithScreen
           onPressFacebook={() => {}}
           onPressGoogle={() => {}}
           onPressEmail={() => {}}
-          onPressOthers={() => {}}
+          onPressOthers={onPressOtherMethods}
+        />
+        <OtherInputMethods
+          visible={otherMethodsVisible}
+          onContinueEmail={onContinueWithEmail}
+          onContinueGuest={onContinueAsGuest}
+          onIhaveAccount={onIhaveAccount}
+          onPressOut={onPressOut}
         />
       </SafeArea>
     </ImageBackground>

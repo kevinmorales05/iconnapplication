@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import {
   View, SafeAreaView, StatusBar, StyleSheet, ViewStyle, StatusBarStyle
 } from 'react-native';
-import theme from '../../util/theme';
+import theme from 'components/theme/theme';
 
 type BarStyle = 'light' | 'dark';
 

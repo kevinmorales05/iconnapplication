@@ -135,8 +135,8 @@ const theme: themeType = {
     text: 'FontAwesome'
   },
   fontColor: {
-    dark: '#de000000',
-    dark_grey: 'darkgrey',
+    dark: '#000000',
+    dark_grey: '#333333',
     white: 'white',
     paragraph: '#000000',
     link: '#5fae8e',
@@ -151,7 +151,7 @@ const theme: themeType = {
     iconn_accent_secondary: '#faa22d',
     iconn_warm_grey: '#f7f7f5',
     iconn_light_grey: '#edebeb',
-    iconn_med_grey: '#dadadb',
+    iconn_med_grey: '#f7f7f5',
     iconn_grey: '#939598',
     iconn_dark_grey: '#333333',
     iconn_background: '#f4f4f4',
