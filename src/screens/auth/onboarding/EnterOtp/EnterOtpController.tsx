@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'types';
-import EnterEmailScreen from './EnterEmailScreen';
+import EnterOtpScreen from './EnterOtpScreen';
 import { ImageBackground, StyleSheet } from 'react-native';
 import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 
-const EnterEmailController: React.FC = () => {
+const EnterOtpController: React.FC = () => {
   const { goBack, navigate } =
     useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   
   const onSubmit = (email: string) => {
     console.log('vamos! ' + email);
-    navigate('EnterOtp')
+    //navigate('...')
   };
 
   return (      
@@ -24,7 +24,7 @@ const EnterEmailController: React.FC = () => {
     backgroundColor="transparent"
     barStyle="dark"
     >
-    <EnterEmailScreen
+    <EnterOtpScreen
       goBack={goBack}
       onSubmit={onSubmit}        
     />
@@ -39,4 +39,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default EnterEmailController;
+export default EnterOtpController;
