@@ -21,6 +21,8 @@ const ContinueWithController: React.FC = () => {
   };
   const onContinueWithEmail = () => {
     console.log('onContinueWithEmail');
+    setotherMethodsVisible(false);
+    navigate('EnterEmail')
   };
   const onContinueAsGuest = () => {
     console.log('onContinueAsGuest');
@@ -60,7 +62,7 @@ const ContinueWithController: React.FC = () => {
         <ContinueWithScreen
           onPressFacebook={() => {}}
           onPressGoogle={() => {}}
-          onPressEmail={() => {}}
+          onPressEmail={onContinueWithEmail}
           onPressOthers={onPressOtherMethods}
         />
         <OtherInputMethods

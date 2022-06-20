@@ -11,6 +11,7 @@ interface ActionButtonProps extends ViewProps {
   color?: BrandColorTypes;
   icon?: IconNode;
   style?: StyleProp<ViewStyle>;
+  circle?: boolean; 
 }
 
 export const ActionButton: React.FC<ActionButtonProps>;

@@ -6,7 +6,6 @@ import {
   Platform,
   StyleSheet,
 } from 'react-native';
-import PropTypes from 'prop-types';
 import Feather from 'react-native-vector-icons/Feather';
 import theme from 'components/theme/theme'
 import { ActionButtonProps } from 'components/types/ActionButton'
@@ -15,7 +14,8 @@ const getContainerStyle = (props: ActionButtonProps) => {
 
   const {    
     size,    
-    color,    
+    color,
+    circle
   } = props;
 
   return {
@@ -24,8 +24,8 @@ const getContainerStyle = (props: ActionButtonProps) => {
     alignItems: 'center',
     backgroundColor: theme.brandColor[color],
     width: theme.actionButtonSize[size],
-    height: theme.actionButtonSize[size],
-    borderRadius: theme.actionButtonSize[size] / 2,
+    height: theme.actionButtonHeight[size],
+    borderRadius: circle ? theme.actionButtonSize[size] / 2 : 12,
   };
 };
 
@@ -33,10 +33,11 @@ const ActionButton: React.FC<ActionButtonProps> = ({
   style,
   size = 'medium',
   color = 'iconn_accent_principal',
+  circle = false,
   ...props
 }) => {
 
-  ({ ...props } = { style, size, color, ...props});
+  ({ ...props } = { style, size, color, circle, ...props});
 
   const TouchableElement: any =
     Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;

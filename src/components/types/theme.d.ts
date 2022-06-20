@@ -44,6 +44,7 @@ export interface themeType {
   fontWeight: possibleFontWeights;
   size: possibleSizes;
   actionButtonSize: possibleSizes;
+  actionButtonHeight: possibleSizes;
   buttonSize: possibleSizes;
   buttonWidth: possibleSizes;
   iconSize: possibleSizes;

@@ -54,9 +54,10 @@ const OtherInputMethods: React.FC<Props> = ({
                         name="close-outline"
                         size={20}
                         color={theme.fontColor.dark_grey} />}
-                  size="xxsmall"        
+                  size="xxsmall"
                   onPress={onPressOut}
-                  color='iconn_med_grey'                  
+                  color='iconn_med_grey'
+                  circle
                 />
               </Container>
             </Container>

@@ -21,6 +21,7 @@ const theme: themeType = {
     Regular: ''
   },
   size: {
+    xxxsmall: 8,
     xxsmall: 10,
     xsmall: 12,
     small: 14,
@@ -30,6 +31,7 @@ const theme: themeType = {
     xxlarge: 22
   },
   actionButtonSize: {
+    xxxsmall: 18,
     xxsmall: 30,
     xsmall: 40,
     small: 50,
@@ -38,7 +40,18 @@ const theme: themeType = {
     xlarge: 80,
     xxlarge: 90
   },
+  actionButtonHeight: {
+    xxxsmall: 18,
+    xxsmall: 30,
+    xsmall: 35,
+    small: 40,
+    medium: 45,
+    large: 50,
+    xlarge: 55,
+    xxlarge: 60
+  },
   buttonSize: {
+    xxxsmall: 6,
     xxsmall: 8,
     xsmall: 10,
     small: 12,
@@ -48,6 +61,7 @@ const theme: themeType = {
     xxlarge: 20
   },
   buttonWidth: {
+    xxxsmall: 80,
     xxsmall: 100,
     xsmall: 120,
     small: 140,
@@ -57,6 +71,7 @@ const theme: themeType = {
     xxlarge: 220
   },
   iconSize: {
+    xxxsmall: 14,
     xxsmall: 16,
     xsmall: 18,
     small: 22,
@@ -66,6 +81,7 @@ const theme: themeType = {
     xxlarge: 36
   },
   avatarSize: {
+    xxxsmall: 20,
     xxsmall: 40,
     xsmall: 60,
     small: 80,
@@ -75,6 +91,7 @@ const theme: themeType = {
     xxlarge: 140
   },
   badgeSize: {
+    xxxsmall: 9,
     xxsmall: 10,
     xsmall: 11,
     small: 12,
@@ -84,6 +101,7 @@ const theme: themeType = {
     xxlarge: 18
   },
   miniBadgeSize: {
+    xxxsmall: 8,
     xxsmall: 10,
     xsmall: 11,
     small: 12,
@@ -93,6 +111,7 @@ const theme: themeType = {
     xxlarge: 21
   },
   listItemSpace: {
+    xxxsmall: 2.5,
     xxsmall: 5,
     xsmall: 7.5,
     small: 10,
@@ -103,6 +122,7 @@ const theme: themeType = {
   },
   space: {
     none: 0,
+    xxxsmall: 1,
     xxsmall: 2.5,
     xsmall: 5,
     small: 7.5,
@@ -113,6 +133,7 @@ const theme: themeType = {
   },
   layoutSpace: {
     none: 0,
+    xxxsmall: 2.5,
     xxsmall: 5,
     xsmall: 10,
     small: 12,
@@ -122,6 +143,7 @@ const theme: themeType = {
     xxlarge: 32
   },
   indicatorSize: {
+    xxxsmall: 0.6,
     xxsmall: 0.8,
     xsmall: 0.9,
     small: 1,

@@ -16,6 +16,8 @@ import {
 import { Touchable } from '../Touchable';
 import { Container } from '../Container';
 import { TextContainer } from '../../molecules/TextContainer';
+import { ActionButton } from '../ActionButton';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export interface Props {
   label?: string;
@@ -44,6 +46,7 @@ export interface Props {
   rules?: RegisterOptions;
   renderErrorIcon?: boolean;
   testID?: string;
+  sufixOutIcon?: boolean;
 }
 
 const Input = forwardRef(({
@@ -72,7 +75,8 @@ const Input = forwardRef(({
   control,
   rules,
   renderErrorIcon = true,
-  testID
+  testID,
+  sufixOutIcon = false
 }: Props, ref: ForwardedRef<any>) => {
   const {
     inputStyle, inputContainerStyle, passwordImageStyle, errorImageStyle, prefixImageStyle
@@ -125,61 +129,73 @@ const Input = forwardRef(({
         marginBottom={8}
       />
       )}
-      <Container
-        row
-        center
-        height={hideLabel ? 68 : undefined}
-        style={{
-          ...inputContainerStyle,
-          borderColor,
-          backgroundColor: !editable ? theme.brandColor.iconn_light_grey : undefined
-        }}
-      >
-        {prefixImage && (
-        <Image
-          testID={`${testID}-prefix-image`}
-          source={prefixImage}
-          style={prefixImageStyle}
-          resizeMode="contain"
-        />
-        )}
-        <Container flex>
-          {!!label && hideLabel && (
-            <Container style={{ marginHorizontal: 12, marginTop: 12 }}>
-              <Collapsible collapsed={!focused}>
-                <TextContainer
-                  testID={`${testID}-hidden-label`}
-                  text={label}
-                  typography="label"
-                />
-              </Collapsible>
-            </Container>
-          )}
-          <Controller
-            name={name}
-            defaultValue={defaultValue}
-            control={control}
-            rules={rules}
-            render={({ field }) => (
-              <TextInput
-                testID={`${testID}-input`}
-                ref={ref}
-                {...textInputProps}
-                value={field.value}
-                onChangeText={field.onChange}
-              />
-            )}
+      <Container flex row space='between' center>
+        <Container
+          row
+          center
+          height={hideLabel ? 68 : undefined}
+          style={{
+            ...inputContainerStyle,
+            borderColor,
+            backgroundColor: !editable ? theme.brandColor.iconn_light_grey : undefined,
+            width: sufixOutIcon ? '91%' : '100%'
+          }}
+        >
+          {prefixImage && (
+          <Image
+            testID={`${testID}-prefix-image`}
+            source={prefixImage}
+            style={prefixImageStyle}
+            resizeMode="contain"
           />
+          )}
+          <Container flex>
+            {!!label && hideLabel && (
+              <Container style={{ marginHorizontal: 12, marginTop: 12 }}>
+                <Collapsible collapsed={!focused}>
+                  <TextContainer
+                    testID={`${testID}-hidden-label`}
+                    text={label}
+                    typography="label"
+                  />
+                </Collapsible>
+              </Container>
+            )}
+            <Controller
+              name={name}
+              defaultValue={defaultValue}
+              control={control}
+              rules={rules}
+              render={({ field }) => (
+                <TextInput
+                  testID={`${testID}-input`}
+                  ref={ref}
+                  {...textInputProps}
+                  value={field.value}
+                  onChangeText={field.onChange}
+                />
+              )}
+            />
+          </Container>
+          {passwordField && showPasswordEnable && (
+            <Touchable testID={`${testID}-hide-password`} onPress={() => setSecureTextEntry(!secureTextEntry)} opacityEffect>
+              {/* <Image source={EYE_OFF_ICON} style={passwordImageStyle} /> */}
+            </Touchable>
+          )}
+          {/* {!(passwordField && showPasswordEnable) && !!error && renderErrorIcon && (
+            <Image testID={`${testID}-error-image`} source={ERROR_CROSS_ICON} style={errorImageStyle} />
+          )} */}
         </Container>
-        {passwordField && showPasswordEnable && (
-          <Touchable testID={`${testID}-hide-password`} onPress={() => setSecureTextEntry(!secureTextEntry)} opacityEffect>
-            {/* <Image source={EYE_OFF_ICON} style={passwordImageStyle} /> */}
-          </Touchable>
+        {sufixOutIcon && (
+          <ActionButton circle size='xxxsmall' color='iconn_accent_secondary' onPress={()=>{}}
+          icon={<Ionicons
+            name="information"
+            size={15}
+            color={theme.fontColor.white} />}
+          />
         )}
-        {/* {!(passwordField && showPasswordEnable) && !!error && renderErrorIcon && (
-          <Image testID={`${testID}-error-image`} source={ERROR_CROSS_ICON} style={errorImageStyle} />
-        )} */}
       </Container>
+      
       {!!error && (
       <TextContainer
         testID={`${testID}-error-label`}
@@ -197,7 +213,6 @@ const Input = forwardRef(({
 const styles = StyleSheet.create({
   inputStyle: {
     fontSize: theme.fontSize.paragraph,
-    fontFamily: theme.fontWeight.Regular,
     paddingHorizontal: 12,
     color: theme.fontColor.dark
   },

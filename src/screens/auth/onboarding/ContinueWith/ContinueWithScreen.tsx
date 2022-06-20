@@ -68,7 +68,7 @@ const ContinueWithScreen: React.FC<Props> = ({
         </Button>
         <Button
           round
-          onPress={() => {}}
+          onPress={onPressEmail}
           fontSize="h4"
           fontBold
           style={{ marginTop: 8 }}
