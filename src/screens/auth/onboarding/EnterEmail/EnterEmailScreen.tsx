@@ -22,8 +22,11 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
     control,
     handleSubmit,
     watch,
-    formState: { errors }
-  } = useForm();
+    formState: { errors, isValid },
+    register,
+  } = useForm({
+    mode: "onChange"
+  });
 
   const { username } = watch();
 
@@ -46,17 +49,18 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
     >
       <TextContainer typography='h2' fontBold text={`Ingresa tu dirección de \ncorreo electrónico`} marginTop={34}></TextContainer>
       <Input
-            name="username"
-            control={control}
-            autoComplete="username"
-            autoCorrect={false}
-            keyboardType="email-address"
-            placeholder={`Ingresa tu correo`}
-            blurOnSubmit={false}
-            rules={emailRules}
-            error={errors.username?.message}
-            marginTop={36}
-            sufixOutIcon
+        {...register('username')}
+        name="username"
+        control={control}
+        autoComplete="username"
+        autoCorrect={false}
+        keyboardType="email-address"
+        placeholder={`Ingresa tu correo`}
+        blurOnSubmit={false}
+        rules={emailRules}
+        error={errors.username?.message}
+        marginTop={36}
+        sufixOutIcon
       />
       <Container flex row crossAlignment="end" space="between">
         <ActionButton
@@ -69,6 +73,7 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         <Button
           length="short"
           round
+          disabled={!isValid}
           onPress={handleSubmit(submit)}
           fontSize="h4"
           fontBold
