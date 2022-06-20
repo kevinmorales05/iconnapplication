@@ -25,6 +25,7 @@ export const getStyles = () => {
       width: 48,
       height: 48,
       marginRight: 8,
+      backgroundColor: theme.brandColor.iconn_white
     },    
     pin__holder: {
       borderWidth: .5,

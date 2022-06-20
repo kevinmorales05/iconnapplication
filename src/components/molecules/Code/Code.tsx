@@ -209,7 +209,7 @@ const Code: FunctionComponent<Props> = ({
         })}
       </View>
 
-      {!!caption && error && (
+      {!!caption && error ? (
         <>
           <View style={styles.pin__caption__container}>
             <Text style={[styles.pin__caption, styles.pin__caption__error]}>
@@ -228,6 +228,11 @@ const Code: FunctionComponent<Props> = ({
             />
           </Container>
         </>
+      ): (
+        <>
+          <View style={styles.pin__caption__container} />            
+          <Container row crossCenter style={{ marginTop: 50, marginBottom: 16 }} />            
+        </>
       )}
 
       {!!labelAction && (
@@ -239,7 +244,7 @@ const Code: FunctionComponent<Props> = ({
           />
           <CustomText
             textColor={theme.fontColor.dark}
-            text={"\n 18 segundos"}
+            text={`\n ${labelAction} segundos`}
             alignSelf='center'            
             typography="h5"
             fontBold            

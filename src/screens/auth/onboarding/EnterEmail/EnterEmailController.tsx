@@ -7,6 +7,7 @@ import { ImageBackground, StyleSheet } from 'react-native';
 import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
+import theme from 'components/theme/theme';
 
 const EnterEmailController: React.FC = () => {
   const { goBack, navigate } =
@@ -20,8 +21,7 @@ const EnterEmailController: React.FC = () => {
   return (      
     <SafeArea
     topSafeArea={false}
-    bottomSafeArea={false}
-    backgroundColor="transparent"
+    bottomSafeArea={false}    
     barStyle="dark"
     >
     <EnterEmailScreen

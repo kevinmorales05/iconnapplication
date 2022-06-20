@@ -2,30 +2,30 @@ import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'types';
-import EnterOtpScreen from './EnterOtpScreen';
+import EnterEmailScreen from './CreatePasswordScreen';
 import { ImageBackground, StyleSheet } from 'react-native';
 import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 
-const EnterOtpController: React.FC = () => {
+const CreatePasswordController: React.FC = () => {
   const { goBack, navigate } =
     useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   
   const onSubmit = (email: string) => {
     console.log('vamos! ' + email);
-    navigate('CreatePassword')
+    navigate('EnterOtp')
   };
 
   return (      
     <SafeArea
     topSafeArea={false}
-    bottomSafeArea={false}
+    bottomSafeArea={false}    
     barStyle="dark"
     >
-    <EnterOtpScreen
+    <EnterEmailScreen
       goBack={goBack}
-      onSubmit={onSubmit}
+      onSubmit={onSubmit}        
     />
     </SafeArea>
   );
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default EnterOtpController;
+export default CreatePasswordController;
