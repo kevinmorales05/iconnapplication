@@ -10,17 +10,13 @@ import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
 
 const ContinueWithController: React.FC = () => {
-  const { goBack, navigate } =
-    useNavigation<NativeStackNavigationProp<AuthStackParams>>();
-  const [otherMethodsVisible, setotherMethodsVisible] =
-    useState<boolean>(false);
+  const { navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+  const [otherMethodsVisible, setotherMethodsVisible] = useState<boolean>(false);
 
   const onPressOtherMethods = () => {
-    console.log('onPressOtherMethods');
     setotherMethodsVisible(true);
   };
   const onContinueWithEmail = () => {
-    console.log('onContinueWithEmail');
     setotherMethodsVisible(false);
     navigate('EnterEmail')
   };
@@ -31,7 +27,6 @@ const ContinueWithController: React.FC = () => {
     console.log('OnIhaveAccount');
   };
   const onPressOut = () => {
-    console.log('onPressOut');
     setotherMethodsVisible(false);
   };
 

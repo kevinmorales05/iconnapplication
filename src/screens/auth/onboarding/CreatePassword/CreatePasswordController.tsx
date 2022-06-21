@@ -1,32 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'types';
-import EnterEmailScreen from './CreatePasswordScreen';
-import { ImageBackground, StyleSheet } from 'react-native';
-import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
+import { StyleSheet } from 'react-native';
 import { SafeArea } from 'components/atoms/SafeArea';
-import LinearGradient from 'react-native-linear-gradient';
+import CreatePasswordScreen from './CreatePasswordScreen';
 
 const CreatePasswordController: React.FC = () => {
   const { goBack, navigate } =
     useNavigation<NativeStackNavigationProp<AuthStackParams>>();
-  
-  const onSubmit = (email: string) => {
-    console.log('vamos! ' + email);
-    navigate('EnterOtp')
+
+  const onSubmit = (password: string) => {
+    console.log('Password: ' + password);
+    navigate('EnterFullName');
   };
 
-  return (      
-    <SafeArea
-    topSafeArea={false}
-    bottomSafeArea={false}    
-    barStyle="dark"
-    >
-    <EnterEmailScreen
-      goBack={goBack}
-      onSubmit={onSubmit}        
-    />
+  return (
+    <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
+      <CreatePasswordScreen goBack={goBack} onSubmit={onSubmit} />
     </SafeArea>
   );
 };

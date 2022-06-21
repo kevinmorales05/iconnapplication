@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { Button, TouchableText } from 'components/molecules';
+import { TouchableText } from 'components/molecules';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Container, CustomText } from 'components/atoms';
 import theme from 'components/theme/theme';
@@ -46,8 +46,7 @@ const Code: FunctionComponent<Props> = ({
   disabledAction = false,
   testID = '',
   accessibilityLabel = '',
-  newCode = '',
-  actionStyle = null,
+  newCode = ''
 }) => {
   const styles = getStyles();
   const [fullCode, setFullCode] = useState('');
@@ -166,6 +165,10 @@ const Code: FunctionComponent<Props> = ({
     arrayInputs.push(input);
   }
 
+  useEffect(() => {
+    inputEl.current[0]?.focus();    
+  }, [])
+
   return (
     <View style={styles.pin__container}>
       <Text
@@ -185,11 +188,7 @@ const Code: FunctionComponent<Props> = ({
               <TextInput
                 testID={`${testID}${index}`}
                 accessibilityLabel={`${accessibilityLabel}${index}`}
-                ref={
-                  /* istanbul ignore next */ (ref) =>
-                    (inputEl.current[index] = ref)
-                }
-                // moves cursor to last position
+                ref={ (ref) => (inputEl.current[index] = ref) }
                 selection={selection}
                 value={code[index]}
                 editable={!disable}
