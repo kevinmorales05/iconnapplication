@@ -7,37 +7,35 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ActionButton, Input, TextContainer } from 'components';
 import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { emailRules } from 'utils/rules';
+import { passwordRule } from 'utils/rules';
 
 interface Props {
   onSubmit: (email: string) => void;
   goBack: () => void;
 }
 
-const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
+const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   const insets = useSafeAreaInsets();
 
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors, isValid },
-    register,
+    register
   } = useForm({
-    mode: "onChange"
+    mode: 'onChange'
   });
 
-  const emailRef = useRef<TextInput>(null);
+  const passwordRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    if (emailRef.current) {
-      emailRef.current.focus();
+    if (passwordRef.current) {
+      passwordRef.current.focus();
     }
   }, []);
 
-
-  const submit: SubmitHandler<FieldValues> = (fields) => {
-    onSubmit(fields.email);
+  const submit: SubmitHandler<FieldValues> = fields => {
+    onSubmit(fields.password);
   };
 
   return (
@@ -52,28 +50,39 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      <TextContainer typography='h2' fontBold text={`Ingresa tu dirección de \ncorreo electrónico`} marginTop={34}></TextContainer>
+      <TextContainer
+        typography="h2"
+        fontBold
+        text={`Crea tu contraseña`}
+        marginTop={34}
+      ></TextContainer>
       <Input
-        {...register('email')}
-        name="email"
+        {...register('password')}
+        name="password"
         control={control}
-        autoComplete="email"
+        autoComplete="password"
         autoCorrect={false}
-        keyboardType="email-address"
-        placeholder={`Ingresa tu correo`}
+        passwordField
+        placeholder={`Ingresa tu contraseña`}
         blurOnSubmit={false}
-        rules={emailRules}
-        error={errors.email?.message}
         marginTop={36}
-        sufixOutIcon
-        ref={emailRef}
+        rules={passwordRule}
+        error={errors.password?.message}
+        ref={passwordRef}
       />
+
       <Container flex row crossAlignment="end" space="between">
         <ActionButton
           size="large"
           onPress={goBack}
           color="iconn_med_grey"
-          icon={ <AntDesign name="arrowleft" size={24} color={theme.fontColor.dark} /> }
+          icon={
+            <AntDesign
+              name="arrowleft"
+              size={24}
+              color={theme.fontColor.dark}
+            />
+          }
         />
 
         <Button
@@ -93,4 +102,4 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   );
 };
 
-export default EnterEmailScreen;
+export default CreatePasswordScreen;

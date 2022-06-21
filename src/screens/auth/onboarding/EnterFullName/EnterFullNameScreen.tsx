@@ -7,10 +7,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ActionButton, Input, TextContainer } from 'components';
 import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { emailRules } from 'utils/rules';
+import { alphabetRule } from 'utils/rules';
 
 interface Props {
-  onSubmit: (email: string) => void;
+  onSubmit: (fullName: any) => void;
   goBack: () => void;
 }
 
@@ -20,24 +20,23 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors, isValid },
-    register,
+    register
   } = useForm({
-    mode: "onChange"
+    mode: 'onChange'
   });
 
-  const emailRef = useRef<TextInput>(null);
+  const nameRef = useRef<TextInput>(null);
+  const lastNameRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    if (emailRef.current) {
-      emailRef.current.focus();
+    if (nameRef.current) {
+      nameRef.current.focus();
     }
   }, []);
 
-
-  const submit: SubmitHandler<FieldValues> = (fields) => {
-    onSubmit(fields.email);
+  const submit: SubmitHandler<FieldValues> = fields => {
+    onSubmit(fields);
   };
 
   return (
@@ -52,28 +51,64 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      <TextContainer typography='h2' fontBold text={`Ingresa tu dirección de \ncorreo electrónico`} marginTop={34}></TextContainer>
+      <TextContainer
+        typography="h2"
+        fontBold
+        text={`¿Cúal es tu nombre?`}
+        marginTop={34}
+      ></TextContainer>
+      <TextContainer
+        typography="h5"
+        text={`Dinos cómo debemos llamarte`}
+        marginTop={9}
+      ></TextContainer>
+
       <Input
-        {...register('email')}
-        name="email"
+        {...register('name')}
+        ref={nameRef}
+        name="name"
         control={control}
-        autoComplete="email"
-        autoCorrect={false}
-        keyboardType="email-address"
-        placeholder={`Ingresa tu correo`}
+        autoComplete="name"
+        autoCorrect
+        autoCapitalize="words"
+        keyboardType="default"
+        placeholder={`Tu nombre`}
+        rules={alphabetRule(true)}
         blurOnSubmit={false}
-        rules={emailRules}
-        error={errors.email?.message}
-        marginTop={36}
-        sufixOutIcon
-        ref={emailRef}
+        onSubmitEditing={() => lastNameRef.current?.focus()}
+        error={errors.name?.message}
+        maxLength={30}
       />
+
+      <Input
+        {...register('lastName')}
+        ref={lastNameRef}
+        name="lastName"
+        control={control}
+        autoComplete="name"
+        autoCorrect
+        autoCapitalize="words"
+        keyboardType="default"
+        placeholder={`Tu apellido`}
+        rules={alphabetRule(true)}
+        blurOnSubmit={false}
+        error={errors.lastName?.message}
+        marginTop={24}
+        maxLength={30}
+      />
+
       <Container flex row crossAlignment="end" space="between">
         <ActionButton
           size="large"
           onPress={goBack}
           color="iconn_med_grey"
-          icon={ <AntDesign name="arrowleft" size={24} color={theme.fontColor.dark} /> }
+          icon={
+            <AntDesign
+              name="arrowleft"
+              size={24}
+              color={theme.fontColor.dark}
+            />
+          }
         />
 
         <Button

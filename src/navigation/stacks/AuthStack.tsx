@@ -7,6 +7,8 @@ import ContinueWithController from 'screens/auth/onboarding/ContinueWith/Continu
 import EnterEmailController from 'screens/auth/onboarding/EnterEmail/EnterEmailController'
 import EnterOtpController from 'screens/auth/onboarding/EnterOtp/EnterOtpController'
 import TermsAndCondController from 'screens/auth/onboarding/TermsAndCond/TermsAndCondController';
+import CreatePasswordController from 'screens/auth/onboarding/CreatePassword/CreatePasswordController';
+import EnterFullNameController from 'screens/auth/onboarding/EnterFullName/EnterFullNameController';
 
 const Stack = createNativeStackNavigator<AuthStackParams>();
 
@@ -18,6 +20,8 @@ const AuthStack: React.FC = () => (
     <Stack.Screen name="EnterEmail" component={EnterEmailController} />
     <Stack.Screen name="EnterOtp" component={EnterOtpController} />
     <Stack.Screen name="TermsAndCond" component={TermsAndCondController} />
+    <Stack.Screen name="CreatePassword" component={CreatePasswordController} />
+    <Stack.Screen name="EnterFullName" component={EnterFullNameController} />
   </Stack.Navigator>
 );
 

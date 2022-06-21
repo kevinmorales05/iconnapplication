@@ -81,7 +81,7 @@ const SafeArea: React.FC<Props> = ({
         <SafeAreaView
           testID={`${testID}-top`}
           style={{
-            backgroundColor: topBGColor
+            backgroundColor: theme.brandColor.iconn_white
           || safeBGColor
           || backgroundColor
           }}
@@ -92,7 +92,7 @@ const SafeArea: React.FC<Props> = ({
         <SafeAreaView
           testID={`${testID}-bottom`}
           style={{
-            backgroundColor: bottomBGColor
+            backgroundColor: theme.brandColor.iconn_white
           || safeBGColor
           || backgroundColor
           }}

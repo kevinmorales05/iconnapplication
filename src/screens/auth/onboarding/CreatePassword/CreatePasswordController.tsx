@@ -2,29 +2,22 @@ import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'types';
-import EnterOtpScreen from './EnterOtpScreen';
 import { StyleSheet } from 'react-native';
 import { SafeArea } from 'components/atoms/SafeArea';
+import CreatePasswordScreen from './CreatePasswordScreen';
 
-const EnterOtpController: React.FC = () => {
+const CreatePasswordController: React.FC = () => {
   const { goBack, navigate } =
     useNavigation<NativeStackNavigationProp<AuthStackParams>>();
-  
-  const onSubmit = (code: string) => {
-    console.log('Código OTP: ' + code);
-    navigate('CreatePassword')
+
+  const onSubmit = (password: string) => {
+    console.log('Password: ' + password);
+    navigate('EnterFullName');
   };
 
-  return (      
-    <SafeArea
-    topSafeArea={false}
-    bottomSafeArea={false}
-    barStyle="dark"
-    >
-    <EnterOtpScreen
-      goBack={goBack}
-      onSubmit={onSubmit}
-    />
+  return (
+    <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
+      <CreatePasswordScreen goBack={goBack} onSubmit={onSubmit} />
     </SafeArea>
   );
 };
@@ -36,4 +29,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default EnterOtpController;
+export default CreatePasswordController;
