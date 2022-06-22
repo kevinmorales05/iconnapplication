@@ -5,3 +5,4 @@ export * from './SafeArea';
 export * from './CustomModal';
 export * from './CustomText';
 export * from './ActionButton';
+export * from './Checkbox';
