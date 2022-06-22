@@ -47,6 +47,7 @@ export interface Props {
   renderErrorIcon?: boolean;
   testID?: string;
   sufixOutIcon?: boolean;
+  onPressInfo?: any;
 }
 
 const Input = forwardRef(({
@@ -76,7 +77,8 @@ const Input = forwardRef(({
   rules,
   renderErrorIcon = true,
   testID,
-  sufixOutIcon = false
+  sufixOutIcon = false,
+  onPressInfo
 }: Props, ref: ForwardedRef<any>) => {
   const {
     inputStyle, inputContainerStyle, passwordImageStyle, errorImageStyle, prefixImageStyle
@@ -187,7 +189,7 @@ const Input = forwardRef(({
           )} */}
         </Container>
         {sufixOutIcon && (
-          <ActionButton circle size='xxxsmall' color='iconn_accent_secondary' onPress={()=>{}}
+          <ActionButton circle size='xxxsmall' color='iconn_accent_secondary' onPress={onPressInfo}
           icon={<Ionicons
             name="information"
             size={15}

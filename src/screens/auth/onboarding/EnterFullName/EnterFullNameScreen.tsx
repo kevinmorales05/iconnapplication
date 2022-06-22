@@ -78,6 +78,7 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         onSubmitEditing={() => lastNameRef.current?.focus()}
         error={errors.name?.message}
         maxLength={30}
+        marginTop={46}
       />
 
       <Input

@@ -13,7 +13,7 @@ import EnterFullNameController from 'screens/auth/onboarding/EnterFullName/Enter
 const Stack = createNativeStackNavigator<AuthStackParams>();
 
 const AuthStack: React.FC = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="TermsAndCond">
+  <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ContinueWith">
     <Stack.Screen name="SignUp" component={SignUpController} />
     <Stack.Screen name="Login" component={LoginController} />
     <Stack.Screen name="ContinueWith" component={ContinueWithController} />

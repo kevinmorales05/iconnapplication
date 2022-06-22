@@ -12,19 +12,23 @@ import { emailRules } from 'utils/rules';
 interface Props {
   onSubmit: (email: string) => void;
   goBack: () => void;
+  onPressInfo: () => void;
 }
 
-const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
+const EnterEmailScreen: React.FC<Props> = ({
+  onSubmit,
+  goBack,
+  onPressInfo
+}) => {
   const insets = useSafeAreaInsets();
 
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors, isValid },
-    register,
+    register
   } = useForm({
-    mode: "onChange"
+    mode: 'onChange'
   });
 
   const emailRef = useRef<TextInput>(null);
@@ -35,8 +39,7 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
     }
   }, []);
 
-
-  const submit: SubmitHandler<FieldValues> = (fields) => {
+  const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields.email);
   };
 
@@ -52,7 +55,12 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      <TextContainer typography='h2' fontBold text={`Ingresa tu dirección de \ncorreo electrónico`} marginTop={34}></TextContainer>
+      <TextContainer
+        typography="h2"
+        fontBold
+        text={`Ingresa tu dirección de \ncorreo electrónico`}
+        marginTop={34}
+      />
       <Input
         {...register('email')}
         name="email"
@@ -67,13 +75,20 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         marginTop={36}
         sufixOutIcon
         ref={emailRef}
+        onPressInfo={onPressInfo}
       />
       <Container flex row crossAlignment="end" space="between">
         <ActionButton
           size="large"
           onPress={goBack}
           color="iconn_med_grey"
-          icon={ <AntDesign name="arrowleft" size={24} color={theme.fontColor.dark} /> }
+          icon={
+            <AntDesign
+              name="arrowleft"
+              size={24}
+              color={theme.fontColor.dark}
+            />
+          }
         />
 
         <Button
