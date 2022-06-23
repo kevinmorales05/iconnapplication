@@ -16,12 +16,13 @@ interface Props {
 }
 
 const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
+
+  let currentIntervalId: any;
   const insets = useSafeAreaInsets();
   const verificationCodeSecondsIntervalValue = 5;
   const [code, setCode] = useState('');
   const [disableAction, setDisableAction] = useState(true);
-  const [verificationCodeIntervalId, setVerificationCodeIntervalId] =
-    useState(0);
+  const [verificationCodeIntervalId, setVerificationCodeIntervalId] = useState(0);
   const [timeleft, setTimeleft] = useState('00:00');
   const [isCodeError, setIsCodeError] = useState(false);
 
@@ -33,6 +34,10 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
 
   useEffect(() => {
     startInterval();
+
+    return () => {
+      clearInterval(currentIntervalId);
+    }
   }, []);
 
   const startInterval = () => {
@@ -40,7 +45,7 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
     setDisableAction(true);
     let enabledTimeInSeconds = verificationCodeSecondsIntervalValue;
 
-    const currentIntervalId = setInterval(() => {
+    currentIntervalId = setInterval(() => {
       const stateIntervalId = verificationCodeIntervalId;
       enabledTimeInSeconds -= 1;
       if (
