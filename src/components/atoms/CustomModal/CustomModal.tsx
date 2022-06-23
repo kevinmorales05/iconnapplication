@@ -3,7 +3,7 @@ import {
   KeyboardAvoidingView, Modal, Platform, TouchableWithoutFeedback, View
 } from 'react-native';
 
-export interface CustomModalProps {
+interface CustomModalProps {
   visible: boolean;
   children: ReactNode;
   onDismiss?: () => void;
@@ -45,4 +45,5 @@ const CustomModal: React.FC<CustomModalProps> = ({
   );
 };
 
-export default CustomModal;
+export type { CustomModalProps }
+export { CustomModal };

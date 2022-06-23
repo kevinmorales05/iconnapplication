@@ -13,6 +13,7 @@ module.exports = {
           theme: './src/theme',
           components: './src/components',
           rtk: './src/rtk',
+          context: './src/context'
         }
       }
     ]
