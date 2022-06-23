@@ -4,7 +4,7 @@ export type AuthStackParams = {
   ForgotPassword: undefined;
   ContinueWith: undefined;
   EnterEmail: undefined;
-  EnterOtp: undefined;
+  EnterOtp: { email: string };
   TermsAndCond: undefined;
   CreatePassword: undefined;
   EnterFullName: undefined;

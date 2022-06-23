@@ -36,7 +36,7 @@ const EnterEmailController: React.FC = () => {
     console.log('Correo electronico: ' + email);
     try {
       const { payload } = await dispatch(preSignUpThunk(email));
-      if (payload.status === 'ok') navigate('EnterOtp');
+      if (payload.status === 'ok') navigate('EnterOtp', { email });
     } catch (error) {
       console.error('Unknow Error', error);
     }

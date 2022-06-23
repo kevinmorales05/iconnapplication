@@ -13,9 +13,10 @@ import { ICONN_EMAIL } from 'assets/images';
 interface Props {
   onSubmit: (code: string) => void;
   goBack: () => void;
+  email: string;
 }
 
-const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
+const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email }) => {
 
   let currentIntervalId: any;
   const insets = useSafeAreaInsets();
@@ -108,7 +109,7 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
           <TextContainer
             typography="h4"
             fontBold
-            text={`mariano.martinez@citi.com.mx`}
+            text={email}
             textColor={theme.brandColor.iconn_green_original}
           ></TextContainer>
         </Container>
