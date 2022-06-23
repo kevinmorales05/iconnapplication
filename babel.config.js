@@ -13,7 +13,8 @@ module.exports = {
           theme: './src/theme',
           components: './src/components',
           rtk: './src/rtk',
-          context: './src/context'
+          context: './src/context',
+          services: './src/services'
         }
       }
     ]

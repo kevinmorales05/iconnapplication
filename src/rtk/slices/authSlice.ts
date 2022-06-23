@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { preSignUpThunk } from 'rtk/thunks/auth.thunks';
 import { AuthDataInterface } from 'rtk/types';
 
 const initialState: AuthDataInterface = {
@@ -13,11 +14,28 @@ const initialState: AuthDataInterface = {
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: initialState,
+  initialState: {
+    user: initialState,
+    loading: false
+  },
   reducers: {
-    setAuthInitialState(state, action: PayloadAction<AuthDataInterface>) {
-      state = initialState;
+    setAuthInitialState(state) {
+      state = { user: initialState, loading: false };
     }
+  },
+  extraReducers: builder => {
+    builder.addCase(preSignUpThunk.pending, state => {
+      console.log('pending...');
+      state.loading = true
+    })
+    builder.addCase(preSignUpThunk.fulfilled, (state, action) => {      
+      console.log('fullfilled...');
+      state.loading = false
+    })
+    builder.addCase(preSignUpThunk.rejected, state => {
+      console.log('rejected...');
+      state.loading = false
+    })
   }
 });
 

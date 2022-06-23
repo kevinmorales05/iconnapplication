@@ -1,11 +1,11 @@
-export type GeneralApiProblem = { kind: string };
+export type GeneralApiProblem = { kind: string | number };
 
 /**
  * Attempts to get a common cause of general problems from an api response.
  *
  * @param response The api response code.
  */
-export function getGeneralApiProblem(response: number): GeneralApiProblem {
+export function getGeneralApiProblem(response: string | number): GeneralApiProblem {
   switch (response) {
     case 400:
       return { kind: "400 - Lo sentimos :( \nLos datos enviados son incorrectos." };
@@ -24,6 +24,6 @@ export function getGeneralApiProblem(response: number): GeneralApiProblem {
     case 504:
       return { kind: "504 - Lo sentimos :( \nHa ocurrido un error y se agoto el tiempo de espera." };
     default:
-      return { kind: "Error desconocido" };
+      return { kind: response };
   }
 }

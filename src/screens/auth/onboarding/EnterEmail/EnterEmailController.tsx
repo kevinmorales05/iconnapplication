@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'types';
 import EnterEmailScreen from './EnterEmailScreen';
-import { StyleSheet } from 'react-native';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { AboutEmail } from 'components/organisms/AboutEmail';
+import { useAlert, useLoading } from 'context';
+import { preSignUpThunk } from 'rtk/thunks/auth.thunks';
+import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 
 const EnterEmailController: React.FC = () => {
-  const { goBack, navigate } =
-    useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const [aboutEmailVisible, setAboutEmailVisible] = useState<boolean>(false);
+  const alert = useAlert();
+  const loader = useLoading();
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state: RootState) => state.auth);
+
+  useEffect(() => {
+    if (loading === false) {
+      loader.hide();
+    }
+  }, [loading]);
 
   const onPressEmailInfo = () => {
     setAboutEmailVisible(true);
@@ -20,9 +31,15 @@ const EnterEmailController: React.FC = () => {
     setAboutEmailVisible(false);
   };
 
-  const onSubmit = (email: string) => {
+  const onSubmit = async (email: string) => {
+    loader.show();
     console.log('Correo electronico: ' + email);
-    navigate('EnterOtp');
+    try {
+      const { payload } = await dispatch(preSignUpThunk(email));
+      if (payload.status === 'ok') navigate('EnterOtp');
+    } catch (error) {
+      console.error('Unknow Error', error);
+    }
   };
 
   return (
