@@ -8,6 +8,7 @@ const initialState: AuthDataInterface = {
   lastName: '',
   secondLastName: '',
   password: '',
+  secret: '',
   termsAndConditions: false,
   isLogged: false
 };
@@ -21,6 +22,15 @@ const authSlice = createSlice({
   reducers: {
     setAuthInitialState(state) {
       state = { user: initialState, loading: false };
+    },
+    setAuthEmail(state, action: PayloadAction<AuthDataInterface>) {
+      state.user.email = action.payload.email;
+    },
+    setSecret(state, action: PayloadAction<AuthDataInterface>) {
+      state.user.secret = action.payload.secret;
+    },
+    setPassword(state, action: PayloadAction<AuthDataInterface>){
+      state.user.password = action.payload.password;
     }
   },
   extraReducers: builder => {
@@ -51,5 +61,5 @@ const authSlice = createSlice({
   }
 });
 
-export const { setAuthInitialState } = authSlice.actions;
+export const { setAuthInitialState, setAuthEmail, setSecret, setPassword } = authSlice.actions;
 export default authSlice.reducer;

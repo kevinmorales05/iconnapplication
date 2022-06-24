@@ -80,7 +80,7 @@ export class IconnApi extends HttpClient {
     if (axios.isAxiosError(err)) {
       let problem: GeneralApiProblem;
       problem = getGeneralApiProblem(err.response._response || err.response.status);      
-      console.log('la bronca es ===> ', problem);
+      console.error('GLOBAL EXCEPCIÓN ===> ', problem);
       if (problem) store.dispatch(setAppError({error: problem.kind.toString()}));
     } else {
       store.dispatch(setAppError({error: 'UNKNOWN ERROR'}));

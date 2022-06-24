@@ -5,13 +5,19 @@ import { AuthStackParams } from 'types';
 import { StyleSheet } from 'react-native';
 import { SafeArea } from 'components/atoms/SafeArea';
 import CreatePasswordScreen from './CreatePasswordScreen';
+import { useAppDispatch } from 'rtk';
+import { setPassword, setSecret } from 'rtk/slices/authSlice';
+import cryptoAES, { getSecretKey } from 'utils/cryptoAES';
 
 const CreatePasswordController: React.FC = () => {
-  const { goBack, navigate } =
-    useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+  const dispatch = useAppDispatch();  
 
   const onSubmit = (password: string) => {
-    console.log('Password: ' + password);
+    const secret = getSecretKey();
+    dispatch(setSecret({secret}));
+    password = cryptoAES(password, secret);
+    dispatch(setPassword({password}));    
     navigate('EnterFullName');
   };
 

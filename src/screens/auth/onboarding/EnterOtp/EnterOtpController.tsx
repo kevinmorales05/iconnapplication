@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'types';
 import EnterOtpScreen from './EnterOtpScreen';
@@ -11,11 +11,11 @@ import { validateOtpThunk } from 'rtk/thunks/auth.thunks';
 
 const EnterOtpController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
-  const { params: { email } } = useRoute<RouteProp<AuthStackParams, 'EnterOtp'>>();
   const loader = useLoading();
   const dispatch = useAppDispatch();
 
-  const { loading } = useAppSelector((state: RootState) => state.auth);
+  const { loading, user } = useAppSelector((state: RootState) => state.auth);
+  const { email } = user;
 
   useEffect(() => {
     if (loading === false) {
@@ -27,7 +27,6 @@ const EnterOtpController: React.FC = () => {
 
   const onSubmit = async (code: string) => {    
     loader.show();
-    console.log('Código OTP: ' + code);
     
     try {  
       const { payload } = await dispatch(validateOtpThunk({email, code}));

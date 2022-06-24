@@ -4,6 +4,7 @@ export interface AuthDataInterface {
   lastName?: string;
   secondLastName?: string;
   password?: string;
+  secret?: string;
   termsAndConditions?: boolean;
   isLogged?: boolean;
 }

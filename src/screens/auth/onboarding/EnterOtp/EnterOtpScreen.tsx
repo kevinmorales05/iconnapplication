@@ -13,7 +13,7 @@ import { ICONN_EMAIL } from 'assets/images';
 interface Props {
   onSubmit: (code: string) => void;
   goBack: () => void;
-  email: string;
+  email?: string;
   wrongCode: boolean;
 }
 
@@ -27,8 +27,6 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
   const [verificationCodeIntervalId, setVerificationCodeIntervalId] = useState(0);
   const [timeleft, setTimeleft] = useState('00:00');
   const [isCodeError, setIsCodeError] = useState(false);
-
-  console.log('wrongCode:', wrongCode);
   
   const codding = (c: string) => {
     setCode(c);

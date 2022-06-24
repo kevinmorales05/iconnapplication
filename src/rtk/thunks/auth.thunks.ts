@@ -5,6 +5,6 @@ export const preSignUpThunk = createAsyncThunk('auth/preSignUpThunk', async (ema
   return await authServices.preSignUp(email);  
 });
 
-export const validateOtpThunk = createAsyncThunk('auth/validateOtpThunk', async (payload: {email: string, code: string}) => {
+export const validateOtpThunk = createAsyncThunk('auth/validateOtpThunk', async (payload: {email?: string, code?: string}) => {
   return await authServices.otpValidate(payload.email, payload.code);
 });

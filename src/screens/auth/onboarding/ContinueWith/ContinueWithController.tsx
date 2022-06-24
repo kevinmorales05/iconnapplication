@@ -8,10 +8,12 @@ import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
+import { RootState, useAppSelector } from 'rtk';
 
 const ContinueWithController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const [otherMethodsVisible, setotherMethodsVisible] = useState<boolean>(false);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const onPressOtherMethods = () => {
     setotherMethodsVisible(true);

@@ -8,6 +8,7 @@ import { AboutEmail } from 'components/organisms/AboutEmail';
 import { useAlert, useLoading } from 'context';
 import { preSignUpThunk } from 'rtk/thunks/auth.thunks';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { setAuthEmail } from 'rtk/slices/authSlice';
 
 const EnterEmailController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -33,14 +34,17 @@ const EnterEmailController: React.FC = () => {
 
   const onSubmit = async (email: string) => {
     loader.show();
-    console.log('Correo electronico: ' + email);
     try {
       const { payload } = await dispatch(preSignUpThunk(email));
-      if (payload.status === 'ok') navigate('EnterOtp', { email });
+      if (payload.status === 'ok'){
+        dispatch(setAuthEmail({email}))
+        navigate('EnterOtp');
+      } 
     } catch (error) {
       console.error('Unknow Error', error);
       // TODO: REMOVE the next line (DOESNT NEED HERE)
-      navigate('EnterOtp', { email });
+      dispatch(setAuthEmail({email}))
+      navigate('EnterOtp');
     }
   };
 

@@ -242,7 +242,6 @@ const Code: FunctionComponent<Props> = ({
         </>
       )}
 
-      {console.log('label action ===> ', !!labelAction)}
       {!!labelAction && (
         <Container backgroundColor={theme.brandColor.iconn_warm_grey} style={{marginHorizontal:32, paddingHorizontal:16, paddingVertical: 24}}>
           <CustomText
