@@ -14,7 +14,7 @@ export function getGeneralApiProblem(response: string | number): GeneralApiProbl
     case 403:
       return { kind: "403 - Lo sentimos :( \nExiste un problema, se intenta acceder a recursos prohibidos." };
     case 404:
-      return { kind: "404 - Lo sentimos :( \nExiste un problema, no se encontró la información." };
+      return { kind: "404 - Lo sentimos :( \nExiste un problema, el recurso no fue encontrado." };
     case 500:
       return { kind: "500 - Lo sentimos :( \nHa ocurrido un error en nuestros servidores." };
     case 502:

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppInterface } from 'rtk/types';
 
 const initialState: AppInterface = {
-  error: undefined  
+  error: undefined
 };
 
 const appSlice = createSlice({
@@ -11,9 +11,12 @@ const appSlice = createSlice({
   reducers: {
     setAppInitialState(state, action: PayloadAction<AppInterface>) {
       state = initialState;
+    },
+    setAppError(state, action: PayloadAction<AppInterface>){
+      state.error = action.payload.error;
     }
   }
 });
 
-export const { setAppInitialState } = appSlice.actions;
+export const { setAppInitialState, setAppError } = appSlice.actions;
 export default appSlice.reducer;

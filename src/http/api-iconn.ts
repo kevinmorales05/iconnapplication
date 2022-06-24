@@ -1,9 +1,9 @@
-// import { store, setErrorAction } from 'rtk';
 import { store } from 'rtk';
 import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
 import { ApiConfig } from './api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
+import { setAppError } from 'rtk/slices/appSlice';
 
 export class IconnApi extends HttpClient {
   
@@ -81,11 +81,9 @@ export class IconnApi extends HttpClient {
       let problem: GeneralApiProblem;
       problem = getGeneralApiProblem(err.response._response || err.response.status);      
       console.log('la bronca es ===> ', problem);
-      
-      // TODO: DESCOMENTAR ESTAS LINEAS:
-      // if (problem) store.dispatch(setErrorAction(problem.kind));
+      if (problem) store.dispatch(setAppError({error: problem.kind.toString()}));
     } else {
-      // store.dispatch(setErrorAction('UNKNOWN ERROR'));
+      store.dispatch(setAppError({error: 'UNKNOWN ERROR'}));
     }
   }
 }
