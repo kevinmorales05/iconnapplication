@@ -8,7 +8,6 @@ import {
   TextInputProps
 } from 'react-native';
 import theme from 'components/theme/theme'
-// import { ERROR_CROSS_ICON, EYE_OFF_ICON } from 'assets/images';
 import Collapsible from 'react-native-collapsible';
 import {
   Control, Controller, FieldValues, RegisterOptions
@@ -18,6 +17,7 @@ import { Container } from '../Container';
 import { TextContainer } from '../../molecules/TextContainer';
 import { ActionButton } from '../ActionButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ICONN_BACKGROUND_IMAGE, ICONN_EYE } from 'assets/images';
 
 export interface Props {
   label?: string;
@@ -181,12 +181,12 @@ const Input = forwardRef(({
           </Container>
           {passwordField && showPasswordEnable && (
             <Touchable testID={`${testID}-hide-password`} onPress={() => setSecureTextEntry(!secureTextEntry)} opacityEffect>
-              {/* <Image source={EYE_OFF_ICON} style={passwordImageStyle} /> */}
+              <Image source={ICONN_EYE} style={passwordImageStyle} />
             </Touchable>
           )}
-          {/* {!(passwordField && showPasswordEnable) && !!error && renderErrorIcon && (
-            <Image testID={`${testID}-error-image`} source={ERROR_CROSS_ICON} style={errorImageStyle} />
-          )} */}
+          {!(passwordField && showPasswordEnable) && !!error && renderErrorIcon && (
+            <Image testID={`${testID}-error-image`} source={ICONN_BACKGROUND_IMAGE} style={errorImageStyle} />
+          )}
         </Container>
         {sufixOutIcon && (
           <ActionButton circle size='xxxsmall' color='iconn_accent_secondary' onPress={onPressInfo}

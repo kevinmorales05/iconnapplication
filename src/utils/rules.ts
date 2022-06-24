@@ -21,10 +21,41 @@ export const passwordRule: RegisterOptions = {
     message: `Campo requerido`
   },
   validate: (value: string) => {
-    if (!/^(?=.*[A-Z])(?=.*\d)[a-zA-Z.\d]{6,}$/.test(value)) {
-      return `Ingresa una contraseña valida`;
+
+    if (/\s/.test(value)) {
+      // return `No se admiten espacios`;
+      return '1';
+    }
+    
+    if (value.length < 8) {
+      // return `Minimo 8 caracteres`;
+      return `2`;
+    } 
+
+    if (!/[A-Z]/.test(value)) {
+      // return `Al menos una mayúscula`;
+      return `3`;
     }
 
+    if (!/[a-z]/.test(value)) {
+      // return `Al menos una minúscula`;
+      return `4`;
+    }
+
+    if (!/\d/.test(value)) {
+      // return `Al menos una número`;
+      return `5`;
+    }
+
+    if (!/\W/.test(value)) {
+      // return `Al menos un caracter especial`;
+      return `6`;
+    }    
+    
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.$!%*?&()])[A-Za-z\d@.$!%*?&()]{8,}$/.test(value)) {
+      return `Contraseña incorrecta`;
+    }
+    
     return true;
   }
 };
