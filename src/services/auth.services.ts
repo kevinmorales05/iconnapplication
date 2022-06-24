@@ -19,8 +19,8 @@ async function preSignUp(email: string): Promise<any> {
  * @param otp
  * @returns
  */
-async function otpValidate(otp: number): Promise<any> {
-  const response = await IconnApi.getInstance().postRequest('/otps/validate',{otp});
+async function otpValidate(email: string, code: string): Promise<any> {
+  const response = await IconnApi.getInstance().getRequest(`/otps/validate/${code}/${email}`);
   if (response === undefined) return Promise.reject(new Error('otpValidate:/otps/validate'));
   const { data } = response;
   return data;

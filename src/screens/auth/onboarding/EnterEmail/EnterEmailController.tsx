@@ -39,6 +39,8 @@ const EnterEmailController: React.FC = () => {
       if (payload.status === 'ok') navigate('EnterOtp', { email });
     } catch (error) {
       console.error('Unknow Error', error);
+      // TODO: REMOVE the next line (DOESNT NEED HERE)
+      navigate('EnterOtp', { email });
     }
   };
 

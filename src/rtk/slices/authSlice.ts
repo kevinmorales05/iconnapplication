@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { preSignUpThunk } from 'rtk/thunks/auth.thunks';
+import { preSignUpThunk, validateOtpThunk } from 'rtk/thunks/auth.thunks';
 import { AuthDataInterface } from 'rtk/types';
 
 const initialState: AuthDataInterface = {
@@ -25,16 +25,28 @@ const authSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(preSignUpThunk.pending, state => {
-      console.log('pending...');
-      state.loading = true
+      console.log('preSignUpThunk pending...');
+      state.loading = true;
     })
-    builder.addCase(preSignUpThunk.fulfilled, (state, action) => {      
-      console.log('fullfilled...');
-      state.loading = false
+    builder.addCase(preSignUpThunk.fulfilled, state => {      
+      console.log('preSignUpThunk fullfilled...');
+      state.loading = false;
     })
     builder.addCase(preSignUpThunk.rejected, state => {
-      console.log('rejected...');
-      state.loading = false
+      console.log('preSignUpThunk rejected...');
+      state.loading = false;
+    })
+    builder.addCase(validateOtpThunk.pending, state => {
+      console.log('validateOtpThunk pending...');
+      state.loading = true;
+    })
+    builder.addCase(validateOtpThunk.fulfilled, state => {      
+      console.log('validateOtpThunk fullfilled...');
+      state.loading = false;
+    })
+    builder.addCase(validateOtpThunk.rejected, state => {
+      console.log('validateOtpThunk rejected...');
+      state.loading = false;
     })
   }
 });

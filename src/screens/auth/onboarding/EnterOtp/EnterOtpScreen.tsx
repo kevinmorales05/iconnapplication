@@ -14,19 +14,22 @@ interface Props {
   onSubmit: (code: string) => void;
   goBack: () => void;
   email: string;
+  wrongCode: boolean;
 }
 
-const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email }) => {
+const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode }) => {
 
   let currentIntervalId: any;
   const insets = useSafeAreaInsets();
-  const verificationCodeSecondsIntervalValue = 5;
+  const verificationCodeSecondsIntervalValue = 10;
   const [code, setCode] = useState('');
   const [disableAction, setDisableAction] = useState(true);
   const [verificationCodeIntervalId, setVerificationCodeIntervalId] = useState(0);
   const [timeleft, setTimeleft] = useState('00:00');
   const [isCodeError, setIsCodeError] = useState(false);
 
+  console.log('wrongCode:', wrongCode);
+  
   const codding = (c: string) => {
     setCode(c);
   };
@@ -35,12 +38,17 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email }) => {
 
   useEffect(() => {
     startInterval();
-
     return () => {
       clearInterval(currentIntervalId);
     }
   }, []);
 
+  useEffect(() => {
+    if (wrongCode === true) {      
+      setIsCodeError(true);      
+    }    
+  }, [wrongCode])
+  
   const startInterval = () => {
     setIsCodeError(false);
     setDisableAction(true);
@@ -77,8 +85,6 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email }) => {
     // again we call endpoint to request new otp
   };
 
-  // TODO: isPasswordChangedCodeError: this value should change with the response of the otp validation endpoint and if otp is invalid,
-  // then isPasswordChangedCodeError should be true to show label error and labelAction.
   return (
     <ScrollView
       bounces={false}

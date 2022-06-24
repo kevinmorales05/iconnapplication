@@ -215,17 +215,25 @@ const Code: FunctionComponent<Props> = ({
               {caption}
             </Text>
           </View>
-          <Container row crossCenter style={{ marginTop: 50, marginBottom: 16 }}>
-            <TouchableText          
-              underline
-              textColor={theme.brandColor.iconn_accent_principal}
-              text="Solicitar un código nuevo"
-              typography="h5"
-              fontBold
-              onPress={onPressAction}
-              marginTop={8}
-            />
-          </Container>
+          {!!labelAction === false ? (
+            <>
+              <Container row crossCenter style={{ marginTop: 50, marginBottom: 16 }}>
+                <TouchableText
+                  underline
+                  textColor={theme.brandColor.iconn_accent_principal}
+                  text="Solicitar un código nuevo"
+                  typography="h5"
+                  fontBold
+                  onPress={onPressAction}
+                  marginTop={8}
+                />
+              </Container>
+            </>
+          ): (
+            <>
+              <Container row crossCenter style={{ marginTop: 50, marginBottom: 16 }}/>                            
+            </>
+          )}
         </>
       ): (
         <>
@@ -234,6 +242,7 @@ const Code: FunctionComponent<Props> = ({
         </>
       )}
 
+      {console.log('label action ===> ', !!labelAction)}
       {!!labelAction && (
         <Container backgroundColor={theme.brandColor.iconn_warm_grey} style={{marginHorizontal:32, paddingHorizontal:16, paddingVertical: 24}}>
           <CustomText
