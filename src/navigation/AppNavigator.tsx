@@ -1,8 +1,9 @@
 import { useAlert, useLoading } from 'context';
 import React, { useEffect } from 'react';
-import { RootState, useAppSelector, useAppDispatch } from 'rtk';
-import { setAppError, setAppInitialState } from 'rtk/slices/appSlice';
+import { RootState, useAppSelector, useAppDispatch } from '../rtk';
+import { setAppError, setAppInitialState } from '../rtk/slices/appSlice';
 import AuthStack from './stacks/AuthStack';
+import HomeStack from './stacks/HomeStack';
 
 const AppNavigator: React.FC = () => {
 
@@ -33,6 +34,7 @@ const AppNavigator: React.FC = () => {
 
 
   return (
+    //<HomeStack />
     <AuthStack />
   );
 };

@@ -1,16 +1,18 @@
-import { ScrollView, StyleSheet } from 'react-native';
-import React from 'react';
+import { Image, ScrollView, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Container } from 'components/atoms';
+import { Checkbox, Container } from 'components/atoms';
 import { TextContainer, Button } from 'components/molecules';
+import { ICONN_DOCUMENT_EDIT } from 'assets/images';
 
 interface Props {}
 
 const TermsAndCondScreen: React.FC<Props> = ({}) => {
-  const insets = useSafeAreaInsets();
-  return (
+    const insets = useSafeAreaInsets();
+    const [acceptT, setAcceptT] = useState(false);
+    return (
     <ScrollView
       bounces={false}
       style={{ flex: 1, flexDirection: 'column' }}
@@ -23,11 +25,7 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
     >
       <Container>
         <Container flex style={{ marginTop: 32, marginLeft: 16 }}>
-          <Icon
-            name="file-document-edit-outline"
-            size={48}
-            color={theme.brandColor.iconn_accent_secondary}
-          />
+        <Image source={ICONN_DOCUMENT_EDIT}  style={{height: 48, width:48}}/>
         </Container>
         <TextContainer
           text="Términos y Condiciones"
@@ -93,22 +91,20 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
         }}
       >
         <Container
-          width={24}
-          height={24}
           style={{
             marginLeft: 88,
             marginVertical: 24,
-            backgroundColor: theme.brandColor.iconn_white
           }}
         >
-          <Icon name="checkbox-blank-outline" size={24} color="#dadadb" />
+           {
+                    acceptT ? <Checkbox checked onPress={() => setAcceptT(!acceptT)}>
+                    Acepto todo lo anterior 
+                   </Checkbox> : <Checkbox onPress={() => setAcceptT(!acceptT)}>
+                    Acepto todo lo anterior 
+                    </Checkbox> 
+                }
+
         </Container>
-        <TextContainer
-          text="Acepto todo lo anterior"
-          typography="placeholder"
-          marginTop={27}
-          marginLeft={8}
-        />
       </Container>
       <Container
         row
@@ -125,21 +121,24 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
           {' '}
           {}
         </Button>
-        <Button
-          disabled
-          round
-          onPress={() => {}}
-          rightIcon={
-            <Icon
-              name="arrow-right"
-              size={24}
-              color={theme.brandColor.iconn_white}
-            />
-          }
-          textStyle={styles.textIconButton}
-        >
-          Siguiente
-        </Button>
+        {
+                acceptT ?  <Button
+                round
+                onPress={()=>{}}
+                rightIcon={<Icon name='arrow-right' size={24} color={theme.brandColor.iconn_white}/>}
+                textStyle={styles.textIconButton}>
+                    Siguiente
+                </Button> :
+                <Button
+                disabled
+                round
+                onPress={()=>{}}
+                rightIcon={<Icon name='arrow-right' size={24} color={theme.brandColor.iconn_white}/>}
+                textStyle={styles.textIconButton}>
+                    Siguiente
+                </Button>
+            }
+
       </Container>
     </ScrollView>
   );
