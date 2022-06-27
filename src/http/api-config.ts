@@ -1,7 +1,20 @@
 import { AxiosRequestConfig } from 'axios';
 
 // TODO: comnplete the rest of configuration, bearer token, auth headers, environment with react-native-config...
-const API_URL = 'https://3043-45-162-72-91.sa.ngrok.io/api';
+const API_URL_USERS = 'https://api-users.apps-backend.iconn.com.mx';
+const API_URL_OTPS = 'https://api-otps.apps-backend.iconn.com.mx';
+const API_AUTHORIZATION = 'PhMMVFxFPNwk6sloACc5';
+
+const getApiUrl = (type: string) => {
+  switch (type) {
+    case 'users':
+      return API_URL_USERS
+    case 'otps':
+      return API_URL_OTPS  
+    default:
+      break;
+  }
+}
 
 /**
  * ICONN API
@@ -9,12 +22,13 @@ const API_URL = 'https://3043-45-162-72-91.sa.ngrok.io/api';
  * |  1  | For every API ICONN context (i.e: onboarding, billing etc.)
  * |,,,,,|
  */
-export const ApiConfig = (): AxiosRequestConfig => {  
+export const ApiConfig = (type: string): AxiosRequestConfig => {  
   return {
-    baseURL: API_URL,
+    baseURL: getApiUrl(type),
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': API_AUTHORIZATION
     }
   };
 };

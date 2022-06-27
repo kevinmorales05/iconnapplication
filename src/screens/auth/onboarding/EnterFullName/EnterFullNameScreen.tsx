@@ -14,7 +14,7 @@ interface Props {
   goBack: () => void;
 }
 
-const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
+const EnterFullNameScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   const insets = useSafeAreaInsets();
 
   const {
@@ -129,4 +129,4 @@ const EnterEmailScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   );
 };
 
-export default EnterEmailScreen;
+export default EnterFullNameScreen;

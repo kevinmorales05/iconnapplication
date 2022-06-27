@@ -44,7 +44,9 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
       return theme.brandColor.iconn_success;
     } else if (parseInt(errors.password?.message) === level){
       return theme.brandColor.iconn_error;
-    } else {
+    } else if (errors.password?.message === undefined) {      
+      return theme.brandColor.iconn_success;
+    } else {      
       return theme.brandColor.iconn_med_grey;
     }
   }
@@ -54,6 +56,8 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
       return 'check-circle';
     } else if (parseInt(errors.password?.message) === level){
       return 'times-circle';
+    } else if (errors.password?.message === undefined) {
+      return 'check-circle';
     } else {
       return 'circle';
     }

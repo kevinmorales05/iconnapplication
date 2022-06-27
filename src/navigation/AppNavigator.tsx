@@ -1,3 +1,4 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAlert, useLoading } from 'context';
 import React, { useEffect } from 'react';
 import { RootState, useAppSelector, useAppDispatch } from '../rtk';
@@ -5,6 +6,7 @@ import { setAppError, setAppInitialState } from '../rtk/slices/appSlice';
 import AuthStack from './stacks/AuthStack';
 import HomeStack from './stacks/HomeStack';
 
+const Stack = createNativeStackNavigator<any>();
 const AppNavigator: React.FC = () => {
 
   const { error } = useAppSelector((state: RootState) => state.app);
@@ -34,8 +36,13 @@ const AppNavigator: React.FC = () => {
 
 
   return (
-    //<HomeStack />
-    <AuthStack />
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName="HomeStack"
+    >
+      <Stack.Screen name="AuthStack" component={AuthStack} />
+      <Stack.Screen name="HomeStack" component={HomeStack} />
+    </Stack.Navigator>    
   );
 };
 

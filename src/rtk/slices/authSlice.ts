@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { preSignUpThunk, validateOtpThunk } from 'rtk/thunks/auth.thunks';
+import { preSignUpThunk, registerThunk, validateOtpThunk } from 'rtk/thunks/auth.thunks';
 import { AuthDataInterface } from 'rtk/types';
 
 const initialState: AuthDataInterface = {
@@ -7,8 +7,8 @@ const initialState: AuthDataInterface = {
   name: '',
   lastName: '',
   secondLastName: '',
-  password: '',
-  secret: '',
+  pass: '',
+  secretKey: '',
   termsAndConditions: false,
   isLogged: false
 };
@@ -26,11 +26,15 @@ const authSlice = createSlice({
     setAuthEmail(state, action: PayloadAction<AuthDataInterface>) {
       state.user.email = action.payload.email;
     },
-    setSecret(state, action: PayloadAction<AuthDataInterface>) {
-      state.user.secret = action.payload.secret;
+    setSecretKey(state, action: PayloadAction<AuthDataInterface>) {
+      state.user.secretKey = action.payload.secretKey;
     },
     setPassword(state, action: PayloadAction<AuthDataInterface>){
-      state.user.password = action.payload.password;
+      state.user.pass = action.payload.pass;
+    },
+    setFullName(state, action: PayloadAction<AuthDataInterface>){
+      state.user.name = action.payload.name;
+      state.user.lastName = action.payload.lastName;
     }
   },
   extraReducers: builder => {
@@ -58,8 +62,20 @@ const authSlice = createSlice({
       console.log('validateOtpThunk rejected...');
       state.loading = false;
     })
+    builder.addCase(registerThunk.pending, state => {
+      console.log('registerThunk pending...');
+      state.loading = true;
+    })
+    builder.addCase(registerThunk.fulfilled, state => {      
+      console.log('registerThunk fullfilled...');
+      state.loading = false;
+    })
+    builder.addCase(registerThunk.rejected, state => {
+      console.log('registerThunk rejected...');
+      state.loading = false;
+    })
   }
 });
 
-export const { setAuthInitialState, setAuthEmail, setSecret, setPassword } = authSlice.actions;
+export const { setAuthInitialState, setAuthEmail, setSecretKey, setPassword, setFullName } = authSlice.actions;
 export default authSlice.reducer;

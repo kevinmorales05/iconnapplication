@@ -1,3 +1,3 @@
 export type HomeStackParams = {
-    Home: undefined;
+  HomeStack: undefined;
 };

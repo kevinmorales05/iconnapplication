@@ -36,15 +36,25 @@ const EnterEmailController: React.FC = () => {
     loader.show();
     try {
       const { payload } = await dispatch(preSignUpThunk(email));
-      if (payload.status === 'ok'){
+      if (payload.status === 'ok'){ // TODO: here we should valiodate status && code === 1
         dispatch(setAuthEmail({email}))
         navigate('EnterOtp');
       } 
     } catch (error) {
       console.error('Unknow Error', error);
-      // TODO: REMOVE the next line (DOESNT NEED HERE)
-      dispatch(setAuthEmail({email}))
-      navigate('EnterOtp');
+      // TODO: integrate the treatment of possible future errors
+      // TODO: Backend should change the response
+      // Instead:      
+      // {
+      //   "status": "ok",
+      //   "msg": "Otp created successfully!"
+      // }      
+      // should be:
+      // {
+      //   "code": 1,
+      //   "status": "ok",
+      //   "msg": "Otp created successfully!"
+      // }
     }
   };
 

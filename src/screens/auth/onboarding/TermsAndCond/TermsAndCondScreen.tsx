@@ -7,12 +7,16 @@ import { Checkbox, Container } from 'components/atoms';
 import { TextContainer, Button } from 'components/molecules';
 import { ICONN_DOCUMENT_EDIT } from 'assets/images';
 
-interface Props {}
+interface Props {
+  onSubmit: () => void;
+  goBack: () => void;
+}
 
-const TermsAndCondScreen: React.FC<Props> = ({}) => {
-    const insets = useSafeAreaInsets();
-    const [acceptT, setAcceptT] = useState(false);
-    return (
+const TermsAndCondScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
+  const insets = useSafeAreaInsets();
+  const [value, setCheckBoxValue] = useState(false);
+
+  return (
     <ScrollView
       bounces={false}
       style={{ flex: 1, flexDirection: 'column' }}
@@ -20,7 +24,8 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
         justifyContent: 'space-between',
         flexGrow: 1,
         paddingBottom: insets.bottom,
-        paddingTop: insets.top
+        paddingTop: insets.top,
+        width: '100%'
       }}
     >
       <Container>
@@ -83,28 +88,8 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
           <TextContainer text="Soy mayor de 18 años" marginLeft={16} />
         </Container>
       </Container>
-      <Container
-        row
-        style={{
-          backgroundColor: theme.brandColor.iconn_warm_grey,
-          marginTop: 190
-        }}
-      >
-        <Container
-          style={{
-            marginLeft: 88,
-            marginVertical: 24,
-          }}
-        >
-           {
-                    acceptT ? <Checkbox checked onPress={() => setAcceptT(!acceptT)}>
-                    Acepto todo lo anterior 
-                   </Checkbox> : <Checkbox onPress={() => setAcceptT(!acceptT)}>
-                    Acepto todo lo anterior 
-                    </Checkbox> 
-                }
-
-        </Container>
+      <Container crossCenter center row style={{ backgroundColor: theme.brandColor.iconn_warm_grey }} height={71}>
+        <Checkbox checked={value} onPress={() => setCheckBoxValue(!value)}>Acepto todo lo anterior</Checkbox>
       </Container>
       <Container
         row
@@ -113,7 +98,7 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
         <Button
           icon={<Icon name="arrow-left" size={24} />}
           leftIconStyle={styles.iconIconButton}
-          onPress={() => {}}
+          onPress={goBack}
           color={'iconn_light_grey'}
           round={true}
           textStyle={styles.iconButton}
@@ -121,24 +106,21 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
           {' '}
           {}
         </Button>
-        {
-                acceptT ?  <Button
-                round
-                onPress={()=>{}}
-                rightIcon={<Icon name='arrow-right' size={24} color={theme.brandColor.iconn_white}/>}
-                textStyle={styles.textIconButton}>
-                    Siguiente
-                </Button> :
-                <Button
-                disabled
-                round
-                onPress={()=>{}}
-                rightIcon={<Icon name='arrow-right' size={24} color={theme.brandColor.iconn_white}/>}
-                textStyle={styles.textIconButton}>
-                    Siguiente
-                </Button>
-            }
-
+        <Button
+          disabled={!value}
+          round
+          onPress={onSubmit}
+          rightIcon={
+            <Icon
+              name="arrow-right"
+              size={24}
+              color={theme.brandColor.iconn_white}
+            />
+          }
+          textStyle={styles.textIconButton}
+        >
+          Siguiente
+        </Button>
       </Container>
     </ScrollView>
   );

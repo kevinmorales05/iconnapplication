@@ -3,8 +3,8 @@ export interface AuthDataInterface {
   name?: string;
   lastName?: string;
   secondLastName?: string;
-  password?: string;
-  secret?: string;
+  pass?: string;
+  secretKey?: string;
   termsAndConditions?: boolean;
   isLogged?: boolean;
 }
