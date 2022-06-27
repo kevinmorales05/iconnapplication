@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from 'types';
+import { AuthStackParams } from 'navigation/types';
 import EnterEmailScreen from './EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { AboutEmail } from 'components/organisms/AboutEmail';
-import { useAlert, useLoading } from 'context';
+import { useLoading } from 'context';
 import { preSignUpThunk } from 'rtk/thunks/auth.thunks';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { setAuthEmail } from 'rtk/slices/authSlice';
@@ -13,7 +13,6 @@ import { setAuthEmail } from 'rtk/slices/authSlice';
 const EnterEmailController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const [aboutEmailVisible, setAboutEmailVisible] = useState<boolean>(false);
-  const alert = useAlert();
   const loader = useLoading();
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state: RootState) => state.auth);
@@ -36,7 +35,7 @@ const EnterEmailController: React.FC = () => {
     loader.show();
     try {
       const { payload } = await dispatch(preSignUpThunk(email));
-      if (payload.status === 'ok'){ // TODO: here we should valiodate status && code === 1
+      if (payload.status === 'ok'){ // TODO: here we should validate status && code === 1, when API is ready :/
         dispatch(setAuthEmail({email}))
         navigate('EnterOtp');
       } 

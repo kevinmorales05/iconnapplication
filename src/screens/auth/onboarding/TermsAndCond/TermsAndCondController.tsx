@@ -3,7 +3,7 @@ import TermsAndCondScreen from './TermsAndCondScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from 'types';
+import { HomeStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { registerThunk } from 'rtk/thunks/auth.thunks';

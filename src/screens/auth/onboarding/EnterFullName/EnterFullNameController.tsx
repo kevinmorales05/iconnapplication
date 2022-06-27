@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from 'types';
+import { AuthStackParams } from 'navigation/types';
 import EnterFullNameScreen from './EnterFullNameScreen';
 import { StyleSheet } from 'react-native';
 import { SafeArea } from 'components/atoms/SafeArea';

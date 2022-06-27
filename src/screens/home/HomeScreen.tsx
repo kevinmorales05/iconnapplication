@@ -47,7 +47,7 @@ const HomeScreen: React.FC<Props> = ({
           fontSize="h4"
           fontBold
           style={{ marginTop: 8 }}
-          icon={<SimpleLineIcons name="email" size={24} color="white" />}
+          icon={<SimpleLineIcons name="logout" size={24} color="white" />}
         >
           Salir
         </Button>        

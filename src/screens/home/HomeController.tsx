@@ -10,7 +10,7 @@ import { RootState, useAppSelector } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from 'types';
+import { AuthStackParams } from 'navigation/types';
 
 
 const CONTAINER_HEIGHT = (Dimensions.get('window').height)/6-20;
