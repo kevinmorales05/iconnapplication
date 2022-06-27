@@ -1,15 +1,20 @@
 import { ScrollView, StyleSheet } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Container } from 'components/atoms';
+import { Checkbox, Container } from 'components/atoms';
 import { TextContainer, Button } from 'components/molecules';
 
-interface Props {}
+interface Props {
+  onSubmit: () => void;
+  goBack: () => void;
+}
 
-const TermsAndCondScreen: React.FC<Props> = ({}) => {
+const TermsAndCondScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   const insets = useSafeAreaInsets();
+  const [value, setCheckBoxValue] = useState(false);
+
   return (
     <ScrollView
       bounces={false}
@@ -18,7 +23,8 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
         justifyContent: 'space-between',
         flexGrow: 1,
         paddingBottom: insets.bottom,
-        paddingTop: insets.top
+        paddingTop: insets.top,
+        width: '100%'
       }}
     >
       <Container>
@@ -85,30 +91,8 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
           <TextContainer text="Soy mayor de 18 años" marginLeft={16} />
         </Container>
       </Container>
-      <Container
-        row
-        style={{
-          backgroundColor: theme.brandColor.iconn_warm_grey,
-          marginTop: 190
-        }}
-      >
-        <Container
-          width={24}
-          height={24}
-          style={{
-            marginLeft: 88,
-            marginVertical: 24,
-            backgroundColor: theme.brandColor.iconn_white
-          }}
-        >
-          <Icon name="checkbox-blank-outline" size={24} color="#dadadb" />
-        </Container>
-        <TextContainer
-          text="Acepto todo lo anterior"
-          typography="placeholder"
-          marginTop={27}
-          marginLeft={8}
-        />
+      <Container crossCenter center row style={{ backgroundColor: theme.brandColor.iconn_warm_grey }} height={71}>
+        <Checkbox checked={value} onPress={() => setCheckBoxValue(!value)}>Acepto todo lo anterior</Checkbox>
       </Container>
       <Container
         row
@@ -117,7 +101,7 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
         <Button
           icon={<Icon name="arrow-left" size={24} />}
           leftIconStyle={styles.iconIconButton}
-          onPress={() => {}}
+          onPress={goBack}
           color={'iconn_light_grey'}
           round={true}
           textStyle={styles.iconButton}
@@ -126,9 +110,9 @@ const TermsAndCondScreen: React.FC<Props> = ({}) => {
           {}
         </Button>
         <Button
-          disabled
+          disabled={!value}
           round
-          onPress={() => {}}
+          onPress={onSubmit}
           rightIcon={
             <Icon
               name="arrow-right"

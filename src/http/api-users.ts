@@ -5,17 +5,17 @@ import { ApiConfig } from './api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
 import { setAppError } from 'rtk/slices/appSlice';
 
-export class IconnApi extends HttpClient {
+export class UsersApi extends HttpClient {
   
-  static classInstance?: IconnApi;
+  static classInstance?: UsersApi;
 
   private constructor() {
     console.log(
       'AxiosRequestConfig ===> ApiConfig ===> \n\n',
-      JSON.stringify(ApiConfig(), null, 3)
+      JSON.stringify(ApiConfig('users'), null, 3)
     );
 
-    super(ApiConfig());
+    super(ApiConfig('users'));
 
     // Interceptors (only for debug purpose), please do not remove the "return" line,
     // is  necessary to prevent a very confusing error and spend sometime to debug it.
@@ -62,7 +62,7 @@ export class IconnApi extends HttpClient {
 
   public static getInstance() {
     if (!this.classInstance) {
-      this.classInstance = new IconnApi();
+      this.classInstance = new UsersApi();
     }
 
     return this.classInstance;

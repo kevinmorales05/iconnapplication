@@ -31,11 +31,7 @@ const ModalCard: React.FC<Props> = ({
         <TouchableOpacity activeOpacity={1}>
           <Container
             style={[
-              modalCenterCardStyle,
-              {
-                padding,
-                backgroundColor: theme.brandColor.iconn_grey
-              }
+              modalCenterCardStyle              
             ]}
           >
             {children}
@@ -62,10 +58,11 @@ const ModalCard: React.FC<Props> = ({
 };
 const styles = StyleSheet.create({
   modalCenterCardStyle: {
-    backgroundColor: theme.brandColor.iconn_accent_secondary,
+    backgroundColor: theme.brandColor.iconn_warning,
     borderRadius: 10,
     minWidth: '85%',
-    width: '85%'
+    width: '85%',
+    padding: 16
   },
   closeContainer: {
     position: 'absolute',

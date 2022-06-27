@@ -9,6 +9,8 @@ import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { Code } from 'components/molecules/Code';
 import { ICONN_EMAIL } from 'assets/images';
+import { useAppDispatch } from 'rtk';
+import { preSignUpThunk } from 'rtk/thunks/auth.thunks';
 
 interface Props {
   onSubmit: (code: string) => void;
@@ -21,12 +23,13 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
 
   let currentIntervalId: any;
   const insets = useSafeAreaInsets();
-  const verificationCodeSecondsIntervalValue = 10;
+  const verificationCodeSecondsIntervalValue = 60;
   const [code, setCode] = useState('');
   const [disableAction, setDisableAction] = useState(true);
   const [verificationCodeIntervalId, setVerificationCodeIntervalId] = useState(0);
   const [timeleft, setTimeleft] = useState('00:00');
   const [isCodeError, setIsCodeError] = useState(false);
+  const dispatch = useAppDispatch();
   
   const codding = (c: string) => {
     setCode(c);
@@ -78,9 +81,30 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
     onSubmit(code);
   };
 
-  const onResendCode = (): any => {
+  const onResendCode = async () => {
     startInterval();
-    // again we call endpoint to request new otp
+    try {
+      const { payload } = await dispatch(preSignUpThunk(email));
+      if (payload.status === 'ok'){ // TODO: here we should validate status && code === 1
+        console.log('NUEVO OTP REENVIADO...');
+        
+      } 
+    } catch (error) {
+      console.error('Unknow Error', error);
+      // TODO: integrate the treatment of possible future errors
+      // TODO: Backend should change the response
+      // Instead:      
+      // {
+      //   "status": "ok",
+      //   "msg": "Otp created successfully!"
+      // }      
+      // should be:
+      // {
+      //   "code": 1,
+      //   "status": "ok",
+      //   "msg": "Otp created successfully!"
+      // }
+    }
   };
 
   return (
