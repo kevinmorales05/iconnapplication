@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from 'types';
+import { AuthStackParams } from 'navigation/types';
 import ContinueWithScreen from './ContinueWithScreen';
 import { ImageBackground, StyleSheet } from 'react-native';
 import { ICONN_BACKGROUND_IMAGE } from 'assets/images';

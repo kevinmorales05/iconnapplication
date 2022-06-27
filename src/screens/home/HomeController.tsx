@@ -1,12 +1,11 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { RootState, useAppSelector } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from 'types';
+import { AuthStackParams } from 'navigation/types';
 
 const HomeController: React.FC = () => {
 	const { navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
