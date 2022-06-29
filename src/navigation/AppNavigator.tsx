@@ -38,7 +38,7 @@ const AppNavigator: React.FC = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="HomeStack"
+      initialRouteName="AuthStack"
     >
       <Stack.Screen name="AuthStack" component={AuthStack} />
       <Stack.Screen name="HomeStack" component={HomeStack} />
