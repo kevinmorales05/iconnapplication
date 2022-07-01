@@ -58,7 +58,7 @@ const ContinueWithScreen: React.FC<Props> = ({
         <Button
           color="google"
           round
-          onPress={() => {}}
+          onPress={onPressGoogle}
           fontSize="h4"
           fontBold
           style={{ marginTop: 8 }}

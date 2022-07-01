@@ -9,6 +9,20 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
 import { RootState, useAppSelector } from 'rtk';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import auth from '@react-native-firebase/auth'
+
+GoogleSignin.configure({
+  webClientId: '579450743521-rj13qtpv8h8kbshokh2takg2aigklit7.apps.googleusercontent.com',
+  offlineAccess: true,
+});
+
+async function signInWithGoogle() {
+  const {idToken} = await GoogleSignin.signIn();
+  const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+  return auth().signInWithCredential(googleCredential);
+  
+}
 
 const ContinueWithController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -58,7 +72,7 @@ const ContinueWithController: React.FC = () => {
       >
         <ContinueWithScreen
           onPressFacebook={() => {}}
-          onPressGoogle={() => {}}
+          onPressGoogle={signInWithGoogle}
           onPressEmail={onContinueWithEmail}
           onPressOthers={onPressOtherMethods}
         />
