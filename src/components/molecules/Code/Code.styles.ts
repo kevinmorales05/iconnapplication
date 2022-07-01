@@ -53,7 +53,8 @@ export const getStyles = () => {
     },
     pin__code: {
       height: 17,
-      fontSize: Platform.select({ ios: 14, android: 20 }),
+      fontSize: Platform.select({ ios: 14, android: 14 }),
+      
     },
     pin__verification: {
       fontSize: 12,

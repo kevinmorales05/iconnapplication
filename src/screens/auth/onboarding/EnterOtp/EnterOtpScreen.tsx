@@ -121,7 +121,7 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
     >
       <Container>
         <TextContainer
-          typography="h2"
+          typography="h1"
           fontBold
           text={`Ingresa el código de 6 \ndigitos quen enviamos a:`}
           marginTop={34}
@@ -142,6 +142,7 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
           ></TextContainer>
         </Container>
 
+        <Container>
         <Code
           label=""
           error={isCodeError}
@@ -154,6 +155,7 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
           onChangeText={c => codding(c)}
           onPressAction={() => onResendCode()}
         />
+        </Container>
       </Container>
 
       <Container flex row crossAlignment="end" space="between">

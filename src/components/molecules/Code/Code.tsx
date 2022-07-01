@@ -243,11 +243,12 @@ const Code: FunctionComponent<Props> = ({
       )}
 
       {!!labelAction && (
-        <Container backgroundColor={theme.brandColor.iconn_warm_grey} style={{marginHorizontal:32, paddingHorizontal:16, paddingVertical: 24}}>
+        <Container backgroundColor={theme.brandColor.iconn_warm_grey} style={{marginHorizontal:34, paddingHorizontal:16, paddingVertical: 24}}>
           <CustomText
             textColor={theme.fontColor.dark}
-            text="Podrás selccionar un código nuevo en:"
+            text="Podrás seleccionar un código nuevo en:"
             typography="h5"
+            textAlign={'center'}
           />
           <CustomText
             textColor={theme.fontColor.dark}
