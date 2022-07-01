@@ -1,3 +1,5 @@
+import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+
 export interface AuthDataInterface {
   email?: string;
   name?: string;
@@ -8,3 +10,6 @@ export interface AuthDataInterface {
   termsAndConditions?: boolean;
   isLogged?: boolean;
 }
+
+export type SocialNetworkType = 'google' | 'apple' | 'facebook';
+export type Credentials = FirebaseAuthTypes.AuthCredential | null;

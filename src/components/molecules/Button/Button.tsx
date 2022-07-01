@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   iconStyle: {
-    paddingHorizontal: 5,
+    paddingHorizontal: 0,
   },
 });
 
