@@ -5,17 +5,13 @@ import { AuthStackParams } from 'navigation/types';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { AboutEmail } from 'components/organisms/AboutEmail';
 import { useLoading } from 'context';
-import { preSignUpThunk } from 'rtk/thunks/auth.thunks';
-import { RootState, useAppDispatch, useAppSelector } from 'rtk';
-import { setAuthEmail } from 'rtk/slices/authSlice';
+import { RootState, useAppSelector } from 'rtk';
 import LoginScreen from './LoginScreen';
 
-
-const EnterPasswordController: React.FC = () => {
+const LoginController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const [aboutEmailVisible, setAboutEmailVisible] = useState<boolean>(false);
   const loader = useLoading();
-  const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
@@ -32,17 +28,8 @@ const EnterPasswordController: React.FC = () => {
     setAboutEmailVisible(false);
   };
 
-  const onSubmit = async (email: string) => {
-    loader.show();
-    try {
-      const { payload } = await dispatch(preSignUpThunk(email));
-      if (payload.status === 'ok'){ 
-        dispatch(setAuthEmail({email}))
-        navigate('EnterPassword');
-      } 
-    } catch (error) {
-      console.error('Unknow Error', error);
-    }
+  const onSubmit = async (email: string) => {    
+    navigate('EnterPassword');    
   };
 
   return (
@@ -61,4 +48,4 @@ const EnterPasswordController: React.FC = () => {
   );
 };
 
-export default EnterPasswordController;
+export default LoginController;

@@ -11,7 +11,6 @@ import React, { useEffect, useState } from 'react';
 const EnterPasswordController: React.FC = () => {
   const { goBack } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const loader = useLoading();
-
   const { loading, user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
 

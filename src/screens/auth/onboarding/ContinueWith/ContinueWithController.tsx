@@ -8,10 +8,10 @@ import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
-import { Credentials, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth, { firebase } from '@react-native-firebase/auth';
-import { AppleButton, appleAuth } from '@invertase/react-native-apple-authentication';
+import { appleAuth } from '@invertase/react-native-apple-authentication';
 
 GoogleSignin.configure({
   webClientId: '579450743521-rj13qtpv8h8kbshokh2takg2aigklit7.apps.googleusercontent.com',
@@ -41,7 +41,8 @@ const ContinueWithController: React.FC = () => {
     console.log('onContinueAsGuest');
   };
   const onIhaveAccount = () => {
-    console.log('OnIhaveAccount');
+    setotherMethodsVisible(false);
+    navigate('Login')
   };
   const onPressOut = () => {
     setotherMethodsVisible(false);

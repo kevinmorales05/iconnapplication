@@ -82,13 +82,7 @@ const LoginScreen: React.FC<Props> = ({
           size="large"
           onPress={goBack}
           color="iconn_med_grey"
-          icon={
-            <AntDesign
-              name="arrowleft"
-              size={24}
-              color={theme.fontColor.dark}
-            />
-          }
+          icon={ <AntDesign name="arrowleft" size={24} color={theme.fontColor.dark} /> }
         />
 
         <Button
