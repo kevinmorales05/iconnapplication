@@ -53,8 +53,7 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen name="AuthStack" component={AuthStack} />       
       </Stack.Navigator>    
     );
-  } else {    
-    console.log('Usuario logueado: ', JSON.stringify(user, null, 3));    
+  } else {
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeStack">
         <Stack.Screen name="HomeStack" component={HomeStack} />
