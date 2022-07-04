@@ -74,6 +74,7 @@ const EnterEmailScreen: React.FC<Props> = ({
         sufixOutIcon
         ref={emailRef}
         onPressInfo={onPressInfo}
+        renderErrorIcon={false}
       />
       <Container flex row crossAlignment="end" space="between">
         <ActionButton
