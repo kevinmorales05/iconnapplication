@@ -1,9 +1,8 @@
-import { store } from 'rtk';
 import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
 import { ApiConfig } from './api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
-import { setAppError } from 'rtk/slices/appSlice';
+import { DeviceEventEmitter } from 'react-native'
 
 export class OtpsApi extends HttpClient {
   
@@ -81,9 +80,9 @@ export class OtpsApi extends HttpClient {
       let problem: GeneralApiProblem;
       problem = getGeneralApiProblem(err.response._response || err.response.status);      
       console.error('GLOBAL EXCEPCIÓN ===> ', problem);
-      if (problem) store.dispatch(setAppError({error: problem.kind.toString()}));
+      if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
     } else {
-      store.dispatch(setAppError({error: 'UNKNOWN ERROR'}));
+      DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');
     }
   }
 }

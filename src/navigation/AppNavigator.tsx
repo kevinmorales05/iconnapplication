@@ -1,21 +1,21 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useAlert, useLoading } from 'context';
 import React, { useEffect, useState } from 'react';
-import { RootState, useAppSelector, useAppDispatch } from '../rtk';
-import { setAppError, setAppInitialState } from '../rtk/slices/appSlice';
 import AuthStack from './stacks/AuthStack';
 import HomeStack from './stacks/HomeStack';
 import auth from '@react-native-firebase/auth'
+import { useAlert, useLoading } from 'context';
+import { DeviceEventEmitter } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { RootState, useAppSelector, useAppDispatch, setAppError, setAppInitialState } from 'rtk';
 
 const Stack = createNativeStackNavigator<any>();
 const AppNavigator: React.FC = () => {
-
-  const { error } = useAppSelector((state: RootState) => state.app);
+  
   const alert = useAlert();
-  const dispatch = useAppDispatch();
   const loader = useLoading();
-  const [initilizing, setInitilizing] = useState(true);
+  const dispatch = useAppDispatch();  
   const [user, setUser] = useState();
+  const [initilizing, setInitilizing] = useState(true);
+  const { error } = useAppSelector((state: RootState) => state.app);
 
   const onAuthStateChanged = (user: any) => {
     setUser(user);
@@ -23,7 +23,7 @@ const AppNavigator: React.FC = () => {
   }
 
   /**
-   * Show global http errors.
+   * Show global http errors and reset AppError.
    */
   useEffect(() => {
     if (error !== undefined) {
@@ -36,13 +36,16 @@ const AppNavigator: React.FC = () => {
   }, [error]);
 
   /**
-   * Reset the app state
-   * and subscribe to changes of firebase authentication.
+   * 1. Reset the app state and subscribe to changes of firebase authentication.
+   * 2. Listen global http exceptions.
    */
-  useEffect(() => {    
+  useEffect(() => {
+    DeviceEventEmitter.addListener('error', (data) => {
+      if (!error) dispatch(setAppError({error: data}));
+    });
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     dispatch(setAppInitialState({}));
-    return subscriber;    
+    return subscriber;
   }, [])
   
   if (initilizing) return null;
@@ -59,8 +62,7 @@ const AppNavigator: React.FC = () => {
         <Stack.Screen name="HomeStack" component={HomeStack} />
       </Stack.Navigator>    
     );  
-  }
-  
+  }  
 };
 
 export default AppNavigator;

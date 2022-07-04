@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { ScrollView, TextInput } from 'react-native';
 import { Container } from 'components/atoms/Container';
-import { Button } from 'components/molecules/Button';
+import { Button } from 'components';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ActionButton, Input, TextContainer } from 'components';

@@ -1,9 +1,7 @@
 import { Image, ScrollView, TextInput } from 'react-native';
-import { Container } from 'components/atoms/Container';
-import { Button } from 'components/molecules/Button';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { ActionButton, Input, TextContainer, TouchableText } from 'components';
+import { ActionButton, Input, TextContainer, TouchableText, Button, Container } from 'components';
 import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { ICONN_EMAIL } from 'assets/images';

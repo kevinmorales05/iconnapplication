@@ -1,11 +1,9 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { Container } from 'components/atoms/Container';
-import { Button } from 'components/molecules/Button';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { CustomText } from 'components';
+import { CustomText, Button, Container } from 'components';
 
 interface Props {
   onPressLogOut: () => void;

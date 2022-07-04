@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { logoutThunk, preSignUpThunk, registerThunk, registerUserWithEmailAndPasswordThunk, validateOtpThunk } from 'rtk/thunks/auth.thunks';
-import { AuthDataInterface } from 'rtk/types';
+import { logoutThunk, preSignUpThunk, registerThunk, registerUserWithEmailAndPasswordThunk, validateOtpThunk } from '../thunks/auth.thunks';
+import { AuthDataInterface } from '../types';
 
 const initialState: AuthDataInterface = {
   email: '',

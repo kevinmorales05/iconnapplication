@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { AuthDataInterface } from 'rtk/types';
+import { AuthDataInterface } from '../types';
 import { authServices } from 'services'
 import auth from '@react-native-firebase/auth'
 

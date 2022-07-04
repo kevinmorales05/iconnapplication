@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Image, ScrollView } from 'react-native';
-import { Container } from 'components/atoms/Container';
-import { Button } from 'components/molecules/Button';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { ActionButton, TextContainer } from 'components';
+import { ActionButton, TextContainer, Button, Container, Code } from 'components';
 import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { Code } from 'components/molecules/Code';
 import { ICONN_EMAIL } from 'assets/images';
-import { useAppDispatch } from 'rtk';
-import { preSignUpThunk } from 'rtk/thunks/auth.thunks';
+import { useAppDispatch, preSignUpThunk } from 'rtk';
 
 interface Props {
   onSubmit: (code: string) => void;

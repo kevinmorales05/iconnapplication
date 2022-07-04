@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { TouchableText } from 'components/molecules';
+import { TouchableText } from '../TouchableText';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import { Container, CustomText } from 'components/atoms';
 import theme from 'components/theme/theme';

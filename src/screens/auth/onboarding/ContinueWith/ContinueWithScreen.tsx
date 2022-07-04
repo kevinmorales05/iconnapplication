@@ -1,10 +1,8 @@
 import React from 'react';
 import { Image, Platform, ScrollView } from 'react-native';
-import { Container } from 'components/atoms/Container';
 import { ICONN_BINOMIO_LOGOS_LIGHT } from 'assets/images';
-import { Button } from 'components/molecules/Button';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TouchableText } from 'components/molecules/TouchableText';
+import { TouchableText, Button, Container } from 'components';
 import theme from 'components/theme/theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/Fontisto';
