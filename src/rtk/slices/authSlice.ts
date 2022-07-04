@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { preSignUpThunk, registerThunk, validateOtpThunk } from 'rtk/thunks/auth.thunks';
+import { logoutThunk, preSignUpThunk, registerThunk, registerUserWithEmailAndPasswordThunk, validateOtpThunk } from 'rtk/thunks/auth.thunks';
 import { AuthDataInterface } from 'rtk/types';
 
 const initialState: AuthDataInterface = {
@@ -72,6 +72,30 @@ const authSlice = createSlice({
     })
     builder.addCase(registerThunk.rejected, state => {
       console.log('registerThunk rejected...');
+      state.loading = false;
+    })
+    builder.addCase(logoutThunk.pending, state => {
+      console.log('logoutThunk pending...');
+      state.loading = true;
+    })
+    builder.addCase(logoutThunk.fulfilled, state => {      
+      console.log('logoutThunk fullfilled...');
+      state.loading = false;
+    })
+    builder.addCase(logoutThunk.rejected, state => {
+      console.log('logoutThunk rejected...');
+      state.loading = false;
+    })
+    builder.addCase(registerUserWithEmailAndPasswordThunk.pending, state => {
+      console.log('registerUserWithEmailAndPasswordThunk pending...');
+      state.loading = true;
+    })
+    builder.addCase(registerUserWithEmailAndPasswordThunk.fulfilled, state => {      
+      console.log('registerUserWithEmailAndPasswordThunk fullfilled...');
+      state.loading = false;
+    })
+    builder.addCase(registerUserWithEmailAndPasswordThunk.rejected, state => {
+      console.log('registerUserWithEmailAndPasswordThunk rejected...');
       state.loading = false;
     })
   }

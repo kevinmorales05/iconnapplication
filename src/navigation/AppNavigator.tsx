@@ -1,10 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAlert, useLoading } from 'context';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RootState, useAppSelector, useAppDispatch } from '../rtk';
 import { setAppError, setAppInitialState } from '../rtk/slices/appSlice';
 import AuthStack from './stacks/AuthStack';
 import HomeStack from './stacks/HomeStack';
+import auth from '@react-native-firebase/auth'
 
 const Stack = createNativeStackNavigator<any>();
 const AppNavigator: React.FC = () => {
@@ -13,6 +14,13 @@ const AppNavigator: React.FC = () => {
   const alert = useAlert();
   const dispatch = useAppDispatch();
   const loader = useLoading();
+  const [initilizing, setInitilizing] = useState(true);
+  const [user, setUser] = useState();
+
+  const onAuthStateChanged = (user: any) => {
+    setUser(user);
+    if (initilizing) setInitilizing(false);
+  }
 
   /**
    * Show global http errors.
@@ -29,21 +37,31 @@ const AppNavigator: React.FC = () => {
 
   /**
    * Reset the app state
+   * and subscribe to changes of firebase authentication.
    */
-  useEffect(() => {
+  useEffect(() => {    
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     dispatch(setAppInitialState({}));
-  }, []);
+    return subscriber;    
+  }, [])
+  
+  if (initilizing) return null;
 
-
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName="AuthStack"
-    >
-      <Stack.Screen name="AuthStack" component={AuthStack} />
-      <Stack.Screen name="HomeStack" component={HomeStack} />
-    </Stack.Navigator>    
-  );
+  if (!user) {    
+    return (
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthStack">
+        <Stack.Screen name="AuthStack" component={AuthStack} />       
+      </Stack.Navigator>    
+    );
+  } else {    
+    console.log('Usuario logueado: ', JSON.stringify(user, null, 3));    
+    return (
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeStack">
+        <Stack.Screen name="HomeStack" component={HomeStack} />
+      </Stack.Navigator>    
+    );  
+  }
+  
 };
 
 export default AppNavigator;

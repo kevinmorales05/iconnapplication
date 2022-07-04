@@ -1,20 +1,13 @@
-import { ICONN_COFFEE } from 'assets/images';
 import { Container, CustomModal, SafeArea, TextContainer } from 'components';
-import React, { Component, useState } from 'react'
-import { Dimensions, Image, ImageSourcePropType, Pressable, StyleSheet, View } from 'react-native';
+import React, { useState } from 'react'
+import { Dimensions, ImageSourcePropType, Pressable, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import theme from 'components/theme/theme';
-import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
-import { RootState, useAppSelector } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch } from 'rtk';
 import HomeScreen from './HomeScreen';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from 'navigation/types';
-
+import { logoutThunk } from 'rtk/thunks/auth.thunks';
 
 const CONTAINER_HEIGHT = (Dimensions.get('window').height)/6-20;
-const CONTAINER_HEIGHTMOD = (Dimensions.get('window').height)/5 + 10;
-
 interface Props {
   carouselItems?: ItemProps;
 }
@@ -28,13 +21,11 @@ interface State {
 }
 
 const HomeController: React.FC = () => {
-	const { navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [modVisibility, setModVisibility] = useState(true)
+  const dispatch = useAppDispatch();
 
-	const logOut = () => {
-		navigate('ContinueWith');
-	}
+	const logOut = async () => await dispatch(logoutThunk());
 
   return (
     <SafeArea
