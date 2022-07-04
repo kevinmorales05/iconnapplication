@@ -60,9 +60,9 @@
 		E710FF6628575E20002028F5 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		E710FF6728575E20002028F5 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome5_Solid.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Solid.ttf"; sourceTree = "<group>"; };
 		E710FF6828575E20002028F5 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
-		E7A9CAEC286E14EF004DB54B /* iconn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = iconn.entitlements; path = iconn/iconn.entitlements; sourceTree = "<group>"; };
 		E7DB919B286D676A00BE5509 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FB539CCD2872E0E5007D7D12 /* iconn.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = iconn.entitlements; path = iconn/iconn.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,7 +105,7 @@
 		13B07FAE1A68108700A75B9A /* iconn */ = {
 			isa = PBXGroup;
 			children = (
-				E7A9CAEC286E14EF004DB54B /* iconn.entitlements */,
+				FB539CCD2872E0E5007D7D12 /* iconn.entitlements */,
 				E7DB919B286D676A00BE5509 /* GoogleService-Info.plist */,
 				E710FF5828575D17002028F5 /* Fonts */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,

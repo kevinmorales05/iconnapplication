@@ -16,10 +16,12 @@ interface Props {
   onPressEmail: () => void;
   onPressOthers: () => void; 
   onPressGoogle: () => void; 
+  onPressFacebook: () =>void;
 }
 
 const ContinueWithScreen: React.FC<Props> = ({
   onPressSocialButton,
+  onPressFacebook,
   onPressEmail,
   onPressOthers,
   onPressGoogle
@@ -63,7 +65,7 @@ const ContinueWithScreen: React.FC<Props> = ({
         <Button
           color="facebook"
           round
-          onPress={() => onPressSocialButton('facebook')}
+          onPress={onPressFacebook}
           fontSize="h4"
           fontBold
           style={{ marginTop: 8 }}

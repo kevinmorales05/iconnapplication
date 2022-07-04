@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import ContinueWithScreen from './ContinueWithScreen';
-import { ImageBackground, StyleSheet } from 'react-native';
+import { AccessibilityInfo, ImageBackground, StyleSheet } from 'react-native';
 import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
@@ -12,15 +12,38 @@ import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth, { firebase } from '@react-native-firebase/auth';
 import { appleAuth } from '@invertase/react-native-apple-authentication';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 
 GoogleSignin.configure({
   webClientId: '579450743521-rj13qtpv8h8kbshokh2takg2aigklit7.apps.googleusercontent.com',
   offlineAccess: true,
 });
 
+async function signInWithFB() {
+  const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+  
+  if (result.isCancelled) {
+    throw 'User cancelled the login process';
+  }
+  const data = await AccessToken.getCurrentAccessToken();
+  
+  if (!data) {
+    throw 'Something went wrong obtaining access token';
+  }
+  const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+  const userCredential = await firebase.auth().signInWithCredential(facebookCredential);
+  console.warn(`Firebase authenticated via FB, UID: ${userCredential.user.uid}`);
+  return auth().signInWithCredential(facebookCredential);
+  
+}
+
 async function signInWithGoogle() {
   const {idToken} = await GoogleSignin.signIn();
   const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+  console.log("Credencial de Google", googleCredential);
+  console.log("Id Token", idToken);
+  const userCredential = await firebase.auth().signInWithCredential(googleCredential);
+  console.warn(`Firebase authenticated via Google, UID: ${userCredential.user.uid}`);
   return auth().signInWithCredential(googleCredential);  
 }
 
@@ -130,6 +153,7 @@ const ContinueWithController: React.FC = () => {
         barStyle="light"
       >
         <ContinueWithScreen
+          onPressFacebook={signInWithFB}
           onPressGoogle={signInWithGoogle}
           // onPressSocialButton={(type) => { dispatch(socialAuth(type, authCallback));}}
           onPressSocialButton={onAppleButtonPress}
