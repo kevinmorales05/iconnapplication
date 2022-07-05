@@ -49,7 +49,7 @@ const renderIcon = (props: CheckBoxProps) => {
         <MaterialIcons
           name="check-box-outline-blank"
           size={theme.size[size] * 1.5}
-          color={theme.brandColor[color]}
+          color={theme.brandColor[color]}     
         />
       )
     );

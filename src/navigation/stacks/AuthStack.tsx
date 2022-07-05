@@ -14,7 +14,7 @@ import EnterPasswordController from 'screens/auth/login/EnterPassword/EnterPassw
 const Stack = createNativeStackNavigator<AuthStackParams>();
 
 const AuthStack: React.FC = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ContinueWith">
+  <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="TermsAndCond">
     <Stack.Screen name="SignUp" component={SignUpController} />
     <Stack.Screen name="Login" component={LoginController} />
     <Stack.Screen name="EnterPassword" component={EnterPasswordController} />

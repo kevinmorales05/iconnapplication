@@ -17,12 +17,23 @@ interface Props {
 const TermsAndCondScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   const insets = useSafeAreaInsets();
   const [value, setCheckBoxValue] = useState(false);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(setTermsAndCond({termsAndConditions: value}));
     return;
   }, [value])
+
+  const [checkedColor, setCheckedColor] = useState('iconn_med_grey');
+
+const changeColor = () => {
+    setCheckBoxValue(!value);
+    setCheckedColor('iconn_green_original');
+    if(checkedColor === "iconn_green_original"){
+      setCheckedColor('iconn_med_grey');
+    }
+}
 
   return (
     <ScrollView
@@ -86,9 +97,10 @@ const TermsAndCondScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
           <TextContainer text="Soy mayor de 18 años" marginLeft={16} />
         </Container>
       </Container>
+
       
-      <Container crossCenter center row style={{ backgroundColor: theme.brandColor.iconn_warm_grey, marginTop: 320 }} height={71}>
-        <Checkbox size='xxlarge' checked={value} onPress={() => setCheckBoxValue(!value)}>Acepto todo lo anterior</Checkbox>
+      <Container crossCenter center row style={{ backgroundColor: theme.brandColor.iconn_warm_grey, marginTop: 280 }} height={71}>
+        <Checkbox size='xxlarge' color={checkedColor} checked={value} onPress={changeColor}>Acepto todo lo anterior</Checkbox>
       </Container>
       
       <Container flex row crossAlignment="end" space="between">
