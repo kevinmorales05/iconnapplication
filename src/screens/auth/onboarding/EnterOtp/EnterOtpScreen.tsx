@@ -26,6 +26,7 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
   const [timeleft, setTimeleft] = useState('00:00');
   const [isCodeError, setIsCodeError] = useState(false);
   const dispatch = useAppDispatch();
+  const [codeReset, setCodeReset] = useState("")
   
   const codding = (c: string) => {
     setCode(c);
@@ -49,6 +50,7 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
   const startInterval = () => {
     setIsCodeError(false);
     setDisableAction(true);
+    setCode('')
     let enabledTimeInSeconds = verificationCodeSecondsIntervalValue;
 
     currentIntervalId = setInterval(() => {
@@ -77,8 +79,14 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
     onSubmit(code);
   };
 
+const cleanCode = () => {
+  setCodeReset(" ")
+  if (codeReset === " ") { setCodeReset("  ") }
+}
+
   const onResendCode = async () => {
     startInterval();
+    cleanCode();
     try {
       const { payload } = await dispatch(preSignUpThunk(email!));
       if (payload.responseCode === 200 && payload.data.isValid) {
@@ -136,6 +144,7 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
           labelAction={timeleft}
           onChangeText={c => codding(c)}
           onPressAction={() => onResendCode()}
+          newCode={codeReset}
         />
         </Container>
       </Container>
