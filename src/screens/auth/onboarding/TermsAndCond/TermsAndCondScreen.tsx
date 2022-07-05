@@ -1,11 +1,12 @@
 import { Image, ScrollView, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Checkbox, Container } from 'components/atoms';
 import { TextContainer, Button } from 'components/molecules';
 import { ICONN_DOCUMENT_EDIT } from 'assets/images';
+import { RootState, setTermsAndCond, useAppDispatch, useAppSelector } from 'rtk';
 
 interface Props {
   onSubmit: () => void;
@@ -15,7 +16,13 @@ interface Props {
 const TermsAndCondScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   const insets = useSafeAreaInsets();
   const [value, setCheckBoxValue] = useState(false);
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    dispatch(setTermsAndCond({termsAndConditions: value}));
+    return;
+  }, [value])
+  
   return (
     <ScrollView
       bounces={false}

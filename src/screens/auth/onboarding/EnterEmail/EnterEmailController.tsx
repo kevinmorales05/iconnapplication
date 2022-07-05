@@ -6,9 +6,9 @@ import EnterEmailScreen from './EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { AboutEmail } from 'components/organisms/AboutEmail';
 import { useLoading } from 'context';
-import { preSignUpThunk } from 'rtk/thunks/auth.thunks';
+import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
-import { setAuthEmail } from 'rtk/slices/authSlice';
+import { setAuthEmail, setSignMode } from 'rtk/slices/authSlice';
 
 const EnterEmailController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -31,14 +31,24 @@ const EnterEmailController: React.FC = () => {
     setAboutEmailVisible(false);
   };
 
+  // const determineProcess = (statusUser: any) => {
+
+  // }
+
   const onSubmit = async (email: string) => {
     loader.show();
     try {
-      const { payload } = await dispatch(preSignUpThunk(email));
-      if (payload.status === 'ok'){ // TODO: here we should validate status && code === 1, when API is ready :/
-        dispatch(setAuthEmail({email}))
-        navigate('EnterOtp');
-      } 
+      const { payload } = await dispatch(validateUserThunk(email));
+      if (payload.status === 200) {
+        if (!payload.isRegistered && payload.signMode === 0) {
+          const { payload } = await dispatch(preSignUpThunk(email));
+          if (payload.status === 'ok'){
+            dispatch(setAuthEmail({email}))
+            dispatch(setSignMode({sign_app_modes_id: 0}))
+            navigate('EnterOtp');
+          }        
+        } // else if (payload.signMode === ) // TODO: finish other signModes, 1,2,3,4
+      }      
     } catch (error) {
       console.error('Unknow Error', error);
       // TODO: integrate the treatment of possible future errors

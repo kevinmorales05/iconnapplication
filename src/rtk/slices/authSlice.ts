@@ -1,8 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { logoutThunk, preSignUpThunk, registerThunk, registerUserWithEmailAndPasswordThunk, validateOtpThunk } from '../thunks/auth.thunks';
+import { logoutThunk, preSignUpThunk, registerThunk,
+  signUpUserWithEmailAndPasswordThunk, registerWithFirebaseThunk, 
+  validateOtpThunk, validateUserThunk, signInWithEmailAndPasswordThunk } from '../thunks/auth.thunks';
 import { AuthDataInterface } from '../types';
 
 const initialState: AuthDataInterface = {
+  user_id: '',
   email: '',
   name: '',
   lastName: '',
@@ -10,7 +13,8 @@ const initialState: AuthDataInterface = {
   pass: '',
   secretKey: '',
   termsAndConditions: false,
-  isLogged: false
+  isLogged: false,
+  sign_app_modes_id: undefined
 };
 
 const authSlice = createSlice({
@@ -26,6 +30,9 @@ const authSlice = createSlice({
     setAuthEmail(state, action: PayloadAction<AuthDataInterface>) {
       state.user.email = action.payload.email;
     },
+    setSignMode(state, action: PayloadAction<AuthDataInterface>) {
+      state.user.sign_app_modes_id = action.payload.sign_app_modes_id;
+    },
     setSecretKey(state, action: PayloadAction<AuthDataInterface>) {
       state.user.secretKey = action.payload.secretKey;
     },
@@ -35,6 +42,12 @@ const authSlice = createSlice({
     setFullName(state, action: PayloadAction<AuthDataInterface>){
       state.user.name = action.payload.name;
       state.user.lastName = action.payload.lastName;
+    },
+    setTermsAndCond(state, action: PayloadAction<AuthDataInterface>){
+      state.user.termsAndConditions = action.payload.termsAndConditions;
+    },
+    setUserId(state, action: PayloadAction<AuthDataInterface>){
+      state.user.user_id = action.payload.user_id;
     }
   },
   extraReducers: builder => {
@@ -86,20 +99,57 @@ const authSlice = createSlice({
       console.log('logoutThunk rejected...');
       state.loading = false;
     })
-    builder.addCase(registerUserWithEmailAndPasswordThunk.pending, state => {
-      console.log('registerUserWithEmailAndPasswordThunk pending...');
+    builder.addCase(signUpUserWithEmailAndPasswordThunk.pending, state => {
+      console.log('signUpUserWithEmailAndPasswordThunk pending...');
       state.loading = true;
     })
-    builder.addCase(registerUserWithEmailAndPasswordThunk.fulfilled, state => {      
-      console.log('registerUserWithEmailAndPasswordThunk fullfilled...');
+    builder.addCase(signUpUserWithEmailAndPasswordThunk.fulfilled, state => {      
+      console.log('signUpUserWithEmailAndPasswordThunk fullfilled...');
       state.loading = false;
     })
-    builder.addCase(registerUserWithEmailAndPasswordThunk.rejected, state => {
-      console.log('registerUserWithEmailAndPasswordThunk rejected...');
+    builder.addCase(signUpUserWithEmailAndPasswordThunk.rejected, state => {
+      console.log('signUpUserWithEmailAndPasswordThunk rejected...');
+      state.loading = false;
+    })
+    builder.addCase(validateUserThunk.pending, state => {
+      console.log('validateUserThunk pending...');
+      state.loading = true;
+    })
+    builder.addCase(validateUserThunk.fulfilled, state => {      
+      console.log('validateUserThunk fullfilled...');
+      state.loading = false;
+    })
+    builder.addCase(validateUserThunk.rejected, state => {
+      console.log('validateUserThunk rejected...');
+      state.loading = false;
+    })
+    builder.addCase(registerWithFirebaseThunk.pending, state => {
+      console.log('registerWithFirebaseThunk pending...');
+      state.loading = true;
+    })
+    builder.addCase(registerWithFirebaseThunk.fulfilled, state => {
+      console.log('registerWithFirebaseThunk fullfilled...');
+      state.loading = false;
+    })
+    builder.addCase(registerWithFirebaseThunk.rejected, state => {
+      console.log('registerWithFirebaseThunk rejected...');
+      state.loading = false;
+    })
+    builder.addCase(signInWithEmailAndPasswordThunk.pending, state => {
+      console.log('signInWithEmailAndPasswordThunk pending...');
+      state.loading = true;
+    })
+    builder.addCase(signInWithEmailAndPasswordThunk.fulfilled, state => {
+      console.log('signInWithEmailAndPasswordThunk fullfilled...');
+      state.loading = false;
+    })
+    builder.addCase(signInWithEmailAndPasswordThunk.rejected, state => {
+      console.log('signInWithEmailAndPasswordThunk rejected...');
       state.loading = false;
     })
   }
 });
-
-export const { setAuthInitialState, setAuthEmail, setSecretKey, setPassword, setFullName } = authSlice.actions;
+// TODO: validate if it is possible to reduce extra reducers.
+export const { setAuthInitialState, setAuthEmail, setSignMode, setSecretKey, setPassword, 
+  setFullName, setTermsAndCond, setUserId } = authSlice.actions;
 export default authSlice.reducer;

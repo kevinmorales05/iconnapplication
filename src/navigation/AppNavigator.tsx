@@ -50,19 +50,24 @@ const AppNavigator: React.FC = () => {
   
   if (initilizing) return null;
 
-  if (!user) {    
+  if (!user || (user && !user.emailVerified)) {
+    console.log('sigue en stack de auth (email no verificado): ', user);
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthStack">
         <Stack.Screen name="AuthStack" component={AuthStack} />       
       </Stack.Navigator>    
     );
-  } else {
+  } else if (user && user.emailVerified) {
+    console.log('el user logueado es: ', user);
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeStack">
         <Stack.Screen name="HomeStack" component={HomeStack} />
       </Stack.Navigator>    
     );  
-  }  
+  } else {
+    // remove this else, isnt needed.
+    console.log('en el else: ', user);
+  }
 };
 
 export default AppNavigator;
