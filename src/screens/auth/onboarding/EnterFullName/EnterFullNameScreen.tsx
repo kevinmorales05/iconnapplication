@@ -57,7 +57,7 @@ const EnterFullNameScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
       ></TextContainer>
       <TextContainer
         typography="h5"
-        text={`Dinos cómo debemos llamarte`}
+        text={`Dinos cómo debemos llamarte.`}
         marginTop={9}
       ></TextContainer>
 
@@ -77,6 +77,7 @@ const EnterFullNameScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         error={errors.name?.message}
         maxLength={30}
         marginTop={46}
+        renderErrorIcon={false}
       />
 
       <Input
@@ -94,6 +95,7 @@ const EnterFullNameScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         error={errors.lastName?.message}
         marginTop={24}
         maxLength={30}
+        renderErrorIcon={false}
       />
 
       <Container flex row crossAlignment="end" space="between">

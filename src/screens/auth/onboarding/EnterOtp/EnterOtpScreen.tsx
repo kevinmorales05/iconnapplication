@@ -119,7 +119,7 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
         <TextContainer
           typography="h1"
           fontBold
-          text={`Ingresa el código de 6 \ndigitos quen enviamos a:`}
+          text={`Ingresa el código de 6 \ndígitos que enviamos a:`}
           marginTop={34}
           marginBottom={11}
         />
