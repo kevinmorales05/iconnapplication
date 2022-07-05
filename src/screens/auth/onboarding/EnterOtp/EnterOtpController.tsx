@@ -30,14 +30,12 @@ const EnterOtpController: React.FC = () => {
     
     try {  
       const { payload } = await dispatch(validateOtpThunk({email, code}));
-      if (payload.status === 'ok' && !payload.isValid) { // TODO: we should validate not only status, we need a code!
-        setWrongCode(true);                               // this validation no works because the backend response with 404, it should reponse 200 with body isValid = false...
-      } else if (payload.status === 'ok' && payload.isValid) { 
+      if (payload.responseCode === 200 && !payload.data.isValid) {
+        setWrongCode(true);
+      } else if (payload.responseCode === 200 && payload.data.isValid) { 
         navigate('CreatePassword');
       }
     } catch (error) {
-      // TODO: managing code errors is needed.
-      setWrongCode(true); // TODO: remove this line when Alberto changes the code response to 200 instead 404
       console.error('Unknow Error', error);      
     }
   };

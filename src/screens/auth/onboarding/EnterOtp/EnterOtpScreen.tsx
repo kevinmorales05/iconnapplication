@@ -80,26 +80,12 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
   const onResendCode = async () => {
     startInterval();
     try {
-      const { payload } = await dispatch(preSignUpThunk(email));
-      if (payload.status === 'ok'){ // TODO: here we should validate status && code === 1
-        console.log('NUEVO OTP REENVIADO...');
-        
+      const { payload } = await dispatch(preSignUpThunk(email!));
+      if (payload.responseCode === 200 && payload.data.isValid) {
+        console.log('NUEVO OTP REENVIADO...');        
       } 
     } catch (error) {
-      console.error('Unknow Error', error);
-      // TODO: integrate the treatment of possible future errors
-      // TODO: Backend should change the response
-      // Instead:      
-      // {
-      //   "status": "ok",
-      //   "msg": "Otp created successfully!"
-      // }      
-      // should be:
-      // {
-      //   "code": 1,
-      //   "status": "ok",
-      //   "msg": "Otp created successfully!"
-      // }
+      console.error('Unknow Error', error);      
     }
   };
 

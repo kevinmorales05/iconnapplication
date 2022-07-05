@@ -35,11 +35,11 @@ const TermsAndCondController: React.FC = () => {
       dispatch(setUserId({user_id: signUpResponse.user.uid}));
       const { payload: registerResponse } = await dispatch(registerWithFirebaseThunk(user));
       // if signIn is succesfull, user is automatically navigated to HomeScreen. See logic here: src/navigation/AppNavigator.tsx.
-      if (registerResponse.status === 200 && !registerResponse.errors) {
+      if (registerResponse.responseCode === 200) {
         dispatch(signInWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));
       } else {
         alert.show({
-          title: payload.errors[0]
+          title: registerResponse.responseMessage
         });
       }
     }    

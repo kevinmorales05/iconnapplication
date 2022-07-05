@@ -5,7 +5,7 @@ import { AuthStackParams } from 'navigation/types';
 import EnterEmailScreen from './EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { AboutEmail } from 'components/organisms/AboutEmail';
-import { useLoading } from 'context';
+import { useAlert, useLoading } from 'context';
 import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { setAuthEmail, setSignMode } from 'rtk/slices/authSlice';
@@ -16,6 +16,7 @@ const EnterEmailController: React.FC = () => {
   const loader = useLoading();
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state: RootState) => state.auth);
+  const alert = useAlert();
 
   useEffect(() => {
     if (loading === false) {
@@ -31,23 +32,29 @@ const EnterEmailController: React.FC = () => {
     setAboutEmailVisible(false);
   };
 
-  // const determineProcess = (statusUser: any) => {
-
-  // }
-
   const onSubmit = async (email: string) => {
     loader.show();
     try {
       const { payload } = await dispatch(validateUserThunk(email));
-      if (payload.status === 200) {
-        if (!payload.isRegistered && payload.signMode === 0) {
+      if (payload.responseCode === 200) {
+        if (!payload.data.isRegistered && payload.data.signMode === 0) {
           const { payload } = await dispatch(preSignUpThunk(email));
-          if (payload.status === 'ok'){
+          if (payload.responseCode === 200 && payload.data.isValid){
             dispatch(setAuthEmail({email}))
-            dispatch(setSignMode({sign_app_modes_id: 0}))
+            dispatch(setSignMode({sign_app_modes_id: 1}))
             navigate('EnterOtp');
           }        
-        } // else if (payload.signMode === ) // TODO: finish other signModes, 1,2,3,4
+        } else if (payload.data.isRegistered) {
+          if (payload.data.signMode === 1) {
+            navigate('EnterPassword');
+          } else if (payload.data.signMode === 2) {
+            alert.show({ title: 'CUENTA CON FACEBOOK' });            
+          } else if (payload.data.signMode === 3) {
+            alert.show({ title: 'CUENTA CON GOOGLE' });
+          } else if (payload.data.signMode === 4) {
+            alert.show({ title: 'CUENTA CON APPLE' });
+          }
+        }
       }      
     } catch (error) {
       console.error('Unknow Error', error);
