@@ -38,6 +38,8 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   };
 
   const getColor = (level: number) => {
+    console.log("errores password color",errors.password?.message)
+    console.log("nivel color", level)
     if (parseInt(errors.password?.message) > level) {
       return theme.brandColor.iconn_success;
     } else if (parseInt(errors.password?.message) === level){
@@ -50,13 +52,19 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   }
 
   const getIcon = (level: number) => {
+      console.log("errores password  color",errors.password?.message)
+      console.log("nivel number", level)
     if (parseInt(errors.password?.message) > level) {
       return 'check-circle';
     } else if (parseInt(errors.password?.message) === level){
       return 'times-circle';
     } else if (errors.password?.message === undefined) {
       return 'check-circle';
-    } else {
+    } 
+    else if(parseInt(errors.password.message) === 0) {
+
+    }
+    else {
       return 'circle';
     }
   }
@@ -77,7 +85,15 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         typography="h2"
         fontBold
         text={`Crea tu contraseña`}
-        marginTop={34}
+        fontSize={24}
+        marginTop={57}
+      ></TextContainer>
+      <TextContainer
+        typography="h2"
+        text={`Recuerda no compartirla.`}
+        marginTop={9}
+        fontSize={17}
+        
       ></TextContainer>
       <Input
         {...register('password')}
@@ -92,7 +108,8 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         rules={passwordRule}
         error=''
         ref={passwordRef}
-        showPasswordEnable        
+        showPasswordEnable 
+        defaultValue={undefined}       
       />
 
       <Container>
