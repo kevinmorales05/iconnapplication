@@ -5,7 +5,7 @@
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
-		<string></string>
+		<string>fb-messenger-share-api</string>
 	</array>
 	<key>FacebookDisplayName</key>
 	<string>Iconn</string>
