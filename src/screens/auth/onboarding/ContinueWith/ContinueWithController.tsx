@@ -8,8 +8,9 @@ import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
-import { setAuthEmail, setSignMode, setUserId, signInWithAppleThunk, 
+import { setAuthEmail, setFullName, setIsLogged, setSignMode, setUserId, signInWithAppleThunk, 
   signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch } from 'rtk';
+import auth from '@react-native-firebase/auth';
 
 const ContinueWithController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -18,12 +19,18 @@ const ContinueWithController: React.FC = () => {
 
   const onAppleButtonPress = async () => {
     try {
-      const { payload } = await dispatch(signInWithAppleThunk());    
-      if (payload.user.uid) {
-        dispatch(setUserId({user_id: payload.user.uid}));
-        dispatch(setAuthEmail({email: payload.user.email}));
-        dispatch(setSignMode({sign_app_modes_id: 4}));
-        navigate('TermsAndCond');
+      const { payload } = await dispatch(signInWithAppleThunk());
+      if (payload.additionalUserInfo.isNewUser) {
+        if (payload.user.uid) {
+          dispatch(setUserId({user_id: payload.user.uid}));
+          dispatch(setAuthEmail({email: payload.user.email}));
+          dispatch(setSignMode({sign_app_modes_id: 4}));
+          navigate('TermsAndCond');
+        }  
+      } else {
+        dispatch(setFullName({name: auth().currentUser?.displayName!}));
+        dispatch(setAuthEmail({email: auth().currentUser?.email!}));
+        dispatch(setIsLogged({isLogged: true}));
       }
     } catch (error) {
       console.log(error);
@@ -48,13 +55,18 @@ const ContinueWithController: React.FC = () => {
   const onGoogleButtonPress = async () => {
     try {
       const { payload } = await dispatch(signInWithGoogleThunk());
-      console.log(JSON.stringify(payload,null,3));
-      // if (payload.user.uid) {
-      //   dispatch(setUserId({user_id: payload.user.uid}));
-      //   dispatch(setAuthEmail({email: payload.user.email}));
-      //   dispatch(setSignMode({sign_app_modes_id: 4}));
-      //   navigate('TermsAndCond');
-      // }
+      if (payload.additionalUserInfo.isNewUser) {
+        if (payload.user.uid) {
+          dispatch(setUserId({user_id: payload.user.uid}));
+          dispatch(setAuthEmail({email: payload.user.email}));
+          dispatch(setSignMode({sign_app_modes_id: 3}));
+          navigate('TermsAndCond');
+        }
+      } else {
+        dispatch(setFullName({name: auth().currentUser?.displayName!}));
+        dispatch(setAuthEmail({email: auth().currentUser?.email!}));
+        dispatch(setIsLogged({isLogged: true}));
+      }
     } catch (error) {
       console.log(error);
     }    

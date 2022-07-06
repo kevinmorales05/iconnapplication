@@ -8,11 +8,13 @@ import { CustomText, Button, Container } from 'components';
 interface Props {
   onPressLogOut: () => void;
   name?: string;
+  email?: string;
 }
 
 const HomeScreen: React.FC<Props> = ({
 	onPressLogOut,
-  name
+  name,
+  email
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -33,7 +35,7 @@ const HomeScreen: React.FC<Props> = ({
 				<Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
           <CustomText
             textColor={theme.brandColor.iconn_dark_grey}
-            text={`Hola ${name}`}
+            text={`Hola ${name ? name : email }`}
             typography="h4"
             fontBold            
           />

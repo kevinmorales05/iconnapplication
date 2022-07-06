@@ -129,7 +129,8 @@ const HomeController: React.FC = () => {
       barStyle="light"
     >
       <HomeScreen
-				name={user.name}        
+				name={user.name}
+        email={user.email}
         onPressLogOut={logOut}
       />     
       <CustomModal visible={modVisibility}>
