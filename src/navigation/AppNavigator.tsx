@@ -18,6 +18,7 @@ const AppNavigator: React.FC = () => {
   const { error } = useAppSelector((state: RootState) => state.app);
 
   const onAuthStateChanged = (user: any) => {
+    auth().currentUser?.reload(); // refresh user after backend sets emailVerified as true.
     setUser(user);
     if (initilizing) setInitilizing(false);
   }
@@ -47,18 +48,18 @@ const AppNavigator: React.FC = () => {
     dispatch(setAppInitialState({}));
     return subscriber;
   }, [])
-  
+
   if (initilizing) return null;
 
   if (!user || (user && !user.emailVerified)) {
-    console.log('sigue en stack de auth (email no verificado): ', user);
+    console.log(`Sigue en auth ${user.email}, emailVerified: ${user.emailVerified}`);
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthStack">
         <Stack.Screen name="AuthStack" component={AuthStack} />       
       </Stack.Navigator>    
     );
   } else if (user && user.emailVerified) {
-    console.log('el user logueado es: ', user);
+    console.log(`USUARIO LOGUEADO: ${user.email}, emailVerified: ${user.emailVerified} 🥳🥳🥳🥳`);
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeStack">
         <Stack.Screen name="HomeStack" component={HomeStack} />
@@ -66,7 +67,7 @@ const AppNavigator: React.FC = () => {
     );  
   } else {
     // remove this else, isnt needed.
-    console.log('en el else: ', user);
+    console.log('en el else: ⚠️ ', user);
   }
 };
 

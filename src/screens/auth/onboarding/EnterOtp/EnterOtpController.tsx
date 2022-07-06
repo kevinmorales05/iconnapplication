@@ -30,9 +30,9 @@ const EnterOtpController: React.FC = () => {
     
     try {  
       const { payload } = await dispatch(validateOtpThunk({email, code}));
-      if (payload.responseCode === 200 && !payload.data.isValid) {
+      if (payload.responseCode === 201 && !payload.data.isValid) {
         setWrongCode(true);
-      } else if (payload.responseCode === 200 && payload.data.isValid) { 
+      } else if (payload.responseCode === 201 && payload.data.isValid) { 
         navigate('CreatePassword');
       }
     } catch (error) {

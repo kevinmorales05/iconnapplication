@@ -42,7 +42,7 @@ const EnterPasswordScreen: React.FC<Props> = ({ goBack, email }) => {
         <TextContainer
           typography="h2"
           fontBold
-          text={`Hola, Alejandra Ramírez`}
+          text={`¡Hola!`}
           marginTop={34}
         ></TextContainer>
         <TextContainer

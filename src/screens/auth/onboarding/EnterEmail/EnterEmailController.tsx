@@ -37,10 +37,10 @@ const EnterEmailController: React.FC = () => {
     try {
       const { payload } = await dispatch(validateUserThunk(email));
       if (payload.responseCode === 200) {
+        dispatch(setAuthEmail({email}))
         if (!payload.data.isRegistered && payload.data.signMode === 0) {
           const { payload } = await dispatch(preSignUpThunk(email));
-          if (payload.responseCode === 200 && payload.data.isValid){
-            dispatch(setAuthEmail({email}))
+          if (payload.responseCode === 201){
             dispatch(setSignMode({sign_app_modes_id: 1}))
             navigate('EnterOtp');
           }        
