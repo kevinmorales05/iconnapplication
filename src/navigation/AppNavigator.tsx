@@ -52,7 +52,7 @@ const AppNavigator: React.FC = () => {
   if (initilizing) return null;
 
   if (!user || (user && !user.emailVerified)) {
-    console.log(`Sigue en auth ${user.email}, emailVerified: ${user.emailVerified}`);
+    console.log(`Sigue en auth ${user?.email}, emailVerified: ${user?.emailVerified}`);
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthStack">
         <Stack.Screen name="AuthStack" component={AuthStack} />       
