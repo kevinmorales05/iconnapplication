@@ -3,7 +3,7 @@ import React, { Component, useState } from 'react'
 import { Dimensions, Image, ImageSourcePropType, Pressable, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import theme from 'components/theme/theme';
-import { RootState, useAppSelector, useAppDispatch } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setIsLogged } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import Carousel, { Pagination }  from 'react-native-snap-carousel';
@@ -114,7 +114,12 @@ const HomeController: React.FC = () => {
   const [modVisibility, setModVisibility] = useState(true)
   const dispatch = useAppDispatch();
 
-	const logOut = async () => await dispatch(logoutThunk());
+	const logOut = async () => {
+    const {meta} = await dispatch(logoutThunk());
+    if (meta.requestStatus === 'fulfilled') {
+      dispatch(setIsLogged({isLogged: false}));
+    }
+  } 
 
   return (
     <SafeArea
@@ -137,7 +142,7 @@ const HomeController: React.FC = () => {
           </Container>
         </Pressable>
         <TextContainer
-          text="¡Hola Alejandra!"
+          text={user.name!}
           typography='h3'
           fontBold={true}
           textAlign='center'

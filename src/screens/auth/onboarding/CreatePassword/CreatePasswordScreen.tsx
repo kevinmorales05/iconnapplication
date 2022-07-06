@@ -38,8 +38,6 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   };
 
   const getColor = (level: number) => {
-    console.log("errores password color",errors.password?.message)
-    console.log("nivel color", level)
     if (parseInt(errors.password?.message) > level) {
       return theme.brandColor.iconn_success;
     } else if (parseInt(errors.password?.message) === level){
@@ -52,8 +50,6 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   }
 
   const getIcon = (level: number) => {
-      console.log("errores password  color",errors.password?.message)
-      console.log("nivel number", level)
     if (parseInt(errors.password?.message) > level) {
       return 'check-circle';
     } else if (parseInt(errors.password?.message) === level){

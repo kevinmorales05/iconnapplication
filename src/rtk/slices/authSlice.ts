@@ -48,6 +48,9 @@ const authSlice = createSlice({
     },
     setUserId(state, action: PayloadAction<AuthDataInterface>){
       state.user.user_id = action.payload.user_id;
+    },
+    setIsLogged(state, action: PayloadAction<AuthDataInterface>){
+      state.user.isLogged = action.payload.isLogged;
     }
   },
   extraReducers: builder => {
@@ -151,5 +154,5 @@ const authSlice = createSlice({
 });
 // TODO: validate if it is possible to reduce extra reducers.
 export const { setAuthInitialState, setAuthEmail, setSignMode, setSecretKey, setPassword, 
-  setFullName, setTermsAndCond, setUserId } = authSlice.actions;
+  setFullName, setTermsAndCond, setUserId, setIsLogged } = authSlice.actions;
 export default authSlice.reducer;
