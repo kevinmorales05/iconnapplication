@@ -72,13 +72,7 @@ const [passValid, setPassValid] = useState(true)
       setVal5Color(theme.brandColor.iconn_med_grey)
       setPassValid(true)
     }
-    if (value.match(/\s/)) {
-      // return `No se admiten espacios`;
-      console.log("no se admiten espacios vacios")
-      setVal5Item("times-circle")
-      setVal5Color(theme.brandColor.iconn_error)
-      setPassValid(true)
-    } 
+    
     if (value.length < 8) {
       // return `Minimo 8 caracteres`;
       console.log("Minimo 8 caracteres")
@@ -135,7 +129,7 @@ const [passValid, setPassValid] = useState(true)
       console.log("*****tiene un digito")
     }
 
-    if (!value.match(/\W/)) {
+    if (!value.match(/\W/) || value.match(/\s/)) {
       // return `Al menos un caracter especial`;
       console.log("Al menos un caracter especial")
       setVal5Item("times-circle")
