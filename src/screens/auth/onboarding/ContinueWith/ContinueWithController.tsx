@@ -92,7 +92,7 @@ const ContinueWithController: React.FC = () => {
   
   const onIhaveAccount = () => {
     setotherMethodsVisible(false);
-    navigate('Login')
+    navigate('EnterEmail');
   };
   const onPressOut = () => {
     setotherMethodsVisible(false);
