@@ -129,7 +129,7 @@ const HomeController: React.FC = () => {
       barStyle="light"
     >
       <HomeScreen
-				name={user.name}
+				name='Hola ${user.name}'
         email={user.email}
         onPressLogOut={logOut}
       />     
@@ -142,12 +142,20 @@ const HomeController: React.FC = () => {
               size={20}/>
           </Container>
         </Pressable>
+        <Container row>
+        <TextContainer
+          text= "Hola "
+          typography='h3'
+          fontBold={true}
+          textAlign='center'
+          marginTop={4}/>
         <TextContainer
           text={user.name!}
           typography='h3'
           fontBold={true}
           textAlign='center'
           marginTop={4}/>
+        </Container>
           <CustomCarousel/>
         <Container style={{backgroundColor: theme.brandColor.iconn_warm_grey, alignSelf:'stretch', borderRadius: 16}}>
           <Pressable onPress={()=> setModVisibility(false)}>
