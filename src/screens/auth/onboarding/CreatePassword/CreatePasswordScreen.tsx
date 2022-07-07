@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { ScrollView, TextInput } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { ScrollView, Image, TextInput, View, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ActionButton, Input, TextContainer, Button, Container } from 'components';
@@ -7,6 +7,8 @@ import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { passwordRule } from 'utils/rules';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import {Touchable} from '../../../../components/atoms/Touchable'
+import { ICONN_EYE } from 'assets/images';
 
 interface Props {
   onSubmit: (email: string) => void;
@@ -15,7 +17,32 @@ interface Props {
 
 const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   const insets = useSafeAreaInsets();
+ const [text, setText] = useState("") // password value
 
+
+ /*
+ 0 -- empty value
+ 1 -- correct validation
+ 2 -- incorrect validation
+ 
+ */
+//items
+const [val1Item, setVal1Item] = useState('circle')
+const [val2Item, setVal2Item] = useState('circle')
+const [val3Item, setVal3Item] = useState('circle')
+const [val4Item, setVal4Item] = useState('circle')
+const [val5Item, setVal5Item] = useState('circle')
+//colors
+const [val1Color, setVal1Color] = useState(theme.brandColor.iconn_med_grey)
+const [val2Color, setVal2Color] = useState(theme.brandColor.iconn_med_grey)
+const [val3Color, setVal3Color] = useState(theme.brandColor.iconn_med_grey)
+const [val4Color, setVal4Color] = useState(theme.brandColor.iconn_med_grey)
+const [val5Color, setVal5Color] = useState(theme.brandColor.iconn_med_grey)
+//see password
+const [secureMode, setSecureMode] = useState(false)
+
+//password validation
+const [passValid, setPassValid] = useState(true)
   const {
     control,
     handleSubmit,
@@ -34,37 +61,116 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   }, []);
 
   const submit: SubmitHandler<FieldValues> = fields => {
-    onSubmit(fields.password);
+    onSubmit(text);
   };
 
-  const getColor = (level: number) => {
-    if (parseInt(errors.password?.message) > level) {
-      return theme.brandColor.iconn_success;
-    } else if (parseInt(errors.password?.message) === level){
-      return theme.brandColor.iconn_error;
-    } else if (errors.password?.message === undefined) {      
-      return theme.brandColor.iconn_success;
-    } else {      
-      return theme.brandColor.iconn_med_grey;
+  const validatePassword = (value: string) => {
+    setText(value)
+    console.log("------------------------")
+    if(value === ""){
+      setVal1Item("circle")
+      setVal1Color(theme.brandColor.iconn_med_grey)
+      setVal2Item("circle")
+      setVal2Color(theme.brandColor.iconn_med_grey)
+      setVal3Item("circle")
+      setVal3Color(theme.brandColor.iconn_med_grey)
+      setVal4Item("circle")
+      setVal4Color(theme.brandColor.iconn_med_grey)
+      setVal5Item("circle")
+      setVal5Color(theme.brandColor.iconn_med_grey)
+      setPassValid(true)
     }
-  }
-
-  const getIcon = (level: number) => {
-    if (parseInt(errors.password?.message) > level) {
-      return 'check-circle';
-    } else if (parseInt(errors.password?.message) === level){
-      return 'times-circle';
-    } else if (errors.password?.message === undefined) {
-      return 'check-circle';
+    if (value.match(/\s/)) {
+      // return `No se admiten espacios`;
+      console.log("no se admiten espacios vacios")
+      setPassValid(false)
     } 
-    else if(parseInt(errors.password.message) === 0) {
+    if (value.length < 8) {
+      // return `Minimo 8 caracteres`;
+      console.log("Minimo 8 caracteres")
+      setVal1Item("times-circle")
+      setVal1Color(theme.brandColor.iconn_error)
+      setPassValid(true)
+    } 
+    else {
+      console.log("*****tiene mas de 8 caracteres")
+      setVal1Item("check-circle")
+      setVal1Color(theme.brandColor.iconn_success)
+    }
+    
+     if(!value.match(/[A-Z]/)){
+      // return `Al menos una mayúscula`;
+      console.log("no hay una mayuscula")
+      setVal2Item("times-circle")
+      setVal2Color(theme.brandColor.iconn_error)
+      setPassValid(true)
+      
+    } 
 
+    else {
+      setVal2Item("check-circle")
+      setVal2Color(theme.brandColor.iconn_success)
+      console.log("*****tiene mayuscula")
+      setPassValid(true)
+    }
+
+    if (!value.match(/[a-z]/)) {
+      // return `Al menos una minúscula`;
+      console.log("al menos una minuscula")
+      setVal3Item("times-circle")
+      setVal3Color(theme.brandColor.iconn_error)
+      setPassValid(true)
     }
     else {
-      return 'circle';
+      setVal3Item("check-circle")
+      setVal3Color(theme.brandColor.iconn_success)
+      console.log("*****tiene minuscula")
     }
-  }
 
+    if (!value.match(/\d/)) {
+      // return `Al menos una número`;
+      console.log("al menos un digito")
+      setVal4Item("times-circle")
+      setVal4Color(theme.brandColor.iconn_error)
+      setPassValid(true)
+      
+    }
+    else {
+      setVal4Item("check-circle")
+      setVal4Color(theme.brandColor.iconn_success)
+      console.log("*****tiene un digito")
+    }
+
+    if (!value.match(/\W/)) {
+      // return `Al menos un caracter especial`;
+      console.log("Al menos un caracter especial")
+      setVal5Item("times-circle")
+      setVal5Color(theme.brandColor.iconn_error)
+      setPassValid(true)
+    }  else {
+      setVal5Item("check-circle")
+      setVal5Color(theme.brandColor.iconn_success)
+      console.log("*****tiene un caracter especial")
+    }
+    console.log("------------------------")
+    if(!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/)  ){
+      console.log("cumple todo")
+      setPassValid(false)
+    }
+
+  }
+  const setMode = () => {
+    if(secureMode === false){
+      setSecureMode(true);
+    }
+    else {
+      setSecureMode(false)
+    }
+   
+    
+
+
+  }
   return (
     <ScrollView
       bounces={false}
@@ -91,45 +197,50 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         fontSize={17}
         
       ></TextContainer>
-      <Input
-        {...register('password')}
-        name="password"
-        control={control}
-        autoComplete="password"
-        autoCorrect={false}
-        passwordField
-        placeholder={`Ingresa tu contraseña`}
-        blurOnSubmit={false}
-        marginTop={36}
-        rules={passwordRule}
-        error=''
-        ref={passwordRef}
-        showPasswordEnable 
-        defaultValue={undefined}       
+      <View style={{backgroundColor:'white', borderColor:'#dadadb', borderWidth:1,padding:2, borderRadius:8, marginTop:20,  flexDirection:'row', height:60, justifyContent:'space-between' }}>
+      <TextInput 
+       style={{backgroundColor:'white' }}
+       onChangeText={ text => validatePassword(text)}
+       placeholder="Ingresa tu contraseña"
+       value={text}
+       secureTextEntry={secureMode}
       />
-
-      <Container>
+      
+<Touchable testID={`5-hide-password`} onPress={()=> setMode()}  opacityEffect>
+              <Image source={ICONN_EYE} style={styles.passwordImageStyle}  />
+            </Touchable>
+      </View>
+      
+      
+    
+    <Container>
+    
+<Container>
         <Container flex row style={{marginTop:34}}>          
-          <FontAwesome name={getIcon(2)} size={18} color={getColor(2)} />
+          <FontAwesome name={val1Item} size={18} color={val1Color} />
           <TextContainer text='Mínimo 8 caracteres' typography='h5' marginLeft={10}/>
         </Container>
         <Container flex row style={{marginTop:11}}>
-          <FontAwesome name={getIcon(3)} size={18} color={getColor(3)} />
+          <FontAwesome name={val2Item} size={18} color={val2Color} />
           <TextContainer text='Contiene una letra mayúscula' typography='h5' marginLeft={10}/>
         </Container>
         <Container flex row style={{marginTop:11}}>
-          <FontAwesome name={getIcon(4)} size={18} color={getColor(4)} />
+          <FontAwesome name={val3Item} size={18} color={val3Color} />
           <TextContainer text='Contiene una letra minúscula' typography='h5' marginLeft={10}/>
         </Container>
         <Container flex row style={{marginTop:11}}>
-          <FontAwesome name={getIcon(5)} size={18} color={getColor(5)} />
+          <FontAwesome name={val4Item} size={18} color={val4Color} />
           <TextContainer text='Contiene un número' typography='h5' marginLeft={10}/>
         </Container>
         <Container flex row style={{marginTop:11}}>
-          <FontAwesome name={getIcon(6)} size={18} color={getColor(6)} />
+          <FontAwesome name={val5Item} size={18} color={val5Color} />
           <TextContainer text='Contiene un caracter especial' typography='h5' marginLeft={10}/>
         </Container>
       </Container>
+
+
+          
+    </Container>  
 
       <Container flex row crossAlignment="end" space="between">
         <ActionButton
@@ -148,7 +259,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         <Button
           length="short"
           round
-          disabled={!isValid}
+          disabled={passValid}
           onPress={handleSubmit(submit)}
           fontSize="h4"
           fontBold
@@ -163,3 +274,35 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
 };
 
 export default CreatePasswordScreen;
+
+
+const styles = StyleSheet.create({
+  inputStyle: {
+    fontSize: theme.fontSize.paragraph,
+    paddingHorizontal: 12,
+    color: theme.fontColor.dark
+  },
+  inputContainerStyle: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: theme.fontColor.medgrey
+  },
+  passwordImageStyle: {
+    width: 20,
+    height: 16,
+    marginRight: 15,
+    marginVertical: 15
+  },
+  errorImageStyle: {
+    width: 10,
+    height: 14,
+    marginRight: 15,
+    marginVertical: 15
+  },
+  prefixImageStyle: {
+    width: 16,
+    height: 16,
+    marginLeft: 15,
+    marginVertical: 15
+  }
+});
