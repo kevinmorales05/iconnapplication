@@ -9,11 +9,12 @@ import React, { useEffect, useRef } from 'react';
 import { passwordRule } from 'utils/rules';
 
 interface Props {
+  onSubmit: (pass: string) => void;
   goBack: () => void;
   email?: string;
 }
 
-const EnterPasswordScreen: React.FC<Props> = ({ goBack, email }) => {
+const EnterPasswordScreen: React.FC<Props> = ({ onSubmit, goBack, email }) => {
   const insets = useSafeAreaInsets();
   const { handleSubmit, register, control } = useForm();
   const passwordRef = useRef<TextInput>(null);
@@ -24,7 +25,9 @@ const EnterPasswordScreen: React.FC<Props> = ({ goBack, email }) => {
     }
   }, []);
 
-  const submit: SubmitHandler<FieldValues> = () => {};
+  const submit: SubmitHandler<FieldValues> = (fields) => {
+    onSubmit(fields.password);
+  };
 
   return (
     <ScrollView

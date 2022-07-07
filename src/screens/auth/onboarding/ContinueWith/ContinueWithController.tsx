@@ -40,13 +40,18 @@ const ContinueWithController: React.FC = () => {
   const onFacebookButtonPress = async () => {
     try {
       const { payload } = await dispatch(signInWithFacebookThunk());
-      console.log(JSON.stringify(payload,null,3));
-      // if (payload.user.uid) {
-      //   dispatch(setUserId({user_id: payload.user.uid}));
-      //   dispatch(setAuthEmail({email: payload.user.email}));
-      //   dispatch(setSignMode({sign_app_modes_id: 4}));
-      //   navigate('TermsAndCond');
-      // }
+      if (payload.additionalUserInfo.isNewUser) {
+        if (payload.user.uid) {
+          dispatch(setUserId({user_id: payload.user.uid}));
+          dispatch(setAuthEmail({email: payload.user.email}));
+          dispatch(setSignMode({sign_app_modes_id: 2}));
+          navigate('TermsAndCond');
+        }
+      } else {
+        dispatch(setFullName({name: auth().currentUser?.displayName!}));
+        dispatch(setAuthEmail({email: auth().currentUser?.email!}));
+        dispatch(setIsLogged({isLogged: true}));
+      }
     } catch (error) {
       console.log(error);
     }
