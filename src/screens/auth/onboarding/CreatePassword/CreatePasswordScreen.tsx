@@ -16,16 +16,8 @@ interface Props {
 }
 
 const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
-  const insets = useSafeAreaInsets();
- const [text, setText] = useState("") // password value
-
-
- /*
- 0 -- empty value
- 1 -- correct validation
- 2 -- incorrect validation
- 
- */
+const insets = useSafeAreaInsets();
+const [text, setText] = useState("") // password value
 //items
 const [val1Item, setVal1Item] = useState('circle')
 const [val2Item, setVal2Item] = useState('circle')
@@ -83,7 +75,9 @@ const [passValid, setPassValid] = useState(true)
     if (value.match(/\s/)) {
       // return `No se admiten espacios`;
       console.log("no se admiten espacios vacios")
-      setPassValid(false)
+      setVal5Item("times-circle")
+      setVal5Color(theme.brandColor.iconn_error)
+      setPassValid(true)
     } 
     if (value.length < 8) {
       // return `Minimo 8 caracteres`;
