@@ -35,10 +35,10 @@ const Alert: React.FC<Props> = ({
 
   return (
     <ModalCard visible={visible} onDismiss={onDismiss} secondButton={cancelTitle ? true : false} type={type}>
-      <Container style={{marginTop: 40}} >
-        <TextContainer text={title} typography='h1' fontWeight='600' marginTop={12} marginHorizontal={32} textAlign='center'/>
-        {message !== '' && ( <TextContainer text={message} typography="h3" marginTop={16} marginHorizontal={16} textAlign='center'/> )}
-        <Container style={{ marginTop: 32 }}>
+      <Container style={{marginTop: 32}} >
+        <TextContainer text={title!} typography='h4' fontWeight='600' marginTop={12} marginHorizontal={32} textAlign='center'/>
+        {message !== '' && ( <TextContainer text={message} typography="h5" marginTop={16} marginHorizontal={16} textAlign='center'/> )}
+        <Container style={{ marginTop: 30 }}>
           {acceptTitle && (
             <Button borderColor='iconn_med_grey' fontSize='h3' fontBold color='iconn_dark_grey' round onPress={onAccept!} outline length='short' style={{width:'95%', marginHorizontal:16, alignSelf:'center'}} >
               {acceptTitle || 'Aceptar'}
