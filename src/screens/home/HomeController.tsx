@@ -129,7 +129,7 @@ const HomeController: React.FC = () => {
       barStyle="light"
     >
       <HomeScreen
-				name='Hola ${user.name}'
+				name={user.name}
         email={user.email}
         onPressLogOut={logOut}
       />     
