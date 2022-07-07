@@ -15,7 +15,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   visible,
   onDismiss,
   children,
-  backgroundOpacity = 0.4,
+  backgroundOpacity = 0.5,
   testID
 }: CustomModalProps) => {
   const backgroundColor = `rgba(0,0,0,${backgroundOpacity})`;
@@ -24,7 +24,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
     return (
       <Modal testID={testID} transparent visible={visible} animationType="fade" onDismiss={onDismiss}>
         <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={{ flex: 1 }}>
-          <TouchableWithoutFeedback testID={`${testID}-touchable`} onPress={() => onDismiss && onDismiss()}>
+          <TouchableWithoutFeedback testID={`${testID}-touchable`} >
             <View style={{ flex: 1, backgroundColor }}>
               {children}
             </View>

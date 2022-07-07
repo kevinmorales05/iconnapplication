@@ -5,6 +5,9 @@ import ICONN_EMAIL from './iconn-email.webp';
 import ICONN_EYE from './iconn-eye.webp';
 import ICONN_COFFEE from './iconn-coffee.webp';
 import ICONN_DOCUMENT_EDIT from './iconn-document-edit.webp';
+import ICONN_WARNING from './iconn-warning.webp';
+import ICONN_SUCCESS from './iconn-success.webp';
+import ICONN_ERROR from './iconn-error.webp';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -13,5 +16,8 @@ export {
   ICONN_EMAIL,
   ICONN_EYE,
   ICONN_COFFEE,
-  ICONN_DOCUMENT_EDIT
+  ICONN_DOCUMENT_EDIT,
+  ICONN_WARNING,
+  ICONN_SUCCESS,
+  ICONN_ERROR
 };

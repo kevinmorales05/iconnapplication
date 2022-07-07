@@ -51,7 +51,7 @@ const getContainerStyle = (props: ButtonProps) => {
   const buttonStyles: any = [styles.container];
   buttonStyles.push({
     backgroundColor: theme.brandColor[color],
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: theme.brandColor[color],
   });
   

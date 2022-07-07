@@ -12,6 +12,7 @@ interface CustomTextProps {
   typography?: TypographyTypes;
   fontBold?: boolean;
   fontSize?: number;
+  fontWeight?: TextStyle['fontWeight'];
   numberOfLines?: number;
   transform?: TextStyle['textTransform'];
   underline?: boolean;
@@ -29,6 +30,7 @@ const CustomText: React.FC<CustomTextProps> = ({
   textAlign,
   fontBold,
   fontSize,
+  fontWeight,
   numberOfLines,
   transform,
   underline,
@@ -59,6 +61,7 @@ const CustomText: React.FC<CustomTextProps> = ({
   if (fontSize) textStyle.push({ fontSize });
   if (textColor) textStyle.push({ color: textColor });
   if (fontBold) textStyle.push({ fontWeight: 'bold' });
+  if (fontWeight) textStyle.push({ fontWeight });
 
   return (
     <Text

@@ -32,6 +32,18 @@ const EnterEmailController: React.FC = () => {
     setAboutEmailVisible(false);
   };
 
+  const showAlert = () => {
+    alert.show({
+      title: 'Ya tienes una cuenta', 
+      message: 'Este correo está asociado a una cuenta existente.',
+      acceptTitle: 'Entendido',
+      onAccept() {                  
+        alert.hide();
+        navigate('ContinueWith');
+      }
+    });
+  };
+
   const onSubmit = async (email: string) => {
     loader.show();
     try {
@@ -48,29 +60,16 @@ const EnterEmailController: React.FC = () => {
           if (payload.data.signMode === 1) {
             navigate('EnterPassword');
           } else if (payload.data.signMode === 2) {
-            alert.show({ title: 'CUENTA CON FACEBOOK' });            
+            showAlert();
           } else if (payload.data.signMode === 3) {
-            alert.show({ title: 'CUENTA CON GOOGLE' });
+            showAlert();
           } else if (payload.data.signMode === 4) {
-            alert.show({ title: 'CUENTA CON APPLE' });
+            showAlert();
           }
         }
       }      
     } catch (error) {
       console.error('Unknow Error', error);
-      // TODO: integrate the treatment of possible future errors
-      // TODO: Backend should change the response
-      // Instead:      
-      // {
-      //   "status": "ok",
-      //   "msg": "Otp created successfully!"
-      // }      
-      // should be:
-      // {
-      //   "code": 1,
-      //   "status": "ok",
-      //   "msg": "Otp created successfully!"
-      // }
     }
   };
 

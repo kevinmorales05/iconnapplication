@@ -27,8 +27,8 @@ const AppNavigator: React.FC = () => {
   useEffect(() => {
     if (error !== undefined) {
       alert.show({
-        title: error
-      });
+        message: error
+      },'error');
       loader.hide();
       dispatch(setAppError({error:undefined}));
     }

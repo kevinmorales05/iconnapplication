@@ -20,6 +20,7 @@ const TextContainer: React.FC<TextContainerProps> = ({
   marginVertical,
   text,
   fontSize,
+  fontWeight,
   typography,
   textColor,
   textAlign,
@@ -41,6 +42,7 @@ const TextContainer: React.FC<TextContainerProps> = ({
       testID={testID}
       text={text}
       fontSize={fontSize}
+      fontWeight={fontWeight}
       typography={typography}
       textColor={textColor}
       textAlign={textAlign}
