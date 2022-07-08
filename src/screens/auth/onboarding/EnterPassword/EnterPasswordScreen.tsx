@@ -11,10 +11,11 @@ import { passwordRule } from 'utils/rules';
 interface Props {
   onSubmit: (pass: string) => void;
   goBack: () => void;
+  goToForgotPassword: () => void;
   email?: string;
 }
 
-const EnterPasswordScreen: React.FC<Props> = ({ onSubmit, goBack, email }) => {
+const EnterPasswordScreen: React.FC<Props> = ({ onSubmit, goBack, goToForgotPassword, email }) => {
   const insets = useSafeAreaInsets();
   const { handleSubmit, register, control } = useForm();
   const passwordRef = useRef<TextInput>(null);
@@ -97,7 +98,7 @@ const EnterPasswordScreen: React.FC<Props> = ({ onSubmit, goBack, email }) => {
             text="Olvidé mi contraseña"
             typography="h5"
             fontBold
-            onPress={handleSubmit(submit)}
+            onPress={goToForgotPassword}
             marginTop={8}
           />
         </Container>

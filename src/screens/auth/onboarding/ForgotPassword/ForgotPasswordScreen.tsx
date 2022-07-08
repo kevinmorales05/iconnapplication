@@ -44,18 +44,20 @@ const ForgotPasswordScreen: React.FC<Props> = ({ onSubmit, goBack, email }) => {
           text={`¡No te preocupes! Para recuperar tu contraseña \nte enviaremos un correo con instrucciones a:`}
           marginTop={28}
         ></TextContainer>
-        <Image
-          source={ICONN_EMAIL}
-          resizeMode="center"
-          style={{ width: 28, height: 28, marginRight: 8, marginTop: 26 }}
-        />
-        <TextContainer
-          typography="h4"
-          fontBold
-          marginTop={10}
-          text={email}
-          textColor={theme.brandColor.iconn_green_original}
-        ></TextContainer>
+         <Container flex row style={{marginTop: 26}}>
+          <Image
+            source={ICONN_EMAIL}
+            resizeMode="center"
+            style={{ width: 28, height: 28, marginRight: 8, marginTop: 5 }}
+          />
+          <TextContainer
+            typography="h4"
+            fontBold
+            marginTop={10}
+            text={email!}
+            textColor={theme.brandColor.iconn_green_original}
+          ></TextContainer>
+        </Container>    
       </Container>
 
       <Container flex row crossAlignment="end" space="between">

@@ -9,7 +9,7 @@ import { RootState, setIsLogged, setPassword, signInWithEmailAndPasswordThunk, u
 import React, { useEffect, useState } from 'react';
 
 const EnterPasswordController: React.FC = () => {
-  const { goBack } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const dispatch = useAppDispatch();
   const loader = useLoading();
   const { loading, user } = useAppSelector((state: RootState) => state.auth);
@@ -20,6 +20,10 @@ const EnterPasswordController: React.FC = () => {
       loader.hide();
     }
   }, [loading]);
+
+  const goToForgotPassword = () => {
+    navigate('ForgotPassword');
+  }
 
   const onSubmit = async (password: string) => {
     dispatch(setPassword({pass: password}));
@@ -32,7 +36,7 @@ const EnterPasswordController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <EnterPasswordScreen goBack={goBack} email={email} onSubmit={onSubmit} />
+      <EnterPasswordScreen goBack={goBack} email={email} onSubmit={onSubmit} goToForgotPassword={goToForgotPassword} />
     </SafeArea>
   );
 };
