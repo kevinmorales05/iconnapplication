@@ -1,7 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
-import SignUpController from 'screens/auth/SignUp/SignUpController';
 import ContinueWithController from 'screens/auth/onboarding/ContinueWith/ContinueWithController';
 import EnterEmailController from 'screens/auth/onboarding/EnterEmail/EnterEmailController'
 import EnterOtpController from 'screens/auth/onboarding/EnterOtp/EnterOtpController'
@@ -15,7 +14,6 @@ const Stack = createNativeStackNavigator<AuthStackParams>();
 
 const AuthStack: React.FC = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="ContinueWith">
-    <Stack.Screen name="SignUp" component={SignUpController} />
     <Stack.Screen name="EnterPassword" component={EnterPasswordController} />
     <Stack.Screen name="ContinueWith" component={ContinueWithController} />
     <Stack.Screen name="EnterEmail" component={EnterEmailController} />

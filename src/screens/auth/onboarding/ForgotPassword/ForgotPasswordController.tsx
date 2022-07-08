@@ -5,16 +5,20 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
-import { RootState, setPassword, useAppDispatch, useAppSelector } from 'rtk';
+import { RootState, useAppSelector } from 'rtk';
+import { useAlert } from 'context';
 
 const ForgotPasswordController: React.FC = () => {
-  const { goBack } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
-  const dispatch = useAppDispatch();
+  const { goBack } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();  
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
+  const alert = useAlert();
 
   const onSubmit = async (password: string) => {
-    dispatch(setPassword({ pass: password }));
+    alert.show({ 
+      title:'Funcionalidad no disponible por el momento :(', 
+      acceptTitle:'ok', 
+      onAccept() { alert.hide();}},'warning');
   };
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
