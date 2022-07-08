@@ -9,6 +9,7 @@ import TermsAndCondController from 'screens/auth/onboarding/TermsAndCond/TermsAn
 import CreatePasswordController from 'screens/auth/onboarding/CreatePassword/CreatePasswordController';
 import EnterFullNameController from 'screens/auth/onboarding/EnterFullName/EnterFullNameController';
 import EnterPasswordController from 'screens/auth/onboarding/EnterPassword/EnterPasswordController';
+import ForgotPasswordController from 'screens/auth/onboarding/ForgotPassword/ForgotPasswordController';
 
 const Stack = createNativeStackNavigator<AuthStackParams>();
 
@@ -22,6 +23,7 @@ const AuthStack: React.FC = () => (
     <Stack.Screen name="TermsAndCond" component={TermsAndCondController} />
     <Stack.Screen name="CreatePassword" component={CreatePasswordController} />
     <Stack.Screen name="EnterFullName" component={EnterFullNameController} />
+    <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
   </Stack.Navigator>
 );
 
