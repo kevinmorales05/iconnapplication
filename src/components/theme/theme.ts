@@ -81,14 +81,14 @@ const theme: themeType = {
     xxlarge: 36
   },
   avatarSize: {
-    xxxsmall: 20,
-    xxsmall: 40,
-    xsmall: 60,
-    small: 80,
-    medium: 90,
-    large: 110,
-    xlarge: 120,
-    xxlarge: 140
+    xxxsmall: 24,
+    xxsmall: 44,
+    xsmall: 64,
+    small: 84,
+    medium: 94,
+    large: 104,
+    xlarge: 114,
+    xxlarge: 124
   },
   badgeSize: {
     xxxsmall: 9,
