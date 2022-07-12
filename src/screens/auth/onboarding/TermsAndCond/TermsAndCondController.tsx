@@ -59,14 +59,15 @@ const TermsAndCondController: React.FC = () => {
    */
   const onSubmit = async () => {
     loader.show();
+    let userToRegister = {...user};
     if (user.sign_app_modes_id === 1) {
-      const { payload: signUpResponse } = await dispatch(signUpUserWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));    
+      const { payload: signUpResponse } = await dispatch(signUpUserWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));
       if (signUpResponse.user.uid) {
+        userToRegister = { ...userToRegister, user_id: signUpResponse.user.uid };
         dispatch(setUserId({user_id: signUpResponse.user.uid}));
-        user.user_id = signUpResponse.user.uid;
       }
     }
-    const { payload: registerResponse } = await dispatch(registerWithFirebaseThunk(user));
+    const { payload: registerResponse } = await dispatch(registerWithFirebaseThunk(userToRegister));
     if (registerResponse.responseCode === 200) {
       if (user.sign_app_modes_id === 1) {
         const { payload: payloadSingIn } = await dispatch(signInWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));
