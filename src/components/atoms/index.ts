@@ -6,3 +6,5 @@ export * from './CustomModal';
 export * from './CustomText';
 export * from './ActionButton';
 export * from './Checkbox';
+export * from './Avatar';
+export * from './DatePicker';

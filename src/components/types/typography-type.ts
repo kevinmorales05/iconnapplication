@@ -11,4 +11,5 @@ export type TypographyTypes =
   | 'link'
   | 'placeholder'
   | 'label'
-  | 'description';
+  | 'description'
+  | 'dot';

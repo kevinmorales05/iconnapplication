@@ -18,6 +18,8 @@ import { TextContainer } from '../../molecules/TextContainer';
 import { ActionButton } from '../ActionButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ICONN_BACKGROUND_IMAGE, ICONN_EYE } from 'assets/images';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { CustomText } from 'components';
 
 export interface Props {
   label?: string;
@@ -42,12 +44,16 @@ export interface Props {
   centerElements?: boolean;
   hideLabel?: boolean;
   name: string;
-  control: Control<FieldValues, string>;
+  control: Control<FieldValues, object>;
   rules?: RegisterOptions;
   renderErrorIcon?: boolean;
   testID?: string;
   sufixOutIcon?: boolean;
   onPressInfo?: any;
+  onChangeText?: TextInputProps['onChangeText'];
+  datePicker?: boolean;
+  onPressDatePickerIcon?: () => void;
+  phone?: boolean
 }
 
 const Input = forwardRef(({
@@ -78,7 +84,11 @@ const Input = forwardRef(({
   renderErrorIcon = true,
   testID,
   sufixOutIcon = false,
-  onPressInfo
+  onPressInfo,
+  onChangeText,
+  datePicker = false,
+  onPressDatePickerIcon,
+  phone = false
 }: Props, ref: ForwardedRef<any>) => {
   const {
     inputStyle, inputContainerStyle, passwordImageStyle, errorImageStyle, prefixImageStyle
@@ -88,7 +98,7 @@ const Input = forwardRef(({
 
   const textInputProps: TextInputProps = {
     placeholder,
-    placeholderTextColor: theme.brandColor.iconn_grey,
+    placeholderTextColor: theme.brandColor.iconn_med_grey,
     autoCapitalize,
     autoComplete,
     autoCorrect,
@@ -169,13 +179,18 @@ const Input = forwardRef(({
               control={control}
               rules={rules}
               render={({ field }) => (
-                <TextInput
-                  testID={`${testID}-input`}
-                  ref={ref}
-                  {...textInputProps}
-                  value={field.value}
-                  onChangeText={field.onChange}
-                />
+                <>
+                <Container row center>
+                  {phone && (<CustomText text='   +52'/>)}
+                  <TextInput
+                    testID={`${testID}-input`}
+                    ref={ref}
+                    {...textInputProps}
+                    value={defaultValue ? defaultValue : field.value}
+                    onChangeText={onChangeText ? onChangeText : field.onChange}
+                  />
+                </Container>
+                </>
               )}
             />
           </Container>
@@ -186,6 +201,14 @@ const Input = forwardRef(({
           )}
           {!(passwordField && showPasswordEnable) && !!error && renderErrorIcon && (
             <Image testID={`${testID}-error-image`} source={ICONN_BACKGROUND_IMAGE} style={errorImageStyle} />
+          )}
+          {datePicker && (
+            <ActionButton size='xsmall' color='' onPress={onPressDatePickerIcon!}
+              icon={<AntDesign
+                name="calendar"
+                size={24}
+                color={theme.fontColor.grey} />}
+            />
           )}
         </Container>
         {sufixOutIcon && (
