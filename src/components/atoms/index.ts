@@ -8,3 +8,4 @@ export * from './ActionButton';
 export * from './Checkbox';
 export * from './Avatar';
 export * from './DatePicker';
+export * from './Select';

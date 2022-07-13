@@ -1,21 +1,35 @@
-import { Avatar, Container, CustomText, DatePicker, Input, TextContainer } from 'components';
+import {
+  Avatar,
+  Button,
+  Container,
+  CustomText,
+  DatePicker,
+  Input,
+  Select,
+  TextContainer
+} from 'components';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleProp, TextInput, ViewStyle } from 'react-native';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useForm } from 'react-hook-form';
 import { alphabetRule } from 'utils/rules';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Octicons from 'react-native-vector-icons/Octicons';
+import { GENDERS } from 'assets/files';
+import { formatDate } from 'utils/functions';
+import { RootState, useAppSelector } from 'rtk';
 
 type Props = {
-  goBack: () => void;
+  goBack?: () => void;
   onPress?: () => void;
   editIconStyle?: StyleProp<ViewStyle>;
-}
+};
 
 const ProfileScreen: React.FC<Props> = ({ goBack }) => {
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { email, name, lastName } = user;
   const insets = useSafeAreaInsets();
   const {
     control,
@@ -28,30 +42,20 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
     mode: 'onChange'
   });
 
-  const namesRef = useRef<TextInput>(null);
-  const surnamesRef = useRef<TextInput>(null);
+  const nameRef = useRef<TextInput>(null);
+  const surnameRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    if (passwordRef.current) {
-      passwordRef.current.focus();
+    setValue('name', name );
+    setValue('lastName', lastName );
+    if (nameRef.current) {
+      nameRef.current.focus();
     }
   }, []);
 
-  useEffect(() => {
-    if (namesRef.current) {
-      namesRef.current.focus();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (emailRef.current) {
-      emailRef.current.focus();
-    }
-  }, []);
-  
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -62,15 +66,16 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date) => {
-    console.warn("A date has been picked: ", date);
+  const handleConfirm = (date:Date) => {
+    const day = date.getDate();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    setValue('dateOfBirth', formatDate(new Date(year, month, day), 'dd/MM/yyyy'));
     hideDatePicker();
   };
 
-  const {
-    fecha    
-  } = watch();
-  
+  const { dateOfBirth } = watch();
+
   return (
     <ScrollView
       bounces={true}
@@ -78,15 +83,16 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
       contentContainerStyle={{
         flexGrow: 1,
         paddingBottom: insets.bottom + 16,
-        paddingTop: insets.top
+        paddingTop: insets.top - 16
       }}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-
-      <Container style={{ marginTop: 25 }}>
+      <Container>
         <Avatar
-          source={{ uri: 'https://www.audi.com.mx/content/dam/nemo/models/a3/rs-3-limousine/my-2022/NeMo-Derivate-Startpage/stage/1080x1920-audi-rs-3-sedan-stage-mobile-RS3_2021_3182.jpg?imwidth=768' }}
+          source={{
+            uri: 'https://www.audi.com.mx/content/dam/nemo/models/a3/rs-3-limousine/my-2022/NeMo-Derivate-Startpage/stage/1080x1920-audi-rs-3-sedan-stage-mobile-RS3_2021_3182.jpg?imwidth=768'
+          }}
           editable={true}
           onPress={() => {}}
         />
@@ -99,10 +105,9 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
         />
 
         <Input
-          {...register('names')}
-          ref={namesRef}
+          {...register('name')}
+          ref={nameRef}
           control={control}
-          autoComplete="name"
           autoCorrect
           autoCapitalize="words"
           keyboardType="default"
@@ -122,10 +127,9 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
         />
 
         <Input
-          {...register('surnames')}
-          ref={surnamesRef}
+          {...register('lastName')}
+          ref={surnameRef}
           control={control}
-          autoComplete="name"
           autoCorrect
           autoCapitalize="words"
           keyboardType="default"
@@ -143,16 +147,25 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
           text={`Correo electrónico`}
           marginTop={21}
         />
-
-        <TextContainer text='mariano.martinez@citi.com.mx' typography='h5' textColor={theme.brandColor.iconn_grey} marginTop={19}/>
+        <TextContainer
+          text={email!}
+          typography="h5"
+          textColor={theme.brandColor.iconn_grey}
+          marginTop={19}
+        />
 
         <Container flex row style={{ marginTop: 10 }} center>
-          <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
+          <Icon
+            name="checkcircle"
+            size={18}
+            color={theme.brandColor.iconn_success}
+            style={{ marginRight: 5 }}
+          />
           <CustomText
             textColor={theme.brandColor.iconn_green_original}
             text="Correo verificado"
             typography="h6"
-            fontWeight='normal'
+            fontWeight="normal"
           />
         </Container>
 
@@ -162,13 +175,19 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
           text={`Contraseña`}
           marginTop={21}
         />
-        
-        <Container row center crossCenter space='between' style={{marginTop:10}}>
+
+        <Container
+          row
+          center
+          crossCenter
+          space="between"
+          style={{ marginTop: 10 }}
+        >
           <CustomText
             fontBold
-            typography='dot'
+            typography="dot"
             text={`••••••••`}
-            textColor={theme.brandColor.iconn_grey}
+            textColor={theme.brandColor.iconn_dark_grey}
           />
           <Container row center crossCenter>
             <Octicons
@@ -176,9 +195,9 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
               size={theme.avatarSize.xxxsmall}
               color={theme.brandColor.iconn_accent_secondary}
               onPress={() => {}}
-              style={{marginRight:5}}
-            />            
-            <CustomText text={'Editar'} typography='h6'/>
+              style={{ marginRight: 5 }}
+            />
+            <CustomText text={'Editar'} typography="h6" />
           </Container>
         </Container>
 
@@ -186,7 +205,7 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
           typography="h6"
           fontBold
           text={`Celular`}
-          marginTop={34}
+          marginTop={24}
         />
 
         <Input
@@ -206,7 +225,7 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
           typography="h6"
           fontBold
           text={`Fecha de nacimiento`}
-          marginTop={34}
+          marginTop={21}
         />
 
         <DateTimePickerModal
@@ -214,16 +233,50 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
+          textColor={theme.brandColor.iconn_accent_principal}
         />
 
         <DatePicker
-          label='' name="fecha" control={control}
+          label=""
+          name="dateOfBirth"
+          control={control}
           onChangeText={({ value }) => {}}
           onPressDatePickerIcon={showDatePicker}
         />
+
+        <TextContainer
+          typography="h6"
+          fontBold
+          text={`Genero`}
+          marginTop={21}
+        />
+
+        <Select
+          name="gender"
+          control={control}
+          options={GENDERS.map(item => item.name)}
+          onSelect={value => setValue('gender', value)}
+          androidMode="dialog"
+          label={`Genero`}
+          placeholder={`Genero`}
+          error={errors.state?.message}
+          useActionSheet
+        />
+        
+        <Button
+          length="long"
+          round
+          disabled={false}
+          onPress={() => {console.log('Saving personal info...');}}
+          fontSize="h4"
+          fontBold
+          marginTop={32}
+        >
+          Guardar
+        </Button>
       </Container>
     </ScrollView>
-  )
-}
+  );
+};
 
 export default ProfileScreen;

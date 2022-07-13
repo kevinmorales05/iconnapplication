@@ -19,7 +19,7 @@ import { ActionButton } from '../ActionButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ICONN_BACKGROUND_IMAGE, ICONN_EYE } from 'assets/images';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { CustomText } from 'components';
+import { CustomText } from '../CustomText';
 
 export interface Props {
   label?: string;

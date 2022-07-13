@@ -9,7 +9,7 @@ const ProfileController: React.FC = () => {
       bottomSafeArea={false}
       barStyle="dark"
     >
-    <ProfileScreen/>
+    <ProfileScreen />
     </SafeArea>
   );
 };
