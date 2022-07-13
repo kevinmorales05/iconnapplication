@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { logoutThunk, preSignUpThunk, registerThunk,
   signUpUserWithEmailAndPasswordThunk, registerWithFirebaseThunk, 
-  validateOtpThunk, validateUserThunk, signInWithEmailAndPasswordThunk } from '../thunks/auth.thunks';
+  validateOtpThunk, validateUserThunk, signInWithEmailAndPasswordThunk, getUserThunk } from '../thunks/auth.thunks';
 import { AuthDataInterface } from '../types';
 
 const initialState: AuthDataInterface = {
@@ -42,6 +42,21 @@ const authSlice = createSlice({
     setFullName(state, action: PayloadAction<AuthDataInterface>){
       state.user.name = action.payload.name;
       state.user.lastName = action.payload.lastName;
+    },
+    setPhoto(state, action: PayloadAction<AuthDataInterface>){
+      state.user.photo = action.payload.photo;
+    },
+    setEmailVerified(state, action: PayloadAction<AuthDataInterface>){
+      state.user.emailVerified = action.payload.emailVerified;
+    },
+    setPhoneNumber(state, action: PayloadAction<AuthDataInterface>){
+      state.user.phoneNumber = action.payload.phoneNumber;
+    },
+    setBirthDay(state, action: PayloadAction<AuthDataInterface>){
+      state.user.birthDay = action.payload.birthDay;
+    },
+    setGender(state, action: PayloadAction<AuthDataInterface>){
+      state.user.gender = action.payload.gender;
     },
     setTermsAndCond(state, action: PayloadAction<AuthDataInterface>){
       state.user.termsAndConditions = action.payload.termsAndConditions;
@@ -150,9 +165,22 @@ const authSlice = createSlice({
       console.log('signInWithEmailAndPasswordThunk rejected...');
       state.loading = false;
     })
+    builder.addCase(getUserThunk.pending, state => {
+      console.log('getUserThunk pending...');
+      state.loading = true;
+    })
+    builder.addCase(getUserThunk.fulfilled, state => {
+      console.log('getUserThunk fullfilled...');
+      state.loading = false;
+    })
+    builder.addCase(getUserThunk.rejected, state => {
+      console.log('getUserThunk rejected...');
+      state.loading = false;
+    })
   }
 });
 // TODO: validate if it is possible to reduce extra reducers.
 export const { setAuthInitialState, setAuthEmail, setSignMode, setSecretKey, setPassword, 
-  setFullName, setTermsAndCond, setUserId, setIsLogged } = authSlice.actions;
+  setFullName, setPhoto, setEmailVerified, setPhoneNumber, setBirthDay, setGender, 
+  setTermsAndCond, setUserId, setIsLogged } = authSlice.actions;
 export default authSlice.reducer;

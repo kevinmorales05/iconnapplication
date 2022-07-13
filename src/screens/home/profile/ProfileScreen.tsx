@@ -29,7 +29,7 @@ type Props = {
 
 const ProfileScreen: React.FC<Props> = ({ goBack }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { email, name, lastName } = user;
+  const { email, name, lastName, sign_app_modes_id, photo } = user;
   const insets = useSafeAreaInsets();
   const {
     control,
@@ -91,7 +91,7 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
       <Container>
         <Avatar
           source={{
-            uri: 'https://www.audi.com.mx/content/dam/nemo/models/a3/rs-3-limousine/my-2022/NeMo-Derivate-Startpage/stage/1080x1920-audi-rs-3-sedan-stage-mobile-RS3_2021_3182.jpg?imwidth=768'
+            uri: photo
           }}
           editable={true}
           onPress={() => {}}
@@ -163,7 +163,7 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
           />
           <CustomText
             textColor={theme.brandColor.iconn_green_original}
-            text="Correo verificado"
+            text={sign_app_modes_id === 1 ? 'Correo verificado' : 'Correo verificado con red social'}
             typography="h6"
             fontWeight="normal"
           />

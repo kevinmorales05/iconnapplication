@@ -71,6 +71,7 @@ const TermsAndCondController: React.FC = () => {
     if (registerResponse.responseCode === 200) {
       if (user.sign_app_modes_id === 1) {
         const { payload: payloadSingIn } = await dispatch(signInWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));
+        // TODO: we will need to manage the session token given by SingIn firebase imediately after a signup.
       }
       dispatch(setIsLogged({isLogged: true}));
       showToast();

@@ -6,12 +6,14 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { CustomText, Button, Container } from 'components';
 
 interface Props {
+  onPressMyAccount: () => void;
   onPressLogOut: () => void;
   name?: string;
   email?: string;
 }
 
 const HomeScreen: React.FC<Props> = ({
+  onPressMyAccount,
 	onPressLogOut,
   name,
   email
@@ -40,7 +42,16 @@ const HomeScreen: React.FC<Props> = ({
             fontBold            
           />
         </Container>
-        
+        <Button
+          round
+          onPress={onPressMyAccount}
+          fontSize="h4"
+          fontBold
+          outline
+          style={{ marginTop: 8 }}
+        >
+          Mi cuenta
+        </Button>
         <Button
           round
           onPress={onPressLogOut}

@@ -8,7 +8,7 @@ import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
-import { setAuthEmail, setFullName, setIsLogged, setSignMode, setUserId, signInWithAppleThunk, 
+import { setAuthEmail, setEmailVerified, setFullName, setIsLogged, setPhoneNumber, setPhoto, setSignMode, setUserId, signInWithAppleThunk, 
   signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch } from 'rtk';
 import auth from '@react-native-firebase/auth';
 
@@ -33,7 +33,7 @@ const ContinueWithController: React.FC = () => {
         dispatch(setIsLogged({isLogged: true}));
       }
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }    
   }
 
@@ -53,27 +53,31 @@ const ContinueWithController: React.FC = () => {
         dispatch(setIsLogged({isLogged: true}));
       }
     } catch (error) {
-      console.log(error);
+      console.warn(error);
     }
   }
 
   const onGoogleButtonPress = async () => {
     try {
       const { payload } = await dispatch(signInWithGoogleThunk());
+      dispatch(setSignMode({sign_app_modes_id: 3}));
+      dispatch(setUserId({user_id: payload.user.uid}));
+      dispatch(setAuthEmail({email: payload.user.email}));      
+      dispatch(setPhoto({ photo: payload.additionalUserInfo.profile.picture }));
+      dispatch(setEmailVerified({ emailVerified: payload.additionalUserInfo.profile.emailVerified }));
+      dispatch(setPhoneNumber({ phoneNumber: payload.additionalUserInfo.profile.phoneNumber }));
+      dispatch(setFullName({
+        name: payload.additionalUserInfo.profile.given_name,
+        lastName: payload.additionalUserInfo.profile.family_name
+      }));
+
       if (payload.additionalUserInfo.isNewUser) {
-        if (payload.user.uid) {
-          dispatch(setUserId({user_id: payload.user.uid}));
-          dispatch(setAuthEmail({email: payload.user.email}));
-          dispatch(setSignMode({sign_app_modes_id: 3}));
-          navigate('TermsAndCond');
-        }
+        if (payload.user.uid) navigate('TermsAndCond');
       } else {
-        dispatch(setFullName({name: auth().currentUser?.displayName!}));
-        dispatch(setAuthEmail({email: auth().currentUser?.email!}));
-        dispatch(setIsLogged({isLogged: true}));
+        dispatch(setIsLogged({ isLogged: true }));
       }
     } catch (error) {
-      console.log(error);
+      console.warn(error);      
     }    
   }
 

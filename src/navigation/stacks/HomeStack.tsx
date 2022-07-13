@@ -7,7 +7,7 @@ import ProfileController from 'screens/home/profile/ProfileController'
 const Stack = createNativeStackNavigator<HomeStackParams>();
 
 const HomeStack: React.FC = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Home">
+  <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="Home">
     <Stack.Screen name="Home" component={HomeController} />
     <Stack.Screen name="Profile" component={ProfileController} />
   </Stack.Navigator>
