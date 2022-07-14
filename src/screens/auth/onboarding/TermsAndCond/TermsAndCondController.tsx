@@ -22,7 +22,7 @@ const showToast = () => {
     delay: 0,    
     backgroundColor: theme.brandColor.iconn_success,
     opacity: 1,    
-    containerStyle:{ paddingVertical:22, width: '90%', height: 59, top: 24, borderRadius: 8, shadowColor: '#171717',
+    containerStyle:{ paddingTop:19, width: '90%', height: 59, top: 24, borderRadius: 8, shadowColor: '#171717',
                     shadowOffset: {width: -2, height: 4}, shadowOpacity: 0.4, shadowRadius: 8 },
     onShow: () => {
         // calls on toast\`s appear animation start
