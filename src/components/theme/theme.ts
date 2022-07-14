@@ -14,7 +14,8 @@ const theme: themeType = {
     link: 14,
     placeholder: 14,
     label: 12,
-    description: 12
+    description: 12,
+    dot: 28
   },
   fontWeight: {
     Bold: '',

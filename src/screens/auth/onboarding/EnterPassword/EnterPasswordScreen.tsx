@@ -6,7 +6,7 @@ import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { ICONN_EMAIL } from 'assets/images';
 import React, { useEffect, useRef } from 'react';
-import { passwordRule } from 'utils/rules';
+import { confirmPasswordRule } from 'utils/rules';
 
 interface Props {
   onSubmit: (pass: string) => void;
@@ -17,7 +17,7 @@ interface Props {
 
 const EnterPasswordScreen: React.FC<Props> = ({ onSubmit, goBack, goToForgotPassword, email }) => {
   const insets = useSafeAreaInsets();
-  const { handleSubmit, register, control } = useForm();
+  const { handleSubmit, register, control, formState:{errors, isValid} } = useForm();
   const passwordRef = useRef<TextInput>(null);
 
   useEffect(() => {
@@ -86,7 +86,6 @@ const EnterPasswordScreen: React.FC<Props> = ({ onSubmit, goBack, goToForgotPass
           placeholder={`Ingresa tu contraseña`}
           blurOnSubmit={false}
           marginTop={27}
-          rules={passwordRule}
           error=""
           ref={passwordRef}
           showPasswordEnable

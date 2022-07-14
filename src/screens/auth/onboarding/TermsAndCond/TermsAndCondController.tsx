@@ -22,7 +22,7 @@ const showToast = () => {
     delay: 0,    
     backgroundColor: theme.brandColor.iconn_success,
     opacity: 1,    
-    containerStyle:{ paddingVertical:22, width: '90%', height: 59, top: 24, borderRadius: 8, shadowColor: '#171717',
+    containerStyle:{ paddingTop:19, width: '90%', height: 59, top: 24, borderRadius: 8, shadowColor: '#171717',
                     shadowOffset: {width: -2, height: 4}, shadowOpacity: 0.4, shadowRadius: 8 },
     onShow: () => {
         // calls on toast\`s appear animation start
@@ -59,17 +59,19 @@ const TermsAndCondController: React.FC = () => {
    */
   const onSubmit = async () => {
     loader.show();
+    let userToRegister = {...user};
     if (user.sign_app_modes_id === 1) {
-      const { payload: signUpResponse } = await dispatch(signUpUserWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));    
+      const { payload: signUpResponse } = await dispatch(signUpUserWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));
       if (signUpResponse.user.uid) {
+        userToRegister = { ...userToRegister, user_id: signUpResponse.user.uid };
         dispatch(setUserId({user_id: signUpResponse.user.uid}));
-        user.user_id = signUpResponse.user.uid;
       }
     }
-    const { payload: registerResponse } = await dispatch(registerWithFirebaseThunk(user));
+    const { payload: registerResponse } = await dispatch(registerWithFirebaseThunk(userToRegister));
     if (registerResponse.responseCode === 200) {
       if (user.sign_app_modes_id === 1) {
         const { payload: payloadSingIn } = await dispatch(signInWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));
+        // TODO: we will need to manage the session token given by SingIn firebase imediately after a signup.
       }
       dispatch(setIsLogged({isLogged: true}));
       showToast();

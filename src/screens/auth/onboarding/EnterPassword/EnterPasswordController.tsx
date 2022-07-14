@@ -5,8 +5,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
 import { useLoading } from 'context';
-import { RootState, setIsLogged, setPassword, signInWithEmailAndPasswordThunk, useAppDispatch, useAppSelector } from 'rtk';
-import React, { useEffect, useState } from 'react';
+import { 
+  getUserThunk, RootState, setAuthEmail, setBirthDay, setEmailVerified, setFullName, 
+  setGender, setIsLogged, setPassword, setPhoneNumber, setPhoto, setSignMode, setUserId, 
+  signInWithEmailAndPasswordThunk, useAppDispatch, useAppSelector } from 'rtk';
+import React, { useEffect } from 'react';
 
 const EnterPasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -30,7 +33,24 @@ const EnterPasswordController: React.FC = () => {
     loader.show();
     const { payload } = await dispatch(signInWithEmailAndPasswordThunk({email: email!, pass: password}));
     if (!payload.additionalUserInfo.isNewUser) {
-      dispatch(setIsLogged({isLogged: true}));
+      const { payload: payloadSignIn } = await dispatch(getUserThunk({ user_id: payload.user.uid}));
+      if (payloadSignIn.data) {
+        const { user_id, name, lastName, email, telephone, birthday, gender_id, photo, sign_app_modes_id } = payloadSignIn.data;        
+        dispatch(setSignMode({sign_app_modes_id: sign_app_modes_id}));
+        dispatch(setUserId({user_id: user_id}));
+        dispatch(setAuthEmail({email: email}));      
+        dispatch(setPhoto({ photo: photo }));
+        dispatch(setEmailVerified({ emailVerified: true }));
+        dispatch(setPhoneNumber({ phoneNumber: telephone }));
+        dispatch(setGender({ gender: gender_id }));
+        dispatch(setBirthDay({ birthDay: birthday }));
+        dispatch(setFullName({
+          name: name,
+          lastName: lastName
+        }));
+        dispatch(setIsLogged({isLogged: true}));  
+      }
+      
     }    
   };
 

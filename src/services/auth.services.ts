@@ -63,10 +63,23 @@ async function register(user: AuthDataInterface): Promise<any> {
   return data.resp;
 }
 
+/**
+ * Function to get current User.
+ * @param user
+ * @returns
+ */
+async function getUser(user: AuthDataInterface): Promise<any> {
+  const response = await UsersApi.getInstance().getRequest(`/users/getUser/${user.user_id}`);
+  if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
+  const { data } = response;
+  return data.resp;
+}
+
 export const authServices = {
   validateUser,
   preSignUp,
   otpValidate,
   register,
-  registerWithFirebase
+  registerWithFirebase,
+  getUser
 };

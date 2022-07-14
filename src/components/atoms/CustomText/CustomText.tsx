@@ -55,6 +55,7 @@ const CustomText: React.FC<CustomTextProps> = ({
     case 'placeholder': textStyle.push(styles.placeholder); break;
     case 'description': textStyle.push(styles.description); break;
     case 'label': textStyle.push(styles.label); break;
+    case 'dot': textStyle.push(styles.dot); break;
     default: break;
   }
 
@@ -134,6 +135,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: theme.fontSize.label,
+    color: theme.fontColor.dark
+  },
+  dot: {
+    fontSize: theme.fontSize.dot,
     color: theme.fontColor.dark
   }
 });

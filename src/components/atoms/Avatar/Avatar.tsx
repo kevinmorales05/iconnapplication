@@ -2,11 +2,11 @@ import { SizeType } from 'components/types/size-type';
 import React from 'react';
 import {
   TouchableOpacity,
-  TouchableNativeFeedback,
   Platform,
   Text,
   Image,
   StyleSheet,
+  Pressable,
 } from 'react-native';
 import Octicons from 'react-native-vector-icons/Octicons';
 import theme from '../../theme/theme';
@@ -60,7 +60,7 @@ const Avatar: React.FC<AvatarProps> = ({
 }) => {
 	({ ...props } = { style, title, editable, size, editText, ...props });
   const TouchableElement: any =
-    Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
+    Platform.OS === 'android' ? Pressable : TouchableOpacity;
   return (
     <Container row
       style={StyleSheet.flatten([
@@ -101,6 +101,7 @@ const Avatar: React.FC<AvatarProps> = ({
                 name="pencil"
                 size={theme.avatarSize[size] / 3}
                 color={props.editIconColor || theme.brandColor.iconn_accent_secondary}
+                onPress={props.onPress}
               />
             </Container>
             </TouchableElement>            

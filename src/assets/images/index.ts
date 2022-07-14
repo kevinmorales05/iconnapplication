@@ -8,7 +8,7 @@ import ICONN_DOCUMENT_EDIT from './iconn-document-edit.webp';
 import ICONN_WARNING from './iconn-warning.webp';
 import ICONN_SUCCESS from './iconn-success.webp';
 import ICONN_ERROR from './iconn-error.webp';
-
+import ICONN_EYE_VISIBLE from './iconn-eye-visible.webp';
 export {
   ICONN_BINOMIO_LOGOS,
   ICONN_BINOMIO_LOGOS_LIGHT,
@@ -19,5 +19,6 @@ export {
   ICONN_DOCUMENT_EDIT,
   ICONN_WARNING,
   ICONN_SUCCESS,
-  ICONN_ERROR
+  ICONN_ERROR,
+  ICONN_EYE_VISIBLE
 };

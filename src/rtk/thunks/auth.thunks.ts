@@ -20,7 +20,7 @@ export const validateOtpThunk = createAsyncThunk('auth/validateOtpThunk', async 
 
 /**
  * (DEPRECATED)
- * TODO: Remove this thunk (Validate with Albert or Kevin), currently isn't used.
+ * TODO: Remove this registerThunk (Validate with Albert or Kevin), currently isn't used.
  */
 export const registerThunk = createAsyncThunk('auth/registerThunk', async (payload: AuthDataInterface) => {
   return await authServices.register(payload);
@@ -29,6 +29,10 @@ export const registerThunk = createAsyncThunk('auth/registerThunk', async (paylo
 export const registerWithFirebaseThunk = createAsyncThunk('auth/registerWithFirebaseThunk', async (payload: AuthDataInterface) => {
   return await authServices.registerWithFirebase(payload);
 });
+
+export const getUserThunk = createAsyncThunk('auth/getUser', async (payload: AuthDataInterface) => {
+  return await authServices.getUser(payload);
+})
 
 // -------------------------------- FIREBASE SECTION --------------------------------
 /**

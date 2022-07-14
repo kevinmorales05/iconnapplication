@@ -7,8 +7,9 @@ import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { passwordRule } from 'utils/rules';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import {Touchable} from '../../../../components/atoms/Touchable'
+import { Touchable } from '../../../../components/atoms/Touchable'
 import { ICONN_EYE } from 'assets/images';
+import { ICONN_EYE_VISIBLE } from 'assets/images';
 
 interface Props {
   onSubmit: (email: string) => void;
@@ -16,25 +17,26 @@ interface Props {
 }
 
 const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
-const insets = useSafeAreaInsets();
-const [text, setText] = useState("") // password value
-//items
-const [val1Item, setVal1Item] = useState('circle')
-const [val2Item, setVal2Item] = useState('circle')
-const [val3Item, setVal3Item] = useState('circle')
-const [val4Item, setVal4Item] = useState('circle')
-const [val5Item, setVal5Item] = useState('circle')
-//colors
-const [val1Color, setVal1Color] = useState(theme.brandColor.iconn_med_grey)
-const [val2Color, setVal2Color] = useState(theme.brandColor.iconn_med_grey)
-const [val3Color, setVal3Color] = useState(theme.brandColor.iconn_med_grey)
-const [val4Color, setVal4Color] = useState(theme.brandColor.iconn_med_grey)
-const [val5Color, setVal5Color] = useState(theme.brandColor.iconn_med_grey)
-//see password
-const [secureMode, setSecureMode] = useState(false)
-
-//password validation
-const [passValid, setPassValid] = useState(true)
+  const insets = useSafeAreaInsets();
+  const [text, setText] = useState("") // password value
+  //items
+  const [val1Item, setVal1Item] = useState('circle')
+  const [val2Item, setVal2Item] = useState('circle')
+  const [val3Item, setVal3Item] = useState('circle')
+  const [val4Item, setVal4Item] = useState('circle')
+  const [val5Item, setVal5Item] = useState('circle')
+  //colors
+  const [val1Color, setVal1Color] = useState(theme.brandColor.iconn_med_grey)
+  const [val2Color, setVal2Color] = useState(theme.brandColor.iconn_med_grey)
+  const [val3Color, setVal3Color] = useState(theme.brandColor.iconn_med_grey)
+  const [val4Color, setVal4Color] = useState(theme.brandColor.iconn_med_grey)
+  const [val5Color, setVal5Color] = useState(theme.brandColor.iconn_med_grey)
+  //see password
+  const [secureMode, setSecureMode] = useState(true)
+  //eye iconn
+  const [iconnChange, setIconnChange] = useState(ICONN_EYE)
+  //password validation
+  const [passValid, setPassValid] = useState(true)
   const {
     control,
     handleSubmit,
@@ -59,7 +61,7 @@ const [passValid, setPassValid] = useState(true)
   const validatePassword = (value: string) => {
     setText(value)
     console.log("------------------------")
-    if(value === ""){
+    if (value === "") {
       setVal1Item("circle")
       setVal1Color(theme.brandColor.iconn_med_grey)
       setVal2Item("circle")
@@ -72,28 +74,28 @@ const [passValid, setPassValid] = useState(true)
       setVal5Color(theme.brandColor.iconn_med_grey)
       setPassValid(true)
     }
-    
+
     if (value.length < 8) {
       // return `Minimo 8 caracteres`;
       console.log("Minimo 8 caracteres")
       setVal1Item("times-circle")
       setVal1Color(theme.brandColor.iconn_error)
       setPassValid(true)
-    } 
+    }
     else {
       console.log("*****tiene mas de 8 caracteres")
       setVal1Item("check-circle")
       setVal1Color(theme.brandColor.iconn_success)
     }
-    
-     if(!value.match(/[A-Z]/)){
+
+    if (!value.match(/[A-Z]/)) {
       // return `Al menos una mayúscula`;
       console.log("no hay una mayuscula")
       setVal2Item("times-circle")
       setVal2Color(theme.brandColor.iconn_error)
       setPassValid(true)
-      
-    } 
+
+    }
 
     else {
       setVal2Item("check-circle")
@@ -121,7 +123,7 @@ const [passValid, setPassValid] = useState(true)
       setVal4Item("times-circle")
       setVal4Color(theme.brandColor.iconn_error)
       setPassValid(true)
-      
+
     }
     else {
       setVal4Item("check-circle")
@@ -135,27 +137,29 @@ const [passValid, setPassValid] = useState(true)
       setVal5Item("times-circle")
       setVal5Color(theme.brandColor.iconn_error)
       setPassValid(true)
-    }  else {
+    } else {
       setVal5Item("check-circle")
       setVal5Color(theme.brandColor.iconn_success)
       console.log("*****tiene un caracter especial")
     }
     console.log("------------------------")
-    if(!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/)  ){
+    if (!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/)) {
       console.log("cumple todo")
       setPassValid(false)
     }
 
   }
   const setMode = () => {
-    if(secureMode === false){
+    if (secureMode === false) {
       setSecureMode(true);
+      setIconnChange(ICONN_EYE)
     }
     else {
       setSecureMode(false)
+      setIconnChange(ICONN_EYE_VISIBLE)
     }
-   
-    
+
+
 
 
   }
@@ -183,52 +187,52 @@ const [passValid, setPassValid] = useState(true)
         text={`Recuerda no compartirla.`}
         marginTop={9}
         fontSize={17}
-        
+
       ></TextContainer>
-      <View style={{backgroundColor:'white', borderColor:'#dadadb', borderWidth:1,padding:2, borderRadius:8, marginTop:20,  flexDirection:'row', height:60, justifyContent:'space-between' }}>
-      <TextInput 
-       style={{backgroundColor:'white' }}
-       onChangeText={ text => validatePassword(text)}
-       placeholder="Ingresa tu contraseña"
-       value={text}
-       secureTextEntry={secureMode}
-      />
-      
-<Touchable testID={`5-hide-password`} onPress={()=> setMode()}  opacityEffect>
-              <Image source={ICONN_EYE} style={styles.passwordImageStyle}  />
-            </Touchable>
+      <View style={{ backgroundColor: 'white', borderColor: '#dadadb', borderWidth: 1, padding: 2, borderRadius: 8, marginTop: 20, flexDirection: 'row', height: 60, justifyContent: 'space-between' }}>
+        <TextInput
+          style={{ backgroundColor: 'white' }}
+          onChangeText={text => validatePassword(text)}
+          placeholder="Ingresa tu contraseña"
+          value={text}
+          secureTextEntry={secureMode}
+        />
+
+        <Touchable testID={`5-hide-password`} onPress={() => setMode()} opacityEffect>
+          <Image source={iconnChange} style={styles.passwordImageStyle} />
+        </Touchable>
       </View>
-      
-      
-    
-    <Container>
-    
-<Container>
-        <Container flex row style={{marginTop:34}}>          
-          <FontAwesome name={val1Item} size={18} color={val1Color} />
-          <TextContainer text='Mínimo 8 caracteres' typography='h5' marginLeft={10}/>
+
+
+
+      <Container>
+
+        <Container>
+          <Container flex row style={{ marginTop: 34 }}>
+            <FontAwesome name={val1Item} size={18} color={val1Color} />
+            <TextContainer text='Mínimo 8 caracteres' typography='h5' marginLeft={10} />
+          </Container>
+          <Container flex row style={{ marginTop: 11 }}>
+            <FontAwesome name={val2Item} size={18} color={val2Color} />
+            <TextContainer text='Contiene una letra mayúscula' typography='h5' marginLeft={10} />
+          </Container>
+          <Container flex row style={{ marginTop: 11 }}>
+            <FontAwesome name={val3Item} size={18} color={val3Color} />
+            <TextContainer text='Contiene una letra minúscula' typography='h5' marginLeft={10} />
+          </Container>
+          <Container flex row style={{ marginTop: 11 }}>
+            <FontAwesome name={val4Item} size={18} color={val4Color} />
+            <TextContainer text='Contiene un número' typography='h5' marginLeft={10} />
+          </Container>
+          <Container flex row style={{ marginTop: 11 }}>
+            <FontAwesome name={val5Item} size={18} color={val5Color} />
+            <TextContainer text='Contiene un caracter especial' typography='h5' marginLeft={10} />
+          </Container>
         </Container>
-        <Container flex row style={{marginTop:11}}>
-          <FontAwesome name={val2Item} size={18} color={val2Color} />
-          <TextContainer text='Contiene una letra mayúscula' typography='h5' marginLeft={10}/>
-        </Container>
-        <Container flex row style={{marginTop:11}}>
-          <FontAwesome name={val3Item} size={18} color={val3Color} />
-          <TextContainer text='Contiene una letra minúscula' typography='h5' marginLeft={10}/>
-        </Container>
-        <Container flex row style={{marginTop:11}}>
-          <FontAwesome name={val4Item} size={18} color={val4Color} />
-          <TextContainer text='Contiene un número' typography='h5' marginLeft={10}/>
-        </Container>
-        <Container flex row style={{marginTop:11}}>
-          <FontAwesome name={val5Item} size={18} color={val5Color} />
-          <TextContainer text='Contiene un caracter especial' typography='h5' marginLeft={10}/>
-        </Container>
+
+
+
       </Container>
-
-
-          
-    </Container>  
 
       <Container flex row crossAlignment="end" space="between">
         <ActionButton
