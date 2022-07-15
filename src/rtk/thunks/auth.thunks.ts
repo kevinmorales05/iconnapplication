@@ -55,7 +55,25 @@ createAsyncThunk('auth/signUpUserWithEmailAndPasswordThunk', async (payload: {em
  */
 export const signInWithEmailAndPasswordThunk =
 createAsyncThunk('auth/signInWithEmailAndPasswordThunk', async (payload: {email: string, pass: string}) => {
-  return await auth().signInWithEmailAndPassword(payload.email, payload.pass);
+  if (payload.email === ""){
+    console.log("Petición incompleta, el campo de correo electrónico es obligatorio.")
+  }
+  try {
+    const userInfo = await auth().signInWithEmailAndPassword(payload.email, payload.pass);
+    return userInfo;
+  } catch (error) {
+    if (error.code === 'auth/wrong-password') {
+      console.log('Contraseña incorrecta.');
+    }
+    if (error.code === 'auth/too-many-requests'){
+      console.log("Hemos bloqueado su cuenta de manera temporal debido a actividad inusual, intente más tarde. Puede activar inmediatamente reseteando su contraseña.")
+      //We have blocked all requests from this device due to unusual activity. Try again later. [ Access to this account has been temporarily disabled due to many failed login attempts. You can immediately restore it by resetting your password or you can try again later.
+    }
+    console.log("error integro ", error)
+    return error;
+  }
+  
+  
 });
 
 /**

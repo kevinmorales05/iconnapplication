@@ -10,6 +10,7 @@ import {
   setGender, setIsLogged, setPassword, setPhoneNumber, setPhoto, setSignMode, setUserId, 
   signInWithEmailAndPasswordThunk, useAppDispatch, useAppSelector } from 'rtk';
 import React, { useEffect } from 'react';
+import { Alert } from 'components';
 
 const EnterPasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();

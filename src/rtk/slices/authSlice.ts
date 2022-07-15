@@ -17,15 +17,16 @@ const initialState: AuthDataInterface = {
   sign_app_modes_id: undefined
 };
 
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: initialState,
-    loading: false
+    loading: false,
   },
   reducers: {
     setAuthInitialState(state) {
-      state = { user: initialState, loading: false };
+      state = { user: initialState, loading: false, passwordCorrect: '' };
     },
     setAuthEmail(state, action: PayloadAction<AuthDataInterface>) {
       state.user.email = action.payload.email;
