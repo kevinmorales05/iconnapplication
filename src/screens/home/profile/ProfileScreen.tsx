@@ -12,7 +12,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleProp, TextInput, ViewStyle } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useForm } from 'react-hook-form';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { alphabetRule } from 'utils/rules';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -22,12 +22,14 @@ import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
 
 type Props = {
+  onSubmit: (data: any) => void;
+  onLogout: () => void;
   goBack?: () => void;
   onPress?: () => void;
   editIconStyle?: StyleProp<ViewStyle>;
 };
 
-const ProfileScreen: React.FC<Props> = ({ goBack }) => {
+const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email, name, lastName, sign_app_modes_id, photo } = user;
   const insets = useSafeAreaInsets();
@@ -75,6 +77,10 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
   };
 
   const { dateOfBirth } = watch();
+
+  const submit: SubmitHandler<FieldValues> = fields => {
+    onSubmit(fields);
+  };
 
   return (
     <ScrollView
@@ -267,7 +273,7 @@ const ProfileScreen: React.FC<Props> = ({ goBack }) => {
           length="long"
           round
           disabled={false}
-          onPress={() => {console.log('Saving personal info...');}}
+          onPress={handleSubmit(submit)}
           fontSize="h4"
           fontBold
           marginTop={32}

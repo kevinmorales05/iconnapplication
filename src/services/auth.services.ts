@@ -75,11 +75,25 @@ async function getUser(user: AuthDataInterface): Promise<any> {
   return data.resp;
 }
 
+/**
+ * Function to update current User.
+ * @param user
+ * @returns
+ */
+ async function putUser(user: AuthDataInterface): Promise<any> {
+  const { user_id } = user;
+  const response = await UsersApi.getInstance().putRequest(`/users/putUser/${user_id}`,user);
+  if (response === undefined) return Promise.reject(new Error('putUser:/users/putUser'));
+  const { data } = response;
+  return data.resp;
+}
+
 export const authServices = {
   validateUser,
   preSignUp,
   otpValidate,
   register,
   registerWithFirebase,
-  getUser
+  getUser,
+  putUser
 };
