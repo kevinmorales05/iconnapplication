@@ -1,17 +1,23 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps
+} from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { AuthDataInterface } from 'rtk/types/auth.types';
 import { Avatar } from 'components/atoms/Avatar';
 
-interface AccountItemProps {
+interface AccountItemProps extends TouchableOpacityProps {
   user: AuthDataInterface;
 }
 
 export default function AccountItem(props: AccountItemProps) {
-  const { user } = props;
+  const { user, ...touchableOpacityProps } = props;
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} {...touchableOpacityProps}>
       <View style={styles.content}>
         <View style={styles.start}>
           <View>

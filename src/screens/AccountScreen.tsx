@@ -81,7 +81,12 @@ export default function AccountScreen() {
       <ScrollView>
         <View>
           <Section label="Perfil">
-            <AccountItem user={user} />
+            <AccountItem
+              user={user}
+              onPress={() => {
+                navigation?.navigate('Profile');
+              }}
+            />
             <AnnounceItem
               icon={
                 <Ionicons

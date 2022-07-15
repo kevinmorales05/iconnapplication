@@ -86,8 +86,8 @@ export default function AddressItems() {
 
   return (
     <View style={styles.container}>
-      {items.map(({ type, address }) => {
-        return <Item type={type} address={address} />;
+      {items.map(({ type, address }, index) => {
+        return <Item key={index} type={type} address={address} />;
       })}
       <TouchableOpacity
         onPress={() => {
