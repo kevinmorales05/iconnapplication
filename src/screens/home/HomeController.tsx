@@ -185,21 +185,17 @@ const HomeController: React.FC = () => {
           </Pressable>
           <Container row>
             <TextContainer
-              text="Hola "
+              text={`¡Hola ${user.name} ${user.lastName}!`}
               typography="h3"
               fontBold={true}
               textAlign="center"
               marginTop={4}
             />
-            <TextContainer
-              text={user.name!}
-              typography="h3"
-              fontBold={true}
-              textAlign="center"
-              marginTop={4}
-            />
+          </Container >
+          <Container center middle flex={1}>
+            <CustomCarousel />
           </Container>
-          <CustomCarousel />
+
           <Container
             style={{
               backgroundColor: theme.brandColor.iconn_warm_grey,
