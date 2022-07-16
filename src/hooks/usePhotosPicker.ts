@@ -5,8 +5,10 @@ import {
   launchImageLibrary
 } from 'react-native-image-picker';
 import { useLoading } from 'context';
+import { RootState, useAppSelector } from 'rtk';
 
 import storage from '@react-native-firebase/storage';
+import { authServices } from 'services';
 
 export default function usePhotosPicker(
   selectionLimit: number | undefined,
@@ -16,6 +18,18 @@ export default function usePhotosPicker(
   const loader = useLoading();
   const [response, setResponse] = useState<ImagePickerResponse | null>(null);
   const [currentPhoto, setCurrentPhoto] = useState<string | undefined>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+
+  const updatePhoto = async (url: string) => {
+    loader.show();
+    try {
+      await authServices.putUser({ ...user, photo: url });
+    } catch (error) {
+      console.warn(error);
+    } finally {
+      loader.hide();
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -43,6 +57,8 @@ export default function usePhotosPicker(
 
         // get download url file
         const url = await storage().ref(bucketPath).getDownloadURL();
+
+        await updatePhoto(url);
 
         setCurrentPhoto(url);
       } catch (error) {
