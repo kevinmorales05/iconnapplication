@@ -20,6 +20,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { GENDERS } from 'assets/files';
 import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
+import usePhotosPicker from '../../../hooks/usePhotosPicker';
 
 type Props = {
   onSubmit: (data: any) => void;
@@ -33,6 +34,19 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email, name, lastName, sign_app_modes_id, photo } = user;
   const insets = useSafeAreaInsets();
+  const { launch, assets } = usePhotosPicker(1);
+  const [currentPhoto, setCurrentPhoto] = useState<string | undefined>(photo);
+
+  useEffect(() => {
+    if (!assets) return;
+
+    (async () => {
+      if (assets[0].uri) {
+        setCurrentPhoto(assets[0].uri);
+      }
+    })();
+  }, [assets]);
+
   const {
     control,
     formState: { errors },
@@ -97,10 +111,12 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
       <Container>
         <Avatar
           source={{
-            uri: photo
+            uri: currentPhoto
           }}
           editable={true}
-          onPress={() => {}}
+          onPress={() => {
+            launch();
+          }}
         />
 
         <TextContainer
