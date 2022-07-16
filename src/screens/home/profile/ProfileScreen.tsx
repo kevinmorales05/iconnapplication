@@ -20,7 +20,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { GENDERS } from 'assets/files';
 import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
-import usePhotosPicker from '../../../hooks/usePhotosPicker';
+import usePhotosPicker from '../../../hooks/usePhotosPicker'; // TODO: Configure Alias
 
 type Props = {
   onSubmit: (data: any) => void;
@@ -34,18 +34,11 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email, name, lastName, sign_app_modes_id, photo } = user;
   const insets = useSafeAreaInsets();
-  const { launch, assets } = usePhotosPicker(1);
-  const [currentPhoto, setCurrentPhoto] = useState<string | undefined>(photo);
 
-  useEffect(() => {
-    if (!assets) return;
+  // storage bucket folder
+  const bucketPath = `userPhotos/${user.user_id}/profile/`;
 
-    (async () => {
-      if (assets[0].uri) {
-        setCurrentPhoto(assets[0].uri);
-      }
-    })();
-  }, [assets]);
+  const { launch, currentPhoto } = usePhotosPicker(1, bucketPath);
 
   const {
     control,

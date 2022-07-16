@@ -6,17 +6,52 @@ import {
 } from 'react-native-image-picker';
 import { useLoading } from 'context';
 
-export default function usePhotosPicker(selectionLimit: number | undefined) {
+import storage from '@react-native-firebase/storage';
+
+export default function usePhotosPicker(
+  selectionLimit: number | undefined,
+  bucketPath: string
+) {
   const [assets, setAssets] = useState<Asset[] | null>(null);
   const loader = useLoading();
-
   const [response, setResponse] = useState<ImagePickerResponse | null>(null);
+  const [currentPhoto, setCurrentPhoto] = useState<string | undefined>();
 
   useEffect(() => {
     (async () => {
       setAssets(response?.assets || null);
     })();
   }, [response]);
+
+  useEffect(() => {
+    (async () => {
+      loader.show();
+      try {
+        // local reference
+        if (!assets) return;
+        if (assets.length < 1) return;
+
+        const { fileName } = assets[0];
+        const { uri } = assets[0];
+
+        if (!fileName || !uri) return;
+
+        const reference = storage().ref(bucketPath);
+
+        // storage bucket reference
+        await reference.putFile(uri);
+
+        // get download url file
+        const url = await storage().ref(bucketPath).getDownloadURL();
+
+        setCurrentPhoto(url);
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        loader.hide();
+      }
+    })();
+  }, [assets]);
 
   const launch = useCallback(async () => {
     try {
@@ -37,5 +72,5 @@ export default function usePhotosPicker(selectionLimit: number | undefined) {
     }
   }, []);
 
-  return { launch, assets } as const; // infers [boolean, typeof load] instead of (boolean | typeof load)[]
+  return { launch, currentPhoto } as const;
 }
