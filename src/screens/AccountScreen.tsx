@@ -15,8 +15,9 @@ import {
 } from 'components';
 import { NavigationContext } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { RootState, useAppSelector } from 'rtk';
+import { RootState, useAppSelector, setIsLogged, useAppDispatch } from 'rtk';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { logoutThunk } from 'rtk/thunks/auth.thunks';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
@@ -73,6 +74,14 @@ const taxItemStyles = StyleSheet.create({
 
 export default function AccountScreen() {
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
+
+  const logOut = async () => {
+    const { meta } = await dispatch(logoutThunk());
+    if (meta.requestStatus === 'fulfilled') {
+      dispatch(setIsLogged({ isLogged: false }));
+    }
+  };
 
   const navigation = useContext(NavigationContext);
 
@@ -114,9 +123,7 @@ export default function AccountScreen() {
           fontBold
           fontSize="h4"
           fontColor={'dark_grey'}
-          onPress={() => {
-            navigation?.navigate('Home');
-          }}
+          onPress={logOut}
           icon={
             <MaterialIcons
               name="logout"
