@@ -19,7 +19,7 @@ interface ToastContextInterface {
 
 export const ToastContext = React.createContext<ToastContextInterface>({} as ToastContextInterface);
 
-const initialState: ToastInterface = { message: '', visible: false, type: 'warning' };
+const initialState: ToastInterface = { message: '', visible: false, type: undefined };
 
 export const ToastContextProvider = ({children}) => {
   const [toast, setToast] = useState<ToastInterface>(initialState);
