@@ -18,3 +18,11 @@ If you want to learn more about creating good readme files then refer the follow
 - [ASP.NET Core](https://github.com/aspnet/Home)
 - [Visual Studio Code](https://github.com/Microsoft/vscode)
 - [Chakra Core](https://github.com/Microsoft/ChakraCore)
+
+
+# Testing deep links
+- In order to test the deep links you just need to run this in the terminal
+ # Open login screen
+ - npx uri-scheme open "iconn://iconn/continuewith" --android
+
+  - npx uri-scheme open "iconn://iconn/continuewith" --ios
