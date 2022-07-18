@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   Asset,
+  CameraOptions,
   ImagePickerResponse,
+  launchCamera,
   launchImageLibrary
 } from 'react-native-image-picker';
 import { useLoading } from 'context';
@@ -9,6 +11,11 @@ import { RootState, useAppSelector } from 'rtk';
 
 import storage from '@react-native-firebase/storage';
 import { authServices } from 'services';
+
+export enum PhotosPickerMode {
+  CAMERA,
+  LIBRARY
+}
 
 export default function usePhotosPicker(
   selectionLimit: number | undefined,
@@ -69,22 +76,40 @@ export default function usePhotosPicker(
     })();
   }, [assets]);
 
-  const launch = useCallback(async () => {
-    try {
-      loader.show();
-      await launchImageLibrary(
-        {
-          mediaType: 'photo',
-          includeBase64: false,
-          includeExtra: true,
-          selectionLimit
-        },
-        setResponse
-      );
-    } catch (error) {
-      console.warn(error);
-    } finally {
-      loader.hide();
+  const launch = useCallback(async (mode: PhotosPickerMode) => {
+    if (mode === PhotosPickerMode.LIBRARY) {
+      try {
+        loader.show();
+        await launchImageLibrary(
+          {
+            mediaType: 'photo',
+            includeBase64: false,
+            includeExtra: true,
+            selectionLimit
+          },
+          setResponse
+        );
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        loader.hide();
+      }
+    }
+
+    if (mode === PhotosPickerMode.CAMERA) {
+      try {
+        loader.show();
+        await launchCamera(
+          {
+            saveToPhotos: false
+          } as CameraOptions,
+          setResponse
+        );
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        loader.hide();
+      }
     }
   }, []);
 

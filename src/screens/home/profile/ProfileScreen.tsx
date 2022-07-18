@@ -20,7 +20,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { GENDERS } from 'assets/files';
 import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
-import usePhotosPicker from '../../../hooks/usePhotosPicker'; // TODO: Configure Alias
+import usePhotosPicker, { PhotosPickerMode } from '../../../hooks/usePhotosPicker'; // TODO: Configure Alias
 
 type Props = {
   onSubmit: (data: any) => void;
@@ -38,7 +38,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   // storage bucket folder
   const bucketPath = `userPhotos/${user.user_id}/profile/`;
 
-  const { launch, currentPhoto } = usePhotosPicker(1, bucketPath);
+  const photosPicker = usePhotosPicker(1, bucketPath);
 
   const {
     control,
@@ -104,11 +104,11 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
       <Container>
         <Avatar
           source={{
-            uri: photo || currentPhoto 
+            uri: photo || photosPicker.currentPhoto 
           }}
           editable={true}
           onPress={() => {
-            launch();
+            photosPicker.launch(PhotosPickerMode.LIBRARY);
           }}
         />
 
