@@ -35,7 +35,7 @@ export const ToastContextProvider = ({children}) => {
 
   useEffect(() => {
     if (toast.visible) {
-      timeout.current = setTimeout(hide, 3000);
+      timeout.current = setTimeout(hide, 4000);
       return () => {
         if (timeout.current) {
           clearTimeout(timeout.current);
