@@ -1,24 +1,50 @@
-import React from 'react';
-import ForgotPasswordScreen from './ForgotPasswordScreen'
+import React, { useEffect } from 'react';
+import ForgotPasswordScreen from './ForgotPasswordScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
-import { RootState, useAppSelector } from 'rtk';
-import { useAlert } from 'context';
+import {
+  RootState,
+  sendEmailToRecoverPasswordThunk,
+  useAppDispatch,
+  useAppSelector
+} from 'rtk';
+import { useToast, useLoading } from 'context';
 
 const ForgotPasswordController: React.FC = () => {
-  const { goBack } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();  
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  const { email } = user;
-  const alert = useAlert();
+  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+  const { loading, user } = useAppSelector((state: RootState) => state.auth);
+  let { email } = user;
+  const loader = useLoading();
+  const toast = useToast();
+  const dispatch = useAppDispatch();
 
-  const onSubmit = async (password: string) => {
-    alert.show({ 
-      title:'Funcionalidad no disponible por el momento :(', 
-      acceptTitle:'ok', 
-      onAccept() { alert.hide();}},'warning');
+  useEffect(() => {
+    if (loading === false) {
+      loader.hide();
+    }
+  }, [loading]);
+
+  const onSubmit = async () => {
+    loader.show();
+    const { payload: sendEmailResponse } = await dispatch(
+      sendEmailToRecoverPasswordThunk({ email })
+    );
+    // TODO: The response code must be updated according to the document "Microservicio Users v_1.2.pdf"
+    if (sendEmailResponse.responseCode === 12) {
+      toast.show({
+        message: 'Correo de recuperación enviado\n exitosamente.',
+        type: 'success'
+      });
+      navigate('ContinueWith');
+    } else {
+      toast.show({
+        message: 'El correo no pudo ser enviado,\n intenta más tarde.',
+        type: 'error'
+      });
+    }
   };
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
@@ -34,4 +60,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default ForgotPasswordController
+export default ForgotPasswordController;

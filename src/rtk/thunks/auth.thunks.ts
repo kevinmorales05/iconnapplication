@@ -32,7 +32,11 @@ export const registerWithFirebaseThunk = createAsyncThunk('auth/registerWithFire
 
 export const getUserThunk = createAsyncThunk('auth/getUser', async (payload: AuthDataInterface) => {
   return await authServices.getUser(payload);
-})
+});
+
+export const sendEmailToRecoverPasswordThunk = createAsyncThunk('auth/sendEmailToRecoverPasswordThunk', async (payload: AuthDataInterface) => {
+  return await authServices.sendEmailtoRecoverPassword(payload);
+});
 
 // -------------------------------- FIREBASE SECTION --------------------------------
 /**
