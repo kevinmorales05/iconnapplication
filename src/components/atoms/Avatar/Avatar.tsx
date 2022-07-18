@@ -61,7 +61,7 @@ const Avatar: React.FC<AvatarProps> = ({
 	...props
 }) => {
 	({ ...props } = { style, title, editable, size, editText, defaultSource, ...props });
-  const [loading, setLoading] = useState(false);
+  const [succesful, setSuccesful] = useState(false);
 
   const TouchableElement: any =
     Platform.OS === 'android' ? Pressable : TouchableOpacity;
@@ -79,15 +79,15 @@ const Avatar: React.FC<AvatarProps> = ({
           {props.source ? (
             <Image
               onLoadStart={() => {
-                setLoading(true)
+                setSuccesful(true)
               }}
-              onLoadEnd={() => {
-                setLoading(false)
+              onLoad={() => {
+                setSuccesful(false)
               }}
               defaultSource={defaultSource}
               source={props.source}
               resizeMode="cover"
-              style={loading ?  styles.defaultImage : styles.image}
+              style={succesful ?  styles.defaultImage : styles.image}
             />
           ) : (
             <Text
