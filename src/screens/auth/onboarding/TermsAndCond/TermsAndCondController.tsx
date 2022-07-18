@@ -7,37 +7,8 @@ import { HomeStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
 import { RootState, setUserId, useAppDispatch, useAppSelector, setIsLogged } from 'rtk';
 import { registerWithFirebaseThunk, signInWithEmailAndPasswordThunk, signUpUserWithEmailAndPasswordThunk } from 'rtk/thunks/auth.thunks';
-import { useAlert, useLoading } from 'context';
-import Toast from 'react-native-root-toast';
+import { useAlert, useLoading, useToast } from 'context';
 import theme from 'components/theme/theme';
-
-// TODO: remove this function and place it in the api context.
-const showToast = () => {
-  Toast.show(`✓       Cuenta creada exitosamente.       X`, {
-    duration: 8000,
-    position: Toast.positions.TOP,
-    shadow: false,
-    animation: true,
-    hideOnPress: true,
-    delay: 0,    
-    backgroundColor: theme.brandColor.iconn_success,
-    opacity: 1,    
-    containerStyle:{ paddingTop:19, width: '90%', height: 59, top: 24, borderRadius: 8, shadowColor: '#171717',
-                    shadowOffset: {width: -2, height: 4}, shadowOpacity: 0.4, shadowRadius: 8 },
-    onShow: () => {
-        // calls on toast\`s appear animation start
-    },
-    onShown: () => {
-        // calls on toast\`s appear animation end.
-    },
-    onHide: () => {
-        // calls on toast\`s hide animation start.
-    },
-    onHidden: () => {
-        // calls on toast\`s hide animation end.
-    }
-  });
-}
 
 const TermsAndCondController: React.FC = () => {
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -45,6 +16,7 @@ const TermsAndCondController: React.FC = () => {
   const loader = useLoading();
   const { loading, user } = useAppSelector((state: RootState) => state.auth);
   const alert = useAlert();
+  const toast = useToast();
 
   useEffect(() => {
     if (loading === false) {
@@ -72,9 +44,10 @@ const TermsAndCondController: React.FC = () => {
       if (user.sign_app_modes_id === 1) {
         const { payload: payloadSingIn } = await dispatch(signInWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));
         // TODO: we will need to manage the session token given by SingIn firebase imediately after a signup.
+        // This would be needed to request to the backend.
       }
       dispatch(setIsLogged({isLogged: true}));
-      showToast();
+      toast.show({message: 'Cuenta creada exitosamente.', type: 'success'});
     } else {
       alert.show({
         title: registerResponse.responseMessage

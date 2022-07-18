@@ -19,4 +19,4 @@ export interface AuthDataInterface {
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';
-export type Credentials = FirebaseAuthTypes.AuthCredential | null; 
+export type Credentials = FirebaseAuthTypes.AuthCredential | null;

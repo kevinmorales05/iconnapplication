@@ -9,13 +9,14 @@ import React, { useEffect, useRef } from 'react';
 import { confirmPasswordRule } from 'utils/rules';
 
 interface Props {
+  accountError?: string;
   onSubmit: (pass: string) => void;
   goBack: () => void;
   goToForgotPassword: () => void;
   email?: string;
 }
 
-const EnterPasswordScreen: React.FC<Props> = ({ onSubmit, goBack, goToForgotPassword, email }) => {
+const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, goToForgotPassword, email }) => {
   const insets = useSafeAreaInsets();
   const { handleSubmit, register, control, formState:{errors, isValid} } = useForm();
   const passwordRef = useRef<TextInput>(null);
@@ -86,7 +87,7 @@ const EnterPasswordScreen: React.FC<Props> = ({ onSubmit, goBack, goToForgotPass
           placeholder={`Ingresa tu contraseña`}
           blurOnSubmit={false}
           marginTop={27}
-          error=""
+          error={accountError}
           ref={passwordRef}
           showPasswordEnable
         />
