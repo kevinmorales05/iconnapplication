@@ -104,7 +104,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
       <Container>
         <Avatar
           source={{
-            uri: photo || currentPhoto || undefined
+            uri: photo || currentPhoto 
           }}
           editable={true}
           onPress={() => {

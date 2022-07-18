@@ -21,7 +21,7 @@ export default function AccountItem(props: AccountItemProps) {
       <View style={styles.content}>
         <View style={styles.start}>
           <View>
-            <Avatar title="MM" />
+            <Avatar source={{ uri: user.photo }} />
           </View>
         </View>
         <View style={styles.middle}>
