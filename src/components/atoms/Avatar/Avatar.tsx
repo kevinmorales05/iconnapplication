@@ -78,16 +78,13 @@ const Avatar: React.FC<AvatarProps> = ({
           ])}>
           {props.source ? (
             <Image
-              onLoadStart={() => {
-                setSuccesful(true)
-              }}
               onLoad={() => {
-                setSuccesful(false)
+                setSuccesful(true)
               }}
               defaultSource={defaultSource}
               source={props.source}
               resizeMode="cover"
-              style={succesful ?  styles.defaultImage : styles.image}
+              style={succesful ? styles.image : styles.defaultImage}
             />
           ) : (
             <Text
