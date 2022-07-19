@@ -7,7 +7,7 @@ import {
   Input,
   Select,
   TextContainer,
-  BottomSheet
+  SafeArea
 } from 'components';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleProp, TextInput, ViewStyle } from 'react-native';
@@ -21,7 +21,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { GENDERS } from 'assets/files';
 import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
-import usePhotosPicker, { PhotosPickerMode } from '../../../hooks/usePhotosPicker'; // TODO: Configure Alias
+import * as PhotosPicker from '../../../components/organisms/PhotosPicker/PhotosPicker';
 
 type Props = {
   onSubmit: (data: any) => void;
@@ -35,11 +35,12 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email, name, lastName, sign_app_modes_id, photo } = user;
   const insets = useSafeAreaInsets();
+  const [visible, setVisible] = useState(false);
 
   // storage bucket folder
   const bucketPath = `userPhotos/${user.user_id}/profile/`;
 
-  const photosPicker = usePhotosPicker(1, bucketPath);
+  const photosPicker = PhotosPicker.usePhotosPicker(1, bucketPath);
 
   const {
     control,
@@ -57,7 +58,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
-  const modeRef = useRef();
 
   useEffect(() => {
     setValue('name', name );
@@ -110,9 +110,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           }}
           editable={true}
           onPress={() => {
-            const {current} = modeRef;
-            const { onPressPicker } = current as any;
-            onPressPicker();
+            setVisible(true);
           }}
         />
 
@@ -281,24 +279,20 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           error={errors.state?.message}
           useActionSheet
         />
-        <BottomSheet
-          ref={modeRef}
-          name="mode"
-          options={["Tomar foto","Elegir de galería"]}
-          onSelect={value => {
-            if(value === PhotosPickerMode.CAMERA){
-            photosPicker.launch(PhotosPickerMode.CAMERA);
-              return;
-            }
-            if(value === "Galería"){
-            photosPicker.launch(PhotosPickerMode.LIBRARY);
-            }
-          }}
-          androidMode="dialog"
-          label={"Tomar foto de perfil"}
-          placeholder={"Seleccionar"}
-          useActionSheet
-        />
+        <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
+          <PhotosPicker.PickerMode
+            visible={visible}
+            handleCamera={() => {
+              photosPicker.launch(PhotosPicker.PhotosPickerMode.CAMERA);
+            }}
+            handleGallery={() => {
+              photosPicker.launch(PhotosPicker.PhotosPickerMode.LIBRARY);
+            }}
+            onPressOut={() => {
+              setVisible(false);
+            }}
+          />
+        </SafeArea>
         <Button
           length="long"
           round
