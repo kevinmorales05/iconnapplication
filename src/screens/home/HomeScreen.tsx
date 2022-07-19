@@ -45,7 +45,7 @@ const HomeScreen: React.FC<Props> = ({
             fontBold            
           />
         </Container>
-        <Button
+        {/* <Button
           round
           onPress={onPressMyAccount}
           fontSize="h4"
@@ -54,7 +54,7 @@ const HomeScreen: React.FC<Props> = ({
           style={{ marginTop: 8 }}
         >
           Mi cuenta
-        </Button>
+        </Button> */}
         <Button
           round
           onPress={onPressLogOut}

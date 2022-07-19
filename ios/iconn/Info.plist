@@ -2,17 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>fbapi</string>
-		<string>fb-messenger-share-api</string>
-	</array>
-	<key>FacebookDisplayName</key>
-	<string>Iconn</string>
-	<key>FacebookClientToken</key>
-	<string>ac3dbac3c61272386ae9b9fd0c1358df</string>
-	<key>FacebookAppID</key>
-	<string>401469165374419</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -36,15 +25,28 @@
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>iconn</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.579450743521-4pe95epj9q15d1u8llo34g6j58nioioi</string>
-				<string>fb401469165374419</string>
+				<string>iconn</string>
 			</array>
 		</dict>
+		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FacebookAppID</key>
+	<string>401469165374419</string>
+	<key>FacebookClientToken</key>
+	<string>ac3dbac3c61272386ae9b9fd0c1358df</string>
+	<key>FacebookDisplayName</key>
+	<string>Iconn</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

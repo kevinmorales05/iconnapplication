@@ -32,7 +32,11 @@ export const registerWithFirebaseThunk = createAsyncThunk('auth/registerWithFire
 
 export const getUserThunk = createAsyncThunk('auth/getUser', async (payload: AuthDataInterface) => {
   return await authServices.getUser(payload);
-})
+});
+
+export const sendEmailToRecoverPasswordThunk = createAsyncThunk('auth/sendEmailToRecoverPasswordThunk', async (payload: AuthDataInterface) => {
+  return await authServices.sendEmailtoRecoverPassword(payload);
+});
 
 // -------------------------------- FIREBASE SECTION --------------------------------
 /**
@@ -52,10 +56,12 @@ createAsyncThunk('auth/signUpUserWithEmailAndPasswordThunk', async (payload: {em
 
 /**
  * Firebase (email + password) signin method
+ * It's better return full promise without resolving it.
+ * TODO: You should change the other firebase methods as this:
  */
 export const signInWithEmailAndPasswordThunk =
 createAsyncThunk('auth/signInWithEmailAndPasswordThunk', async (payload: {email: string, pass: string}) => {
-  return await auth().signInWithEmailAndPassword(payload.email, payload.pass);
+  return auth().signInWithEmailAndPassword(payload.email, payload.pass);
 });
 
 /**
@@ -69,10 +75,6 @@ export const signInWithGoogleThunk = createAsyncThunk('auth/signInWithGoogleThun
     });
     const {idToken} = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    // console.log("Credencial de Google", googleCredential);
-    // console.log("Id Token", idToken);
-    // const userCredential = await firebase.auth().signInWithCredential(googleCredential);
-    // console.warn(`Firebase authenticated via Google, UID: ${userCredential.user.uid}`);
     return await firebase.auth().signInWithCredential(googleCredential);
   } catch (error) {
     console.log(error);
