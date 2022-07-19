@@ -75,10 +75,6 @@ export const signInWithGoogleThunk = createAsyncThunk('auth/signInWithGoogleThun
     });
     const {idToken} = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    // console.log("Credencial de Google", googleCredential);
-    // console.log("Id Token", idToken);
-    // const userCredential = await firebase.auth().signInWithCredential(googleCredential);
-    // console.warn(`Firebase authenticated via Google, UID: ${userCredential.user.uid}`);
     return await firebase.auth().signInWithCredential(googleCredential);
   } catch (error) {
     console.log(error);
