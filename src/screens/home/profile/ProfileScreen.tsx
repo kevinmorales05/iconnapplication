@@ -6,7 +6,8 @@ import {
   DatePicker,
   Input,
   Select,
-  TextContainer
+  TextContainer,
+  BottomSheet
 } from 'components';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleProp, TextInput, ViewStyle } from 'react-native';
@@ -56,6 +57,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
+  const modeRef = useRef();
 
   useEffect(() => {
     setValue('name', name );
@@ -104,11 +106,13 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
       <Container>
         <Avatar
           source={{
-            uri: photo || photosPicker.currentPhoto 
+            uri: photo || photosPicker.currentPhoto
           }}
           editable={true}
           onPress={() => {
-            photosPicker.launch(PhotosPickerMode.LIBRARY);
+            const {current} = modeRef;
+            const { onPressPicker } = current as any;
+            onPressPicker();
           }}
         />
 
@@ -277,7 +281,24 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           error={errors.state?.message}
           useActionSheet
         />
-        
+        <BottomSheet
+          ref={modeRef}
+          name="mode"
+          options={["Tomar foto","Elegir de galería"]}
+          onSelect={value => {
+            if(value === PhotosPickerMode.CAMERA){
+            photosPicker.launch(PhotosPickerMode.CAMERA);
+              return;
+            }
+            if(value === "Galería"){
+            photosPicker.launch(PhotosPickerMode.LIBRARY);
+            }
+          }}
+          androidMode="dialog"
+          label={"Tomar foto de perfil"}
+          placeholder={"Seleccionar"}
+          useActionSheet
+        />
         <Button
           length="long"
           round

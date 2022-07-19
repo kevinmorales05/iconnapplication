@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   Asset,
-  CameraOptions,
   ImagePickerResponse,
   launchCamera,
   launchImageLibrary
@@ -13,8 +12,8 @@ import storage from '@react-native-firebase/storage';
 import { authServices } from 'services';
 
 export enum PhotosPickerMode {
-  CAMERA,
-  LIBRARY
+  CAMERA = "CAMERA",
+  LIBRARY = "LIBRARY"
 }
 
 export default function usePhotosPicker(
@@ -98,17 +97,17 @@ export default function usePhotosPicker(
 
     if (mode === PhotosPickerMode.CAMERA) {
       try {
-        loader.show();
         await launchCamera(
           {
-            saveToPhotos: false
-          } as CameraOptions,
+            mediaType: 'photo',
+            includeBase64: false,
+            includeExtra: true
+          },
           setResponse
         );
       } catch (error) {
         console.warn(error);
       } finally {
-        loader.hide();
       }
     }
   }, []);
