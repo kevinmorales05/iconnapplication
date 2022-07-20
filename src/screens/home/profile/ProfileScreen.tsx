@@ -33,7 +33,7 @@ type Props = {
 
 const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { email, name, lastName, sign_app_modes_id, photo } = user;
+  const { email, name, telephone, gender, lastName, sign_app_modes_id, photo } = user;
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
 
@@ -66,6 +66,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   useEffect(() => {
     setValue('name', name );
     setValue('lastName', lastName );
+    setValue('telephone', telephone );
     if (nameRef.current) {
       nameRef.current.focus();
     }
@@ -230,7 +231,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         />
 
         <Input
-          {...register('phone')}
+          {...register('telephone')}
           ref={phoneRef}
           control={control}
           keyboardType="number-pad"

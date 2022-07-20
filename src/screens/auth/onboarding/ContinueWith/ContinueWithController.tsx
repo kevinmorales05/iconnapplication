@@ -8,7 +8,7 @@ import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
-import { setAuthEmail, setEmailVerified, setFullName, setIsLogged, setPhoneNumber, setPhoto, setSignMode, setUserId, signInWithAppleThunk, 
+import { setAuthEmail, setEmailVerified, setFullName, setIsLogged, setTelephone, setPhoto, setSignMode, setUserId, signInWithAppleThunk, 
   signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch, validateUserThunk } from 'rtk';
 
 const ContinueWithController: React.FC = () => {
@@ -55,7 +55,7 @@ const ContinueWithController: React.FC = () => {
       dispatch(setAuthEmail({ email: user.email! }));
       dispatch(setPhoto({ photo: user.photoURL! }));
       dispatch(setEmailVerified({ emailVerified: user.emailVerified }));
-      dispatch(setPhoneNumber({ phoneNumber: user.phoneNumber! }));
+      dispatch(setTelephone({ telephone: user.phoneNumber! }));
       dispatch(setFullName({
         name: additionalUserInfo?.profile?.given_name,
         lastName: additionalUserInfo?.profile?.family_name
@@ -86,7 +86,7 @@ const ContinueWithController: React.FC = () => {
       dispatch(setAuthEmail({ email: user.email! }));
       dispatch(setPhoto({ photo: user.photoURL! }));
       dispatch(setEmailVerified({ emailVerified: user.emailVerified }));
-      dispatch(setPhoneNumber({ phoneNumber: user.phoneNumber! }));
+      dispatch(setTelephone({ telephone: user.phoneNumber! }));
       dispatch(setFullName({
         name: additionalUserInfo?.profile?.given_name,
         lastName: additionalUserInfo?.profile?.family_name

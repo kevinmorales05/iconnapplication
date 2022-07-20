@@ -15,7 +15,7 @@ import {
   setGender,
   setIsLogged,
   setPassword,
-  setPhoneNumber,
+  setTelephone,
   setPhoto,
   setSignMode,
   setUserId,
@@ -99,7 +99,7 @@ const EnterPasswordController: React.FC = () => {
               dispatch(setAuthEmail({ email: email }));
               dispatch(setPhoto({ photo: photo }));
               dispatch(setEmailVerified({ emailVerified: true }));
-              dispatch(setPhoneNumber({ phoneNumber: telephone }));
+              dispatch(setTelephone({ telephone: telephone }));
               dispatch(setGender({ gender: gender_id }));
               dispatch(setBirthDay({ birthDay: birthday }));
               dispatch(setFullName({ name: name, lastName: lastName }));

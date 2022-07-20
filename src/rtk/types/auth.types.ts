@@ -13,7 +13,7 @@ export interface AuthDataInterface {
   sign_app_modes_id?: number;
   photo?: string;
   emailVerified?: boolean;
-  phoneNumber?: string;
+  telephone?: string;
   birthDay?: string;
   gender?: number;
 }
