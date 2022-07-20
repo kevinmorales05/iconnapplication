@@ -53,8 +53,8 @@ const authSlice = createSlice({
     setTelephone(state, action: PayloadAction<AuthDataInterface>){
       state.user.telephone = action.payload.telephone;
     },
-    setBirthDay(state, action: PayloadAction<AuthDataInterface>){
-      state.user.birthDay = action.payload.birthDay;
+    setBirthday(state, action: PayloadAction<AuthDataInterface>){
+      state.user.birthday = action.payload.birthday;
     },
     setGender(state, action: PayloadAction<AuthDataInterface>){
       state.user.gender = action.payload.gender;
@@ -194,6 +194,6 @@ const authSlice = createSlice({
 });
 // TODO: validate if it is possible to reduce extra reducers.
 export const { setAuthInitialState, setAuthEmail, setSignMode, setSecretKey, setPassword, 
-  setFullName, setPhoto, setEmailVerified, setTelephone, setBirthDay, setGender, 
+  setFullName, setPhoto, setEmailVerified, setTelephone, setBirthday, setGender, 
   setTermsAndCond, setUserId, setIsLogged } = authSlice.actions;
 export default authSlice.reducer;

@@ -86,11 +86,11 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
     const day = date.getDate();
     const month = date.getMonth();
     const year = date.getFullYear();
-    setValue('dateOfBirth', formatDate(new Date(year, month, day), 'dd/MM/yyyy'));
+    setValue('birthday', formatDate(new Date(year, month, day), 'dd/MM/yyyy'));
     hideDatePicker();
   };
 
-  const { dateOfBirth } = watch();
+  const { birthday } = watch();
 
   const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields);
@@ -260,7 +260,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
 
         <DatePicker
           label=""
-          name="dateOfBirth"
+          name="birthday"
           control={control}
           onChangeText={({ value }) => {}}
           onPressDatePickerIcon={showDatePicker}

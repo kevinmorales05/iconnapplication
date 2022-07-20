@@ -9,7 +9,7 @@ import {
   getUserThunk,
   RootState,
   setAuthEmail,
-  setBirthDay,
+  setBirthday,
   setEmailVerified,
   setFullName,
   setGender,
@@ -101,7 +101,7 @@ const EnterPasswordController: React.FC = () => {
               dispatch(setEmailVerified({ emailVerified: true }));
               dispatch(setTelephone({ telephone: telephone }));
               dispatch(setGender({ gender: gender_id }));
-              dispatch(setBirthDay({ birthDay: birthday }));
+              dispatch(setBirthday({ birthday: birthday }));
               dispatch(setFullName({ name: name, lastName: lastName }));
               dispatch(setIsLogged({ isLogged: true }));
             }

@@ -14,7 +14,7 @@ export interface AuthDataInterface {
   photo?: string;
   emailVerified?: boolean;
   telephone?: string;
-  birthDay?: string;
+  birthday?: string;
   gender?: number;
 }
 
