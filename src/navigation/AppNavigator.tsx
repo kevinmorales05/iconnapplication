@@ -16,6 +16,8 @@ const AppNavigator: React.FC = () => {
   const { error } = useAppSelector((state: RootState) => state.app);
   const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
   const { isLogged } = userLogged;
+  const {guest : guestLogged} = useAppSelector((state: RootState) => state.guest);
+  const { isGuest } = guestLogged;
 
   const onAuthStateChanged = (user: any) => {
     auth().currentUser?.reload(); // refresh user after backend sets emailVerified as true.
@@ -47,15 +49,22 @@ const AppNavigator: React.FC = () => {
     return subscriber;
   }, []);
 
-  if (!isLogged) {
+  if (!isLogged && !isGuest) {
     console.log('No authenticated.');
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthStack">
         <Stack.Screen name="AuthStack" component={AuthStack} />       
       </Stack.Navigator>    
     );
-  } else {
+  } else if (isLogged && !isGuest) {
     console.log(`USUARIO LOGUEADO: ${auth().currentUser?.email}, emailVerified: ${auth().currentUser?.emailVerified} 🥳🥳🥳🥳`);
+    return (
+      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeStack">
+        <Stack.Screen name="HomeStack" component={HomeStack} />
+      </Stack.Navigator>    
+    );
+  } else if (!isLogged && isGuest) {
+    console.log('USUARIO INVITADO' );
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeStack">
         <Stack.Screen name="HomeStack" component={HomeStack} />

@@ -22,6 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
 
+
 interface Props {
   carouselItems?: ItemProps;
 }
@@ -146,7 +147,10 @@ class CustomCarousel extends Component<Props, State> {
 
 const HomeController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const [modVisibility, setModVisibility] = useState(true);
+  const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
+  const { isLogged } = userLogged;
+  const modVis = (isLogged) ? true : false;
+  const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
   const { navigate } =
     useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -159,6 +163,7 @@ const HomeController: React.FC = () => {
   };
 
   const goToMyAccount = () => navigate('Profile');
+  console.log("USER->", isLogged);
 
   return (
     <SafeArea
@@ -171,7 +176,7 @@ const HomeController: React.FC = () => {
         name={user.name}
         email={user.email}
         onPressLogOut={logOut}
-        onPressMyAccount={goToMyAccount}
+        onPressMyAccount={(isLogged) ? goToMyAccount : () => navigate('InviteSignUp')}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
