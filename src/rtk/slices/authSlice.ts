@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { logoutThunk, preSignUpThunk, registerThunk,
   signUpUserWithEmailAndPasswordThunk, registerWithFirebaseThunk, 
-  validateOtpThunk, validateUserThunk, signInWithEmailAndPasswordThunk, getUserThunk } from '../thunks/auth.thunks';
+  validateOtpThunk, validateUserThunk, signInWithEmailAndPasswordThunk, 
+  getUserThunk, sendEmailToRecoverPasswordThunk } from '../thunks/auth.thunks';
 import { AuthDataInterface } from '../types';
 
 const initialState: AuthDataInterface = {
@@ -175,6 +176,18 @@ const authSlice = createSlice({
     })
     builder.addCase(getUserThunk.rejected, state => {
       console.log('getUserThunk rejected...');
+      state.loading = false;
+    })
+    builder.addCase(sendEmailToRecoverPasswordThunk.pending, state => {
+      console.log('sendEmailToRecoverPasswordThunk pending...');
+      state.loading = true;
+    })
+    builder.addCase(sendEmailToRecoverPasswordThunk.fulfilled, state => {
+      console.log('sendEmailToRecoverPasswordThunk fullfilled...');
+      state.loading = false;
+    })
+    builder.addCase(sendEmailToRecoverPasswordThunk.rejected, state => {
+      console.log('sendEmailToRecoverPasswordThunk rejected...');
       state.loading = false;
     })
   }

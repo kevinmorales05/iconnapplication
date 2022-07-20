@@ -6,8 +6,8 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { appleAuth } from '@invertase/react-native-apple-authentication';
 
-export const validateUserThunk = createAsyncThunk('auth/validateUserThunk', async (email: string) => {
-  return await authServices.validateUser(email);
+export const validateUserThunk = createAsyncThunk('auth/validateUserThunk', async (uidOrEmail: string) => {
+  return await authServices.validateUser(uidOrEmail);
 });
 
 export const preSignUpThunk = createAsyncThunk('auth/preSignUpThunk', async (email: string) => {
@@ -32,7 +32,11 @@ export const registerWithFirebaseThunk = createAsyncThunk('auth/registerWithFire
 
 export const getUserThunk = createAsyncThunk('auth/getUser', async (payload: AuthDataInterface) => {
   return await authServices.getUser(payload);
-})
+});
+
+export const sendEmailToRecoverPasswordThunk = createAsyncThunk('auth/sendEmailToRecoverPasswordThunk', async (payload: AuthDataInterface) => {
+  return await authServices.sendEmailtoRecoverPassword(payload);
+});
 
 // -------------------------------- FIREBASE SECTION --------------------------------
 /**
@@ -71,10 +75,6 @@ export const signInWithGoogleThunk = createAsyncThunk('auth/signInWithGoogleThun
     });
     const {idToken} = await GoogleSignin.signIn();
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    // console.log("Credencial de Google", googleCredential);
-    // console.log("Id Token", idToken);
-    // const userCredential = await firebase.auth().signInWithCredential(googleCredential);
-    // console.warn(`Firebase authenticated via Google, UID: ${userCredential.user.uid}`);
     return await firebase.auth().signInWithCredential(googleCredential);
   } catch (error) {
     console.log(error);

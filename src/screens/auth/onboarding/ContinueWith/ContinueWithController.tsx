@@ -9,7 +9,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
 import { setAuthEmail, setEmailVerified, setFullName, setIsLogged, setPhoneNumber, setPhoto, setSignMode, setUserId, signInWithAppleThunk, 
-  signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch, setIsGuest } from 'rtk';
+  signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch, setIsGuest, validateUserThunk} from 'rtk';
 import auth from '@react-native-firebase/auth';
 
 const ContinueWithController: React.FC = () => {
@@ -24,18 +24,27 @@ const ContinueWithController: React.FC = () => {
 
   const onAppleButtonPress = async () => {
     try {
-      const { payload } = await dispatch(signInWithAppleThunk());
-      if (payload.additionalUserInfo.isNewUser) {
-        if (payload.user.uid) {
-          dispatch(setUserId({user_id: payload.user.uid}));
-          dispatch(setAuthEmail({email: payload.user.email}));
-          dispatch(setSignMode({sign_app_modes_id: 4}));
-          navigate('TermsAndCond');
-        }  
+      const response = await dispatch(signInWithAppleThunk()).unwrap();
+      console.log('la data devuelta por APPLE: ', JSON.stringify(response, null, 3));
+      const { user, additionalUserInfo } = response!;
+      dispatch(setSignMode({ sign_app_modes_id: 4 }));
+      dispatch(setUserId({ user_id: user.uid }));
+      dispatch(setAuthEmail({ email: user.email! }));
+      dispatch(setPhoto({ photo: user.providerData[0].photoURL }));
+      dispatch(setFullName({
+        name: user.providerData[0].displayName,
+        lastName: ''  // Apple only provides a "displayName".
+      }));
+
+      if (additionalUserInfo?.isNewUser) {
+        if (user.uid) navigate('TermsAndCond');
       } else {
-        dispatch(setFullName({name: auth().currentUser?.displayName!}));
-        dispatch(setAuthEmail({email: auth().currentUser?.email!}));
-        dispatch(setIsLogged({isLogged: true}));
+        const response = await dispatch(validateUserThunk(user.uid)).unwrap();        
+        if (response.responseCode === 200 && response.data.isRegistered) {
+          dispatch(setIsLogged({ isLogged: true }));
+        } else if(response.responseCode === 200 && !response.data.isRegistered) {
+          navigate('TermsAndCond');
+        }
       }
     } catch (error) {
       console.warn(error);
@@ -44,18 +53,29 @@ const ContinueWithController: React.FC = () => {
 
   const onFacebookButtonPress = async () => {
     try {
-      const { payload } = await dispatch(signInWithFacebookThunk());
-      if (payload.additionalUserInfo.isNewUser) {
-        if (payload.user.uid) {
-          dispatch(setUserId({user_id: payload.user.uid}));
-          dispatch(setAuthEmail({email: payload.user.email}));
-          dispatch(setSignMode({sign_app_modes_id: 2}));
+      const response = await dispatch(signInWithFacebookThunk()).unwrap();
+      console.log('la data devuelta por FACEBOOK: ', JSON.stringify(response, null, 3));
+      const { user, additionalUserInfo } = response!;
+      dispatch(setSignMode({ sign_app_modes_id: 2 }));
+      dispatch(setUserId({ user_id: user.uid }));
+      dispatch(setAuthEmail({ email: user.email! }));
+      dispatch(setPhoto({ photo: user.photoURL! }));
+      dispatch(setEmailVerified({ emailVerified: user.emailVerified }));
+      dispatch(setPhoneNumber({ phoneNumber: user.phoneNumber! }));
+      dispatch(setFullName({
+        name: additionalUserInfo?.profile?.given_name,
+        lastName: additionalUserInfo?.profile?.family_name
+      }));
+
+      if (additionalUserInfo?.isNewUser) {
+        if (user.uid) navigate('TermsAndCond');
+      } else {
+        const response = await dispatch(validateUserThunk(user.uid)).unwrap();        
+        if (response.responseCode === 200 && response.data.isRegistered) {
+          dispatch(setIsLogged({ isLogged: true }));
+        } else if(response.responseCode === 200 && !response.data.isRegistered) {
           navigate('TermsAndCond');
         }
-      } else {
-        dispatch(setFullName({name: auth().currentUser?.displayName!}));
-        dispatch(setAuthEmail({email: auth().currentUser?.email!}));
-        dispatch(setIsLogged({isLogged: true}));
       }
     } catch (error) {
       console.warn(error);
@@ -64,25 +84,32 @@ const ContinueWithController: React.FC = () => {
 
   const onGoogleButtonPress = async () => {
     try {
-      const { payload } = await dispatch(signInWithGoogleThunk());
-      dispatch(setSignMode({sign_app_modes_id: 3}));
-      dispatch(setUserId({user_id: payload.user.uid}));
-      dispatch(setAuthEmail({email: payload.user.email}));      
-      dispatch(setPhoto({ photo: payload.additionalUserInfo.profile.picture }));
-      dispatch(setEmailVerified({ emailVerified: payload.additionalUserInfo.profile.emailVerified }));
-      dispatch(setPhoneNumber({ phoneNumber: payload.additionalUserInfo.profile.phoneNumber }));
+      const response = await dispatch(signInWithGoogleThunk()).unwrap();
+      console.log('la data devuelta por GOOGLE: ', JSON.stringify(response, null, 3));
+      const { user, additionalUserInfo } = response!;
+      dispatch(setSignMode({ sign_app_modes_id: 3}));
+      dispatch(setUserId({ user_id: user.uid }));
+      dispatch(setAuthEmail({ email: user.email! }));
+      dispatch(setPhoto({ photo: user.photoURL! }));
+      dispatch(setEmailVerified({ emailVerified: user.emailVerified }));
+      dispatch(setPhoneNumber({ phoneNumber: user.phoneNumber! }));
       dispatch(setFullName({
-        name: payload.additionalUserInfo.profile.given_name,
-        lastName: payload.additionalUserInfo.profile.family_name
+        name: additionalUserInfo?.profile?.given_name,
+        lastName: additionalUserInfo?.profile?.family_name
       }));
 
-      if (payload.additionalUserInfo.isNewUser) {
-        if (payload.user.uid) navigate('TermsAndCond');
+      if (additionalUserInfo?.isNewUser) {
+        if (user.uid) navigate('TermsAndCond');
       } else {
-        dispatch(setIsLogged({ isLogged: true }));
+        const response = await dispatch(validateUserThunk(user.uid)).unwrap();
+        if (response.responseCode === 200 && response.data.isRegistered) {
+          dispatch(setIsLogged({ isLogged: true }));
+        } else if(response.responseCode === 200 && !response.data.isRegistered) {
+          navigate('TermsAndCond');
+        }
       }
     } catch (error) {
-      console.warn(error);      
+      console.warn(error);
     }    
   }
 

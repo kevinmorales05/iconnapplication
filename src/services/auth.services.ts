@@ -6,11 +6,11 @@ import { UsersApi } from '../http/api-users';
  * Function to validate user status
  * @param email
  */
-async function validateUser(email: string): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(`/users/validateUser/${email}`);
-  if (response === undefined) return Promise.reject(new Error(`validateUser:/users/validateUser/${email}`));
+async function validateUser(uidOrEmail: string): Promise<any> {
+  const response = await UsersApi.getInstance().getRequest(`/users/validateUser/${uidOrEmail}`);
+  if (response === undefined) return Promise.reject(new Error(`validateUser:/users/validateUser/${uidOrEmail}`));
   const { data } = response;
-  return data.resp;
+  return data;
 }
 
 /**
@@ -75,11 +75,24 @@ async function getUser(user: AuthDataInterface): Promise<any> {
   return data.resp;
 }
 
+/**
+ * Function to send an email to recover password.
+ * @param user
+ * @returns
+ */
+async function sendEmailtoRecoverPassword(user: AuthDataInterface): Promise<any> {
+  const response = await UsersApi.getInstance().getRequest(`/users/sendEmailForPasswordRecovery/${user.email}`);
+  if (response === undefined) return Promise.reject(new Error('sendEmailtoRecoverPassword:users/sendEmailForPasswordRecovery'));
+  const { data } = response;
+  return data;
+}
+
 export const authServices = {
   validateUser,
   preSignUp,
   otpValidate,
   register,
   registerWithFirebase,
-  getUser
+  getUser,
+  sendEmailtoRecoverPassword
 };
