@@ -6,8 +6,8 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
 import { appleAuth } from '@invertase/react-native-apple-authentication';
 
-export const validateUserThunk = createAsyncThunk('auth/validateUserThunk', async (email: string) => {
-  return await authServices.validateUser(email);
+export const validateUserThunk = createAsyncThunk('auth/validateUserThunk', async (uidOrEmail: string) => {
+  return await authServices.validateUser(uidOrEmail);
 });
 
 export const preSignUpThunk = createAsyncThunk('auth/preSignUpThunk', async (email: string) => {
