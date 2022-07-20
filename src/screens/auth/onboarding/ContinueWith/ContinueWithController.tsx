@@ -9,7 +9,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
 import { setAuthEmail, setEmailVerified, setFullName, setIsLogged, setPhoneNumber, setPhoto, setSignMode, setUserId, signInWithAppleThunk, 
-  signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch } from 'rtk';
+  signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch, validateUserThunk } from 'rtk';
 
 const ContinueWithController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -33,8 +33,12 @@ const ContinueWithController: React.FC = () => {
       if (additionalUserInfo?.isNewUser) {
         if (user.uid) navigate('TermsAndCond');
       } else {
-        // TODO: validateUser here!!!
-        dispatch(setIsLogged({ isLogged: true }));
+        const response = await dispatch(validateUserThunk(user.uid)).unwrap();        
+        if (response.responseCode === 200 && response.data.isRegistered) {
+          dispatch(setIsLogged({ isLogged: true }));
+        } else if(response.responseCode === 200 && !response.data.isRegistered) {
+          navigate('TermsAndCond');
+        }
       }
     } catch (error) {
       console.warn(error);
@@ -60,8 +64,12 @@ const ContinueWithController: React.FC = () => {
       if (additionalUserInfo?.isNewUser) {
         if (user.uid) navigate('TermsAndCond');
       } else {
-        // TODO: validateUser here!!!
-        dispatch(setIsLogged({isLogged: true}));
+        const response = await dispatch(validateUserThunk(user.uid)).unwrap();        
+        if (response.responseCode === 200 && response.data.isRegistered) {
+          dispatch(setIsLogged({ isLogged: true }));
+        } else if(response.responseCode === 200 && !response.data.isRegistered) {
+          navigate('TermsAndCond');
+        }
       }
     } catch (error) {
       console.warn(error);
@@ -87,8 +95,12 @@ const ContinueWithController: React.FC = () => {
       if (additionalUserInfo?.isNewUser) {
         if (user.uid) navigate('TermsAndCond');
       } else {
-        // TODO: validateUser here!!!
-        dispatch(setIsLogged({ isLogged: true }));
+        const response = await dispatch(validateUserThunk(user.uid)).unwrap();
+        if (response.responseCode === 200 && response.data.isRegistered) {
+          dispatch(setIsLogged({ isLogged: true }));
+        } else if(response.responseCode === 200 && !response.data.isRegistered) {
+          navigate('TermsAndCond');
+        }
       }
     } catch (error) {
       console.warn(error);
