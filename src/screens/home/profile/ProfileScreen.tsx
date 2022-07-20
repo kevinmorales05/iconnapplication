@@ -40,7 +40,11 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   // storage bucket folder
   const bucketPath = `userPhotos/${user.user_id}/profile/`;
 
-  const photosPicker = PhotosPicker.usePhotosPicker(1, bucketPath);
+  const photosPicker = PhotosPicker.usePhotosPicker(1, bucketPath,
+    () => {
+      setVisible(false)
+    }
+    );
 
   const {
     control,

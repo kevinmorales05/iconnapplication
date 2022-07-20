@@ -5,10 +5,12 @@ import { useLoading } from 'context';
 import { RootState, useAppSelector } from 'rtk';
 import { authServices } from 'services';
 import { AuthDataInterface } from 'rtk/types/auth.types';
+import { useToast } from 'context';
 
 const ProfileController: React.FC = () => {
   const loader = useLoading();
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const toast = useToast();
 
   const onSubmit = async (userFields: AuthDataInterface) => {
     const { user_id } = user;
@@ -16,8 +18,15 @@ const ProfileController: React.FC = () => {
     loader.show();
     try {
       await authServices.putUser(userFields);
+      toast.show({
+        message: 'Datos guardos exitosamente.',
+        type: 'success'
+      });
     } catch (error) {
-      console.warn(error);
+      toast.show({
+        message: 'Hubo un error al guardar tus datos. Intenta mas tarde.',
+        type: 'error'
+      });
     } finally {
       loader.hide();
     }

@@ -5,37 +5,28 @@ import {
   launchCamera,
   launchImageLibrary
 } from 'react-native-image-picker';
-import { useLoading } from 'context';
+import { useLoading, useToast } from 'context';
 import { RootState, useAppSelector } from 'rtk';
 
 import storage from '@react-native-firebase/storage';
 import { authServices } from 'services';
 
 export enum PhotosPickerMode {
-  CAMERA = "CAMERA",
-  LIBRARY = "LIBRARY"
+  CAMERA = 'CAMERA',
+  LIBRARY = 'LIBRARY'
 }
 
 export default function usePhotosPicker(
   selectionLimit: number | undefined,
-  bucketPath: string
+  bucketPath: string,
+  onFinish: () => void
 ) {
   const [assets, setAssets] = useState<Asset[] | null>(null);
   const loader = useLoading();
   const [response, setResponse] = useState<ImagePickerResponse | null>(null);
   const [currentPhoto, setCurrentPhoto] = useState<string | undefined>();
   const { user } = useAppSelector((state: RootState) => state.auth);
-
-  const updatePhoto = async (url: string) => {
-    loader.show();
-    try {
-      await authServices.putUser({ ...user, photo: url });
-    } catch (error) {
-      console.warn(error);
-    } finally {
-      loader.hide();
-    }
-  };
+  const toast = useToast();
 
   useEffect(() => {
     (async () => {
@@ -64,13 +55,21 @@ export default function usePhotosPicker(
         // get download url file
         const url = await storage().ref(bucketPath).getDownloadURL();
 
-        await updatePhoto(url);
+        await authServices.putUser({ ...user, photo: url });
 
+        toast.show({
+          message: 'Datos guardados exitosamente.',
+          type: 'success'
+        });
         setCurrentPhoto(url);
       } catch (error) {
-        console.warn(error);
+        toast.show({
+          message: 'No se pudo guardar tu foto, intenta mas tarde',
+          type: 'error'
+        });
       } finally {
         loader.hide();
+        onFinish();
       }
     })();
   }, [assets]);
@@ -79,17 +78,19 @@ export default function usePhotosPicker(
     if (mode === PhotosPickerMode.LIBRARY) {
       try {
         loader.show();
-        await launchImageLibrary(
-          {
-            mediaType: 'photo',
-            includeBase64: false,
-            includeExtra: true,
-            selectionLimit
-          },
-          setResponse
-        );
+        const response = await launchImageLibrary({
+          mediaType: 'photo',
+          includeBase64: false,
+          includeExtra: true,
+          selectionLimit
+        });
+
+        setResponse(response);
       } catch (error) {
-        console.warn(error);
+        toast.show({
+          message: 'No se pudo guardar tu foto,\n intenta mas tarde',
+          type: 'error'
+        });
       } finally {
         loader.hide();
       }
@@ -97,16 +98,18 @@ export default function usePhotosPicker(
 
     if (mode === PhotosPickerMode.CAMERA) {
       try {
-        await launchCamera(
-          {
-            mediaType: 'photo',
-            includeBase64: false,
-            includeExtra: true
-          },
-          setResponse
-        );
+        const response = await launchCamera({
+          mediaType: 'photo',
+          includeBase64: false,
+          includeExtra: true
+        });
+
+        setResponse(response);
       } catch (error) {
-        console.warn(error);
+        toast.show({
+          message: 'No se pudo guardar tu foto,\n intenta mas tarde',
+          type: 'error'
+        });
       } finally {
       }
     }

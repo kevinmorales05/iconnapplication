@@ -107,5 +107,6 @@ export const authServices = {
   register,
   registerWithFirebase,
   getUser,
+  putUser,
   sendEmailtoRecoverPassword
 };
