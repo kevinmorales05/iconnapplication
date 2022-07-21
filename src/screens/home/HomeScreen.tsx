@@ -49,6 +49,7 @@ const HomeScreen: React.FC<Props> = ({
           fontBold
           outline
           style={{ marginTop: 8 }}
+          disabled
         >
           Mi cuenta
         </Button> 
