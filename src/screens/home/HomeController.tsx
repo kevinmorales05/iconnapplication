@@ -193,7 +193,7 @@ const HomeController: React.FC = () => {
           </Pressable>
           <Container row>
             <TextContainer
-              text={`¡Hola ${user.name ? user.name : user.email} ${user.lastName ? user.lastName : ''}!`}
+              text={user.name ? `¡Hola ${user.name}!`: '¡Hola!'}
               typography="h3"
               fontBold={true}
               textAlign="center"

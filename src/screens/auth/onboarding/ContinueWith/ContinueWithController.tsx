@@ -63,8 +63,8 @@ const ContinueWithController: React.FC = () => {
       dispatch(setEmailVerified({ emailVerified: user.emailVerified }));
       dispatch(setPhoneNumber({ phoneNumber: user.phoneNumber! }));
       dispatch(setFullName({
-        name: additionalUserInfo?.profile?.given_name,
-        lastName: additionalUserInfo?.profile?.family_name
+        name: additionalUserInfo?.profile?.name,
+        lastName: additionalUserInfo?.profile?.last_name
       }));
 
       if (additionalUserInfo?.isNewUser) {
