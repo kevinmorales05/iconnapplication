@@ -63,16 +63,7 @@ const EnterPasswordController: React.FC = () => {
         signInWithEmailAndPasswordThunk({ email: email!, pass: password })
       );
 
-      if (response.error) {
-        // alert.show(
-        //   {
-        //     title: 'Error:',
-        //     message: manageFirebaseLoginError(response.error.code),
-        //     acceptTitle: 'Aceptar',
-        //     onAccept() { alert.hide(); },
-        //   },
-        //   'warning'
-        // );
+      if (response.error) {        
         const msg = manageFirebaseLoginError(response.error.code);
         setAccountError(msg);
       } else {
@@ -98,7 +89,7 @@ const EnterPasswordController: React.FC = () => {
               dispatch(setUserId({ user_id: user_id }));
               dispatch(setAuthEmail({ email: email }));
               dispatch(setPhoto({ photo: photo }));
-              dispatch(setEmailVerified({ emailVerified: true }));
+              dispatch(setEmailVerified({ emailVerified: true })); // TODO: maybe we need change for the real field returned by firebase.
               dispatch(setPhoneNumber({ phoneNumber: telephone }));
               dispatch(setGender({ gender: gender_id }));
               dispatch(setBirthDay({ birthDay: birthday }));
