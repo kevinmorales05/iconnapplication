@@ -15,7 +15,8 @@ export interface AuthDataInterface {
   emailVerified?: boolean;
   telephone?: string;
   birthday?: string;
-  gender?: number;
+  gender_id?: number;
+  gender?: string | number;
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';

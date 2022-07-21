@@ -22,6 +22,7 @@ import { GENDERS } from 'assets/files';
 import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
 import * as PhotosPicker from '../../../components/organisms/PhotosPicker/PhotosPicker';
+import moment from 'moment';
 
 type Props = {
   onSubmit: (data: any) => void;
@@ -33,7 +34,7 @@ type Props = {
 
 const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { email, name, telephone, gender, lastName, sign_app_modes_id, photo } = user;
+  const { email, name, telephone, gender, birthday, lastName, sign_app_modes_id, photo } = user;
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
 
@@ -67,6 +68,16 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
     setValue('name', name );
     setValue('lastName', lastName );
     setValue('telephone', telephone );
+    
+    if (gender) {
+      const previusGender = GENDERS.find(element => {
+        return gender === element.id;
+      });
+      setValue('gender', previusGender?.name);
+    }
+
+    setValue('birthday',  moment(birthday, 'YYYY-MM-DD').format('DD/MM/YYYY'));
+
     if (nameRef.current) {
       nameRef.current.focus();
     }
@@ -90,7 +101,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
     hideDatePicker();
   };
 
-  const { birthday } = watch();
 
   const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields);

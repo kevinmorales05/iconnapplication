@@ -6,6 +6,7 @@ import { RootState, useAppSelector } from 'rtk';
 import { authServices } from 'services';
 import { AuthDataInterface } from 'rtk/types/auth.types';
 import { useToast } from 'context';
+import { GENDERS } from 'assets/files';
 
 const ProfileController: React.FC = () => {
   const loader = useLoading();
@@ -15,6 +16,10 @@ const ProfileController: React.FC = () => {
   const onSubmit = async (userFields: AuthDataInterface) => {
     const { user_id } = user;
     userFields.user_id = user_id;
+    const gender = GENDERS.find(gender => {
+      return gender.name === userFields.gender;
+    })
+    userFields.gender_id = gender?.id as number;
     loader.show();
     try {
       await authServices.putUser(userFields);
