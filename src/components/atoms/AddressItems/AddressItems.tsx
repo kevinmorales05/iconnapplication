@@ -85,42 +85,50 @@ export default function AddressItems() {
   const [visible, setVisible] = useState(false);
 
   return (
-    <View style={styles.container}>
-      {items.map(({ type, address }, index) => {
-        return <Item key={index} type={type} address={address} />;
-      })}
-      <TouchableOpacity
-        onPress={() => {
-          setVisible(!visible);
+    <View>
+      <View>
+        {items.length > 0 ? (
+          <EmptyMessage />
+        ) : (
+          <View style={styles.container}>
+            {items.map(({ type, address }, index) => {
+              return <Item key={index} type={type} address={address} />;
+            })}
+            <TouchableOpacity
+              onPress={() => {
+                setVisible(!visible);
 
-          if (visible) {
-            setItems(mockAddresses);
-          } else {
-            setItems([
-              ...items,
-              {
-                type: 'Casa',
-                address: 'Senda de Alegría 123, Villa las fuentes'
-              },
-              {
-                type: 'Casa',
-                address: 'Senda de Alegría 123, Villa las fuentes'
-              },
-              {
-                type: 'Casa',
-                address: 'Senda de Alegría 123, Villa las fuentes'
-              }
-            ]);
-          }
-        }}
-      >
-        <View style={styles.watchMore}>
-          <Text style={styles.text}>{visible ? 'VER MENOS' : 'VER TODAS'}</Text>
-        </View>
-      </TouchableOpacity>
+                if (visible) {
+                  setItems(mockAddresses);
+                } else {
+                  setItems([
+                    ...items,
+                    {
+                      type: 'Casa',
+                      address: 'Senda de Alegría 123, Villa las fuentes'
+                    },
+                    {
+                      type: 'Casa',
+                      address: 'Senda de Alegría 123, Villa las fuentes'
+                    },
+                    {
+                      type: 'Casa',
+                      address: 'Senda de Alegría 123, Villa las fuentes'
+                    }
+                  ]);
+                }
+              }}
+            >
+              <View style={styles.watchMore}>
+                <Text style={styles.text}>
+                  {visible ? 'VER MENOS' : 'VER TODAS'}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
     </View>
-    // <EmptyMessage /> TODO: Enable when data is available.
-    // <ConnectionItem/> TODO: Enable when data is available.
   );
 }
 
