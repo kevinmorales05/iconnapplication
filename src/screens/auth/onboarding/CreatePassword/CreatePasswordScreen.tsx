@@ -8,7 +8,7 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 interface Props {
-  onSubmit: (email: string) => void;
+  onSubmit: (password: string) => void;
   goBack: () => void;
 }
 
@@ -33,23 +33,27 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   }, []);
 
   const submit: SubmitHandler<FieldValues> = fields => {
-    onSubmit(fields.password);
+    // TODO: we need to correct the submit, 
+    // because the values do not arrive via handlersubmit of react-hook-form.
+    onSubmit(passwordVal);
   };
 
+  //Password Value
+  const [passwordVal, setPasswordVal] = useState('');
   //items
-  const [val1Item, setVal1Item] = useState('ellipse')
-  const [val2Item, setVal2Item] = useState('ellipse')
-  const [val3Item, setVal3Item] = useState('ellipse')
-  const [val4Item, setVal4Item] = useState('ellipse')
-  const [val5Item, setVal5Item] = useState('ellipse')
+  const [val1Item, setVal1Item] = useState('ellipse');
+  const [val2Item, setVal2Item] = useState('ellipse');
+  const [val3Item, setVal3Item] = useState('ellipse');
+  const [val4Item, setVal4Item] = useState('ellipse');
+  const [val5Item, setVal5Item] = useState('ellipse');
   //colors
-  const [val1Color, setVal1Color] = useState(theme.brandColor.iconn_med_grey)
-  const [val2Color, setVal2Color] = useState(theme.brandColor.iconn_med_grey)
-  const [val3Color, setVal3Color] = useState(theme.brandColor.iconn_med_grey)
-  const [val4Color, setVal4Color] = useState(theme.brandColor.iconn_med_grey)
-  const [val5Color, setVal5Color] = useState(theme.brandColor.iconn_med_grey)
+  const [val1Color, setVal1Color] = useState(theme.brandColor.iconn_med_grey);
+  const [val2Color, setVal2Color] = useState(theme.brandColor.iconn_med_grey);
+  const [val3Color, setVal3Color] = useState(theme.brandColor.iconn_med_grey);
+  const [val4Color, setVal4Color] = useState(theme.brandColor.iconn_med_grey);
+  const [val5Color, setVal5Color] = useState(theme.brandColor.iconn_med_grey);
   //password validation
-  const [passValid, setPassValid] = useState(false)
+  const [passValid, setPassValid] = useState(false);
   //activitus error
   const [passwordError, setPasswordError] = useState('');
 
@@ -128,6 +132,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
       setPasswordError('');
       setPassValid(true);
     }
+    setPasswordVal(value);
   }
 
   return (
@@ -169,7 +174,6 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         error={passwordError}
         ref={passwordRef}
         showPasswordEnable
-        defaultValue={undefined}
         onChangeText={(str => validatePassword(str))}
         maxLength={30}
       />
