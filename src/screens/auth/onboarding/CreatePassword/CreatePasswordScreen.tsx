@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ActionButton, Input, TextContainer, Button, Container } from 'components';
 import theme from 'components/theme/theme';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { FieldValues, RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
 interface Props {
@@ -18,7 +18,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { isValid },
     register
   } = useForm({
     mode: 'onChange'
@@ -33,13 +33,10 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
   }, []);
 
   const submit: SubmitHandler<FieldValues> = fields => {
-    // TODO: we need to correct the submit, 
-    // because the values do not arrive via handlersubmit of react-hook-form.
-    onSubmit(passwordVal);
+    console.log(fields);
+    onSubmit(fields.password);
   };
 
-  //Password Value
-  const [passwordVal, setPasswordVal] = useState('');
   //items
   const [val1Item, setVal1Item] = useState('ellipse');
   const [val2Item, setVal2Item] = useState('ellipse');
@@ -128,12 +125,16 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
       setVal5Item("checkmark-circle-sharp");
       setVal5Color(theme.brandColor.iconn_success);
     }
-    if (!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/)) {
+
+    if (!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/) && !value.match(/\s/)) {
       setPasswordError('');
       setPassValid(true);
     }
-    setPasswordVal(value);
   }
+
+  const passRule: RegisterOptions = {
+    validate: () => passValid ? true : false
+  };
 
   return (
     <ScrollView
@@ -174,8 +175,9 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         error={passwordError}
         ref={passwordRef}
         showPasswordEnable
-        onChangeText={(str => validatePassword(str))}
+        onChangeText={validatePassword}
         maxLength={30}
+        rules={passRule}
       />
 
       <Container>
@@ -218,7 +220,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         <Button
           length="short"
           round
-          disabled={!passValid}
+          disabled={!isValid}
           onPress={handleSubmit(submit)}
           fontSize="h4"
           fontBold

@@ -185,7 +185,11 @@ const Input = forwardRef(({
                     ref={ref}
                     {...textInputProps}
                     value={defaultValue ? defaultValue : field.value}
-                    onChangeText={onChangeText ? onChangeText : field.onChange}
+                    onChangeText={e => {
+                      field.value = e;                      
+                      field.onChange(e);
+                      { onChangeText ? onChangeText(field.value) : undefined }
+                    }}
                   />
                 </Container>
                 </>
