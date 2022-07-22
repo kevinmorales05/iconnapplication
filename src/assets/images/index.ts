@@ -10,6 +10,8 @@ import ICONN_SUCCESS from './iconn-success.webp';
 import ICONN_ERROR from './iconn-error.webp';
 import ICONN_EYE_VISIBLE from './iconn-eye-visible.webp';
 import ICONN_USER from './iconn-user.webp';
+import ICONN_LOADER from './iconn-loader.gif';
+
 export {
   ICONN_BINOMIO_LOGOS,
   ICONN_BINOMIO_LOGOS_LIGHT,
@@ -22,5 +24,6 @@ export {
   ICONN_SUCCESS,
   ICONN_ERROR,
   ICONN_EYE_VISIBLE,
-  ICONN_USER
+  ICONN_USER,
+  ICONN_LOADER
 };
