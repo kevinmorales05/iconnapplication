@@ -1,7 +1,7 @@
 import React, { ReactNode, useMemo, useState } from 'react';
 import { LoadingInterface } from 'components/organisms/Loading';
-import { ActivityIndicator, StyleSheet, View, Image } from 'react-native';
-import theme from 'components/theme/theme';
+import { StyleSheet, View, Image } from 'react-native';
+import { ICONN_LOADER } from 'assets/images';
 
 interface Props {
   children: ReactNode
@@ -33,7 +33,7 @@ export const LoadingContextProvider = ({ children }: Props) => {
       { loadingState.visible
         && (
           <View style={styles.container}>
-            <Image source={require("../assets/videos/iconn-loader.gif")}/>
+            <Image source={ICONN_LOADER}/>
           </View>
         )}
     </LoadingContext.Provider>
