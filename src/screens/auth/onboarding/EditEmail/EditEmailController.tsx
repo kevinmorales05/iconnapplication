@@ -1,22 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from 'navigation/types';
-import EnterEmailScreen from './EnterEmailScreen';
+import { HomeStackParams } from 'navigation/types';
+import EnterEmailScreen from '../EnterEmail/EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { AboutEmail } from 'components/organisms/AboutEmail';
 import { useAlert, useLoading } from 'context';
 import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
-import { RootState, useAppDispatch, useAppSelector } from 'rtk';
+import {
+  AuthDataInterface,
+  RootState,
+  useAppDispatch,
+  useAppSelector
+} from 'rtk';
 import { setAuthEmail, setSignMode } from 'rtk/slices/authSlice';
+import { useToast } from 'context';
+import auth, { firebase } from '@react-native-firebase/auth';
+import { authServices } from 'services';
 
 const EnterEmailController: React.FC = () => {
-  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+  const { goBack, navigate } =
+    useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [aboutEmailVisible, setAboutEmailVisible] = useState<boolean>(false);
   const loader = useLoading();
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state: RootState) => state.auth);
   const alert = useAlert();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const toast = useToast();
 
   useEffect(() => {
     if (loading === false) {
@@ -34,12 +45,11 @@ const EnterEmailController: React.FC = () => {
 
   const showAlert = () => {
     alert.show({
-      title: 'Ya tienes una cuenta', 
+      title: 'Ya tienes una cuenta',
       message: 'Este correo está asociado a una cuenta existente.',
       acceptTitle: 'Entendido',
-      onAccept() {                  
+      onAccept() {
         alert.hide();
-        navigate('ContinueWith');
       }
     });
   };
@@ -49,16 +59,41 @@ const EnterEmailController: React.FC = () => {
     try {
       const { payload } = await dispatch(validateUserThunk(email));
       if (payload.responseCode === 200) {
-        dispatch(setAuthEmail({email}))
+        dispatch(setAuthEmail({ email }));
         if (!payload.data.isRegistered && payload.data.signMode === 0) {
           const { payload } = await dispatch(preSignUpThunk(email));
-          if (payload.responseCode === 201){
-            dispatch(setSignMode({sign_app_modes_id: 1}))
-            navigate('EnterOtp');
-          }        
+          if (payload.responseCode === 201) {
+            try {
+              const currentUser = firebase.auth().currentUser;
+
+              if (!currentUser) {
+                throw new Error('null currentUser');
+              }
+
+              await currentUser.updateEmail(email);
+
+              await authServices.putUser({
+                ...user,
+                email
+              } as AuthDataInterface);
+
+              toast.show({
+                message: 'Datos guardos exitosamente.',
+                type: 'success'
+              });
+
+              navigate('Profile');
+            } catch (error) {
+              console.log(error);
+              toast.show({
+                message: 'No se pudo editar el correo.',
+                type: 'error'
+              });
+            }
+          }
         } else if (payload.data.isRegistered) {
           if (payload.data.signMode === 1) {
-            navigate('EnterPassword');
+            showAlert();
           } else if (payload.data.signMode === 2) {
             showAlert();
           } else if (payload.data.signMode === 3) {
@@ -67,7 +102,7 @@ const EnterEmailController: React.FC = () => {
             showAlert();
           }
         }
-      }      
+      }
     } catch (error) {
       console.error('Unknow Error', error);
     }
@@ -76,7 +111,7 @@ const EnterEmailController: React.FC = () => {
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
       <EnterEmailScreen
-        title={`Ingresa tu dirección de \ncorreo electrónico`}
+        title={'Ingresa tu nueva dirección\n de correo electrónico'}
         goBack={goBack}
         onSubmit={onSubmit}
         onPressInfo={onPressEmailInfo}

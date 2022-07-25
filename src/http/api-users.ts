@@ -71,6 +71,10 @@ export class UsersApi extends HttpClient {
     return this.instance.post(path, payload);
   }
 
+  async putRequest(path: string, payload: any) {
+    return this.instance.put(path, payload);
+  }
+
   async getRequest(path: string, payload?: any) {
     return this.instance.get(path, payload);
   }

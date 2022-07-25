@@ -9,13 +9,13 @@ import {
   getUserThunk,
   RootState,
   setAuthEmail,
-  setBirthDay,
+  setBirthday,
   setEmailVerified,
   setFullName,
   setGender,
   setIsLogged,
   setPassword,
-  setPhoneNumber,
+  setTelephone,
   setPhoto,
   setSignMode,
   setUserId,
@@ -89,10 +89,10 @@ const EnterPasswordController: React.FC = () => {
               dispatch(setUserId({ user_id: user_id }));
               dispatch(setAuthEmail({ email: email }));
               dispatch(setPhoto({ photo: photo }));
-              dispatch(setEmailVerified({ emailVerified: true })); // TODO: maybe we need change for the real field returned by firebase.
-              dispatch(setPhoneNumber({ phoneNumber: telephone }));
+              dispatch(setEmailVerified({ emailVerified: true }));
+              dispatch(setTelephone({ telephone: telephone }));
               dispatch(setGender({ gender: gender_id }));
-              dispatch(setBirthDay({ birthDay: birthday }));
+              dispatch(setBirthday({ birthday: birthday }));
               dispatch(setFullName({ name: name, lastName: lastName }));
               dispatch(setIsLogged({ isLogged: true }));
             }

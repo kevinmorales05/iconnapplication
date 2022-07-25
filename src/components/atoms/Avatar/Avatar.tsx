@@ -1,5 +1,5 @@
 import { SizeType } from 'components/types/size-type';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   TouchableOpacity,
   Platform,
@@ -12,6 +12,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import theme from '../../theme/theme';
 import { AvatarProps } from '../../types/Avatar';
 import { Container } from '../Container';
+import { ICONN_USER } from 'assets/images';
 
 const getContainerStyle = (props: AvatarProps) => {
 	const { size, source, square, rounded } = props;
@@ -56,9 +57,12 @@ const Avatar: React.FC<AvatarProps> = ({
   editable = false,
   size = 'xsmall',
   editText = 'Editar',
+  defaultSource = ICONN_USER,
 	...props
 }) => {
-	({ ...props } = { style, title, editable, size, editText, ...props });
+	({ ...props } = { style, title, editable, size, editText, defaultSource, ...props });
+  const [succesful, setSuccesful] = useState(false);
+
   const TouchableElement: any =
     Platform.OS === 'android' ? Pressable : TouchableOpacity;
   return (
@@ -74,9 +78,13 @@ const Avatar: React.FC<AvatarProps> = ({
           ])}>
           {props.source ? (
             <Image
+              onLoad={() => {
+                setSuccesful(true)
+              }}
+              defaultSource={defaultSource}
               source={props.source}
               resizeMode="cover"
-              style={styles.image}
+              style={succesful ? styles.image : styles.defaultImage}
             />
           ) : (
             <Text
@@ -122,7 +130,11 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-  }  
+  },
+  defaultImage: {
+    width: '70%',
+    height: '70%',
+  } 
 });
 
 export default Avatar;

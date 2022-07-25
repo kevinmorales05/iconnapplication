@@ -5,4 +5,5 @@ export type FontColorTypes =
   | 'paragraph'
   | 'link'
   | 'medgrey'
-  | 'grey';
+  | 'grey'
+  | 'dark_orange';

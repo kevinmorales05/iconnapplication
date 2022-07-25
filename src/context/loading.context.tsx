@@ -1,7 +1,7 @@
 import React, { ReactNode, useMemo, useState } from 'react';
 import { LoadingInterface } from 'components/organisms/Loading';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import theme from 'components/theme/theme';
+import { StyleSheet, View, Image } from 'react-native';
+import { ICONN_LOADER } from 'assets/images';
 
 interface Props {
   children: ReactNode
@@ -33,7 +33,7 @@ export const LoadingContextProvider = ({ children }: Props) => {
       { loadingState.visible
         && (
           <View style={styles.container}>
-            <ActivityIndicator size="large" color={theme.brandColor.iconn_accent_principal} />
+            <Image source={ICONN_LOADER}/>
           </View>
         )}
     </LoadingContext.Provider>
@@ -47,8 +47,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    opacity: 0.5,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center'
   }

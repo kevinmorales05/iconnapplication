@@ -76,6 +76,32 @@ async function getUser(user: AuthDataInterface): Promise<any> {
 }
 
 /**
+ * Function to update current User.
+ * @param user
+ * @returns
+ */
+ async function putUser(user: AuthDataInterface): Promise<any> {
+  const { user_id } = user;
+  const response = await UsersApi.getInstance().putRequest(`/users/putUser/${user_id}`,user);
+  if (response === undefined) return Promise.reject(new Error('putUser:/users/putUser'));
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to update the current User password.
+ * @param user
+ * @returns
+ */
+ async function updateUserPassword(user: AuthDataInterface): Promise<any> {
+  const { user_id } = user;
+  const response = await UsersApi.getInstance().putRequest(`/users/updateUserPassword/${user_id}`,user);
+  if (response === undefined) return Promise.reject(new Error('updateUserPassword:/users/updateUserPassword'));
+  const { data } = response;
+  return data;
+}
+
+/**
  * Function to send an email to recover password.
  * @param user
  * @returns
@@ -94,5 +120,7 @@ export const authServices = {
   register,
   registerWithFirebase,
   getUser,
-  sendEmailtoRecoverPassword
+  putUser,
+  sendEmailtoRecoverPassword,
+  updateUserPassword
 };

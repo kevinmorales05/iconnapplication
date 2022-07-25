@@ -164,7 +164,8 @@ const theme: themeType = {
     paragraph: '#000000',
     link: '#5fae8e',
     medgrey: 'lightgrey',
-    grey: 'grey'
+    grey: 'grey',
+    dark_orange: '#F39124'
   },
   brandColor: {
     iconn_orange_original: '#f37721',

@@ -13,9 +13,11 @@ export interface AuthDataInterface {
   sign_app_modes_id?: number;
   photo?: string;
   emailVerified?: boolean;
-  phoneNumber?: string;
-  birthDay?: string;
-  gender?: number;
+  telephone?: string;
+  birthday?: string;
+  gender_id?: number;
+  gender?: string | number;
+  password?: string;
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';
