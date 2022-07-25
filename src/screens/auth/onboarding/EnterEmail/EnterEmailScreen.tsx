@@ -8,12 +8,14 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { emailRules } from 'utils/rules';
 
 interface Props {
+  title: string;
   onSubmit: (email: string) => void;
   goBack: () => void;
   onPressInfo: () => void;
 }
 
 const EnterEmailScreen: React.FC<Props> = ({
+  title,
   onSubmit,
   goBack,
   onPressInfo
@@ -56,7 +58,7 @@ const EnterEmailScreen: React.FC<Props> = ({
       <TextContainer
         typography="h2"
         fontBold
-        text={`Ingresa tu dirección de \ncorreo electrónico`}
+        text={title}
         marginTop={34}
       />
       <Input

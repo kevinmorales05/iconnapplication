@@ -7,10 +7,11 @@ import {
   Input,
   Select,
   TextContainer,
-  SafeArea
+  SafeArea,
+  Touchable
 } from 'components';
-import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleProp, TextInput, ViewStyle } from 'react-native';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
@@ -23,6 +24,7 @@ import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
 import * as PhotosPicker from '../../../components/organisms/PhotosPicker/PhotosPicker';
 import moment from 'moment';
+import { NavigationContext } from '@react-navigation/native';
 
 type Props = {
   onSubmit: (data: any) => void;
@@ -37,6 +39,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const { email, name, telephone, gender, birthday, lastName, sign_app_modes_id, photo } = user;
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
+  const navigation = useContext(NavigationContext);
 
   // storage bucket folder
   const bucketPath = `userPhotos/${user.user_id}/profile/`;
@@ -179,27 +182,51 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           text={`Correo electrónico`}
           marginTop={21}
         />
-        <TextContainer
-          text={email!}
-          typography="h5"
-          textColor={theme.brandColor.iconn_grey}
-          marginTop={19}
-        />
+        <View style={{flex:1, flexDirection:"row"}}>
+          <View style={{flex:3}}>
+            <TextContainer
+              text={email!}
+              typography="h5"
+              textColor={theme.brandColor.iconn_grey}
+              marginTop={19}
+            />
 
-        <Container flex row style={{ marginTop: 10 }} center>
-          <Icon
-            name="checkcircle"
-            size={18}
-            color={theme.brandColor.iconn_success}
-            style={{ marginRight: 5 }}
-          />
-          <CustomText
-            textColor={theme.brandColor.iconn_green_original}
-            text={sign_app_modes_id === 1 ? 'Correo verificado' : 'Correo verificado con red social'}
-            typography="h6"
-            fontWeight="normal"
-          />
-        </Container>
+            <Container flex row style={{ marginTop: 10 }} center>
+              <Icon
+                name="checkcircle"
+                size={18}
+                color={theme.brandColor.iconn_success}
+                style={{ marginRight: 5 }}
+              />
+              <CustomText
+                textColor={theme.brandColor.iconn_green_original}
+                text={
+                  sign_app_modes_id === 1
+                    ? 'Correo verificado'
+                    : 'Correo verificado con red social'
+                }
+                typography="h6"
+                fontWeight="normal"
+              />
+            </Container>
+          </View>
+
+          {sign_app_modes_id === 1 && <View style={{flex:3, marginTop:19}}>
+            <Touchable onPress={() => {
+              navigation?.navigate('Editar correo');
+            }}>
+              <Container row center style={{justifyContent :"flex-end"}}>
+                <Octicons
+                  name="pencil"
+                  size={theme.avatarSize.xxxsmall}
+                  color={theme.brandColor.iconn_accent_secondary}
+                  style={{ marginRight: 5 }}
+                />
+                <CustomText text={'Editar'} typography="h6" />
+              </Container>
+            </Touchable>
+          </View>}
+        </View>
 
         <TextContainer
           typography="h6"
@@ -221,16 +248,21 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
             text={`••••••••`}
             textColor={theme.brandColor.iconn_dark_grey}
           />
-          <Container row center crossCenter>
-            <Octicons
-              name="pencil"
-              size={theme.avatarSize.xxxsmall}
-              color={theme.brandColor.iconn_accent_secondary}
-              onPress={() => {}}
-              style={{ marginRight: 5 }}
-            />
-            <CustomText text={'Editar'} typography="h6" />
-          </Container>
+          <TouchableOpacity
+            onPress={() => {
+              navigation?.navigate('Editar Contraseña');
+            }}
+          >
+            <Container row center crossCenter>
+              <Octicons
+                name="pencil"
+                size={theme.avatarSize.xxxsmall}
+                color={theme.brandColor.iconn_accent_secondary}
+                style={{ marginRight: 5 }}
+              />
+              <CustomText text={'Editar'} typography="h6" />
+            </Container>
+          </TouchableOpacity>
         </Container>
 
         <TextContainer

@@ -3,4 +3,7 @@ export type HomeStackParams = {
   Home: undefined;
   'Mi Cuenta': undefined;
   Profile: undefined;
+  "Editar correo": undefined;
+  EnterOtp: undefined;
+  ["Editar Contraseña"]: undefined;
 };
