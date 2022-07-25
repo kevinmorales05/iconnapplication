@@ -40,21 +40,22 @@ const HomeScreen: React.FC<Props> = ({
 				<Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
           <CustomText
             textColor={theme.brandColor.iconn_dark_grey}
-            text={`Hola ${name ? name : email }`}
+            text={name ? `¡Hola ${name}!`: '¡Hola!'}
             typography="h4"
             fontBold            
           />
         </Container>
-        {/* <Button
+        <Button
           round
           onPress={onPressMyAccount}
           fontSize="h4"
           fontBold
           outline
           style={{ marginTop: 8 }}
+          disabled
         >
           Mi cuenta
-        </Button> */}
+        </Button> 
         <Button
           round
           onPress={onPressLogOut}

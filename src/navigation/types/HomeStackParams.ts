@@ -6,4 +6,5 @@ export type HomeStackParams = {
   "Editar correo": undefined;
   EnterOtp: undefined;
   ["Editar Contraseña"]: undefined;
+  InviteSignUp: undefined;
 };

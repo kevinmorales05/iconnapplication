@@ -9,12 +9,17 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
 import { setAuthEmail, setEmailVerified, setFullName, setIsLogged, setTelephone, setPhoto, setSignMode, setUserId, signInWithAppleThunk, 
-  signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch, validateUserThunk } from 'rtk';
+  signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch, setIsGuest, validateUserThunk } from 'rtk';
 
 const ContinueWithController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const [otherMethodsVisible, setotherMethodsVisible] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const delay = ms => new Promise(res => setTimeout(res, ms));
+  const nowIsGuest = async () => {
+    await delay(1000);
+    dispatch(setIsGuest({isGuest: true}));
+  }
 
   const onAppleButtonPress = async () => {
     try {
@@ -57,8 +62,8 @@ const ContinueWithController: React.FC = () => {
       dispatch(setEmailVerified({ emailVerified: user.emailVerified }));
       dispatch(setTelephone({ telephone: user.phoneNumber! }));
       dispatch(setFullName({
-        name: additionalUserInfo?.profile?.given_name,
-        lastName: additionalUserInfo?.profile?.family_name
+        name: additionalUserInfo?.profile?.name,
+        lastName: additionalUserInfo?.profile?.last_name
       }));
 
       if (additionalUserInfo?.isNewUser) {
@@ -117,7 +122,16 @@ const ContinueWithController: React.FC = () => {
   };
   
   const onContinueAsGuest = () => {
-    console.log('onContinueAsGuest');
+      /* setotherMethodsVisible(false);
+      if(!otherMethodsVisible) {
+        dispatch(setIsGuest({isGuest: true}));
+      }
+      else {
+        console.log("sigue siendo true, MODAL", otherMethodsVisible);
+      } */
+    setotherMethodsVisible(false);
+    console.log('Modal', otherMethodsVisible);
+    nowIsGuest();
   };
   
   const onIhaveAccount = () => {
@@ -125,6 +139,7 @@ const ContinueWithController: React.FC = () => {
     navigate('EnterEmail');
   };
   const onPressOut = () => {
+    console.log('Modal', otherMethodsVisible);
     setotherMethodsVisible(false);
   };
 

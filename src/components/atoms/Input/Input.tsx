@@ -17,7 +17,7 @@ import { Container } from '../Container';
 import { TextContainer } from '../../molecules/TextContainer';
 import { ActionButton } from '../ActionButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ICONN_BACKGROUND_IMAGE, ICONN_EYE } from 'assets/images';
+import { ICONN_EYE_ON, ICONN_EYE_OFF } from 'assets/images';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { CustomText } from '../CustomText';
 
@@ -46,7 +46,6 @@ export interface Props {
   name: string;
   control: Control<FieldValues, object>;
   rules?: RegisterOptions;
-  renderErrorIcon?: boolean;
   testID?: string;
   sufixOutIcon?: boolean;
   onPressInfo?: any;
@@ -81,7 +80,6 @@ const Input = forwardRef(({
   name,
   control,
   rules,
-  renderErrorIcon = true,
   testID,
   sufixOutIcon = false,
   onPressInfo,
@@ -91,7 +89,7 @@ const Input = forwardRef(({
   phone = false
 }: Props, ref: ForwardedRef<any>) => {
   const {
-    inputStyle, inputContainerStyle, passwordImageStyle, errorImageStyle, prefixImageStyle
+    inputStyle, inputContainerStyle, passwordImageStyle, prefixImageStyle
   } = styles;
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(passwordField || false);
   const [focused, setFocused] = useState<boolean>(false);
@@ -187,7 +185,11 @@ const Input = forwardRef(({
                     ref={ref}
                     {...textInputProps}
                     value={defaultValue ? defaultValue : field.value}
-                    onChangeText={onChangeText ? onChangeText : field.onChange}
+                    onChangeText={e => {
+                      field.value = e;                      
+                      field.onChange(e);
+                      { onChangeText ? onChangeText(field.value) : undefined }
+                    }}
                   />
                 </Container>
                 </>
@@ -196,11 +198,8 @@ const Input = forwardRef(({
           </Container>
           {passwordField && showPasswordEnable && (
             <Touchable testID={`${testID}-hide-password`} onPress={() => setSecureTextEntry(!secureTextEntry)} opacityEffect>
-              <Image source={ICONN_EYE} style={passwordImageStyle} />
+              <Image source={secureTextEntry ? ICONN_EYE_ON : ICONN_EYE_OFF} style={passwordImageStyle} />
             </Touchable>
-          )}
-          {!(passwordField && showPasswordEnable) && !!error && renderErrorIcon && (
-            <Image testID={`${testID}-error-image`} source={ICONN_BACKGROUND_IMAGE} style={errorImageStyle} />
           )}
           {datePicker && (
             <ActionButton size='xsmall' color='' onPress={onPressDatePickerIcon!}
@@ -221,7 +220,7 @@ const Input = forwardRef(({
         )}
       </Container>
       
-      {!!error && (
+      {(!!error && error.length > 1) && (
       <TextContainer
         testID={`${testID}-error-label`}
         text={error}
@@ -239,6 +238,7 @@ const styles = StyleSheet.create({
   inputStyle: {
     fontSize: theme.fontSize.paragraph,
     paddingHorizontal: 12,
+    width: '100%',
     color: theme.fontColor.dark
   },
   inputContainerStyle: {
@@ -247,14 +247,8 @@ const styles = StyleSheet.create({
     borderColor: theme.fontColor.medgrey
   },
   passwordImageStyle: {
-    width: 20,
-    height: 16,
-    marginRight: 15,
-    marginVertical: 15
-  },
-  errorImageStyle: {
-    width: 10,
-    height: 14,
+    width: 24,
+    height: 24,
     marginRight: 15,
     marginVertical: 15
   },

@@ -63,16 +63,7 @@ const EnterPasswordController: React.FC = () => {
         signInWithEmailAndPasswordThunk({ email: email!, pass: password })
       );
 
-      if (response.error) {
-        // alert.show(
-        //   {
-        //     title: 'Error:',
-        //     message: manageFirebaseLoginError(response.error.code),
-        //     acceptTitle: 'Aceptar',
-        //     onAccept() { alert.hide(); },
-        //   },
-        //   'warning'
-        // );
+      if (response.error) {        
         const msg = manageFirebaseLoginError(response.error.code);
         setAccountError(msg);
       } else {

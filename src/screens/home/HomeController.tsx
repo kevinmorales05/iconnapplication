@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
-import { RootState, useAppSelector, useAppDispatch, setIsLogged } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setIsLogged, setIsGuest } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -21,6 +21,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
+
 
 interface Props {
   carouselItems?: ItemProps;
@@ -146,7 +147,10 @@ class CustomCarousel extends Component<Props, State> {
 
 const HomeController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const [modVisibility, setModVisibility] = useState(true);
+  const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
+  const { isLogged } = userLogged;
+  const modVis = (isLogged) ? true : false;
+  const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
   const { navigate } =
     useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -156,9 +160,13 @@ const HomeController: React.FC = () => {
     if (meta.requestStatus === 'fulfilled') {
       dispatch(setIsLogged({ isLogged: false }));
     }
+    if (setIsGuest({isGuest: true})) {
+      dispatch(setIsGuest({isGuest: false}));
+    }
   };
 
   const goToMyAccount = () => navigate('Profile');
+  console.log("USER->", isLogged);
 
   return (
     <SafeArea
@@ -171,7 +179,7 @@ const HomeController: React.FC = () => {
         name={user.name}
         email={user.email}
         onPressLogOut={logOut}
-        onPressMyAccount={goToMyAccount}
+        onPressMyAccount={(isLogged) ? goToMyAccount : () => navigate('InviteSignUp')}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
@@ -185,7 +193,7 @@ const HomeController: React.FC = () => {
           </Pressable>
           <Container row>
             <TextContainer
-              text={`¡Hola ${user.name ? user.name : user.email} ${user.lastName ? user.lastName : ''}!`}
+              text={user.name ? `¡Hola ${user.name}!`: '¡Hola!'}
               typography="h3"
               fontBold={true}
               textAlign="center"
