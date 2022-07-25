@@ -62,6 +62,7 @@ const EnterEmailController: React.FC = () => {
         if (!payload.data.isRegistered && payload.data.signMode === 0) {
           const { payload } = await dispatch(preSignUpThunk(email));
           if (payload.responseCode === 201) {
+            loader.show()
             try {
               await authServices.putUser({
                 user_id: user.user_id,
@@ -75,11 +76,12 @@ const EnterEmailController: React.FC = () => {
 
               navigate('Profile');
             } catch (error) {
-              console.log(error);
               toast.show({
                 message: 'No se pudo editar el correo.',
                 type: 'error'
               });
+            } finally {
+              loader.hide()
             }
           }
         } else if (payload.data.isRegistered) {
