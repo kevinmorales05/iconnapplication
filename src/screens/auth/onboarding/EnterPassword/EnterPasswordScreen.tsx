@@ -6,7 +6,7 @@ import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { ICONN_EMAIL } from 'assets/images';
 import React, { useEffect, useRef } from 'react';
-import { confirmPasswordRule } from 'utils/rules';
+import { passwordMinimumRule } from 'utils/rules';
 
 interface Props {
   accountError?: string;
@@ -18,7 +18,7 @@ interface Props {
 
 const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, goToForgotPassword, email }) => {
   const insets = useSafeAreaInsets();
-  const { handleSubmit, register, control, formState:{errors, isValid} } = useForm();
+  const { handleSubmit, register, control, formState:{ errors, isValid } } = useForm({ mode: 'onChange' });
   const passwordRef = useRef<TextInput>(null);
 
   useEffect(() => {
@@ -87,9 +87,10 @@ const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, 
           placeholder={`Ingresa tu contraseña`}
           blurOnSubmit={false}
           marginTop={27}
-          error={accountError}
+          error={accountError ? accountError : errors.password?.message }
           ref={passwordRef}
           showPasswordEnable
+          rules={passwordMinimumRule}
         />
         <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
           <TouchableText
@@ -125,6 +126,7 @@ const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, 
           fontBold
           style={{ marginTop: 8 }}
           rightIcon={<AntDesign name="arrowright" size={24} color="white" />}
+          disabled={!isValid}
         >
           Siguiente
         </Button>
