@@ -7,15 +7,8 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { AboutEmail } from 'components/organisms/AboutEmail';
 import { useAlert, useLoading } from 'context';
 import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
-import {
-  AuthDataInterface,
-  RootState,
-  useAppDispatch,
-  useAppSelector
-} from 'rtk';
+import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { setAuthEmail } from 'rtk/slices/authSlice';
-import { useToast } from 'context';
-import { authServices } from 'services';
 
 const EnterEmailController: React.FC = () => {
   const { goBack, navigate } =
@@ -25,8 +18,6 @@ const EnterEmailController: React.FC = () => {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state: RootState) => state.auth);
   const alert = useAlert();
-  const toast = useToast();
-  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (loading === false) {
@@ -62,27 +53,7 @@ const EnterEmailController: React.FC = () => {
         if (!payload.data.isRegistered && payload.data.signMode === 0) {
           const { payload } = await dispatch(preSignUpThunk(email));
           if (payload.responseCode === 201) {
-            loader.show()
-            try {
-              await authServices.putUser({
-                user_id: user.user_id,
-                email
-              } as AuthDataInterface);
-
-              toast.show({
-                message: 'Datos guardos exitosamente.',
-                type: 'success'
-              });
-
-              navigate('Profile');
-            } catch (error) {
-              toast.show({
-                message: 'No se pudo editar el correo.',
-                type: 'error'
-              });
-            } finally {
-              loader.hide()
-            }
+            navigate('EnterOtp');
           }
         } else if (payload.data.isRegistered) {
           if (payload.data.signMode === 1) {

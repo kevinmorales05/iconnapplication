@@ -9,8 +9,13 @@ import { useLoading } from 'context';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { validateOtpThunk } from 'rtk/thunks/auth.thunks';
 
-const EnterOtpController: React.FC = () => {
-  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+interface EnterOtpControllerProps {
+  handleSubmit?: (email: string) => void;
+}
+
+const EnterOtpController = ({ handleSubmit }: EnterOtpControllerProps) => {
+  const { goBack, navigate } =
+    useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const loader = useLoading();
   const dispatch = useAppDispatch();
 
@@ -25,24 +30,33 @@ const EnterOtpController: React.FC = () => {
 
   const [wrongCode, setWrongCode] = useState(false);
 
-  const onSubmit = async (code: string) => {    
+  const onSubmit = async (code: string) => {
     loader.show();
-    
-    try {  
-      const { payload } = await dispatch(validateOtpThunk({email, code}));
+    try {
+      const { payload } = await dispatch(validateOtpThunk({ email, code }));
       if (payload.responseCode === 201 && !payload.data.isValid) {
         setWrongCode(true);
-      } else if (payload.responseCode === 201 && payload.data.isValid) { 
+      } else if (payload.responseCode === 201 && payload.data.isValid) {
+        if (handleSubmit) {
+          handleSubmit(email as string);
+          return;
+        }
+
         navigate('CreatePassword');
       }
     } catch (error) {
-      console.error('Unknow Error', error);      
+      console.error('Unknow Error', error);
     }
   };
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <EnterOtpScreen goBack={goBack} onSubmit={onSubmit} email={email} wrongCode={wrongCode} />
+      <EnterOtpScreen
+        goBack={goBack}
+        onSubmit={onSubmit}
+        email={email}
+        wrongCode={wrongCode}
+      />
     </SafeArea>
   );
 };
