@@ -7,7 +7,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import CreatePasswordScreen from '../CreatePassword/CreatePasswordScreen';
 import { useAppSelector, RootState } from 'rtk';
 
-import { useToast } from 'context';
+import { useToast, useLoading } from 'context';
 
 import auth, { firebase } from '@react-native-firebase/auth';
 import { authServices } from 'services';
@@ -16,17 +16,14 @@ const EditPasswordController: React.FC = () => {
   const { goBack, navigate } =
     useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const toast = useToast();
+  const loader = useLoading();
+
   const { user } = useAppSelector((state: RootState) => state.auth);
 
   const onSubmit = async (password: string) => {
+    loader.show()
     try {
-      const currentUser = firebase.auth().currentUser;
-
-      if (!currentUser) {
-        throw new Error('null currentUser');
-      }
-
-      await authServices.updateUserPassword({ ...user, password });
+      await authServices.updateUserPassword({ ...user, new_password:password });
 
       toast.show({
         message: 'Datos guardos exitosamente.',
@@ -40,6 +37,9 @@ const EditPasswordController: React.FC = () => {
         message: 'No se pudo cambiar la contraseña.',
         type: 'error'
       });
+    }
+    finally {
+      loader.hide()
     }
   };
 

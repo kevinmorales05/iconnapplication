@@ -26,6 +26,7 @@ const EnterEmailController: React.FC = () => {
   const { loading } = useAppSelector((state: RootState) => state.auth);
   const alert = useAlert();
   const toast = useToast();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (loading === false) {
@@ -62,8 +63,8 @@ const EnterEmailController: React.FC = () => {
           const { payload } = await dispatch(preSignUpThunk(email));
           if (payload.responseCode === 201) {
             try {
-
               await authServices.putUser({
+                user_id: user.user_id,
                 email
               } as AuthDataInterface);
 

@@ -18,6 +18,7 @@ export interface AuthDataInterface {
   gender_id?: number;
   gender?: string | number;
   password?: string;
+  new_password?: string;
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';
