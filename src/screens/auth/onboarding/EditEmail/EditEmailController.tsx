@@ -13,9 +13,8 @@ import {
   useAppDispatch,
   useAppSelector
 } from 'rtk';
-import { setAuthEmail, setSignMode } from 'rtk/slices/authSlice';
+import { setAuthEmail } from 'rtk/slices/authSlice';
 import { useToast } from 'context';
-import auth, { firebase } from '@react-native-firebase/auth';
 import { authServices } from 'services';
 
 const EnterEmailController: React.FC = () => {
@@ -26,7 +25,6 @@ const EnterEmailController: React.FC = () => {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state: RootState) => state.auth);
   const alert = useAlert();
-  const { user } = useAppSelector((state: RootState) => state.auth);
   const toast = useToast();
 
   useEffect(() => {
@@ -64,16 +62,8 @@ const EnterEmailController: React.FC = () => {
           const { payload } = await dispatch(preSignUpThunk(email));
           if (payload.responseCode === 201) {
             try {
-              const currentUser = firebase.auth().currentUser;
-
-              if (!currentUser) {
-                throw new Error('null currentUser');
-              }
-
-              await currentUser.updateEmail(email);
 
               await authServices.putUser({
-                ...user,
                 email
               } as AuthDataInterface);
 

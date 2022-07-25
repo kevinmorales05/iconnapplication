@@ -14,6 +14,9 @@ const ProfileController: React.FC = () => {
   const toast = useToast();
 
   const onSubmit = async (userFields: AuthDataInterface) => {
+    //prevents unhandled email update
+    delete userFields.email
+
     const { user_id } = user;
     userFields.user_id = user_id;
     const gender = GENDERS.find(gender => {

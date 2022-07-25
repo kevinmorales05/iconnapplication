@@ -79,7 +79,10 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
       setValue('gender', previusGender?.name);
     }
 
-    setValue('birthday',  moment(birthday, 'YYYY-MM-DD').format('DD/MM/YYYY'));
+    if(birthday){
+      //the backend returns dates with YYY-MMM-DD format
+      setValue('birthday',  moment(birthday, 'YYYY-MM-DD').format('DD/MM/YYYY'));
+    }
 
     if (nameRef.current) {
       nameRef.current.focus();
@@ -149,7 +152,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           placeholder={''}
           rules={alphabetRule(true)}
           blurOnSubmit={false}
-          error={errors.names?.message}
+          error={errors.name?.message}
           maxLength={30}
           renderErrorIcon={false}
         />
@@ -171,7 +174,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           placeholder={''}
           rules={alphabetRule(true)}
           blurOnSubmit={false}
-          error={errors.surnames?.message}
+          error={errors.lastName?.message}
           maxLength={30}
           renderErrorIcon={false}
         />
@@ -248,7 +251,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
             text={`••••••••`}
             textColor={theme.brandColor.iconn_dark_grey}
           />
-          <TouchableOpacity
+          {sign_app_modes_id === 1 && <TouchableOpacity
             onPress={() => {
               navigation?.navigate('Editar Contraseña');
             }}
@@ -262,7 +265,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
               />
               <CustomText text={'Editar'} typography="h6" />
             </Container>
-          </TouchableOpacity>
+          </TouchableOpacity>}
         </Container>
 
         <TextContainer
@@ -273,13 +276,13 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         />
 
         <Input
-          {...register('telephone')}
+          {...register('telephone',{required:"Campo requerido"})}
           ref={phoneRef}
           control={control}
           keyboardType="number-pad"
           placeholder={'000-000-0000'}
           blurOnSubmit={true}
-          error={errors.phone?.message}
+          error={errors.telephone?.message}
           maxLength={10}
           renderErrorIcon={false}
           phone
@@ -323,7 +326,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           androidMode="dialog"
           label={`Genero`}
           placeholder={`Genero`}
-          error={errors.state?.message}
+          error={errors.gender?.message}
           useActionSheet
         />
         <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
