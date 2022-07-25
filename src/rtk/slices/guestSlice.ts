@@ -12,7 +12,7 @@ const guestSlice = createSlice({
   },
   reducers: {
     setGuestInitialState(state) {
-        state = { guest: initialState };
+        state.guest = { ...initialState };
       },
     setIsGuest(state, action: PayloadAction<GuestInterface>){
       state.guest.isGuest = action.payload.isGuest;

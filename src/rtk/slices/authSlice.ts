@@ -26,7 +26,8 @@ const authSlice = createSlice({
   },
   reducers: {
     setAuthInitialState(state) {
-      state = { user: initialState, loading: false };
+      state.user = { ...initialState };
+      state.loading = false;
     },
     setAuthEmail(state, action: PayloadAction<AuthDataInterface>) {
       state.user.email = action.payload.email;

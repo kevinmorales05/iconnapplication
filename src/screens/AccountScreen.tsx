@@ -15,7 +15,7 @@ import {
 } from 'components';
 import { NavigationContext } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { RootState, useAppSelector, setIsLogged, useAppDispatch } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState } from 'rtk';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 
@@ -79,7 +79,9 @@ export default function AccountScreen() {
   const logOut = async () => {
     const { meta } = await dispatch(logoutThunk());
     if (meta.requestStatus === 'fulfilled') {
-      dispatch(setIsLogged({ isLogged: false }));
+      dispatch(setAppInitialState());
+      dispatch(setAuthInitialState());
+      dispatch(setGuestInitialState());
     }
   };
 
