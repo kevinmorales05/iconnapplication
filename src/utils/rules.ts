@@ -115,3 +115,19 @@ export const mobilePhoneRule: RegisterOptions = {
   },
   minLength: 1
 };
+
+export const rfcRule: RegisterOptions = {
+  required: {
+    value: true,
+    message: `Campo requerido.`
+  },
+  validate: (value: string) => {
+    if (!/^([A-ZÑ&]{3,4})(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))([A-Z\d]{2})([A\d])$/
+    .test(value)) {
+      return 'Formato incorrecto.';
+    }
+
+    return true;
+  },
+  minLength: 1
+};

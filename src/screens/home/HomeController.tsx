@@ -170,7 +170,8 @@ const HomeController: React.FC = () => {
     }
   };
 
-  const goToMyAccount = () => navigate('Profile');
+  const goToMyAccount = () => navigate('Mi Cuenta');
+  const goToBilling = () => navigate('TaxData');
   console.log("USER->", isLogged);
 
   return (
@@ -185,6 +186,7 @@ const HomeController: React.FC = () => {
         email={user.email}
         onPressLogOut={logOut}
         onPressMyAccount={(isLogged) ? goToMyAccount : () => navigate('InviteSignUp')}
+        onPressBilling={goToBilling}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>

@@ -22,7 +22,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 import { GENDERS } from 'assets/files';
 import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
-import * as PhotosPicker from '../../../components/organisms/PhotosPicker/PhotosPicker';
+import * as PhotosPicker from '../../../../components/organisms/PhotosPicker/PhotosPicker';
 import moment from 'moment';
 import { NavigationContext } from '@react-navigation/native';
 

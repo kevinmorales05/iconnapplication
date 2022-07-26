@@ -13,7 +13,7 @@ import {
   AddressItems,
   AnnounceItem
 } from 'components';
-import { NavigationContext } from '@react-navigation/native';
+import { NavigationContext, useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState } from 'rtk';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -21,10 +21,14 @@ import { logoutThunk } from 'rtk/thunks/auth.thunks';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
 
-const TaxItem = () => {
-  return (
-    <TouchableOpacity style={taxItemStyles.container}>
+const TaxItem: React.FC = () => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const goToTaxData = () => navigate('TaxData');
+  return(
+    <TouchableOpacity style={taxItemStyles.container} onPress={goToTaxData} >
       <View style={taxItemStyles.content}>
         <View style={taxItemStyles.middle}>
           <Text numberOfLines={1}>
@@ -36,7 +40,7 @@ const TaxItem = () => {
         </View>
       </View>
     </TouchableOpacity>
-  );
+  )
 };
 
 const taxItemStyles = StyleSheet.create({
