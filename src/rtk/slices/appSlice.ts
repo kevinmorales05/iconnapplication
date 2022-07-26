@@ -9,8 +9,8 @@ const appSlice = createSlice({
   name: 'app',
   initialState: initialState,
   reducers: {
-    setAppInitialState(state, action: PayloadAction<AppInterface>) {
-      state = initialState;
+    setAppInitialState(state) {
+      state = { ...initialState };
     },
     setAppError(state, action: PayloadAction<AppInterface>){
       state.error = action.payload.error;

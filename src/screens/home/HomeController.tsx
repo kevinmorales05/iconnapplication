@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
-import { RootState, useAppSelector, useAppDispatch, setIsLogged, setIsGuest } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -156,12 +156,17 @@ const HomeController: React.FC = () => {
     useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   const logOut = async () => {
-    const { meta } = await dispatch(logoutThunk());
-    if (meta.requestStatus === 'fulfilled') {
-      dispatch(setIsLogged({ isLogged: false }));
-    }
-    if (setIsGuest({isGuest: true})) {
-      dispatch(setIsGuest({isGuest: false}));
+    if (isLogged) {
+      const { meta } = await dispatch(logoutThunk());
+      if (meta.requestStatus === 'fulfilled') {
+        dispatch(setAppInitialState());
+        dispatch(setAuthInitialState());
+        dispatch(setGuestInitialState());
+      }  
+    } else {
+      dispatch(setAppInitialState());
+      dispatch(setAuthInitialState());
+      dispatch(setGuestInitialState());
     }
   };
 

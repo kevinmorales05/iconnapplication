@@ -15,7 +15,7 @@ interface Props {
 
 const HomeScreen: React.FC<Props> = ({
   onPressMyAccount,
-	onPressLogOut,
+  onPressLogOut,
   name,
   email
 }) => {
@@ -34,28 +34,29 @@ const HomeScreen: React.FC<Props> = ({
       }}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
-    >      
-
+    >
       <Container flex crossCenter>
-				<Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
+        <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
           <CustomText
             textColor={theme.brandColor.iconn_dark_grey}
-            text={name ? `¡Hola ${name}!`: '¡Hola!'}
+            text={name ? `¡Hola ${name}!` : '¡Hola!'}
             typography="h4"
-            fontBold            
+            fontBold
           />
         </Container>
         <Button
           round
-          onPress={onPressMyAccount}
+          onPress={() => {
+            navigation?.navigate('Mi Cuenta');
+          }}
           fontSize="h4"
           fontBold
-          outline
           style={{ marginTop: 8 }}
+          icon={<SimpleLineIcons name="user" size={24} color="white" />}
           disabled
         >
           Mi cuenta
-        </Button> 
+        </Button>
         <Button
           round
           onPress={onPressLogOut}
@@ -66,18 +67,6 @@ const HomeScreen: React.FC<Props> = ({
         >
           Salir
         </Button>
-        <Button
-          round
-          onPress={() => {
-            navigation?.navigate('Mi Cuenta');
-          }}
-          fontSize="h4"
-          fontBold
-          style={{ marginTop: 8 }}
-          icon={<SimpleLineIcons name="user" size={24} color="white" />}
-        >
-          Mi cuenta
-        </Button>        
       </Container>
     </ScrollView>
   );
