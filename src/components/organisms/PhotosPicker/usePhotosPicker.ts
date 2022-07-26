@@ -6,7 +6,7 @@ import {
   launchImageLibrary
 } from 'react-native-image-picker';
 import { useLoading, useToast } from 'context';
-import { RootState, useAppSelector } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setPhoto } from 'rtk';
 
 import storage from '@react-native-firebase/storage';
 import { authServices } from 'services';
@@ -27,6 +27,7 @@ export default function usePhotosPicker(
   const [currentPhoto, setCurrentPhoto] = useState<string | undefined>();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const toast = useToast();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     (async () => {
@@ -56,12 +57,17 @@ export default function usePhotosPicker(
         const url = await storage().ref(bucketPath).getDownloadURL();
 
         await authServices.putUser({ ...user, photo: url });
-
+        
+        dispatch(
+          setPhoto({
+            photo: url,
+          })
+        );
+        
         toast.show({
           message: 'Datos guardados exitosamente.',
           type: 'success'
         });
-        setCurrentPhoto(url);
       } catch (error) {
         toast.show({
           message: 'No se pudo guardar tu foto, intenta mas tarde',

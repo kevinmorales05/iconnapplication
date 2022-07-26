@@ -44,7 +44,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   // storage bucket folder
   const bucketPath = `userPhotos/${user.user_id}/profile/`;
 
-  const photosPicker = PhotosPicker.usePhotosPicker(1, bucketPath,
+  const { currentPhoto, launch } = PhotosPicker.usePhotosPicker(1, bucketPath,
     () => {
       setVisible(false)
     }
@@ -127,7 +127,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
       <Container>
         <Avatar
           source={{
-            uri: photo || photosPicker.currentPhoto
+            uri: photo ? photo : currentPhoto
           }}
           editable={true}
           onPress={() => {
@@ -333,10 +333,10 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           <PhotosPicker.PickerMode
             visible={visible}
             handleCamera={() => {
-              photosPicker.launch(PhotosPicker.PhotosPickerMode.CAMERA);
+              launch(PhotosPicker.PhotosPickerMode.CAMERA);
             }}
             handleGallery={() => {
-              photosPicker.launch(PhotosPicker.PhotosPickerMode.LIBRARY);
+              launch(PhotosPicker.PhotosPickerMode.LIBRARY);
             }}
             onPressOut={() => {
               setVisible(false);
