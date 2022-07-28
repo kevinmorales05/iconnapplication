@@ -45,7 +45,7 @@ const EditPasswordController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <CreatePasswordScreen goBack={goBack} onSubmit={onSubmit} />
+      <CreatePasswordScreen hasNavigationTitle={true} goBack={goBack} onSubmit={onSubmit} />
     </SafeArea>
   );
 };

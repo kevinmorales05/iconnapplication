@@ -10,9 +10,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 interface Props {
   onSubmit: (password: string) => void;
   goBack: () => void;
+  hasNavigationTitle: boolean;
 }
 
-const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
+const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigationTitle }) => {
   const insets = useSafeAreaInsets();  
 
   const {
@@ -153,8 +154,8 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         fontBold
         text={`Crea tu contraseña`}
         fontSize={24}
-        marginTop={57}
-      ></TextContainer>
+        marginTop={hasNavigationTitle? 0 : 54}
+        ></TextContainer>
       <TextContainer
         typography="h2"
         text={`Recuerda no compartirla.`}
