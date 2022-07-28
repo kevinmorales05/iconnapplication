@@ -30,7 +30,7 @@ const CardBilling: React.FC<CardBillingProps> = ({ text, disable = false, type, 
   };
 
   return (
-    <Container row space="between" height={78} style={cardBillingStyle} crossCenter center>
+    <Container row space="between" height={86} style={cardBillingStyle} crossCenter center>
       <Container width={'85%'} flex row center space="between">
         <TextContainer text={text} marginLeft={24} />
         <Image source={type === 'petro' ? ICONN_CARD_PETRO : ICONN_CARD_SEVEN} style={cardImageStyle} />

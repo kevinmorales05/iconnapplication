@@ -4,18 +4,17 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { AuthStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
-import AuthStack from 'navigation/stacks/AuthStack';
+import { setIsGuest, useAppDispatch } from 'rtk';
+
 
 
 const InviteSignUpController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<any>>();
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const navigation = useNavigation();
+  const dispatch = useAppDispatch();
   const onSubmit = () => {
-    //navigation.navigate(AuthStack);
-    navigate('AuthStack', {screen: 'ContinueWith'});
+    dispatch(setIsGuest({isGuest: false}));
   };
 
   return (
