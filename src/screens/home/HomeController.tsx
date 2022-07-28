@@ -178,7 +178,7 @@ const HomeController: React.FC = () => {
     <SafeArea
       topSafeArea={false}
       bottomSafeArea={false}
-      backgroundColor="transparent"
+      backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
       <HomeScreen

@@ -3,7 +3,7 @@ import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { CustomText, Button, Container } from 'components';
+import { CustomText, Button, Container, CardBilling } from 'components';
 import { NavigationContext } from '@react-navigation/native';
 
 interface Props {
@@ -41,6 +41,7 @@ const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressBilling, onPress
         <Button round onPress={onPressLogOut} fontSize="h4" fontBold style={{ marginTop: 8 }} icon={<SimpleLineIcons name="logout" size={24} color="white" />}>
           Salir
         </Button>
+        {/* <CardBilling text="Facturar ticket" onPress={() => console.log('funciona!!!')} type="seven"  /> */}
       </Container>
     </ScrollView>
   );

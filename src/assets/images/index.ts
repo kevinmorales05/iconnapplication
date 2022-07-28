@@ -11,9 +11,11 @@ import ICONN_ERROR from './iconn-error.webp';
 import ICONN_EYE_VISIBLE from './iconn-eye-visible.webp';
 import ICONN_USER from './iconn-user.webp';
 import ICONN_LOADER from './iconn-loader.gif';
-
 import ICONN_INVITE from './iconn-signin.webp';
 import ICONN_EYE_OFF from './iconn-eye-visible.webp';
+import ICONN_CARD_PETRO from './iconn-card-petro.webp';
+import ICONN_CARD_SEVEN from './iconn-card-seven.webp';
+
 export {
   ICONN_BINOMIO_LOGOS,
   ICONN_BINOMIO_LOGOS_LIGHT,
@@ -29,5 +31,7 @@ export {
   ICONN_USER,
   ICONN_LOADER,
   ICONN_INVITE,
-  ICONN_EYE_OFF
+  ICONN_EYE_OFF,
+  ICONN_CARD_PETRO,
+  ICONN_CARD_SEVEN
 };
