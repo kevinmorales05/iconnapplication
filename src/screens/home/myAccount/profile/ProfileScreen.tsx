@@ -215,7 +215,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
 
           {sign_app_modes_id === 1 && <View style={{flex:3, marginTop:19}}>
             <Touchable onPress={() => {
-              navigation?.navigate('Editar correo');
+              navigation?.navigate("EditEmail");
             }}>
               <Container row center style={{justifyContent :"flex-end"}}>
                 <Octicons

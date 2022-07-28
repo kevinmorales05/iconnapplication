@@ -59,7 +59,7 @@ const HomeStack: React.FC = () => (
     <Stack.Screen name="Home" component={HomeController} />
     <Stack.Screen name="Mi Cuenta" component={AccountScreen} />
     <Stack.Screen name="Profile" options={{ title: 'Mi Perfil' }} component={ProfileController} />
-    <Stack.Screen name="Editar correo" component={EditEmailController} />
+    <Stack.Screen name="EditEmail" options={{ title: 'Editar Correo' }} component={EditEmailController} />
     <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={WrappedController} />
     <Stack.Screen name="Editar Contraseña" component={EditPasswordController} />
     <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
