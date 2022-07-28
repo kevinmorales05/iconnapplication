@@ -37,18 +37,12 @@ const InviteSignUpScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         <Container flex style={{marginTop: 45, alignItems: 'center', justifyContent:'center'}} >
             <Image source={ICONN_SIGNIN} style={{height:208, width: 193}} />
         </Container>
-        <TextContainer
-        text='Al registrarte, la emisión de facturas es más fácil y rápida'
-        textAlign='center'
-        typography='h5'
-        marginTop={30}
-        marginHorizontal={55}/>
         <Button
         round
         fontBold
         fontSize='h4'
         marginTop={57}
-        onPress={() => {}}>
+        onPress={onSubmit}>
             Registrarme
         </Button>
         <Button
@@ -58,7 +52,7 @@ const InviteSignUpScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
         fontSize='h4'
         fontColor='dark_grey'
         marginTop={16}
-        onPress={() => {}}>
+        onPress={goBack}>
             En otro momento
         </Button>
     </ScrollView>

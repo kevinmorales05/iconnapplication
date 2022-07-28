@@ -148,7 +148,8 @@ class CustomCarousel extends Component<Props, State> {
 const HomeController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
-  const { isLogged } = userLogged;
+  const {guest : guestLogged} = useAppSelector((state: RootState) => state.guest);
+  const { isGuest } = guestLogged;  const { isLogged } = userLogged;
   const modVis = (isLogged) ? true : false;
   const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
@@ -170,8 +171,12 @@ const HomeController: React.FC = () => {
     }
   };
 
-  const goToMyAccount = () => navigate('Mi Cuenta');
-  const goToInvoice = () => navigate('Invoice');
+  const goToMyAccount = () => {
+   (isGuest) ? navigate('InviteSignUp') : navigate('Mi Cuenta');
+  }
+  const goToInvoice = () => {
+    (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
+  }
 
   return (
     <SafeArea
@@ -184,7 +189,7 @@ const HomeController: React.FC = () => {
         name={user.name}
         email={user.email}
         onPressLogOut={logOut}
-        onPressMyAccount={(isLogged) ? goToMyAccount : () => navigate('InviteSignUp')}
+        onPressMyAccount={goToMyAccount}
         onPressInvoice={goToInvoice}
       />
       <CustomModal visible={modVisibility}>
