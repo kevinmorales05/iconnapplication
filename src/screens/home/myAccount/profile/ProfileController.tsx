@@ -8,10 +8,19 @@ import { AuthDataInterface } from 'rtk/types/auth.types';
 import { useToast } from 'context';
 import { GENDERS } from 'assets/files';
 
+import {
+  setBirthday,
+  setFullName,
+  setGender,
+  setTelephone,
+  useAppDispatch
+} from 'rtk';
+
 const ProfileController: React.FC = () => {
   const loader = useLoading();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const toast = useToast();
+  const dispatch = useAppDispatch();
 
   const onSubmit = async (userFields: AuthDataInterface) => {
     //prevents unhandled email update
@@ -26,6 +35,10 @@ const ProfileController: React.FC = () => {
     loader.show();
     try {
       await authServices.putUser(userFields);
+      dispatch(setTelephone({ telephone: userFields.telephone }));
+      dispatch(setGender({ gender: userFields.gender_id }));
+      dispatch(setBirthday({ birthday: userFields.birthday }));
+      dispatch(setFullName({ name: userFields.name, lastName: userFields.lastName }));
       toast.show({
         message: 'Datos guardos exitosamente.',
         type: 'success'

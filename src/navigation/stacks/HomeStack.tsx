@@ -9,7 +9,7 @@ import EditPasswordController from 'screens/auth/onboarding/EditPassword/EditPas
 import ProfileController from 'screens/home/myAccount/profile/ProfileController';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
 import { useLoading } from 'context';
-import { RootState, useAppSelector, AuthDataInterface } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, AuthDataInterface, setAuthEmail } from 'rtk';
 import { useToast } from 'context';
 import { authServices } from 'services';
 import BillingController from 'screens/home/myAccount/taxInformation/billing/BillingController';
@@ -24,6 +24,7 @@ const WrappedController = () => {
   const loader = useLoading();
   const toast = useToast();
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
 
   const handleSubmit = async (email: string) => {
     loader.show();
@@ -32,6 +33,7 @@ const WrappedController = () => {
         user_id: user.user_id,
         email
       } as AuthDataInterface);
+      dispatch(setAuthEmail({ email }));
 
       toast.show({
         message: 'Datos guardos exitosamente.',

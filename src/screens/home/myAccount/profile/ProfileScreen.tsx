@@ -80,8 +80,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
     }
 
     if(birthday){
-      //the backend returns dates with YYY-MMM-DD format
-      setValue('birthday',  moment(birthday, 'YYYY-MM-DD').format('DD/MM/YYYY'));
+      setValue('birthday',  birthday);
     }
 
     if (nameRef.current) {
