@@ -1,12 +1,13 @@
 import React, { ReactNode } from 'react';
 import {
-  View, SafeAreaView, StatusBar, StyleSheet, ViewStyle, StatusBarStyle
+  View, SafeAreaView, StatusBar, StyleSheet, ViewStyle, StatusBarStyle, StyleProp
 } from 'react-native';
 import theme from 'components/theme/theme';
 
 type BarStyle = 'light' | 'dark';
 
 interface Props {
+  childrenContainerStyle?: StyleProp<ViewStyle>;
   topSafeArea?: boolean;
   bottomSafeArea?: boolean;
   safeBGColor?: ViewStyle['backgroundColor'];
@@ -31,16 +32,12 @@ const SafeArea: React.FC<Props> = ({
   topBGColor,
   statusBarColor,
   hiddenStatusBar,
-  testID
+  testID,
+  childrenContainerStyle
 }: Props) => {
   const renderChildren = () => (
-    <View
-      testID={`${testID}-children`}
-      style={[styles.childrenContainerStyle,
-        { backgroundColor }]}
-    >
+    <View testID={`${testID}-children`} style={[styles.childrenContainerStyle, { backgroundColor }, childrenContainerStyle]}>
       {children}
-
     </View>
   );
 
