@@ -7,7 +7,7 @@
 #import <React/RCTRootView.h>
 
 #import <React/RCTAppSetupUtils.h>
-
+#import <RNGoogleSignin/RNGoogleSignin.h>
 #if RCT_NEW_ARCH_ENABLED
 #import <React/CoreModulesPlugins.h>
 #import <React/RCTCxxBridgeDelegate.h>
@@ -115,7 +115,20 @@
    openURL:(NSURL *)url
    options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
-  return [RCTLinkingManager application:application openURL:url options:options];
+  if ([[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options]) {
+    return YES;
+  }
+
+  if ([RNGoogleSignin application:application openURL:url options:options]) {
+    return YES;
+  }
+
+  if ([RCTLinkingManager application:application openURL:url options:options]) {
+    return YES;
+  }
+
+  return NO;
+
 }
 
 @end
