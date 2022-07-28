@@ -23,7 +23,6 @@ import { GENDERS } from 'assets/files';
 import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
 import * as PhotosPicker from '../../../../components/organisms/PhotosPicker/PhotosPicker';
-import moment from 'moment';
 import { NavigationContext } from '@react-navigation/native';
 
 type Props = {
@@ -275,7 +274,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         />
 
         <Input
-          {...register('telephone',{required:"Campo requerido"})}
+          {...register('telephone',{required:"Campo requerido", min:10})}
           ref={phoneRef}
           control={control}
           keyboardType="number-pad"
@@ -318,6 +317,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         />
 
         <Select
+          rules={{required:"Campo requerido"}}
           name="gender"
           control={control}
           options={GENDERS.map(item => item.name)}
