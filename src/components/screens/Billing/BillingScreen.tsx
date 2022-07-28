@@ -15,8 +15,6 @@ interface Props {
 }
 
 const BillingScreen: React.FC<Props> = ({ showAlert }) => {
-  const insets = useSafeAreaInsets();
-
   const {
     control,
     setValue,
@@ -32,35 +30,13 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
   const postalCodeRef = useRef<TextInput>(null);
 
   return (
-    <ScrollView
-      bounces={false}
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingBottom: insets.bottom,
-        paddingTop: insets.top
-      }}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-    >
-      <Container flex>
-        <TextContainer
-          textColor={theme.brandColor.iconn_grey}
-          typography="description"
-          text={`Todos los campos son obligatorios.`}
-        ></TextContainer>
-        <TextContainer
-          typography="h3"
-          fontBold
-          text={`Datos Fiscales`}
-          marginTop={25}
-        ></TextContainer>
-        <TextContainer
-          typography="h5"
-          fontBold
-          text={`RFC`}
-          marginTop={13}
-        ></TextContainer>
+    <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+      <Container flex style={{ marginTop: 24 }}>
+        <TextContainer typography="paragraph" text="Crea un perfil fiscal para guardar tus datos de facturación."></TextContainer>
+        <TextContainer textColor={theme.brandColor.iconn_grey} typography="description" text={`Todos los campos son obligatorios.`} marginTop={6} />
+        <TextContainer typography="h3" fontBold text={`Datos Fiscales`} marginTop={25}></TextContainer>
+        <TextContainer typography="h5" fontBold text={`RFC`} marginTop={13}></TextContainer>
+
         <Input
           {...register('rfc')}
           ref={rfcRef}
@@ -77,12 +53,8 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           marginTop={4}
           renderErrorIcon={false}
         />
-        <TextContainer
-          typography="h5"
-          fontBold
-          text={`Razón Social`}
-          marginTop={21}
-        ></TextContainer>
+
+        <TextContainer typography="h5" fontBold text={`Razón Social`} marginTop={21}></TextContainer>
         <Input
           {...register('businessName')}
           ref={businessNameRef}
@@ -97,12 +69,8 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           marginTop={4}
           renderErrorIcon={false}
         />
-        <TextContainer
-          typography="h5"
-          fontBold
-          text={`Correo electrónico`}
-          marginTop={21}
-        ></TextContainer>
+
+        <TextContainer typography="h5" fontBold text={`Correo electrónico`} marginTop={21} />
         <Input
           {...register('email')}
           ref={emailRef}
@@ -118,12 +86,8 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           marginTop={4}
           renderErrorIcon={false}
         />
-        <TextContainer
-          typography="h5"
-          fontBold
-          text={`Régimen fiscal`}
-          marginTop={21}
-        ></TextContainer>
+
+        <TextContainer typography="h5" fontBold text={`Régimen fiscal`} marginTop={21} />
         <Select
           name="Tax Incorporation Regime"
           control={control}
@@ -135,12 +99,8 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           error={errors.state?.message}
           useActionSheet
         />
-        <TextContainer
-          typography="h5"
-          fontBold
-          text={`Uso de CFDI (Predeterminado)`}
-          marginTop={21}
-        ></TextContainer>
+
+        <TextContainer typography="h5" fontBold text={`Uso de CFDI (Predeterminado)`} marginTop={21} />
         <Select
           name="03-Gastos en General"
           control={control}
@@ -152,12 +112,8 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           error={errors.state?.message}
           useActionSheet
         />
-        <TextContainer
-          typography="h5"
-          fontBold
-          text={`Código Postal`}
-          marginTop={21}
-        ></TextContainer>
+
+        <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={21} />
         <Input
           {...register('postal code')}
           ref={postalCodeRef}
@@ -172,51 +128,35 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           marginTop={4}
           renderErrorIcon={false}
         />
-        <Container backgroundColor={theme.brandColor.iconn_background} style={{ marginTop: 24, width: 360, height: 90 }}>
-          <TextContainer
-            textColor={theme.fontColor.dark}
-            typography="h5"
-            fontBold
-            text={`Agregar un domicilio`}
-            marginTop={21}
-          ></TextContainer>
+
+        <Container backgroundColor={theme.brandColor.iconn_background} style={{ marginTop: 24, width: '100%', height: 90 }}>
+          <TextContainer textColor={theme.fontColor.dark} typography="h5" fontBold text={`Agregar un domicilio`} marginTop={21} />
           <Container flex row style={{ marginTop: 9 }}>
-            <Icon
-              name="checkcircle"
-              size={18}
-              color={theme.brandColor.iconn_success}
-              style={{ marginRight: 5 }}
-            />
-            <CustomText
-              textColor={theme.brandColor.iconn_green_original}
-              text={'Registrado'}
-              typography="h5"
-              fontWeight="normal"
-            />
-            <Icon
-              name="right"
-              size={18}
-              color={theme.fontColor.dark_grey}
-              style={{ marginStart: '68%', margin: -14, fontWeight: 'bold' }}
-            />
+            <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
+            <CustomText textColor={theme.brandColor.iconn_green_original} text={'Registrado'} typography="h5" fontWeight="normal" />
+            <Icon name="right" size={18} color={theme.fontColor.dark_grey} style={{ marginStart: '68%', margin: -14, fontWeight: 'bold' }} />
           </Container>
         </Container>
+
         <Container style={{ marginTop: 24 }}>
           <Button
             length="long"
             round
             disabled={!isValid}
-            onPress={() => { console.log('Save billing data'); }}
+            onPress={() => {
+              console.log('Save billing data');
+            }}
             fontSize="h3"
             fontBold
           >
             Guardar
           </Button>
         </Container>
+
         <Container style={{ marginTop: 16, marginBottom: 32 }}>
           <Button
-            color='iconn_light_grey'
-            fontColor='dark'
+            color="iconn_light_grey"
+            fontColor="dark"
             length="long"
             round
             disabled={false}

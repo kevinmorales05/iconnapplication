@@ -9,4 +9,5 @@ export type HomeStackParams = {
   InviteSignUp: undefined;
   Billing: undefined;
   TaxData: undefined;
+  Invoice: undefined;
 };

@@ -87,7 +87,7 @@ export const signInWithGoogleThunk = createAsyncThunk('auth/signInWithGoogleThun
 export const signInWithFacebookThunk = createAsyncThunk('auth/signInWithFacebookThunk', async () => {
   try {
     const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-    
+
     if (result.isCancelled) {
       throw 'User cancelled the login process';
     }

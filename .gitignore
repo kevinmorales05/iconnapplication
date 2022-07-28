@@ -63,3 +63,6 @@ buck-out/
 # Sonar
 /sonar-project.properties
 /.scannerwork/
+
+# VsCode
+/.vscode

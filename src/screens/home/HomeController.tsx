@@ -171,8 +171,7 @@ const HomeController: React.FC = () => {
   };
 
   const goToMyAccount = () => navigate('Mi Cuenta');
-  const goToBilling = () => navigate('TaxData');
-  console.log("USER->", isLogged);
+  const goToInvoice = () => navigate('Invoice');
 
   return (
     <SafeArea
@@ -186,7 +185,7 @@ const HomeController: React.FC = () => {
         email={user.email}
         onPressLogOut={logOut}
         onPressMyAccount={(isLogged) ? goToMyAccount : () => navigate('InviteSignUp')}
-        onPressBilling={goToBilling}
+        onPressInvoice={goToInvoice}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>

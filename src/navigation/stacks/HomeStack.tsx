@@ -17,6 +17,7 @@ import TaxDataController from 'screens/home/myAccount/taxInformation/taxData/Tax
 
 const Stack = createNativeStackNavigator<HomeStackParams>();
 import { useNavigation } from '@react-navigation/native';
+import InvoiceController from 'screens/home/billing/Invoice/InvoiceController';
 
 const WrappedController = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -62,6 +63,7 @@ const HomeStack: React.FC = () => (
     <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
     <Stack.Screen options={{ title: 'Facturación' }} name="Billing" component={BillingController} />
     <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxData" component={TaxDataController} />
+    <Stack.Screen options={{ title: 'Facturación' }} name="Invoice" component={InvoiceController} />
   </Stack.Navigator>
 );
 

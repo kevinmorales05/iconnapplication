@@ -7,14 +7,14 @@ import { CustomText, Button, Container, CardBilling } from 'components';
 import { NavigationContext } from '@react-navigation/native';
 
 interface Props {
-  onPressMyAccount: () => void;
-  onPressBilling: () => void;
+  onPressInvoice: () => void;
+  onPressMyAccount: () => void;  
   onPressLogOut: () => void;
   name?: string;
   email?: string;
 }
 
-const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressBilling, onPressLogOut, name, email }) => {
+const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, name, email }) => {
   const insets = useSafeAreaInsets();
 
   const navigation = React.useContext(NavigationContext);
@@ -35,6 +35,9 @@ const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressBilling, onPress
         <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
           <CustomText textColor={theme.brandColor.iconn_dark_grey} text={name ? `¡Hola ${name}!` : '¡Hola!'} typography="h4" fontBold />
         </Container>
+        <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+          Facturación
+        </Button>
         <Button round onPress={onPressMyAccount} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
           Mi cuenta
         </Button>

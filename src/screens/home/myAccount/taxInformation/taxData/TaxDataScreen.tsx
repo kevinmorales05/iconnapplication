@@ -24,7 +24,7 @@ const TaxDataScreen: React.FC<Props> = ({ addRFC }) => {
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      <Container flex style={{ backgroundColor: theme.brandColor.iconn_background }}>
+      <Container flex>
         <Container backgroundColor={theme.fontColor.white} style={{ marginTop: 24, width: 357, height: 120, borderRadius: 5 }}>
           <TextContainer
             textColor={theme.fontColor.dark}
