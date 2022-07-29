@@ -37,6 +37,7 @@ export default function usePhotosPicker(
 
   useEffect(() => {
     (async () => {
+      onFinish();
       loader.show();
       try {
         // local reference
@@ -75,7 +76,6 @@ export default function usePhotosPicker(
         });
       } finally {
         loader.hide();
-        onFinish();
       }
     })();
   }, [assets]);

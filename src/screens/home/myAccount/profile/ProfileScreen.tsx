@@ -47,7 +47,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const { currentPhoto, launch } = PhotosPicker.usePhotosPicker(1, bucketPath,
     () => {
       setVisible(false)
-    }
+    },
     );
 
   const {
@@ -272,7 +272,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         />
 
         <Input
-          {...register('telephone',{required:"Campo requerido", min:10})}
+          {...register('telephone')}
           ref={phoneRef}
           control={control}
           keyboardType="number-pad"
@@ -315,7 +315,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         />
 
         <Select
-          rules={{required:"Campo requerido"}}
           name="gender"
           control={control}
           options={GENDERS.map(item => item.name)}
