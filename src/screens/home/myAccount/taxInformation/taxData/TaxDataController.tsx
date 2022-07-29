@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import { SafeArea } from 'components/atoms/SafeArea';
 import TaxDataScreen from './TaxDataScreen';
 import { useNavigation } from '@react-navigation/native';
@@ -17,12 +16,5 @@ const TaxDataController: React.FC = () => {
     </SafeArea>
   );
 };
-
-const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover'
-  }
-});
 
 export default TaxDataController;
