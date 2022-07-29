@@ -26,9 +26,9 @@ import { HomeStackParams } from 'navigation/types';
 
 const TaxItem: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const goToTaxData = () => navigate('TaxData');
+  const goToTaxInfo = () => navigate('TaxInfo');
   return(
-    <TouchableOpacity style={taxItemStyles.container} onPress={goToTaxData} >
+    <TouchableOpacity style={taxItemStyles.container} onPress={goToTaxInfo} >
       <View style={taxItemStyles.content}>
         <View style={taxItemStyles.middle}>
           <Text numberOfLines={1}>

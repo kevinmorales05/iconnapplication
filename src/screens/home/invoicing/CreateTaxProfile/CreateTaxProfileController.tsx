@@ -3,7 +3,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { BillingScreen } from 'components';
 import { useAlert } from 'context';
 
-const BillingController: React.FC = () => {
+const CreateTaxProfileController: React.FC = () => {
   const alert = useAlert();
 
   const showAlert = () => {
@@ -24,4 +24,4 @@ const BillingController: React.FC = () => {
   );
 };
 
-export default BillingController;
+export default CreateTaxProfileController;

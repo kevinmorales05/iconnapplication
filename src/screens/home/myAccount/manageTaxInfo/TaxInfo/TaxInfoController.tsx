@@ -1,20 +1,20 @@
 import React from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
-import TaxDataScreen from './TaxDataScreen';
+import TaxInfoScreen from './TaxInfoScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import theme from 'components/theme/theme';
 
-const TaxDataController: React.FC = () => {
+const TaxInfoController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const goToAddRFC = () => navigate('Billing');
+  const goToAddRFC = () => navigate('AddRFC');
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
-      <TaxDataScreen addRFC={goToAddRFC} />
+      <TaxInfoScreen addRFC={goToAddRFC} />
     </SafeArea>
   );
 };
 
-export default TaxDataController;
+export default TaxInfoController;

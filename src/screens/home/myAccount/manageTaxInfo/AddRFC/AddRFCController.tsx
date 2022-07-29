@@ -3,7 +3,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { BillingScreen } from 'components';
 import { useAlert } from 'context';
 
-const CreateTaxProfileController: React.FC = () => {
+const AddRFCController: React.FC = () => {
   const alert = useAlert();
 
   const showAlert = () => {
@@ -18,10 +18,10 @@ const CreateTaxProfileController: React.FC = () => {
   };
 
   return (
-    <SafeArea topSafeArea={false} bottomSafeArea barStyle="dark">
+    <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
       <BillingScreen showAlert={showAlert} />
     </SafeArea>
   );
 };
 
-export default CreateTaxProfileController;
+export default AddRFCController;

@@ -7,22 +7,22 @@ import { Touchable } from '../../atoms/Touchable';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-interface TaxDataProps {
+interface TaxInfoProps {
   rfc: string;
   name: string;
   onPress: () => void;
   isDefault?: boolean;
 }
 
-const TaxInformationCard: React.FC<TaxDataProps> = ({ rfc, name, onPress, isDefault = false }: TaxDataProps) => {
-  const fiscalDataStyle: StyleProp<ViewStyle> = {
+const TaxInfoCard: React.FC<TaxInfoProps> = ({ rfc, name, onPress, isDefault = false }: TaxInfoProps) => {
+  const taxInfoStyle: StyleProp<ViewStyle> = {
     borderRadius: 8,
     backgroundColor: theme.brandColor.iconn_white,
     marginTop: 12
   };
 
   return (
-    <Container row space="between" crossCenter center style={fiscalDataStyle}>
+    <Container row space="between" crossCenter center style={taxInfoStyle}>
       <Container width={'85%'} flex crossCenter>
         <Container style={{ marginLeft: 16, marginBottom: 12 }}>
           <TextContainer text={rfc} typography="h3" fontBold marginTop={12} />
@@ -44,4 +44,4 @@ const TaxInformationCard: React.FC<TaxDataProps> = ({ rfc, name, onPress, isDefa
   );
 };
 
-export default TaxInformationCard;
+export default TaxInfoCard;

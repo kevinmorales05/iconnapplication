@@ -7,7 +7,8 @@ export type HomeStackParams = {
   EnterOtp: undefined;
   ["Editar Contraseña"]: undefined;
   InviteSignUp: undefined;
-  Billing: undefined;
-  TaxData: undefined;
+  AddRFC: undefined;
+  TaxInfo: undefined;
   Invoice: undefined;
+  CreateTaxProfile: undefined;
 };

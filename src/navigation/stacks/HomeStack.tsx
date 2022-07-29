@@ -12,12 +12,13 @@ import { useLoading } from 'context';
 import { RootState, useAppSelector, useAppDispatch, AuthDataInterface, setAuthEmail } from 'rtk';
 import { useToast } from 'context';
 import { authServices } from 'services';
-import BillingController from 'screens/home/myAccount/taxInformation/billing/BillingController';
-import TaxDataController from 'screens/home/myAccount/taxInformation/taxData/TaxDataController';
+import AddRFCController from 'screens/home/myAccount/manageTaxInfo/AddRFC/AddRFCController';
+import TaxInfoController from 'screens/home/myAccount/manageTaxInfo/TaxInfo/TaxInfoController';
 
 const Stack = createNativeStackNavigator<HomeStackParams>();
 import { useNavigation } from '@react-navigation/native';
-import InvoiceController from 'screens/home/billing/Invoice/InvoiceController';
+import InvoiceController from 'screens/home/invoicing/Invoice/InvoiceController';
+import CreateTaxProfileController from 'screens/home/invoicing/CreateTaxProfile/CreateTaxProfileController';
 
 const WrappedController = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -63,9 +64,10 @@ const HomeStack: React.FC = () => (
     <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={WrappedController} />
     <Stack.Screen name="Editar Contraseña" component={EditPasswordController} />
     <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
-    <Stack.Screen options={{ title: 'Facturación' }} name="Billing" component={BillingController} />
-    <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxData" component={TaxDataController} />
-    <Stack.Screen options={{ title: 'Facturación' }} name="Invoice" component={InvoiceController} />
+    <Stack.Screen options={{ title: 'Agregar nuevo RFC' }} name="AddRFC" component={AddRFCController} />
+    <Stack.Screen options={{ title: 'Administrar información fiscal' }} name="TaxInfo" component={TaxInfoController} />
+    <Stack.Screen options={{ title: 'Facturar' }} name="Invoice" component={InvoiceController} />
+    <Stack.Screen options={{ title: 'Crear perfil fiscal' }} name="CreateTaxProfile" component={CreateTaxProfileController} />
   </Stack.Navigator>
 );
 

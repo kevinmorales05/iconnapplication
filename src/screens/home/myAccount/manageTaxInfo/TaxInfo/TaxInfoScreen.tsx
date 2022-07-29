@@ -1,4 +1,4 @@
-import { Button, Container, TaxInformationCard } from 'components';
+import { Button, Container, TaxInfoCard } from 'components';
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,7 +7,7 @@ interface Props {
   addRFC: () => void;
 }
 
-const TaxDataScreen: React.FC<Props> = ({ addRFC }) => {
+const TaxInfoScreen: React.FC<Props> = ({ addRFC }) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -23,8 +23,8 @@ const TaxDataScreen: React.FC<Props> = ({ addRFC }) => {
       showsVerticalScrollIndicator={false}
     >
       <Container flex>
-        <TaxInformationCard rfc="RAPA880105P32" name="Alejandra Ramírez Pedroza" isDefault onPress={() => {}} />
-        <TaxInformationCard rfc="MAAM890518UR6" name="Mariano Martinez Apolinar" onPress={() => {}} />
+        <TaxInfoCard rfc="RAPA880105P32" name="Alejandra Ramírez Pedroza" isDefault onPress={() => {}} />
+        <TaxInfoCard rfc="MAAM890518UR6" name="Mariano Martinez Apolinar" onPress={() => {}} />
       </Container>
       <Container>
         <Button length="long" round disabled={false} onPress={addRFC} fontSize="h3" fontBold>
@@ -35,4 +35,4 @@ const TaxDataScreen: React.FC<Props> = ({ addRFC }) => {
   );
 };
 
-export default TaxDataScreen;
+export default TaxInfoScreen;
