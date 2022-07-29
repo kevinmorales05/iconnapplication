@@ -24,6 +24,7 @@ import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
 import * as PhotosPicker from '../../../../components/organisms/PhotosPicker/PhotosPicker';
 import { NavigationContext } from '@react-navigation/native';
+import moment from 'moment';
 
 type Props = {
   onSubmit: (data: any) => void;
@@ -79,7 +80,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
     }
 
     if(birthday){
-      setValue('birthday',  birthday);
+      setValue('birthday',  null);
     }
 
     if (nameRef.current) {
@@ -98,10 +99,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   };
 
   const handleConfirm = (date:Date) => {
-    const day = date.getDate();
-    const month = date.getMonth();
-    const year = date.getFullYear();
-    setValue('birthday', formatDate(new Date(year, month, day), 'dd/MM/yyyy'));
+    setValue('birthday',moment(date).format("DD/MM/YYYY"));
     hideDatePicker();
   };
 
@@ -302,11 +300,11 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         />
 
         <DatePicker
-          label=""
           name="birthday"
           control={control}
-          onChangeText={({ value }) => {}}
+          rules={{ required:"Campo requerido", min:10 }}
           onPressDatePickerIcon={showDatePicker}
+          error={errors.birthday?.message}
         />
 
         <TextContainer
