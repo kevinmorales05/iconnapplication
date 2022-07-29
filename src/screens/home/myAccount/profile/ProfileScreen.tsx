@@ -80,7 +80,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
     }
 
     if(birthday){
-      setValue('birthday',  null);
+      setValue('birthday',  birthday);
     }
 
     if (nameRef.current) {
