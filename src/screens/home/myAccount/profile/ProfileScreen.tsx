@@ -52,7 +52,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
 
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     register,
     handleSubmit,
     watch,
@@ -342,7 +342,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         <Button
           length="long"
           round
-          disabled={false}
+          disabled={!isValid}
           onPress={handleSubmit(submit)}
           fontSize="h4"
           fontBold
