@@ -26,21 +26,21 @@ const CardBilling: React.FC<CardBillingProps> = ({ text, disable = false, type, 
   const cardImageStyle: StyleProp<ImageStyle> = {
     width: type === 'petro' ? 88 : 103,
     height: type === 'petro' ? 37 : 19,
-    right: 50
+    marginRight: 25
   };
 
   return (
+    <Touchable onPress={onPress} disabled={disable}>
     <Container row space="between" height={86} style={cardBillingStyle} crossCenter center>
       <Container width={'85%'} flex row center space="between">
         <TextContainer text={text} marginLeft={24} />
         <Image source={type === 'petro' ? ICONN_CARD_PETRO : ICONN_CARD_SEVEN} style={cardImageStyle} />
       </Container>
-      <Container width={'15%'} crossAlignment="end">
-        <Touchable onPress={onPress} disabled={disable} marginRight={20}>
-          <Octicons name="chevron-right" size={24} color={theme.fontColor.dark} />
-        </Touchable>
+      <Container width={'15%'} crossAlignment="end" style={{marginRight:20}}>        
+        <Octicons name="chevron-right" size={24} color={theme.fontColor.dark} />        
       </Container>
     </Container>
+    </Touchable>
   );
 };
 

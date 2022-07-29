@@ -21,26 +21,31 @@ const TaxInfoCard: React.FC<TaxInfoProps> = ({ rfc, name, onPress, isDefault = f
     marginTop: 12
   };
 
+  const taxIconStyle: StyleProp<ViewStyle> = {
+    marginRight: 20,
+    marginBottom: isDefault ? 35 : 0
+  };
+
   return (
-    <Container row space="between" crossCenter center style={taxInfoStyle}>
-      <Container width={'85%'} flex crossCenter>
-        <Container style={{ marginLeft: 16, marginBottom: 12 }}>
-          <TextContainer text={rfc} typography="h3" fontBold marginTop={12} />
-          <TextContainer text={name} typography="h4" marginTop={8} />
-        </Container>
-        {isDefault && (
-          <Container row style={{ marginLeft: 16, marginBottom: 14 }}>
-            <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
-            <TextContainer textColor={theme.brandColor.iconn_green_original} text="Predeterminado" typography="h5" fontWeight="normal" />
+    <Touchable onPress={onPress}>
+      <Container row space="between" crossCenter center style={taxInfoStyle}>
+        <Container width={'85%'} flex crossCenter>
+          <Container style={{ marginLeft: 16, marginBottom: 12 }}>
+            <TextContainer text={rfc} typography="h3" fontBold marginTop={12} />
+            <TextContainer text={name} typography="h4" marginTop={8} />
           </Container>
-        )}
-      </Container>
-      <Container width={'15%'} crossAlignment="end">
-        <Touchable onPress={onPress} marginRight={20} marginBottom={isDefault ? 35 : 0}>
+          {isDefault && (
+            <Container row style={{ marginLeft: 16, marginBottom: 14 }}>
+              <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
+              <TextContainer textColor={theme.brandColor.iconn_green_original} text="Predeterminado" typography="h5" fontWeight="normal" />
+            </Container>
+          )}
+        </Container>
+        <Container width={'15%'} crossAlignment="end" style={taxIconStyle}>
           <Octicons name="chevron-right" size={24} color={theme.fontColor.dark} />
-        </Touchable>
+        </Container>
       </Container>
-    </Container>
+    </Touchable>
   );
 };
 
