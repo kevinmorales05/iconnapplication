@@ -2,7 +2,7 @@ import { InvoicingInterface } from 'rtk';
 import { InvoicingApi } from '../http/api-invoicing';
 
 /**
- * Function to validate user status
+ * Function to get regimens list
  */
 async function getTaxRegimeList(): Promise<any> {
   const response = await InvoicingApi.getInstance().getRequest('/taxRegime/list');
@@ -11,6 +11,17 @@ async function getTaxRegimeList(): Promise<any> {
   return data;
 }
 
+/**
+ * Function to get CFDI list
+ */
+async function getCFDIList(): Promise<any> {
+  const response = await InvoicingApi.getInstance().getRequest('/cfdi/list');
+  if (response === undefined) return Promise.reject(new Error('getCFDIList:/cfdi/list'));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
-  getTaxRegimeList
+  getTaxRegimeList,
+  getCFDIList
 };

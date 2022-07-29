@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../slices/authSlice';
 import appReducer from '../slices/appSlice';
 import guestReducer from '../slices/guestSlice';
+import invoicingReducer from '../slices/invoicingSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     auth: authReducer,
     app: appReducer,
     guest: guestReducer,
+    invoicing: invoicingReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -1,5 +1,5 @@
 import { Button, Container, TextContainer } from 'components';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, TextInput, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
 import { Input, Select, Touchable } from 'components';
@@ -8,12 +8,15 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { GENDERS } from 'assets/files';
 import { emailRules, rfcRule } from 'utils/rules';
+import { useAppDispatch } from 'rtk';
+import { getCFDIListThunk, getTaxRegimeListThunk } from 'rtk/thunks/invoicing.thunks';
 
 interface Props {
   showAlert: () => void;
 }
 
 const BillingScreen: React.FC<Props> = ({ showAlert }) => {
+  const dispatch = useAppDispatch();
   const {
     control,
     setValue,
@@ -29,10 +32,24 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
   const postalCodeRef = useRef<TextInput>(null);
 
   const [toggled, setToggled] = useState(false);
+  const [regimensList, setRegimensList] = useState([]);
+  const [cfdiList, setCfdiList] = useState([]);
 
   const toggle = () => {
     setToggled(!toggled);
   };
+
+  const fetchCatalogs = useCallback(async () => {
+    const {data: regimens} = await dispatch(getTaxRegimeListThunk()).unwrap();    
+    setRegimensList(regimens);
+    const {data: cfdis} = await dispatch(getCFDIListThunk()).unwrap();
+    setCfdiList(cfdis);
+  }, [])
+
+  useEffect(() => {
+    fetchCatalogs();    
+  }, [fetchCatalogs])
+  
 
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
@@ -95,28 +112,26 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
 
           <TextContainer typography="h5" fontBold text={`Régimen fiscal`} marginTop={21} />
           <Select
-            name="Tax Incorporation Regime"
+            name="regime"
             control={control}
-            options={GENDERS.map(item => item.name)}
+            options={regimensList.map(item => item.sat_tax_regime)}
             onSelect={value => setValue('Tax Incorporation Regime', value)}
             androidMode="dialog"
             label={`Régimen de Incorporación Fiscal`}
             placeholder={`Régimen de Incorporación Fiscal`}
-            error={errors.state?.message}
-            useActionSheet
+            error={errors.state?.message}            
           />
 
           <TextContainer typography="h5" fontBold text={`Uso de CFDI (Predeterminado)`} marginTop={21} />
           <Select
-            name="03-Gastos en General"
+            name="cfdi"
             control={control}
-            options={GENDERS.map(item => item.name)}
+            options={cfdiList.map(item => item.description)}
             onSelect={value => setValue('03-Gastos en General', value)}
             androidMode="dialog"
             label={`03-Gastos en General`}
             placeholder={`03-Gastos en General`}
             error={errors.state?.message}
-            useActionSheet
           />
 
           <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={21} />
