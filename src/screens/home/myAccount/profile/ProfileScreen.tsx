@@ -20,7 +20,6 @@ import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { GENDERS } from 'assets/files';
-import { formatDate } from 'utils/functions';
 import { RootState, useAppSelector } from 'rtk';
 import * as PhotosPicker from '../../../../components/organisms/PhotosPicker/PhotosPicker';
 import { NavigationContext } from '@react-navigation/native';
@@ -40,6 +39,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
   const navigation = useContext(NavigationContext);
+  const [disabled, setDisabled] = useState(false);
 
   // storage bucket folder
   const bucketPath = `userPhotos/${user.user_id}/profile/`;
@@ -52,7 +52,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
 
   const {
     control,
-    formState: { errors, isValid },
+    formState: { errors },
     register,
     handleSubmit,
     watch,
@@ -60,6 +60,17 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   } = useForm({
     mode: 'onChange'
   });
+
+  const { name: nameField, lastName: lastNameField } = watch();
+
+  useEffect(() => {
+    if (nameField && lastNameField) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [nameField, lastNameField]);
+  
 
   const nameRef = useRef<TextInput>(null);
   const surnameRef = useRef<TextInput>(null);
@@ -302,7 +313,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         <DatePicker
           name="birthday"
           control={control}
-          rules={{ required:"Campo requerido", min:10 }}
           onPressDatePickerIcon={showDatePicker}
           error={errors.birthday?.message}
         />
@@ -342,7 +352,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
         <Button
           length="long"
           round
-          disabled={!isValid}
+          disabled={disabled}
           onPress={handleSubmit(submit)}
           fontSize="h4"
           fontBold
