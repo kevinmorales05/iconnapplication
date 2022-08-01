@@ -8,7 +8,6 @@ import { AboutEmail } from 'components/organisms/AboutEmail';
 import { useAlert, useLoading } from 'context';
 import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
-import { setAuthEmail } from 'rtk/slices/authSlice';
 
 const EnterEmailController: React.FC = () => {
   const { goBack, navigate } =
@@ -49,11 +48,10 @@ const EnterEmailController: React.FC = () => {
     try {
       const { payload } = await dispatch(validateUserThunk(email));
       if (payload.responseCode === 200) {
-        dispatch(setAuthEmail({ email }))
         if (!payload.data.isRegistered && payload.data.signMode === 0) {
           const { payload } = await dispatch(preSignUpThunk(email));
           if (payload.responseCode === 201) {
-            navigate('EnterOtp');
+            navigate('EnterOtp', { email });
           }
         } else if (payload.data.isRegistered) {
           if (payload.data.signMode === 1) {

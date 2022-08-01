@@ -4,7 +4,7 @@ export type HomeStackParams = {
   'Mi Cuenta': undefined;
   Profile: undefined;
   EditEmail: undefined;
-  EnterOtp: undefined;
+  EnterOtp: { email: string };
   ["Editar Contraseña"]: undefined;
   InviteSignUp: undefined;
   AddRFC: undefined;
