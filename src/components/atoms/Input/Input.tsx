@@ -187,8 +187,10 @@ const Input = forwardRef(({
                     value={defaultValue ? defaultValue : field.value}
                     onChangeText={e => {
                       if(phone){
-                        let isNum = /^\d+$/.test(e);
-                        if (!isNum) return;
+                        if(e){
+                          let isNum = /^\d+$/.test(e);
+                          if (!isNum) return;
+                        }
                       }
                       
                       field.value = e;                      
