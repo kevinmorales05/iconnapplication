@@ -51,6 +51,8 @@ const EnterPasswordController: React.FC = () => {
         return 'Contraseña incorrecta.';
       case 'auth/too-many-requests':
         return 'Cuenta bloqueada temporalmente, cambie su contraseña.';
+      case 'auth/network-request-failed':
+        return 'No hay conexión a internet.'
       default:
         return error;
     }
