@@ -2,7 +2,7 @@ import { Button, Container, TextContainer } from 'components';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, TextInput, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
-import { Input, Select, Touchable } from 'components';
+import { Input, Select, Touchable, CustomText } from 'components';
 import { useForm } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -10,6 +10,7 @@ import { GENDERS } from 'assets/files';
 import { emailRules, rfcRule } from 'utils/rules';
 import { useAppDispatch } from 'rtk';
 import { getCFDIListThunk, getTaxRegimeListThunk } from 'rtk/thunks/invoicing.thunks';
+import { invoicingServices } from 'services';
 
 interface Props {
   showAlert: () => void;
@@ -20,6 +21,7 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
   const {
     control,
     setValue,
+    watch,
     formState: { errors, isValid },
     register
   } = useForm({
@@ -34,22 +36,46 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
   const [toggled, setToggled] = useState(false);
   const [regimensList, setRegimensList] = useState([]);
   const [cfdiList, setCfdiList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [validated, setValidated] = useState<boolean>(false);
 
   const toggle = () => {
     setToggled(!toggled);
   };
 
   const fetchCatalogs = useCallback(async () => {
-    const {data: regimens} = await dispatch(getTaxRegimeListThunk()).unwrap();    
+    const { data: regimens } = await dispatch(getTaxRegimeListThunk()).unwrap();
     setRegimensList(regimens);
-    const {data: cfdis} = await dispatch(getCFDIListThunk()).unwrap();
+    const { data: cfdis } = await dispatch(getCFDIListThunk()).unwrap();
     setCfdiList(cfdis);
-  }, [])
+  }, []);
 
   useEffect(() => {
-    fetchCatalogs();    
-  }, [fetchCatalogs])
-  
+    fetchCatalogs();
+  }, [fetchCatalogs]);
+
+  const { postalCode } = watch();
+
+  const fetchColonies = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await invoicingServices.getColonies(postalCode);
+      if (data.responseCode === 65) {
+        setValidated(true);
+      } else {
+        setValidated(false);
+      }
+    } catch (error) {
+      setValidated(false);
+    } finally {
+      setLoading(false);
+    }
+  }, [postalCode]);
+
+  useEffect(() => {
+    if (!postalCode) return;
+    fetchColonies();
+  }, [postalCode]);
 
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
@@ -119,7 +145,7 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
             androidMode="dialog"
             label={`Régimen de Incorporación Fiscal`}
             placeholder={`Régimen de Incorporación Fiscal`}
-            error={errors.state?.message}            
+            error={errors.state?.message}
           />
 
           <TextContainer typography="h5" fontBold text={`Uso de CFDI (Predeterminado)`} marginTop={21} />
@@ -136,9 +162,8 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
 
           <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={21} />
           <Input
-            {...register('postal code', { required: true })}
-            ref={postalCodeRef}
-            name="postal code"
+            {...register('postalCode', { required: true })}
+            name="postalCode"
             control={control}
             autoCorrect={false}
             keyboardType="numeric"
@@ -149,6 +174,21 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
             marginTop={4}
             renderErrorIcon={false}
           />
+          {loading && (
+            <Container row>
+              <Container flex row style={{ marginTop: 10 }} center>
+                <CustomText textColor={theme.fontColor.grey} text={'Validando...'} typography="h6" fontWeight="normal" />
+              </Container>
+            </Container>
+          )}
+          {validated === true && !loading && (
+            <Container row>
+              <Container flex row style={{ marginTop: 10 }} center>
+                <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
+                <CustomText textColor={theme.brandColor.iconn_green_original} text={'Código postal válido'} typography="h6" fontWeight="normal" />
+              </Container>
+            </Container>
+          )}
         </Container>
         <Touchable onPress={toggle}>
           <Container

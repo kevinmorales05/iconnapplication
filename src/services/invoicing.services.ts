@@ -1,6 +1,5 @@
 import { InvoicingInterface } from 'rtk';
 import { InvoicingApi } from '../http/api-invoicing';
-
 /**
  * Function to get regimens list
  */
@@ -21,7 +20,19 @@ async function getCFDIList(): Promise<any> {
   return data;
 }
 
+/**
+ * Function to get postal code info
+ * @param postalCode
+ */
+ async function getColonies(postalCode: string): Promise<any> {
+  const response = await InvoicingApi.getInstance().getRequest(`/colony/list/${postalCode}`);
+  if (response === undefined) return Promise.reject(new Error(`getColonies:/colony/list/${postalCode}`));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
   getTaxRegimeList,
-  getCFDIList
+  getCFDIList,
+  getColonies
 };
