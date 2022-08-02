@@ -23,3 +23,8 @@ This project uses:
  - npx uri-scheme open "iconn://iconn/continuewith" --android
 
   - npx uri-scheme open "iconn://iconn/continuewith" --ios
+
+# open invoicing scren
+ - npx uri-scheme open "iconn://iconn/invoice" --android
+
+ - npx uri-scheme open "iconn://iconn/invoice" --ios
