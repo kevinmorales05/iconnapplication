@@ -4,6 +4,11 @@ const config = {
             screens: {
                 ContinueWith: 'continuewith'
             }
+        },
+        HomeStack:{
+            screens: {
+                Invoice: 'invoice'
+            }
         }
     }
 };
