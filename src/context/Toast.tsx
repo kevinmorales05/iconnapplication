@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useRef} from 'react';
-import { ToastContext } from './toast.context';
+import { ToastContext, ToastContextProvider } from './toast.context';
 import {
   Animated,
   Easing,
@@ -37,11 +37,12 @@ export const Toast = () => {
     <Animated.View
       style={[
         styles.toast,
+        toast.visible ? { height: 59 }: { height: 0 },
         {opacity: fade},
         { backgroundColor: toast.type === 'error' ? 
           theme.brandColor.iconn_error : toast.type === 'success' ? 
           theme.brandColor.iconn_success : toast.type === 'warning' ? 
-          theme.brandColor.iconn_warning : undefined!}
+          theme.brandColor.iconn_warning : undefined!},
       ]}>
       <Container row center crossCenter space='between'>
         <AntDesign 

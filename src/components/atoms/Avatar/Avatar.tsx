@@ -99,22 +99,19 @@ const Avatar: React.FC<AvatarProps> = ({
         </Container>
       </TouchableElement>
       {editable && (
-        <Container row center>
-          <TouchableElement>
-            <Container center crossCenter style={StyleSheet.flatten([
-              getEditIconStyle(size),
-              props.editIconStyle,
-            ])}>
-              <Octicons
-                name="pencil"
-                size={theme.avatarSize[size] / 3}
-                color={props.editIconColor || theme.brandColor.iconn_accent_secondary}
-                onPress={props.onPress}
-              />
-            </Container>
-            </TouchableElement>            
-            <Text>{editText}</Text>            
-        </Container>
+        <TouchableOpacity style={{ marginTop:10 }} onPress={props.onPress}>
+          <Container row center>
+              <Container center crossCenter style={{ marginLeft:15 }}>
+                <Octicons
+                  style={{ marginRight:5 }}
+                  name="pencil"
+                  size={theme.avatarSize[size] / 3}
+                  color={props.editIconColor || theme.brandColor.iconn_accent_secondary}
+                />
+              </Container>
+              <Text>{editText}</Text>            
+          </Container>
+        </TouchableOpacity>            
       )}
     </Container>
   );
