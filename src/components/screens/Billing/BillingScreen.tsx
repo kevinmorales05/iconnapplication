@@ -16,6 +16,27 @@ interface Props {
   showAlert: () => void;
 }
 
+interface ColonyState {
+  state_id: string;
+  name: string;
+  status: string | null;
+}
+interface City {
+  cities_id: string;
+  name: string;
+  status: string | null;
+  State: ColonyState;
+}
+
+interface Colony {
+  colonies_id: string;
+  name: string;
+  cities_id: string;
+  zip_code: string;
+  status: string | null;
+  City: City;
+}
+
 const BillingScreen: React.FC<Props> = ({ showAlert }) => {
   const dispatch = useAppDispatch();
   const {
@@ -38,6 +59,7 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
   const [cfdiList, setCfdiList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [validated, setValidated] = useState<boolean>(false);
+  const [colonies, setColonies] = useState<Colony[] | null>(null);
 
   const toggle = () => {
     setToggled(!toggled);
@@ -62,11 +84,14 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
       const data = await invoicingServices.getColonies(postalCode);
       if (data.responseCode === 65) {
         setValidated(true);
+        setColonies(data.data as Colony[]);
       } else {
         setValidated(false);
+        setColonies(null);
       }
     } catch (error) {
       setValidated(false);
+      setColonies(null);
     } finally {
       setLoading(false);
     }
@@ -76,6 +101,17 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
     if (!postalCode) return;
     fetchColonies();
   }, [postalCode]);
+
+  useEffect(() => {
+    if (colonies) {
+      const sample: Colony = colonies[0];
+
+      setValue('state', sample.City.State.name);
+      setValue('city', sample.City.name);
+    } else {
+      setToggled(false);
+    }
+  }, [colonies]);
 
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
@@ -167,7 +203,7 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
             control={control}
             autoCorrect={false}
             keyboardType="numeric"
-            placeholder={`64000`}
+            placeholder={`C.P`}
             blurOnSubmit={false}
             error={errors.name?.message}
             maxLength={5}
@@ -190,7 +226,7 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
             </Container>
           )}
         </Container>
-        <Touchable onPress={toggle}>
+        <Touchable disabled={!Boolean(colonies)} onPress={toggle}>
           <Container
             backgroundColor={theme.brandColor.iconn_background}
             style={{ marginVertical: 24, paddingVertical: 21, paddingHorizontal: theme.layoutSpace.medium }}
@@ -205,7 +241,7 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           </Container>
         </Touchable>
         <Container style={styles.billingSection}>
-          {toggled && (
+          {toggled && colonies && (
             <Container>
               <TextContainer typography="h6" fontBold text={`Calle`} marginTop={25} />
               <Input
@@ -230,39 +266,40 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
                 maxLength={30}
               />
               <TextContainer typography="h6" fontBold text={`Estado`} marginTop={25} />
-              <Select
-                name="state"
+              <Input
                 control={control}
-                options={[]}
-                onSelect={value => setValue('state', value)}
-                androidMode="dialog"
-                label={`Estado`}
-                placeholder={`Depende del Código Postal`}
-                error={errors.gender?.message}
-                useActionSheet
+                {...register('state')}
+                autoCorrect
+                keyboardType="default"
+                placeholder={'Estado'}
+                blurOnSubmit={false}
+                error={errors.state?.message}
+                maxLength={30}
               />
               <TextContainer typography="h6" fontBold text={`Municipio, Cuidad o Delegación`} marginTop={25} />
-              <Select
-                name="municipality"
+              <Input
+                disabled
                 control={control}
-                options={[]}
-                onSelect={value => setValue('municipality', value)}
-                androidMode="dialog"
-                label={`Municipio`}
-                placeholder={`Depende del Código Postal`}
-                error={errors.gender?.message}
-                useActionSheet
+                {...register('city')}
+                autoCorrect
+                keyboardType="default"
+                placeholder={'Ciudad'}
+                blurOnSubmit={false}
+                error={errors.city?.message}
+                maxLength={30}
               />
               <TextContainer typography="h6" fontBold text={`Colonia`} marginTop={25} />
               <Select
                 name="colony"
                 control={control}
-                options={[]}
+                options={colonies.map((colony: Colony) => {
+                  return colony.name;
+                })}
                 onSelect={value => setValue('colony', value)}
                 androidMode="dialog"
                 label={`Colonia`}
                 placeholder={`Seleccionar`}
-                error={errors.gender?.message}
+                error={errors.colony?.message}
                 useActionSheet
               />
             </Container>
