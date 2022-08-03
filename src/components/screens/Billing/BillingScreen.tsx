@@ -13,11 +13,15 @@ import { invoicingServices } from 'services';
 import { Colony, InvoicingProfile } from 'lib/models/InvoicingProfile';
 
 interface Props {
-  submit: (invoicingProfile: InvoicingProfile) => void;
-  onDelete: () => void;
+  onSubmit: (invoicingProfile: InvoicingProfile) => void;
+  onDelete?: () => void;
 }
 
-const BillingScreen: React.FC<Props> = ({ submit, onDelete }) => {
+const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
+  const submit = (fields: any) => {
+    onSubmit(fields as InvoicingProfile);
+  };
+
   const dispatch = useAppDispatch();
   const {
     control,
@@ -59,7 +63,7 @@ const BillingScreen: React.FC<Props> = ({ submit, onDelete }) => {
   const fetchColonies = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await invoicingServices.getColonies(postalCode || "XXXXX");
+      const data = await invoicingServices.getColonies(postalCode || 'XXXXX');
       if (data.responseCode === 65) {
         setColonies(data.data as Colony[]);
       } else {
@@ -87,10 +91,6 @@ const BillingScreen: React.FC<Props> = ({ submit, onDelete }) => {
       setToggled(false);
     }
   }, [colonies]);
-
-  const onSubmit: SubmitHandler<FieldValues> = fields => {
-    submit(fields as InvoicingProfile)
-  };
 
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
@@ -246,7 +246,7 @@ const BillingScreen: React.FC<Props> = ({ submit, onDelete }) => {
               <TextContainer textColor={theme.fontColor.dark} typography="h5" fontBold text={`Agregar un domicilio`} />
               <TextContainer textColor={theme.fontColor.grey} typography="placeholder" text={` (Opcional)`} />
               <Container flex style={{ flexDirection: 'row-reverse' }}>
-                {toggled ? <Icon name="right" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
+                {toggled ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
               </Container>
             </Container>
           </Container>
@@ -316,27 +316,29 @@ const BillingScreen: React.FC<Props> = ({ submit, onDelete }) => {
             </Container>
           )}
 
-          <Container style={{ marginTop: 24 }}>
-            <Button length="long" round onPress={handleSubmit(onSubmit)} fontSize="h3" fontBold>
+          <Container style={{ marginVertical: 24 }}>
+            <Button length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
               Guardar
             </Button>
           </Container>
 
-          <Container style={{ marginTop: 16, marginBottom: 32 }}>
-            <Button
-              color="iconn_light_grey"
-              fontColor="dark"
-              length="long"
-              round
-              disabled={false}
-              onPress={onDelete}
-              fontSize="h3"
-              fontBold
-              leftIcon={<EvilIcons name="trash" size={22} color={theme.brandColor.iconn_error} style={{ left: 8 }} />}
-            >
-              Eliminar
-            </Button>
-          </Container>
+          {onDelete && (
+            <Container>
+              <Button
+                color="iconn_light_grey"
+                fontColor="dark"
+                length="long"
+                round
+                disabled={false}
+                onPress={onDelete}
+                fontSize="h3"
+                fontBold
+                leftIcon={<EvilIcons name="trash" size={22} color={theme.brandColor.iconn_error} style={{ left: 8 }} />}
+              >
+                Eliminar
+              </Button>
+            </Container>
+          )}
         </Container>
       </Container>
     </ScrollView>

@@ -26,14 +26,14 @@ const CreateTaxProfileController: React.FC = () => {
     });
   };
 
-  const submit = (invoicingProfile: InvoicingProfile) => {
+  const onSubmit = (invoicingProfile: InvoicingProfile) => {
     console.log("submit from controller:",invoicingProfile)
 
   };
 
   return (
     <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
-      <BillingScreen submit={submit} onDelete={onDelete} />
+      <BillingScreen onSubmit={onSubmit} onDelete={onDelete} />
     </SafeArea>
   );
 };
