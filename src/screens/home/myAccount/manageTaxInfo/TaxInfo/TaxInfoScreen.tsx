@@ -52,7 +52,7 @@ const TaxInfoScreen: React.FC<Props> = ({ addRFC, invoicingProfileList }) => {
           )}
         </Container>
         <Container>
-          <Button length="long" round disabled={false} onPress={addRFC} fontSize="h3" fontBold>
+          <Button length="long" round disabled={!isOnline} onPress={addRFC} fontSize="h3" fontBold>
             + Agregar RFC
           </Button>
         </Container>
