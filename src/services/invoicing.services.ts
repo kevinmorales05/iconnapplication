@@ -1,5 +1,6 @@
 import { InvoicingProfile } from '../lib/models/InvoicingProfile';
 import { InvoicingApi } from '../http/api-invoicing';
+import { InvoicingProfileInterface } from 'rtk/types/invoicing.types';
 /**
  * Function to get regimens list
  */
@@ -52,10 +53,25 @@ async function getCFDIList(): Promise<any> {
   return data;
 }
 
+/**
+ * Function to delete an invoicing profile
+ */
+
+ async function deleteInvoicingProfile(invoicingProfile: InvoicingProfileInterface): Promise<any> {
+  const {invoicing_profile_id} = invoicingProfile;
+  invoicingProfile.status = false;
+  /* const emptInvoiceP = {} as InvoicingProfileInterface; */
+  const response = await InvoicingApi.getInstance().putRequest(`/invoicingProfile/delete/${invoicing_profile_id}`, invoicingProfile);
+  if (response === undefined) return Promise.reject(new Error(`deleteInvoicingProfile:invoicingProfile/delete/${invoicing_profile_id}`));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
   getTaxRegimeList,
   getCFDIList,
   getColonies,
   registerInvoicingProfile,
-  getInvoicingProfileList
+  getInvoicingProfileList,
+  deleteInvoicingProfile
 };

@@ -122,13 +122,6 @@ const ContinueWithController: React.FC = () => {
   };
   
   const onContinueAsGuest = () => {
-      /* setotherMethodsVisible(false);
-      if(!otherMethodsVisible) {
-        dispatch(setIsGuest({isGuest: true}));
-      }
-      else {
-        console.log("sigue siendo true, MODAL", otherMethodsVisible);
-      } */
     setotherMethodsVisible(false);
     console.log('Modal', otherMethodsVisible);
     nowIsGuest();
