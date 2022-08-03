@@ -3,62 +3,40 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, TextInput, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
 import { Input, Select, Touchable, CustomText } from 'components';
-import { useForm } from 'react-hook-form';
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import { GENDERS } from 'assets/files';
 import { emailRules, rfcRule } from 'utils/rules';
 import { useAppDispatch } from 'rtk';
 import { getCFDIListThunk, getTaxRegimeListThunk } from 'rtk/thunks/invoicing.thunks';
 import { invoicingServices } from 'services';
+import { Colony, InvoicingProfile } from 'lib/models/InvoicingProfile';
 
 interface Props {
-  showAlert: () => void;
+  submit: (invoicingProfile: InvoicingProfile) => void;
+  onDelete: () => void;
 }
 
-interface ColonyState {
-  state_id: string;
-  name: string;
-  status: string | null;
-}
-interface City {
-  cities_id: string;
-  name: string;
-  status: string | null;
-  State: ColonyState;
-}
-
-interface Colony {
-  colonies_id: string;
-  name: string;
-  cities_id: string;
-  zip_code: string;
-  status: string | null;
-  City: City;
-}
-
-const BillingScreen: React.FC<Props> = ({ showAlert }) => {
+const BillingScreen: React.FC<Props> = ({ submit, onDelete }) => {
   const dispatch = useAppDispatch();
   const {
     control,
     setValue,
     watch,
     formState: { errors, isValid },
-    register
+    register,
+    handleSubmit
   } = useForm({
     mode: 'onChange'
   });
 
   const rfcRef = useRef<TextInput>(null);
-  const businessNameRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
-  const postalCodeRef = useRef<TextInput>(null);
 
   const [toggled, setToggled] = useState(false);
   const [regimensList, setRegimensList] = useState([]);
   const [cfdiList, setCfdiList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [validated, setValidated] = useState<boolean>(false);
   const [colonies, setColonies] = useState<Colony[] | null>(null);
 
   const toggle = () => {
@@ -83,14 +61,11 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
     try {
       const data = await invoicingServices.getColonies(postalCode);
       if (data.responseCode === 65) {
-        setValidated(true);
         setColonies(data.data as Colony[]);
       } else {
-        setValidated(false);
         setColonies(null);
       }
     } catch (error) {
-      setValidated(false);
       setColonies(null);
     } finally {
       setLoading(false);
@@ -108,10 +83,16 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
 
       setValue('state', sample.City.State.name);
       setValue('city', sample.City.name);
+      setToggled(true);
     } else {
       setToggled(false);
     }
   }, [colonies]);
+
+  const onSubmit: SubmitHandler<FieldValues> = fields => {
+    console.log("fields:",fields)
+    submit(fields as InvoicingProfile)
+  };
 
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
@@ -131,9 +112,9 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
             autoCapitalize="characters"
             autoCorrect={false}
             rules={rfcRule}
-            placeholder={`RAPA880105P32`}
+            placeholder={`Escribe tu RFC con homoclave`}
             blurOnSubmit={false}
-            error={errors.name?.message}
+            error={errors.rfc?.message}
             maxLength={13}
             marginTop={4}
             renderErrorIcon={false}
@@ -142,14 +123,19 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           <TextContainer typography="h5" fontBold text={`Razón Social`} marginTop={21}></TextContainer>
           <Input
             {...register('businessName')}
-            ref={businessNameRef}
+            rules={{
+              required: {
+                value: true,
+                message: `Campo requerido.`
+              }
+            }}
             name="businessName"
             control={control}
             autoCorrect={false}
             keyboardType="default"
-            placeholder={`Alejandra Ramírez Pedroza`}
+            placeholder={`Nombre completo o Razón Social`}
             blurOnSubmit={false}
-            error={errors.name?.message}
+            error={errors.businessName?.message}
             maxLength={30}
             marginTop={4}
             renderErrorIcon={false}
@@ -160,13 +146,19 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
             {...register('email')}
             ref={emailRef}
             name="email"
+            rules={{
+              required: {
+                value: true,
+                message: `Campo requerido.`
+              }
+            }}
             control={control}
             autoCorrect={false}
             keyboardType="email-address"
             placeholder={`a.ramirez.corp@hotmail.com`}
             blurOnSubmit={false}
             rules={emailRules}
-            error={errors.name?.message}
+            error={errors.email?.message}
             maxLength={30}
             marginTop={4}
             renderErrorIcon={false}
@@ -175,40 +167,61 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           <TextContainer typography="h5" fontBold text={`Régimen fiscal`} marginTop={21} />
           <Select
             name="regime"
+            rules={{
+              required: {
+                value: true,
+                message: `Campo requerido.`
+              }
+            }}
             control={control}
             options={regimensList.map(item => item.sat_tax_regime)}
-            onSelect={value => setValue('Tax Incorporation Regime', value)}
+            onSelect={value => setValue('regime', value)}
             androidMode="dialog"
             label={`Régimen de Incorporación Fiscal`}
             placeholder={`Régimen de Incorporación Fiscal`}
-            error={errors.state?.message}
+            error={errors.regime?.message}
+            useActionSheet
           />
 
           <TextContainer typography="h5" fontBold text={`Uso de CFDI (Predeterminado)`} marginTop={21} />
           <Select
             name="cfdi"
             control={control}
+            rules={{
+              required: {
+                value: true,
+                message: `Campo requerido.`
+              }
+            }}
             options={cfdiList.map(item => item.description)}
-            onSelect={value => setValue('03-Gastos en General', value)}
+            onSelect={value => setValue('cfdi', value)}
             androidMode="dialog"
             label={`03-Gastos en General`}
             placeholder={`03-Gastos en General`}
-            error={errors.state?.message}
+            error={errors.cfdi?.message}
+            useActionSheet
           />
 
           <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={21} />
           <Input
-            {...register('postalCode', { required: true })}
+            {...register('postalCode')}
+            rules={{
+              required: {
+                value: true,
+                message: `Campo requerido.`
+              }
+            }}
             name="postalCode"
             control={control}
             autoCorrect={false}
             keyboardType="numeric"
             placeholder={`C.P`}
             blurOnSubmit={false}
-            error={errors.name?.message}
+            error={errors.postalCode?.message}
             maxLength={5}
             marginTop={4}
             renderErrorIcon={false}
+            numeric
           />
           {loading && (
             <Container row>
@@ -217,7 +230,7 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
               </Container>
             </Container>
           )}
-          {validated === true && !loading && (
+          {colonies && !loading && (
             <Container row>
               <Container flex row style={{ marginTop: 10 }} center>
                 <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
@@ -306,16 +319,7 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
           )}
 
           <Container style={{ marginTop: 24 }}>
-            <Button
-              length="long"
-              round
-              disabled={!isValid}
-              onPress={() => {
-                console.log('Save billing data');
-              }}
-              fontSize="h3"
-              fontBold
-            >
+            <Button length="long" round onPress={handleSubmit(onSubmit)} fontSize="h3" fontBold>
               Guardar
             </Button>
           </Container>
@@ -327,7 +331,7 @@ const BillingScreen: React.FC<Props> = ({ showAlert }) => {
               length="long"
               round
               disabled={false}
-              onPress={showAlert}
+              onPress={onDelete}
               fontSize="h3"
               fontBold
               leftIcon={<EvilIcons name="trash" size={22} color={theme.brandColor.iconn_error} style={{ left: 8 }} />}

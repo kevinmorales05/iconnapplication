@@ -52,7 +52,8 @@ export interface Props {
   onChangeText?: TextInputProps['onChangeText'];
   datePicker?: boolean;
   onPressDatePickerIcon?: () => void;
-  phone?: boolean
+  phone?: boolean;
+  numeric?: boolean
 }
 
 const Input = forwardRef(({
@@ -86,7 +87,8 @@ const Input = forwardRef(({
   onChangeText,
   datePicker = false,
   onPressDatePickerIcon,
-  phone = false
+  phone = false,
+  numeric = false,
 }: Props, ref: ForwardedRef<any>) => {
   const {
     inputStyle, inputContainerStyle, passwordImageStyle, prefixImageStyle
@@ -186,7 +188,7 @@ const Input = forwardRef(({
                     {...textInputProps}
                     value={defaultValue ? defaultValue : field.value}
                     onChangeText={e => {
-                      if(phone){
+                      if(phone || numeric){
                         if(e){
                           let isNum = /^\d+$/.test(e);
                           if (!isNum) return;
