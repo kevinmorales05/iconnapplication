@@ -1,5 +1,5 @@
 import { Container, CustomModal, SafeArea, TextContainer } from 'components';
-import React, { Component, useState } from 'react';
+import React, { Component, useCallback, useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -18,6 +18,8 @@ import { ICONN_COFFEE } from 'assets/images';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
+import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
+import { setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -177,6 +179,19 @@ const HomeController: React.FC = () => {
   const goToInvoice = () => {
     (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
   }
+
+  /**
+   * Load Invocing Profile List and store it in the redux store.
+   */
+  const fetchInvoicingProfileList = useCallback(async () => {
+    const { data: invoicingProfileList } = await dispatch(getInvoicingProfileListThunk(user.user_id!)).unwrap();
+    const arr: InvoicingProfileInterface[] = invoicingProfileList;    
+    dispatch(setInvoicingProfilesList(arr));
+  }, []);
+
+  useEffect(() => {
+    fetchInvoicingProfileList();
+  }, [fetchInvoicingProfileList]);
 
   return (
     <SafeArea

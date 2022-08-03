@@ -43,9 +43,20 @@ async function getCFDIList(): Promise<any> {
   return data;
 }
 
+/**
+ * Function to get invoicing profile list
+ */
+ async function getInvoicingProfileList(uid: string): Promise<any> {
+  const response = await InvoicingApi.getInstance().getRequest(`/invoicingProfile/list/${uid}`);
+  if (response === undefined) return Promise.reject(new Error('getInvoicingProfileList:/invoicingProfile/list'));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
   getTaxRegimeList,
   getCFDIList,
   getColonies,
-  registerInvoicingProfile
+  registerInvoicingProfile,
+  getInvoicingProfileList
 };

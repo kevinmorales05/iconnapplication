@@ -1,9 +1,9 @@
-import { Button, Container, TextContainer } from 'components';
+import { Button, TextContainer } from '../../molecules';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, TextInput, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
-import { Input, Select, Touchable, CustomText } from 'components';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
 import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { emailRules, rfcRule } from 'utils/rules';

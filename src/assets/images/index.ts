@@ -15,6 +15,9 @@ import ICONN_INVITE from './iconn-signin.webp';
 import ICONN_EYE_OFF from './iconn-eye-visible.webp';
 import ICONN_CARD_PETRO from './iconn-card-petro.webp';
 import ICONN_CARD_SEVEN from './iconn-card-seven.webp';
+import ICONN_USER_PROFILE from './iconn-user-profile.webp';
+import ICONN_NO_CONNECTION from './iconn-no-connection.webp';
+import ICONN_CHANGE from './iconn-change.webp';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -33,5 +36,8 @@ export {
   ICONN_INVITE,
   ICONN_EYE_OFF,
   ICONN_CARD_PETRO,
-  ICONN_CARD_SEVEN
+  ICONN_CARD_SEVEN,
+  ICONN_USER_PROFILE,
+  ICONN_NO_CONNECTION,
+  ICONN_CHANGE
 };
