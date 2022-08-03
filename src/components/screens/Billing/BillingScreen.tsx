@@ -2,26 +2,22 @@ import { Button, TextContainer } from '../../molecules';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ScrollView, TextInput, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
 import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { emailRules, rfcRule } from 'utils/rules';
-import { useAppDispatch } from 'rtk';
+import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getCFDIListThunk, getTaxRegimeListThunk } from 'rtk/thunks/invoicing.thunks';
 import { invoicingServices } from 'services';
-import { Colony, InvoicingProfile } from 'lib/models/InvoicingProfile';
+import { Colony } from 'lib/models/InvoicingProfile';
 
 interface Props {
-  onSubmit: (invoicingProfile: InvoicingProfile) => void;
+  onSubmit: (data: any) => void;
   onDelete?: () => void;
 }
 
 const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
-  const submit = (fields: any) => {
-    onSubmit(fields as InvoicingProfile);
-  };
-
   const dispatch = useAppDispatch();
   const {
     control,
@@ -33,6 +29,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
   } = useForm({
     mode: 'onChange'
   });
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const rfcRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
@@ -91,6 +88,39 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
       setToggled(false);
     }
   }, [colonies]);
+
+  const submit = (fields: any) => {
+    const { c_use_cfdi } = cfdiList.find(cfdi => {
+      const item = cfdi as any;
+
+      return item.description === fields.cfdi;
+    }) as any;
+
+    const { tax_code_key } = regimensList.find(regimen => {
+      const item = regimen as any;
+
+      return item.sat_tax_regime === fields.regime;
+    }) as any;
+
+    const invoicingProfile = {
+      user_id: user.user_id,
+      rfc: fields.rfc,
+      business_name: fields.businessName,
+      email: fields.email,
+      c_use_cfdi,
+      tax_code_key,
+      zip_code: Number(fields.postalCode),
+      address: {
+        street: fields.street,
+        ext_num: fields.ext_num,
+        colony: fields.colony,
+        city: fields.city,
+        state: fields.state,
+      }
+    };
+
+    onSubmit(invoicingProfile);
+  };
 
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
@@ -317,7 +347,9 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
           )}
 
           <Container style={{ marginVertical: 24 }}>
-            <Button length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
+            <Button 
+            disabled={!isValid} 
+            length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
               Guardar
             </Button>
           </Container>
@@ -329,7 +361,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
                 fontColor="dark"
                 length="long"
                 round
-                disabled={false}
                 onPress={onDelete}
                 fontSize="h3"
                 fontBold

@@ -1,5 +1,4 @@
 import { InvoicingProfile } from '../lib/models/InvoicingProfile';
-import { InvoicingInterface } from 'rtk';
 import { InvoicingApi } from '../http/api-invoicing';
 /**
  * Function to get regimens list
@@ -36,7 +35,7 @@ async function getCFDIList(): Promise<any> {
  * Function to register invoicing profile
  * @param invoicingProfile
  */
- async function registerInvoicingProfile(invoicingProfile: InvoicingProfile): Promise<any> {
+ async function registerInvoicingProfile(invoicingProfile: any): Promise<any> {
   const response = await InvoicingApi.getInstance().postRequest("/invoicingProfile/create", invoicingProfile);
   if (response === undefined) return Promise.reject(new Error("registerInvoicingProfile:/invoicingProfile/create"));
   const { data } = response;

@@ -1,11 +1,12 @@
 import React from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { BillingScreen } from 'components';
-import { useAlert } from 'context';
-import { InvoicingProfile } from 'lib/models/InvoicingProfile';
+import { useAlert, useLoading } from 'context';
+import { invoicingServices } from 'services';
 
 const AddRFCController: React.FC = () => {
   const alert = useAlert();
+  const loader = useLoading();
 
   const onDelete = async () => {
     alert.show({
@@ -19,14 +20,21 @@ const AddRFCController: React.FC = () => {
           // const data = await invoicingServices.deleteInvoicingProfile(invoicingProfile);
         } catch (error) {
           console.log(error);
-      }
+        }
       }
     });
   };
 
-  const onSubmit = async (invoicingProfile: InvoicingProfile) => {
-    console.log("submit from controller:")
+  const onSubmit = async (invoiceProfile: any) => {
+    loader.show();
 
+    try {
+      await invoicingServices.registerInvoicingProfile(invoiceProfile);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loader.hide();
+    }
   };
 
   return (
