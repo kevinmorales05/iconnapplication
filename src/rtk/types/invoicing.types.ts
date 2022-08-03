@@ -11,10 +11,11 @@ export interface InvoicingProfileInterface {
   createdat: string;
   updatedat: string;
   status: boolean;
-  Address: InvoicingProfileAddress,
-  Cfdi: InvoicingProfileCFDI,
-  Tax_Regime: InvoicingProfileRegime,
-  User: InvoicingProfileUser
+  default: boolean;
+  Address: InvoicingProfileAddress;
+  Cfdi: InvoicingProfileCFDI;
+  Tax_Regime: InvoicingProfileRegime;
+  User: InvoicingProfileUser;
 }
 
 export interface InvoicingProfileAddress {
@@ -68,8 +69,8 @@ export interface InvoicingProfileUser {
   sign_app_modes_id: number;
   secret_key: string;
   Sign_App_Mode: {
-    sign_app_modes_id: number,
+    sign_app_modes_id: number;
     description: string;
-  }        
-  Gender: string
+  };
+  Gender: string;
 }

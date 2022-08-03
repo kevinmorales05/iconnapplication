@@ -1,34 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams, HomeStackParams } from 'navigation/types';
+import { HomeStackParams } from 'navigation/types';
 import InvoiceScreen from './InvoiceScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
-import { useAlert, useLoading } from 'context';
-import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
-import { RootState, useAppDispatch, useAppSelector } from 'rtk';
-import { setAuthEmail, setSignMode } from 'rtk/slices/authSlice';
+import { InvoicingProfileInterface, RootState, useAppSelector } from 'rtk';
 import theme from 'components/theme/theme';
 
 const InvoiceController: React.FC = () => {
-  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-
-  const loader = useLoading();
-  const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state: RootState) => state.auth);
-  const alert = useAlert();
-
-  useEffect(() => {
-    if (loading === false) {
-      loader.hide();
-    }
-  }, [loading]);
-
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const onSubmit = async () => navigate('CreateTaxProfile');
+
+  let defaultProfile: InvoicingProfileInterface;
+
+  if (invoicingProfileList.length === 1) {
+    defaultProfile = invoicingProfileList[0];
+  } else {
+    defaultProfile = invoicingProfileList.find((obj) => obj.default === true)!;
+  }  
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
-      <InvoiceScreen title={`Ingresa tu dirección de \ncorreo electrónico`} goBack={goBack} onSubmit={onSubmit} onPressInfo={() => {}} />
+      <InvoiceScreen invoicingProfileList={invoicingProfileList} defaultProfile={defaultProfile!} onSubmit={onSubmit} />
     </SafeArea>
   );
 };
