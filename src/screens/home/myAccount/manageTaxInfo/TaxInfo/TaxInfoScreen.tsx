@@ -41,6 +41,7 @@ const TaxInfoScreen: React.FC<Props> = ({ addRFC }) => {
       </Container>
       <Container flex>
         <TaxInfoCard rfc="RAPA880105P32" name="Alejandra Ramírez Pedroza" isDefault onPress={() => {}} />
+        <TaxInfoCard rfc="MAAM890518UR6" name="Mariano Martinez Apolinar" onPress={() => {console.log('first')}} withExchange/>
         <TaxInfoCard rfc="MAAM890518UR6" name="Mariano Martinez Apolinar" onPress={() => {}} />
       </Container>
       <Container>
