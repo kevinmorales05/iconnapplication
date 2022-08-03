@@ -59,7 +59,7 @@ const BillingScreen: React.FC<Props> = ({ submit, onDelete }) => {
   const fetchColonies = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await invoicingServices.getColonies(postalCode);
+      const data = await invoicingServices.getColonies(postalCode || "XXXXX");
       if (data.responseCode === 65) {
         setColonies(data.data as Colony[]);
       } else {
@@ -73,7 +73,6 @@ const BillingScreen: React.FC<Props> = ({ submit, onDelete }) => {
   }, [postalCode]);
 
   useEffect(() => {
-    if (!postalCode) return;
     fetchColonies();
   }, [postalCode]);
 
@@ -90,7 +89,6 @@ const BillingScreen: React.FC<Props> = ({ submit, onDelete }) => {
   }, [colonies]);
 
   const onSubmit: SubmitHandler<FieldValues> = fields => {
-    console.log("fields:",fields)
     submit(fields as InvoicingProfile)
   };
 
