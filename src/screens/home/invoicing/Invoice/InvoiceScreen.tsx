@@ -32,7 +32,7 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
             rfc={defaultProfile.rfc}
             name={defaultProfile.business_name}
             onPress={() => {
-              console.log('first');
+              console.log('TODO: change profile...');
             }}
             withExchange
           />

@@ -20,7 +20,7 @@ const TaxInfoScreen: React.FC<Props> = ({ addRFC, invoicingProfileList }) => {
   });
 
   const order = (a: any, b: any) => {
-    return a < b ? 0 : a > b ? 1 : -1;
+    return a < b ? -1 : a > b ? 1 : 0;
   };
 
   return (
@@ -46,7 +46,7 @@ const TaxInfoScreen: React.FC<Props> = ({ addRFC, invoicingProfileList }) => {
           ) : (
             invoicingProfileList
               .map(function (profile, i) {
-                return <TaxInfoCard rfc={profile.rfc} name={profile.business_name} isDefault={profile.default} onPress={() => {}} />;
+                return <TaxInfoCard key={i} rfc={profile.rfc} name={profile.business_name} isDefault={profile.default} onPress={() => {}} />;
               })
               .sort(order)
           )}
