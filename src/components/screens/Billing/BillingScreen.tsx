@@ -1,25 +1,23 @@
 import { Button, TextContainer } from '../../molecules';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, TextInput, StyleSheet } from 'react-native';
+import { ScrollView, TextInput, StyleSheet, View } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
 import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
 import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { emailRules, rfcRule } from 'utils/rules';
-import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { InvoicingProfileInterface, Colony, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getCFDIListThunk, getTaxRegimeListThunk } from 'rtk/thunks/invoicing.thunks';
 import { invoicingServices } from 'services';
-import { Colony } from 'lib/models/InvoicingProfile';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { HomeStackParams } from 'navigation/types';
 
 interface Props {
   onSubmit: (data: any) => void;
   onDelete?: () => void;
+  current?: InvoicingProfileInterface;
 }
 
-const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
+const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   const dispatch = useAppDispatch();
   const {
     control,
@@ -32,35 +30,41 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
     mode: 'onChange'
   });
   const { user } = useAppSelector((state: RootState) => state.auth);
-
-  const route = useRoute<RouteProp<HomeStackParams, 'CreateTaxProfile'>>();
-
-  const [current, setCurrent] = useState<InvoicingProfileInterface | undefined>(undefined);
-
-  useEffect(() => {
-    setCurrent(current);
-    console.log('current', route.params);
-  }, [route]);
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     if (current) {
-      console.log('rfc', current.rfc);
       setValue('rfc', current.rfc);
+      setValue('cfdi', current.Cfdi.description);
+      setValue('business_name', current.business_name);
+      setValue('email', current.email);
+      setValue('regime', current.Tax_Regime.sat_tax_regime);
+      setValue('postalCode', current.zip_code);
+      setValue('businessName', current.business_name);
+      setValue('street', current.Address.street);
+      setValue('city', current.Address.city);
+      setValue('state', current.Address.city);
+      setValue('colony', current.Address.colony);
     }
   }, [current]);
+
+  const mandatoryFields = watch(['rfc', 'cfdi', 'business_name', 'email', 'regime', 'postalCode', 'businessName']);
+
+  useEffect(() => {
+    const emptyField = mandatoryFields.some(field => {
+      return !field;
+    });
+
+    setDisabled(emptyField);
+  }, [mandatoryFields]);
 
   const rfcRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
 
-  const [toggled, setToggled] = useState(false);
   const [regimensList, setRegimensList] = useState([]);
   const [cfdiList, setCfdiList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [colonies, setColonies] = useState<Colony[] | null>(null);
-
-  const toggle = () => {
-    setToggled(!toggled);
-  };
 
   const fetchCatalogs = useCallback(async () => {
     const { data: regimens } = await dispatch(getTaxRegimeListThunk()).unwrap();
@@ -101,9 +105,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
 
       setValue('state', sample.City.State.name);
       setValue('city', sample.City.name);
-      setToggled(true);
     } else {
-      setToggled(false);
     }
   }, [colonies]);
 
@@ -285,7 +287,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
             </Container>
           )}
         </Container>
-        <Touchable disabled={!Boolean(colonies)} onPress={toggle}>
+        <View pointerEvents={colonies === null ? 'none' : 'auto'}>
           <Container
             backgroundColor={theme.brandColor.iconn_background}
             style={{ marginVertical: 24, paddingVertical: 21, paddingHorizontal: theme.layoutSpace.medium }}
@@ -294,13 +296,13 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
               <TextContainer textColor={theme.fontColor.dark} typography="h5" fontBold text={`Agregar un domicilio`} />
               <TextContainer textColor={theme.fontColor.grey} typography="placeholder" text={` (Opcional)`} />
               <Container flex style={{ flexDirection: 'row-reverse' }}>
-                {toggled ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
+                {colonies ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
               </Container>
             </Container>
           </Container>
-        </Touchable>
+        </View>
         <Container style={styles.billingSection}>
-          {toggled && colonies && (
+          {colonies && (
             <Container>
               <TextContainer typography="h6" fontBold text={`Calle`} marginTop={25} />
               <Input
@@ -325,28 +327,32 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
                 maxLength={30}
               />
               <TextContainer typography="h6" fontBold text={`Estado`} marginTop={25} />
-              <Input
-                control={control}
-                {...register('state')}
-                autoCorrect
-                keyboardType="default"
-                placeholder={'Estado'}
-                blurOnSubmit={false}
-                error={errors.state?.message}
-                maxLength={30}
-              />
+              <View pointerEvents="none">
+                <Input
+                  control={control}
+                  {...register('state')}
+                  autoCorrect
+                  keyboardType="default"
+                  placeholder={'Estado'}
+                  blurOnSubmit={false}
+                  error={errors.state?.message}
+                  maxLength={30}
+                />
+              </View>
               <TextContainer typography="h6" fontBold text={`Municipio, Cuidad o Delegación`} marginTop={25} />
-              <Input
-                disabled
-                control={control}
-                {...register('city')}
-                autoCorrect
-                keyboardType="default"
-                placeholder={'Ciudad'}
-                blurOnSubmit={false}
-                error={errors.city?.message}
-                maxLength={30}
-              />
+              <View pointerEvents="none">
+                <Input
+                  control={control}
+                  {...register('city')}
+                  autoCorrect
+                  keyboardType="default"
+                  placeholder={'Ciudad'}
+                  blurOnSubmit={false}
+                  error={errors.city?.message}
+                  maxLength={30}
+                />
+              </View>
+
               <TextContainer typography="h6" fontBold text={`Colonia`} marginTop={25} />
               <Select
                 name="colony"
@@ -365,7 +371,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
           )}
 
           <Container style={{ marginVertical: 24 }}>
-            <Button disabled={!isValid} length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
+            <Button disabled={disabled || colonies === null} length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
               Guardar
             </Button>
           </Container>

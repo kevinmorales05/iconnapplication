@@ -75,3 +75,22 @@ export interface InvoicingProfileUser {
   };
   Gender: string;
 }
+export interface State {
+  state_id: string;
+  name: string;
+  status: string | null;
+}
+export interface City {
+  cities_id: string;
+  name: string;
+  status: string | null;
+  State: State;
+}
+export interface Colony {
+  colonies_id: string;
+  name: string;
+  cities_id: string;
+  zip_code: string;
+  status: string | null;
+  City: City;
+}
