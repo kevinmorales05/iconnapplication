@@ -12,6 +12,7 @@ export interface InvoicingProfileInterface {
   updatedat: string;
   status: boolean;
   default: boolean;
+  verified_mail: boolean;
   Address: InvoicingProfileAddress;
   Cfdi: InvoicingProfileCFDI;
   Tax_Regime: InvoicingProfileRegime;

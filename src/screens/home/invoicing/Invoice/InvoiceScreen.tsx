@@ -36,10 +36,9 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
             }}
             withExchange
           />
-          <AnnounceItem
-            message="Verifica tu correo para facturar"
-            icon={<AntDesign name="warning" size={25} color={theme.brandColor.iconn_white} />}
-          ></AnnounceItem>
+          {!defaultProfile.verified_mail && (
+            <AnnounceItem message="Verifica tu correo para facturar" icon={<AntDesign name="warning" size={25} color={theme.brandColor.iconn_white} />} />
+          )}
           <Container style={{ marginTop: 36 }}>
             <CardAction
               text="Historial de Facturas"
@@ -70,10 +69,20 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
       </Container>
       {/* // TODO: We must disable CardBillling until defaultProfile email is verified. */}
       <Container style={{ marginTop: 18 }}>
-        <CardBilling text="Facturar ticket" type="seven" disable={invoicingProfileList.length === 0} onPress={() => {}} />
+        <CardBilling
+          text="Facturar ticket"
+          type="seven"
+          disable={invoicingProfileList.length === 0 || defaultProfile.verified_mail === false}
+          onPress={() => {}}
+        />
       </Container>
       <Container style={{ marginTop: 8 }}>
-        <CardBilling text="Facturar ticket" type="petro" disable={invoicingProfileList.length === 0} onPress={() => {}} />
+        <CardBilling
+          text="Facturar ticket"
+          type="petro"
+          disable={invoicingProfileList.length === 0 || defaultProfile.verified_mail === false}
+          onPress={() => {}}
+        />
       </Container>
     </ScrollView>
   );
