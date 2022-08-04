@@ -124,7 +124,11 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
 
   useEffect(() => {
     (async () => {
-      if (!postalCode) return;
+      if (!postalCode) {
+        setColonies(null)
+        return;
+      };
+      
       setLoading(true);
       try {
         const data = await invoicingServices.getColonies(postalCode);
