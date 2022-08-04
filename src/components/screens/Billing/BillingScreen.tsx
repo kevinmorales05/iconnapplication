@@ -124,24 +124,23 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, onBack, current })
 
   const { postalCode } = watch();
 
-  const fetchColonies = useCallback(async () => {
-    setLoading(true);
-    try {
-      const data = await invoicingServices.getColonies(postalCode || 'XXXXX');
-      if (data.responseCode === 65) {
-        setColonies(data.data as Colony[]);
-      } else {
-        setColonies(null);
-      }
-    } catch (error) {
-      setColonies(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [postalCode]);
-
   useEffect(() => {
-    fetchColonies();
+    (async () => {
+      if (!postalCode) return;
+      setLoading(true);
+      try {
+        const data = await invoicingServices.getColonies(postalCode);
+        if (data.responseCode === 65) {
+          setColonies(data.data as Colony[]);
+        } else {
+          setColonies(null);
+        }
+      } catch (error) {
+        setColonies(null);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [postalCode]);
 
   useEffect(() => {

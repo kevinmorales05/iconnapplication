@@ -67,11 +67,24 @@ async function getCFDIList(): Promise<any> {
   return data;
 }
 
+/**
+ * Function to update an invoicing profile
+ */
+
+async function updateInvoicingProfile(invoicingProfile: InvoicingProfileInterface): Promise<any> {
+  const { invoicing_profile_id } = invoicingProfile;
+  const response = await InvoicingApi.getInstance().putRequest(`/invoicingProfile/update/${invoicing_profile_id}`, invoicingProfile);
+  if (response === undefined) return Promise.reject(new Error(`updateInvoicingProfile:invoicingProfile/update/${invoicing_profile_id}`));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
   getTaxRegimeList,
   getCFDIList,
   getColonies,
   registerInvoicingProfile,
   getInvoicingProfileList,
-  deleteInvoicingProfile
+  deleteInvoicingProfile,
+  updateInvoicingProfile
 };

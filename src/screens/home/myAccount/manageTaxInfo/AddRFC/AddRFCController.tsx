@@ -1,12 +1,18 @@
 import React from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { BillingScreen } from 'components';
-import { useAlert, useLoading } from 'context';
+import { useAlert, useLoading, useToast } from 'context';
 import { invoicingServices } from 'services';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
+import { current } from '@reduxjs/toolkit';
 
 const AddRFCController: React.FC = () => {
   const alert = useAlert();
   const loader = useLoading();
+  const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const toast = useToast();
 
   const onDelete = async () => {
     alert.show({
@@ -30,8 +36,16 @@ const AddRFCController: React.FC = () => {
 
     try {
       await invoicingServices.registerInvoicingProfile(invoiceProfile);
+      toast.show({
+        message: 'Datos guardados exitosamente.',
+        type: 'success'
+      });
+      goBack();
     } catch (error) {
-      console.log(error);
+      toast.show({
+        message: 'Hubo un error al guardar tus datos. Intenta mas tarde.',
+        type: 'error'
+      });
     } finally {
       loader.hide();
     }

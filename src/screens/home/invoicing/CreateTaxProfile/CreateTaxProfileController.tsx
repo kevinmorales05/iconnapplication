@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { BillingScreen } from 'components';
-import { useAlert, useLoading } from 'context';
-import { InvoicingProfile } from 'lib/models/InvoicingProfile';
+import { useAlert, useLoading, useToast } from 'context';
 import { invoicingServices } from 'services';
-import { SubmitHandler, FieldValues } from 'react-hook-form';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
 import { InvoicingProfileInterface } from 'rtk';
@@ -12,8 +10,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const CreateTaxProfileController: React.FC = () => {
   const alert = useAlert();
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const route = useRoute<RouteProp<HomeStackParams, 'CreateTaxProfile'>>();
+  const toast = useToast();
 
   const [current, setCurrent] = useState<InvoicingProfileInterface | undefined>(undefined);
 
@@ -51,8 +50,32 @@ const CreateTaxProfileController: React.FC = () => {
     );
   };
 
-  const onSubmit = (invoicingProfile: InvoicingProfile) => {
-    console.log('submit from controller:', invoicingProfile);
+  const onSubmit = async (invoicingProfile: InvoicingProfileInterface) => {
+    loader.show();
+    try {
+      const data = await invoicingServices.updateInvoicingProfile({ ...invoicingProfile, invoicing_profile_id: current!.invoicing_profile_id });
+
+      if (data.responseCode === 49) {
+        toast.show({
+          message: data.responseSubject,
+          type: 'success'
+        });
+      } else {
+        toast.show({
+          message: data.responseSubject,
+          type: 'error'
+        });
+      }
+
+      goBack();
+    } catch (error) {
+      toast.show({
+        message: 'Hubo un error al guardar tus datos. Intenta mas tarde.',
+        type: 'error'
+      });
+    } finally {
+      loader.hide();
+    }
   };
 
   const onBack = () => {
