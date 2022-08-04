@@ -112,8 +112,6 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPressOut,
               >
                 Administrar Datos
               </Button>
-
-              <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}></Container>
             </Container>
           </Container>
         </TouchableOpacity>
