@@ -14,9 +14,10 @@ interface Props {
   onSubmit: () => void;
   invoicingProfileList: InvoicingProfileInterface[];
   defaultProfile: InvoicingProfileInterface;
+  resendEmail: () => void;
 }
 
-const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaultProfile }) => {
+const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaultProfile, resendEmail }) => {
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
 
@@ -44,7 +45,13 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
             withExchange
           />
           {!defaultProfile.verified_mail && (
-            <AnnounceItem message="Verifica tu correo para facturar" icon={<AntDesign name="warning" size={25} color={theme.brandColor.iconn_white} />} />
+            <AnnounceItem
+              message="Verifica tu correo para facturar"
+              withActionButton
+              ActionButtonText='Reenviar'
+              icon={<AntDesign name="warning" size={25} color={theme.brandColor.iconn_white} />}
+              onPressActionButton={resendEmail}
+            ></AnnounceItem>
           )}
           <Container style={{ marginTop: 36 }}>
             <CardAction
