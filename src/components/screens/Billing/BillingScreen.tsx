@@ -79,7 +79,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
     if (current) {
       setValue('rfc', current.rfc);
       setValue('cfdi', current.Cfdi.description);
-      setValue('business_name', current.business_name);
       setValue('email', current.email);
       setValue('regime', current.Tax_Regime.sat_tax_regime);
       setValue('postalCode', current.zip_code);
@@ -98,8 +97,14 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
       return !field;
     });
 
+    //enables custom validations
+    if (Object.keys(errors).length > 0) {
+      setDisabled(true);
+      return;
+    }
+
     setDisabled(emptyField);
-  }, [mandatoryFields]);
+  }, [mandatoryFields, errors]);
 
   const rfcRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
@@ -125,10 +130,10 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   useEffect(() => {
     (async () => {
       if (!postalCode) {
-        setColonies(null)
+        setColonies(null);
         return;
-      };
-      
+      }
+
       setLoading(true);
       try {
         const data = await invoicingServices.getColonies(postalCode);
@@ -221,6 +226,10 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
               required: {
                 value: true,
                 message: `Campo requerido.`
+              },
+              minLength: {
+                value: 3,
+                message: 'Mínimo 3 valores'
               }
             }}
             name="businessName"
