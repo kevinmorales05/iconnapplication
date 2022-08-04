@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useRef} from 'react';
-import { ToastContext, ToastContextProvider } from './toast.context';
+import { ToastContext } from './toast.context';
 import {
   Animated,
   Easing,
@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import theme from 'components/theme/theme';
-import { Container } from 'components';
+import { Container } from '../components/atoms';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 

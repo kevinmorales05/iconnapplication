@@ -190,7 +190,7 @@ const HomeController: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    fetchInvoicingProfileList();
+    if (user.user_id) fetchInvoicingProfileList();
   }, [fetchInvoicingProfileList]);
 
   return (

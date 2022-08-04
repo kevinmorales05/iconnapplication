@@ -15,7 +15,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useAlert } from 'context';
 import { HeaderBackButton } from '@react-navigation/elements';
-import { AnnounceItem } from 'components';
+import { AnnounceItem } from '../../atoms';
 import Feather from 'react-native-vector-icons/Feather';
 
 interface Props {

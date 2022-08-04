@@ -19,14 +19,18 @@ const AnnounceItem = (props: AnnounceItemProps) => {
           <View style={styles.actionButtonContent}>
             <View style={styles.icon}>{icon}</View>
             <View style={styles.message}>
-              <Text
-                style={{
-                  fontSize: theme.fontSize.h4,
-                  color: theme.fontColor.dark
-                }}
-              >
-                {message}
-              </Text>
+              {typeof message === 'string' ? (
+                <Text
+                  style={{
+                    fontSize: theme.fontSize.h4,
+                    color: theme.fontColor.dark
+                  }}
+                >
+                  {message}
+                </Text>
+              ) : (
+                message
+              )}
               <TouchableOpacity onPress={onPressActionButton}>
                 <Text
                   style={{
