@@ -2,12 +2,15 @@ import React from 'react';
 import { Container } from 'components/atoms';
 import { Button, ModalCard, TextContainer } from 'components/molecules';
 import { modalType } from 'components/types/modal-type';
+import { BrandColorTypes } from 'components/types/brand-color-type';
 
 interface AlertDataInterface {
   title?: string;
   message?: string;
   acceptTitle?: string;
   cancelTitle?: string;
+  cancelOutline?: BrandColorTypes;
+  cancelTextColor?: BrandColorTypes;
   onAccept?: () => void;
   onCancel?: () => void;
 }
@@ -27,7 +30,9 @@ const Alert: React.FC<Props> = ({
     onAccept,
     onCancel,
     acceptTitle,
-    cancelTitle
+    cancelTitle,
+    cancelOutline = 'iconn_med_grey',
+    cancelTextColor = 'iconn_dark_grey',
   },
   onDismiss,
   type
@@ -45,7 +50,7 @@ const Alert: React.FC<Props> = ({
             </Button>
           )}
           {cancelTitle && (
-            <Button borderColor='iconn_med_grey' fontSize='h3' fontBold color='iconn_dark_grey' round onPress={onCancel!} outline length='short' style={{width:'95%', marginHorizontal:16, alignSelf:'center', marginTop: 8}}>
+            <Button borderColor={cancelOutline} fontSize='h3' fontBold color={cancelTextColor} round onPress={onCancel!} outline length='short' style={{width:'95%', marginHorizontal:16, alignSelf:'center', marginTop: 8}}>
               {cancelTitle || 'Cancelar'}
             </Button>
           )}
