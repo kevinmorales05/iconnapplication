@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -79,18 +79,21 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPressOut,
                 />
               </Container>
             </Container>
-            <Container>
-              {invoicingProfileList?.map((invoicingProfile: InvoicingProfileInterface) => {
-                return (
-                  <InvoiceItem
-                    onSelect={invoicingProfile => {
-                      setSelected(invoicingProfile);
-                    }}
-                    invoicingProfile={invoicingProfile}
-                    selected={invoicingProfile.rfc === selected?.rfc}
-                  />
-                );
-              })}
+            <Container style={{ height: 200 }}>
+              <ScrollView>
+                {invoicingProfileList?.map((invoicingProfile: InvoicingProfileInterface, index) => {
+                  return (
+                    <InvoiceItem
+                      key={index}
+                      onSelect={invoicingProfile => {
+                        setSelected(invoicingProfile);
+                      }}
+                      invoicingProfile={invoicingProfile}
+                      selected={invoicingProfile.rfc === selected?.rfc}
+                    />
+                  );
+                })}
+              </ScrollView>
             </Container>
             <Container>
               <Button marginTop={28} round fontBold fontSize="h4" onPress={onAdd}>
