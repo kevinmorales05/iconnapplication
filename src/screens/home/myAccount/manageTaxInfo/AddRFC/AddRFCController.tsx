@@ -35,12 +35,19 @@ const AddRFCController: React.FC = () => {
     loader.show();
 
     try {
-      await invoicingServices.registerInvoicingProfile(invoiceProfile);
-      toast.show({
-        message: 'Datos guardados exitosamente.',
-        type: 'success'
-      });
-      goBack();
+      const data = await invoicingServices.registerInvoicingProfile(invoiceProfile);
+      if (data.responseCode === 44) {
+        toast.show({
+          message: data.responseMessage,
+          type: 'success'
+        });
+        goBack();
+      } else {
+        toast.show({
+          message: data.responseMessage,
+          type: 'error'
+        });
+      }
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos. Intenta mas tarde.',
