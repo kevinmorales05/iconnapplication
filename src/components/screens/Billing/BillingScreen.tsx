@@ -7,10 +7,12 @@ import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
 import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { emailRules, rfcRule } from 'utils/rules';
-import { RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getCFDIListThunk, getTaxRegimeListThunk } from 'rtk/thunks/invoicing.thunks';
 import { invoicingServices } from 'services';
 import { Colony } from 'lib/models/InvoicingProfile';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { HomeStackParams } from 'navigation/types';
 
 interface Props {
   onSubmit: (data: any) => void;
@@ -30,6 +32,22 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
     mode: 'onChange'
   });
   const { user } = useAppSelector((state: RootState) => state.auth);
+
+  const route = useRoute<RouteProp<HomeStackParams, 'CreateTaxProfile'>>();
+
+  const [current, setCurrent] = useState<InvoicingProfileInterface | undefined>(undefined);
+
+  useEffect(() => {
+    setCurrent(current);
+    console.log('current', route.params);
+  }, [route]);
+
+  useEffect(() => {
+    if (current) {
+      console.log('rfc', current.rfc);
+      setValue('rfc', current.rfc);
+    }
+  }, [current]);
 
   const rfcRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
@@ -115,7 +133,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
         ext_num: fields.ext_num,
         colony: fields.colony,
         city: fields.city,
-        state: fields.state,
+        state: fields.state
       }
     };
 
@@ -347,9 +365,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete }) => {
           )}
 
           <Container style={{ marginVertical: 24 }}>
-            <Button 
-            disabled={!isValid} 
-            length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
+            <Button disabled={!isValid} length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
               Guardar
             </Button>
           </Container>

@@ -1,3 +1,5 @@
+import { InvoicingProfileInterface } from "rtk";
+
 export type HomeStackParams = {
   HomeStack: undefined;
   Home: undefined;
@@ -10,5 +12,5 @@ export type HomeStackParams = {
   AddRFC: undefined;
   TaxInfo: undefined;
   Invoice: undefined;
-  CreateTaxProfile: undefined;
+  CreateTaxProfile: undefined | InvoicingProfileInterface;
 };

@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TextContainer, Button, Container, CardBilling, TaxInfoCard, AnnounceItem, CardAction } from 'components';
+import { TextContainer, Button, Container, CardBilling, TaxInfoCard, AnnounceItem, CardAction, SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import { InvoicingProfileInterface } from 'rtk';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import InvoiceModal from 'screens/home/InvoiceModal';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
 
 interface Props {
   onSubmit: () => void;
@@ -14,6 +18,9 @@ interface Props {
 
 const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaultProfile }) => {
   const insets = useSafeAreaInsets();
+  const [visible, setVisible] = useState(false);
+
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   return (
     <ScrollView
@@ -32,7 +39,7 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
             rfc={defaultProfile.rfc}
             name={defaultProfile.business_name}
             onPress={() => {
-              console.log('TODO: change profile...');
+              setVisible(true);
             }}
             withExchange
           />
@@ -75,6 +82,25 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
       <Container style={{ marginTop: 8 }}>
         <CardBilling text="Facturar ticket" type="petro" disable={invoicingProfileList.length === 0} onPress={() => {}} />
       </Container>
+      <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
+        <InvoiceModal
+          invoicingProfileList={invoicingProfileList}
+          visible={visible}
+          onAdd={() => {
+            navigate('CreateTaxProfile');
+            setVisible(false);
+          }}
+          onManage={(selected: InvoicingProfileInterface | null) => {
+            if (selected) {
+              navigate('CreateTaxProfile', selected);
+              setVisible(false);
+            }
+          }}
+          onPressOut={() => {
+            setVisible(false);
+          }}
+        />
+      </SafeArea>
     </ScrollView>
   );
 };

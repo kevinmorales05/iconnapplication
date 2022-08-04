@@ -4,6 +4,9 @@ import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { InvoicingProfileInterface } from 'rtk';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
 
 interface Props {
   addRFC: () => void;
@@ -18,6 +21,7 @@ const TaxInfoScreen: React.FC<Props> = ({ addRFC, invoicingProfileList }) => {
       setIsOnline(true);
     }
   });
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   const order = (a: any, b: any) => {
     return a < b ? -1 : a > b ? 1 : 0;
@@ -46,7 +50,9 @@ const TaxInfoScreen: React.FC<Props> = ({ addRFC, invoicingProfileList }) => {
           ) : (
             invoicingProfileList
               .map(function (profile, i) {
-                return <TaxInfoCard key={i} rfc={profile.rfc} name={profile.business_name} isDefault={profile.default} onPress={() => {}} />;
+                return <TaxInfoCard key={i} rfc={profile.rfc} name={profile.business_name} isDefault={profile.default} onPress={() => {
+                  navigate("CreateTaxProfile", profile )
+                }} />;
               })
               .sort(order)
           )}

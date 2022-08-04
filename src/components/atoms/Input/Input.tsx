@@ -183,6 +183,7 @@ const Input = forwardRef(({
                 <Container row center>
                   {phone && (<CustomText text='   +52'/>)}
                   <TextInput
+                    pointerEvents={datePicker ? "none" : "auto"}
                     testID={`${testID}-input`}
                     ref={ref}
                     {...textInputProps}
