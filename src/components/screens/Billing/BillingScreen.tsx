@@ -1,6 +1,6 @@
 import { Button, TextContainer } from '../../molecules';
 import React, { useCallback, useEffect, useRef, useState, useLayoutEffect } from 'react';
-import { ScrollView, TextInput, StyleSheet, View, Button as RNButton } from 'react-native';
+import { ScrollView, TextInput, StyleSheet, View, BackHandler } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
 import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
@@ -23,7 +23,7 @@ interface Props {
   current?: InvoicingProfileInterface;
 }
 
-const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, onBack, current }) => {
+const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   const dispatch = useAppDispatch();
   const {
     control,
@@ -41,38 +41,36 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, onBack, current })
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams, 'CreateTaxProfile'>>();
   const alert = useAlert();
 
+  const onBack = () => {
+    if (isDirty) {
+      alert.show(
+        {
+          title: '¿Salir sin guardar cambios?',
+          message: 'Tienes cambios no guardados.',
+          acceptTitle: 'Volver',
+          cancelTitle: 'Salir sin guardar',
+          cancelOutline: 'iconn_green_original',
+          cancelTextColor: 'iconn_green_original',
+          async onAccept() {
+            alert.hide();
+          },
+          async onCancel() {
+            alert.hide();
+            navigation.goBack();
+          }
+        },
+        'warning'
+      );
+    } else {
+      navigation.goBack();
+    }
+  };
+
+  /** Custom event for software 'Back Button' android /ios (software button) */
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => {
-        return (
-          <HeaderBackButton
-            labelVisible
-            onPress={() => {
-              if (isDirty) {
-                alert.show(
-                  {
-                    title: '¿Salir sin guardar cambios?',
-                    message: 'Tienes cambios no guardados.',
-                    acceptTitle: 'Volver',
-                    cancelTitle: 'Salir sin guardar',
-                    cancelOutline: 'iconn_green_original',
-                    cancelTextColor: 'iconn_green_original',
-                    async onAccept() {
-                      alert.hide();
-                    },
-                    async onCancel() {
-                      alert.hide();
-                      navigation.goBack();
-                    }
-                  },
-                  'warning'
-                );
-              } else {
-                navigation.goBack();
-              }
-            }}
-          />
-        );
+      headerLeft: props => {
+        return <HeaderBackButton {...props} onPress={onBack} />;
       }
     });
   }, [navigation, isDirty]);
