@@ -39,6 +39,7 @@ const CreateTaxProfileController: React.FC = () => {
           try {
             await invoicingServices.deleteInvoicingProfile(invoiceProfile);
             navigate('TaxInfo');
+            alert.hide();
           } catch (error) {
             console.log('error:', error);
           } finally {
@@ -60,14 +61,13 @@ const CreateTaxProfileController: React.FC = () => {
           message: data.responseSubject,
           type: 'success'
         });
+        goBack();
       } else {
         toast.show({
           message: data.responseSubject,
           type: 'error'
         });
       }
-
-      goBack();
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos. Intenta mas tarde.',
