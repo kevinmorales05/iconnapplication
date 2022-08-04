@@ -55,9 +55,29 @@ const CreateTaxProfileController: React.FC = () => {
     console.log('submit from controller:', invoicingProfile);
   };
 
+  const onBack = () => {
+    alert.show(
+      {
+        title: '¿Salir sin guardar cambios?',
+        message: 'Tienes cambios no guardados.',
+        acceptTitle: 'Volver',
+        cancelTitle: 'Salir sin guardar',
+        cancelOutline: 'iconn_warning',
+        cancelTextColor: 'iconn_warning',
+        async onAccept() {
+          alert.hide();
+        },
+        async onCancel() {
+          alert.hide();
+        }
+      },
+      'warning'
+    );
+  };
+
   return (
     <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
-      <BillingScreen onSubmit={onSubmit} onDelete={onDelete} current={current} />
+      <BillingScreen onSubmit={onSubmit} onDelete={onDelete} onBack={onBack} current={current} />
     </SafeArea>
   );
 };

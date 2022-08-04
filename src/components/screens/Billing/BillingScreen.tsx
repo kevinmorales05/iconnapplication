@@ -1,6 +1,6 @@
 import { Button, TextContainer } from '../../molecules';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ScrollView, TextInput, StyleSheet, View } from 'react-native';
+import React, { useCallback, useEffect, useRef, useState, useLayoutEffect } from 'react';
+import { ScrollView, TextInput, StyleSheet, View, Button as RNButton } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
 import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
@@ -10,20 +10,26 @@ import { emailRules, rfcRule } from 'utils/rules';
 import { InvoicingProfileInterface, Colony, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getCFDIListThunk, getTaxRegimeListThunk } from 'rtk/thunks/invoicing.thunks';
 import { invoicingServices } from 'services';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
+import { useAlert } from 'context';
+import { HeaderBackButton } from '@react-navigation/elements';
 
 interface Props {
   onSubmit: (data: any) => void;
   onDelete?: (invoicingProfileInterface: InvoicingProfileInterface) => void;
+  onBack?: () => void;
   current?: InvoicingProfileInterface;
 }
 
-const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
+const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, onBack, current }) => {
   const dispatch = useAppDispatch();
   const {
     control,
     setValue,
     watch,
-    formState: { errors, isValid },
+    formState: { errors, isDirty },
     register,
     handleSubmit
   } = useForm({
@@ -31,6 +37,45 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   });
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [disabled, setDisabled] = useState(false);
+
+  const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams, 'CreateTaxProfile'>>();
+  const alert = useAlert();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => {
+        return (
+          <HeaderBackButton
+            labelVisible
+            onPress={() => {
+              if (isDirty) {
+                alert.show(
+                  {
+                    title: '¿Salir sin guardar cambios?',
+                    message: 'Tienes cambios no guardados.',
+                    acceptTitle: 'Volver',
+                    cancelTitle: 'Salir sin guardar',
+                    cancelOutline: 'iconn_green_original',
+                    cancelTextColor: 'iconn_green_original',
+                    async onAccept() {
+                      alert.hide();
+                    },
+                    async onCancel() {
+                      alert.hide();
+                      navigation.goBack();
+                    }
+                  },
+                  'warning'
+                );
+              } else {
+                navigation.goBack();
+              }
+            }}
+          />
+        );
+      }
+    });
+  }, [navigation, isDirty]);
 
   useEffect(() => {
     if (current) {
@@ -48,7 +93,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
     }
   }, [current]);
 
-  const mandatoryFields = watch(['rfc', 'cfdi', 'business_name', 'email', 'regime', 'postalCode', 'businessName']);
+  const mandatoryFields = watch(['rfc', 'cfdi', 'email', 'regime', 'postalCode', 'businessName']);
 
   useEffect(() => {
     const emptyField = mandatoryFields.some(field => {
@@ -303,7 +348,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
         </View>
         <Container style={styles.billingSection}>
           {colonies && (
-            <Container>
+            <Container style={{ marginBottom: 25 }}>
               <TextContainer typography="h6" fontBold text={`Calle`} marginTop={25} />
               <Input
                 {...register('street')}
@@ -370,7 +415,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             </Container>
           )}
 
-          <Container style={{ marginTop: 20 }}>
+          <Container style={{ marginBottom: current ? 0 : 40 }}>
             <Button disabled={disabled || colonies === null} length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
               Guardar
             </Button>
