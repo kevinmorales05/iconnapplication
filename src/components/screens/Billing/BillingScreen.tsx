@@ -15,6 +15,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useAlert } from 'context';
 import { HeaderBackButton } from '@react-navigation/elements';
+import { AnnounceItem } from 'components';
+import Feather from 'react-native-vector-icons/Feather';
 
 interface Props {
   onSubmit: (data: any) => void;
@@ -37,6 +39,8 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   });
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [disabled, setDisabled] = useState(false);
+  const { guest } = useAppSelector((state: RootState) => state.guest);
+  const { isGuest } = guest;
 
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams, 'CreateTaxProfile'>>();
   const alert = useAlert();
@@ -197,7 +201,22 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
       <Container flex style={{ marginTop: 24 }}>
         <Container style={styles.billingSection}>
-          <TextContainer typography="paragraph" text="Crea un perfil fiscal para guardar tus datos de facturación."></TextContainer>
+          {isGuest ? (
+            <AnnounceItem
+              icon={<Feather name="alert-triangle" size={25} color={theme.fontColor.white} />}
+              message={
+                <View style={{ marginVertical: 20 }}>
+                  <CustomText text="Como invitado, tus datos ficales no se guardarán para las siguientes facturas" />
+                  <View style={{ marginTop: 10 }}>
+                    <CustomText text="Registrarme" underline fontBold textColor={theme.fontColor.dark_orange} />
+                  </View>
+                </View>
+              }
+            />
+          ) : (
+            <TextContainer typography="paragraph" text="Crea un perfil fiscal para guardar tus datos de facturación." />
+          )}
+
           <TextContainer textColor={theme.brandColor.iconn_grey} typography="description" text={`Todos los campos son obligatorios.`} marginTop={6} />
           <TextContainer typography="h3" fontBold text={`Datos Fiscales`} marginTop={25}></TextContainer>
           <TextContainer typography="h5" fontBold text={`RFC`} marginTop={13}></TextContainer>

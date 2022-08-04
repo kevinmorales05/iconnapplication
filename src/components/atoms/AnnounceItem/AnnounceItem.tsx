@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 interface AnnounceItemProps {
-  message: string;
+  message: string | React.ReactNode;
   icon: React.ReactNode;
 }
 
@@ -12,9 +12,7 @@ const AnnounceItem = (props: AnnounceItemProps) => {
     <View style={styles.container}>
       <View style={styles.content}>
         <View style={styles.icon}>{icon}</View>
-        <View style={styles.message}>
-          <Text>{message}</Text>
-        </View>
+        <View style={styles.message}>{typeof message === 'string' ? <Text>{message}</Text> : message}</View>
       </View>
     </View>
   );
