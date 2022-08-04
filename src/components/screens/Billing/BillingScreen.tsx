@@ -13,7 +13,7 @@ import { invoicingServices } from 'services';
 
 interface Props {
   onSubmit: (data: any) => void;
-  onDelete?: () => void;
+  onDelete?: (invoicingProfileInterface: InvoicingProfileInterface) => void;
   current?: InvoicingProfileInterface;
 }
 
@@ -370,20 +370,23 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             </Container>
           )}
 
-          <Container style={{ marginVertical: 24 }}>
+          <Container style={{ marginTop: 20 }}>
             <Button disabled={disabled || colonies === null} length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
               Guardar
             </Button>
           </Container>
 
-          {onDelete && (
-            <Container>
+          {current && (
+            <Container style={{ marginVertical: 20 }}>
               <Button
                 color="iconn_light_grey"
                 fontColor="dark"
                 length="long"
                 round
-                onPress={onDelete}
+                onPress={() => {
+                  if (!onDelete) return;
+                  onDelete(current);
+                }}
                 fontSize="h3"
                 fontBold
                 leftIcon={<EvilIcons name="trash" size={22} color={theme.brandColor.iconn_error} style={{ left: 8 }} />}
