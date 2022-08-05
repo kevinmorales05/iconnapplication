@@ -48,7 +48,7 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
             <AnnounceItem
               message="Verifica tu correo para facturar"
               withActionButton
-              ActionButtonText='Reenviar'
+              ActionButtonText="Reenviar"
               icon={<AntDesign name="warning" size={25} color={theme.brandColor.iconn_white} />}
               onPressActionButton={resendEmail}
             ></AnnounceItem>
@@ -103,7 +103,7 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
           invoicingProfileList={invoicingProfileList}
           visible={visible}
           onAdd={() => {
-            navigate('CreateTaxProfile');
+            navigate('AddRFC');
             setVisible(false);
           }}
           onManage={(selected: InvoicingProfileInterface | null) => {

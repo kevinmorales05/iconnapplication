@@ -32,7 +32,7 @@ const InvoiceItem = ({ invoicingProfile, onSelect, selected }: InvoiceItemProps)
           <CustomText textColor={theme.brandColor.iconn_dark_grey} text={invoicingProfile.rfc} typography="h3" fontBold />
           {selected && <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />}
         </Container>
-        <CustomText textColor={theme.brandColor.iconn_dark_grey} text={`${invoicingProfile.User.name} ${invoicingProfile.User.lastName}`} typography="h3" />
+        <CustomText textColor={theme.brandColor.iconn_dark_grey} text={`${invoicingProfile.business_name}`} typography="h3" />
       </View>
     </TouchableOpacity>
   );
