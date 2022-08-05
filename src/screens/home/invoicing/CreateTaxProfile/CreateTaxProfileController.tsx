@@ -5,18 +5,21 @@ import { useAlert, useLoading, useToast } from 'context';
 import { invoicingServices } from 'services';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
-import { InvoicingProfileInterface } from 'rtk';
+import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
 
 const CreateTaxProfileController: React.FC = () => {
   const alert = useAlert();
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const route = useRoute<RouteProp<HomeStackParams, 'CreateTaxProfile'>>();
   const toast = useToast();
+  const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
 
   const [current, setCurrent] = useState<InvoicingProfileInterface | undefined>(undefined);
 
   const loader = useLoading();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setCurrent(route.params);
@@ -38,6 +41,11 @@ const CreateTaxProfileController: React.FC = () => {
           loader.show();
           try {
             await invoicingServices.deleteInvoicingProfile(invoiceProfile);
+
+            const newList = invoicingProfileList.filter(item => {
+              return item.invoicing_profile_id !== invoiceProfile.invoicing_profile_id;
+            });
+            dispatch(setInvoicingProfilesList(newList));
             navigate('TaxInfo');
             alert.hide();
           } catch (error) {
@@ -61,6 +69,17 @@ const CreateTaxProfileController: React.FC = () => {
           message: data.responseSubject,
           type: 'success'
         });
+        const updated = data.data as InvoicingProfileInterface;
+
+        const newList = invoicingProfileList.map(item => {
+          if (item.invoicing_profile_id === updated.invoicing_profile_id) {
+            return updated;
+          }
+          return item;
+        });
+
+        dispatch(setInvoicingProfilesList(newList));
+
         goBack();
       } else {
         toast.show({

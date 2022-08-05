@@ -6,13 +6,16 @@ import { invoicingServices } from 'services';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { current } from '@reduxjs/toolkit';
+import { setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
+import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 
 const AddRFCController: React.FC = () => {
   const alert = useAlert();
   const loader = useLoading();
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const toast = useToast();
+  const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
+  const dispatch = useAppDispatch();
 
   const onDelete = async () => {
     alert.show({
@@ -41,6 +44,8 @@ const AddRFCController: React.FC = () => {
           message: data.responseMessage,
           type: 'success'
         });
+        const created = data.data as InvoicingProfileInterface;
+        dispatch(setInvoicingProfilesList([...invoicingProfileList, created]));
         goBack();
       } else {
         toast.show({
