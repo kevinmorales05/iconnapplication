@@ -13,3 +13,7 @@ export const getCFDIListThunk = createAsyncThunk('invoicing/getCFDIListThunk', a
 export const getInvoicingProfileListThunk = createAsyncThunk('invoicing/getInvoicingProfileListThunk', async (uid: string) => {
   return await invoicingServices.getInvoicingProfileList(uid);
 });
+
+export const resendVerificationEmailThunk = createAsyncThunk('invoicing/getInvoicingProfileListThunk', async (email: string) => {
+  return await invoicingServices.resendVerificationEmail(email);
+});

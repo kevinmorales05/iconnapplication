@@ -24,21 +24,20 @@ const ModalCard: React.FC<Props> = ({
   visible,
   children,
   onDismiss,
-  secondButton,
   type = 'warning'
 }: Props) => {
-  const { modalCenterCardStyleOneButton, modalCenterCardStyleTwoButton, closeContainer } = styles;
+  const { modalCenterCardStyle, closeContainer } = styles;
 
   return (
     <CustomModal visible={visible} onDismiss={onDismiss}>
       <Container flex middle>
         <TouchableOpacity activeOpacity={1}>
-          <Container style={secondButton ? modalCenterCardStyleTwoButton : modalCenterCardStyleOneButton }>
+          <Container style={ modalCenterCardStyle }>
             <LinearGradient
               colors={type === 'warning' ? [ '#efd363', '#d0b64d' ] : type === 'error' ? [ '#be646b', '#9f3038' ] : [ '#34c28c', '#319f72' ]}
               style={{ height: 64, width: '100%', position: 'absolute', borderTopLeftRadius: 16, borderTopRightRadius: 16 }} >
             </LinearGradient>
-            <Container style={{backgroundColor: 'transparent', height: 64, borderTopLeftRadius: 16, borderTopRightRadius: 16}}>              
+            <Container style={{backgroundColor: 'transparent', borderTopLeftRadius: 16, borderTopRightRadius: 16}}>
               <Image
                 source={type === 'warning' ? ICONN_WARNING : type === 'error' ? ICONN_ERROR : ICONN_SUCCESS}
                 style={{ alignSelf: 'center', margin: 0, height: 80, top: 16 }}
@@ -63,18 +62,11 @@ const ModalCard: React.FC<Props> = ({
   );
 };
 const styles = StyleSheet.create({
-  modalCenterCardStyleOneButton: {
+  modalCenterCardStyle: {
     backgroundColor: theme.brandColor.iconn_white,
     borderRadius: 16,
-    width: 280,
-    height: 290
-  },
-  modalCenterCardStyleTwoButton: {
-    backgroundColor: theme.brandColor.iconn_white,
-    borderRadius: 16,
-    width: 280,
-    height: 360
-  },
+    width: 280    
+  },  
   closeContainer: {
     position: 'absolute',
     top: 16,

@@ -79,6 +79,16 @@ async function updateInvoicingProfile(invoicingProfile: InvoicingProfileInterfac
   return data;
 }
 
+/**
+ * Function to resend verification email
+ */
+ async function resendVerificationEmail(email: string): Promise<any> {
+  const response = await InvoicingApi.getInstance().getRequest(`/mail/sendEmailForVerification/${email}`);
+  if (response === undefined) return Promise.reject(new Error(`resendVerificationEmail:mail/sendEmailForVerification/${email}`));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
   getTaxRegimeList,
   getCFDIList,
@@ -86,5 +96,6 @@ export const invoicingServices = {
   registerInvoicingProfile,
   getInvoicingProfileList,
   deleteInvoicingProfile,
-  updateInvoicingProfile
+  updateInvoicingProfile,
+  resendVerificationEmail
 };
