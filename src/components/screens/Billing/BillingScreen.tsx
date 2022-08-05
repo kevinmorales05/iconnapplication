@@ -90,7 +90,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
       setValue('street', current.Address.street);
       setValue('city', current.Address.city);
       setValue('state', current.Address.state);
-      setValue('colony', current.Address.colony);
       setValue('ext_num', current.Address.ext_num);
     }
   }, [current]);
@@ -161,9 +160,11 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
 
       setValue('state', sample.City.State.name);
       setValue('city', sample.City.name);
-    } else {
+      if (current) {
+        setValue('colony', current.Address.colony);
+      }
     }
-  }, [colonies]);
+  }, [colonies, current]);
 
   const submit = (fields: any) => {
     const { c_use_cfdi } = cfdiList.find(cfdi => {
@@ -301,7 +302,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             onSelect={value => setValue('regime', value)}
             androidMode="dialog"
             label={`Régimen de Incorporación Fiscal`}
-            placeholder={`Régimen de Incorporación Fiscal`}
+            placeholder={`Seleccionar`}
             error={errors.regime?.message}
             useActionSheet
           />
@@ -320,7 +321,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             onSelect={value => setValue('cfdi', value)}
             androidMode="dialog"
             label={`03-Gastos en General`}
-            placeholder={`03-Gastos en General`}
+            placeholder={`Seleccionar`}
             error={errors.cfdi?.message}
             useActionSheet
           />
@@ -430,7 +431,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
 
               <TextContainer typography="h6" fontBold text={`Colonia`} marginTop={25} />
               <Select
-                {...register('colony')}
                 name="colony"
                 control={control}
                 options={colonies.map((colony: Colony) => {
