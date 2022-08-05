@@ -89,8 +89,9 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
       setValue('businessName', current.business_name);
       setValue('street', current.Address.street);
       setValue('city', current.Address.city);
-      setValue('state', current.Address.city);
+      setValue('state', current.Address.state);
       setValue('colony', current.Address.colony);
+      setValue('ext_num', current.Address.ext_num);
     }
   }, [current]);
 
@@ -429,6 +430,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
 
               <TextContainer typography="h6" fontBold text={`Colonia`} marginTop={25} />
               <Select
+                {...register('colony')}
                 name="colony"
                 control={control}
                 options={colonies.map((colony: Colony) => {
