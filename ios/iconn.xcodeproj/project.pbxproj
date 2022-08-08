@@ -547,7 +547,6 @@
 				CURRENT_PROJECT_VERSION = 11;
 				DEVELOPMENT_TEAM = 56AALG3568;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = iconn/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
