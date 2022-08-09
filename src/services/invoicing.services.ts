@@ -1,4 +1,3 @@
-import { InvoicingProfile } from '../lib/models/InvoicingProfile';
 import { InvoicingApi } from '../http/api-invoicing';
 import { InvoicingProfileInterface } from 'rtk/types/invoicing.types';
 /**
@@ -82,9 +81,19 @@ async function updateInvoicingProfile(invoicingProfile: InvoicingProfileInterfac
 /**
  * Function to resend verification email
  */
- async function resendVerificationEmail(email: string): Promise<any> {
+async function resendVerificationEmail(email: string): Promise<any> {
   const response = await InvoicingApi.getInstance().getRequest(`/invoicing/mail/sendEmailForVerification/${email}`);
   if (response === undefined) return Promise.reject(new Error(`resendVerificationEmail:/invoicing/mail/sendEmailForVerification/${email}`));
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to select default invoicingProfile
+ */
+async function selectDefault(invoicing_profile_id: number): Promise<any> {
+  const response = await InvoicingApi.getInstance().putRequest(`/invoicing/invoicingProfile/select_default/${invoicing_profile_id}`, { invoicing_profile_id });
+  if (response === undefined) return Promise.reject(new Error(`selectDefault:/invoicingProfile/select_default/${invoicing_profile_id}`));
   const { data } = response;
   return data;
 }
@@ -97,5 +106,6 @@ export const invoicingServices = {
   getInvoicingProfileList,
   deleteInvoicingProfile,
   updateInvoicingProfile,
-  resendVerificationEmail
+  resendVerificationEmail,
+  selectDefault
 };

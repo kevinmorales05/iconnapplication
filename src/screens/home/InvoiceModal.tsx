@@ -1,36 +1,54 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from 'components/molecules';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { InvoicingProfileInterface } from 'rtk';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from 'navigation/types';
+import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { invoicingServices } from 'services';
+import { setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
 
 interface InvoiceItemProps {
   invoicingProfile: InvoicingProfileInterface;
-  onSelect: (invoicingProfile: InvoicingProfileInterface | null) => void;
-  selected: boolean;
 }
-const InvoiceItem = ({ invoicingProfile, onSelect, selected }: InvoiceItemProps) => {
+const InvoiceItem = ({ invoicingProfile }: InvoiceItemProps) => {
   const highlightBorder = {
     borderWidth: 1,
     borderColor: '#2FB97A'
   };
+  const dispatch = useAppDispatch();
+
+  const [loading, setLoading] = useState(false);
+  const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
+
   return (
     <TouchableOpacity
-      onPress={() => {
-        onSelect(invoicingProfile);
+      onPress={async () => {
+        setLoading(true);
+        try {
+          const data = await invoicingServices.selectDefault(invoicingProfile.invoicing_profile_id);
+          if (data.responseCode === 200) {
+            const newList = invoicingProfileList.map((item: InvoicingProfileInterface) => {
+              if (item.invoicing_profile_id === invoicingProfile.invoicing_profile_id) {
+                return { ...item, default: true };
+              }
+              return { ...item, default: false } as InvoicingProfileInterface;
+            });
+            dispatch(setInvoicingProfilesList(newList));
+          }
+        } catch (error) {
+        } finally {
+          setLoading(false);
+        }
       }}
     >
-      <View style={[selected ? highlightBorder : {}, { backgroundColor: '#EBF9F3', borderRadius: 10, padding: 16, marginTop: 10 }]}>
+      <View style={[invoicingProfile.default ? highlightBorder : {}, { backgroundColor: '#EBF9F3', borderRadius: 10, padding: 16, marginTop: 10 }]}>
         <Container row style={{ justifyContent: 'space-between' }}>
           <CustomText textColor={theme.brandColor.iconn_dark_grey} text={invoicingProfile.rfc} typography="h3" fontBold />
-          {selected && <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />}
+          {invoicingProfile.default && !loading && <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />}
+          {loading && <ActivityIndicator size={'small'} color="gray" />}
         </Container>
         <CustomText textColor={theme.brandColor.iconn_dark_grey} text={`${invoicingProfile.business_name}`} typography="h3" />
       </View>
@@ -47,10 +65,8 @@ interface InvoiceModalProps {
 
 const InvoiceModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPressOut, onManage, invoicingProfileList }) => {
   const { containerStyle } = styles;
-  const [selected, setSelected] = useState<InvoicingProfileInterface | null>(null);
 
   const insets = useSafeAreaInsets();
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   return (
     <CustomModal visible={visible} onDismiss={onPressOut}>
@@ -82,16 +98,7 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPressOut,
             <Container style={{ height: 200 }}>
               <ScrollView>
                 {invoicingProfileList?.map((invoicingProfile: InvoicingProfileInterface, index) => {
-                  return (
-                    <InvoiceItem
-                      key={index}
-                      onSelect={invoicingProfile => {
-                        setSelected(invoicingProfile);
-                      }}
-                      invoicingProfile={invoicingProfile}
-                      selected={invoicingProfile.rfc === selected?.rfc}
-                    />
-                  );
+                  return <InvoiceItem key={index} invoicingProfile={invoicingProfile} />;
                 })}
               </ScrollView>
             </Container>
@@ -106,7 +113,10 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPressOut,
                 fontBold
                 fontSize="h4"
                 onPress={() => {
-                  onManage(selected);
+                  const defaultInvoicingProfile = invoicingProfileList.find(item => {
+                    return item.default == true;
+                  });
+                  onManage(defaultInvoicingProfile ?? null);
                 }}
                 style={{ marginTop: 8 }}
               >

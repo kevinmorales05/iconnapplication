@@ -40,7 +40,7 @@ const ProfileController: React.FC = () => {
       dispatch(setBirthday({ birthday: userFields.birthday }));
       dispatch(setFullName({ name: userFields.name, lastName: userFields.lastName }));
       toast.show({
-        message: 'Datos guardos exitosamente.',
+        message: 'Datos guardados exitosamente.',
         type: 'success'
       });
     } catch (error) {
