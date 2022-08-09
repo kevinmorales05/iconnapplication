@@ -53,7 +53,8 @@ export interface Props {
   datePicker?: boolean;
   onPressDatePickerIcon?: () => void;
   phone?: boolean;
-  numeric?: boolean
+  numeric?: boolean;
+  boldLabel?: boolean;
 }
 
 const Input = forwardRef(({
@@ -89,6 +90,7 @@ const Input = forwardRef(({
   onPressDatePickerIcon,
   phone = false,
   numeric = false,
+  boldLabel = false,
 }: Props, ref: ForwardedRef<any>) => {
   const {
     inputStyle, inputContainerStyle, passwordImageStyle, prefixImageStyle
@@ -139,6 +141,7 @@ const Input = forwardRef(({
         text={label}
         typography="label"
         marginBottom={8}
+        fontBold={boldLabel}
       />
       )}
       <Container flex row space='between' center>
@@ -169,6 +172,7 @@ const Input = forwardRef(({
                     testID={`${testID}-hidden-label`}
                     text={label}
                     typography="label"
+                    fontBold={boldLabel}
                   />
                 </Collapsible>
               </Container>

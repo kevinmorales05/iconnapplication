@@ -10,10 +10,12 @@ import ProfileController from 'screens/home/myAccount/profile/ProfileController'
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
 import AddRFCController from 'screens/home/myAccount/manageTaxInfo/AddRFC/AddRFCController';
 import TaxInfoController from 'screens/home/myAccount/manageTaxInfo/TaxInfo/TaxInfoController';
-
-const Stack = createNativeStackNavigator<HomeStackParams>();
 import InvoiceController from 'screens/home/invoicing/Invoice/InvoiceController';
 import CreateTaxProfileController from 'screens/home/invoicing/CreateTaxProfile/CreateTaxProfileController';
+import AddTicketPetroController from 'screens/home/invoicing/invoicingPetro/AddTicketPetro/AddTicketPetroController';
+import AddTicketSevenController from 'screens/home/invoicing/invoicingSeven/AddTicketSeven/AddTicketSevenController';
+
+const Stack = createNativeStackNavigator<HomeStackParams>();
 
 const HomeStack: React.FC = () => (
   <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="Home">
@@ -28,6 +30,8 @@ const HomeStack: React.FC = () => (
     <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
     <Stack.Screen options={{ title: 'Facturar' }} name="Invoice" component={InvoiceController} />
     <Stack.Screen options={{ title: 'Perfil Fiscal' }} name="CreateTaxProfile" component={CreateTaxProfileController} />
+    <Stack.Screen options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} name="AddTicketPetro" component={AddTicketPetroController} />
+    <Stack.Screen options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} name="AddTicketSeven" component={AddTicketSevenController} />
   </Stack.Navigator>
 );
 

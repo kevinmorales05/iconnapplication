@@ -18,6 +18,10 @@ import ICONN_CARD_SEVEN from './iconn-card-seven.webp';
 import ICONN_USER_PROFILE from './iconn-user-profile.webp';
 import ICONN_NO_CONNECTION from './iconn-no-connection.webp';
 import ICONN_CHANGE from './iconn-change.webp';
+import ICONN_INVOICING_SEVEN from './iconn-invoicing-7-eleven.webp';
+import ICONN_INVOICING_PETRO from './iconn-invoicing-petro.webp';
+import ICONN_INVOICING_PETRO_REFERENCE from './iconn-invoicing-petro-reference.webp';
+import ICONN_INVOICING_SEVEN_REFERENCE from './iconn-invoicing-seven-reference.webp';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -39,5 +43,9 @@ export {
   ICONN_CARD_SEVEN,
   ICONN_USER_PROFILE,
   ICONN_NO_CONNECTION,
-  ICONN_CHANGE
+  ICONN_CHANGE,
+  ICONN_INVOICING_SEVEN,
+  ICONN_INVOICING_PETRO,
+  ICONN_INVOICING_PETRO_REFERENCE,
+  ICONN_INVOICING_SEVEN_REFERENCE
 };

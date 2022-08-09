@@ -13,8 +13,7 @@ const InvoiceController: React.FC = () => {
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
-  const { loading } = useAppSelector((state: RootState) => state.invoicing);
-  const onSubmit = async () => navigate('CreateTaxProfile');
+  const { loading } = useAppSelector((state: RootState) => state.invoicing);  
   const alert = useAlert();
   const loader = useLoading();
   let defaultProfile: InvoicingProfileInterface;
@@ -30,6 +29,10 @@ const InvoiceController: React.FC = () => {
       loader.hide();
     }
   }, [loading]);
+
+  const onSubmit = async () => navigate('CreateTaxProfile');
+  const goToAddTicketPetro = async () => navigate('AddTicketPetro');
+  const goToAddTicketSeven = async () => navigate('AddTicketSeven');
 
   const showAlert = () => {
     alert.show(
@@ -60,7 +63,13 @@ const InvoiceController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
-      <InvoiceScreen invoicingProfileList={invoicingProfileList} defaultProfile={defaultProfile!} onSubmit={onSubmit} resendEmail={resendEmail} />
+      <InvoiceScreen 
+        invoicingProfileList={invoicingProfileList} 
+        defaultProfile={defaultProfile!} 
+        onSubmit={onSubmit} 
+        resendEmail={resendEmail} 
+        goToAddTicketPetro={goToAddTicketPetro}
+        goToAddTicketSeven={goToAddTicketSeven} />
     </SafeArea>
   );
 };
