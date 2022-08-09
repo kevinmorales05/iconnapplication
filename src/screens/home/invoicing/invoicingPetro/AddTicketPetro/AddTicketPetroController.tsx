@@ -6,13 +6,14 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { InvoicingHelper } from 'components';
 import { ICONN_INVOICING_PETRO_REFERENCE } from 'assets/images';
+import { FieldValues, SubmitHandler } from 'react-hook-form';
 
 const AddTicketPetroController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
 
-  const onSubmit = () => {
-    console.log('submit from controller...');
+  const onSubmit = (fields: SubmitHandler<FieldValues>):void => {
+    console.log('submit from controller...', fields);
   };
 
   const onPressHelpIcon = () => {
@@ -20,7 +21,6 @@ const AddTicketPetroController: React.FC = () => {
   };
 
   const onPressOut = () => {
-    console.log('hide modal...')        
     setHelpVisible(false);
   };
 

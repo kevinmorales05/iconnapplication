@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Image, Platform, ScrollView, StyleSheet, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TextContainer, Button, Container, CustomText, Touchable, Input, DatePicker } from 'components';
@@ -8,9 +8,12 @@ import { ICONN_INVOICING_PETRO } from 'assets/images';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useForm } from 'react-hook-form';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import moment from 'moment';
+import { alphaNumeric, date, numericWithSpecificLenght } from 'utils/rules';
 
 interface Props {
-  onSubmit: () => void;
+  onSubmit: (fields: any) => void;
   goBack: () => void;
   onPressQuestionButton: () => void;
   onPressScan: () => void;
@@ -26,11 +29,15 @@ const styles = StyleSheet.create({
 const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, onPressScan }) => {
   const { closeContainer } = styles;
   const insets = useSafeAreaInsets();
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
   const {
     control,
     handleSubmit,
     formState: { errors, isValid },
-    register
+    register,
+    setValue,
+    trigger
   } = useForm({
     mode: 'onChange'
   });
@@ -45,6 +52,20 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
       stationRef.current.focus();
     }
   }, []);
+
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date: Date) => {
+    setValue('ticketDate', moment(date).format('DD/MM/YYYY'));
+    hideDatePicker();
+    trigger('ticketDate');
+  };
 
   return (
     <Container flex useKeyboard>
@@ -113,6 +134,8 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
               maxLength={4}
               numeric
               onSubmitEditing={() => folioRef.current?.focus()}
+              rules={numericWithSpecificLenght(4)}
+              error={errors.station?.message}
             />
 
             <Input
@@ -130,6 +153,8 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
               maxLength={6}
               numeric
               onSubmitEditing={() => webIdRef.current?.focus()}
+              rules={numericWithSpecificLenght(6)}
+              error={errors.folio?.message}
             />
 
             <Input
@@ -137,7 +162,7 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
               name="webId"
               control={control}
               autoCorrect={false}
-              keyboardType="numeric"
+              keyboardType="default"
               placeholder={`4 dígitos`}
               blurOnSubmit={true}
               marginTop={21}
@@ -145,7 +170,16 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
               label="Web ID"
               boldLabel
               maxLength={4}
-              numeric
+              rules={alphaNumeric(4)}
+              error={errors.webId?.message}
+            />
+
+            <DateTimePickerModal
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
+              textColor={theme.brandColor.iconn_accent_principal}
             />
 
             <DatePicker
@@ -160,10 +194,14 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
               ref={ticketDateRef}
               label="Fecha del ticket"
               boldLabel
+              onPressDatePickerIcon={showDatePicker}
+              maxLength={10}
+              rules={date}
+              error={errors.ticketDate?.message}
             />
           </Container>
           <Container style={{ marginBottom: 16 }}>
-            <Button marginTop={16} round fontBold fontSize="h4" onPress={onSubmit}>
+            <Button disabled={!isValid} marginTop={16} round fontBold fontSize="h4" onPress={handleSubmit(onSubmit)}>
               + Agregar
             </Button>
           </Container>

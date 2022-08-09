@@ -15,8 +15,8 @@ const AddTicketSevenController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
 
-  const onSubmit = () => {
-    console.log('submit from controller...');
+  const onSubmit = (fields: SubmitHandler<FieldValues>):void => {
+    console.log('submit from controller...', fields);
   };
 
   const onPressHelpIcon = () => {

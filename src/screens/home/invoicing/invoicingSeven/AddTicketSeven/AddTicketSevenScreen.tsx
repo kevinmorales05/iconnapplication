@@ -1,17 +1,16 @@
 import React, { useEffect, useRef } from 'react';
 import { Image, Platform, ScrollView, StyleSheet, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TextContainer, Button, Container, CustomText, Touchable, Input, DatePicker } from 'components';
+import { TextContainer, Button, Container, CustomText, Touchable, Input } from 'components';
 import theme from 'components/theme/theme';
-import { InvoicingPetroTicketInterface, InvoicingProfileInterface } from 'rtk';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ICONN_INVOICING_SEVEN } from 'assets/images';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useForm } from 'react-hook-form';
-
+import { numericWithSpecificLenght } from 'utils/rules';
 interface Props {
-  onSubmit: () => void;
+  onSubmit: (fields: any) => void;
   goBack: () => void;
   onPressQuestionButton: () => void;
   onPressScan: () => void;
@@ -107,12 +106,14 @@ const AddTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
               ref={barCodeRef}
               label="Código de barras"
               boldLabel
-              maxLength={4}
+              maxLength={35}
               numeric
+              rules={numericWithSpecificLenght(35)}
+              error={errors.barCode?.message}
             />
           </Container>
           <Container>
-            <Button marginTop={16} round fontBold fontSize="h4" onPress={onSubmit}>
+            <Button disabled={!isValid} marginTop={16} round fontBold fontSize="h4" onPress={handleSubmit(onSubmit)}>
               + Agregar
             </Button>
           </Container>

@@ -35,7 +35,7 @@ export interface Props {
   defaultValue?: TextInputProps['value'];
   passwordField?: boolean;
   showPasswordEnable?: boolean;
-  error?: string;
+  error?: any;
   onFocus?: TextInputProps['onFocus'];
   onBlur?: TextInputProps['onBlur'];
   marginTop?: number;

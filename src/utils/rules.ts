@@ -1,4 +1,3 @@
-
 import { RegisterOptions } from 'react-hook-form';
 
 export const emailRules: RegisterOptions = {
@@ -24,7 +23,7 @@ export const passwordRule: RegisterOptions = {
     message: `Campo requerido.`
   },
   validate: (value: string) => {
-    if (!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/) && !value.match(/\s/)) {
+    if (!(value.length < 8) && value.match(/[A-Z]/) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/) && !value.match(/\s/)) {
       return true;
     }
     return `Ingresa una contraseña válida.`;
@@ -45,7 +44,7 @@ export const passwordMinimumRule: RegisterOptions = {
     }
     return true;
   }
-}
+};
 
 export const confirmPasswordRule = (compare: string): RegisterOptions => ({
   required: {
@@ -122,8 +121,7 @@ export const rfcRule: RegisterOptions = {
     message: `Campo requerido.`
   },
   validate: (value: string) => {
-    if (!/^([A-ZÑ&]{3,4})(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))([A-Z\d]{2})([A\d])$/
-    .test(value)) {
+    if (!/^([A-ZÑ&]{3,4})(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))([A-Z\d]{2})([A\d])$/.test(value)) {
       return 'Formato incorrecto.';
     }
 
@@ -131,3 +129,65 @@ export const rfcRule: RegisterOptions = {
   },
   minLength: 1
 };
+
+/**
+ * Function to validate a minimum length for numeric fields.
+ */
+export const numericWithSpecificLenght = (lenght: number): RegisterOptions => ({
+  required: {
+    value: true,
+    message: `Campo requerido.`
+  },
+  minLength: {
+    value: lenght,
+    message: `Longitud invalida.`
+  },
+  validate: (value: string) => {
+    if (!value.match(/\d/)) return false;
+    return true;
+  }
+});
+
+/**
+ * Function to validate date fields (dd/mm/yyyy).
+ */
+export const date: RegisterOptions = {
+  required: {
+    value: true,
+    message: `Campo requerido.`
+  },
+  minLength: {
+    value: 10,
+    message: `Longitud invalida.`
+  },
+  validate: (value: string) => {
+    if (
+      !value.match(
+        /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/
+      )
+    ) {
+      return false;
+    }
+    return true;
+  }
+};
+
+/**
+ * Function to validate AlphaNumeric Fields with minimum lenght.
+ */
+export const alphaNumeric = (lenght: number): RegisterOptions => ({
+  required: {
+    value: true,
+    message: `Campo requerido.`
+  },
+  minLength: {
+    value: lenght,
+    message: `Longitud invalida.`
+  },
+  validate: (value: string) => {
+    if (!value.match(/[A-Za-z0-9]/) || value.match(/\s/)) {
+      return 'Formato invalido.';
+    }
+    return true;
+  }
+});
