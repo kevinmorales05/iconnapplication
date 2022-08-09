@@ -14,6 +14,7 @@ import InvoiceController from 'screens/home/invoicing/Invoice/InvoiceController'
 import CreateTaxProfileController from 'screens/home/invoicing/CreateTaxProfile/CreateTaxProfileController';
 import AddTicketPetroController from 'screens/home/invoicing/invoicingPetro/AddTicketPetro/AddTicketPetroController';
 import AddTicketSevenController from 'screens/home/invoicing/invoicingSeven/AddTicketSeven/AddTicketSevenController';
+import InvoiceHistoryController from 'screens/home/invoicing/InvoiceHistory/InvoiceHistoryController';
 
 const Stack = createNativeStackNavigator<HomeStackParams>();
 
@@ -30,6 +31,7 @@ const HomeStack: React.FC = () => (
     <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
     <Stack.Screen options={{ title: 'Facturar' }} name="Invoice" component={InvoiceController} />
     <Stack.Screen options={{ title: 'Perfil Fiscal' }} name="CreateTaxProfile" component={CreateTaxProfileController} />
+    <Stack.Screen options={{ title: 'Historial de facturas' }} name="InvoiceHistory" component={InvoiceHistoryController} />
     <Stack.Screen options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} name="AddTicketPetro" component={AddTicketPetroController} />
     <Stack.Screen options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} name="AddTicketSeven" component={AddTicketSevenController} />
   </Stack.Navigator>

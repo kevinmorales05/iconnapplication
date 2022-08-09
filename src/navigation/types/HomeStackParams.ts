@@ -13,6 +13,7 @@ export type HomeStackParams = {
   TaxInfo: undefined;
   Invoice: undefined;
   CreateTaxProfile: undefined | InvoicingProfileInterface;
+  InvoiceHistory: undefined;
   AddTicketPetro: undefined;
   AddTicketSeven: undefined;
 };
