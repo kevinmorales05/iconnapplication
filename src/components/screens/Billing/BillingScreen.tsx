@@ -117,6 +117,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   const [cfdiList, setCfdiList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [colonies, setColonies] = useState<Colony[] | null>(null);
+  const [toggled, setToggled] = useState(false);
 
   const fetchCatalogs = useCallback(async () => {
     const { data: regimens } = await dispatch(getTaxRegimeListThunk()).unwrap();
@@ -363,7 +364,13 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             </Container>
           )}
         </Container>
-        <View pointerEvents={colonies === null ? 'none' : 'auto'}>
+        <Touchable
+          onPress={() => {
+            setToggled(toggled => {
+              return !toggled;
+            });
+          }}
+        >
           <Container
             backgroundColor={theme.brandColor.iconn_background}
             style={{ marginVertical: 24, paddingVertical: 21, paddingHorizontal: theme.layoutSpace.medium }}
@@ -372,13 +379,13 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
               <TextContainer textColor={theme.fontColor.dark} typography="h5" fontBold text={`Agregar un domicilio`} />
               <TextContainer textColor={theme.fontColor.grey} typography="placeholder" text={` (Opcional)`} />
               <Container flex style={{ flexDirection: 'row-reverse' }}>
-                {colonies ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
+                {toggled ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
               </Container>
             </Container>
           </Container>
-        </View>
+        </Touchable>
         <Container style={styles.billingSection}>
-          {colonies && (
+          {colonies && toggled && (
             <Container style={{ marginBottom: 25 }}>
               <TextContainer typography="h6" fontBold text={`Calle`} marginTop={25} />
               <Input
