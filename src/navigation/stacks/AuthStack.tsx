@@ -9,6 +9,7 @@ import CreatePasswordController from 'screens/auth/onboarding/CreatePassword/Cre
 import EnterFullNameController from 'screens/auth/onboarding/EnterFullName/EnterFullNameController';
 import EnterPasswordController from 'screens/auth/onboarding/EnterPassword/EnterPasswordController';
 import ForgotPasswordController from 'screens/auth/onboarding/ForgotPassword/ForgotPasswordController';
+import ScannerController from 'screens/home/invoicing/Scanner/ScannerController';
 
 const Stack = createNativeStackNavigator<AuthStackParams>();
 
@@ -22,6 +23,7 @@ const AuthStack: React.FC = () => (
     <Stack.Screen name="CreatePassword" component={CreatePasswordController} />
     <Stack.Screen name="EnterFullName" component={EnterFullNameController} />
     <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
+    <Stack.Screen name="Scanner" component={ScannerController} />
   </Stack.Navigator>
 );
 
