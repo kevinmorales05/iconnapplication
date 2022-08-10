@@ -9,6 +9,7 @@ interface CustomModalProps {
   onDismiss?: () => void;
   backgroundOpacity?: number;
   testID?: string;
+  animationType?: 'none' | 'slide' | 'fade' | undefined;
 }
 
 const CustomModal: React.FC<CustomModalProps> = ({
@@ -16,13 +17,14 @@ const CustomModal: React.FC<CustomModalProps> = ({
   onDismiss,
   children,
   backgroundOpacity = 0.5,
-  testID
+  testID,
+  animationType = 'fade'
 }: CustomModalProps) => {
   const backgroundColor = `rgba(0,0,0,${backgroundOpacity})`;
 
   if (onDismiss) {
     return (
-      <Modal testID={testID} transparent visible={visible} animationType="fade" onDismiss={onDismiss}>
+      <Modal testID={testID} transparent visible={visible} animationType={animationType} onDismiss={onDismiss}>
         <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={{ flex: 1 }}>
           <TouchableWithoutFeedback testID={`${testID}-touchable`} >
             <View style={{ flex: 1, backgroundColor }}>
@@ -35,7 +37,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
   }
 
   return (
-    <Modal testID={testID} transparent visible={visible} animationType="fade">
+    <Modal testID={testID} transparent visible={visible} animationType={animationType}>
       <KeyboardAvoidingView enabled={Platform.OS === 'ios'} behavior="padding" style={{ flex: 1 }}>
         <View style={{ flex: 1, backgroundColor }}>
           {children}

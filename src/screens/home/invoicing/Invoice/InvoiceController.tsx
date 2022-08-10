@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
@@ -14,16 +14,17 @@ const InvoiceController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { loading } = useAppSelector((state: RootState) => state.invoicing);
-  const onSubmit = async () => navigate('CreateTaxProfile');
   const alert = useAlert();
   const loader = useLoading();
-  let defaultProfile: InvoicingProfileInterface;
+  const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
 
-  if (invoicingProfileList.length === 1) {
-    defaultProfile = invoicingProfileList[0];
-  } else {
-    defaultProfile = invoicingProfileList.find(obj => obj.default === true)!;
-  }
+  useEffect(() => {
+    setDefaultProfile(
+      invoicingProfileList.find(item => {
+        return item.default === true;
+      }) ?? null
+    );
+  }, [invoicingProfileList]);
 
   useEffect(() => {
     if (loading === false) {
@@ -31,13 +32,24 @@ const InvoiceController: React.FC = () => {
     }
   }, [loading]);
 
+  const onSubmit = async () => {
+    if (defaultProfile) {
+      navigate('CreateTaxProfile');
+    } else {
+      navigate('AddRFC');
+    }
+  };
+
+  const goToAddTicketPetro = async () => navigate('AddTicketPetro');
+  const goToAddTicketSeven = async () => navigate('AddTicketSeven');
+
   const showAlert = () => {
     alert.show(
       {
         title: 'Verifica tu correo electronico',
         message: `Para facturar sólo falta verificar tu correo. Revisa tu bandeja de entrada:`,
         acceptTitle: 'Aceptar',
-        secondMessage: defaultProfile.email,
+        secondMessage: defaultProfile?.email,
         onAccept() {
           alert.hide();
         }
@@ -49,7 +61,7 @@ const InvoiceController: React.FC = () => {
   const resendEmail = async () => {
     loader.show();
     try {
-      const response = await dispatch(resendVerificationEmailThunk(defaultProfile.email)).unwrap();
+      const response = await dispatch(resendVerificationEmailThunk(defaultProfile?.email as string)).unwrap();
       if (response.responseCode === 200) {
         showAlert();
       }
@@ -60,7 +72,14 @@ const InvoiceController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
-      <InvoiceScreen invoicingProfileList={invoicingProfileList} defaultProfile={defaultProfile!} onSubmit={onSubmit} resendEmail={resendEmail} />
+      <InvoiceScreen
+        invoicingProfileList={invoicingProfileList}
+        defaultProfile={defaultProfile!}
+        onSubmit={onSubmit}
+        resendEmail={resendEmail}
+        goToAddTicketPetro={goToAddTicketPetro}
+        goToAddTicketSeven={goToAddTicketSeven}
+      />
     </SafeArea>
   );
 };

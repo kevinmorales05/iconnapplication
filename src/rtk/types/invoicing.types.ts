@@ -94,3 +94,14 @@ export interface Colony {
   status: string | null;
   City: City;
 }
+
+export interface InvoicingPetroTicketInterface {
+  station: string;
+  folio: string;
+  web_id: string;
+  date: string;
+}
+
+export interface InvoicingSevenTicketInterface {
+  bar_code: string;
+}

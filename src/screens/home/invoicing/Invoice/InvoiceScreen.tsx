@@ -13,11 +13,13 @@ import { HomeStackParams } from 'navigation/types';
 interface Props {
   onSubmit: () => void;
   invoicingProfileList: InvoicingProfileInterface[];
-  defaultProfile: InvoicingProfileInterface;
+  defaultProfile: InvoicingProfileInterface | null;
   resendEmail: () => void;
+  goToAddTicketPetro: () => void;
+  goToAddTicketSeven: () => void;
 }
 
-const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaultProfile, resendEmail }) => {
+const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaultProfile, resendEmail, goToAddTicketPetro, goToAddTicketSeven }) => {
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
 
@@ -81,21 +83,20 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
       <Container style={{ marginTop: 34 }}>
         <TextContainer text="Nueva Factura" typography="h3" fontBold />
       </Container>
-      {/* // TODO: We must disable CardBillling until defaultProfile email is verified. */}
       <Container style={{ marginTop: 18 }}>
         <CardBilling
           text="Facturar ticket"
           type="seven"
-          disable={invoicingProfileList.length === 0 || defaultProfile.verified_mail === false}
-          onPress={() => {}}
+          disable={invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false}
+          onPress={goToAddTicketSeven}
         />
       </Container>
       <Container style={{ marginTop: 8 }}>
         <CardBilling
           text="Facturar ticket"
           type="petro"
-          disable={invoicingProfileList.length === 0 || defaultProfile.verified_mail === false}
-          onPress={() => {}}
+          disable={invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false}
+          onPress={goToAddTicketPetro}
         />
       </Container>
       <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
