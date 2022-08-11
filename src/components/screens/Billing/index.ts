@@ -1,4 +1,3 @@
-
-import BillingScreen from './BillingScreen'
+import BillingScreen from './BillingScreen';
 
 export { BillingScreen };

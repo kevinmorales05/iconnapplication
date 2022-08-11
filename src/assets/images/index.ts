@@ -22,6 +22,9 @@ import ICONN_INVOICING_SEVEN from './iconn-invoicing-7-eleven.webp';
 import ICONN_INVOICING_PETRO from './iconn-invoicing-petro.webp';
 import ICONN_INVOICING_PETRO_REFERENCE from './iconn-invoicing-petro-reference.webp';
 import ICONN_INVOICING_SEVEN_REFERENCE from './iconn-invoicing-seven-reference.webp';
+import ICONN_INVOICING_GENERATED_INVOICE_SEVEN from './iconn-seven-invoice.webp';
+import ICONN_INVOICING_GENERATED_INVOICE_PETRO from './iconn-petro-invoice.webp';
+import ICONN_INVOICING_SUCCESS_INVOICE_GENERATED from './iconn-invoicing-success-invoice-generated.png';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -47,5 +50,8 @@ export {
   ICONN_INVOICING_SEVEN,
   ICONN_INVOICING_PETRO,
   ICONN_INVOICING_PETRO_REFERENCE,
-  ICONN_INVOICING_SEVEN_REFERENCE
+  ICONN_INVOICING_SEVEN_REFERENCE,
+  ICONN_INVOICING_GENERATED_INVOICE_SEVEN,
+  ICONN_INVOICING_GENERATED_INVOICE_PETRO,
+  ICONN_INVOICING_SUCCESS_INVOICE_GENERATED
 };

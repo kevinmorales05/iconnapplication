@@ -24,6 +24,7 @@ export interface TouchableProps {
   androidRippleColor?: ColorValue;
   hitSlop?: number;
   testID?: string;
+  width?: ViewStyle['width'];
 }
 
 const Touchable: React.FC<TouchableProps> = ({
@@ -44,7 +45,8 @@ const Touchable: React.FC<TouchableProps> = ({
   opacityEffect,
   androidRippleColor = theme.brandColor.iconn_accent_principal,
   hitSlop,
-  testID
+  testID,
+  width
 }: TouchableProps) => (
   Platform.OS === 'ios' || opacityEffect ? (
     <TouchableOpacity
@@ -65,7 +67,8 @@ const Touchable: React.FC<TouchableProps> = ({
         marginRight,
         marginTop,
         marginBottom,
-        zIndex: 2
+        zIndex: 2,
+        width
       }}
     >
       <View pointerEvents="none">
@@ -91,7 +94,8 @@ const Touchable: React.FC<TouchableProps> = ({
         marginLeft,
         marginRight,
         marginTop,
-        marginBottom
+        marginBottom,
+        width
       }}
     >
       <View pointerEvents="none" style={{ backgroundColor: 'transparent' }}>

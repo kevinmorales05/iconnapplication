@@ -1,4 +1,4 @@
-import { InvoicingProfileInterface } from "rtk";
+import { InvoicingProfileInterface } from 'rtk';
 
 export type HomeStackParams = {
   HomeStack: undefined;
@@ -7,7 +7,7 @@ export type HomeStackParams = {
   Profile: undefined;
   EditEmail: undefined;
   EnterOtp: { email: string };
-  ["Editar Contraseña"]: undefined;
+  ['Editar Contraseña']: undefined;
   InviteSignUp: undefined;
   AddRFC: undefined;
   TaxInfo: undefined;
@@ -15,4 +15,8 @@ export type HomeStackParams = {
   CreateTaxProfile: undefined | InvoicingProfileInterface;
   AddTicketPetro: undefined;
   AddTicketSeven: undefined;
+  InvoiceTicketPetro: undefined;
+  InvoiceTicketSeven: undefined;
+  InvoiceGeneratedPetro: undefined;
+  InvoiceGeneratedSeven: undefined;
 };

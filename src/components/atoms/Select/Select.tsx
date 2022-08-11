@@ -20,7 +20,7 @@ interface Props {
   marginTop?: number;
   androidMode?: PickerProps['mode'];
   name: string;
-  control: Control<FieldValues, string>;
+  control: Control<FieldValues, any>;
   rules?: RegisterOptions;
   onSelect: (value: string) => void;
   testID?: string;

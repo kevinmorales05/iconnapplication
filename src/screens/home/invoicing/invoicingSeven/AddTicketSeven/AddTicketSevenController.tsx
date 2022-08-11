@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import AddTicketSevenScreen from './AddTicketSevenScreen';
-import { useAlert } from 'context';
-import { InvoicingProfile } from 'lib/models/InvoicingProfile';
-import { invoicingServices } from 'services';
+import { useToast } from 'context';
 import { SubmitHandler, FieldValues } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -14,9 +12,12 @@ import { ICONN_INVOICING_SEVEN_REFERENCE } from 'assets/images';
 const AddTicketSevenController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
+  const toast = useToast();
 
-  const onSubmit = (fields: SubmitHandler<FieldValues>):void => {
-    console.log('submit from controller...', fields);
+  const onSubmit = (fields: SubmitHandler<FieldValues>): void => {
+    console.log('Datos del Ticket Seven...', fields);
+    toast.show({ message: 'Ticket agregado correctamente.', type: 'success' });
+    navigate('InvoiceTicketSeven');
   };
 
   const onPressHelpIcon = () => {
