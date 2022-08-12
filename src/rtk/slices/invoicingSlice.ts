@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getCFDIListThunk, getInvoicingProfileListThunk, getTaxRegimeListThunk } from '../thunks/invoicing.thunks';
-import { InvoicingPetroTicketInterface, InvoicingProfileInterface, InvoicingSevenTicketInterface } from '../types';
+import { InvoicingPetroTicketResponseInterface, InvoicingProfileInterface, InvoicingSevenTicketResponseInterface } from '../types';
 
 const initialState: InvoicingProfileInterface[] = [];
-const initialStateSevenTicketList: InvoicingSevenTicketInterface[] = [];
-const initialStatePetroTicketList: InvoicingPetroTicketInterface[] = [];
+const initialStateSevenTicketList: InvoicingSevenTicketResponseInterface[] = [];
+const initialStatePetroTicketList: InvoicingPetroTicketResponseInterface[] = [];
 
 const invoicingSlice = createSlice({
   name: 'invoicing',

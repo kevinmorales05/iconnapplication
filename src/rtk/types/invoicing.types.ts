@@ -95,13 +95,22 @@ export interface Colony {
   City: City;
 }
 
-export interface InvoicingPetroTicketInterface {
+export interface InvoicingPetroTicketResponseInterface {
   station: string;
   folio: string;
   web_id: string;
   date: string;
 }
 
-export interface InvoicingSevenTicketInterface {
-  bar_code: string;
+export interface InvoicingSevenTicketResponseInterface {
+  ticketNo: string;
+  store: string;
+  status: number;
+  ticketTotal: string;
+  paymentMethod: string;
+}
+
+export interface InvoicingSevenTicketRequestInterface {
+  establishment: number;
+  ticket: string;
 }

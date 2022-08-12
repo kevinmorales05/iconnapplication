@@ -1,0 +1,14 @@
+[
+  {
+    "id": "02",
+    "name": "Tarjeta de crédito"
+  },
+  {
+    "id": "03",
+    "name": "Tarjeta de débito"
+  },
+  {
+    "id": "04",
+    "name": "Efectivo"
+  }
+]

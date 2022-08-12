@@ -6,3 +6,4 @@ export * from './TouchableText';
 export * from './CardBilling';
 export * from './TaxInfoCard';
 export * from './CardDivided';
+export * from './ListSwipeableItem';
