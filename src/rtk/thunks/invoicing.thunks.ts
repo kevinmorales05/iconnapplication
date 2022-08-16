@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { InvoicingProfileInterface } from '../types';
+import { InvoicingSevenTicketRequestInterface } from '../types';
 import { invoicingServices } from 'services';
 
 export const getTaxRegimeListThunk = createAsyncThunk('invoicing/getTaxRegimeListThunk', async () => {
@@ -14,6 +14,10 @@ export const getInvoicingProfileListThunk = createAsyncThunk('invoicing/getInvoi
   return await invoicingServices.getInvoicingProfileList(uid);
 });
 
-export const resendVerificationEmailThunk = createAsyncThunk('invoicing/getInvoicingProfileListThunk', async (email: string) => {
+export const resendVerificationEmailThunk = createAsyncThunk('invoicing/resendVerificationEmailThunk', async (email: string) => {
   return await invoicingServices.resendVerificationEmail(email);
+});
+
+export const getTicketThunk = createAsyncThunk('invoicing/getTicketThunk', async (ticket: InvoicingSevenTicketRequestInterface) => {
+  return await invoicingServices.getTicket(ticket);
 });

@@ -1,5 +1,5 @@
 import { InvoicingApi } from '../http/api-invoicing';
-import { InvoicingProfileInterface } from 'rtk/types/invoicing.types';
+import { InvoicingProfileInterface, InvoicingSevenTicketRequestInterface } from 'rtk/types/invoicing.types';
 /**
  * Function to get regimens list
  */
@@ -98,6 +98,16 @@ async function selectDefault(invoicing_profile_id: number): Promise<any> {
   return data;
 }
 
+/**
+ * Function to select default invoicingProfile
+ */
+ async function getTicket(ticket: InvoicingSevenTicketRequestInterface): Promise<any> {
+  const response = await InvoicingApi.getInstance().postRequest('/invoicing/invoicingData/getTicket', ticket);
+  if (response === undefined) return Promise.reject(new Error('getTicket:/invoicingData/getTicket/'));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
   getTaxRegimeList,
   getCFDIList,
@@ -107,5 +117,6 @@ export const invoicingServices = {
   deleteInvoicingProfile,
   updateInvoicingProfile,
   resendVerificationEmail,
-  selectDefault
+  selectDefault,
+  getTicket
 };

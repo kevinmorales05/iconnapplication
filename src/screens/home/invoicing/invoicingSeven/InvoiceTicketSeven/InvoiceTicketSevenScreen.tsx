@@ -51,6 +51,8 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressAd
     fetchCatalogs();
   }, [fetchCatalogs]);
 
+  let rowRefs = new Map();
+
   return (
     <Container flex useKeyboard>
       <Container style={{ marginTop: insets.top, paddingHorizontal: 16, marginBottom: 10 }} row space="between" center>
@@ -74,7 +76,7 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressAd
                 <TextContainer text="TOTAL" fontBold typography="h6" textColor={theme.fontColor.grey} fontWeight="900" marginRight={10} />
               </Container>
               {ticketsList.map((ticket, i) => (
-                <ListSwipeableItem key={i} onPressEdit={onPressEditTicket} onPressDelete={onPressDeleteTicket} ticketSeven={ticket} />
+                <ListSwipeableItem key={i} onPressEdit={onPressEditTicket} onPressDelete={onPressDeleteTicket} ticketSeven={ticket} index={i} rowRefs={rowRefs}/>
               ))}
               <Container style={{ paddingTop: 24, paddingBottom: 16, paddingHorizontal: 16 }}>
                 <TextContainer text="Información de tu factura" fontBold typography="h4" />

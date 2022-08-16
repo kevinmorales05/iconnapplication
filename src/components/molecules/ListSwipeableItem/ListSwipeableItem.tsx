@@ -12,11 +12,20 @@ import { InvoicingPetroTicketResponseInterface, InvoicingSevenTicketResponseInte
 interface ListSwipeableItemProps {
   ticketSeven?: InvoicingSevenTicketResponseInterface;
   ticketPetro?: InvoicingPetroTicketResponseInterface;
-  onPressEdit: (ticket: any) => any;
-  onPressDelete: (ticket: any) => any;
+  onPressEdit: (ticket: any, position: number) => any;
+  onPressDelete: (ticket: any, position: number) => any;
+  index: number;
+  rowRefs: any;
 }
 
-const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({ onPressEdit, onPressDelete, ticketSeven, ticketPetro }: ListSwipeableItemProps): any => {
+const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
+  onPressEdit,
+  onPressDelete,
+  ticketSeven,
+  ticketPetro,
+  index,
+  rowRefs
+}: ListSwipeableItemProps): any => {
   const item: StyleProp<ViewStyle> = {
     height: 68,
     paddingLeft: 16,
@@ -35,14 +44,22 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({ onPressEdit, onPr
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
         {buttonType === 'edit' ? (
-          <RectButton style={[rightAction, { backgroundColor: backgroundColor }]} onPress={() => onPressEdit(ticketSeven ? ticketSeven : ticketPetro)}>
+          <RectButton style={[rightAction, { backgroundColor: backgroundColor }]} onPress={() => onPressEdit(ticketSeven ? ticketSeven : ticketPetro, index)}>
             <Container middle>
               <Octicons name="pencil" size={theme.iconSize.xsmall} color={theme.brandColor.iconn_white} />
               <TextContainer fontBold text="Editar" textColor={theme.fontColor.white} fontSize={theme.fontSize.h6} marginTop={4} />
             </Container>
           </RectButton>
         ) : (
-          <RectButton style={[rightAction, { backgroundColor: backgroundColor }]} onPress={() => onPressDelete(ticketSeven ? ticketSeven : ticketPetro)}>
+          <RectButton
+            style={[rightAction, { backgroundColor: backgroundColor }]}
+            onPress={() => {
+              closeRow(index);
+              setTimeout(() => {
+                onPressDelete(ticketSeven ? ticketSeven : ticketPetro, index);
+              }, 500);
+            }}
+          >
             <Container middle>
               <Ionicons name="md-trash-outline" size={theme.iconSize.xsmall} color={theme.brandColor.iconn_white} />
               <TextContainer fontBold text="Borrar" textColor={theme.fontColor.white} fontSize={theme.fontSize.h6} marginTop={4} />
@@ -60,8 +77,29 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({ onPressEdit, onPr
     </Container>
   );
 
+  const closeRow = (index: number) => {
+    [...rowRefs.entries()].forEach(([key, ref]) => {
+      if (key === index && ref) ref.close();
+    });
+  };
+
   return (
-    <Swipeable friction={2} rightThreshold={40} renderRightActions={renderRightActions} overshootLeft={true}>
+    <Swipeable
+      friction={2}
+      rightThreshold={40}
+      renderRightActions={renderRightActions}
+      overshootLeft={true}
+      ref={ref => {
+        if (ref && !rowRefs.get(index)) {
+          rowRefs.set(index, ref);
+        }
+      }}
+      onSwipeableWillOpen={() => {
+        [...rowRefs.entries()].forEach(([key, ref]) => {
+          if (key !== index && ref) ref.close();
+        });
+      }}
+    >
       <Container row center style={item} backgroundColor={theme.brandColor.iconn_white} space="between">
         {ticketSeven ? (
           <>
