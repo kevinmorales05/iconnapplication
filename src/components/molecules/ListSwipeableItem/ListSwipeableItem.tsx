@@ -1,6 +1,6 @@
 import React from 'react';
 import { Animated, StyleProp, ViewStyle } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, RectButton } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Container } from 'components/atoms';
 import { TextContainer } from '../TextContainer';
@@ -84,37 +84,39 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
   };
 
   return (
-    <Swipeable
-      friction={2}
-      rightThreshold={40}
-      renderRightActions={renderRightActions}
-      overshootLeft={true}
-      ref={ref => {
-        if (ref && !rowRefs.get(index)) {
-          rowRefs.set(index, ref);
-        }
-      }}
-      onSwipeableWillOpen={() => {
-        [...rowRefs.entries()].forEach(([key, ref]) => {
-          if (key !== index && ref) ref.close();
-        });
-      }}
-    >
-      <Container row center style={item} backgroundColor={theme.brandColor.iconn_white} space="between">
-        {ticketSeven ? (
-          <>
-            <TextContainer text={ticketSeven!.ticketNo} fontSize={12} />
-            <TextContainer text={`$${ticketSeven!.ticketTotal}`} textColor={theme.fontColor.dark_orange} fontSize={12} fontBold />
-          </>
-        ) : (
-          <>
-            {/* // TODO: don't forget add ticketPetro + its atributes... */}
-            <TextContainer text={ticketSeven!.ticketNo} fontSize={12} />
-            <TextContainer text={ticketSeven!.ticketTotal} />
-          </>
-        )}
-      </Container>
-    </Swipeable>
+    <GestureHandlerRootView>
+      <Swipeable
+        friction={2}
+        rightThreshold={40}
+        renderRightActions={renderRightActions}
+        overshootLeft={true}
+        ref={ref => {
+          if (ref && !rowRefs.get(index)) {
+            rowRefs.set(index, ref);
+          }
+        }}
+        onSwipeableWillOpen={() => {
+          [...rowRefs.entries()].forEach(([key, ref]) => {
+            if (key !== index && ref) ref.close();
+          });
+        }}
+      >
+        <Container row center style={item} backgroundColor={theme.brandColor.iconn_white} space="between">
+          {ticketSeven ? (
+            <>
+              <TextContainer text={ticketSeven!.ticketNo} fontSize={12} />
+              <TextContainer text={`$${ticketSeven!.ticketTotal}`} textColor={theme.fontColor.dark_orange} fontSize={12} fontBold />
+            </>
+          ) : (
+            <>
+              {/* // TODO: don't forget add ticketPetro + its atributes... */}
+              <TextContainer text={ticketSeven!.ticketNo} fontSize={12} />
+              <TextContainer text={ticketSeven!.ticketTotal} />
+            </>
+          )}
+        </Container>
+      </Swipeable>
+    </GestureHandlerRootView>
   );
 };
 
