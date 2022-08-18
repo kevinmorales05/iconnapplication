@@ -17,14 +17,7 @@ const InvoiceTicketSevenController: React.FC = () => {
     navigate('InvoiceGeneratedSeven');
   };
 
-  const onPressAddNewTicket = () => {
-    // console.log('TODO: navegar a agregar nuevo ticket')
-    // navigate('AddTicketSeven');
-    // TODO: in this case we need to research if is better a "navigate with params"...
-    // rememeber that in the "Agregar Ticket Screen" we need arrive with the field empty when is the first navigation,
-    // but when is a goBack the field should mantain the same value...
-    goBack();
-  };
+  const onPressAddNewTicket = () => navigate('AddTicketSeven');
 
   const editTicket: any = (ticket: any) => {
     console.log('Editing ticket...', ticket);

@@ -19,7 +19,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
-import { setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
+import { setInvoicingInitialState, setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -165,11 +165,13 @@ const HomeController: React.FC = () => {
         dispatch(setAppInitialState());
         dispatch(setAuthInitialState());
         dispatch(setGuestInitialState());
+        dispatch(setInvoicingInitialState());
       }  
     } else {
       dispatch(setAppInitialState());
       dispatch(setAuthInitialState());
       dispatch(setGuestInitialState());
+      dispatch(setInvoicingInitialState());
     }
   };
 

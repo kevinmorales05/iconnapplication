@@ -2,21 +2,23 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getCFDIListThunk, getInvoicingProfileListThunk, getTaxRegimeListThunk, getTicketThunk } from '../thunks/invoicing.thunks';
 import { InvoicingPetroTicketResponseInterface, InvoicingProfileInterface, InvoicingSevenTicketResponseInterface } from '../types';
 
-const initialState: InvoicingProfileInterface[] = [];
+const initialStateProfileList: InvoicingProfileInterface[] = [];
 const initialStateSevenTicketList: InvoicingSevenTicketResponseInterface[] = [];
 const initialStatePetroTicketList: InvoicingPetroTicketResponseInterface[] = [];
 
 const invoicingSlice = createSlice({
   name: 'invoicing',
   initialState: {
-    invoicingProfileList: initialState,
+    invoicingProfileList: initialStateProfileList,
     invoicingSevenTicketList: initialStateSevenTicketList,
     invoicingPetroTicketList: initialStatePetroTicketList,
     loading: false
   },
   reducers: {
-    setAuthInitialState(state) {
-      state.invoicingProfileList = { ...initialState };
+    setInvoicingInitialState(state) {
+      state.invoicingProfileList = initialStateProfileList;
+      state.invoicingSevenTicketList = initialStateSevenTicketList;
+      state.invoicingPetroTicketList = initialStatePetroTicketList;
       state.loading = false;
     },
     setInvoicing(state, action: PayloadAction<InvoicingProfileInterface>) {
@@ -84,5 +86,5 @@ const invoicingSlice = createSlice({
   }
 });
 // TODO: validate if it is possible to reduce extra reducers.
-export const { setAuthInitialState, setInvoicing, setInvoicingProfilesList, addTicketSevenToList, deleteTicketSevenFromList } = invoicingSlice.actions;
+export const { setInvoicingInitialState, setInvoicing, setInvoicingProfilesList, addTicketSevenToList, deleteTicketSevenFromList } = invoicingSlice.actions;
 export default invoicingSlice.reducer;
