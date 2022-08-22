@@ -23,6 +23,12 @@ import ICONN_INVOICING_SEVEN from './iconn-invoicing-7-eleven.webp';
 import ICONN_INVOICING_PETRO from './iconn-invoicing-petro.webp';
 import ICONN_INVOICING_PETRO_REFERENCE from './iconn-invoicing-petro-reference.webp';
 import ICONN_INVOICING_SEVEN_REFERENCE from './iconn-invoicing-seven-reference.webp';
+import ICONN_PETRO_MINIMAL from './iconn-petro-minimal.webp';
+import ICONN_SEVEN_MINIMAL from './iconn-seven-minimal.webp';
+import ICONN_CALENDAR_CUSTOM from './iconn-calendar-custom.webp';
+import ICONN_CALENDAR_MONTH from './iconn-calendar-month.webp';
+import ICONN_CALENDAR_WEEK from './iconn-calendar-week.webp';
+import ICONN_CALENDAR_YESTERDAY from './iconn-calendar-yesterday.webp';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -49,5 +55,11 @@ export {
   ICONN_INVOICING_SEVEN,
   ICONN_INVOICING_PETRO,
   ICONN_INVOICING_PETRO_REFERENCE,
-  ICONN_INVOICING_SEVEN_REFERENCE
+  ICONN_INVOICING_SEVEN_REFERENCE,
+  ICONN_PETRO_MINIMAL,
+  ICONN_SEVEN_MINIMAL,
+  ICONN_CALENDAR_CUSTOM,
+  ICONN_CALENDAR_MONTH,
+  ICONN_CALENDAR_WEEK,
+  ICONN_CALENDAR_YESTERDAY
 };

@@ -1,276 +1,382 @@
-import { Avatar, Button, Container, CustomText, DatePicker, Input, Select, TextContainer, SafeArea, Touchable } from 'components';
-import React, { useEffect, useRef, useState, useContext } from 'react';
-import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle, View } from 'react-native';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { alphabetRule } from 'utils/rules';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { ScrollView, Image, StyleSheet, View } from 'react-native';
+import { ActionButton, Container, CustomText, Touchable, SafeArea } from 'components';
 import theme from 'components/theme/theme';
-import Icon from 'react-native-vector-icons/AntDesign';
-import Octicons from 'react-native-vector-icons/Octicons';
-import { GENDERS } from 'assets/files';
-import { RootState, useAppSelector } from 'rtk';
-import * as PhotosPicker from '../../../../components/organisms/PhotosPicker/PhotosPicker';
-import { NavigationContext } from '@react-navigation/native';
-import moment from 'moment';
+import { ICONN_INVOICE, ICONN_PETRO_MINIMAL } from 'assets/images';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { invoicingServices } from 'services';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
+import Entypo from 'react-native-vector-icons/Entypo';
+import InvoicingHelpModal from 'screens/home/InvoicingHelpModal';
+import SendInvoiceModal from 'screens/home/SendInvoiceModal';
+import EstablishmentModal, { Establishment } from 'screens/home/EstablishmentModal';
+import AmmountModal, { Ammount } from 'screens/home/AmmountModal';
+import DateModal, { Period } from 'screens/home/DateModal';
+import RangeModal from 'screens/home/RangeModal';
+import MultipleFilterModal from 'screens/home/MultipleFilterModal';
+import { useLoading } from 'context';
 
-type Props = {
-  onSubmit: (data: any) => void;
-  onLogout: () => void;
-  goBack?: () => void;
+interface FilterChipProps {
+  name: string;
+  label: string;
+  value?: string;
   onPress?: () => void;
-  editIconStyle?: StyleProp<ViewStyle>;
+  highlight: boolean;
+}
+
+const FilterChip = ({ highlight = false, label, value, onPress = () => {} }: FilterChipProps) => {
+  return (
+    <Touchable onPress={onPress}>
+      <View
+        style={[{ backgroundColor: '#D1D1D3', borderRadius: 12, padding: 9, marginLeft: 10 }, highlight && { backgroundColor: theme.fontColor.light_green }]}
+      >
+        <CustomText textColor={highlight ? 'white' : 'black'} alignSelf="center" text={label} />
+      </View>
+    </Touchable>
+  );
 };
 
-const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  const { email, name, telephone, gender, birthday, lastName, sign_app_modes_id, photo } = user;
-  const insets = useSafeAreaInsets();
+const DateSeparator = ({ date }: { date: string }) => {
+  return (
+    <View style={{ marginTop: 10, marginLeft: 15 }}>
+      <CustomText text={date} textColor={theme.fontColor.grey} fontBold />
+    </View>
+  );
+};
+
+const InvoiceItem = () => {
+  return (
+    <View
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        paddingVertical: 18,
+        paddingHorizontal: 23,
+        marginTop: 10
+      }}
+    >
+      <View>
+        <Image source={ICONN_PETRO_MINIMAL} />
+      </View>
+      <View>
+        <CustomText text="RAPA880105P32" fontBold />
+      </View>
+      <View style={{ flexDirection: 'row' }}>
+        <CustomText text="Total:" />
+        <CustomText text=" $48.50" textColor={theme.fontColor.light_green} fontBold />
+      </View>
+    </View>
+  );
+};
+
+const Results = () => {
+  return (
+    <View>
+      <ScrollView>
+        <DateSeparator date={'Mayo 16, 2022'} />
+        <InvoiceItem />
+        <InvoiceItem />
+      </ScrollView>
+    </View>
+  );
+};
+
+const Empty = () => {
+  return (
+    <Container style={styles.empty}>
+      <Container center style={styles.content}>
+        <Container center>
+          <Image source={ICONN_INVOICE} />
+        </Container>
+        <Container style={styles.title}>
+          <CustomText textAlign="center" text="NO TIENES FACTURAS DISPONIBLES" alignSelf="center" typography="h3" fontBold fontSize={12} />
+        </Container>
+        <Container style={styles.placeholder}>
+          <CustomText
+            fontSize={12}
+            textAlign="center"
+            alignSelf="center"
+            textColor={theme.brandColor.iconn_grey}
+            text="Las facturas que realices con tu cuenta aparecerán aquí."
+            typography="h3"
+          />
+        </Container>
+      </Container>
+    </Container>
+  );
+};
+
+enum Filter {
+  STORE,
+  DATE,
+  AMMOUNT,
+  MULTIPLE
+}
+
+const InvoiceScreen: React.FC = () => {
+  const [results, setResults] = useState<null | []>(null);
+  const [supporting, setSupporting] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [filter, setFilter] = useState<Filter | null>(null);
+
+  const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
+  const [establishment, setEstablishment] = useState<Establishment | null>(null);
+  const [ammmount, setAmmount] = useState<Ammount | null>(null);
+  const [date, setDate] = useState<Period | null>(null);
   const [visible, setVisible] = useState(false);
-  const navigation = useContext(NavigationContext);
-  const [disabled, setDisabled] = useState(false);
 
-  // storage bucket folder
-  const bucketPath = `userPhotos/${user.user_id}/profile/`;
+  const [query, setQuery] = useState<any>(null);
 
-  const { currentPhoto, launch } = PhotosPicker.usePhotosPicker(1, bucketPath, () => {
-    setVisible(false);
-  });
-
-  const {
-    control,
-    formState: { errors },
-    register,
-    handleSubmit,
-    watch,
-    setValue
-  } = useForm({
-    mode: 'onChange'
-  });
-
-  const { name: nameField, lastName: lastNameField } = watch();
+  const loader = useLoading();
 
   useEffect(() => {
-    if (nameField && lastNameField) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
-  }, [nameField, lastNameField]);
+    let dateFilter = null;
 
-  const nameRef = useRef<TextInput>(null);
-  const surnameRef = useRef<TextInput>(null);
-  const emailRef = useRef<TextInput>(null);
-  const passwordRef = useRef<TextInput>(null);
-  const phoneRef = useRef<TextInput>(null);
+    if (date) {
+      if (typeof date?.type === 'string') {
+        if (date.label === 'Ayer') {
+          dateFilter = {
+            yesterday: true
+          };
+        }
+        if (date.label === 'Esta semana') {
+          dateFilter = {
+            thisWeek: true
+          };
+        }
+        if (date.label === 'Este mes') {
+          dateFilter = {
+            thisMonth: true
+          };
+        }
+      } else {
+        dateFilter = {
+          dateStart: date.type.dateStart?.format('DD-MM-YYYY'),
+          dateEnd: date.type.dateEnd?.format('DD-MM-YYYY')
+        };
+      }
+    }
+
+    setQuery({
+      ...(dateFilter ? dateFilter : {}),
+      ...(ammmount ? { amount: { min: ammmount?.min, max: ammmount?.max } } : {}),
+      ...(establishment ? { establishment: establishment.id } : {})
+    });
+  }, [establishment, ammmount, date]);
+
+  async function stall(stallTime = 3000) {
+    await new Promise(resolve => setTimeout(resolve, stallTime));
+  }
 
   useEffect(() => {
-    setValue('name', name);
-    setValue('lastName', lastName);
-    setValue('telephone', telephone);
+    if (!query) return;
+    if (Object.keys(query).length === 0) return;
 
-    if (gender) {
-      const previusGender = GENDERS.find(element => {
-        return gender === element.id;
-      });
-      setValue('gender', previusGender?.name);
-    }
+    console.log('query:', query);
 
-    if (birthday) {
-      setValue('birthday', birthday);
-    }
+    (async () => {
+      if (!query) return;
+      loader.show();
+      try {
+        // const data = await invoicingServices.getInvoices(1, 2, { data: query });
+        await stall(500);
+      } catch (e) {
+      } finally {
+        loader.hide();
+      }
 
-    if (nameRef.current) {
-      nameRef.current.focus();
-    }
-  }, []);
+      // console.log('data', data);
+    })();
+  }, [query]);
 
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date: Date) => {
-    setValue('birthday', moment(date).format('DD/MM/YYYY'));
-    hideDatePicker();
-  };
-
-  const submit: SubmitHandler<FieldValues> = fields => {
-    onSubmit(fields);
-  };
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: props => {
+        return (
+          <ActionButton
+            circle
+            size="xxxsmall"
+            color="iconn_accent_secondary"
+            onPress={() => {
+              setSupporting(true);
+            }}
+            icon={<Entypo name="help" size={11} color={theme.fontColor.white} />}
+          />
+        );
+      }
+    });
+  }, [navigation]);
 
   return (
-    <ScrollView
-      bounces={true}
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingBottom: insets.bottom + 16,
-        paddingTop: insets.top - 16
-      }}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-    >
-      <Container>
-        <Avatar
-          source={{
-            uri: photo ? photo : currentPhoto
-          }}
-          editable={true}
-          onPress={() => {
-            setVisible(true);
-          }}
-        />
-
-        <TextContainer typography="h6" fontBold text={`Nombres`} marginTop={25} />
-
-        <Input
-          {...register('name')}
-          ref={nameRef}
-          control={control}
-          autoCorrect
-          autoCapitalize="words"
-          keyboardType="default"
-          placeholder={''}
-          rules={alphabetRule(true)}
-          blurOnSubmit={false}
-          error={errors.name?.message}
-          maxLength={30}
-          renderErrorIcon={false}
-        />
-
-        <TextContainer typography="h6" fontBold text={`Apellidos`} marginTop={21} />
-
-        <Input
-          {...register('lastName')}
-          ref={surnameRef}
-          control={control}
-          autoCorrect
-          autoCapitalize="words"
-          keyboardType="default"
-          placeholder={''}
-          rules={alphabetRule(true)}
-          blurOnSubmit={false}
-          error={errors.lastName?.message}
-          maxLength={30}
-          renderErrorIcon={false}
-        />
-
-        <TextContainer typography="h6" fontBold text={`Correo electrónico`} marginTop={21} />
-        <View style={{ flex: 1, flexDirection: 'row' }}>
-          <View style={{ flex: 3 }}>
-            <TextContainer text={email!} typography="h5" textColor={theme.brandColor.iconn_grey} marginTop={19} />
-
-            <Container flex row style={{ marginTop: 10 }} center>
-              <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
-              <CustomText
-                textColor={theme.brandColor.iconn_green_original}
-                text={sign_app_modes_id === 1 ? 'Correo verificado' : 'Correo verificado con red social'}
-                typography="h6"
-                fontWeight="normal"
-              />
-            </Container>
-          </View>
-
-          {sign_app_modes_id === 1 && (
-            <View style={{ flex: 3, marginTop: 19 }}>
-              <Touchable
-                onPress={() => {
-                  navigation?.navigate('EditEmail');
-                }}
-              >
-                <Container row center style={{ justifyContent: 'flex-end' }}>
-                  <Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_accent_secondary} style={{ marginRight: 5 }} />
-                  <CustomText text={'Editar'} typography="h6" />
-                </Container>
-              </Touchable>
-            </View>
-          )}
-        </View>
-
-        <TextContainer typography="h6" fontBold text={`Contraseña`} marginTop={21} />
-
-        <Container row center crossCenter space="between" style={{ marginTop: 10 }}>
-          <CustomText fontBold typography="dot" text={`••••••••`} textColor={theme.brandColor.iconn_dark_grey} />
-          {sign_app_modes_id === 1 && (
-            <TouchableOpacity
-              onPress={() => {
-                navigation?.navigate('Editar Contraseña');
+    <>
+      <View style={styles.container}>
+        <View style={styles.filters}>
+          <ScrollView showsHorizontalScrollIndicator={false} horizontal>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center'
               }}
             >
-              <Container row center crossCenter>
-                <Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_accent_secondary} style={{ marginRight: 5 }} />
-                <CustomText text={'Editar'} typography="h6" />
-              </Container>
-            </TouchableOpacity>
-          )}
-        </Container>
+              <Touchable
+                onPress={() => {
+                  setFilter(Filter.MULTIPLE);
+                }}
+              >
+                <View
+                  style={{
+                    borderRadius: 7,
+                    padding: 5,
+                    marginLeft: 10,
+                    backgroundColor: theme.fontColor.light_green
+                  }}
+                >
+                  <MaterialCommunityIcons name="tune-vertical-variant" size={16} color={theme.fontColor.white} />
+                </View>
+              </Touchable>
+            </View>
 
-        <TextContainer typography="h6" fontBold text={`Celular`} marginTop={24} />
-
-        <Input
-          {...register('telephone')}
-          ref={phoneRef}
-          control={control}
-          keyboardType="number-pad"
-          placeholder={'000-000-0000'}
-          blurOnSubmit={true}
-          error={errors.telephone?.message}
-          maxLength={10}
-          renderErrorIcon={false}
-          phone
-        />
-
-        <TextContainer typography="h6" fontBold text={`Fecha de nacimiento`} marginTop={21} />
-
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode="date"
-          onConfirm={handleConfirm}
-          onCancel={hideDatePicker}
-          textColor={theme.brandColor.iconn_accent_principal}
-        />
-
-        <DatePicker name="birthday" control={control} onPressDatePickerIcon={showDatePicker} error={errors.birthday?.message} />
-
-        <TextContainer typography="h6" fontBold text={`Genero`} marginTop={21} />
-
-        <Select
-          name="gender"
-          control={control}
-          options={GENDERS.map(item => item.name)}
-          onSelect={value => setValue('gender', value)}
-          androidMode="dialog"
-          label={`Genero`}
-          placeholder={`Genero`}
-          error={errors.gender?.message}
-          useActionSheet
-        />
+            <FilterChip
+              highlight={!!date}
+              label={date ? (date.label as string) : 'Fecha'}
+              name="date"
+              onPress={() => {
+                setFilter(Filter.DATE);
+              }}
+            />
+            <FilterChip
+              highlight={!!establishment}
+              label={establishment ? (establishment.name as string) : 'Establecimiento'}
+              name="date"
+              onPress={() => {
+                setFilter(Filter.STORE);
+              }}
+            />
+            <FilterChip
+              highlight={!!ammmount}
+              label={ammmount ? (ammmount.label as string) : 'Monto'}
+              name="date"
+              onPress={() => {
+                setFilter(Filter.AMMOUNT);
+              }}
+            />
+            <View style={{ marginHorizontal: 20, display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+              <Touchable
+                onPress={() => {
+                  setEstablishment(null);
+                  setAmmount(null);
+                  setDate(null);
+                }}
+              >
+                <CustomText text="Limpiar todo" textColor={theme.fontColor.light_green} underline fontBold />
+              </Touchable>
+            </View>
+          </ScrollView>
+        </View>
+        {results ? <Empty /> : <Results />}
         <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-          <PhotosPicker.PickerMode
+          {/* actions modals */}
+          <InvoicingHelpModal
+            visible={supporting}
+            onPressOut={() => {
+              setSupporting(false);
+            }}
+          />
+          <SendInvoiceModal
+            visible={sending}
+            onPressOut={() => {
+              setSending(false);
+            }}
+          />
+          {/* filtering modals */}
+          <EstablishmentModal
+            handleEstablishment={current => {
+              setEstablishment(current);
+            }}
+            establishment={establishment}
+            visible={filter === Filter.STORE}
+            onPressOut={() => {
+              setFilter(null);
+            }}
+          />
+          <AmmountModal
+            ammount={ammmount}
+            handleAmmount={current => {
+              setAmmount(current);
+            }}
+            visible={filter === Filter.AMMOUNT}
+            onPressOut={() => {
+              setFilter(null);
+            }}
+          />
+          <DateModal
+            period={date}
+            handlePeriod={current => {
+              setDate(current);
+            }}
+            handleRange={() => {
+              setVisible(true);
+              setFilter(null);
+            }}
+            visible={filter === Filter.DATE}
+            onPressOut={() => {
+              setFilter(null);
+            }}
+          />
+          <RangeModal
+            period={date}
+            handlePeriod={current => {
+              setDate(current);
+            }}
             visible={visible}
-            handleCamera={() => {
-              launch(PhotosPicker.PhotosPickerMode.CAMERA);
-            }}
-            handleGallery={() => {
-              launch(PhotosPicker.PhotosPickerMode.LIBRARY);
-            }}
             onPressOut={() => {
               setVisible(false);
             }}
           />
+          <MultipleFilterModal
+            handleEstablishment={current => {
+              setEstablishment(current);
+            }}
+            establishment={establishment}
+            //ammount
+            ammount={ammmount}
+            handleAmmount={current => {
+              setAmmount(current);
+            }}
+            //period
+            period={date}
+            handlePeriod={current => {
+              setDate(current);
+            }}
+            handleRange={() => {
+              setVisible(true);
+              setFilter(null);
+            }}
+            visible={filter === Filter.MULTIPLE}
+            onPressOut={() => {
+              setFilter(null);
+            }}
+          />
         </SafeArea>
-        <Button length="long" round disabled={disabled} onPress={handleSubmit(submit)} fontSize="h4" fontBold marginTop={32}>
-          Guardar
-        </Button>
-      </Container>
-    </ScrollView>
+      </View>
+    </>
   );
 };
 
-export default ProfileScreen;
+export default InvoiceScreen;
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#F2F2F2' },
+  empty: { height: '100%', marginTop: 100 },
+  content: {},
+  title: { marginTop: 20 },
+  placeholder: { marginTop: 15, width: 235 },
+  filters: { paddingTop: 20, paddingBottom: 20, display: 'flex', flexDirection: 'row', alignItems: 'center' }
+});

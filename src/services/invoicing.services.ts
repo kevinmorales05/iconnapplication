@@ -98,6 +98,16 @@ async function selectDefault(invoicing_profile_id: number): Promise<any> {
   return data;
 }
 
+/**
+ * Function to get Invoices
+ */
+async function getInvoices(page: number, limit: number, payload: any): Promise<any> {
+  const response = await InvoicingApi.getInstance().getRequest(`/invoicing/invoicingData/list/filter?page=${page}&limit=${limit}`, payload);
+  if (response === undefined) return Promise.reject(new Error(`getInvoices:/invoicing/invoicingData/list`));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
   getTaxRegimeList,
   getCFDIList,
@@ -107,5 +117,6 @@ export const invoicingServices = {
   deleteInvoicingProfile,
   updateInvoicingProfile,
   resendVerificationEmail,
-  selectDefault
+  selectDefault,
+  getInvoices
 };
