@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { ActionButton, Container, CustomModal, CustomText, Touchable } from 'components/atoms';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from 'components/molecules';
@@ -90,6 +90,8 @@ const RangeModal: React.FC<RangeModalProps> = ({ visible, onPressOut, period, ha
             </Container>
             <Container>
               <CalendarPicker
+                weekdays={['Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sá', 'Do']}
+                months={['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']}
                 disabledDates={date => {
                   const leftLimit = date.isBefore(moment().subtract(2, 'months'));
                   const rightLimit = date.isAfter(moment());

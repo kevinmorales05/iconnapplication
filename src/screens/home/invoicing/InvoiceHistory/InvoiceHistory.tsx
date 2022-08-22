@@ -363,6 +363,11 @@ const InvoiceScreen: React.FC = () => {
             onPressOut={() => {
               setFilter(null);
             }}
+            onClear={() => {
+              setEstablishment(null);
+              setAmmount(null);
+              setDate(null);
+            }}
           />
         </SafeArea>
       </View>

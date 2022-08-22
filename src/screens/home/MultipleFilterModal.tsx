@@ -58,6 +58,7 @@ interface MultipleFilterModalProps {
 
   handleAmmount: (ammount: Ammount) => void;
   ammount: Ammount | null;
+  onClear: () => void;
 }
 
 const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
@@ -69,7 +70,8 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
   handleEstablishment,
   establishment,
   handleAmmount,
-  ammount
+  ammount,
+  onClear
 }) => {
   const { containerStyle } = styles;
 
@@ -144,6 +146,16 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
     }
   }, [period]);
 
+  const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    const hasChanges = [current, currentA, currentE].some(element => {
+      return element !== null;
+    });
+
+    setHasChanges(hasChanges);
+  }, [current, currentA, currentE]);
+
   return (
     <CustomModal visible={visible} onDismiss={onPressOut}>
       <Container flex alignment="end">
@@ -155,22 +167,35 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
             backgroundColor: theme.brandColor.iconn_white
           }}
         >
-          <ScrollView>
-            <Container>
-              <Container row space="between" style={{ marginTop: 16, marginBottom: 16 }}>
-                <Container>
-                  <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Fecha" typography="h3" fontBold />
-                </Container>
-                <Container>
-                  <ActionButton
-                    style={{ marginTop: -6, shadowColor: 'none' }}
-                    icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
-                    size="xxsmall"
-                    onPress={onPressOut}
-                    color="iconn_med_grey"
-                    circle
-                  />
-                </Container>
+          <Container style={{ height: 500 }}>
+            <Container row space="between" style={{ marginBottom: 20, alignItems: 'center' }}>
+              <Touchable
+                onPress={() => {
+                  onClear();
+                  setCurrent(null);
+                  setCurrentA(null);
+                  setCurrentE(null);
+                }}
+              >
+                <CustomText text="Limpiar" textColor={theme.fontColor.light_green} underline fontBold />
+              </Touchable>
+              <Container>
+                <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Filtrar facturas" typography="h2" fontBold />
+              </Container>
+              <Container>
+                <ActionButton
+                  style={{ shadowColor: 'none' }}
+                  icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
+                  size="xxsmall"
+                  onPress={onPressOut}
+                  color="iconn_med_grey"
+                  circle
+                />
+              </Container>
+            </Container>
+            <ScrollView>
+              <Container>
+                <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Rango de fechas" typography="h3" fontBold />
               </Container>
               <Container>
                 {periods.map(period => {
@@ -202,26 +227,24 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
                 }}
                 current={currentA as Ammount}
               />
-              <Container>
-                <Button
-                  disabled={current === null}
-                  onPress={() => {
-                    if (current) handlePeriod(current);
-                    if (currentE) handleEstablishment(currentE);
-                    if (currentA) handleAmmount(currentA);
+            </ScrollView>
+            <Button
+              disabled={!hasChanges}
+              onPress={() => {
+                if (current) handlePeriod(current);
+                if (currentE) handleEstablishment(currentE);
+                if (currentA) handleAmmount(currentA);
 
-                    onPressOut();
-                  }}
-                  marginTop={28}
-                  round
-                  fontBold
-                  fontSize="h4"
-                >
-                  Aplicar
-                </Button>
-              </Container>
-            </Container>
-          </ScrollView>
+                onPressOut();
+              }}
+              marginTop={28}
+              round
+              fontBold
+              fontSize="h4"
+            >
+              Aplicar
+            </Button>
+          </Container>
         </TouchableOpacity>
       </Container>
     </CustomModal>
