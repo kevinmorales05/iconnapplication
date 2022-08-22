@@ -41,7 +41,7 @@ const ModalCard: React.FC<Props> = ({
               <Image
                 source={type === 'warning' ? ICONN_WARNING : type === 'error' ? ICONN_ERROR : ICONN_SUCCESS}
                 style={{ alignSelf: 'center', margin: 0, height: 80, top: 16 }}
-                resizeMode="center"
+                resizeMode="contain"
               />
               <Container style={closeContainer}>
                 <ActionButton

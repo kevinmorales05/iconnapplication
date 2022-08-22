@@ -89,7 +89,7 @@ const CreateTaxProfileController: React.FC = () => {
       }
     } catch (error) {
       toast.show({
-        message: 'Hubo un error al guardar tus datos. Intenta mas tarde.',
+        message: 'Hubo un error al guardar tus datos. /n Intenta más tarde.',
         type: 'error'
       });
     } finally {
@@ -98,6 +98,7 @@ const CreateTaxProfileController: React.FC = () => {
   };
 
   const onBack = () => {
+    
     alert.show(
       {
         title: '¿Salir sin guardar cambios?',
