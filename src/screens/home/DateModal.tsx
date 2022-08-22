@@ -202,9 +202,10 @@ interface DateFilterProps {
 export const DateFilter = ({ onCurrent, current, periods }: DateFilterProps) => {
   return (
     <Container>
-      {periods.map(period => {
+      {periods.map((period, index) => {
         return (
           <DateItem
+            key={index}
             onPress={() => {
               onCurrent(period);
             }}
