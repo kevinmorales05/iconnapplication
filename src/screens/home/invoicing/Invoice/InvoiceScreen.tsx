@@ -58,7 +58,9 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
           <Container style={{ marginTop: 36 }}>
             <CardAction
               text="Historial de Facturas"
-              onPress={() => {}}
+              onPress={() => {
+                navigate('InvoiceHistory');
+              }}
               icon={<AntDesign name="copy1" size={25} color={theme.brandColor.iconn_accent_secondary} />}
             />
           </Container>

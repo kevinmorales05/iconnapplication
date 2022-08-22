@@ -6,4 +6,5 @@ export type FontColorTypes =
   | 'link'
   | 'medgrey'
   | 'grey'
-  | 'dark_orange';
+  | 'dark_orange'
+  | 'light_green'
