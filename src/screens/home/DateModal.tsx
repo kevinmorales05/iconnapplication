@@ -92,21 +92,24 @@ const DateModal: React.FC<DateModalProps> = ({ visible, onPressOut, period, hand
   const [periods, setPeriods] = useState<Period[]>(PERIODS);
 
   useEffect(() => {
-    if (period) {
-      if (typeof period.type !== 'string') {
-        setPeriods(items => {
-          const currentPeriods: Period[] = items.map(item => {
-            if (item.id === 4) {
-              return { ...item, label: `Personalizado: ${period.label}` };
-            } else {
-              return item;
-            }
-          });
-          return currentPeriods;
+    if (period === null) {
+      setPeriods(PERIODS);
+      return;
+    }
+
+    if (typeof period.type !== 'string') {
+      setPeriods(items => {
+        const currentPeriods: Period[] = items.map(item => {
+          if (item.id === 4) {
+            return { ...item, label: `Personalizado: ${period.label}` };
+          } else {
+            return item;
+          }
         });
-      } else {
-        setPeriods(PERIODS);
-      }
+        return currentPeriods;
+      });
+    } else {
+      setPeriods(PERIODS);
     }
   }, [period]);
 
@@ -188,3 +191,27 @@ const styles = StyleSheet.create({
 });
 
 export default DateModal;
+
+interface DateFilterProps {
+  onCurrent: (period: Period) => void;
+  periods: Period[];
+  current: Period | null;
+}
+
+export const DateFilter = ({ onCurrent, current, periods }: DateFilterProps) => {
+  return (
+    <Container>
+      {periods.map(period => {
+        return (
+          <DateItem
+            onPress={() => {
+              onCurrent(period);
+            }}
+            period={period}
+            selected={period.id === current?.id}
+          />
+        );
+      })}
+    </Container>
+  );
+};

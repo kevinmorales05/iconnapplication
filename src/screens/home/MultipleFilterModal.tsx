@@ -13,13 +13,7 @@ import { ICONN_CALENDAR_YESTERDAY, ICONN_CALENDAR_WEEK, ICONN_CALENDAR_MONTH, IC
 import { Range } from './RangeModal';
 import { EstablishmentFilter, Establishment } from './EstablishmentModal';
 import { AmmountFilter, Ammount } from './AmmountModal';
-
-export interface Period {
-  id: number;
-  type: string | Range;
-  label: string | React.ReactNode;
-  icon: React.ReactNode;
-}
+import { DateFilter, Period } from './DateModal';
 
 interface DateItemProps {
   period: Period;
@@ -120,7 +114,6 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
   }, [visible]);
 
   //ammount
-
   const [currentA, setCurrentA] = useState<Ammount | null>(null);
 
   useEffect(() => {
@@ -128,21 +121,24 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
   }, [visible]);
 
   useEffect(() => {
-    if (period) {
-      if (typeof period.type !== 'string') {
-        setPeriods(items => {
-          const currentPeriods: Period[] = items.map(item => {
-            if (item.id === 4) {
-              return { ...item, label: `Personalizado: ${period.label}` };
-            } else {
-              return item;
-            }
-          });
-          return currentPeriods;
+    if (period === null) {
+      setPeriods(PERIODS);
+      return;
+    }
+
+    if (typeof period.type !== 'string') {
+      setPeriods(items => {
+        const currentPeriods: Period[] = items.map(item => {
+          if (item.id === 4) {
+            return { ...item, label: `Personalizado: ${period.label}` };
+          } else {
+            return item;
+          }
         });
-      } else {
-        setPeriods(PERIODS);
-      }
+        return currentPeriods;
+      });
+    } else {
+      setPeriods(PERIODS);
     }
   }, [period]);
 
@@ -167,7 +163,7 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
             backgroundColor: theme.brandColor.iconn_white
           }}
         >
-          <Container style={{ height: 500 }}>
+          <Container style={{ height: 500 - (insets.top + 16) }}>
             <Container row space="between" style={{ marginBottom: 20, alignItems: 'center' }}>
               <Touchable
                 onPress={() => {
@@ -197,24 +193,17 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
               <Container>
                 <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Rango de fechas" typography="h3" fontBold />
               </Container>
-              <Container>
-                {periods.map(period => {
-                  return (
-                    <DateItem
-                      onPress={() => {
-                        if (typeof period.type === 'string') {
-                          setCurrent(period);
-                        } else {
-                          handleRange();
-                        }
-                      }}
-                      period={period}
-                      selected={period.id === current?.id}
-                    />
-                  );
-                })}
-              </Container>
-
+              <DateFilter
+                onCurrent={period => {
+                  if (typeof period.type === 'string') {
+                    setCurrent(period);
+                  } else {
+                    handleRange();
+                  }
+                }}
+                current={current}
+                periods={periods}
+              />
               <EstablishmentFilter
                 onCurrent={currentE => {
                   setCurrentE(currentE);
