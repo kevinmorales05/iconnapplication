@@ -141,9 +141,10 @@ const DateModal: React.FC<DateModalProps> = ({ visible, onPressOut, period, hand
               </Container>
             </Container>
             <Container>
-              {periods.map(period => {
+              {periods.map((period, index) => {
                 return (
                   <DateItem
+                    key={index}
                     onPress={() => {
                       if (typeof period.type === 'string') {
                         setCurrent(period);

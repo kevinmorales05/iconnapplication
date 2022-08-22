@@ -196,9 +196,10 @@ export const AmmountFilter = ({ onCurrent, current }: AmmountFilterProps) => {
       </Container>
       <Container row>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-          {AMMOUNTS.map(ammount => {
+          {AMMOUNTS.map((ammount, index) => {
             return (
               <AmmountChip
+                key={index}
                 ammount={ammount}
                 selected={ammount.id === current?.id}
                 onPress={ammount => {
