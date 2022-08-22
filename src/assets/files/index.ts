@@ -1,5 +1,4 @@
 import GENDERS from './genders.json';
+import PAYMENT_METHODS from './paymentMethods.json';
 
-export {
-  GENDERS
-};
+export { GENDERS, PAYMENT_METHODS };

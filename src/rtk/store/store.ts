@@ -1,21 +1,33 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authReducer from '../slices/authSlice';
 import appReducer from '../slices/appSlice';
 import guestReducer from '../slices/guestSlice';
 import invoicingReducer from '../slices/invoicingSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
+import { persistReducer } from 'redux-persist';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const reducers = combineReducers({
+  auth: authReducer,
+  app: appReducer,
+  guest: guestReducer,
+  invoicing: invoicingReducer
+});
+
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage: AsyncStorage
+};
+
+const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
-  reducer: {
-    auth: authReducer,
-    app: appReducer,
-    guest: guestReducer,
-    invoicing: invoicingReducer,
-  },
-  middleware: (getDefaultMiddleware) =>
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
-      serializableCheck: false,
-    }),
+      serializableCheck: false
+    })
 });
 
 export type AppDispatch = typeof store.dispatch;

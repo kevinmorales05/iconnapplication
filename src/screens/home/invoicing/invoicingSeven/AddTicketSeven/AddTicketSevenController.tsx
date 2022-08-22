@@ -1,22 +1,62 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import AddTicketSevenScreen from './AddTicketSevenScreen';
-import { useAlert } from 'context';
-import { InvoicingProfile } from 'lib/models/InvoicingProfile';
-import { invoicingServices } from 'services';
+import { useLoading, useToast } from 'context';
 import { SubmitHandler, FieldValues } from 'react-hook-form';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { InvoicingHelper } from 'components';
 import { ICONN_INVOICING_SEVEN_REFERENCE } from 'assets/images';
+import { RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { getTicketThunk } from 'rtk/thunks/invoicing.thunks';
+import { addTicketSevenToList } from 'rtk/slices/invoicingSlice';
 
 const AddTicketSevenController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
+  const toast = useToast();
+  const loader = useLoading();
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((state: RootState) => state.invoicing);
 
-  const onSubmit = (fields: SubmitHandler<FieldValues>):void => {
-    console.log('submit from controller...', fields);
+  useEffect(() => {
+    if (loading === false) {
+      loader.hide();
+    }
+  }, [loading]);
+
+  const manageGetTicketResponseCode = (responseCode: number): string => {
+    switch (responseCode) {
+      case 592:
+        return 'El ticket no existe en el sistema.';
+      case 580:
+        return 'Ticket facturado anteriormente.';
+      default:
+        return 'unknown';
+    }
+  };
+
+  const onSubmit = async (fields: SubmitHandler<FieldValues>) => {
+    loader.show();
+    try {
+      const response = await dispatch(getTicketThunk({ establishment: 2, ticket: fields.barCode })).unwrap();
+      if (response.responseCode === 595) {
+        toast.show({ message: 'Ticket agregado correctamente.', type: 'success' });
+        dispatch(addTicketSevenToList(response.data));
+        navigate('InvoiceTicketSeven');
+      } else {
+        const errorMessage = manageGetTicketResponseCode(response.responseCode);
+        if (errorMessage !== 'unknown') {
+          toast.show({ message: errorMessage, type: 'error' });
+          return;
+        }
+        console.log('un codigo nuevo, agregalo!!! ===> ', response.responseCode);
+        toast.show({ message: response.responseMessage, type: 'warning' });
+      }
+    } catch (error) {
+      console.warn(error);
+    }
   };
 
   const onPressHelpIcon = () => {

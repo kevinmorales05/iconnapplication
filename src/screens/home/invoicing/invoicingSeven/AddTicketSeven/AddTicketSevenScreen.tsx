@@ -9,6 +9,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useForm } from 'react-hook-form';
 import { numericWithSpecificLenght } from 'utils/rules';
+import { useIsFocused } from '@react-navigation/native';
 interface Props {
   onSubmit: (fields: any) => void;
   goBack: () => void;
@@ -30,18 +31,23 @@ const AddTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
     control,
     handleSubmit,
     formState: { errors, isValid },
-    register
+    register,
+    reset
   } = useForm({
     mode: 'onChange'
   });
 
   const barCodeRef = useRef<TextInput>(null);
+  const isFocused = useIsFocused();
+
+  const resetForm = () => {
+    reset({ barCode: '' });
+    if (barCodeRef.current) barCodeRef.current.focus();
+  };
 
   useEffect(() => {
-    if (barCodeRef.current) {
-      barCodeRef.current.focus();
-    }
-  }, []);
+    isFocused && resetForm();
+  }, [isFocused]);
 
   return (
     <Container flex useKeyboard>
@@ -55,10 +61,11 @@ const AddTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
       </Container>
       <ScrollView
         bounces={false}
-        contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 } }
+        contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}>
-        <Container flex space='between'>
+        showsVerticalScrollIndicator={false}
+      >
+        <Container flex space="between">
           <Container>
             <Image source={ICONN_INVOICING_SEVEN} resizeMode="contain" style={{ width: 103, marginTop: 20, alignSelf: 'center' }} />
 

@@ -9,4 +9,5 @@ export type AuthStackParams = {
   TermsAndCond: undefined;
   CreatePassword: undefined;
   EnterFullName: undefined;
+  Scanner: undefined;
 };

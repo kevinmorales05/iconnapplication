@@ -1,21 +1,9 @@
 import React, { useContext } from 'react';
-import {
-  ScrollView,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Text
-} from 'react-native';
-import {
-  Button,
-  AccountItem,
-  Section,
-  AddressItems,
-  AnnounceItem
-} from 'components';
+import { ScrollView, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { Button, AccountItem, Section, AddressItems, AnnounceItem } from 'components';
 import { NavigationContext, useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState } from 'rtk';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 
@@ -27,20 +15,18 @@ import { HomeStackParams } from 'navigation/types';
 const TaxItem: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const goToTaxInfo = () => navigate('TaxInfo');
-  return(
-    <TouchableOpacity style={taxItemStyles.container} onPress={goToTaxInfo} >
+  return (
+    <TouchableOpacity style={taxItemStyles.container} onPress={goToTaxInfo}>
       <View style={taxItemStyles.content}>
         <View style={taxItemStyles.middle}>
-          <Text numberOfLines={1}>
-            Administra tu información de facturación
-          </Text>
+          <Text numberOfLines={1}>Administra tu información de facturación</Text>
         </View>
         <View style={taxItemStyles.end}>
           <AntDesign name="right" size={24} color="black" />
         </View>
       </View>
     </TouchableOpacity>
-  )
+  );
 };
 
 const taxItemStyles = StyleSheet.create({
@@ -86,6 +72,7 @@ export default function AccountScreen() {
       dispatch(setAppInitialState());
       dispatch(setAuthInitialState());
       dispatch(setGuestInitialState());
+      dispatch(setInvoicingInitialState());
     }
   };
 
@@ -102,16 +89,7 @@ export default function AccountScreen() {
                 navigation?.navigate('Profile');
               }}
             />
-            <AnnounceItem
-              icon={
-                <Ionicons
-                  name="megaphone-outline"
-                  size={25}
-                  color={theme.fontColor.white}
-                />
-              }
-              message={'Completa tu perfil y obtén cupón'}
-            />
+            <AnnounceItem icon={<Ionicons name="megaphone-outline" size={25} color={theme.fontColor.white} />} message={'Completa tu perfil y obtén cupón'} />
           </Section>
           <Section label="Direcciones guardadas">
             <AddressItems />
@@ -130,13 +108,7 @@ export default function AccountScreen() {
           fontSize="h4"
           fontColor={'dark_grey'}
           onPress={logOut}
-          icon={
-            <MaterialIcons
-              name="logout"
-              size={20}
-              color={theme.brandColor.iconn_red_original}
-            />
-          }
+          icon={<MaterialIcons name="logout" size={20} color={theme.brandColor.iconn_red_original} />}
         >
           Cerrar sesión
         </Button>
