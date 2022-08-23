@@ -101,25 +101,23 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
           onPress={goToAddTicketPetro}
         />
       </Container>
-      <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-        <InvoiceModal
-          invoicingProfileList={invoicingProfileList}
-          visible={visible}
-          onAdd={() => {
-            navigate('AddRFC');
+      <InvoiceModal
+        invoicingProfileList={invoicingProfileList}
+        visible={visible}
+        onAdd={() => {
+          navigate('AddRFC');
+          setVisible(false);
+        }}
+        onManage={(selected: InvoicingProfileInterface | null) => {
+          if (selected) {
+            navigate('CreateTaxProfile', selected);
             setVisible(false);
-          }}
-          onManage={(selected: InvoicingProfileInterface | null) => {
-            if (selected) {
-              navigate('CreateTaxProfile', selected);
-              setVisible(false);
-            }
-          }}
-          onPressOut={() => {
-            setVisible(false);
-          }}
-        />
-      </SafeArea>
+          }
+        }}
+        onPressOut={() => {
+          setVisible(false);
+        }}
+      />
     </ScrollView>
   );
 };
