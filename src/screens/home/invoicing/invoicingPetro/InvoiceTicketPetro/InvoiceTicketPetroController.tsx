@@ -1,36 +1,43 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import InvoiceTicketPetroScreen from './InvoiceTicketPetroScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { InvoicingHelper } from 'components';
-import { ICONN_INVOICING_PETRO_REFERENCE } from 'assets/images';
+import { deleteTicketPetroFromList, RootState, useAppDispatch, useAppSelector } from 'rtk';
 
 const InvoiceTicketPetroController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [helpVisible, setHelpVisible] = useState<boolean>(false);
+  const { invoicingPetroTicketList } = useAppSelector((state: RootState) => state.invoicing);
+  const dispatch = useAppDispatch();
 
   const onSubmit = () => {
-    console.log('submit from controller...');
+    console.log('submit from controller Petro...');
+    navigate('InvoiceGeneratedPetro');
   };
 
-  const onPressHelpIcon = () => {
-    setHelpVisible(true);
+  const onPressAddNewTicket = () => navigate('AddTicketPetro');
+
+  const editTicket: any = (ticket: any) => {
+    console.log('Editing ticket Petro...', ticket);
   };
 
-  const onPressOut = () => {
-    console.log('hide modal...')        
-    setHelpVisible(false);
+  const deleteTicket: any = (ticket: any, index: number) => {
+    console.log('Deleting ticket...', ticket);
+    console.log('Position...', index);
+    dispatch(deleteTicketPetroFromList(index));
   };
-
-  const onPressScan = () => {
-    console.log('onPressScan...')
-  }
 
   return (
-    <SafeArea topSafeArea={false} bottomSafeArea barStyle="dark">
-      <InvoiceTicketPetroScreen onSubmit={onSubmit} />
+    <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
+      <InvoiceTicketPetroScreen
+        ticketsList={invoicingPetroTicketList}
+        onPressEditTicket={editTicket}
+        onPressDeleteTicket={deleteTicket}
+        onSubmit={onSubmit}
+        goBack={goBack}
+        onPressAddNewTicket={onPressAddNewTicket}
+      />
     </SafeArea>
   );
 };

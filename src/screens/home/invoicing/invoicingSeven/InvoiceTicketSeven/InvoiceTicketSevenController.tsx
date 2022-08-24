@@ -4,7 +4,7 @@ import InvoiceTicketSevenScreen from './InvoiceTicketSevenScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { InvoicingSevenTicketResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { deleteTicketSevenFromList } from 'rtk/slices/invoicingSlice';
 
 const InvoiceTicketSevenController: React.FC = () => {
@@ -12,8 +12,8 @@ const InvoiceTicketSevenController: React.FC = () => {
   const { invoicingSevenTicketList } = useAppSelector((state: RootState) => state.invoicing);
   const dispatch = useAppDispatch();
 
-  const onSubmit = () => {
-    console.log('submit from controller Seven...');
+  const onSubmit = async (cfdi: string, paymentMethod: string) => {
+    console.log('los campos para facturar seven son:', cfdi, paymentMethod);
     navigate('InvoiceGeneratedSeven');
   };
 
@@ -28,13 +28,6 @@ const InvoiceTicketSevenController: React.FC = () => {
     console.log('Position...', index);
     dispatch(deleteTicketSevenFromList(index));
   };
-
-  // Harcoded list:
-  // const ticketsList: InvoicingSevenTicketResponseInterface[] = [
-  //   { paymentMethod: 'Cash', status: 3, store: 'tienda', ticketNo: '11112345645698712345698712345678999', ticketTotal: '345.56' },
-  //   { paymentMethod: 'TDC', status: 3, store: 'tiendita', ticketNo: '22225645645698712345698712345678888', ticketTotal: '987.36' },
-  //   { paymentMethod: 'Cash', status: 3, store: 'tienda', ticketNo: '11112345645698712345698712345678999', ticketTotal: '345.56' }
-  // ];
 
   return (
     <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">

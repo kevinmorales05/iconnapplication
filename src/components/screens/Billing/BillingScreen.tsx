@@ -305,7 +305,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             label={`Régimen de Incorporación Fiscal`}
             placeholder={`Seleccionar`}
             error={errors.regime?.message}
-            useActionSheet
           />
 
           <TextContainer typography="h5" fontBold text={`Uso de CFDI (Predeterminado)`} marginTop={21} />
@@ -324,7 +323,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             label={`03-Gastos en General`}
             placeholder={`Seleccionar`}
             error={errors.cfdi?.message}
-            useActionSheet
           />
 
           <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={21} />
@@ -448,7 +446,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
                 label={`Colonia`}
                 placeholder={`Seleccionar`}
                 error={errors.colony?.message}
-                useActionSheet
               />
             </Container>
           )}

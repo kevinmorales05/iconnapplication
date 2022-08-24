@@ -12,7 +12,7 @@ import { useAlert, useLoading } from 'context';
 const InvoiceController: React.FC = () => {
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { invoicingProfileList, invoicingSevenTicketList } = useAppSelector((state: RootState) => state.invoicing);
+  const { invoicingProfileList, invoicingSevenTicketList, invoicingPetroTicketList } = useAppSelector((state: RootState) => state.invoicing);
   const { loading } = useAppSelector((state: RootState) => state.invoicing);
   const alert = useAlert();
   const loader = useLoading();
@@ -40,10 +40,13 @@ const InvoiceController: React.FC = () => {
     }
   };
 
-  const goToAddTicketPetro = async () => navigate('AddTicketPetro');
+  const goToAddTicketPetro = async () => {
+    if (invoicingPetroTicketList.length > 0) navigate('InvoiceTicketPetro');
+    else navigate('AddTicketPetro');
+  };
   const goToAddTicketSeven = async () => {
-    if (invoicingSevenTicketList.length > 0) navigate('InvoiceTicketSeven')
-    else navigate('AddTicketSeven')
+    if (invoicingSevenTicketList.length > 0) navigate('InvoiceTicketSeven');
+    else navigate('AddTicketSeven');
   };
 
   const showAlert = () => {

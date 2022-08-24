@@ -333,7 +333,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           label={`Genero`}
           placeholder={`Genero`}
           error={errors.gender?.message}
-          useActionSheet
         />
         <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
           <PhotosPicker.PickerMode

@@ -1,5 +1,5 @@
 import { InvoicingApi } from '../http/api-invoicing';
-import { InvoicingProfileInterface, InvoicingSevenTicketRequestInterface } from 'rtk/types/invoicing.types';
+import { InvoicingPetroTicketRequestInterface, InvoicingProfileInterface, InvoicingSevenTicketRequestInterface } from 'rtk/types/invoicing.types';
 /**
  * Function to get regimens list
  */
@@ -101,7 +101,7 @@ async function selectDefault(invoicing_profile_id: number): Promise<any> {
 /**
  * Function to select default invoicingProfile
  */
- async function getTicket(ticket: InvoicingSevenTicketRequestInterface): Promise<any> {
+ async function getTicket(ticket: InvoicingSevenTicketRequestInterface | InvoicingPetroTicketRequestInterface): Promise<any> {
   const response = await InvoicingApi.getInstance().postRequest('/invoicing/invoicingData/getTicket', ticket);
   if (response === undefined) return Promise.reject(new Error('getTicket:/invoicingData/getTicket/'));
   const { data } = response;
