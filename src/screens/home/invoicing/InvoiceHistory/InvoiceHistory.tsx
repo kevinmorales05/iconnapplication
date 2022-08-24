@@ -170,22 +170,15 @@ const InvoiceScreen: React.FC = () => {
     });
   }, [establishment, ammmount, date]);
 
-  async function stall(stallTime = 3000) {
-    await new Promise(resolve => setTimeout(resolve, stallTime));
-  }
-
   useEffect(() => {
     if (!query) return;
     if (Object.keys(query).length === 0) return;
-
-    console.log('query:', query);
 
     (async () => {
       if (!query) return;
       loader.show();
       try {
-        // const data = await invoicingServices.getInvoices(1, 2, { data: query });
-        await stall(500);
+        const data = await invoicingServices.getInvoices(1, 2, { params: query });
       } catch (e) {
       } finally {
         loader.hide();

@@ -94,7 +94,7 @@ const AMMOUNTS = [
   }
 ] as Ammount[];
 
-const InvoicingHelpModal: React.FC<AmmountModalProps> = ({ visible, onPressOut, ammount, handleAmmount }) => {
+const AmmountModal: React.FC<AmmountModalProps> = ({ visible, onPressOut, ammount, handleAmmount }) => {
   const { containerStyle } = styles;
 
   const insets = useSafeAreaInsets();
@@ -134,9 +134,10 @@ const InvoicingHelpModal: React.FC<AmmountModalProps> = ({ visible, onPressOut, 
             </Container>
             <Container row>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {AMMOUNTS.map(ammount => {
+                {AMMOUNTS.map((ammount, key) => {
                   return (
                     <AmmountChip
+                      key={key}
                       ammount={ammount}
                       selected={ammount.id === current?.id}
                       onPress={ammount => {
@@ -179,7 +180,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default InvoicingHelpModal;
+export default AmmountModal;
 
 interface AmmountFilterProps {
   onCurrent: (ammount: Ammount) => void;
