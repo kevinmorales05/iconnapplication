@@ -55,6 +55,7 @@ const AddTicketPetroController: React.FC = () => {
         })
       ).unwrap();
       if (response.responseCode === 57) {
+        // TODO: We need avoid adding tickets with different store and payment method. We must add a filter based on getTicket response.
         toast.show({ message: 'Ticket agregado correctamente.', type: 'success' });
         dispatch(addTicketPetroToList(response.data));
         navigate('InvoiceTicketPetro');

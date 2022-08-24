@@ -162,6 +162,7 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({
                 placeholder={`Seleccionar`}
                 label="Selecciona la forma de pago:"
               />
+              {/* TODO: We must disable the the paymentMethod and autopopulate with the value of the first ticket added. */}
             </Container>
           </Container>
 
@@ -175,7 +176,7 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({
               onPress={() => onSubmit(Cfdi, PaymentMethod)}
               leftIcon={<Image source={ICONN_INVOICING_INVOICE} />}
             >
-              Agregar
+              Facturar
             </Button>
           </Container>
         </Container>

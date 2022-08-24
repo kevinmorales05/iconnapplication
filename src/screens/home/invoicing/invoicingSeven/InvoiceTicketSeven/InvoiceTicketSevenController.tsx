@@ -5,13 +5,16 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { RootState, useAppDispatch, useAppSelector, deleteTicketSevenFromList, InvoicingProfileInterface } from 'rtk';
-import { useAlert } from 'context';
+import { useAlert, useLoading, useToast } from 'context';
+import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
 
 const InvoiceTicketSevenController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { invoicingProfileList, invoicingSevenTicketList } = useAppSelector((state: RootState) => state.invoicing);
+  const { loading, invoicingProfileList, invoicingSevenTicketList } = useAppSelector((state: RootState) => state.invoicing);
   const dispatch = useAppDispatch();
   const alert = useAlert();
+  const loader = useLoading();
+  const toast = useToast();
   const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
 
   useEffect(() => {
@@ -22,9 +25,61 @@ const InvoiceTicketSevenController: React.FC = () => {
     );
   }, [invoicingProfileList]);
 
+  useEffect(() => {
+    if (loading === false) {
+      loader.hide();
+    }
+  }, [loading]);
+
+  const manageGetInvoiceResponseCode = (responseCode: number): string => {
+    switch (responseCode) {
+      case 592:
+        return 'El ticket no existe en el sistema.';
+      case 580:
+        return 'Ticket facturado anteriormente.';
+      default:
+        return 'unknown';
+    }
+  };
+
+  // TODO: add double check to this!!
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
-    console.log('los campos para facturar seven son:', cfdi, paymentMethod);
-    navigate('InvoiceGeneratedSeven');
+
+    // TODO: remove this if:
+    if (true) {
+      navigate('InvoiceGeneratedSeven');
+      return;
+    }
+    
+    loader.show();
+    try {
+      const response = await dispatch(
+        getInvoiceThunk({
+          rfc: defaultProfile?.rfc.toString()!,
+          establishment: 2,
+          zipCode: defaultProfile?.zip_code.toString()!,
+          taxRegime: defaultProfile?.tax_code_key.toString()!,
+          businessName: defaultProfile?.business_name.toString()!,
+          methodOfPayment: paymentMethod,
+          invoicingProfileId: defaultProfile?.invoicing_profile_id.toString()!,
+          tickets: invoicingSevenTicketList.map(t => t.ticketNo),
+          store: '01'
+        })
+      ).unwrap();
+      if (response.responseCode === 65) {
+        navigate('InvoiceGeneratedSeven');
+      } else {
+        const errorMessage = manageGetInvoiceResponseCode(response.responseCode);
+        if (errorMessage !== 'unknown') {
+          toast.show({ message: errorMessage, type: 'error' });
+          return;
+        }
+        console.log('un codigo nuevo en respuesta al getInvoice, agregalo!!! ===> ', response.responseCode);
+        toast.show({ message: response.responseMessage, type: 'warning' });
+      }
+    } catch (error) {
+      console.warn(error);
+    }
   };
 
   const onPressAddNewTicket = () => navigate('AddTicketSeven');

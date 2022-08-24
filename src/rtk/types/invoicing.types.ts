@@ -125,3 +125,15 @@ export interface InvoicingPetroTicketRequestInterface {
   station: number;
   date: string;
 }
+
+export interface InvoiceInterface {
+  rfc: string;
+  establishment: number;
+  zipCode: string;
+  taxRegime: string;
+  businessName: string;
+  methodOfPayment: string;
+  store?: string;
+  invoicingProfileId: string;
+  tickets: string[];
+}
