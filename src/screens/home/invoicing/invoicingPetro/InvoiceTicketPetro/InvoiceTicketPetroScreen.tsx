@@ -3,7 +3,7 @@ import { Image, Platform, ScrollView, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TextContainer, Button, Container, TaxInfoCard, Touchable, CustomText, ActionButton, ListSwipeableItem, Select } from 'components';
 import theme from 'components/theme/theme';
-import { InvoicingPetroTicketResponseInterface, useAppDispatch } from 'rtk';
+import { InvoicingPetroTicketResponseInterface, useAppDispatch, InvoicingProfileInterface } from 'rtk';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useForm } from 'react-hook-form';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -11,6 +11,10 @@ import { PAYMENT_METHODS } from 'assets/files';
 import { ICONN_INVOICING_INVOICE } from 'assets/images';
 import { getCFDIListThunk } from 'rtk/thunks/invoicing.thunks';
 import { openField } from 'utils/rules';
+import InvoiceModal from 'screens/home/InvoiceModal';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
 
 interface Props {
   onSubmit: (cfdi: string, paymentMethod: string) => void;
@@ -19,14 +23,27 @@ interface Props {
   onPressEditTicket: () => void;
   onPressDeleteTicket: () => void;
   ticketsList: InvoicingPetroTicketResponseInterface[];
+  invoicingProfileList: InvoicingProfileInterface[];
+  defaultProfile: InvoicingProfileInterface | null;
 }
 
-const InvoiceTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressAddNewTicket, onPressEditTicket, onPressDeleteTicket, ticketsList }) => {
+const InvoiceTicketPetroScreen: React.FC<Props> = ({
+  onSubmit,
+  goBack,
+  onPressAddNewTicket,
+  onPressEditTicket,
+  onPressDeleteTicket,
+  ticketsList,
+  invoicingProfileList,
+  defaultProfile
+}) => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const [cfdiList, setCfdiList] = useState([]);
   const [Cfdi, setCfdi] = useState<string>('');
   const [PaymentMethod, setPaymentMethod] = useState<string>('');
+  const [visible, setVisible] = useState(false);
   const {
     control,
     formState: { isValid },
@@ -91,7 +108,12 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressAd
               ))}
               <Container style={{ paddingTop: 24, paddingBottom: 16, paddingHorizontal: 16 }}>
                 <TextContainer text="Información de tu factura" fontBold typography="h4" />
-                <TaxInfoCard withExchange name="LAS AGUILAS SA DE CV" rfc="MAAM890617BU7" onPress={() => {}}></TaxInfoCard>
+                <TaxInfoCard
+                  rfc={defaultProfile ? defaultProfile.rfc : 'Error'}
+                  name={defaultProfile ? defaultProfile.business_name : 'Error'}
+                  onPress={() => setVisible(true)}
+                  withExchange
+                />
               </Container>
             </Container>
 
@@ -157,6 +179,23 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressAd
             </Button>
           </Container>
         </Container>
+        <InvoiceModal
+          invoicingProfileList={invoicingProfileList}
+          visible={visible}
+          onAdd={() => {
+            navigate('AddRFC');
+            setVisible(false);
+          }}
+          onManage={(selected: InvoicingProfileInterface | null) => {
+            if (selected) {
+              navigate('CreateTaxProfile', selected);
+              setVisible(false);
+            }
+          }}
+          onPressOut={() => {
+            setVisible(false);
+          }}
+        />
       </ScrollView>
     </Container>
   );

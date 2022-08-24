@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import InvoiceTicketPetroScreen from './InvoiceTicketPetroScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { deleteTicketPetroFromList, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { deleteTicketPetroFromList, RootState, useAppDispatch, useAppSelector, InvoicingProfileInterface } from 'rtk';
 import { useAlert } from 'context';
 
 const InvoiceTicketPetroController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { invoicingPetroTicketList } = useAppSelector((state: RootState) => state.invoicing);
+  const { invoicingProfileList, invoicingPetroTicketList } = useAppSelector((state: RootState) => state.invoicing);
   const dispatch = useAppDispatch();
   const alert = useAlert();
+  const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
+
+  useEffect(() => {
+    setDefaultProfile(
+      invoicingProfileList.find(item => {
+        return item.default === true;
+      }) ?? null
+    );
+  }, [invoicingProfileList]);
 
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
     console.log('los campos para facturar Petro son:', cfdi, paymentMethod);
@@ -50,6 +59,8 @@ const InvoiceTicketPetroController: React.FC = () => {
   return (
     <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
       <InvoiceTicketPetroScreen
+        invoicingProfileList={invoicingProfileList}
+        defaultProfile={defaultProfile!}
         ticketsList={invoicingPetroTicketList}
         onPressEditTicket={editTicket}
         onPressDeleteTicket={deleteTicket}

@@ -1,17 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import InvoiceTicketSevenScreen from './InvoiceTicketSevenScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { RootState, useAppDispatch, useAppSelector, deleteTicketSevenFromList } from 'rtk';
+import { RootState, useAppDispatch, useAppSelector, deleteTicketSevenFromList, InvoicingProfileInterface } from 'rtk';
 import { useAlert } from 'context';
 
 const InvoiceTicketSevenController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { invoicingSevenTicketList } = useAppSelector((state: RootState) => state.invoicing);
+  const { invoicingProfileList, invoicingSevenTicketList } = useAppSelector((state: RootState) => state.invoicing);
   const dispatch = useAppDispatch();
   const alert = useAlert();
+  const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
+
+  useEffect(() => {
+    setDefaultProfile(
+      invoicingProfileList.find(item => {
+        return item.default === true;
+      }) ?? null
+    );
+  }, [invoicingProfileList]);
 
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
     console.log('los campos para facturar seven son:', cfdi, paymentMethod);
@@ -50,6 +59,8 @@ const InvoiceTicketSevenController: React.FC = () => {
   return (
     <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
       <InvoiceTicketSevenScreen
+        invoicingProfileList={invoicingProfileList}
+        defaultProfile={defaultProfile!}
         ticketsList={invoicingSevenTicketList}
         onPressEditTicket={editTicket}
         onPressDeleteTicket={deleteTicket}
