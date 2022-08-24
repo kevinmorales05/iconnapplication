@@ -144,13 +144,13 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
               control={control}
               autoCorrect={false}
               keyboardType="numeric"
-              placeholder={`6 dígitos`}
+              placeholder={`7 dígitos`}
               blurOnSubmit={true}
               marginTop={21}
               ref={folioRef}
               label="Folio"
               boldLabel
-              maxLength={6}
+              maxLength={7}
               numeric
               onSubmitEditing={() => webIdRef.current?.focus()}
               rules={numericWithSpecificLenght(6)}

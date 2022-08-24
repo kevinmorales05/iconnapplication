@@ -1,5 +1,5 @@
 import { InvoicingApi } from '../http/api-invoicing';
-import { InvoicingProfileInterface, InvoicingSevenTicketRequestInterface } from 'rtk/types/invoicing.types';
+import { InvoiceInterface, InvoicingPetroTicketRequestInterface, InvoicingProfileInterface, InvoicingSevenTicketRequestInterface } from 'rtk/types/invoicing.types';
 /**
  * Function to get regimens list
  */
@@ -101,7 +101,7 @@ async function selectDefault(invoicing_profile_id: number): Promise<any> {
 /**
  * Function to select default invoicingProfile
  */
- async function getTicket(ticket: InvoicingSevenTicketRequestInterface): Promise<any> {
+ async function getTicket(ticket: InvoicingSevenTicketRequestInterface | InvoicingPetroTicketRequestInterface): Promise<any> {
   const response = await InvoicingApi.getInstance().postRequest('/invoicing/invoicingData/getTicket', ticket);
   if (response === undefined) return Promise.reject(new Error('getTicket:/invoicingData/getTicket/'));
   const { data } = response;
@@ -109,11 +109,21 @@ async function selectDefault(invoicing_profile_id: number): Promise<any> {
 }
 
 /**
- * Function to get Invoices
+ * Function to get Invoices (list invoices)
  */
 async function getInvoices(page: number, limit: number, payload: any): Promise<any> {
   const response = await InvoicingApi.getInstance().getRequest(`/invoicing/invoicingData/list/filter?page=${page}&limit=${limit}`, payload);
   if (response === undefined) return Promise.reject(new Error(`getInvoices:/invoicing/invoicingData/list`));
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to generate invoice
+ */
+ async function getInvoice(payload: InvoiceInterface): Promise<any> {
+  const response = await InvoicingApi.getInstance().getRequest('/invoicing/invoicingData/getInvoice', {params: payload});
+  if (response === undefined) return Promise.reject(new Error('getInvoice:/invoicing/invoicingData/getInvoice'));
   const { data } = response;
   return data;
 }
@@ -129,5 +139,6 @@ export const invoicingServices = {
   resendVerificationEmail,
   selectDefault,
   getTicket,
-  getInvoices
+  getInvoices,
+  getInvoice
 };

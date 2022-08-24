@@ -42,6 +42,7 @@ const AddTicketSevenController: React.FC = () => {
     try {
       const response = await dispatch(getTicketThunk({ establishment: 2, ticket: fields.barCode })).unwrap();
       if (response.responseCode === 595) {
+        // TODO: We need avoid adding tickets with different store and payment method. We must add a filter based on getTicket response.
         toast.show({ message: 'Ticket agregado correctamente.', type: 'success' });
         dispatch(addTicketSevenToList(response.data));
         navigate('InvoiceTicketSeven');

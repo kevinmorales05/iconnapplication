@@ -191,3 +191,17 @@ export const alphaNumeric = (lenght: number): RegisterOptions => ({
     return true;
   }
 });
+
+/**
+ * Function to validate an open field with minimum lenght and no white spaces.
+ */
+export const openField = (lenght: number): RegisterOptions => ({
+  required: {
+    value: true,
+    message: `Campo requerido.`
+  },
+  minLength: {
+    value: lenght,
+    message: `Longitud invalida.`
+  }
+});

@@ -96,10 +96,13 @@ export interface Colony {
 }
 
 export interface InvoicingPetroTicketResponseInterface {
-  station: string;
-  folio: string;
-  web_id: string;
+  ticketNo: string;
+  webId: string;
   date: string;
+  station: string;
+  status: string;
+  ticketTotal: string;
+  paymentMethod: string;
 }
 
 export interface InvoicingSevenTicketResponseInterface {
@@ -113,4 +116,24 @@ export interface InvoicingSevenTicketResponseInterface {
 export interface InvoicingSevenTicketRequestInterface {
   establishment: number;
   ticket: string;
+}
+
+export interface InvoicingPetroTicketRequestInterface {
+  establishment: number;
+  folio: string;
+  webId: string;
+  station: number;
+  date: string;
+}
+
+export interface InvoiceInterface {
+  rfc: string;
+  establishment: number;
+  zipCode: string;
+  taxRegime: string;
+  businessName: string;
+  methodOfPayment: string;
+  store?: string;
+  invoicingProfileId: string;
+  tickets: string[];
 }

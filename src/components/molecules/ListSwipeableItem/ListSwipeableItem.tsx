@@ -101,7 +101,7 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
           });
         }}
       >
-        <Container row center style={item} backgroundColor={theme.brandColor.iconn_white} space="between">
+        <Container row center style={item} backgroundColor={theme.brandColor.iconn_white} space={ticketSeven ? 'between' : 'around'}>
           {ticketSeven ? (
             <>
               <TextContainer text={ticketSeven!.ticketNo} fontSize={12} />
@@ -109,9 +109,10 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
             </>
           ) : (
             <>
-              {/* // TODO: don't forget add ticketPetro + its atributes... */}
-              <TextContainer text={ticketSeven!.ticketNo} fontSize={12} />
-              <TextContainer text={ticketSeven!.ticketTotal} />
+              <TextContainer text={ticketPetro!.station} fontSize={12} />
+              <TextContainer text={ticketPetro!.ticketNo} fontSize={12} />
+              <TextContainer text={ticketPetro!.webId} fontSize={12} />
+              <TextContainer text={`$${ticketPetro!.ticketTotal}`} textColor={theme.fontColor.dark_orange} fontSize={12} fontBold />
             </>
           )}
         </Container>

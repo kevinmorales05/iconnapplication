@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ActionSheetIOS, Platform, SafeAreaView, StyleSheet } from 'react-native';
+import { Platform, SafeAreaView, StyleSheet } from 'react-native';
 import { Picker, PickerProps } from '@react-native-picker/picker';
 import { Control, FieldValues, RegisterOptions } from 'react-hook-form';
 import RBSheet from 'react-native-raw-bottom-sheet';
@@ -14,8 +14,9 @@ interface Props {
   label?: string;
   placeholder?: string;
   error?: string;
-  options: Array<string>;
-  useActionSheet?: boolean;
+  options: Array<any>;
+  optionsIdField?: string;
+  optionsValueField?: string;
   actionSheetTitle?: string;
   marginTop?: number;
   androidMode?: PickerProps['mode'];
@@ -31,8 +32,8 @@ const Select: React.FC<Props> = ({
   placeholder = '',
   error = '',
   options,
-  useActionSheet,
-  actionSheetTitle = placeholder,
+  optionsIdField = '',
+  optionsValueField = '',
   marginTop = 8,
   androidMode,
   name,
@@ -54,19 +55,6 @@ const Select: React.FC<Props> = ({
   const onPressPicker = () => {
     if (Platform.OS === 'android') {
       pickerRef.current?.focus();
-    } else if (useActionSheet) {
-      ActionSheetIOS.showActionSheetWithOptions(
-        {
-          title: actionSheetTitle,
-          tintColor: theme.brandColor.iconn_accent_principal,
-          options: [...options.map((item) => `${item}`), 'cancel'],
-          cancelButtonIndex: options.length,
-          userInterfaceStyle: 'light'
-        },
-        (buttonIndex) => {
-          if (buttonIndex !== options.length) setValue(options[buttonIndex]);
-        }
-      );
     } else {
       sheetRef.current?.open();
     }
@@ -84,7 +72,13 @@ const Select: React.FC<Props> = ({
           mode={androidMode}
         >
           <Picker.Item label={label} value="" color='lightgrey' />
-          {options.map((element) => (<Picker.Item key={element} label={element} value={element} />))}
+          {options.map((element) => 
+            optionsIdField !== '' ?
+            (
+              <Picker.Item key={element[optionsIdField]} label={element[optionsValueField]} value={element[optionsIdField]} />
+            ) : (
+              <Picker.Item key={element} label={element} value={element} />
+            ))}
         </Picker>
         )}
         <Input
@@ -137,14 +131,22 @@ const Select: React.FC<Props> = ({
             onValueChange={setValue}
             dropdownIconRippleColor={theme.brandColor.iconn_accent_principal}
           >
-            {options.map((element) => (
-              <Picker.Item
-                key={element}
-                label={element}
-                value={element}
-                color={theme.brandColor.iconn_dark_grey}
-              />
-            ))}
+            {options.map(element =>
+              optionsIdField !== '' ? (
+                <Picker.Item
+                  key={element[optionsIdField]}
+                  label={element[optionsValueField]}
+                  value={element[optionsIdField]}
+                  color={theme.brandColor.iconn_dark_grey}
+                />
+              ) : (
+                <Picker.Item
+                  key={element}
+                  label={element}
+                  value={element}
+                  color={theme.brandColor.iconn_dark_grey}
+                />
+              ))}
           </Picker>
           <SafeAreaView />
         </Container>

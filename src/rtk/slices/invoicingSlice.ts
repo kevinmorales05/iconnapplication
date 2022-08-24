@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getCFDIListThunk, getInvoicingProfileListThunk, getTaxRegimeListThunk, getTicketThunk } from '../thunks/invoicing.thunks';
+import { getCFDIListThunk, getInvoicingProfileListThunk, getTaxRegimeListThunk, getTicketThunk, getInvoiceThunk } from '../thunks/invoicing.thunks';
 import { InvoicingPetroTicketResponseInterface, InvoicingProfileInterface, InvoicingSevenTicketResponseInterface } from '../types';
 
 const initialStateProfileList: InvoicingProfileInterface[] = [];
@@ -31,60 +31,71 @@ const invoicingSlice = createSlice({
       state.invoicingSevenTicketList.push(action.payload);
     },
     deleteTicketSevenFromList(state, action: PayloadAction<number>) {
-      state.invoicingSevenTicketList.splice(action.payload, 1); // TODO check this!
+      state.invoicingSevenTicketList.splice(action.payload, 1);
+    },
+    addTicketPetroToList(state, action: PayloadAction<InvoicingPetroTicketResponseInterface>) {
+      state.invoicingPetroTicketList.push(action.payload);
+    },
+    deleteTicketPetroFromList(state, action: PayloadAction<number>) {
+      state.invoicingPetroTicketList.splice(action.payload, 1);
     }
   },
   extraReducers: builder => {
     builder.addCase(getTaxRegimeListThunk.pending, state => {
-      console.log('getTaxRegimeListThunk pending...');
       state.loading = true;
     });
     builder.addCase(getTaxRegimeListThunk.fulfilled, state => {
-      console.log('getTaxRegimeListThunk fullfilled...');
       state.loading = false;
     });
     builder.addCase(getTaxRegimeListThunk.rejected, state => {
-      console.log('getTaxRegimeListThunk rejected...');
       state.loading = false;
     });
     builder.addCase(getCFDIListThunk.pending, state => {
-      console.log('getCFDIListThunk pending...');
       state.loading = true;
     });
     builder.addCase(getCFDIListThunk.fulfilled, state => {
-      console.log('getCFDIListThunk fullfilled...');
       state.loading = false;
     });
     builder.addCase(getCFDIListThunk.rejected, state => {
-      console.log('getCFDIListThunk rejected...');
       state.loading = false;
     });
     builder.addCase(getInvoicingProfileListThunk.pending, state => {
-      console.log('getInvoicingProfileListThunk pending...');
       state.loading = true;
     });
     builder.addCase(getInvoicingProfileListThunk.fulfilled, state => {
-      console.log('getInvoicingProfileListThunk fullfilled...');
       state.loading = false;
     });
     builder.addCase(getInvoicingProfileListThunk.rejected, state => {
-      console.log('getInvoicingProfileListThunk rejected...');
       state.loading = false;
     });
     builder.addCase(getTicketThunk.pending, state => {
-      console.log('getTicketThunk pending...');
       state.loading = true;
     });
     builder.addCase(getTicketThunk.fulfilled, state => {
-      console.log('getTicketThunk fullfilled...');
       state.loading = false;
     });
     builder.addCase(getTicketThunk.rejected, state => {
-      console.log('getTicketThunk rejected...');
+      state.loading = false;
+    });
+    builder.addCase(getInvoiceThunk.pending, state => {
+      state.loading = true;
+    });
+    builder.addCase(getInvoiceThunk.fulfilled, state => {
+      state.loading = false;
+    });
+    builder.addCase(getInvoiceThunk.rejected, state => {
       state.loading = false;
     });
   }
 });
-// TODO: validate if it is possible to reduce extra reducers.
-export const { setInvoicingInitialState, setInvoicing, setInvoicingProfilesList, addTicketSevenToList, deleteTicketSevenFromList } = invoicingSlice.actions;
+
+export const {
+  setInvoicingInitialState,
+  setInvoicing,
+  setInvoicingProfilesList,
+  addTicketSevenToList,
+  deleteTicketSevenFromList,
+  addTicketPetroToList,
+  deleteTicketPetroFromList
+} = invoicingSlice.actions;
 export default invoicingSlice.reducer;
