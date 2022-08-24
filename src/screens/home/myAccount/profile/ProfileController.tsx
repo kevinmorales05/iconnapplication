@@ -45,7 +45,7 @@ const ProfileController: React.FC = () => {
       });
     } catch (error) {
       toast.show({
-        message: 'Hubo un error al guardar tus datos. Intenta mas tarde.',
+        message: 'Hubo un error al guardar tus datos. /n Intenta mas tarde.',
         type: 'error'
       });
     } finally {

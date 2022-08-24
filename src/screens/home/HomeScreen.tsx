@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
@@ -41,7 +41,6 @@ const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPress
         <Button round onPress={onPressLogOut} fontSize="h4" fontBold style={{ marginTop: 8 }} icon={<SimpleLineIcons name="logout" size={24} color="white" />}>
           Salir
         </Button>
-        {/* <CardBilling text="Facturar ticket" onPress={() => console.log('funciona!!!')} type="seven"  /> */}
       </Container>
     </ScrollView>
   );

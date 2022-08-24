@@ -58,7 +58,9 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
           <Container style={{ marginTop: 36 }}>
             <CardAction
               text="Historial de Facturas"
-              onPress={() => {}}
+              onPress={() => {
+                navigate('InvoiceHistory');
+              }}
               icon={<AntDesign name="copy1" size={25} color={theme.brandColor.iconn_accent_secondary} />}
             />
           </Container>
@@ -99,25 +101,23 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
           onPress={goToAddTicketPetro}
         />
       </Container>
-      <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-        <InvoiceModal
-          invoicingProfileList={invoicingProfileList}
-          visible={visible}
-          onAdd={() => {
-            navigate('AddRFC');
+      <InvoiceModal
+        invoicingProfileList={invoicingProfileList}
+        visible={visible}
+        onAdd={() => {
+          navigate('AddRFC');
+          setVisible(false);
+        }}
+        onManage={(selected: InvoicingProfileInterface | null) => {
+          if (selected) {
+            navigate('CreateTaxProfile', selected);
             setVisible(false);
-          }}
-          onManage={(selected: InvoicingProfileInterface | null) => {
-            if (selected) {
-              navigate('CreateTaxProfile', selected);
-              setVisible(false);
-            }
-          }}
-          onPressOut={() => {
-            setVisible(false);
-          }}
-        />
-      </SafeArea>
+          }
+        }}
+        onPressOut={() => {
+          setVisible(false);
+        }}
+      />
     </ScrollView>
   );
 };

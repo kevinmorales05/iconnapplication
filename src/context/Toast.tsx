@@ -37,7 +37,7 @@ export const Toast = () => {
     <Animated.View
       style={[
         styles.toast,
-        toast.visible ? { height: 59 }: { height: 0 },
+        toast.visible ? { height: 76 }: { height: 0 },
         {opacity: fade},
         { backgroundColor: toast.type === 'error' ? 
           theme.brandColor.iconn_error : toast.type === 'success' ? 
@@ -45,16 +45,18 @@ export const Toast = () => {
           theme.brandColor.iconn_warning : undefined!},
       ]}>
       <Container row center crossCenter space='between'>
+        <Container center space='between'>
         <AntDesign 
           name={toast.type === 'error' ? 
             'closecircleo' : toast.type === 'success' ? 
             `checkcircleo` : toast.type === 'warning' ? 
             'warning' : undefined!} 
           color={theme.brandColor.iconn_white}
-          style={{marginLeft:16}}
+          style={{marginLeft:16, marginRight: 16}}
           size={24}
-        />
-        <Animated.Text style={{opacity: fade, color: theme.brandColor.iconn_white, fontSize: 16, fontWeight: '400', letterSpacing: 0.3,}}> {toast.message}</Animated.Text>
+        /> 
+        </Container>
+        <Animated.Text style={{opacity: fade, color: theme.brandColor.iconn_white, fontSize: 16, fontWeight: '400', letterSpacing: 0.3, width: 250 }}> {toast.message}</Animated.Text>
         <TouchableOpacity onPress={hide} style={{marginRight: 16}}>
           <Ionicons name={`close-outline`} size={24} color={theme.brandColor.iconn_white} />
         </TouchableOpacity>

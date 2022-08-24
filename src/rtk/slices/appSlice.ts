@@ -14,6 +14,7 @@ const appSlice = createSlice({
     setAppInitialState(state) {
       state.error = '';
       state.internetReachability = 0;
+      state.internetReachabilityReviewed = 0;
     },
     setAppError(state, action: PayloadAction<AppInterface>) {
       state.error = action.payload.error;
