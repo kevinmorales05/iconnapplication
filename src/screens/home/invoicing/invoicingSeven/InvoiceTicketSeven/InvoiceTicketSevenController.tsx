@@ -4,13 +4,14 @@ import InvoiceTicketSevenScreen from './InvoiceTicketSevenScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { RootState, useAppDispatch, useAppSelector } from 'rtk';
-import { deleteTicketSevenFromList } from 'rtk/slices/invoicingSlice';
+import { RootState, useAppDispatch, useAppSelector, deleteTicketSevenFromList } from 'rtk';
+import { useAlert } from 'context';
 
 const InvoiceTicketSevenController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { invoicingSevenTicketList } = useAppSelector((state: RootState) => state.invoicing);
   const dispatch = useAppDispatch();
+  const alert = useAlert();
 
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
     console.log('los campos para facturar seven son:', cfdi, paymentMethod);
@@ -20,13 +21,30 @@ const InvoiceTicketSevenController: React.FC = () => {
   const onPressAddNewTicket = () => navigate('AddTicketSeven');
 
   const editTicket: any = (ticket: any) => {
-    console.log('Editing ticket...', ticket);
+    console.log('Editing ticket Seven...', ticket);
   };
 
   const deleteTicket: any = (ticket: any, index: number) => {
     console.log('Deleting ticket...', ticket);
     console.log('Position...', index);
-    dispatch(deleteTicketSevenFromList(index));
+    alert.show(
+      {
+        title: 'Borrar ticket',
+        message: 'Deseas borrar el ticket capturado.',
+        acceptTitle: 'Cancelar',
+        cancelTitle: 'Borrar',
+        cancelOutline: 'iconn_error',
+        cancelTextColor: 'iconn_error',
+        onCancel() {
+          alert.hide();
+          dispatch(deleteTicketSevenFromList(index));
+        },
+        onAccept() {
+          alert.hide();
+        }
+      },
+      'error'
+    );
   };
 
   return (
