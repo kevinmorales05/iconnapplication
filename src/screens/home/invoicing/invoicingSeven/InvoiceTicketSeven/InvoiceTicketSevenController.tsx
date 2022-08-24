@@ -102,6 +102,7 @@ const InvoiceTicketSevenController: React.FC = () => {
         onCancel() {
           alert.hide();
           dispatch(deleteTicketSevenFromList(index));
+          toast.show({ message: 'Ticket borrado correctamente.', type: 'success' });
         },
         onAccept() {
           alert.hide();

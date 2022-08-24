@@ -102,6 +102,7 @@ const InvoiceTicketPetroController: React.FC = () => {
         onCancel() {
           alert.hide();
           dispatch(deleteTicketPetroFromList(index));
+          toast.show({ message: 'Ticket borrado correctamente.', type: 'success' });
         },
         onAccept() {
           alert.hide();
