@@ -8,12 +8,22 @@ import { InvoicingHelper } from 'components';
 import { ICONN_INVOICING_PETRO_REFERENCE } from 'assets/images';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { useLoading, useToast } from 'context';
-import { addTicketPetroToList, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { addTicketPetroToList, InvoicingPetroTicketResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getTicketThunk } from 'rtk/thunks/invoicing.thunks';
 import { formatDate } from 'utils/functions';
 import moment from 'moment';
 
-const AddTicketPetroController: React.FC = () => {
+const AddTicketPetroController: React.FC<any> = ({ route }) => {
+  const [Ticket, setTicket] = useState<InvoicingPetroTicketResponseInterface>();
+  const [Position, setPosition] = useState<number>();
+
+  useEffect(() => {
+    if (route?.params) {
+      setTicket(route.params.ticket);
+      setPosition(route.params.position);
+    }
+  }, []);
+
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
   const toast = useToast();
@@ -83,7 +93,14 @@ const AddTicketPetroController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea barStyle="dark">
-      <AddTicketPetroScreen onSubmit={onSubmit} goBack={goBack} onPressQuestionButton={onPressHelpIcon} onPressScan={onPressScan} />
+      <AddTicketPetroScreen
+        onSubmit={onSubmit}
+        goBack={goBack}
+        onPressQuestionButton={onPressHelpIcon}
+        onPressScan={onPressScan}
+        ticket={Ticket}
+        position={Position}
+      />
       <InvoicingHelper
         onPressOut={onPressOut}
         visible={helpVisible}

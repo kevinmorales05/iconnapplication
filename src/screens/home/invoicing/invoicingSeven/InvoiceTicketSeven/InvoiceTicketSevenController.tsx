@@ -44,13 +44,12 @@ const InvoiceTicketSevenController: React.FC = () => {
 
   // TODO: add double check to this!!
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
-
     // TODO: remove this if:
     if (true) {
       navigate('InvoiceGeneratedSeven');
       return;
     }
-    
+
     loader.show();
     try {
       const response = await dispatch(
@@ -82,15 +81,10 @@ const InvoiceTicketSevenController: React.FC = () => {
     }
   };
 
-  const onPressAddNewTicket = () => navigate('AddTicketSeven');
-
-  const editTicket: any = (ticket: any) => {
-    console.log('Editing ticket Seven...', ticket);
-  };
+  const onPressAddNewTicket = () => navigate('AddTicketSeven', { ticket: undefined, position: undefined });
+  const editTicket: any = (ticket: any, position: number) => navigate('AddTicketSeven', { ticket, position });
 
   const deleteTicket: any = (ticket: any, index: number) => {
-    console.log('Deleting ticket...', ticket);
-    console.log('Position...', index);
     alert.show(
       {
         title: 'Borrar ticket',

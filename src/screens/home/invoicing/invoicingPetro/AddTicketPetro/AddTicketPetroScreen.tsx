@@ -11,12 +11,16 @@ import { useForm } from 'react-hook-form';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { alphaNumeric, date, numericWithSpecificLenght } from 'utils/rules';
+import { useIsFocused } from '@react-navigation/native';
+import { InvoicingPetroTicketResponseInterface } from 'rtk';
 
 interface Props {
   onSubmit: (fields: any) => void;
   goBack: () => void;
   onPressQuestionButton: () => void;
   onPressScan: () => void;
+  ticket?: InvoicingPetroTicketResponseInterface;
+  position?: number;
 }
 
 const styles = StyleSheet.create({
@@ -26,7 +30,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, onPressScan }) => {
+const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, onPressScan, ticket, position }) => {
   const { closeContainer } = styles;
   const insets = useSafeAreaInsets();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -36,6 +40,7 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
     handleSubmit,
     formState: { errors, isValid },
     register,
+    reset,
     setValue,
     trigger
   } = useForm({
@@ -46,12 +51,40 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
   const folioRef = useRef<TextInput>(null);
   const webIdRef = useRef<TextInput>(null);
   const ticketDateRef = useRef<TextInput>(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     if (stationRef.current) {
       stationRef.current.focus();
     }
   }, []);
+
+  const resetForm = () => {
+    reset({
+      station: '',
+      folio: '',
+      webId: '',
+      ticketDate: ''
+    });
+    if (stationRef.current) stationRef.current.focus();
+  };
+
+  const populateForm = () => {
+    setValue('station', ticket?.station);
+    setValue('folio', ticket?.ticketNo);
+    setValue('webId', ticket?.webId);
+    setValue('ticketDate', moment(ticket?.date).format('DD/MM/YYYY'));
+    trigger('station');
+    trigger('folio');
+    trigger('webId');
+    trigger('ticketDate');
+    if (stationRef.current) stationRef.current.focus();
+  };
+
+  useEffect(() => {
+    if (isFocused && !ticket && !position) resetForm();
+    else populateForm();
+  }, [ticket]);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);

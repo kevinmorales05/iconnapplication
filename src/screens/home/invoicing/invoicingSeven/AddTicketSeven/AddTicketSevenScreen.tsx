@@ -10,11 +10,14 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useForm } from 'react-hook-form';
 import { numericWithSpecificLenght } from 'utils/rules';
 import { useIsFocused } from '@react-navigation/native';
+import { InvoicingSevenTicketResponseInterface } from 'rtk';
 interface Props {
   onSubmit: (fields: any) => void;
   goBack: () => void;
   onPressQuestionButton: () => void;
   onPressScan: () => void;
+  ticket?: InvoicingSevenTicketResponseInterface;
+  position?: number;
 }
 
 const styles = StyleSheet.create({
@@ -24,7 +27,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const AddTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, onPressScan }) => {
+const AddTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, onPressScan, ticket, position }) => {
   const { closeContainer } = styles;
   const insets = useSafeAreaInsets();
   const {
@@ -32,7 +35,9 @@ const AddTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
     handleSubmit,
     formState: { errors, isValid },
     register,
-    reset
+    reset,
+    setValue,
+    trigger
   } = useForm({
     mode: 'onChange'
   });
@@ -45,9 +50,16 @@ const AddTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
     if (barCodeRef.current) barCodeRef.current.focus();
   };
 
+  const populateForm = () => {
+    setValue('barCode', ticket?.ticketNo);
+    trigger('barCode');
+    if (barCodeRef.current) barCodeRef.current.focus();
+  };
+
   useEffect(() => {
-    isFocused && resetForm();
-  }, [isFocused]);
+    if (isFocused && !ticket && !position) resetForm();
+    else populateForm();
+  }, [ticket]);
 
   return (
     <Container flex useKeyboard>

@@ -8,11 +8,20 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { InvoicingHelper } from 'components';
 import { ICONN_INVOICING_SEVEN_REFERENCE } from 'assets/images';
-import { RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { addTicketSevenToList, InvoicingSevenTicketResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getTicketThunk } from 'rtk/thunks/invoicing.thunks';
-import { addTicketSevenToList } from 'rtk/slices/invoicingSlice';
 
-const AddTicketSevenController: React.FC = () => {
+const AddTicketSevenController: React.FC<any> = ({ route }) => {
+  const [Ticket, setTicket] = useState<InvoicingSevenTicketResponseInterface>();
+  const [Position, setPosition] = useState<number>();
+
+  useEffect(() => {
+    if (route?.params) {
+      setTicket(route.params.ticket);
+      setPosition(route.params.position);
+    }
+  }, []);
+
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
   const toast = useToast();
@@ -74,7 +83,14 @@ const AddTicketSevenController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea barStyle="dark">
-      <AddTicketSevenScreen onSubmit={onSubmit} goBack={goBack} onPressScan={onPressScan} onPressQuestionButton={onPressHelpIcon} />
+      <AddTicketSevenScreen
+        onSubmit={onSubmit}
+        goBack={goBack}
+        onPressScan={onPressScan}
+        onPressQuestionButton={onPressHelpIcon}
+        ticket={Ticket}
+        position={Position}
+      />
       <InvoicingHelper
         onPressOut={onPressOut}
         visible={helpVisible}
