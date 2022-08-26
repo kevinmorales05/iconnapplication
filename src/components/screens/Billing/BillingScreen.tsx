@@ -261,7 +261,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             placeholder={`Nombre completo o Razón Social`}
             blurOnSubmit={false}
             error={errors.businessName?.message}
-            maxLength={30}
+            maxLength={100}
             marginTop={4}
             renderErrorIcon={false}
           />

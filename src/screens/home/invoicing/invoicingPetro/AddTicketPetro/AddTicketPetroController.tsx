@@ -64,8 +64,17 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
     return !!ticket;
   };
 
-  // TODO: we need more petro tickets to test this.
   const onSubmit = async (fields: FieldValues) => {
+    if (invoicingPetroTicketList.length > 0) {
+      if (!!!invoicingPetroTicketList.find(t => t.station === fields.station)) {
+        toast.show({ message: 'La estación debe ser igual a la del ticket anterior.', type: 'warning' });
+        return;
+      }
+      if (!!invoicingPetroTicketList.find(t => t.ticketNo === fields.folio)) {
+        toast.show({ message: 'El folio debe ser diferente al del ticket anterior.', type: 'warning' });
+        return;
+      }
+    }
     const dateMomentObject = moment(fields.ticketDate, 'DD/MM/YYYY');
     const dateObject = dateMomentObject.toDate();
 
@@ -89,15 +98,10 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
       if (response.responseCode === 57) {
         if (!invoicingPaymentMethodForPetroTicketList && !invoicingStoreForPetroTicketList) {
           dispatch(setInvoicingPaymentMethodForPetroTicketList(response.data.paymentMethod));
-          dispatch(setInvoicingStoreForPetroTicketList(response.data.store));
-        } else {
-          if (invoicingPaymentMethodForPetroTicketList !== response.data.paymentMethod) {
-            toast.show({ message: 'El método de pago debe ser igual al del ticket anterior.', type: 'warning' });
-            return;
-          } else if (invoicingStoreForPetroTicketList !== response.data.store) {
-            toast.show({ message: 'La sucursal debe ser igual a la del ticket anterior.', type: 'warning' });
-            return;
-          }
+          dispatch(setInvoicingStoreForPetroTicketList(response.data.station));
+        } else if (invoicingPaymentMethodForPetroTicketList !== response.data.paymentMethod) {
+          toast.show({ message: 'El método de pago debe ser igual al del ticket anterior.', type: 'warning' });
+          return;
         }
 
         if (Position! >= 0) dispatch(replaceTicketPetroFromList({ ticket: response.data, position: Position! }));
@@ -107,13 +111,7 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
 
         navigate('InvoiceTicketPetro');
       } else {
-        const errorMessage = manageGetTicketResponseCode(response.responseCode);
-        if (errorMessage !== 'unknown') {
-          toast.show({ message: errorMessage, type: 'error' });
-          return;
-        }
-        console.log('un codigo nuevo en petro, agregalo!!! ===> ', response.responseCode);
-        toast.show({ message: response.responseMessage, type: 'warning' });
+        toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
       console.warn(error);

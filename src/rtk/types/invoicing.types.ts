@@ -136,14 +136,22 @@ export interface InvoicingPetroTicketRequestInterface {
   date: string;
 }
 
+export interface InvoicingGetInvoiceTicketInterface {
+  folio: string;
+  station: string;
+  webId: string;
+  date: string;
+}
+
 export interface InvoiceInterface {
-  rfc: string;
   establishment: number;
+  rfc: string;
   zipCode: string;
-  taxRegime: string;
+  taxRegime: number;
   businessName: string;
   methodOfPayment: string;
-  store?: string;
-  invoicingProfileId: string;
-  tickets: string[];
+  store: string;
+  invoicingProfileId: number;
+  cfdiUse: string;
+  tickets?: string[] | InvoicingGetInvoiceTicketInterface[];
 }

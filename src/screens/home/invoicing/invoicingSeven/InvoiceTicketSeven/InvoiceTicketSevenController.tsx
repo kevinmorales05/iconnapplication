@@ -9,10 +9,9 @@ import { useAlert, useLoading, useToast } from 'context';
 import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
 
 const InvoiceTicketSevenController: React.FC = () => {
-  const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { loading, invoicingProfileList, invoicingSevenTicketList, invoicingPaymentMethodForSevenTicketList } = useAppSelector(
-    (state: RootState) => state.invoicing
-  );
+  const { navigate, goBack, push } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { loading, invoicingProfileList, invoicingSevenTicketList, invoicingPaymentMethodForSevenTicketList, invoicingStoreForSevenTicketList } =
+    useAppSelector((state: RootState) => state.invoicing);
   const dispatch = useAppDispatch();
   const alert = useAlert();
   const loader = useLoading();
@@ -33,58 +32,56 @@ const InvoiceTicketSevenController: React.FC = () => {
     }
   }, [loading]);
 
-  const manageGetInvoiceResponseCode = (responseCode: number): string => {
-    switch (responseCode) {
-      case 592:
-        return 'El ticket no existe en el sistema.';
-      case 580:
-        return 'Ticket facturado anteriormente.';
-      default:
-        return 'unknown';
-    }
-  };
-
-  // TODO: add double check to this!!
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
     // TODO: remove this "if":
-    if (true) {
-      navigate('InvoiceGeneratedSeven');
-      return;
-    }
+    // if (true) {
+    //   navigate('InvoiceGeneratedSeven');
+    //   return;
+    // }
+
+    console.log('establishment: ', 2);
+    console.log('rfc: ', defaultProfile?.rfc);
+    console.log('zipCode: ', defaultProfile?.zip_code);
+    console.log('taxRegime: ', defaultProfile?.tax_code_key);
+    console.log('businessName: ', defaultProfile?.business_name);
+    console.log('methodOfPayment: ', invoicingPaymentMethodForSevenTicketList);
+    console.log('store: ', invoicingStoreForSevenTicketList);
+    console.log('invoicingProfileId: ', defaultProfile?.invoicing_profile_id);
+    console.log('cfdiUse: ', cfdi);
+    console.log(
+      'tickets: ',
+      invoicingSevenTicketList.map(t => t.ticketNo)
+    );
 
     loader.show();
     try {
       const response = await dispatch(
         getInvoiceThunk({
-          rfc: defaultProfile?.rfc.toString()!,
           establishment: 2,
-          zipCode: defaultProfile?.zip_code.toString()!,
-          taxRegime: defaultProfile?.tax_code_key.toString()!,
-          businessName: defaultProfile?.business_name.toString()!,
-          methodOfPayment: paymentMethod,
-          invoicingProfileId: defaultProfile?.invoicing_profile_id.toString()!,
-          tickets: invoicingSevenTicketList.map(t => t.ticketNo),
-          store: '01'
+          rfc: defaultProfile?.rfc!,
+          zipCode: defaultProfile?.zip_code!,
+          taxRegime: defaultProfile?.tax_code_key!,
+          businessName: defaultProfile?.business_name!,
+          methodOfPayment: invoicingPaymentMethodForSevenTicketList,
+          store: invoicingStoreForSevenTicketList,
+          invoicingProfileId: defaultProfile?.invoicing_profile_id!,
+          cfdiUse: cfdi,
+          tickets: invoicingSevenTicketList.map(t => t.ticketNo)
         })
       ).unwrap();
-      if (response.responseCode === 65) {
+      if (response.responseCode === 75) {
         navigate('InvoiceGeneratedSeven');
       } else {
-        const errorMessage = manageGetInvoiceResponseCode(response.responseCode);
-        if (errorMessage !== 'unknown') {
-          toast.show({ message: errorMessage, type: 'error' });
-          return;
-        }
-        console.log('un codigo nuevo en respuesta al getInvoice, agregalo!!! ===> ', response.responseCode);
-        toast.show({ message: response.responseMessage, type: 'warning' });
+        toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
       console.warn(error);
     }
   };
 
-  const onPressAddNewTicket = () => navigate('AddTicketSeven', { ticket: null, position: undefined });
-  const editTicket: any = (ticket: any, position: number) => navigate('AddTicketSeven', { ticket, position });
+  const onPressAddNewTicket = () => push('AddTicketSeven', { ticket: null, position: undefined });
+
+  const editTicket: any = (ticket: any, position: number) => push('AddTicketSeven', { ticket, position });
 
   const deleteTicket: any = (ticket: any, index: number) => {
     alert.show(

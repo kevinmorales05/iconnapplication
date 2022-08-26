@@ -46,17 +46,6 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
     }
   }, [loading]);
 
-  const manageGetTicketResponseCode = (responseCode: number): string => {
-    switch (responseCode) {
-      case 592:
-        return 'El ticket no existe en el sistema.';
-      case 580:
-        return 'Ticket facturado anteriormente.';
-      default:
-        return 'unknown';
-    }
-  };
-
   const isTheSameTicket = (barCode: string) => {
     const ticket = invoicingSevenTicketList.find(t => t.ticketNo === barCode);
     return !!ticket;
@@ -92,13 +81,7 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
 
         navigate('InvoiceTicketSeven');
       } else {
-        const errorMessage = manageGetTicketResponseCode(response.responseCode);
-        if (errorMessage !== 'unknown') {
-          toast.show({ message: errorMessage, type: 'error' });
-          return;
-        }
-        console.log('un codigo nuevo, agregalo!!! ===> ', response.responseCode);
-        toast.show({ message: response.responseMessage, type: 'warning' });
+        toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
       console.warn(error);
