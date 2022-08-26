@@ -8,7 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { InvoicingHelper } from 'components';
 import { ICONN_INVOICING_SEVEN_REFERENCE } from 'assets/images';
-import { addTicketSevenToList, InvoicingSevenTicketResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { replaceTicketSevenFromList, addTicketSevenToList, InvoicingSevenTicketResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getTicketThunk } from 'rtk/thunks/invoicing.thunks';
 
 const AddTicketSevenController: React.FC<any> = ({ route }) => {
@@ -20,14 +20,14 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
       setTicket(route.params.ticket);
       setPosition(route.params.position);
     }
-  }, []);
+  }, [route?.params]);
 
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
   const toast = useToast();
   const loader = useLoading();
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state: RootState) => state.invoicing);
+  const { loading, invoicingSevenTicketList } = useAppSelector((state: RootState) => state.invoicing);
 
   useEffect(() => {
     if (loading === false) {
@@ -46,14 +46,26 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
     }
   };
 
-  const onSubmit = async (fields: SubmitHandler<FieldValues>) => {
+  const isTheSameTicket = (barCode: string) => {
+    const ticket = invoicingSevenTicketList.find(t => t.ticketNo === barCode);
+    return !!ticket;
+  }
+
+  const onSubmit = async (fields: FieldValues) => {
+    if(isTheSameTicket(fields.barCode)){
+      toast.show({ message: 'No has realizado cambios en el ticket.', type: 'warning' });
+      return;
+    }
     loader.show();
     try {
       const response = await dispatch(getTicketThunk({ establishment: 2, ticket: fields.barCode })).unwrap();
-      if (response.responseCode === 595) {
+      if (response.responseCode === 57) {
         // TODO: We need avoid adding tickets with different store and payment method. We must add a filter based on getTicket response.
         toast.show({ message: 'Ticket agregado correctamente.', type: 'success' });
-        dispatch(addTicketSevenToList(response.data));
+
+        if (Position! >= 0) dispatch(replaceTicketSevenFromList({ticket: response.data, position: Position!}));
+        else dispatch(addTicketSevenToList(response.data));
+
         navigate('InvoiceTicketSeven');
       } else {
         const errorMessage = manageGetTicketResponseCode(response.responseCode);

@@ -105,12 +105,22 @@ export interface InvoicingPetroTicketResponseInterface {
   paymentMethod: string;
 }
 
+export interface InvoicingPetroTicketResponseWithPositionInterface {
+  ticket: InvoicingPetroTicketResponseInterface;
+  position: number;
+}
+
 export interface InvoicingSevenTicketResponseInterface {
   ticketNo: string;
   store: string;
   status: number;
   ticketTotal: string;
   paymentMethod: string;
+}
+
+export interface InvoicingSevenTicketResponseWithPositionInterface {
+  ticket: InvoicingSevenTicketResponseInterface;
+  position: number;
 }
 
 export interface InvoicingSevenTicketRequestInterface {

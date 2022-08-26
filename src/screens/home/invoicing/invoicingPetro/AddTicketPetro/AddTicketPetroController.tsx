@@ -6,9 +6,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { InvoicingHelper } from 'components';
 import { ICONN_INVOICING_PETRO_REFERENCE } from 'assets/images';
-import { FieldValues, SubmitHandler } from 'react-hook-form';
+import { FieldValues } from 'react-hook-form';
 import { useLoading, useToast } from 'context';
-import { addTicketPetroToList, InvoicingPetroTicketResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { replaceTicketPetroFromList, addTicketPetroToList, InvoicingPetroTicketResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getTicketThunk } from 'rtk/thunks/invoicing.thunks';
 import { formatDate } from 'utils/functions';
 import moment from 'moment';
@@ -22,14 +22,14 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
       setTicket(route.params.ticket);
       setPosition(route.params.position);
     }
-  }, []);
+  }, [route?.params]);
 
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
   const toast = useToast();
   const loader = useLoading();
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state: RootState) => state.invoicing);
+  const { loading, invoicingPetroTicketList } = useAppSelector((state: RootState) => state.invoicing);
 
   useEffect(() => {
     if (loading === false) {
@@ -48,10 +48,21 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
     }
   };
 
+  const isTheSameTicket = (station: string, folio: string, webId: string, date: string) => {
+    const ticket = invoicingPetroTicketList.find(t => t.ticketNo === folio && t.date === date && t.webId === webId && t.station === station);
+    return !!ticket;
+  };
+
   // TODO: we need more petro tickets to test this.
-  const onSubmit = async (fields: SubmitHandler<FieldValues>) => {
+  const onSubmit = async (fields: FieldValues) => {
     const dateMomentObject = moment(fields.ticketDate, 'DD/MM/YYYY');
     const dateObject = dateMomentObject.toDate();
+
+    if (isTheSameTicket(fields.station, fields.folio, fields.webId, formatDate(dateObject, "yyyy'-'MM'-'dd'T'HH':'mm':'ss"))) {
+      toast.show({ message: 'No has realizado cambios en el ticket.', type: 'warning' });
+      return;
+    }
+
     loader.show();
     try {
       // establishment 1 = petro
@@ -67,7 +78,10 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
       if (response.responseCode === 57) {
         // TODO: We need avoid adding tickets with different store and payment method. We must add a filter based on getTicket response.
         toast.show({ message: 'Ticket agregado correctamente.', type: 'success' });
-        dispatch(addTicketPetroToList(response.data));
+
+        if (Position! >= 0) dispatch(replaceTicketPetroFromList({ ticket: response.data, position: Position! }));
+        else dispatch(addTicketPetroToList(response.data));
+
         navigate('InvoiceTicketPetro');
       } else {
         const errorMessage = manageGetTicketResponseCode(response.responseCode);

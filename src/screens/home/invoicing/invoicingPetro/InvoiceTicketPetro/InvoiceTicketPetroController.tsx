@@ -81,7 +81,7 @@ const InvoiceTicketPetroController: React.FC = () => {
     }
   };
 
-  const onPressAddNewTicket = () => navigate('AddTicketPetro', { ticket: undefined, position: undefined });
+  const onPressAddNewTicket = () => navigate('AddTicketPetro', { ticket: null, position: undefined });
   const editTicket: any = (ticket: any, position: number) => navigate('AddTicketPetro', { ticket, position });
 
   const deleteTicket: any = (ticket: any, index: number) => {

@@ -44,7 +44,13 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
         {buttonType === 'edit' ? (
-          <RectButton style={[rightAction, { backgroundColor: backgroundColor }]} onPress={() => onPressEdit(ticketSeven ? ticketSeven : ticketPetro, index)}>
+          <RectButton
+            style={[rightAction, { backgroundColor: backgroundColor }]}
+            onPress={() => {
+              closeRow(index);
+              onPressEdit(ticketSeven ? ticketSeven : ticketPetro, index);
+            }}
+          >
             <Container middle>
               <Octicons name="pencil" size={theme.iconSize.xsmall} color={theme.brandColor.iconn_white} />
               <TextContainer fontBold text="Editar" textColor={theme.fontColor.white} fontSize={theme.fontSize.h6} marginTop={4} />

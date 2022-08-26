@@ -81,7 +81,7 @@ const InvoiceTicketSevenController: React.FC = () => {
     }
   };
 
-  const onPressAddNewTicket = () => navigate('AddTicketSeven', { ticket: undefined, position: undefined });
+  const onPressAddNewTicket = () => navigate('AddTicketSeven', { ticket: null, position: undefined });
   const editTicket: any = (ticket: any, position: number) => navigate('AddTicketSeven', { ticket, position });
 
   const deleteTicket: any = (ticket: any, index: number) => {

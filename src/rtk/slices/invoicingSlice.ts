@@ -1,6 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getCFDIListThunk, getInvoicingProfileListThunk, getTaxRegimeListThunk, getTicketThunk, getInvoiceThunk } from '../thunks/invoicing.thunks';
-import { InvoicingPetroTicketResponseInterface, InvoicingProfileInterface, InvoicingSevenTicketResponseInterface } from '../types';
+import {
+  InvoicingProfileInterface,
+  InvoicingPetroTicketResponseInterface,
+  InvoicingSevenTicketResponseInterface,
+  InvoicingPetroTicketResponseWithPositionInterface,
+  InvoicingSevenTicketResponseWithPositionInterface
+} from '../types';
 
 const initialStateProfileList: InvoicingProfileInterface[] = [];
 const initialStateSevenTicketList: InvoicingSevenTicketResponseInterface[] = [];
@@ -38,6 +44,12 @@ const invoicingSlice = createSlice({
     },
     deleteTicketPetroFromList(state, action: PayloadAction<number>) {
       state.invoicingPetroTicketList.splice(action.payload, 1);
+    },
+    replaceTicketSevenFromList(state, action: PayloadAction<InvoicingSevenTicketResponseWithPositionInterface>) {
+      state.invoicingSevenTicketList.splice(action.payload.position, 1, action.payload.ticket);
+    },
+    replaceTicketPetroFromList(state, action: PayloadAction<InvoicingPetroTicketResponseWithPositionInterface>) {
+      state.invoicingPetroTicketList.splice(action.payload.position, 1, action.payload.ticket);
     }
   },
   extraReducers: builder => {
@@ -96,6 +108,8 @@ export const {
   addTicketSevenToList,
   deleteTicketSevenFromList,
   addTicketPetroToList,
-  deleteTicketPetroFromList
+  deleteTicketPetroFromList,
+  replaceTicketSevenFromList,
+  replaceTicketPetroFromList
 } = invoicingSlice.actions;
 export default invoicingSlice.reducer;
