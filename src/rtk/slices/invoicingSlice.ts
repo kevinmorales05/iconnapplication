@@ -18,6 +18,10 @@ const invoicingSlice = createSlice({
     invoicingProfileList: initialStateProfileList,
     invoicingSevenTicketList: initialStateSevenTicketList,
     invoicingPetroTicketList: initialStatePetroTicketList,
+    invoicingPaymentMethodForSevenTicketList: '',
+    invoicingStoreForSevenTicketList: '',
+    invoicingPaymentMethodForPetroTicketList: '',
+    invoicingStoreForPetroTicketList: '',
     loading: false
   },
   reducers: {
@@ -25,6 +29,10 @@ const invoicingSlice = createSlice({
       state.invoicingProfileList = initialStateProfileList;
       state.invoicingSevenTicketList = initialStateSevenTicketList;
       state.invoicingPetroTicketList = initialStatePetroTicketList;
+      state.invoicingPaymentMethodForSevenTicketList = '';
+      state.invoicingStoreForSevenTicketList = '';
+      state.invoicingPaymentMethodForPetroTicketList = '',
+      state.invoicingStoreForPetroTicketList = '',
       state.loading = false;
     },
     setInvoicing(state, action: PayloadAction<InvoicingProfileInterface>) {
@@ -50,6 +58,18 @@ const invoicingSlice = createSlice({
     },
     replaceTicketPetroFromList(state, action: PayloadAction<InvoicingPetroTicketResponseWithPositionInterface>) {
       state.invoicingPetroTicketList.splice(action.payload.position, 1, action.payload.ticket);
+    },
+    setInvoicingPaymentMethodForSevenTicketList(state, action: PayloadAction<string>) {
+      state.invoicingPaymentMethodForSevenTicketList = action.payload;
+    },
+    setInvoicingStoreForSevenTicketList(state, action: PayloadAction<string>) {
+      state.invoicingStoreForSevenTicketList = action.payload;
+    },
+    setInvoicingPaymentMethodForPetroTicketList(state, action: PayloadAction<string>) {
+      state.invoicingPaymentMethodForPetroTicketList = action.payload;
+    },
+    setInvoicingStoreForPetroTicketList(state, action: PayloadAction<string>) {
+      state.invoicingStoreForPetroTicketList = action.payload;
     }
   },
   extraReducers: builder => {
@@ -110,6 +130,10 @@ export const {
   addTicketPetroToList,
   deleteTicketPetroFromList,
   replaceTicketSevenFromList,
-  replaceTicketPetroFromList
+  replaceTicketPetroFromList,
+  setInvoicingPaymentMethodForSevenTicketList,
+  setInvoicingStoreForSevenTicketList,
+  setInvoicingPaymentMethodForPetroTicketList,
+  setInvoicingStoreForPetroTicketList
 } = invoicingSlice.actions;
 export default invoicingSlice.reducer;

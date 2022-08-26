@@ -42,11 +42,11 @@ const InvoiceController: React.FC = () => {
 
   const goToAddTicketPetro = async () => {
     if (invoicingPetroTicketList.length > 0) navigate('InvoiceTicketPetro');
-    else navigate('AddTicketPetro');
+    else navigate('AddTicketPetro', { ticket: undefined, position: undefined });
   };
   const goToAddTicketSeven = async () => {
     if (invoicingSevenTicketList.length > 0) navigate('InvoiceTicketSeven');
-    else navigate('AddTicketSeven');
+    else navigate('AddTicketSeven', { ticket: undefined, position: undefined });
   };
 
   const showAlert = () => {

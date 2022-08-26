@@ -10,7 +10,9 @@ import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
 
 const InvoiceTicketSevenController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { loading, invoicingProfileList, invoicingSevenTicketList } = useAppSelector((state: RootState) => state.invoicing);
+  const { loading, invoicingProfileList, invoicingSevenTicketList, invoicingPaymentMethodForSevenTicketList } = useAppSelector(
+    (state: RootState) => state.invoicing
+  );
   const dispatch = useAppDispatch();
   const alert = useAlert();
   const loader = useLoading();
@@ -44,7 +46,7 @@ const InvoiceTicketSevenController: React.FC = () => {
 
   // TODO: add double check to this!!
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
-    // TODO: remove this if:
+    // TODO: remove this "if":
     if (true) {
       navigate('InvoiceGeneratedSeven');
       return;
@@ -117,6 +119,7 @@ const InvoiceTicketSevenController: React.FC = () => {
         onSubmit={onSubmit}
         goBack={goBack}
         onPressAddNewTicket={onPressAddNewTicket}
+        paymentMethod={invoicingPaymentMethodForSevenTicketList}
       />
     </SafeArea>
   );

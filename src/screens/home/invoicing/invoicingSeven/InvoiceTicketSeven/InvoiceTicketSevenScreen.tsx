@@ -25,6 +25,7 @@ interface Props {
   ticketsList: InvoicingSevenTicketResponseInterface[];
   invoicingProfileList: InvoicingProfileInterface[];
   defaultProfile: InvoicingProfileInterface | null;
+  paymentMethod: string;
 }
 
 const InvoiceTicketSevenScreen: React.FC<Props> = ({
@@ -35,14 +36,15 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
   onPressDeleteTicket,
   ticketsList,
   invoicingProfileList,
-  defaultProfile
+  defaultProfile,
+  paymentMethod
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const [cfdiList, setCfdiList] = useState([]);
   const [Cfdi, setCfdi] = useState<string>('');
-  const [PaymentMethod, setPaymentMethod] = useState<string>('');
+  const [PaymentMethod, setPaymentMethod] = useState<string>(paymentMethod);
   const [visible, setVisible] = useState(false);
   const {
     control,
@@ -53,13 +55,9 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
     mode: 'onChange'
   });
 
-  const barCodeRef = useRef<TextInput>(null);
-
   useEffect(() => {
-    if (barCodeRef.current) {
-      barCodeRef.current.focus();
-    }
-  }, []);
+    setValue('payment_method', paymentMethod ? PAYMENT_METHODS.find(i => i.id === paymentMethod)?.name : '');
+  }, [PaymentMethod]);
 
   const fetchCatalogs = useCallback(async () => {
     const { data: cfdis } = await dispatch(getCFDIListThunk()).unwrap();
@@ -159,8 +157,8 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
                 androidMode="dialog"
                 placeholder={`Seleccionar`}
                 label="Selecciona la forma de pago:"
+                disabled
               />
-              {/* TODO: We must disable the the paymentMethod and autopopulate with the value of the first ticket added. */}
             </Container>
           </Container>
 

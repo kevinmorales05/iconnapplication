@@ -8,7 +8,16 @@ import { InvoicingHelper } from 'components';
 import { ICONN_INVOICING_PETRO_REFERENCE } from 'assets/images';
 import { FieldValues } from 'react-hook-form';
 import { useLoading, useToast } from 'context';
-import { replaceTicketPetroFromList, addTicketPetroToList, InvoicingPetroTicketResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import {
+  replaceTicketPetroFromList,
+  addTicketPetroToList,
+  InvoicingPetroTicketResponseInterface,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+  setInvoicingPaymentMethodForPetroTicketList,
+  setInvoicingStoreForPetroTicketList
+} from 'rtk';
 import { getTicketThunk } from 'rtk/thunks/invoicing.thunks';
 import { formatDate } from 'utils/functions';
 import moment from 'moment';
@@ -29,7 +38,9 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
   const toast = useToast();
   const loader = useLoading();
   const dispatch = useAppDispatch();
-  const { loading, invoicingPetroTicketList } = useAppSelector((state: RootState) => state.invoicing);
+  const { loading, invoicingPetroTicketList, invoicingPaymentMethodForPetroTicketList, invoicingStoreForPetroTicketList } = useAppSelector(
+    (state: RootState) => state.invoicing
+  );
 
   useEffect(() => {
     if (loading === false) {
@@ -59,7 +70,7 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
     const dateObject = dateMomentObject.toDate();
 
     if (isTheSameTicket(fields.station, fields.folio, fields.webId, formatDate(dateObject, "yyyy'-'MM'-'dd'T'HH':'mm':'ss"))) {
-      toast.show({ message: 'No has realizado cambios en el ticket.', type: 'warning' });
+      toast.show({ message: 'No has realizado cambios en el ticket, o el ticket ya está en el listado.', type: 'warning' });
       return;
     }
 
@@ -76,11 +87,23 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
         })
       ).unwrap();
       if (response.responseCode === 57) {
-        // TODO: We need avoid adding tickets with different store and payment method. We must add a filter based on getTicket response.
-        toast.show({ message: 'Ticket agregado correctamente.', type: 'success' });
+        if (!invoicingPaymentMethodForPetroTicketList && !invoicingStoreForPetroTicketList) {
+          dispatch(setInvoicingPaymentMethodForPetroTicketList(response.data.paymentMethod));
+          dispatch(setInvoicingStoreForPetroTicketList(response.data.store));
+        } else {
+          if (invoicingPaymentMethodForPetroTicketList !== response.data.paymentMethod) {
+            toast.show({ message: 'El método de pago debe ser igual al del ticket anterior.', type: 'warning' });
+            return;
+          } else if (invoicingStoreForPetroTicketList !== response.data.store) {
+            toast.show({ message: 'La sucursal debe ser igual a la del ticket anterior.', type: 'warning' });
+            return;
+          }
+        }
 
         if (Position! >= 0) dispatch(replaceTicketPetroFromList({ ticket: response.data, position: Position! }));
         else dispatch(addTicketPetroToList(response.data));
+
+        toast.show({ message: 'Ticket agregado correctamente.', type: 'success' });
 
         navigate('InvoiceTicketPetro');
       } else {

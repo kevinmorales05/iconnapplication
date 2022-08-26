@@ -25,6 +25,7 @@ interface Props {
   rules?: RegisterOptions;
   onSelect: (value: string) => void;
   testID?: string;
+  disabled?: boolean;
 }
 
 const Select: React.FC<Props> = ({
@@ -40,7 +41,8 @@ const Select: React.FC<Props> = ({
   control,
   rules,
   onSelect,
-  testID
+  testID,
+  disabled = false
 }) => {
 
   const pickerRef = useRef<any>(null);
@@ -62,7 +64,7 @@ const Select: React.FC<Props> = ({
 
   return (
     <>
-      <Touchable testID={testID} onPress={onPressPicker}>
+      <Touchable testID={testID} onPress={onPressPicker} disabled={disabled}>
         {Platform.OS === 'android' && (
         <Picker
           ref={pickerRef}
