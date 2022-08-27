@@ -4,7 +4,15 @@ import InvoiceTicketSevenScreen from './InvoiceTicketSevenScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { RootState, useAppDispatch, useAppSelector, deleteTicketSevenFromList, InvoicingProfileInterface } from 'rtk';
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+  deleteTicketSevenFromList,
+  InvoicingProfileInterface,
+  setInvoicingPaymentMethodForSevenTicketList,
+  setInvoicingStoreForSevenTicketList
+} from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
 
@@ -31,6 +39,13 @@ const InvoiceTicketSevenController: React.FC = () => {
       loader.hide();
     }
   }, [loading]);
+
+  useEffect(() => {
+    if (invoicingSevenTicketList.length === 0) {
+      dispatch(setInvoicingPaymentMethodForSevenTicketList(''));
+      dispatch(setInvoicingStoreForSevenTicketList(''));
+    }
+  }, [invoicingSevenTicketList]);
 
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
     // TODO: remove this "if":

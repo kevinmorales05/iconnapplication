@@ -5,13 +5,15 @@ import { Image, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, CardDivided, TextContainer } from '../../molecules';
 import { Container } from '../../atoms';
+import { InvoicingProfileInterface } from 'rtk';
 
 interface Props {
   finalize: () => void;
   newInvoice: () => void;
+  defaultProfile: InvoicingProfileInterface;
 }
 
-const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice }) => {
+const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, defaultProfile }) => {
   const insets = useSafeAreaInsets();
   return (
     <ScrollView
@@ -30,15 +32,21 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice }) => {
         <TextContainer text="Factura generada" fontSize={theme.fontSize.h1} fontWeight={'800'} marginTop={24} textAlign="center" />
         <Container style={{ marginTop: 60 }} center>
           <TextContainer text="Tu factura se ha enviado al correo:" fontSize={theme.fontSize.h4} marginTop={2} />
-          <TextContainer text="alondra33@hotmail.com" textColor={theme.brandColor.iconn_green_original} fontBold fontSize={theme.fontSize.h4} marginTop={2} />
+          <TextContainer
+            text={defaultProfile ? defaultProfile.email : 'Error'}
+            textColor={theme.brandColor.iconn_green_original}
+            fontBold
+            fontSize={theme.fontSize.h4}
+            marginTop={2}
+          />
         </Container>
         <Container style={{ marginTop: 50 }}>
           <CardDivided
-            rfcText="MMAM874HDRY45"
+            rfcText={defaultProfile ? defaultProfile.rfc : 'Error'}
             textCard="Total:"
             actionText={'$823.37'}
             typeImage="petro"
-            textButtonLeft="Reenviar"
+            textButtonLeft="Ver"
             textButtonRigth="Reenviar"
             onPressButtonLeft={() => {
               console.log('Presionando Ver');
