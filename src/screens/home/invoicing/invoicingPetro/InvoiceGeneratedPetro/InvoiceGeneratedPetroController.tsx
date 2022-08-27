@@ -7,9 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { InvoicingProfileInterface, RootState, useAppSelector } from 'rtk';
 
-interface Props {}
-
-const InvoiceGeneratedPetroController: React.FC<Props> = () => {
+const InvoiceGeneratedPetroController: React.FC<any> = ({ route }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
@@ -27,7 +25,12 @@ const InvoiceGeneratedPetroController: React.FC<Props> = () => {
 
   return (
     <SafeArea barStyle="dark" topSafeArea={false} bottomSafeArea={false} backgroundColor={theme.brandColor.iconn_background}>
-      <InvoiceGeneratedScreen finalize={goToHome} newInvoice={goToNewInvoice} defaultProfile={defaultProfile!} />
+      <InvoiceGeneratedScreen
+        finalize={goToHome}
+        newInvoice={goToNewInvoice}
+        defaultProfile={defaultProfile!}
+        invoiceGenerated={route.params ? route.params.invoiceGenerated : undefined}
+      />
     </SafeArea>
   );
 };

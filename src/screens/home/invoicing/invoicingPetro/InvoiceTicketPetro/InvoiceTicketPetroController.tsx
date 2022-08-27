@@ -91,8 +91,13 @@ const InvoiceTicketPetroController: React.FC = () => {
           })
         })
       ).unwrap();
+      // TODO we need add a ternary to convert establishment from 1 to petro
+      // remove this "if":
+      // if (response.responseCode !== 75) {
+      //   navigate('InvoiceGeneratedPetro', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'petro', total: '57.00' } });
+      // }
       if (response.responseCode === 75) {
-        navigate('InvoiceGeneratedPetro');
+        navigate('InvoiceGeneratedPetro', { invoiceGenerated: response.data });
       } else {
         toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }

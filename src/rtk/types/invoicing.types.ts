@@ -155,3 +155,10 @@ export interface InvoiceInterface {
   cfdiUse: string;
   tickets?: string[] | InvoicingGetInvoiceTicketInterface[];
 }
+
+export interface InvoiceGeneratedResponseInterface {
+  uuidInvoice: string;
+  emissionDate: string;
+  total: string;
+  establishment: any;
+}

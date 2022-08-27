@@ -1,19 +1,20 @@
 import React from 'react';
 import theme from 'components/theme/theme';
-import { ICONN_INVOICING_SUCCESS_INVOICE_GENERATED, ICONN_SUCCESS } from 'assets/images';
+import { ICONN_INVOICING_SUCCESS_INVOICE_GENERATED } from 'assets/images';
 import { Image, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, CardDivided, TextContainer } from '../../molecules';
 import { Container } from '../../atoms';
-import { InvoicingProfileInterface } from 'rtk';
+import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface } from 'rtk';
 
 interface Props {
   finalize: () => void;
   newInvoice: () => void;
   defaultProfile: InvoicingProfileInterface;
+  invoiceGenerated: InvoiceGeneratedResponseInterface;
 }
 
-const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, defaultProfile }) => {
+const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, defaultProfile, invoiceGenerated }) => {
   const insets = useSafeAreaInsets();
   return (
     <ScrollView
@@ -44,8 +45,8 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, default
           <CardDivided
             rfcText={defaultProfile ? defaultProfile.rfc : 'Error'}
             textCard="Total:"
-            actionText={'$823.37'}
-            typeImage="petro"
+            actionText={invoiceGenerated ? `$${invoiceGenerated.total}` : 'Error'}
+            typeImage={invoiceGenerated ? invoiceGenerated.establishment : undefined}
             textButtonLeft="Ver"
             textButtonRigth="Reenviar"
             onPressButtonLeft={() => {

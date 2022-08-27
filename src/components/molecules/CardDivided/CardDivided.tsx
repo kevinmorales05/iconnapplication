@@ -47,8 +47,8 @@ const CardDivided: React.FC<CardDividedProps> = ({
   };
 
   const CardDividedImageStyle: StyleProp<ImageStyle> = {
-    width: typeImage === 'petro' ? 54 : 43,
-    height: typeImage === 'petro' ? 54 : 52
+    width: typeImage === 'petro' ? 43 : 54,
+    height: typeImage === 'petro' ? 52 : 54
   };
 
   const LowerLeftRightContainer: StyleProp<ViewStyle> = {
@@ -65,7 +65,7 @@ const CardDivided: React.FC<CardDividedProps> = ({
     <Container>
       <Container row center style={TopContainer}>
         <Image
-          source={typeImage === 'petro' ? ICONN_INVOICING_GENERATED_INVOICE_SEVEN : ICONN_INVOICING_GENERATED_INVOICE_PETRO}
+          source={typeImage === 'petro' ? ICONN_INVOICING_GENERATED_INVOICE_PETRO : ICONN_INVOICING_GENERATED_INVOICE_SEVEN}
           style={CardDividedImageStyle}
         />
         <Container style={{ marginLeft: 22, marginBottom: 10 }}>

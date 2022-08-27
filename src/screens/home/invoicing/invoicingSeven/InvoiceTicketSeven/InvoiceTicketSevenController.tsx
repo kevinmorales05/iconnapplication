@@ -84,8 +84,13 @@ const InvoiceTicketSevenController: React.FC = () => {
           tickets: invoicingSevenTicketList.map(t => t.ticketNo)
         })
       ).unwrap();
+      // TODO we need add a ternary to convert establishment from 2 to seven
+      // remove this "if":
+      // if (response.responseCode !== 75) {
+      //   navigate('InvoiceGeneratedSeven', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'seven', total: '17.00' } });
+      // }
       if (response.responseCode === 75) {
-        navigate('InvoiceGeneratedSeven');
+        navigate('InvoiceGeneratedSeven', { invoiceGenerated: response.data });
       } else {
         toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }
