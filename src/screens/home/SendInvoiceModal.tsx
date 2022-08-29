@@ -1,7 +1,7 @@
 import { ActionButton, Container, CustomModal, CustomText, Input } from 'components/atoms';
 import { Button, TextContainer } from 'components/molecules';
 import theme from 'components/theme/theme';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Feather from 'react-native-vector-icons/Feather';
@@ -12,13 +12,15 @@ import { emailRules } from 'utils/rules';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { Result } from 'screens/home/invoicing/InvoiceHistory/InvoiceHistory';
 
 interface SendInvoiceModalProps {
   visible: boolean;
   onPressOut: () => void;
+  invoice: Result;
 }
 
-const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut }) => {
+const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut, invoice }) => {
   const { containerStyle } = styles;
 
   const insets = useSafeAreaInsets();

@@ -27,7 +27,7 @@ interface EstablishmentResult {
   establishment_id: number;
   description: string;
 }
-interface Result {
+export interface Result {
   rfc?: string;
   invoice_uuid: string;
   emission_date: string;
@@ -144,7 +144,7 @@ const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChil
   );
 };
 
-const Results = ({ handleSend, results }: { handleSend: () => void; results: Result[] }) => {
+const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; results: Result[] }) => {
   let row: Array<Swipeable | null> = [];
   let prevOpenedRow;
 
@@ -244,7 +244,8 @@ const Results = ({ handleSend, results }: { handleSend: () => void; results: Res
                 console.log('open preview modal', v);
               },
               () => {
-                handleSend();
+                const { item, index } = v;
+                handleSend(item);
               }
             )
           }
@@ -308,8 +309,8 @@ enum InvoiceScreenMode {
 const InvoiceScreen: React.FC = () => {
   const [results, setResults] = useState<null | Result[]>(null);
   const [supporting, setSupporting] = useState(false);
-  const [sending, setSending] = useState(false);
   const [filter, setFilter] = useState<Filter | null>(null);
+  const [selected, setSelected] = useState<Result | null>(null);
 
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -522,8 +523,8 @@ const InvoiceScreen: React.FC = () => {
             </View>
             <Results
               results={results}
-              handleSend={() => {
-                setSending(true);
+              handleSend={(invoice: Result) => {
+                setSelected(invoice);
               }}
             />
           </>
@@ -538,9 +539,10 @@ const InvoiceScreen: React.FC = () => {
             }}
           />
           <SendInvoiceModal
-            visible={sending}
+            visible={!!selected}
+            invoice={selected}
             onPressOut={() => {
-              setSending(false);
+              setSelected(null);
             }}
           />
           {/* filtering modals */}
