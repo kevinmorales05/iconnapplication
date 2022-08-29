@@ -282,44 +282,6 @@ const InvoiceScreen: React.FC = () => {
   const [query, setQuery] = useState<BodyParams>({ userId: testUserId });
 
   const loader = useLoading();
-  //filters sync
-  // useEffect(() => {
-  //   setQuery(current => {
-  //     let dateFilter = null;
-
-  //     if (date) {
-  //       if (typeof date?.type === 'string') {
-  //         if (date.label === 'Ayer') {
-  //           dateFilter = {
-  //             yesterday: true
-  //           };
-  //         }
-  //         if (date.label === 'Esta semana') {
-  //           dateFilter = {
-  //             thisWeek: true
-  //           };
-  //         }
-  //         if (date.label === 'Este mes') {
-  //           dateFilter = {
-  //             thisMonth: true
-  //           };
-  //         }
-  //       } else {
-  //         dateFilter = {
-  //           dateStart: date.type.dateStart?.format('DD-MM-YYYY'),
-  //           dateEnd: date.type.dateEnd?.format('DD-MM-YYYY')
-  //         };
-  //       }
-  //     }
-
-  //     return {
-  //       ...current,
-  //       ...(dateFilter ? dateFilter : {}),
-  //       ...(ammmount ? { amount: { min: ammmount?.min, max: ammmount?.max } } : {}),
-  //       ...(establishment ? { establishment: establishment.id } : {})
-  //     } as BodyParams;
-  //   });
-  // }, [establishment, ammmount, date]);
 
   useEffect(() => {
     setQuery(current => {

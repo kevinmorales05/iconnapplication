@@ -88,7 +88,7 @@ const Results = ({ handleSend }: { handleSend: () => void }) => {
         rightOpenValue={-100}
       >
         <View>
-          <InvoiceItem helpPointer={true} />
+          <InvoiceItem invoice={item} helpPointer={true} />
         </View>
       </Swipeable>
     );
