@@ -89,7 +89,7 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
         <CardBilling
           text="Facturar ticket"
           type="seven"
-          // disable={invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false}
+          disable={invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false}
           onPress={goToAddTicketSeven}
         />
       </Container>
@@ -97,7 +97,7 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
         <CardBilling
           text="Facturar ticket"
           type="petro"
-          // disable={invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false}
+          disable={invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false}
           onPress={goToAddTicketPetro}
         />
       </Container>
