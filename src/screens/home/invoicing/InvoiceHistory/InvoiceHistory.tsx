@@ -235,6 +235,7 @@ const Results = ({ handleSend, results }: { handleSend: () => void; results: Res
         </Container>
       ) : (
         <FlatList
+          style={{ maxHeight: '90%' }}
           data={results}
           renderItem={v =>
             renderItem(

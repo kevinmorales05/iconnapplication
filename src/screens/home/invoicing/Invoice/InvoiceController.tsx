@@ -77,7 +77,7 @@ const InvoiceController: React.FC = () => {
   };
 
   return (
-    <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
+    <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
       <InvoiceScreen
         invoicingProfileList={invoicingProfileList}
         defaultProfile={defaultProfile!}
