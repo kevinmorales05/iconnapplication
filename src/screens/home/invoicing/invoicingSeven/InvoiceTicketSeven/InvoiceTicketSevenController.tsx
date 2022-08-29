@@ -4,7 +4,16 @@ import InvoiceTicketSevenScreen from './InvoiceTicketSevenScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { RootState, useAppDispatch, useAppSelector, deleteTicketSevenFromList, InvoicingProfileInterface } from 'rtk';
+import {
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+  deleteTicketSevenFromList,
+  InvoicingProfileInterface,
+  setInvoicingPaymentMethodForSevenTicketList,
+  setInvoicingStoreForSevenTicketList,
+  resetInvoicingSevenTicketList
+} from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
 
@@ -31,6 +40,13 @@ const InvoiceTicketSevenController: React.FC = () => {
       loader.hide();
     }
   }, [loading]);
+
+  useEffect(() => {
+    if (invoicingSevenTicketList.length === 0) {
+      dispatch(setInvoicingPaymentMethodForSevenTicketList(''));
+      dispatch(setInvoicingStoreForSevenTicketList(''));
+    }
+  }, [invoicingSevenTicketList]);
 
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
     // TODO: remove this "if":
@@ -69,8 +85,14 @@ const InvoiceTicketSevenController: React.FC = () => {
           tickets: invoicingSevenTicketList.map(t => t.ticketNo)
         })
       ).unwrap();
+      // TODO we need add a ternary to convert establishment from 2 to seven
+      // remove this "if":
+      // if (response.responseCode !== 75) {
+      //   navigate('InvoiceGeneratedSeven', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'seven', total: '17.00' } });
+      // }
       if (response.responseCode === 75) {
-        navigate('InvoiceGeneratedSeven');
+        dispatch(resetInvoicingSevenTicketList());
+        navigate('InvoiceGeneratedSeven', { invoiceGenerated: response.data });
       } else {
         toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }

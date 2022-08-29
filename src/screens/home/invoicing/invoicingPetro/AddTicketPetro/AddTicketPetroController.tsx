@@ -48,17 +48,6 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
     }
   }, [loading]);
 
-  const manageGetTicketResponseCode = (responseCode: number): string => {
-    switch (responseCode) {
-      case 592:
-        return 'El ticket no existe en el sistema.';
-      case 580:
-        return 'Ticket facturado anteriormente.';
-      default:
-        return 'unknown';
-    }
-  };
-
   const isTheSameTicket = (station: string, folio: string, webId: string, date: string) => {
     const ticket = invoicingPetroTicketList.find(t => t.ticketNo === folio && t.date === date && t.webId === webId && t.station === station);
     return !!ticket;

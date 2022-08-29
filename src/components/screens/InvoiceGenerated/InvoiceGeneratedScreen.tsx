@@ -1,17 +1,22 @@
 import React from 'react';
 import theme from 'components/theme/theme';
-import { ICONN_INVOICING_SUCCESS_INVOICE_GENERATED, ICONN_SUCCESS } from 'assets/images';
+import { ICONN_INVOICING_SUCCESS_INVOICE_GENERATED } from 'assets/images';
 import { Image, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, CardDivided, TextContainer } from '../../molecules';
 import { Container } from '../../atoms';
+import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface } from 'rtk';
 
 interface Props {
   finalize: () => void;
   newInvoice: () => void;
+  viewGeneratedInvoice: () => void;
+  resendGeneratedInvoice: () => void;
+  defaultProfile: InvoicingProfileInterface;
+  invoiceGenerated: InvoiceGeneratedResponseInterface;
 }
 
-const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice }) => {
+const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, viewGeneratedInvoice, resendGeneratedInvoice, defaultProfile, invoiceGenerated }) => {
   const insets = useSafeAreaInsets();
   return (
     <ScrollView
@@ -30,22 +35,24 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice }) => {
         <TextContainer text="Factura generada" fontSize={theme.fontSize.h1} fontWeight={'800'} marginTop={24} textAlign="center" />
         <Container style={{ marginTop: 60 }} center>
           <TextContainer text="Tu factura se ha enviado al correo:" fontSize={theme.fontSize.h4} marginTop={2} />
-          <TextContainer text="alondra33@hotmail.com" textColor={theme.brandColor.iconn_green_original} fontBold fontSize={theme.fontSize.h4} marginTop={2} />
+          <TextContainer
+            text={defaultProfile ? defaultProfile.email : 'Error'}
+            textColor={theme.brandColor.iconn_green_original}
+            fontBold
+            fontSize={theme.fontSize.h4}
+            marginTop={2}
+          />
         </Container>
         <Container style={{ marginTop: 50 }}>
           <CardDivided
-            rfcText="MMAM874HDRY45"
+            rfcText={defaultProfile ? defaultProfile.rfc : 'Error'}
             textCard="Total:"
-            actionText={'$823.37'}
-            typeImage="petro"
-            textButtonLeft="Reenviar"
+            actionText={invoiceGenerated ? `$${invoiceGenerated.total}` : 'Error'}
+            typeImage={invoiceGenerated ? invoiceGenerated.establishment : undefined}
+            textButtonLeft="Ver"
             textButtonRigth="Reenviar"
-            onPressButtonLeft={() => {
-              console.log('Presionando Ver');
-            }}
-            onPressButtonRigth={() => {
-              console.log('Presionando Reenviar');
-            }}
+            onPressButtonLeft={viewGeneratedInvoice}
+            onPressButtonRigth={resendGeneratedInvoice}
           />
         </Container>
       </Container>

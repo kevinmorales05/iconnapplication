@@ -1,4 +1,4 @@
-import { InvoicingProfileInterface } from 'rtk';
+import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface } from 'rtk';
 
 export type HomeStackParams = {
   HomeStack: undefined;
@@ -18,6 +18,8 @@ export type HomeStackParams = {
   AddTicketSeven: { ticket?: any; position?: number };
   InvoiceTicketPetro: undefined;
   InvoiceTicketSeven: undefined;
-  InvoiceGeneratedPetro: undefined;
-  InvoiceGeneratedSeven: undefined;
+  InvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
+  InvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
+  ViewInvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
+  ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
 };

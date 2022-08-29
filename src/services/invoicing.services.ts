@@ -1,6 +1,7 @@
 import { InvoicingApi } from '../http/api-invoicing';
 import {
   InvoiceInterface,
+  InvoicingGetInvoicePDFRequestInterface,
   InvoicingPetroTicketRequestInterface,
   InvoicingProfileInterface,
   InvoicingSevenTicketRequestInterface
@@ -133,6 +134,16 @@ async function getInvoice(payload: InvoiceInterface): Promise<any> {
   return data;
 }
 
+/**
+ * Function to get invoice PDF
+ */
+async function getInvoicePDF(payload: InvoicingGetInvoicePDFRequestInterface): Promise<any> {
+  const response = await InvoicingApi.getInstance().getRequest('/invoicing/invoicingData/getInvoicePDF', payload);
+  if (response === undefined) return Promise.reject(new Error('getInvoicePDF:/invoicing/invoicingData/getInvoicePDF'));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
   getTaxRegimeList,
   getCFDIList,
@@ -145,5 +156,6 @@ export const invoicingServices = {
   selectDefault,
   getTicket,
   getInvoices,
-  getInvoice
+  getInvoice,
+  getInvoicePDF
 };

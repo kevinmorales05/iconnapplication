@@ -4,7 +4,16 @@ import InvoiceTicketPetroScreen from './InvoiceTicketPetroScreen';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { deleteTicketPetroFromList, RootState, useAppDispatch, useAppSelector, InvoicingProfileInterface } from 'rtk';
+import {
+  deleteTicketPetroFromList,
+  RootState,
+  useAppDispatch,
+  useAppSelector,
+  InvoicingProfileInterface,
+  setInvoicingPaymentMethodForPetroTicketList,
+  setInvoicingStoreForPetroTicketList,
+  resetInvoicingPetroTicketList
+} from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
 
@@ -31,6 +40,13 @@ const InvoiceTicketPetroController: React.FC = () => {
       loader.hide();
     }
   }, [loading]);
+
+  useEffect(() => {
+    if (invoicingPetroTicketList.length === 0) {
+      dispatch(setInvoicingPaymentMethodForPetroTicketList(''));
+      dispatch(setInvoicingStoreForPetroTicketList(''));
+    }
+  }, [invoicingPetroTicketList]);
 
   // TODO: add double check to this!!
   const onSubmit = async (cfdi: string, paymentMethod: string) => {
@@ -76,8 +92,14 @@ const InvoiceTicketPetroController: React.FC = () => {
           })
         })
       ).unwrap();
+      // TODO we need add a ternary to convert establishment from 1 to petro
+      // remove this "if":
+      // if (response.responseCode !== 75) {
+      //   navigate('InvoiceGeneratedPetro', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'petro', total: '57.00' } });
+      // }
       if (response.responseCode === 75) {
-        navigate('InvoiceGeneratedPetro');
+        dispatch(resetInvoicingPetroTicketList());
+        navigate('InvoiceGeneratedPetro', { invoiceGenerated: response.data });
       } else {
         toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }
