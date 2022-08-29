@@ -167,3 +167,8 @@ export interface InvoicingGetInvoicePDFRequestInterface {
   userId: string;
   uuid: string;
 }
+
+export interface InvoicingForwardInvoiceRequestInterface {
+  uuid: string;
+  emails: string[];
+}

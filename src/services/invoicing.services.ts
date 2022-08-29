@@ -1,6 +1,7 @@
 import { InvoicingApi } from '../http/api-invoicing';
 import {
   InvoiceInterface,
+  InvoicingForwardInvoiceRequestInterface,
   InvoicingGetInvoicePDFRequestInterface,
   InvoicingPetroTicketRequestInterface,
   InvoicingProfileInterface,
@@ -144,6 +145,16 @@ async function getInvoicePDF(payload: InvoicingGetInvoicePDFRequestInterface): P
   return data;
 }
 
+/**
+ * Function to forward invoice
+ */
+async function forwardInvoice(payload: InvoicingForwardInvoiceRequestInterface): Promise<any> {
+  const response = await InvoicingApi.getInstance().postRequest('/invoicing/invoicingData/forward', payload);
+  if (response === undefined) return Promise.reject(new Error('forwardInvoice:/invoicing/invoicingData/forward'));
+  const { data } = response;
+  return data;
+}
+
 export const invoicingServices = {
   getTaxRegimeList,
   getCFDIList,
@@ -157,5 +168,6 @@ export const invoicingServices = {
   getTicket,
   getInvoices,
   getInvoice,
-  getInvoicePDF
+  getInvoicePDF,
+  forwardInvoice
 };

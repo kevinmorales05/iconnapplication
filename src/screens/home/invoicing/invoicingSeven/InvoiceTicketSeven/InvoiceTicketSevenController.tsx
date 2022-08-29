@@ -90,6 +90,7 @@ const InvoiceTicketSevenController: React.FC = () => {
       // if (response.responseCode !== 75) {
       //   navigate('InvoiceGeneratedSeven', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'seven', total: '17.00' } });
       // }
+      // return;
       if (response.responseCode === 75) {
         dispatch(resetInvoicingSevenTicketList());
         navigate('InvoiceGeneratedSeven', { invoiceGenerated: response.data });
