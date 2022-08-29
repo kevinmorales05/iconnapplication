@@ -162,3 +162,8 @@ export interface InvoiceGeneratedResponseInterface {
   total: string;
   establishment: any;
 }
+
+export interface InvoicingGetInvoicePDFRequestInterface {
+  userId: string;
+  uuid: string;
+}

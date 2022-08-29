@@ -1,5 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { InvoiceInterface, InvoicingPetroTicketRequestInterface, InvoicingSevenTicketRequestInterface } from '../types';
+import { InvoiceInterface, InvoicingGetInvoicePDFRequestInterface, InvoicingPetroTicketRequestInterface, InvoicingSevenTicketRequestInterface } from '../types';
 import { invoicingServices } from 'services';
 
 export const getTaxRegimeListThunk = createAsyncThunk('invoicing/getTaxRegimeListThunk', async () => {
@@ -18,10 +18,17 @@ export const resendVerificationEmailThunk = createAsyncThunk('invoicing/resendVe
   return await invoicingServices.resendVerificationEmail(email);
 });
 
-export const getTicketThunk = createAsyncThunk('invoicing/getTicketThunk', async (ticket: InvoicingSevenTicketRequestInterface | InvoicingPetroTicketRequestInterface) => {
-  return await invoicingServices.getTicket(ticket);
-});
+export const getTicketThunk = createAsyncThunk(
+  'invoicing/getTicketThunk',
+  async (ticket: InvoicingSevenTicketRequestInterface | InvoicingPetroTicketRequestInterface) => {
+    return await invoicingServices.getTicket(ticket);
+  }
+);
 
 export const getInvoiceThunk = createAsyncThunk('invoicing/getInvoiceThunk', async (tickets: InvoiceInterface) => {
   return await invoicingServices.getInvoice(tickets);
+});
+
+export const getInvoicePDFThunk = createAsyncThunk('invoicing/getInvoicePDFThunk', async (request: InvoicingGetInvoicePDFRequestInterface) => {
+  return await invoicingServices.getInvoicePDF(request);
 });

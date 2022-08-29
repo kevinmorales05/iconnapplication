@@ -10,11 +10,13 @@ import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface } from 'rt
 interface Props {
   finalize: () => void;
   newInvoice: () => void;
+  viewGeneratedInvoice: () => void;
+  resendGeneratedInvoice: () => void;
   defaultProfile: InvoicingProfileInterface;
   invoiceGenerated: InvoiceGeneratedResponseInterface;
 }
 
-const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, defaultProfile, invoiceGenerated }) => {
+const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, viewGeneratedInvoice, resendGeneratedInvoice, defaultProfile, invoiceGenerated }) => {
   const insets = useSafeAreaInsets();
   return (
     <ScrollView
@@ -49,12 +51,8 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, default
             typeImage={invoiceGenerated ? invoiceGenerated.establishment : undefined}
             textButtonLeft="Ver"
             textButtonRigth="Reenviar"
-            onPressButtonLeft={() => {
-              console.log('Presionando Ver');
-            }}
-            onPressButtonRigth={() => {
-              console.log('Presionando Reenviar');
-            }}
+            onPressButtonLeft={viewGeneratedInvoice}
+            onPressButtonRigth={resendGeneratedInvoice}
           />
         </Container>
       </Container>

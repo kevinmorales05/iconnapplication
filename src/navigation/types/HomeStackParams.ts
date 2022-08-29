@@ -20,4 +20,6 @@ export type HomeStackParams = {
   InvoiceTicketSeven: undefined;
   InvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   InvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
+  ViewInvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
+  ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
 };

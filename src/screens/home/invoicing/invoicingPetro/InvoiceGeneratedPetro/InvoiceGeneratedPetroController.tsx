@@ -22,10 +22,18 @@ const InvoiceGeneratedPetroController: React.FC<any> = ({ route }) => {
 
   const goToHome = () => navigate('Home');
   const goToNewInvoice = () => navigate('AddTicketPetro', { ticket: undefined, position: undefined });
+  const goToViewerPDF = () => navigate('ViewInvoiceGeneratedPetro', { invoiceGenerated: route.params ? route.params.invoiceGenerated : undefined });
+
+  const resendGeneratedInvoice = () => {
+    console.log('Aqui se va a reenviar la factura Petro....');
+    // TODO integrate endpoint to resend generated invoice.
+  };
 
   return (
     <SafeArea barStyle="dark" topSafeArea={false} bottomSafeArea={false} backgroundColor={theme.brandColor.iconn_background}>
       <InvoiceGeneratedScreen
+        viewGeneratedInvoice={goToViewerPDF}
+        resendGeneratedInvoice={resendGeneratedInvoice}
         finalize={goToHome}
         newInvoice={goToNewInvoice}
         defaultProfile={defaultProfile!}
