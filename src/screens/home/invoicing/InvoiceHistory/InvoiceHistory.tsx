@@ -21,6 +21,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { InvoiceInterface, useAppSelector, RootState } from 'rtk';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import moment from 'moment';
 
 interface EstablishmentResult {
   establishment_id: number;
@@ -72,36 +73,67 @@ const DateSeparator = ({ date }: { date: string }) => {
   );
 };
 
-export const InvoiceItem = ({ helpPointer = false, hiddenPointer, invoice }: { helpPointer?: boolean; hiddenPointer?: boolean; invoice: Result }) => {
+export const InvoiceItem = ({
+  helpPointer = false,
+  hiddenPointer,
+  invoice,
+  results
+}: {
+  helpPointer?: boolean;
+  hiddenPointer?: boolean;
+  invoice: Result;
+  results?: Result[];
+}) => {
+  const [separator, setSeparator] = useState(false);
+
+  useEffect(() => {
+    if (!results) return;
+
+    const dayCoincidences = results.filter(result => {
+      return moment(result.emission_date).isSame(moment(invoice.emission_date), 'day');
+    });
+
+    let moments = dayCoincidences.map(d => {
+      return moment(d.emission_date);
+    });
+
+    const minDate = moment.min(moments);
+
+    setSeparator(minDate.isSame(moment(invoice.emission_date)));
+  }, [invoice, results]);
+
   return (
-    <View
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexDirection: 'row',
-        backgroundColor: 'white',
-        paddingVertical: 18,
-        paddingHorizontal: 23,
-        marginTop: 10
-      }}
-    >
-      <View>
-        <Image source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
-      </View>
-      <View>
-        <CustomText text={invoice.rfc ?? 'RAPA880105P33'} fontBold />
-      </View>
-      <View style={{ flexDirection: 'row' }}>
-        <CustomText text="Total: " />
-        <CustomText text={invoice.total} textColor={theme.fontColor.light_green} fontBold />
-      </View>
-      {helpPointer && (
-        <View style={{ position: 'absolute', right: 20, top: 60 }}>
-          <FontAwesome5 name="hand-point-up" size={60} />
+    <>
+      {separator && <DateSeparator date={moment(invoice.emission_date).format('MMMM DD, YYYY')} />}
+      <View
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+          backgroundColor: 'white',
+          paddingVertical: 18,
+          paddingHorizontal: 23,
+          marginTop: 10
+        }}
+      >
+        <View>
+          <Image source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
         </View>
-      )}
-    </View>
+        <View>
+          <CustomText text={invoice.rfc ?? 'RAPA880105P33'} fontBold />
+        </View>
+        <View style={{ flexDirection: 'row' }}>
+          <CustomText text="Total: " />
+          <CustomText text={invoice.total} textColor={theme.fontColor.light_green} fontBold />
+        </View>
+        {helpPointer && (
+          <View style={{ position: 'absolute', right: 20, top: 60 }}>
+            <FontAwesome5 name="hand-point-up" size={60} />
+          </View>
+        )}
+      </View>
+    </>
   );
 };
 
@@ -159,7 +191,7 @@ const Results = ({ handleSend, results }: { handleSend: () => void; results: Res
         ref={ref => (row[index] = ref)}
         rightOpenValue={-100}
       >
-        <InvoiceItem invoice={item} />
+        <InvoiceItem results={results} invoice={item} />
       </Swipeable>
     );
   };
@@ -367,7 +399,12 @@ const InvoiceScreen: React.FC = () => {
             setResults([]);
           } else {
             const { rows } = data;
-            setResults(rows);
+
+            const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
+              return moment(a.emission_date).diff(b.emission_date);
+            });
+
+            setResults(sortedArray);
           }
         }
       } catch (e) {
