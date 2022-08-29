@@ -1,5 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { InvoiceInterface, InvoicingGetInvoicePDFRequestInterface, InvoicingPetroTicketRequestInterface, InvoicingSevenTicketRequestInterface } from '../types';
+import {
+  InvoiceInterface,
+  InvoicingForwardInvoiceRequestInterface,
+  InvoicingGetInvoicePDFRequestInterface,
+  InvoicingPetroTicketRequestInterface,
+  InvoicingSevenTicketRequestInterface
+} from '../types';
 import { invoicingServices } from 'services';
 
 export const getTaxRegimeListThunk = createAsyncThunk('invoicing/getTaxRegimeListThunk', async () => {
@@ -31,4 +37,8 @@ export const getInvoiceThunk = createAsyncThunk('invoicing/getInvoiceThunk', asy
 
 export const getInvoicePDFThunk = createAsyncThunk('invoicing/getInvoicePDFThunk', async (request: InvoicingGetInvoicePDFRequestInterface) => {
   return await invoicingServices.getInvoicePDF(request);
+});
+
+export const forwardInvoiceThunk = createAsyncThunk('invoicing/forwardInvoiceThunk', async (request: InvoicingForwardInvoiceRequestInterface) => {
+  return await invoicingServices.forwardInvoice(request);
 });

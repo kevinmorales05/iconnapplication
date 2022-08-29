@@ -97,6 +97,7 @@ const InvoiceTicketPetroController: React.FC = () => {
       // if (response.responseCode !== 75) {
       //   navigate('InvoiceGeneratedPetro', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'petro', total: '57.00' } });
       // }
+      // return;
       if (response.responseCode === 75) {
         dispatch(resetInvoicingPetroTicketList());
         navigate('InvoiceGeneratedPetro', { invoiceGenerated: response.data });
@@ -105,6 +106,7 @@ const InvoiceTicketPetroController: React.FC = () => {
       }
     } catch (error) {
       console.warn(error);
+      // navigate('InvoiceGeneratedPetro', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'petro', total: '57.00' } });
     }
   };
 

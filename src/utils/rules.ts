@@ -205,3 +205,23 @@ export const openField = (lenght: number): RegisterOptions => ({
     message: `Longitud invalida.`
   }
 });
+
+/**
+ * Function to validate a field with emails list.
+ */
+export const emailsList = (lenght: number): RegisterOptions => ({
+  required: {
+    value: true,
+    message: `Campo requerido.`
+  },
+  minLength: {
+    value: lenght,
+    message: `Longitud invalida.`
+  },
+  validate: (value: string) => {
+    if (!value.match(/^([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4},?)+$/)) {
+      return false;
+    }
+    return true;
+  }
+});
