@@ -1,60 +1,126 @@
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View, ActivityIndicator } from 'react-native';
-import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, TouchableOpacity, View, Image, FlatList } from 'react-native';
+import { ActionButton, Container, CustomModal, CustomText, Touchable } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from 'components/molecules';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
-import { invoicingServices } from 'services';
-import { setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
-import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { InvoiceItem } from 'screens/home/invoicing/InvoiceHistory/InvoiceHistory';
+import { InvoiceInterface } from 'rtk';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import Feather from 'react-native-vector-icons/Feather';
 
-interface InvoiceItemProps {
-  invoicingProfile: InvoicingProfileInterface;
-}
-const InvoiceItem = ({ invoicingProfile }: InvoiceItemProps) => {
-  const highlightBorder = {
-    borderWidth: 1,
-    borderColor: '#2FB97A'
+const DATA = [
+  {
+    rfc: 'RAPA880105P32',
+    zipCode: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+    taxRegime: 'First Item'
+  }
+] as InvoiceInterface[];
+
+const Results = ({ handleSend }: { handleSend: () => void }) => {
+  const [listData, setListData] = useState(DATA);
+  let row: Array<Swipeable | null> = [];
+  let prevOpenedRow;
+
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  useEffect(() => {
+    if (row.length > 0) {
+      setInterval(async function () {
+        if (row[0]) {
+          row[0].openRight();
+          await timeout(1000);
+          row[0].close();
+        }
+      }, 2000);
+    }
+  }, [row]);
+
+  /**
+   *
+   */
+  const renderItem = ({ item, index }, onPreview, onSend) => {
+    //
+    const closeRow = index => {
+      console.log('closerow');
+      if (prevOpenedRow && prevOpenedRow !== row[index]) {
+        prevOpenedRow.close();
+      }
+      prevOpenedRow = row[index];
+    };
+
+    const renderRightActions = (progress, dragX, onPreview, onSend) => {
+      const itemStyle = { height: '100%', display: 'flex', justifyContent: 'center', paddingHorizontal: 30, alignItems: 'center' };
+      return (
+        <View
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row',
+            marginTop: 10
+          }}
+        >
+          <Touchable onPress={onPreview}>
+            <View style={[{ backgroundColor: '#808386' }, itemStyle]}>
+              <Feather name="eye" size={30} color={theme.brandColor.iconn_white} />
+              <CustomText text="Ver" textColor={'white'} fontBold />
+            </View>
+          </Touchable>
+          <Touchable onPress={onSend}>
+            <View style={[{ backgroundColor: '#406BA3' }, itemStyle]}>
+              <Feather name="send" size={30} color={theme.brandColor.iconn_white} />
+              <CustomText text="Enviar" textColor={'white'} fontBold />
+            </View>
+          </Touchable>
+        </View>
+      );
+    };
+
+    return (
+      <Swipeable
+        renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, onPreview, onSend)}
+        onSwipeableOpen={() => closeRow(index)}
+        ref={ref => (row[index] = ref)}
+        rightOpenValue={-100}
+      >
+        <View>
+          <InvoiceItem helpPointer={true} />
+        </View>
+      </Swipeable>
+    );
   };
-  const dispatch = useAppDispatch();
 
-  const [loading, setLoading] = useState(false);
-  const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
+  const deleteItem = ({ item, index }) => {
+    console.log(item, index);
+    let a = listData;
+    a.splice(index, 1);
+    console.log(a);
+    setListData([...a]);
+  };
 
   return (
-    <TouchableOpacity
-      onPress={async () => {
-        setLoading(true);
-        try {
-          const data = await invoicingServices.selectDefault(invoicingProfile.invoicing_profile_id);
-          if (data.responseCode === 200) {
-            const newList = invoicingProfileList.map((item: InvoicingProfileInterface) => {
-              if (item.invoicing_profile_id === invoicingProfile.invoicing_profile_id) {
-                return { ...item, default: true };
-              }
-              return { ...item, default: false } as InvoicingProfileInterface;
-            });
-            dispatch(setInvoicingProfilesList(newList));
-          }
-        } catch (error) {
-        } finally {
-          setLoading(false);
+    <View style={{ backgroundColor: '#F1F1F1', marginVertical: 10 }}>
+      <FlatList
+        style={{ backgroundColor: '#F1F1F1', marginVertical: 30 }}
+        data={listData}
+        renderItem={v =>
+          renderItem(
+            v,
+            () => {
+              console.log('open preview modal', v);
+            },
+            () => {
+              handleSend();
+            }
+          )
         }
-      }}
-    >
-      <View style={[invoicingProfile.default ? highlightBorder : {}, { backgroundColor: '#EBF9F3', borderRadius: 10, padding: 16, marginTop: 10 }]}>
-        <Container row style={{ justifyContent: 'space-between' }}>
-          <CustomText textColor={theme.brandColor.iconn_dark_grey} text={invoicingProfile.rfc} typography="h3" fontBold />
-          {invoicingProfile.default && !loading && <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />}
-          {loading && <ActivityIndicator size={'small'} color="gray" />}
-        </Container>
-        <CustomText textColor={theme.brandColor.iconn_dark_grey} text={`${invoicingProfile.business_name}`} typography="h3" />
-      </View>
-    </TouchableOpacity>
+        keyExtractor={item => item.rfc}
+      />
+    </View>
   );
 };
 interface InvoiceModalProps {
@@ -62,7 +128,7 @@ interface InvoiceModalProps {
   onPressOut: () => void;
 }
 
-const InvoicingHelpModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPressOut, invoicingProfileList }) => {
+const InvoicingHelpModal: React.FC<InvoiceModalProps> = ({ visible, onPressOut }) => {
   const { containerStyle } = styles;
 
   const insets = useSafeAreaInsets();
@@ -94,9 +160,10 @@ const InvoicingHelpModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPre
                 />
               </Container>
             </Container>
-            <Container style={{ height: 200 }}>
+            <Container>
               <CustomText text="Puedes consultar tus facturas hasta 3 meses atrás." />
               <CustomText text="Puedes ver directamente cada factura o enviarla a varias direcciones de correo, deslizando hacia la izquierda en cada factura:" />
+              <Results handleSend={() => {}} />
             </Container>
             <Container>
               <CustomText fontBold text="¿Tienes mas dudas de Facturación?" />

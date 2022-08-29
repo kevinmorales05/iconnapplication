@@ -13,25 +13,18 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 
-interface InvoicingHelpModalProps {
+interface SendInvoiceModalProps {
   visible: boolean;
   onPressOut: () => void;
 }
 
-const InvoicingHelpModal: React.FC<InvoicingHelpModalProps> = ({ visible, onPressOut }) => {
+const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut }) => {
   const { containerStyle } = styles;
 
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
-  const {
-    control,
-    setValue,
-    watch,
-    formState: { errors, isDirty },
-    register,
-    handleSubmit
-  } = useForm({
+  const { control, register } = useForm({
     mode: 'onChange'
   });
 
@@ -109,4 +102,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default InvoicingHelpModal;
+export default SendInvoiceModal;

@@ -117,8 +117,8 @@ async function getTicket(ticket: InvoicingSevenTicketRequestInterface | Invoicin
  * Function to get Invoices (list invoices)
  */
 async function getInvoices(page: number, limit: number, payload: any): Promise<any> {
-  const response = await InvoicingApi.getInstance().getRequest(`/invoicing/invoicingData/list/filter?page=${page}&limit=${limit}`, payload);
-  if (response === undefined) return Promise.reject(new Error(`getInvoices:/invoicing/invoicingData/list`));
+  const response = await InvoicingApi.getInstance().postRequest(`/invoicing/invoicingData/list/filter?page=${page}&limit=${limit}`, payload);
+  if (response === undefined) return Promise.reject(new Error(`getInvoices:/invoicing/invoicingData/list/filter`));
   const { data } = response;
   return data;
 }
