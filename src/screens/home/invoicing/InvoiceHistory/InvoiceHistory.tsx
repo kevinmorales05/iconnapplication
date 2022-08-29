@@ -377,14 +377,6 @@ const InvoiceScreen: React.FC = () => {
     })();
   }, [query]);
 
-  // useEffect(() => {
-  //   console.log('results:', results);
-  // }, [results]);
-
-  useEffect(() => {
-    console.log('query:', query);
-  }, [query]);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: props => {
