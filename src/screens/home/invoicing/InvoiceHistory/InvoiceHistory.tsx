@@ -11,7 +11,7 @@ import { HomeStackParams } from 'navigation/types';
 import InvoicingHelpModal from 'screens/home/InvoicingHelpModal';
 import SendInvoiceModal from 'screens/home/SendInvoiceModal';
 import EstablishmentModal, { Establishment } from 'screens/home/EstablishmentModal';
-import AmmountModal, { Ammount } from 'screens/home/AmmountModal';
+import AmountModal, { Amount } from 'screens/home/AmountModal';
 import DateModal, { Period } from 'screens/home/DateModal';
 import RangeModal from 'screens/home/RangeModal';
 import MultipleFilterModal from 'screens/home/MultipleFilterModal';
@@ -19,7 +19,7 @@ import { useLoading } from 'context';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { InvoiceInterface, useAppSelector, RootState } from 'rtk';
+import { useAppSelector, RootState } from 'rtk';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 
@@ -84,6 +84,41 @@ export const InvoiceItem = ({
   invoice: Result;
   results?: Result[];
 }) => {
+  return (
+    <View
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        paddingVertical: 18,
+        paddingHorizontal: 23,
+        marginTop: 10
+      }}
+    >
+      <View>
+        <Image source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
+      </View>
+      <View>
+        <CustomText text={invoice.rfc ?? 'RAPA880105P33'} fontBold />
+      </View>
+      <View style={{ flexDirection: 'row' }}>
+        <CustomText text="Total: " />
+        <CustomText text={invoice.total} textColor={theme.fontColor.light_green} fontBold />
+      </View>
+      {helpPointer && (
+        <View style={{ position: 'absolute', right: 20, top: 60 }}>
+          <FontAwesome5 name="hand-point-up" size={60} />
+        </View>
+      )}
+    </View>
+  );
+};
+
+const testUserId = 'bV2anO5OnIgOy7tE0gtZlyVPqHF2';
+
+const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChild; results?: Result[]; invoice: Result }) => {
   const [separator, setSeparator] = useState(false);
 
   useEffect(() => {
@@ -101,43 +136,13 @@ export const InvoiceItem = ({
 
     setSeparator(minDate.isSame(moment(invoice.emission_date)));
   }, [invoice, results]);
-
   return (
     <>
       {separator && <DateSeparator date={moment(invoice.emission_date).format('MMMM DD, YYYY')} />}
-      <View
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          backgroundColor: 'white',
-          paddingVertical: 18,
-          paddingHorizontal: 23,
-          marginTop: 10
-        }}
-      >
-        <View>
-          <Image source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
-        </View>
-        <View>
-          <CustomText text={invoice.rfc ?? 'RAPA880105P33'} fontBold />
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <CustomText text="Total: " />
-          <CustomText text={invoice.total} textColor={theme.fontColor.light_green} fontBold />
-        </View>
-        {helpPointer && (
-          <View style={{ position: 'absolute', right: 20, top: 60 }}>
-            <FontAwesome5 name="hand-point-up" size={60} />
-          </View>
-        )}
-      </View>
+      {children}
     </>
   );
 };
-
-const testUserId = 'bV2anO5OnIgOy7tE0gtZlyVPqHF2';
 
 const Results = ({ handleSend, results }: { handleSend: () => void; results: Result[] }) => {
   let row: Array<Swipeable | null> = [];
@@ -184,15 +189,17 @@ const Results = ({ handleSend, results }: { handleSend: () => void; results: Res
     };
 
     return (
-      <Swipeable
-        key={index}
-        renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, onPreview, onSend)}
-        onSwipeableOpen={() => closeRow(index)}
-        ref={ref => (row[index] = ref)}
-        rightOpenValue={-100}
-      >
-        <InvoiceItem results={results} invoice={item} />
-      </Swipeable>
+      <ItemWrapper results={results} invoice={item}>
+        <Swipeable
+          key={index}
+          renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, onPreview, onSend)}
+          onSwipeableOpen={() => closeRow(index)}
+          ref={ref => (row[index] = ref)}
+          rightOpenValue={-100}
+        >
+          <InvoiceItem results={results} invoice={item} />
+        </Swipeable>
+      </ItemWrapper>
     );
   };
 
@@ -288,7 +295,7 @@ interface BodyParams {
   thisMonth?: boolean;
   thisWeek?: boolean;
   yesterday?: boolean;
-  ammount?: Ammount;
+  amount?: Amount;
   establishment?: number;
 }
 
@@ -307,7 +314,7 @@ const InvoiceScreen: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
 
   const [establishment, setEstablishment] = useState<Establishment | null>(null);
-  const [ammmount, setAmmount] = useState<Ammount | null>(null);
+  const [amount, setAmount] = useState<Amount | null>(null);
   const [date, setDate] = useState<Period | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -331,17 +338,17 @@ const InvoiceScreen: React.FC = () => {
 
   useEffect(() => {
     setQuery(current => {
-      if (ammmount) {
-        return { ...current, ammount: { min: ammmount.min, max: ammmount.max } } as BodyParams;
+      if (amount) {
+        return { ...current, amount: { min: amount.min, max: amount.max } } as BodyParams;
       }
 
       const updated = { ...current } as BodyParams;
 
-      delete updated.ammount;
+      delete updated.amount;
 
       return updated;
     });
-  }, [ammmount]);
+  }, [amount]);
 
   useEffect(() => {
     setQuery(current => {
@@ -489,21 +496,21 @@ const InvoiceScreen: React.FC = () => {
                   }}
                 />
                 <FilterChip
-                  highlight={!!ammmount}
-                  label={ammmount ? (ammmount.label as string) : 'Monto'}
+                  highlight={!!amount}
+                  label={amount ? (amount.label as string) : 'Monto'}
                   name="date"
                   onPress={() => {
                     setFilter(Filter.AMMOUNT);
                   }}
                   onReset={() => {
-                    setAmmount(null);
+                    setAmount(null);
                   }}
                 />
                 <View style={{ marginHorizontal: 20, display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <Touchable
                     onPress={() => {
                       setEstablishment(null);
-                      setAmmount(null);
+                      setAmount(null);
                       setDate(null);
                     }}
                   >
@@ -546,10 +553,10 @@ const InvoiceScreen: React.FC = () => {
               setFilter(null);
             }}
           />
-          <AmmountModal
-            ammount={ammmount}
-            handleAmmount={current => {
-              setAmmount(current);
+          <AmountModal
+            ammount={amount}
+            handleAmount={current => {
+              setAmount(current);
             }}
             visible={filter === Filter.AMMOUNT}
             onPressOut={() => {
@@ -586,9 +593,9 @@ const InvoiceScreen: React.FC = () => {
             }}
             establishment={establishment}
             //ammount
-            ammount={ammmount}
-            handleAmmount={current => {
-              setAmmount(current);
+            ammount={amount}
+            handleAmount={current => {
+              setAmount(current);
             }}
             //period
             period={date}
@@ -605,7 +612,7 @@ const InvoiceScreen: React.FC = () => {
             }}
             onClear={() => {
               setEstablishment(null);
-              setAmmount(null);
+              setAmount(null);
               setDate(null);
             }}
           />

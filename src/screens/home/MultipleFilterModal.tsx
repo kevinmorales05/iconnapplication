@@ -12,7 +12,7 @@ import { ICONN_CALENDAR_YESTERDAY, ICONN_CALENDAR_WEEK, ICONN_CALENDAR_MONTH, IC
 
 import { Range } from './RangeModal';
 import { EstablishmentFilter, Establishment } from './EstablishmentModal';
-import { AmmountFilter, Ammount } from './AmmountModal';
+import { AmountFilter, Amount } from './AmountModal';
 import { DateFilter, Period } from './DateModal';
 
 interface DateItemProps {
@@ -50,8 +50,8 @@ interface MultipleFilterModalProps {
   handleEstablishment: (establishment: Establishment) => void;
   establishment: Establishment | null;
 
-  handleAmmount: (ammount: Ammount) => void;
-  ammount: Ammount | null;
+  handleAmount: (ammount: Amount) => void;
+  ammount: Amount | null;
   onClear: () => void;
 }
 
@@ -63,7 +63,7 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
   period,
   handleEstablishment,
   establishment,
-  handleAmmount,
+  handleAmount,
   ammount,
   onClear
 }) => {
@@ -114,7 +114,7 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
   }, [visible]);
 
   //ammount
-  const [currentA, setCurrentA] = useState<Ammount | null>(null);
+  const [currentA, setCurrentA] = useState<Amount | null>(null);
 
   useEffect(() => {
     setCurrentA(visible ? ammount : null);
@@ -210,11 +210,11 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
                 }}
                 current={currentE as Establishment}
               />
-              <AmmountFilter
+              <AmountFilter
                 onCurrent={currentA => {
                   setCurrentA(currentA);
                 }}
-                current={currentA as Ammount}
+                current={currentA as Amount}
               />
             </ScrollView>
             <Button
@@ -222,7 +222,7 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
               onPress={() => {
                 if (current) handlePeriod(current);
                 if (currentE) handleEstablishment(currentE);
-                if (currentA) handleAmmount(currentA);
+                if (currentA) handleAmount(currentA);
 
                 onPressOut();
               }}

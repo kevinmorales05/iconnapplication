@@ -6,14 +6,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from 'components/molecules';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-interface AmmountModalProps {
+interface AmountModalProps {
   visible: boolean;
   onPressOut: () => void;
-  handleAmmount: (ammount: Ammount) => void;
-  ammount: Ammount | null;
+  handleAmount: (ammount: Amount) => void;
+  ammount: Amount | null;
 }
 
-const AmmountChip = ({ ammount, selected, onPress }: { ammount: Ammount; selected: boolean; onPress: (ammount: Ammount) => void }) => {
+const AmountChip = ({ ammount, selected, onPress }: { ammount: Amount; selected: boolean; onPress: (ammount: Amount) => void }) => {
   const selectedStyle = {
     backgroundColor: 'white',
     borderColor: '#34c28c',
@@ -49,7 +49,7 @@ const AmmountChip = ({ ammount, selected, onPress }: { ammount: Ammount; selecte
   );
 };
 
-export interface Ammount {
+export interface Amount {
   id: 1;
   min: number | null;
   max: number | null;
@@ -92,14 +92,14 @@ const AMMOUNTS = [
     min: 2000,
     max: null
   }
-] as Ammount[];
+] as Amount[];
 
-const AmmountModal: React.FC<AmmountModalProps> = ({ visible, onPressOut, ammount, handleAmmount }) => {
+const AmountModal: React.FC<AmountModalProps> = ({ visible, onPressOut, ammount, handleAmount }) => {
   const { containerStyle } = styles;
 
   const insets = useSafeAreaInsets();
 
-  const [current, setCurrent] = useState<Ammount | null>(null);
+  const [current, setCurrent] = useState<Amount | null>(null);
 
   useEffect(() => {
     setCurrent(visible ? ammount : null);
@@ -136,7 +136,7 @@ const AmmountModal: React.FC<AmmountModalProps> = ({ visible, onPressOut, ammoun
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                 {AMMOUNTS.map((ammount, key) => {
                   return (
-                    <AmmountChip
+                    <AmountChip
                       key={key}
                       ammount={ammount}
                       selected={ammount.id === current?.id}
@@ -152,7 +152,7 @@ const AmmountModal: React.FC<AmmountModalProps> = ({ visible, onPressOut, ammoun
               <Button
                 disabled={current === null}
                 onPress={() => {
-                  handleAmmount(current as Ammount);
+                  handleAmount(current as Amount);
                   onPressOut();
                 }}
                 marginTop={28}
@@ -180,14 +180,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default AmmountModal;
+export default AmountModal;
 
-interface AmmountFilterProps {
-  onCurrent: (ammount: Ammount) => void;
-  current: Ammount | null;
+interface AmountFilterProps {
+  onCurrent: (ammount: Amount) => void;
+  current: Amount | null;
 }
 
-export const AmmountFilter = ({ onCurrent, current }: AmmountFilterProps) => {
+export const AmountFilter = ({ onCurrent, current }: AmountFilterProps) => {
   return (
     <Container>
       <Container row space="between" style={{ marginTop: 16, marginBottom: 16 }}>
@@ -199,7 +199,7 @@ export const AmmountFilter = ({ onCurrent, current }: AmmountFilterProps) => {
         <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
           {AMMOUNTS.map((ammount, index) => {
             return (
-              <AmmountChip
+              <AmountChip
                 key={index}
                 ammount={ammount}
                 selected={ammount.id === current?.id}
