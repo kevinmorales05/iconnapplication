@@ -11,7 +11,8 @@ import {
   deleteTicketSevenFromList,
   InvoicingProfileInterface,
   setInvoicingPaymentMethodForSevenTicketList,
-  setInvoicingStoreForSevenTicketList
+  setInvoicingStoreForSevenTicketList,
+  resetInvoicingSevenTicketList
 } from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
@@ -90,6 +91,7 @@ const InvoiceTicketSevenController: React.FC = () => {
       //   navigate('InvoiceGeneratedSeven', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'seven', total: '17.00' } });
       // }
       if (response.responseCode === 75) {
+        dispatch(resetInvoicingSevenTicketList());
         navigate('InvoiceGeneratedSeven', { invoiceGenerated: response.data });
       } else {
         toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });

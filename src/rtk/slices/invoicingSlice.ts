@@ -31,8 +31,8 @@ const invoicingSlice = createSlice({
       state.invoicingPetroTicketList = initialStatePetroTicketList;
       state.invoicingPaymentMethodForSevenTicketList = '';
       state.invoicingStoreForSevenTicketList = '';
-      state.invoicingPaymentMethodForPetroTicketList = '',
-      state.invoicingStoreForPetroTicketList = '',
+      state.invoicingPaymentMethodForPetroTicketList = '';
+      state.invoicingStoreForPetroTicketList = '';
       state.loading = false;
     },
     setInvoicing(state, action: PayloadAction<InvoicingProfileInterface>) {
@@ -70,6 +70,12 @@ const invoicingSlice = createSlice({
     },
     setInvoicingStoreForPetroTicketList(state, action: PayloadAction<string>) {
       state.invoicingStoreForPetroTicketList = action.payload;
+    },
+    resetInvoicingPetroTicketList(state) {
+      state.invoicingPetroTicketList = initialStatePetroTicketList;
+    },
+    resetInvoicingSevenTicketList(state) {
+      state.invoicingSevenTicketList = initialStateSevenTicketList;
     }
   },
   extraReducers: builder => {
@@ -134,6 +140,8 @@ export const {
   setInvoicingPaymentMethodForSevenTicketList,
   setInvoicingStoreForSevenTicketList,
   setInvoicingPaymentMethodForPetroTicketList,
-  setInvoicingStoreForPetroTicketList
+  setInvoicingStoreForPetroTicketList,
+  resetInvoicingPetroTicketList,
+  resetInvoicingSevenTicketList
 } = invoicingSlice.actions;
 export default invoicingSlice.reducer;

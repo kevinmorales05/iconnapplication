@@ -11,7 +11,8 @@ import {
   useAppSelector,
   InvoicingProfileInterface,
   setInvoicingPaymentMethodForPetroTicketList,
-  setInvoicingStoreForPetroTicketList
+  setInvoicingStoreForPetroTicketList,
+  resetInvoicingPetroTicketList
 } from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
@@ -97,6 +98,7 @@ const InvoiceTicketPetroController: React.FC = () => {
       //   navigate('InvoiceGeneratedPetro', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'petro', total: '57.00' } });
       // }
       if (response.responseCode === 75) {
+        dispatch(resetInvoicingPetroTicketList());
         navigate('InvoiceGeneratedPetro', { invoiceGenerated: response.data });
       } else {
         toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
