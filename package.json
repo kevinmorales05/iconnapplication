@@ -36,6 +36,7 @@
     "react": "17.0.2",
     "react-hook-form": "^7.32.1",
     "react-native": "0.68.2",
+    "react-native-barcode-mask": "1.2.4",
     "react-native-blob-util": "^0.16.2",
     "react-native-calendar-picker": "^7.1.2",
     "react-native-collapsible": "^1.6.0",
@@ -46,11 +47,14 @@
     "react-native-modal-datetime-picker": "^13.1.2",
     "react-native-pdf": "^6.6.2",
     "react-native-raw-bottom-sheet": "^2.2.0",
+    "react-native-reanimated": "2.8.0",
     "react-native-safe-area-context": "^4.3.1",
     "react-native-screens": "^3.13.1",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-vision-camera": "2.13.3",
     "react-redux": "^8.0.2",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "vision-camera-code-scanner": "0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -17,6 +17,12 @@ module.exports = {
           services: './src/services'
         }
       }
+    ],
+    [
+      'react-native-reanimated/plugin',
+      {
+        globals: ['__scanCodes']
+      }
     ]
   ]
 };

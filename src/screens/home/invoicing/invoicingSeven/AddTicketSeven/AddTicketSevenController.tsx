@@ -97,7 +97,7 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
   };
 
   const onPressScan = () => {
-    console.log('onPressScan...');
+    navigate('CodeReader');
   };
 
   return (

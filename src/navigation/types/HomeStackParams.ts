@@ -22,4 +22,5 @@ export type HomeStackParams = {
   InvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   ViewInvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
+  CodeReader: undefined;
 };
