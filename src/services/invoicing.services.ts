@@ -96,6 +96,16 @@ async function resendVerificationEmail(email: string): Promise<any> {
 }
 
 /**
+ * Function to resend verification email
+ */
+async function sendInvoiceEmail(emails: string[], uuid: string): Promise<any> {
+  const response = await InvoicingApi.getInstance().postRequest(`/invoicing/invoicingData/forward`, { emails, uuid });
+  if (response === undefined) return Promise.reject(new Error(`invoicing/invoicingData/forward/`));
+  const { data } = response;
+  return data;
+}
+
+/**
  * Function to select default invoicingProfile
  */
 async function selectDefault(invoicing_profile_id: number): Promise<any> {
@@ -169,5 +179,6 @@ export const invoicingServices = {
   getInvoices,
   getInvoice,
   getInvoicePDF,
-  forwardInvoice
+  forwardInvoice,
+  sendInvoiceEmail
 };
