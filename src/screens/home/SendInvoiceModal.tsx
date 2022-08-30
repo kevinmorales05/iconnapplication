@@ -11,13 +11,16 @@ import { Result } from 'screens/home/invoicing/InvoiceHistory/InvoiceHistory';
 import { invoicingServices } from 'services';
 import { useAlert, useLoading } from 'context';
 
+const DEFAULT_COUNTDOWN_TIME = 30;
 interface SendInvoiceModalProps {
   visible: boolean;
   onPressOut: () => void;
   invoice: Result;
+  seconds: number;
+  startCountdown: (seconds: number) => void;
 }
 
-const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut, invoice }) => {
+const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut, invoice, seconds, startCountdown }) => {
   const { containerStyle } = styles;
 
   const insets = useSafeAreaInsets();
@@ -116,12 +119,12 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
                 Cancelar
               </Button>
               <Button
-                disabled={emails.length === 0}
+                disabled={emails.length === 0 || seconds > 0}
                 length="short"
                 round
                 fontBold
                 fontSize="h4"
-                leftIcon={<Feather name="send" size={20} color={theme.fontColor.white} />}
+                leftIcon={seconds === 0 ? <Feather name="send" size={20} color={theme.fontColor.white} /> : undefined}
                 onPress={async () => {
                   if (!value) return;
                   if (emails.length === 0) return;
@@ -130,7 +133,7 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
 
                   try {
                     await invoicingServices.sendInvoiceEmail(emails, invoice.invoice_uuid);
-
+                    startCountdown(DEFAULT_COUNTDOWN_TIME);
                     alert.show(
                       {
                         title: 'Factura reenviada',
@@ -149,7 +152,7 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
                   loader.hide();
                 }}
               >
-                Reenviar
+                {seconds > 0 ? `Reenviar (${seconds})` : 'Reenviar'}
               </Button>
             </Container>
           </Container>

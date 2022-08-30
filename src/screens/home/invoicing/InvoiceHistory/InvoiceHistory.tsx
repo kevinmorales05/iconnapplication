@@ -459,6 +459,22 @@ const InvoiceScreen: React.FC = () => {
     });
   }, [navigation]);
 
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    let myInterval = setInterval(() => {
+      setSeconds(current => {
+        if (current > 0) {
+          return current - 1;
+        }
+        return current;
+      });
+    }, 1000);
+    return () => {
+      clearInterval(myInterval);
+    };
+  }, [seconds]);
+
   return (
     <>
       <View style={styles.container}>
@@ -561,6 +577,10 @@ const InvoiceScreen: React.FC = () => {
             invoice={selected}
             onPressOut={() => {
               setSelected(null);
+            }}
+            seconds={seconds}
+            startCountdown={initial => {
+              setSeconds(initial);
             }}
           />
           {/* filtering modals */}
