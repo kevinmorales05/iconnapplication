@@ -19,7 +19,7 @@ import { useLoading } from 'context';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
 import Entypo from 'react-native-vector-icons/Entypo';
-import { useAppSelector, RootState } from 'rtk';
+import { useAppSelector, RootState, InvoiceGeneratedResponseInterface } from 'rtk';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 
@@ -147,6 +147,7 @@ const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChil
 const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; results: Result[] }) => {
   let row: Array<Swipeable | null> = [];
   let prevOpenedRow;
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   /**
    *
@@ -241,7 +242,18 @@ const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; 
             renderItem(
               v,
               () => {
-                console.log('open preview modal', v);
+                const { item } = v;
+
+                const invoiceGenerated: InvoiceGeneratedResponseInterface = {
+                  uuidInvoice: item.invoice_uuid,
+                  emissionDate: item.emission_date,
+                  total: item.total,
+                  establishment: String(item.Establishment.establishment_id)
+                };
+
+                navigate(item.Establishment.establishment_id === 1 ? 'ViewInvoiceGeneratedPetro' : 'ViewInvoiceGeneratedSeven', {
+                  invoiceGenerated
+                });
               },
               () => {
                 const { item, index } = v;
@@ -321,6 +333,12 @@ const InvoiceScreen: React.FC = () => {
   const [visible, setVisible] = useState(false);
 
   const [query, setQuery] = useState<BodyParams>({ userId: testUserId });
+
+  useEffect(() => {
+    setQuery(current => {
+      return { ...current, userId: user.user_id } as BodyParams;
+    });
+  }, [user]);
 
   const loader = useLoading();
 
