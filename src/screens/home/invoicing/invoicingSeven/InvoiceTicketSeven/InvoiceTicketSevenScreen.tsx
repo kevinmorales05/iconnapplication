@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Image, Platform, ScrollView, TextInput } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Image, Platform, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TextContainer, Button, Container, CustomText, Touchable, ActionButton, Select, TaxInfoCard, ListSwipeableItem } from 'components';
 import theme from 'components/theme/theme';

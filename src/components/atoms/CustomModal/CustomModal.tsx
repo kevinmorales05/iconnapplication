@@ -9,7 +9,7 @@ interface CustomModalProps {
   onDismiss?: () => void;
   backgroundOpacity?: number;
   testID?: string;
-  animationType?: 'none' | 'slide' | 'fade' | undefined;
+  animationType?: 'none' | 'slide' | 'fade';
 }
 
 const CustomModal: React.FC<CustomModalProps> = ({

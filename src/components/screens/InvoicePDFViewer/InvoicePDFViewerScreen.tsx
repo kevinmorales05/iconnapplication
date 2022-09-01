@@ -5,7 +5,6 @@ import Pdf from 'react-native-pdf';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
-import Feather from 'react-native-vector-icons/Feather';
 
 interface Props {
   goBack: () => void;

@@ -83,9 +83,9 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
     </Container>
   );
 
-  const closeRow = (index: number) => {
+  const closeRow = (idx: number) => {
     [...rowRefs.entries()].forEach(([key, ref]) => {
-      if (key === index && ref) ref.close();
+      if (key === idx && ref) ref.close();
     });
   };
 

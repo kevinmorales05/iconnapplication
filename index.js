@@ -8,4 +8,4 @@ import {name as appName} from './app.json';
 
 AppRegistry.registerComponent(appName, () => App);
 
-// export { default } from './storybook';
+//export { default } from './storybook';

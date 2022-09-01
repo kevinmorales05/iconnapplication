@@ -5,7 +5,6 @@ import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, TextContainer } from 'components/molecules';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ICONN_INVOICING_PETRO_REFERENCE } from 'assets/images';
 
 interface Props {
   visible: boolean;

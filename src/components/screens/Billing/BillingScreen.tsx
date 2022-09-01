@@ -364,8 +364,8 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
         </Container>
         <Touchable
           onPress={() => {
-            setToggled(toggled => {
-              return !toggled;
+            setToggled(toggled1 => {
+              return !toggled1;
             });
           }}
         >

@@ -67,7 +67,7 @@ const ResendInvoice: React.FC<Props> = ({ visible, message, secondMessage, onPre
                   <TextInput
                     style={{ height: 89, paddingHorizontal: 12, borderColor: theme.brandColor.iconn_light_grey, borderWidth: 1, borderRadius: 8 }}
                     onBlur={onBlur}
-                    onChangeText={value => onChange(value)}
+                    onChangeText={val => onChange(val)}
                     value={value}
                     multiline
                     placeholder="Correos electrónicos"
