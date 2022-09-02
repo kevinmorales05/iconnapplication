@@ -29,6 +29,23 @@ const TaxItem: React.FC = () => {
   );
 };
 
+const AddressesItem: React.FC = () => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const goToAddresses = () => navigate('Address');
+  return (
+    <TouchableOpacity style={[taxItemStyles.container,{backgroundColor: theme.brandColor.iconn_accent_secondary}]} onPress={goToAddresses}>
+      <View style={taxItemStyles.content}>
+        <View style={taxItemStyles.middle}>
+          <Text numberOfLines={1}>Administra tus direcciones de entrega</Text>
+        </View>
+        <View style={taxItemStyles.end}>
+          <AntDesign name="right" size={24} color="black" />
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const taxItemStyles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
@@ -96,6 +113,7 @@ export default function AccountScreen() {
           </Section>
           <Section label="Datos fiscales">
             <TaxItem />
+            <AddressesItem />
           </Section>
         </View>
       </ScrollView>

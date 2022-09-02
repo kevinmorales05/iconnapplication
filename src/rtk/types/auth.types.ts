@@ -19,7 +19,20 @@ export interface AuthDataInterface {
   gender?: string | number;
   password?: string;
   new_password?: string;
+  addresses?: Address[];
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';
 export type Credentials = FirebaseAuthTypes.AuthCredential | null;
+
+export interface Address {
+  postalCode: string;
+  state: string;
+  city: string;
+  colony: string;
+  streetAndNumber: string;
+  longitude: string;
+  latitude: string;
+  default: boolean;
+  tag: string;
+}

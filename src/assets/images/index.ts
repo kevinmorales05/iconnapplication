@@ -34,6 +34,8 @@ import ICONN_CALENDAR_MONTH from './iconn-calendar-month.webp';
 import ICONN_CALENDAR_WEEK from './iconn-calendar-week.webp';
 import ICONN_CALENDAR_YESTERDAY from './iconn-calendar-yesterday.webp';
 import ICONN_NO_RESULTS from './iconn-no-results.webp';
+import ICONN_ADDRESS_FIND from './iconn-address-find.png';
+import ICONN_NO_ADDRESSES from './iconn-no-addresses.png';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -71,5 +73,7 @@ export {
   ICONN_CALENDAR_MONTH,
   ICONN_CALENDAR_WEEK,
   ICONN_CALENDAR_YESTERDAY,
-  ICONN_NO_RESULTS
+  ICONN_NO_RESULTS,
+  ICONN_ADDRESS_FIND,
+  ICONN_NO_ADDRESSES
 };

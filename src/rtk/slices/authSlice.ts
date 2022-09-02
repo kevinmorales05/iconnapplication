@@ -15,7 +15,8 @@ const initialState: AuthDataInterface = {
   secretKey: '',
   termsAndConditions: false,
   isLogged: false,
-  sign_app_modes_id: undefined
+  sign_app_modes_id: undefined,
+  addresses: []
 };
 
 const authSlice = createSlice({
