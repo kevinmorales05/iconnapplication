@@ -1,6 +1,4 @@
-import { InvoicingApi } from '../http/api-invoicing';
 import { DocsApi } from '../http/api-docs';
-
 /**
  * Function to create doc
  * TODO error handling
@@ -70,5 +68,5 @@ export const invoicingServices = {
   getAllDocByUserID,
   deleteDocByDocID,
   updateDocByDocID,
-  getDocByUserID
+  getDocByDocID
 };
