@@ -5,6 +5,7 @@ const API_VTEX_ORDERS = 'https://oneiconn.myvtex.com/api/oms/user/orders';
 const API_VTEX_AUTH = '';
 const VTEX_APPKEY = 'vtexappkey-oneiconn-SOYFEO';
 const VTEX_APPTOKEN = 'PNOSOIQKQXOYQSNSEIBGIYAWBWUWKPISEXCKGFMHMJYWKVXRQVEXRDTUSDPBTRTIEJFGLTUIVRLFTFTPGGYVAKOLCLCFYFVGYYMQJNAKMBTEAZFTORXDZWCYFALXSELQ'
+const VTEX_DOCS = 'https://oneiconn.myvtex.com/api/dataentities/';
 
 
 const getApiUrl = (type: string) => {
@@ -13,6 +14,8 @@ const getApiUrl = (type: string) => {
       return API_VTEX_ORDERS;
     case 'auth':
       return API_VTEX_AUTH;
+    case 'docs':
+      return VTEX_DOCS;
     default:
       break;
   }

@@ -1,6 +1,6 @@
 import { OrdersApi } from '../http/api-orders';
 import moment from 'moment'
-type listOrderType = 'asc' | 'desc'
+type listOrderType = 'asc' | 'desc';
 /**
  * Function to get orders list paginated and descendent order
  * the date in order to fulfill the requeriment of the last 6 months is in timestamp format.
