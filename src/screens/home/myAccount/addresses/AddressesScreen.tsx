@@ -9,8 +9,8 @@ import NetInfo from '@react-native-community/netinfo';
 interface Props {
   addresses: Address[];
   onPressAddNewAddress: () => void;
-  onPressEdit: () => void;
-  onPressDelete: () => void;
+  onPressEdit: (address: Address, position: number) => void;
+  onPressDelete: (address: Address, position: number) => void;
   goBack: () => void;
 }
 
@@ -48,7 +48,15 @@ const AddressesScreen: React.FC<Props> = ({ addresses, onPressAddNewAddress, onP
           ) : (
             addresses
               .map(function (address, i) {
-                return <AddressCard key={i} address={address} onPressEdit={() => onPressEdit()} onPressDelete={() => onPressDelete()} index={i} />;
+                return (
+                  <AddressCard
+                    key={i}
+                    address={address}
+                    onPressEdit={() => onPressEdit(address, i)}
+                    onPressDelete={() => onPressDelete(address, i)}
+                    index={i}
+                  />
+                );
               })
               .sort(order)
           )}

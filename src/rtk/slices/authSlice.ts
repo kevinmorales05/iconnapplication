@@ -1,9 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { logoutThunk, preSignUpThunk, registerThunk,
-  signUpUserWithEmailAndPasswordThunk, registerWithFirebaseThunk, 
-  validateOtpThunk, validateUserThunk, signInWithEmailAndPasswordThunk, 
-  getUserThunk, sendEmailToRecoverPasswordThunk } from '../thunks/auth.thunks';
-import { AuthDataInterface } from '../types';
+import { getAddressByPostalCodeThunk, saveUserAddressThunk } from 'rtk/thunks/vtex-addresses.thunks';
+import {
+  logoutThunk,
+  preSignUpThunk,
+  registerThunk,
+  signUpUserWithEmailAndPasswordThunk,
+  registerWithFirebaseThunk,
+  validateOtpThunk,
+  validateUserThunk,
+  signInWithEmailAndPasswordThunk,
+  getUserThunk,
+  sendEmailToRecoverPasswordThunk
+} from '../thunks/auth.thunks';
+import { Address, AuthDataInterface } from '../types';
 
 const initialState: AuthDataInterface = {
   user_id: '',
@@ -23,7 +32,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: initialState,
-    loading: false,
+    loading: false
   },
   reducers: {
     setAuthInitialState(state) {
@@ -39,163 +48,172 @@ const authSlice = createSlice({
     setSecretKey(state, action: PayloadAction<AuthDataInterface>) {
       state.user.secretKey = action.payload.secretKey;
     },
-    setPassword(state, action: PayloadAction<AuthDataInterface>){
+    setPassword(state, action: PayloadAction<AuthDataInterface>) {
       state.user.pass = action.payload.pass;
     },
-    setFullName(state, action: PayloadAction<AuthDataInterface>){
+    setFullName(state, action: PayloadAction<AuthDataInterface>) {
       state.user.name = action.payload.name;
       state.user.lastName = action.payload.lastName;
     },
-    setPhoto(state, action: PayloadAction<AuthDataInterface>){
+    setPhoto(state, action: PayloadAction<AuthDataInterface>) {
       state.user.photo = action.payload.photo;
     },
-    setEmailVerified(state, action: PayloadAction<AuthDataInterface>){
+    setEmailVerified(state, action: PayloadAction<AuthDataInterface>) {
       state.user.emailVerified = action.payload.emailVerified;
     },
-    setTelephone(state, action: PayloadAction<AuthDataInterface>){
+    setTelephone(state, action: PayloadAction<AuthDataInterface>) {
       state.user.telephone = action.payload.telephone;
     },
-    setBirthday(state, action: PayloadAction<AuthDataInterface>){
+    setBirthday(state, action: PayloadAction<AuthDataInterface>) {
       state.user.birthday = action.payload.birthday;
     },
-    setGender(state, action: PayloadAction<AuthDataInterface>){
+    setGender(state, action: PayloadAction<AuthDataInterface>) {
       state.user.gender = action.payload.gender;
     },
-    setTermsAndCond(state, action: PayloadAction<AuthDataInterface>){
+    setTermsAndCond(state, action: PayloadAction<AuthDataInterface>) {
       state.user.termsAndConditions = action.payload.termsAndConditions;
     },
-    setUserId(state, action: PayloadAction<AuthDataInterface>){
-      state.user.user_id = action.payload.user_id;
+    setUserId(state, action: PayloadAction<AuthDataInterface>) {
+      // TODO (IMPORTANT!!!): REVERT THIS HARDCODED USER ID:
+      state.user.user_id = 'da5550d6-2a38-11ed-835d-129d14bde747';
     },
-    setIsLogged(state, action: PayloadAction<AuthDataInterface>){
+    setIsLogged(state, action: PayloadAction<AuthDataInterface>) {
       state.user.isLogged = action.payload.isLogged;
+    },
+    setAddressesList(state, action: PayloadAction<Address[]>) {
+      state.user.addresses = action.payload;
+    },
+    addAddressToList(state, action: PayloadAction<Address>) {
+      state.user.addresses.push(action.payload);
     }
   },
   extraReducers: builder => {
     builder.addCase(preSignUpThunk.pending, state => {
-      console.log('preSignUpThunk pending...');
       state.loading = true;
-    })
-    builder.addCase(preSignUpThunk.fulfilled, state => {      
-      console.log('preSignUpThunk fullfilled...');
+    });
+    builder.addCase(preSignUpThunk.fulfilled, state => {
       state.loading = false;
-    })
+    });
     builder.addCase(preSignUpThunk.rejected, state => {
-      console.log('preSignUpThunk rejected...');
       state.loading = false;
-    })
+    });
     builder.addCase(validateOtpThunk.pending, state => {
-      console.log('validateOtpThunk pending...');
       state.loading = true;
-    })
-    builder.addCase(validateOtpThunk.fulfilled, state => {      
-      console.log('validateOtpThunk fullfilled...');
+    });
+    builder.addCase(validateOtpThunk.fulfilled, state => {
       state.loading = false;
-    })
+    });
     builder.addCase(validateOtpThunk.rejected, state => {
-      console.log('validateOtpThunk rejected...');
       state.loading = false;
-    })
+    });
     builder.addCase(registerThunk.pending, state => {
-      console.log('registerThunk pending...');
       state.loading = true;
-    })
-    builder.addCase(registerThunk.fulfilled, state => {      
-      console.log('registerThunk fullfilled...');
+    });
+    builder.addCase(registerThunk.fulfilled, state => {
       state.loading = false;
-    })
+    });
     builder.addCase(registerThunk.rejected, state => {
-      console.log('registerThunk rejected...');
       state.loading = false;
-    })
+    });
     builder.addCase(logoutThunk.pending, state => {
-      console.log('logoutThunk pending...');
       state.loading = true;
-    })
-    builder.addCase(logoutThunk.fulfilled, state => {      
-      console.log('logoutThunk fullfilled...');
+    });
+    builder.addCase(logoutThunk.fulfilled, state => {
       state.loading = false;
-    })
+    });
     builder.addCase(logoutThunk.rejected, state => {
-      console.log('logoutThunk rejected...');
       state.loading = false;
-    })
+    });
     builder.addCase(signUpUserWithEmailAndPasswordThunk.pending, state => {
-      console.log('signUpUserWithEmailAndPasswordThunk pending...');
       state.loading = true;
-    })
-    builder.addCase(signUpUserWithEmailAndPasswordThunk.fulfilled, state => {      
-      console.log('signUpUserWithEmailAndPasswordThunk fullfilled...');
+    });
+    builder.addCase(signUpUserWithEmailAndPasswordThunk.fulfilled, state => {
       state.loading = false;
-    })
+    });
     builder.addCase(signUpUserWithEmailAndPasswordThunk.rejected, state => {
-      console.log('signUpUserWithEmailAndPasswordThunk rejected...');
       state.loading = false;
-    })
+    });
     builder.addCase(validateUserThunk.pending, state => {
-      console.log('validateUserThunk pending...');
       state.loading = true;
-    })
-    builder.addCase(validateUserThunk.fulfilled, state => {      
-      console.log('validateUserThunk fullfilled...');
+    });
+    builder.addCase(validateUserThunk.fulfilled, state => {
       state.loading = false;
-    })
+    });
     builder.addCase(validateUserThunk.rejected, state => {
-      console.log('validateUserThunk rejected...');
       state.loading = false;
-    })
+    });
     builder.addCase(registerWithFirebaseThunk.pending, state => {
-      console.log('registerWithFirebaseThunk pending...');
       state.loading = true;
-    })
+    });
     builder.addCase(registerWithFirebaseThunk.fulfilled, state => {
-      console.log('registerWithFirebaseThunk fullfilled...');
       state.loading = false;
-    })
+    });
     builder.addCase(registerWithFirebaseThunk.rejected, state => {
-      console.log('registerWithFirebaseThunk rejected...');
       state.loading = false;
-    })
+    });
     builder.addCase(signInWithEmailAndPasswordThunk.pending, state => {
-      console.log('signInWithEmailAndPasswordThunk pending...');
       state.loading = true;
-    })
+    });
     builder.addCase(signInWithEmailAndPasswordThunk.fulfilled, state => {
-      console.log('signInWithEmailAndPasswordThunk fullfilled...');
       state.loading = false;
-    })
+    });
     builder.addCase(signInWithEmailAndPasswordThunk.rejected, state => {
-      console.log('signInWithEmailAndPasswordThunk rejected...');
       state.loading = false;
-    })
+    });
     builder.addCase(getUserThunk.pending, state => {
-      console.log('getUserThunk pending...');
       state.loading = true;
-    })
+    });
     builder.addCase(getUserThunk.fulfilled, state => {
-      console.log('getUserThunk fullfilled...');
       state.loading = false;
-    })
+    });
     builder.addCase(getUserThunk.rejected, state => {
-      console.log('getUserThunk rejected...');
       state.loading = false;
-    })
+    });
     builder.addCase(sendEmailToRecoverPasswordThunk.pending, state => {
-      console.log('sendEmailToRecoverPasswordThunk pending...');
       state.loading = true;
-    })
+    });
     builder.addCase(sendEmailToRecoverPasswordThunk.fulfilled, state => {
-      console.log('sendEmailToRecoverPasswordThunk fullfilled...');
       state.loading = false;
-    })
+    });
     builder.addCase(sendEmailToRecoverPasswordThunk.rejected, state => {
-      console.log('sendEmailToRecoverPasswordThunk rejected...');
       state.loading = false;
-    })
+    });
+    builder.addCase(getAddressByPostalCodeThunk.pending, state => {
+      state.loading = true;
+    });
+    builder.addCase(getAddressByPostalCodeThunk.fulfilled, state => {
+      state.loading = false;
+    });
+    builder.addCase(getAddressByPostalCodeThunk.rejected, state => {
+      state.loading = false;
+    });
+    builder.addCase(saveUserAddressThunk.pending, state => {
+      state.loading = true;
+    });
+    builder.addCase(saveUserAddressThunk.fulfilled, state => {
+      state.loading = false;
+    });
+    builder.addCase(saveUserAddressThunk.rejected, state => {
+      state.loading = false;
+    });
   }
 });
 // TODO: validate if it is possible to reduce extra reducers.
-export const { setAuthInitialState, setAuthEmail, setSignMode, setSecretKey, setPassword, 
-  setFullName, setPhoto, setEmailVerified, setTelephone, setBirthday, setGender, 
-  setTermsAndCond, setUserId, setIsLogged } = authSlice.actions;
+export const {
+  setAuthInitialState,
+  setAuthEmail,
+  setSignMode,
+  setSecretKey,
+  setPassword,
+  setFullName,
+  setPhoto,
+  setEmailVerified,
+  setTelephone,
+  setBirthday,
+  setGender,
+  setTermsAndCond,
+  setUserId,
+  setIsLogged,
+  setAddressesList
+} = authSlice.actions;
 export default authSlice.reducer;

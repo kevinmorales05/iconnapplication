@@ -13,7 +13,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 interface Props {
   label?: string;
   placeholder?: string;
-  error?: string;
+  error?: any;
   options: Array<any>;
   optionsIdField?: string;
   optionsValueField?: string;

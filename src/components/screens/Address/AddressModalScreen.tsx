@@ -7,7 +7,7 @@ import { ICONN_ADDRESS_FIND } from 'assets/images';
 import { FieldValues, useForm } from 'react-hook-form';
 import { alphaNumeric, numericWithSpecificLenght, openField } from 'utils/rules';
 import { useIsFocused } from '@react-navigation/native';
-import { Address } from 'rtk';
+import { Address, PostalCodeInfo } from 'rtk';
 import { PAYMENT_METHODS } from 'assets/files';
 import { CrudType } from '../../types/crud-type';
 import theme from 'components/theme/theme';
@@ -15,29 +15,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface Props {
   visible: boolean;
+  postalCodeInfo: PostalCodeInfo;
   address: Address;
   mode: CrudType;
   title: string;
+  onPressFindPostalCodeInfo: (postalCode: string) => void;
   onSubmit: (address: FieldValues) => void;
-  onPressEditAddress: (address: Address) => void;
-  onPressDeleteAddress: (address: Address) => void;
   onPressClose: () => void;
 }
 
-const AddressModalScreen: React.FC<Props> = ({ visible, address, mode, title, onSubmit, onPressEditAddress, onPressDeleteAddress, onPressClose }) => {
-  const insets = useSafeAreaInsets();
-  const [PaymentMethod, setPaymentMethod] = useState<string>('01');
-  const [checkedColor, setCheckedColor] = useState('iconn_med_grey');
-  const [value, setCheckBoxValue] = useState(false);
-
-  const changeColor = () => {
-    setCheckBoxValue(!value);
-    setCheckedColor('iconn_green_original');
-    if (checkedColor === 'iconn_green_original') {
-      setCheckedColor('iconn_med_grey');
-    }
-  };
-
+const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address, mode, title, onPressFindPostalCodeInfo, onSubmit, onPressClose }) => {
   const {
     control,
     handleSubmit,
@@ -45,43 +32,60 @@ const AddressModalScreen: React.FC<Props> = ({ visible, address, mode, title, on
     register,
     reset,
     setValue,
-    trigger
+    trigger,
+    getValues
   } = useForm({
     mode: 'onChange'
   });
 
-  const stationRef = useRef<TextInput>(null);
-  const streetAndNumberRef = useRef<TextInput>(null);
+  const insets = useSafeAreaInsets();
+  const [PaymentMethod, setPaymentMethod] = useState<string>('01');
+  const [checkedColor, setCheckedColor] = useState('iconn_med_grey');
+  const [value, setCheckBoxValue] = useState(false);
+
+  const resetForm = () => {
+    reset({
+      postalCode: '',
+      state: '',
+      city: '',
+      neighborhood: '',
+      street: '',
+      tag: ''
+    });
+    //
+    if (postalCodeRef.current) postalCodeRef.current.focus();
+  };
+
+  useEffect(() => {
+    if (mode === 'create') {
+      console.log('reset...');
+      resetForm();
+    }
+  }, [mode]);
+
+  useEffect(() => {
+    setValue('state', postalCodeInfo?.state);
+    setValue('city', postalCodeInfo?.city);
+  }, [postalCodeInfo]);
+
+  // const changeColor = () => {
+  //   setCheckBoxValue(!value);
+  //   setCheckedColor('iconn_green_original');
+  //   if (checkedColor === 'iconn_green_original') {
+  //     setCheckedColor('iconn_med_grey');
+  //   }
+  // };
+
+  const postalCodeRef = useRef<TextInput>(null);
+  const streetRef = useRef<TextInput>(null);
   const tagRef = useRef<TextInput>(null);
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (stationRef.current) {
-      stationRef.current.focus();
+    if (postalCodeRef.current) {
+      postalCodeRef.current.focus();
     }
   }, []);
-
-  const resetForm = () => {
-    reset({
-      station: '',
-      folio: '',
-      webId: '',
-      ticketDate: ''
-    });
-    if (stationRef.current) stationRef.current.focus();
-  };
-
-  const populateForm = () => {
-    // setValue('station', ticket?.station);
-    // setValue('folio', ticket?.ticketNo);
-    // setValue('webId', ticket?.webId);
-    // setValue('ticketDate', moment(ticket?.date).format('DD/MM/YYYY'));
-    // trigger('station');
-    // trigger('folio');
-    // trigger('webId');
-    // trigger('ticketDate');
-    if (stationRef.current) stationRef.current.focus();
-  };
 
   const { containerStyle } = styles;
 
@@ -130,12 +134,12 @@ const AddressModalScreen: React.FC<Props> = ({ visible, address, mode, title, on
                       keyboardType="numeric"
                       placeholder={`Código Postal`}
                       blurOnSubmit={true}
-                      ref={stationRef}
+                      ref={postalCodeRef}
                       label="Código Postal"
                       boldLabel
                       maxLength={5}
                       numeric
-                      onSubmitEditing={() => streetAndNumberRef.current?.focus()}
+                      onSubmitEditing={() => streetRef.current?.focus()}
                       rules={numericWithSpecificLenght(5)}
                       error={errors.postalCode}
                     />
@@ -146,103 +150,80 @@ const AddressModalScreen: React.FC<Props> = ({ visible, address, mode, title, on
                       round
                       fontBold
                       fontSize="h4"
-                      onPress={() => {}}
+                      onPress={() => onPressFindPostalCodeInfo(getValues('postalCode'))}
                       color="iconn_med_grey"
                       fontColor="dark"
+                      disabled={!!errors.postalCode?.message || getValues('postalCode')?.length === 0}
                     >
                       Validar
                     </Button>
                   </Container>
                 </Container>
 
-                <TextContainer typography="h5" fontBold text={`Estado / Provincia / Region`} marginTop={21} />
-                <Select
+                <Input
+                  {...register('state')}
                   name="state"
                   control={control}
-                  rules={openField(1)}
-                  options={PAYMENT_METHODS}
-                  optionsIdField="id"
-                  optionsValueField="name"
-                  onSelect={value => {
-                    if (typeof value === 'object') {
-                      setPaymentMethod(value['id']);
-                      setValue('state', value ? PAYMENT_METHODS.find(i => i.id === value['id'])?.name : '');
-                    } else {
-                      setPaymentMethod(value);
-                      setValue('state', value ? PAYMENT_METHODS.find(i => i.id === value)?.name : '');
-                    }
-                    trigger('state');
-                  }}
-                  androidMode="dialog"
-                  placeholder={`Selección`}
-                  label="Selección"
-                  disabled={false}
+                  autoCorrect={false}
+                  keyboardType="default"
+                  placeholder={`Ej. Estado de México`}
+                  blurOnSubmit={true}
+                  marginTop={21}
+                  label="Estado / Provincia / Region"
+                  boldLabel
+                  maxLength={100}
+                  rules={openField(3)}
+                  error={errors.state?.message}
+                  editable={false}
                 />
 
-                <TextContainer typography="h5" fontBold text={`Municipio, Ciudad o Delegación`} marginTop={21} />
-                <Select
+                <Input
+                  {...register('city')}
                   name="city"
                   control={control}
-                  rules={openField(1)}
-                  options={PAYMENT_METHODS}
-                  optionsIdField="id"
-                  optionsValueField="name"
-                  onSelect={value => {
-                    if (typeof value === 'object') {
-                      setPaymentMethod(value['id']);
-                      setValue('city', value ? PAYMENT_METHODS.find(i => i.id === value['id'])?.name : '');
-                    } else {
-                      setPaymentMethod(value);
-                      setValue('city', value ? PAYMENT_METHODS.find(i => i.id === value)?.name : '');
-                    }
-                    trigger('city');
-                  }}
-                  androidMode="dialog"
-                  placeholder={`Selección`}
-                  label="Selección"
-                  disabled={false}
+                  autoCorrect={false}
+                  keyboardType="default"
+                  placeholder={`Ej. Toluca`}
+                  blurOnSubmit={true}
+                  marginTop={21}
+                  label="Municipio, Ciudad o Delegación"
+                  boldLabel
+                  maxLength={100}
+                  rules={openField(3)}
+                  error={errors.city?.message}
+                  editable={false}
                 />
 
                 <TextContainer typography="h5" fontBold text={`Colonia`} marginTop={21} />
                 <Select
-                  name="colony"
+                  name="neighborhood"
                   control={control}
-                  rules={openField(1)}
-                  options={PAYMENT_METHODS}
-                  optionsIdField="id"
-                  optionsValueField="name"
-                  onSelect={value => {
-                    if (typeof value === 'object') {
-                      setPaymentMethod(value['id']);
-                      setValue('colony', value ? PAYMENT_METHODS.find(i => i.id === value['id'])?.name : '');
-                    } else {
-                      setPaymentMethod(value);
-                      setValue('colony', value ? PAYMENT_METHODS.find(i => i.id === value)?.name : '');
-                    }
-                    trigger('colony');
-                  }}
+                  rules={openField(3)}
+                  options={postalCodeInfo ? postalCodeInfo.neighborhood?.split('::') : []}
+                  onSelect={value => setValue('neighborhood', value)}
                   androidMode="dialog"
                   placeholder={`Selección`}
                   label="Selección"
+                  error={errors.neighborhood?.message}
                   disabled={false}
                 />
 
                 <Input
-                  {...register('streetAndNumber')}
-                  name="streetAndNumber"
+                  {...register('street')}
+                  name="street"
                   control={control}
                   autoCorrect={false}
                   keyboardType="default"
                   placeholder={`Ej. Blvrd Acapulco #4056`}
                   blurOnSubmit={true}
                   marginTop={21}
-                  ref={streetAndNumberRef}
+                  ref={streetRef}
                   label="Calle y número exterior"
                   boldLabel
                   maxLength={150}
                   onSubmitEditing={() => tagRef.current?.focus()}
-                  rules={alphaNumeric(3)}
-                  error={errors.streetAndNumber?.message}
+                  rules={openField(3)}
+                  error={errors.street?.message}
                 />
 
                 <Input
@@ -258,7 +239,7 @@ const AddressModalScreen: React.FC<Props> = ({ visible, address, mode, title, on
                   label="Etiqueta (opcional)"
                   boldLabel
                   maxLength={150}
-                  rules={alphaNumeric(3)}
+                  rules={openField(3)}
                   error={errors.tag?.message}
                 />
               </Container>

@@ -6,7 +6,7 @@ import { DocsApi } from '../http/api-docs';
  */
 
 async function createDoc(dataentity: string, doc: any): Promise<any> {
-  const response = await DocsApi.getInstance().postRequest(`/${dataentity}/documents?_schema=schema`, doc);
+  const response = await DocsApi.getInstance().postRequest(`/dataentities/${dataentity}/documents?_schema=schema`, doc);
   const { data } = response;
   return data;
 }
@@ -31,7 +31,7 @@ async function getDocByDocID(dataentity: string, docID: string): Promise<any> {
  */
 
 async function getAllDocByUserID(dataentity: string, userId: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=id=${userId}`);
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=userId=${userId}`);
   //error handling
   const { data } = response;
   return data;
@@ -63,10 +63,17 @@ async function updateDocByDocID(dataentity: string, docId: string, doc: any): Pr
   return data;
 }
 
-export const invoicingServices = {
+async function getAddressByPostalCode(postalCode: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`checkout/pub/postal-code/MEX/${postalCode}`);
+  const { data } = response;
+  return data;
+}
+
+export const vtexDocsServices = {
   createDoc,
   getAllDocByUserID,
   deleteDocByDocID,
   updateDocByDocID,
-  getDocByDocID
+  getDocByDocID,
+  getAddressByPostalCode
 };

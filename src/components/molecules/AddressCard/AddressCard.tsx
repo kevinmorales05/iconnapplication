@@ -25,17 +25,24 @@ const AddressCard: React.FC<AddressCardProps> = ({ address, onPressEdit, onPress
 
   return (
     <Container row space="between" height={120} style={AddressCardStyle} crossCenter center>
-      <Container width={'85%'} flex space="between" style={{ marginLeft: 13 }}>
-        <TextContainer text={address.tag} fontBold />
-        <TextContainer text={`${address.streetAndNumber}, ${address.colony}, ${address.city}, ${address.state}`} marginTop={12} />
-        <Container row style={{ marginTop: 12 }}>
-          <Ionicons name="md-trash-outline" size={theme.iconSize.xsmall} color={theme.brandColor.iconn_red_original} />
-          <TextContainer text="Eliminar" textColor={theme.brandColor.iconn_red_original} fontSize={theme.fontSize.h6} marginTop={4} />
+      <Container width={'80%'} flex space="between" style={{ marginLeft: 13 }}>
+        <TextContainer text={address.addressName!} fontBold />
+        <TextContainer text={`${address.street}, ${address.neighborhood}, ${address.city}, ${address.state}`} marginTop={12} />
+        <Container row>
+          <Touchable onPress={onPressDelete}>
+            <Container row style={{ marginTop: 12 }}>
+              <Ionicons name="md-trash-outline" size={theme.iconSize.xsmall} color={theme.brandColor.iconn_red_original} />
+              <TextContainer text="Eliminar" textColor={theme.brandColor.iconn_red_original} fontSize={theme.fontSize.h6} marginTop={4} />
+            </Container>
+          </Touchable>
+          <Container />
         </Container>
       </Container>
-      <Container width={'15%'} crossAlignment="end" style={{ marginRight: 20 }}>
-        <Octicons name="chevron-right" size={24} color={theme.fontColor.dark} />
-      </Container>
+      <Touchable onPress={onPressEdit} width={'20%'}>
+        <Container crossAlignment="end" style={{ marginRight: 20 }}>
+          <Octicons name="chevron-right" size={24} color={theme.fontColor.dark} />
+        </Container>
+      </Touchable>
     </Container>
   );
 };
