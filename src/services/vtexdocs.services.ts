@@ -43,19 +43,16 @@ async function getAllDocByUserID(dataentity: string, userId: string): Promise<an
  * TODO interface for doc
  */
 async function deleteDocByDocID(dataentity: string, docId: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(`dataentities/${dataentity}/documents/${docId}`);
-  //error handling}
+  const response = await DocsApi.getInstance().deleteRequest(`dataentities/${dataentity}/documents/${docId}`);
   const { data } = response;
   return data;
 }
+
 /**
  * Function to  update one doc
  * TODO error handling
  * TODO interface for doc
  */
-
-//dataentities/AD/documents/:id
-
 async function updateDocByDocID(dataentity: string, docId: string, doc: any): Promise<any> {
   const response = await DocsApi.getInstance().patchRequest(`dataentities/${dataentity}/documents/${docId}`, doc);
   //error handling}

@@ -3,16 +3,16 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { RootState, useAppDispatch, useAppSelector, deleteTicketSevenFromList, Address, PostalCodeInfo } from 'rtk';
+import { RootState, useAppDispatch, useAppSelector, Address, PostalCodeInfo, deleteAddressFromList, addAddressToList } from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 import { AddressModalScreen } from 'components';
 import AddressesScreen from './AddressesScreen';
 import { CrudType } from 'components/types/crud-type';
 import theme from 'components/theme/theme';
-import { getAddressByPostalCodeThunk, getUserAddressesThunk, saveUserAddressThunk } from 'rtk/thunks/vtex-addresses.thunks';
+import { deleteUserAddressThunk, getAddressByPostalCodeThunk, getUserAddressesThunk, saveUserAddressThunk } from 'rtk/thunks/vtex-addresses.thunks';
 
 const AddressesController: React.FC = () => {
-  const { goBack, push } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { loading, user } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
   const alert = useAlert();
@@ -62,13 +62,22 @@ const AddressesController: React.FC = () => {
   };
 
   const deleteAdress = async (address: Address, position: number) => {
-    console.log(address);
-    console.log(position);
+    try {
+      const response = await dispatch(deleteUserAddressThunk(address.id!)).unwrap();
+      if (!response) {
+        // TODO: WARNING: the vtex api responses with 204 (No content) when is a successful response,
+        // that is a wrong definition of the response and could be a "false positive".
+        dispatch(deleteAddressFromList(position));
+        toast.show({ message: `Dirección eliminada\n correctamente.`, type: 'success' });
+      } else {
+        toast.show({ message: `Ocurrió un error inesperado.`, type: 'warning' });
+      }
+    } catch (error) {
+      toast.show({ message: error, type: 'error' });
+    }
   };
 
   const removeAddress: any = (address: Address, position: number) => {
-    console.log(address);
-    console.log(position);
     alert.show(
       {
         title: 'Eliminar Dirección',
@@ -79,8 +88,7 @@ const AddressesController: React.FC = () => {
         cancelTextColor: 'iconn_error',
         onCancel() {
           alert.hide();
-          // dispatch(deleteTicketSevenFromList(index));
-          toast.show({ message: 'Dirección eliminada\n correctamente.', type: 'success' });
+          deleteAdress(address, position);
         },
         onAccept() {
           alert.hide();
@@ -97,27 +105,30 @@ const AddressesController: React.FC = () => {
   const onSubmit = async (address: Address) => {
     onPressCloseModalScreen();
     loader.show();
+
+    const addressPayload: Address = {
+      addressName: address.tag,
+      receiverName: `${user.name} ${user.lastName} ${user.secondLastName}`,
+      city: address.city,
+      state: address.state,
+      country: 'MX',
+      postalCode: address.postalCode,
+      street: address.street,
+      neighborhood: address.neighborhood,
+      userId: user.user_id
+    };
+
     try {
-      const response = await dispatch(
-        saveUserAddressThunk({
-          addressName: address.tag,
-          receiverName: `${user.name} ${user.lastName} ${user.secondLastName}`,
-          city: address.city,
-          state: address.state,
-          country: 'MX', // TODO: will be always MX?
-          postalCode: address.postalCode,
-          street: address.street,
-          neighborhood: address.neighborhood,
-          userId: user.user_id
-        })
-      ).unwrap();
+      const response = await dispatch(saveUserAddressThunk(addressPayload)).unwrap();
       if (response) {
+        addressPayload.id = response.DocumentId;
+        dispatch(addAddressToList(addressPayload));
         toast.show({ message: `Dirección guardada correctamente.`, type: 'success' });
       } else {
-        setAddressModalScreenVisible(true);
+        toast.show({ message: `Ocurrió un error inesperado.`, type: 'warning' });
       }
     } catch (error) {
-      console.warn(error);
+      toast.show({ message: error, type: 'error' });
     }
   };
 

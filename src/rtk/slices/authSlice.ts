@@ -12,7 +12,7 @@ import {
   getUserThunk,
   sendEmailToRecoverPasswordThunk
 } from '../thunks/auth.thunks';
-import { Address, AuthDataInterface } from '../types';
+import { Address, AddressWithPositionInterface, AuthDataInterface } from '../types';
 
 const initialState: AuthDataInterface = {
   user_id: '',
@@ -86,6 +86,12 @@ const authSlice = createSlice({
     },
     addAddressToList(state, action: PayloadAction<Address>) {
       state.user.addresses.push(action.payload);
+    },
+    deleteAddressFromList(state, action: PayloadAction<number>) {
+      state.user.addresses.splice(action.payload, 1);
+    },
+    replaceAddressFromList(state, action: PayloadAction<AddressWithPositionInterface>) {
+      state.user.addresses.splice(action.payload.position, 1, action.payload.address);
     }
   },
   extraReducers: builder => {
@@ -215,6 +221,9 @@ export const {
   setTermsAndCond,
   setUserId,
   setIsLogged,
-  setAddressesList
+  setAddressesList,
+  addAddressToList,
+  deleteAddressFromList,
+  replaceAddressFromList
 } = authSlice.actions;
 export default authSlice.reducer;

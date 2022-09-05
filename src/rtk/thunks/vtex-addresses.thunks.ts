@@ -23,8 +23,15 @@ export const getAddressByPostalCodeThunk = createAsyncThunk('vtex/getAddressByPo
 });
 
 /**
- * Function to save a user address
+ * Function to save a user address.
  */
 export const saveUserAddressThunk = createAsyncThunk('vtex/saveUserAddressThunk', async (address: Address) => {
   return await vtexDocsServices.createDoc('AD', address);
+});
+
+/**
+ * Function to delete a user address.
+ */
+export const deleteUserAddressThunk = createAsyncThunk('vtex/deleteUserAddressThunk', async (id: string) => {
+  return await vtexDocsServices.deleteDocByDocID('AD', id);
 });

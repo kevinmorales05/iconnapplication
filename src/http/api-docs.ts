@@ -80,7 +80,7 @@ export class DocsApi extends HttpClient {
   }
 
   async deleteRequest(path: string, payload?: any) {
-    return this.instance.get(path, payload);
+    return this.instance.delete(path, payload);
   }
   async patchRequest(path: string, payload?: any) {
     return this.instance.get(path, payload);

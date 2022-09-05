@@ -68,3 +68,8 @@ export interface PostalCodeInfo {
   reference: string;
   geoCoordinates: number[];
 }
+
+export interface AddressWithPositionInterface {
+  position: number;
+  address: Address;
+}
