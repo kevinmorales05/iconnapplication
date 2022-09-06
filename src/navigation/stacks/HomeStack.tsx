@@ -22,7 +22,8 @@ import InvoiceHistoryController from 'screens/home/invoicing/InvoiceHistory/Invo
 import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicingPetro/ViewInvoiceGeneratedPetro/ViewInvoiceGeneratedPetroController';
 import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
 import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
-import AddressesController from 'screens/home/myAccount/Addresses/AddressesController';
+import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
+import ShopCartController from '../../screens/home/ShopCartController';
 
 const Stack = createNativeStackNavigator<HomeStackParams>();
 
@@ -60,6 +61,7 @@ const HomeStack: React.FC = () => (
       name="Address"
       component={AddressesController}
     />
+    <Stack.Screen options={{ headerShown: false }} name="ShopCart" component={ShopCartController} />
   </Stack.Navigator>
 );
 

@@ -8,12 +8,13 @@ import { CustomText, Button, Container } from 'components';
 interface Props {
   onPressInvoice: () => void;
   onPressMyAccount: () => void;
+  onPressShopCart: () => void;
   onPressLogOut: () => void;
   name?: string;
   email?: string;
 }
 
-const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, name, email }) => {
+const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressShopCart, onPressInvoice, onPressLogOut, name, email }) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -37,6 +38,9 @@ const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPress
         </Button>
         <Button round onPress={onPressMyAccount} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
           Mi cuenta
+        </Button>
+        <Button round onPress={onPressShopCart} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+          Carrito de compras
         </Button>
         <Button round onPress={onPressLogOut} fontSize="h4" fontBold style={{ marginTop: 8 }} icon={<SimpleLineIcons name="logout" size={24} color="white" />}>
           Salir

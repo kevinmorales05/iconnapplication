@@ -36,6 +36,14 @@ import ICONN_CALENDAR_YESTERDAY from './iconn-calendar-yesterday.webp';
 import ICONN_NO_RESULTS from './iconn-no-results.webp';
 import ICONN_ADDRESS_FIND from './iconn-address-find.png';
 import ICONN_NO_ADDRESSES from './iconn-no-addresses.png';
+import ICONN_EMPTY_SHOPPING_CART from './trash_delete_bin_empty.png';
+import ICONN_DELETE_SHOPPING_CART_ITEM from './trash_delete_bin.png';
+import ICONN_SHOPPING_CART_BASKET from './basket_shopping_cart.png';
+import IMG_PRODUCT1 from './ipapas.png';
+import IMG_PRODUCT2 from './ipepsi.jpg';
+import IMG_PRODUCT3 from './ipepsi.png';
+import IMG_PRODUCT4 from './ipepsitala.jpeg';
+import IMG_PRODUCT5 from './isabritas.jpeg';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -75,5 +83,13 @@ export {
   ICONN_CALENDAR_YESTERDAY,
   ICONN_NO_RESULTS,
   ICONN_ADDRESS_FIND,
-  ICONN_NO_ADDRESSES
+  ICONN_NO_ADDRESSES,
+  ICONN_EMPTY_SHOPPING_CART,
+  ICONN_DELETE_SHOPPING_CART_ITEM,
+  ICONN_SHOPPING_CART_BASKET,
+  IMG_PRODUCT1,
+  IMG_PRODUCT2,
+  IMG_PRODUCT3,
+  IMG_PRODUCT4,
+  IMG_PRODUCT5
 };

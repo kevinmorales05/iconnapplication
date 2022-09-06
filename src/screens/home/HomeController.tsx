@@ -175,6 +175,10 @@ const HomeController: React.FC = () => {
     isGuest ? navigate('InviteSignUp') : navigate('Invoice');
   };
 
+  const goToShopCart = () => {
+    navigate('ShopCart');
+   }
+
   /**
    * Load User Addresses List and store it in the redux store
    */
@@ -209,7 +213,7 @@ const HomeController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} backgroundColor={theme.brandColor.iconn_background} barStyle="dark">
-      <HomeScreen name={user.name} email={user.email} onPressLogOut={logOut} onPressMyAccount={goToMyAccount} onPressInvoice={goToInvoice} />
+      <HomeScreen name={user.name} email={user.email} onPressLogOut={logOut} onPressMyAccount={goToMyAccount} onPressInvoice={goToInvoice} onPressShopCart={goToShopCart} />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
           <Pressable style={{ alignSelf: 'flex-end' }} onPress={() => setModVisibility(false)}>

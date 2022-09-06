@@ -24,4 +24,5 @@ export type HomeStackParams = {
   ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   CodeReader: undefined;
   Address: undefined;
+  ShopCart: undefined;
 };
