@@ -1,9 +1,9 @@
-import { Container, CustomModal, SafeArea, TextContainer } from 'components';
+import { AddressModalScreen, Container, CustomModal, SafeArea, TextContainer, AddressModalSelection } from 'components';
 import React, { Component, useCallback, useEffect, useState } from 'react';
 import { Dimensions, Image, ImageSourcePropType, Pressable, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -12,9 +12,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
-import { setInvoicingInitialState, setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
+import { setInvoicingInitialState } from 'rtk/slices/invoicingSlice';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useLoading } from 'context';
+import { useAddresses } from './myAccount/hooks/useAddresses';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -137,11 +138,12 @@ const HomeController: React.FC = () => {
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
   const { isGuest } = guestLogged;
   const { isLogged } = userLogged;
-  const modVis = isLogged ? true : false;
+  const modVis = isLogged ? false : false; // TODO: don't forget revert this to show carrusel...
   const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const loader = useLoading();
+  const [addressModalSelectionVisible, setAddressModalSelectionVisible] = useState(false);
 
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
@@ -177,7 +179,7 @@ const HomeController: React.FC = () => {
 
   const goToShopCart = () => {
     navigate('ShopCart');
-   }
+  };
 
   /**
    * Load User Addresses List and store it in the redux store
@@ -211,9 +213,41 @@ const HomeController: React.FC = () => {
     if (user.user_id && invoicingProfileList.length === 0) fetchInvoicingProfileList();
   }, [fetchInvoicingProfileList]);
 
+  const {
+    editAddress,
+    removeAddress,
+    onPressAddNewAddress,
+    addressModalScreenVisible,
+    postalCodeInfo,
+    address,
+    mode,
+    modalScreenTitle,
+    fetchAddressByPostalCode,
+    onSubmit,
+    onPressCloseModalScreen
+  } = useAddresses();
+
+  const onPressCloseAddressModalSelection = () => {
+    setAddressModalSelectionVisible(false);
+  };
+
+  const onPressAddNewAddressFromHome = () => {
+    setAddressModalSelectionVisible(false);
+    onPressAddNewAddress();
+  };
+
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} backgroundColor={theme.brandColor.iconn_background} barStyle="dark">
-      <HomeScreen name={user.name} email={user.email} onPressLogOut={logOut} onPressMyAccount={goToMyAccount} onPressInvoice={goToInvoice} onPressShopCart={goToShopCart} />
+      <HomeScreen
+        name={user.name}
+        email={user.email}
+        onPressLogOut={logOut}
+        onPressMyAccount={goToMyAccount}
+        onPressInvoice={goToInvoice}
+        onPressAddNewAddress={onPressAddNewAddress}
+        onPressShowAddressesModal={() => setAddressModalSelectionVisible(true)}
+        onPressShopCart={goToShopCart}
+      />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
           <Pressable style={{ alignSelf: 'flex-end' }} onPress={() => setModVisibility(false)}>
@@ -250,6 +284,25 @@ const HomeController: React.FC = () => {
           </Container>
         </Container>
       </CustomModal>
+
+      <AddressModalSelection
+        visible={addressModalSelectionVisible}
+        addresses={user.addresses}
+        onPressEdit={editAddress}
+        onPressDelete={removeAddress}
+        onPressAddNewAddress={onPressAddNewAddressFromHome}
+        onPressClose={onPressCloseAddressModalSelection}
+      />
+      <AddressModalScreen
+        visible={addressModalScreenVisible}
+        postalCodeInfo={postalCodeInfo!}
+        address={address!}
+        mode={mode!}
+        title={modalScreenTitle}
+        onPressFindPostalCodeInfo={fetchAddressByPostalCode}
+        onSubmit={onSubmit}
+        onPressClose={onPressCloseModalScreen}
+      />
     </SafeArea>
   );
 };

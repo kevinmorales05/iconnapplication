@@ -8,7 +8,7 @@ import {
   InvoicingSevenTicketRequestInterface
 } from '../types';
 import { invoicingServices } from 'services';
-import { setInvoicingProfilesList } from 'rtk/slices';
+import { setInvoicingProfilesList } from '../slices/invoicingSlice';
 
 export const getTaxRegimeListThunk = createAsyncThunk('invoicing/getTaxRegimeListThunk', async () => {
   return await invoicingServices.getTaxRegimeList();

@@ -44,6 +44,7 @@ import IMG_PRODUCT2 from './ipepsi.jpg';
 import IMG_PRODUCT3 from './ipepsi.png';
 import IMG_PRODUCT4 from './ipepsitala.jpeg';
 import IMG_PRODUCT5 from './isabritas.jpeg';
+import ICONN_HOME_LOCATION from './iconn-home-location.png';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -91,5 +92,6 @@ export {
   IMG_PRODUCT2,
   IMG_PRODUCT3,
   IMG_PRODUCT4,
-  IMG_PRODUCT5
+  IMG_PRODUCT5,
+  ICONN_HOME_LOCATION
 };

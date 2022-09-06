@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAddressByPostalCodeThunk, saveUserAddressThunk, updateUserAddressThunk } from 'rtk/thunks/vtex-addresses.thunks';
+import { getAddressByPostalCodeThunk, saveUserAddressThunk, updateUserAddressThunk } from '../thunks/vtex-addresses.thunks';
 import {
   logoutThunk,
   preSignUpThunk,

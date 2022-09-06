@@ -1,8 +1,9 @@
 /************************************************** VTEX **********************************************************/
 
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { Address, setAddressesList } from 'rtk';
-import { vtexDocsServices } from 'services/vtexdocs.services';
+import { Address } from '../types';
+import { setAddressesList } from '../slices/authSlice';
+import { vtexDocsServices } from 'services';
 
 /**
  * Function to get User Addresses

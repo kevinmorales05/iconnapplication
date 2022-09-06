@@ -11,10 +11,9 @@ interface Props {
   onPressAddNewAddress: () => void;
   onPressEdit: (address: Address, position: number) => void;
   onPressDelete: (address: Address, position: number) => void;
-  goBack: () => void;
 }
 
-const AddressesScreen: React.FC<Props> = ({ addresses, onPressAddNewAddress, onPressEdit, onPressDelete, goBack }) => {
+const AddressesScreen: React.FC<Props> = ({ addresses, onPressAddNewAddress, onPressEdit, onPressDelete }) => {
   const insets = useSafeAreaInsets();
   const [isOnline, setIsOnline] = useState(false);
 

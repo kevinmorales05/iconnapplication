@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
@@ -6,15 +6,26 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { CustomText, Button, Container } from 'components';
 
 interface Props {
-  onPressInvoice: () => void;
   onPressMyAccount: () => void;
   onPressShopCart: () => void;
+  onPressInvoice: () => void;
+  onPressShowAddressesModal: () => void;
+  onPressAddNewAddress: () => void;
   onPressLogOut: () => void;
   name?: string;
   email?: string;
 }
 
-const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressShopCart, onPressInvoice, onPressLogOut, name, email }) => {
+const HomeScreen: React.FC<Props> = ({
+  onPressMyAccount,
+  onPressShopCart,
+  onPressInvoice,
+  onPressShowAddressesModal,
+  onPressAddNewAddress,
+  onPressLogOut,
+  name,
+  email
+}) => {
   const insets = useSafeAreaInsets();
 
   return (
@@ -35,6 +46,12 @@ const HomeScreen: React.FC<Props> = ({ onPressMyAccount, onPressShopCart, onPres
         </Container>
         <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
           Facturación
+        </Button>
+        <Button round onPress={onPressShowAddressesModal} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+          Modal con direcciones
+        </Button>
+        <Button round onPress={onPressAddNewAddress} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+          Boton para agregar nueva direccion
         </Button>
         <Button round onPress={onPressMyAccount} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
           Mi cuenta
