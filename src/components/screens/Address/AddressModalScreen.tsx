@@ -1,14 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Image, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CustomModal, Container, Input, Select, CustomText, ActionButton } from '../../atoms';
 import { Button, TextContainer } from '../../molecules';
 import { ICONN_ADDRESS_FIND } from 'assets/images';
 import { FieldValues, useForm } from 'react-hook-form';
-import { alphaNumeric, numericWithSpecificLenght, openField } from 'utils/rules';
-import { useIsFocused } from '@react-navigation/native';
+import { numericWithSpecificLenght, openField } from 'utils/rules';
 import { Address, PostalCodeInfo } from 'rtk';
-import { PAYMENT_METHODS } from 'assets/files';
 import { CrudType } from '../../types/crud-type';
 import theme from 'components/theme/theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -39,9 +37,6 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
   });
 
   const insets = useSafeAreaInsets();
-  const [PaymentMethod, setPaymentMethod] = useState<string>('01');
-  const [checkedColor, setCheckedColor] = useState('iconn_med_grey');
-  const [value, setCheckBoxValue] = useState(false);
 
   const resetForm = () => {
     reset({
@@ -52,14 +47,21 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
       street: '',
       tag: ''
     });
-    //
     if (postalCodeRef.current) postalCodeRef.current.focus();
+  };
+
+  const populateForUpdate = () => {
+    setValue('postalCode', address.postalCode);
+    setValue('neighborhood', address.neighborhood);
+    setValue('street', address.street);
+    setValue('tag', address.addressName);
   };
 
   useEffect(() => {
     if (mode === 'create') {
-      console.log('reset...');
       resetForm();
+    } else if (mode === 'update') {
+      populateForUpdate();
     }
   }, [mode]);
 
@@ -68,18 +70,9 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
     setValue('city', postalCodeInfo?.city);
   }, [postalCodeInfo]);
 
-  // const changeColor = () => {
-  //   setCheckBoxValue(!value);
-  //   setCheckedColor('iconn_green_original');
-  //   if (checkedColor === 'iconn_green_original') {
-  //     setCheckedColor('iconn_med_grey');
-  //   }
-  // };
-
   const postalCodeRef = useRef<TextInput>(null);
   const streetRef = useRef<TextInput>(null);
   const tagRef = useRef<TextInput>(null);
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     if (postalCodeRef.current) {
@@ -142,6 +135,7 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
                       onSubmitEditing={() => streetRef.current?.focus()}
                       rules={numericWithSpecificLenght(5)}
                       error={errors.postalCode}
+                      editable={mode === 'create'}
                     />
                   </Container>
                   <Container style={{ width: '48%' }}>
@@ -153,7 +147,7 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
                       onPress={() => onPressFindPostalCodeInfo(getValues('postalCode'))}
                       color="iconn_med_grey"
                       fontColor="dark"
-                      disabled={!!errors.postalCode?.message || getValues('postalCode')?.length === 0}
+                      disabled={!!errors.postalCode?.message || getValues('postalCode')?.length === 0 || mode !== 'create'}
                     >
                       Validar
                     </Button>

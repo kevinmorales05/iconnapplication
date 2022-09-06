@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAddressByPostalCodeThunk, saveUserAddressThunk } from 'rtk/thunks/vtex-addresses.thunks';
+import { getAddressByPostalCodeThunk, saveUserAddressThunk, updateUserAddressThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import {
   logoutThunk,
   preSignUpThunk,
@@ -201,6 +201,15 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(saveUserAddressThunk.rejected, state => {
+      state.loading = false;
+    });
+    builder.addCase(updateUserAddressThunk.pending, state => {
+      state.loading = true;
+    });
+    builder.addCase(updateUserAddressThunk.fulfilled, state => {
+      state.loading = false;
+    });
+    builder.addCase(updateUserAddressThunk.rejected, state => {
       state.loading = false;
     });
   }

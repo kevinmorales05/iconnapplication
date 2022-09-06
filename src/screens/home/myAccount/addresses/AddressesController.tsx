@@ -3,13 +3,19 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { RootState, useAppDispatch, useAppSelector, Address, PostalCodeInfo, deleteAddressFromList, addAddressToList } from 'rtk';
+import { RootState, useAppDispatch, useAppSelector, Address, PostalCodeInfo, deleteAddressFromList, addAddressToList, replaceAddressFromList } from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 import { AddressModalScreen } from 'components';
 import AddressesScreen from './AddressesScreen';
 import { CrudType } from 'components/types/crud-type';
 import theme from 'components/theme/theme';
-import { deleteUserAddressThunk, getAddressByPostalCodeThunk, getUserAddressesThunk, saveUserAddressThunk } from 'rtk/thunks/vtex-addresses.thunks';
+import {
+  deleteUserAddressThunk,
+  getAddressByPostalCodeThunk,
+  getUserAddressesThunk,
+  saveUserAddressThunk,
+  updateUserAddressThunk
+} from 'rtk/thunks/vtex-addresses.thunks';
 
 const AddressesController: React.FC = () => {
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -18,11 +24,13 @@ const AddressesController: React.FC = () => {
   const alert = useAlert();
   const loader = useLoading();
   const toast = useToast();
-  const [address, setAddress] = useState<Address>();
+  const [address, setAddress] = useState<Address | null>();
   const [mode, setMode] = useState<CrudType | null>(null);
   const [addressModalScreenVisible, setAddressModalScreenVisible] = useState(false);
   const [modalScreenTitle, setModalScreenTitle] = useState<string>('');
   const [postalCodeInfo, setPostalCodeInfo] = useState<PostalCodeInfo | null>();
+  const [position, setPosition] = useState<number | null>();
+  const [IDToUpdate, setIDToUpdate] = useState<string | null>();
 
   useEffect(() => {
     if (loading === false) {
@@ -44,13 +52,20 @@ const AddressesController: React.FC = () => {
   }, [fetchAddresses]);
 
   const editAddress: any = (address: Address, position: number) => {
-    console.log('editing....');
-    console.log(address);
-    console.log(position);
+    fetchAddressByPostalCode(address.postalCode!);
+    setAddress(address);
+    setPosition(position);
+    setIDToUpdate(address.id);
+    setModalScreenTitle('Editar dirección');
+    setAddressModalScreenVisible(true);
+    setMode('update');
   };
 
   const onPressAddNewAddress = () => {
     setPostalCodeInfo(null);
+    setAddress(null);
+    setPosition(null);
+    setIDToUpdate(null);
     setModalScreenTitle('Agregar dirección');
     setAddressModalScreenVisible(true);
     setMode('create');
@@ -99,7 +114,7 @@ const AddressesController: React.FC = () => {
   };
 
   /**
-   * Function to save a new user address.
+   * Function to save and a new user address.
    * @param address
    */
   const onSubmit = async (address: Address) => {
@@ -119,13 +134,25 @@ const AddressesController: React.FC = () => {
     };
 
     try {
-      const response = await dispatch(saveUserAddressThunk(addressPayload)).unwrap();
-      if (response) {
-        addressPayload.id = response.DocumentId;
-        dispatch(addAddressToList(addressPayload));
-        toast.show({ message: `Dirección guardada correctamente.`, type: 'success' });
-      } else {
-        toast.show({ message: `Ocurrió un error inesperado.`, type: 'warning' });
+      let response: any;
+      if (mode === 'create') {
+        response = await dispatch(saveUserAddressThunk(addressPayload)).unwrap();
+        if (response) {
+          addressPayload.id = response.DocumentId;
+          dispatch(addAddressToList(addressPayload));
+          toast.show({ message: `Dirección guardada\n correctamente.`, type: 'success' });
+        } else {
+          toast.show({ message: `Ocurrió un error inesperado al guardar la dirección.`, type: 'warning' });
+        }
+      } else if (mode === 'update') {
+        addressPayload.id = IDToUpdate!;
+        response = await dispatch(updateUserAddressThunk(addressPayload)).unwrap();
+        if (!response) {
+          dispatch(replaceAddressFromList({ address: addressPayload, position: position! }));
+          toast.show({ message: `Dirección actualizada\n correctamente.`, type: 'success' });
+        } else {
+          toast.show({ message: `Ocurrió un error inesperado al actualizar la dirección.`, type: 'warning' });
+        }
       }
     } catch (error) {
       toast.show({ message: error, type: 'error' });

@@ -35,3 +35,10 @@ export const saveUserAddressThunk = createAsyncThunk('vtex/saveUserAddressThunk'
 export const deleteUserAddressThunk = createAsyncThunk('vtex/deleteUserAddressThunk', async (id: string) => {
   return await vtexDocsServices.deleteDocByDocID('AD', id);
 });
+
+/**
+ * Function to update a user address.
+ */
+export const updateUserAddressThunk = createAsyncThunk('vtex/updateUserAddressThunk', async (address: Address) => {
+  return await vtexDocsServices.updateDocByDocID('AD', address.id!, address);
+});

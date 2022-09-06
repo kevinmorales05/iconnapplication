@@ -38,9 +38,7 @@ async function getAllDocByUserID(dataentity: string, userId: string): Promise<an
 }
 
 /**
- * Function to detele one doc
- * TODO error handling
- * TODO interface for doc
+ * Function to detele one doc.
  */
 async function deleteDocByDocID(dataentity: string, docId: string): Promise<any> {
   const response = await DocsApi.getInstance().deleteRequest(`dataentities/${dataentity}/documents/${docId}`);
@@ -49,17 +47,20 @@ async function deleteDocByDocID(dataentity: string, docId: string): Promise<any>
 }
 
 /**
- * Function to  update one doc
- * TODO error handling
- * TODO interface for doc
+ * Function to update one doc.
  */
 async function updateDocByDocID(dataentity: string, docId: string, doc: any): Promise<any> {
-  const response = await DocsApi.getInstance().patchRequest(`dataentities/${dataentity}/documents/${docId}`, doc);
-  //error handling}
+  const response = await DocsApi.getInstance().putRequest(`dataentities/${dataentity}/documents/${docId}`, doc);
   const { data } = response;
   return data;
 }
 
+/**
+ * Function to get full Address by postalCode.
+ * Also get the neighborhood array.
+ * @param postalCode
+ * @returns
+ */
 async function getAddressByPostalCode(postalCode: string): Promise<any> {
   const response = await DocsApi.getInstance().getRequest(`checkout/pub/postal-code/MEX/${postalCode}`);
   const { data } = response;
