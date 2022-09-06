@@ -100,7 +100,7 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
               <TouchableText
                 underline
                 textColor={theme.brandColor.iconn_green_original}
-                text="Agregar dirección"
+                text="Agregar nueva dirección"
                 typography="h4"
                 fontBold
                 onPress={onPressAddNewAddress}

@@ -33,7 +33,7 @@ const AddressesItem: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const goToAddresses = () => navigate('Address');
   return (
-    <TouchableOpacity style={[taxItemStyles.container,{backgroundColor: theme.brandColor.iconn_accent_secondary}]} onPress={goToAddresses}>
+    <TouchableOpacity style={[taxItemStyles.container, { backgroundColor: theme.brandColor.iconn_white }]} onPress={goToAddresses}>
       <View style={taxItemStyles.content}>
         <View style={taxItemStyles.middle}>
           <Text numberOfLines={1}>Administra tus direcciones de entrega</Text>
