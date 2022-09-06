@@ -1,13 +1,6 @@
 import { Container, CustomModal, SafeArea, TextContainer } from 'components';
 import React, { Component, useCallback, useEffect, useState } from 'react';
-import {
-  Dimensions,
-  Image,
-  ImageSourcePropType,
-  Pressable,
-  StyleSheet,
-  View
-} from 'react-native';
+import { Dimensions, Image, ImageSourcePropType, Pressable, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
@@ -20,10 +13,11 @@ import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { setInvoicingInitialState, setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
+import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
+import { useLoading } from 'context';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
-
 
 interface Props {
   carouselItems?: ItemProps;
@@ -65,17 +59,8 @@ class CustomCarousel extends Component<Props, State> {
           height: 150
         }}
       >
-        <Image
-          source={item.image}
-          style={{ width: 300, height: CONTAINER_HEIGHTMOD }}
-          resizeMode="stretch"
-        />
-        <TextContainer
-          text={item.text}
-          typography="h5"
-          marginTop={30}
-          textAlign="center"
-        />
+        <Image source={item.image} style={{ width: 300, height: CONTAINER_HEIGHTMOD }} resizeMode="stretch" />
+        <TextContainer text={item.text} typography="h5" marginTop={30} textAlign="center" />
       </View>
     );
   };
@@ -137,9 +122,7 @@ class CustomCarousel extends Component<Props, State> {
           sliderWidth={280}
           itemWidth={280}
           renderItem={this.renderItem}
-          onSnapToItem={(index: number) =>
-            this.setState({ activeIndex: index })
-          }
+          onSnapToItem={(index: number) => this.setState({ activeIndex: index })}
         />
         {this.pagination}
       </Container>
@@ -149,14 +132,24 @@ class CustomCarousel extends Component<Props, State> {
 
 const HomeController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
-  const {guest : guestLogged} = useAppSelector((state: RootState) => state.guest);
-  const { isGuest } = guestLogged;  const { isLogged } = userLogged;
-  const modVis = (isLogged) ? true : false;
+  const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
+  const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
+  const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
+  const { isGuest } = guestLogged;
+  const { isLogged } = userLogged;
+  const modVis = isLogged ? true : false;
   const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
-  const { navigate } =
-    useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const loader = useLoading();
+
+  useEffect(() => {
+    if (invoicingLoading === false) loader.hide();
+  }, [invoicingLoading]);
+
+  useEffect(() => {
+    if (authLoading === false) loader.hide();
+  }, [authLoading]);
 
   const logOut = async () => {
     if (isLogged) {
@@ -166,7 +159,7 @@ const HomeController: React.FC = () => {
         dispatch(setAuthInitialState());
         dispatch(setGuestInitialState());
         dispatch(setInvoicingInitialState());
-      }  
+      }
     } else {
       dispatch(setAppInitialState());
       dispatch(setAuthInitialState());
@@ -176,58 +169,57 @@ const HomeController: React.FC = () => {
   };
 
   const goToMyAccount = () => {
-   (isGuest) ? navigate('InviteSignUp') : navigate('Mi Cuenta');
-  }
+    isGuest ? navigate('InviteSignUp') : navigate('Mi Cuenta');
+  };
   const goToInvoice = () => {
-    (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
-  }
+    isGuest ? navigate('InviteSignUp') : navigate('Invoice');
+  };
+
+  /**
+   * Load User Addresses List and store it in the redux store
+   */
+  const fetchAddresses = useCallback(async () => {
+    console.log('fetchAddresses...');
+    loader.show();
+    await dispatch(getUserAddressesThunk(user.user_id!));
+  }, []);
+
+  /**
+   * We get the user addresses just if there isn`t any address.
+   */
+  useEffect(() => {
+    if (user.addresses?.length === 0) fetchAddresses();
+  }, [fetchAddresses]);
 
   /**
    * Load Invocing Profile List and store it in the redux store.
    */
   const fetchInvoicingProfileList = useCallback(async () => {
-    const { data: invoicingProfileList } = await dispatch(getInvoicingProfileListThunk(user.user_id!)).unwrap();
-    const arr: InvoicingProfileInterface[] = invoicingProfileList;    
-    dispatch(setInvoicingProfilesList(arr));
+    console.log('fetchInvoicingProfileList...');
+    loader.show();
+    await dispatch(getInvoicingProfileListThunk(user.user_id!));
   }, []);
 
+  /**
+   * We get the invoicing profile list just if there isn`t any profile.
+   */
   useEffect(() => {
-    if (user.user_id) fetchInvoicingProfileList();
+    if (user.user_id && invoicingProfileList.length === 0) fetchInvoicingProfileList();
   }, [fetchInvoicingProfileList]);
 
   return (
-    <SafeArea
-      topSafeArea={false}
-      bottomSafeArea={false}
-      backgroundColor={theme.brandColor.iconn_background}
-      barStyle="dark"
-    >
-      <HomeScreen
-        name={user.name}
-        email={user.email}
-        onPressLogOut={logOut}
-        onPressMyAccount={goToMyAccount}
-        onPressInvoice={goToInvoice}
-      />
+    <SafeArea topSafeArea={false} bottomSafeArea={false} backgroundColor={theme.brandColor.iconn_background} barStyle="dark">
+      <HomeScreen name={user.name} email={user.email} onPressLogOut={logOut} onPressMyAccount={goToMyAccount} onPressInvoice={goToInvoice} />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
-          <Pressable
-            style={{ alignSelf: 'flex-end' }}
-            onPress={() => setModVisibility(false)}
-          >
+          <Pressable style={{ alignSelf: 'flex-end' }} onPress={() => setModVisibility(false)}>
             <Container circle style={styles.iconContainer}>
               <Icon name="window-close" size={20} />
             </Container>
           </Pressable>
           <Container row>
-            <TextContainer
-              text={user.name ? `¡Hola ${user.name}!`: '¡Hola!'}
-              typography="h3"
-              fontBold={true}
-              textAlign="center"
-              marginTop={4}
-            />
-          </Container >
+            <TextContainer text={user.name ? `¡Hola ${user.name}!` : '¡Hola!'} typography="h3" fontBold={true} textAlign="center" marginTop={4} />
+          </Container>
           <Container center middle flex={1}>
             <CustomCarousel />
           </Container>

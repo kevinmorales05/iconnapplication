@@ -4,9 +4,11 @@ import {
   InvoicingForwardInvoiceRequestInterface,
   InvoicingGetInvoicePDFRequestInterface,
   InvoicingPetroTicketRequestInterface,
+  InvoicingProfileInterface,
   InvoicingSevenTicketRequestInterface
 } from '../types';
 import { invoicingServices } from 'services';
+import { setInvoicingProfilesList } from 'rtk/slices';
 
 export const getTaxRegimeListThunk = createAsyncThunk('invoicing/getTaxRegimeListThunk', async () => {
   return await invoicingServices.getTaxRegimeList();
@@ -16,8 +18,14 @@ export const getCFDIListThunk = createAsyncThunk('invoicing/getCFDIListThunk', a
   return await invoicingServices.getCFDIList();
 });
 
-export const getInvoicingProfileListThunk = createAsyncThunk('invoicing/getInvoicingProfileListThunk', async (uid: string) => {
-  return await invoicingServices.getInvoicingProfileList(uid);
+/**
+ * Function to get user invoicing profiles.
+ * Here we can see the effective use of the thunk.
+ */
+export const getInvoicingProfileListThunk = createAsyncThunk('invoicing/getInvoicingProfileListThunk', async (uid: string, thunk) => {
+  const { data: invoicingProfileList } = await invoicingServices.getInvoicingProfileList(uid);
+  const arr: InvoicingProfileInterface[] = invoicingProfileList;
+  thunk.dispatch(setInvoicingProfilesList(arr));
 });
 
 export const resendVerificationEmailThunk = createAsyncThunk('invoicing/resendVerificationEmailThunk', async (email: string) => {
