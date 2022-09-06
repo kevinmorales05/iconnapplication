@@ -23,7 +23,7 @@ import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicin
 import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
 import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
 import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
-import ShopCartController from '../../screens/home/ShopCartController';
+import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
 
 const Stack = createNativeStackNavigator<HomeStackParams>();
 
