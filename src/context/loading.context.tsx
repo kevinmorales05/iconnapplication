@@ -2,25 +2,26 @@ import React, { ReactNode, useMemo, useState } from 'react';
 import { LoadingInterface } from 'components/organisms/Loading';
 import { StyleSheet, View, Image } from 'react-native';
 import { ICONN_LOADER } from 'assets/images';
+import { CustomText } from 'components';
 
 interface Props {
-  children: ReactNode
+  children: ReactNode;
 }
 
 interface LoadingContextInterface {
-  show: (message?: string) => void,
-  hide: () => void
+  show: (message?: string, variant?: string) => void;
+  hide: () => void;
 }
 
 export const LoadingContext = React.createContext<LoadingContextInterface>({} as LoadingContextInterface);
 
-const initialState: LoadingInterface = { visible: false };
+const initialState: LoadingInterface = { visible: false, variant: 'default' };
 
 export const LoadingContextProvider = ({ children }: Props) => {
   const [loadingState, setLoadingState] = useState<LoadingInterface>(initialState);
 
-  const show = (message?: string) => {
-    setLoadingState({ visible: true, message });
+  const show = (message?: string, variant?: string) => {
+    setLoadingState({ visible: true, message, variant });
   };
 
   const hide = () => setLoadingState(initialState);
@@ -33,9 +34,20 @@ export const LoadingContextProvider = ({ children }: Props) => {
       { loadingState.visible
         && (
           <View style={styles.container}>
-            <Image source={ICONN_LOADER}/>
-          </View>
-        )}
+          <Image source={ICONN_LOADER} />
+          {loadingState.variant === 'ecommerce' && (
+            <View
+              style={{
+                position: 'absolute',
+                top: 490,
+                width: 200
+              }}
+            >
+              <CustomText textAlign="center" numberOfLines={3} fontSize={20} fontBold text="Estamos buscando tu 7-Eleven más cercano" />
+            </View>
+          )}
+        </View>
+      )}
     </LoadingContext.Provider>
   );
 };

@@ -7,4 +7,6 @@ export * from './CardBilling';
 export * from './TaxInfoCard';
 export * from './CardDivided';
 export * from './ListSwipeableItem';
+export * from './EcommerceHeader';
+export * from './BasketCounter';
 export * from './AddressCard';

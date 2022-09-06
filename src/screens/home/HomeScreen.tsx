@@ -4,6 +4,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { CustomText, Button, Container } from 'components';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
+import { useNavigation } from '@react-navigation/native';
 
 interface Props {
   onPressMyAccount: () => void;
@@ -27,6 +30,7 @@ const HomeScreen: React.FC<Props> = ({
   email
 }) => {
   const insets = useSafeAreaInsets();
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   return (
     <ScrollView
@@ -61,6 +65,18 @@ const HomeScreen: React.FC<Props> = ({
         </Button>
         <Button round onPress={onPressLogOut} fontSize="h4" fontBold style={{ marginTop: 8 }} icon={<SimpleLineIcons name="logout" size={24} color="white" />}>
           Salir
+        </Button>
+        <Button
+          round
+          onPress={() => {
+            navigate('Ecommerce');
+          }}
+          fontSize="h4"
+          fontBold
+          style={{ marginTop: 8 }}
+          icon={<SimpleLineIcons name="logout" size={24} color="white" />}
+        >
+          Ecommerce
         </Button>
       </Container>
     </ScrollView>

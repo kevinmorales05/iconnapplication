@@ -5,3 +5,4 @@ export * from './OtherInputMethods';
 export * from './InvoicingHelper';
 export * from './ResendInvoice';
 export * from './AddressModalSelection';
+export * from './ShippingDropdown';

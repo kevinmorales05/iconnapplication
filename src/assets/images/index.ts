@@ -34,6 +34,14 @@ import ICONN_CALENDAR_MONTH from './iconn-calendar-month.webp';
 import ICONN_CALENDAR_WEEK from './iconn-calendar-week.webp';
 import ICONN_CALENDAR_YESTERDAY from './iconn-calendar-yesterday.webp';
 import ICONN_NO_RESULTS from './iconn-no-results.webp';
+import ICONN_POSTAL_CODE_HEADER_ICON from './iconn-postal-code-header-icon.webp';
+import ICONN_PIN_LOCATION from './iconn-pin-location.webp';
+import ICONN_SCOOTER from './iconn-scooter.webp';
+import ICONN_SEVEN_STORE from './iconn-seven-store.webp';
+import ICONN_HOUSE_PIN_LOCATION from './iconn-house-pin-location.webp';
+import ICONN_SELLER_PIN_LOCATION from './iconn-seller-pin-location.webp';
+import ICONN_BASKET from './iconn-basket.webp';
+import ICONN_REVERSE_BASKET from './iconn-reverse-basket.webp';
 import ICONN_ADDRESS_FIND from './iconn-address-find.png';
 import ICONN_NO_ADDRESSES from './iconn-no-addresses.png';
 import ICONN_EMPTY_SHOPPING_CART from './trash_delete_bin_empty.png';
@@ -83,6 +91,14 @@ export {
   ICONN_CALENDAR_WEEK,
   ICONN_CALENDAR_YESTERDAY,
   ICONN_NO_RESULTS,
+  ICONN_POSTAL_CODE_HEADER_ICON,
+  ICONN_PIN_LOCATION,
+  ICONN_SCOOTER,
+  ICONN_SEVEN_STORE,
+  ICONN_HOUSE_PIN_LOCATION,
+  ICONN_SELLER_PIN_LOCATION,
+  ICONN_BASKET,
+  ICONN_REVERSE_BASKET,
   ICONN_ADDRESS_FIND,
   ICONN_NO_ADDRESSES,
   ICONN_EMPTY_SHOPPING_CART,

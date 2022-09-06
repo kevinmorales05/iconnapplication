@@ -6,6 +6,7 @@ import { Container, CustomModal, CustomText } from 'components/atoms';
 interface LoadingInterface {
   visible: boolean;
   message?: string;
+  variant?: string;
 }
 
 const Loading: React.FC<LoadingInterface> = ({

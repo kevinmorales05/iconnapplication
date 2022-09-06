@@ -25,6 +25,8 @@ import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeRead
 import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
 
+import EcommerceStack from './EcommerceStack';
+
 const Stack = createNativeStackNavigator<HomeStackParams>();
 
 const HomeStack: React.FC = () => (
@@ -55,6 +57,7 @@ const HomeStack: React.FC = () => (
     <Stack.Screen options={{ headerShown: false, gestureEnabled: false }} name="InvoiceGeneratedSeven" component={InvoiceGeneratedSevenController} />
     <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedPetro" component={ViewInvoiceGeneratedPetroController} />
     <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedSeven" component={ViewInvoiceGeneratedSevenController} />
+    <Stack.Screen options={{ headerShown: false }} name="Ecommerce" component={EcommerceStack} />
     <Stack.Screen options={{ headerShown: false }} name="CodeReader" component={CodeReaderController} />
     <Stack.Screen
       options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '', headerTintColor: 'black' }}
