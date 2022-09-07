@@ -110,10 +110,10 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
             </Container>
           </Container>
           <ScrollView
-            bounces={true}
+            bounces={false}
             contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 }}
             keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={true}
+            showsVerticalScrollIndicator={false}
           >
             <Container flex>
               <Container>
