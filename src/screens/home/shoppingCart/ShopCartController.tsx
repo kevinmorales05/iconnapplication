@@ -78,19 +78,39 @@ const ShopCartController: React.FC = () => {
    */
 
    //const prod = getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9')
-   console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+   //console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
    //console.log(Object.values(prod.items));
-   console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+   //console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 
    const [prod, setProd] = useState(Object);
+   //const [colonies, setColonies] = useState<Colony[] | null>(null);
+
+
    useEffect(() => {
     //dispatch(setTermsAndCond({termsAndConditions: value}));
     //const prodLsit = getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9')
     setProd(getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9'));
     //setProd(prodLsit);
-    console.log('se imprime desde useEffect',prod.items);
-    return;
+    console.log('............................');
+    console.log('se imprime desde useEffect',prod);
+    console.log('............................');
   }, [])
+/*
+  useEffect(() => {
+    (async () => {
+      try {
+        console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+        const data = await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9');
+        console.log(Object.values(data.items));
+        console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+        setProd(data);
+      } catch (error) {
+        setProd(null);
+      } finally {
+        setProd(null);
+      }
+    })();
+  }, []);*/
 
    //const deleteProd = emptyShoppingCar('655c3cc734e34ac3a14749e39a82e8b9')
    //const updateProd = updateShoppingCart();
