@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Image, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CustomModal, Container, Input, Select, CustomText, ActionButton } from '../../atoms';
@@ -55,6 +55,10 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
     setValue('neighborhood', address.neighborhood);
     setValue('street', address.street);
     setValue('tag', address.addressName);
+    trigger('postalCode');
+    trigger('neighborhood');
+    trigger('street');
+    trigger('tag');
   };
 
   useEffect(() => {
@@ -65,9 +69,21 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
     }
   }, [mode]);
 
+  const [postalCodeChanged, setPostalCodeChanged] = useState(false);
+
   useEffect(() => {
     setValue('state', postalCodeInfo?.state);
     setValue('city', postalCodeInfo?.city);
+    trigger('state');
+    trigger('city');
+
+    if (mode === 'update') {
+      if (postalCodeInfo.neighborhood && postalCodeInfo.postalCode !== address.postalCode) {
+        setValue('neighborhood', postalCodeInfo?.neighborhood.split('::')[0]);
+        trigger('neighborhood');
+      }
+      setPostalCodeChanged(false);
+    }
   }, [postalCodeInfo]);
 
   const postalCodeRef = useRef<TextInput>(null);
@@ -79,6 +95,10 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
       postalCodeRef.current.focus();
     }
   }, []);
+
+  const validateChangesOnPostalCode = (newPostalCode: string) => {
+    if (mode === 'update' && newPostalCode !== address.postalCode) setPostalCodeChanged(true);
+  };
 
   const { containerStyle } = styles;
 
@@ -135,7 +155,7 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
                       onSubmitEditing={() => streetRef.current?.focus()}
                       rules={numericWithSpecificLenght(5)}
                       error={errors.postalCode}
-                      editable={mode === 'create'}
+                      onChangeText={postalCodeValue => validateChangesOnPostalCode(postalCodeValue)}
                     />
                   </Container>
                   <Container style={{ width: '48%' }}>
@@ -147,7 +167,7 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
                       onPress={() => onPressFindPostalCodeInfo(getValues('postalCode'))}
                       color="iconn_med_grey"
                       fontColor="dark"
-                      disabled={!!errors.postalCode?.message || getValues('postalCode')?.length === 0 || mode !== 'create'}
+                      disabled={!!errors.postalCode?.message || getValues('postalCode')?.length === 0 || (mode === 'update' && postalCodeChanged === false)}
                     >
                       Validar
                     </Button>
@@ -238,7 +258,14 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
                 />
               </Container>
               <Container>
-                <Button disabled={!isValid} marginTop={16} round fontBold fontSize="h4" onPress={handleSubmit(onSubmit)}>
+                <Button
+                  disabled={!isValid || (mode === 'update' && postalCodeChanged === true && postalCodeInfo.neighborhood !== '')}
+                  marginTop={16}
+                  round
+                  fontBold
+                  fontSize="h4"
+                  onPress={handleSubmit(onSubmit)}
+                >
                   Guardar
                 </Button>
               </Container>

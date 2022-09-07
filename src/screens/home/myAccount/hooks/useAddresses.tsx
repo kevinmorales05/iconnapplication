@@ -109,22 +109,22 @@ export const useAddresses = () => {
   };
 
   /**
-   * Function to save and a new user address.
-   * @param address
+   * Function to save and update a user address.
+   * @param addressTosubmit
    */
-  const onSubmit = async (address: Address) => {
+  const onSubmit = async (addressTosubmit: Address) => {
     onPressCloseModalScreen();
     loader.show();
 
     const addressPayload: Address = {
-      addressName: address.tag,
+      addressName: addressTosubmit.tag,
       receiverName: `${user.name} ${user.lastName} ${user.secondLastName}`,
-      city: address.city,
-      state: address.state,
+      city: addressTosubmit.city,
+      state: addressTosubmit.state,
       country: 'MX',
-      postalCode: address.postalCode,
-      street: address.street,
-      neighborhood: address.neighborhood,
+      postalCode: addressTosubmit.postalCode,
+      street: addressTosubmit.street,
+      neighborhood: addressTosubmit.neighborhood,
       userId: user.user_id
     };
 
@@ -144,6 +144,7 @@ export const useAddresses = () => {
         addressPayload.id = IDToUpdate!;
         response = await dispatch(updateUserAddressThunk(addressPayload)).unwrap();
         if (!response) {
+          addressPayload.isDefault = address?.isDefault;
           dispatch(replaceAddressFromList({ address: addressPayload, position: position! }));
           toast.show({ message: `Dirección actualizada\n correctamente.`, type: 'success' });
         } else {
