@@ -134,6 +134,7 @@ export const useAddresses = () => {
         response = await dispatch(saveUserAddressThunk(addressPayload)).unwrap();
         if (response) {
           addressPayload.id = response.DocumentId;
+          if (user.addresses?.length === 0) addressPayload.isDefault = true; // if is the first address in the list, it's set to true.
           dispatch(addAddressToList(addressPayload));
           toast.show({ message: `Dirección guardada\n correctamente.`, type: 'success' });
         } else {
