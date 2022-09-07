@@ -38,8 +38,9 @@ import { SizeType } from '../components/types/size-type';
  * Function to update shopping cart
  * shoppingCartId is the Cart identififer to update.
  */
- async function updateShoppingCart(shoppingCartId:string, allowedOutdatedData:string): Promise<any> {
-  const response = await ShoppingCar.getInstance().patchRequest(`/${shoppingCartId}/items?allowedOutdatedData=${allowedOutdatedData}`,45);
+ async function updateShoppingCart(shoppingCartId:string, doc: any): Promise<any> {
+  console.log('shoppingCartId:',shoppingCartId);
+  const response = await ShoppingCar.getInstance().patchRequest(`/${shoppingCartId}/items`, doc);
   if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
   const { data } = response;
   console.log(moment().format())

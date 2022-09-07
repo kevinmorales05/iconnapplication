@@ -22,12 +22,14 @@ interface Props {
   onPressInvoice: () => void;
   onPressMyAccount: () => void;
   onPressLogOut: () => void;
+  onPressDeleteItem: () => void;
+  onPressAddItem: () => void;
   productsss?: Object;
 }
 
 //const [prod, setProd] = useState(Object);
 
-const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, productsss }) => {
+const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, onPressDeleteItem, onPressAddItem, productsss }) => {
   const insets = useSafeAreaInsets();
   const isEmpty = false;
 
@@ -36,22 +38,60 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   let itemsReceived = null;
   if (productsss) {
     //const array = Object.values(productsss.items);
-    console.log('sssssssssssssss');
+    console.log('ssssssssss');
     const arrayValues = Object.values(productsss);
     console.log(Object.values(productsss).length);
     //const itemsListRecieved = array[2]; 
-    console.log('sssssssssssssss');
-    console.log('cccccccccc');
+    console.log('ssssssssss');
+    console.log('ccccccccc');
     console.log(arrayValues[2]);
-    console.log('cccccccccc');
+    console.log('ccccccccc');
     itemsReceived = arrayValues[2];
-    console.log('.................');
+    console.log('.............');
     console.log(itemsReceived);
-    console.log('.................');
+    console.log('.............');
   }
   console.log('------------------');
 
-  const Counter: React.RF = ( {numOfItems}) => {
+  const Counter: React.RF = ( {orderFormId, item} ) => {
+    const deleteItem = () => {
+      console.log('***delete item***');
+      item.quantity-- 
+      const request = {
+        "orderItems": [
+          {
+            "id": item.id,
+            "quantity": item.quantity,
+            "seller": "1"
+          }
+        ]
+      }
+      try {
+        updateShoppingCart(orderFormId, request);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    const addItem = () => {
+      console.log('***delete item***');
+      item.quantity++;
+      const request = {
+        "orderItems": [
+          {
+            "id": item.id,
+            "quantity": item.quantity,
+            "seller": "1"
+          }
+        ]
+      }
+      try {
+        updateShoppingCart(orderFormId, request);
+      } catch (error) {
+        console.log(error);
+      }
+     
+    };
     return (
       <Container space='between' crossCenter row circle style={{
         borderStartWidth: 1, borderLeftColor: theme.brandColor.iconn_grey,
@@ -63,6 +103,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
                   size="small"
                   transparent="true"
                   fontBold="true"
+                  onPress={deleteItem}
                 >
                   -
                 </Button>
@@ -71,7 +112,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <CustomText text='' fontSize={7}></CustomText>
           </Container>
           <Container>
-            <CustomText text={numOfItems} textAlign='auto' fontSize={11}></CustomText>
+            <CustomText text={item.quantity} textAlign='auto' fontSize={11}></CustomText>
           </Container>
           <Container>
             <CustomText text='' fontSize={7}></CustomText>
@@ -81,6 +122,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
                   fontSize="h5"
                   size="small"
                   transparent="true"
+                  onPress={addItem}
                 >
                   +
                 </Button>
@@ -89,10 +131,9 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   };
 
   const ItemsList: React.FC = ({ itemss }) => {
-
-    console.log('jjjjjjjjjjjjjjjjjjjkks');
+    console.log('jjjjjjjjjjjjjjjkk');
     console.log(itemss);
-    console.log('jjjjjjjjjjjjjjjjjjjkkks');
+    console.log('jjjjjjjjjjjjjjjkkk');
  
     let toShow = null;
     if(itemss){
@@ -173,14 +214,14 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     return (
       <Container row style={{ marginLeft: 16, marginRight: 16, marginTop: 9, marginBottom: 0, height: 110, backgroundColor: theme.brandColor.iconn_white }}>
         <Container>
-          <Image source={{uri:value.imageUrl}} style={{ marginTop: 10, width: 80, height: 88 }} />
+          <Image source={ICONN_EMPTY_SHOPPING_CART} style={{ marginTop: 10, width: 80, height: 88 }} />
         </Container>
         <Container>
           <Container row crossCenter space='between'>
             <Text numberOfLines={3} style={{ width: 120, color: 'black' }}>
             {value.name}
           </Text>
-            <CustomText text={"$" + value.priceDefinition.total} ></CustomText>
+            <CustomText text={"$" + value.price} ></CustomText>
           </Container>
           <Container>
           <Text numberOfLines={1} style={{ width: 120, color: 'grey' }}>
@@ -194,7 +235,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
               transparent="true" leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} style={{ left: 1 }} />}>
               Eliminar
             </Button>
-            <Counter numOfItems={value.quantity} />
+            <Counter orderFormId={'655c3cc734e34ac3a14749e39a82e8b9'} item={value} />
           </Container>
         </Container>
       </Container>
