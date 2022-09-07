@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Image, Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TextContainer, Button, AddressCard, TouchableText } from '../../molecules';
-import { CustomModal, Container, InfoCard, CustomText, ActionButton } from '../../atoms';
+import { CustomModal, Container, InfoCard, CustomText, ActionButton, Touchable } from '../../atoms';
 import { ICONN_HOME_LOCATION, ICONN_NO_ADDRESSES } from 'assets/images';
 import { Address } from 'rtk';
 import NetInfo from '@react-native-community/netinfo';
@@ -81,14 +81,14 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
                   .map(function (address, i) {
                     return (
                       <Container key={i} style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_light_grey }}>
-                        <AddressCard
-                          address={address}
-                          onPressEdit={() => {
+                        <Touchable
+                          onPress={() => {
                             onPressClose();
                             onPressEdit(address, i);
                           }}
-                          index={i}
-                        />
+                        >
+                          <AddressCard address={address} onPressEdit={() => {}} index={i} />
+                        </Touchable>
                       </Container>
                     );
                   })
@@ -121,7 +121,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     width: '100%',
-    padding: 16
+    padding: 16,
+    maxHeight: '90%'
   }
 });
 
