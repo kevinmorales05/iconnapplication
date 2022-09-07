@@ -54,9 +54,11 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   console.log('------------------');
 
   const Counter: React.RF = ( {orderFormId, item} ) => {
+    const [counterValue, setCounterValue] = useState(0);
     const deleteItem = () => {
       console.log('***delete item***');
-      item.quantity-- 
+      item.quantity--;
+      setCounterValue(item.quantity);
       const request = {
         "orderItems": [
           {
@@ -76,6 +78,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     const addItem = () => {
       console.log('***delete item***');
       item.quantity++;
+      setCounterValue(item.quantity);
       const request = {
         "orderItems": [
           {
@@ -112,7 +115,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <CustomText text='' fontSize={7}></CustomText>
           </Container>
           <Container>
-            <CustomText text={item.quantity} textAlign='auto' fontSize={11}></CustomText>
+            <CustomText text={counterValue} textAlign='auto' fontSize={11}></CustomText>
           </Container>
           <Container>
             <CustomText text='' fontSize={7}></CustomText>
@@ -131,14 +134,14 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   };
 
   const ItemsList: React.FC = ({ itemss }) => {
-    console.log('jjjjjjjjjjjjjjjkk');
+    console.log('jjjjjjjjjjjjjjkk');
     console.log(itemss);
-    console.log('jjjjjjjjjjjjjjjkkk');
+    console.log('jjjjjjjjjjjjjjkkk');
  
     let toShow = null;
     if(itemss){
      const itemsToShow = itemss.items;
-     if(itemsToShow[0]){
+     if(Object.values(itemsToShow).length){
       toShow = itemsToShow
      }
     } else {
