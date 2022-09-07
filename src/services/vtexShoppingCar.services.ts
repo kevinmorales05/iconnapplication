@@ -19,7 +19,7 @@ import { SizeType } from '../components/types/size-type';
     console.log('quantity: ',data.items[0].quantity);
     console.log('name: ',data.items[0].name);
     console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
-    return Object.values(data);
+    return data;
   }
 
 /**
