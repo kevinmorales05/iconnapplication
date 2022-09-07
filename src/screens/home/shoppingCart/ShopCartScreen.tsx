@@ -16,6 +16,7 @@ import {
 import { Image, StyleProp, ViewStyle } from 'react-native';
 import { text } from '@storybook/addon-knobs';
 import { getShoppingCart, emptyShoppingCar, updateShoppingCart } from 'services/vtexShoppingCar.services';
+import items from 'assets/files/sellers.json';
 
 interface Props {
   onPressInvoice: () => void;
@@ -32,15 +33,21 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   console.log('------------------');
   console.log(productsss);
+  let itemsReceived = null;
   if (productsss) {
-    const array = Object.values(productsss);
-    console.log('sssssssssssssssss');
-    console.log(array[2]);
+    //const array = Object.values(productsss.items);
+    console.log('sssssssssssssss');
+    const arrayValues = Object.values(productsss);
+    console.log(Object.values(productsss).length);
     //const itemsListRecieved = array[2]; 
-    console.log('sssssssssssssssss');
+    console.log('sssssssssssssss');
     console.log('cccccccccc');
-    //console.log(itemsListRecieved[0]);
+    console.log(arrayValues[2]);
     console.log('cccccccccc');
+    itemsReceived = arrayValues[2];
+    console.log('.................');
+    console.log(itemsReceived);
+    console.log('.................');
   }
   console.log('------------------');
 
@@ -64,7 +71,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <CustomText text='' fontSize={7}></CustomText>
           </Container>
           <Container>
-            <CustomText text="1" textAlign='auto' fontSize={11}></CustomText>
+            <CustomText text={numOfItems} textAlign='auto' fontSize={11}></CustomText>
           </Container>
           <Container>
             <CustomText text='' fontSize={7}></CustomText>
@@ -81,49 +88,57 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     );
   };
 
-  const ItemsList: React.FC = ({ }) => {
+  const ItemsList: React.FC = ({ itemss }) => {
 
-    const productsList = [
-      {
-        name: 'papas',
-        imageUrl: IMG_PRODUCT1,
-        description: 'golosinas',
-        price: 18.23,
-        oldPrice: 20.0
-      }/*,
-      {
-        name: 'pepsi lata',
-        imageUrl: IMG_PRODUCT2,
-        description: 'bebidas azucaradas',
-        price: 17.24,
-        oldPrice: 25.23
-      },
-      {
-        name: 'pepsi des',
-        imageUrl: IMG_PRODUCT3,
-        description: 'bebida azucarada',
-        price: 12.5,
-        oldPrice: 15.23
-      },
-      {
-        name: 'pepsi med',
-        imageUrl: IMG_PRODUCT4,
-        description: 'bebida azucarada',
-        price: 16.36,
-        oldPrice: 18.23
-      },
-      {
-        name: 'Sabritas',
-        imageUrl: IMG_PRODUCT5,
-        description: 'comida salada',
-        price: 35.2,
-        oldPrice: 40.23
-      }*/
-    ];
+    console.log('jjjjjjjjjjjjjjjjjjjkks');
+    console.log(itemss);
+    console.log('jjjjjjjjjjjjjjjjjjjkkks');
+ 
+    let toShow = null;
+    if(itemss){
+     const itemsToShow = itemss.items;
+     if(itemsToShow[0]){
+      toShow = itemsToShow
+     }
+    } else {
+      const productsList = [
+        {
+          name: 'papas',
+          imageUrl: IMG_PRODUCT1,
+          description: 'golosinas',
+          price: 18.23,
+          oldPrice: 20.0
+        },
+        {
+          name: 'pepsi de lata',
+          imageUrl: IMG_PRODUCT2,
+          description: 'bebidas azucaradas',
+          price: 17.24,
+          oldPrice: 25.23
+        },
+        {
+          name: 'pepsi desechable',
+          imageUrl: IMG_PRODUCT3,
+          description: 'bebida azucarada',
+          price: 12.5,
+          oldPrice: 15.23
+        },
+        {
+          name: 'Sabritas',
+          imageUrl: IMG_PRODUCT5,
+          description: 'comida salada',
+          price: 35.2,
+          oldPrice: 40.23
+        }
+      ];
+      toShow = productsList
+    }
+
+  
     return (
       <Container>
         {
-          productsList.map(
+          toShow.map(
             (value) => {
               return (
                 <Item value={value} />
@@ -158,15 +173,19 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     return (
       <Container row style={{ marginLeft: 16, marginRight: 16, marginTop: 9, marginBottom: 0, height: 110, backgroundColor: theme.brandColor.iconn_white }}>
         <Container>
-          <Image source={value.imageUrl} style={{ marginTop: 10, width: 80, height: 88 }} />
+          <Image source={{uri:value.imageUrl}} style={{ marginTop: 10, width: 80, height: 88 }} />
         </Container>
         <Container>
           <Container row crossCenter space='between'>
-            <CustomText text={value.name}></CustomText>
-            <CustomText text={"$" + value.price} ></CustomText>
+            <Text numberOfLines={3} style={{ width: 120, color: 'black' }}>
+            {value.name}
+          </Text>
+            <CustomText text={"$" + value.priceDefinition.total} ></CustomText>
           </Container>
           <Container>
-          <CustomText text={"$" + value.price}></CustomText>
+          <Text numberOfLines={1} style={{ width: 120, color: 'grey' }}>
+          {"$" + value.price + "  c/u"}
+          </Text>
           </Container>
           <Container row space='between'>
             <Button fontSize="h6"
@@ -175,7 +194,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
               transparent="true" leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} style={{ left: 1 }} />}>
               Eliminar
             </Button>
-            <Counter numOfItems={3} />
+            <Counter numOfItems={value.quantity} />
           </Container>
         </Container>
       </Container>
@@ -249,7 +268,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}>
-          <ItemsList />
+          <ItemsList itemss={itemsReceived} />
         </ScrollView>
       </Container>
       <View style={styles.footer}>{cartFooter}</View>
