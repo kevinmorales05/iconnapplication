@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -29,22 +29,12 @@ const HomeScreen: React.FC<Props> = ({
   name,
   email
 }) => {
-  const insets = useSafeAreaInsets();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [toggle, setToggle] = useState(false);
 
   return (
-    <ScrollView
-      bounces={false}
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingBottom: insets.bottom
-      }}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-    >
-      <Container>
+    <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%' }}>
+      <View style={{ zIndex: 0, width: '100%' }}>
         <Touchable
           onPress={() => {
             setToggle(current => {
@@ -57,52 +47,62 @@ const HomeScreen: React.FC<Props> = ({
             {toggle ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
           </Container>
         </Touchable>
-        {toggle && (
-          <CustomModal visible={toggle} onDismiss={() => {}}>
-              <ShippingDropdown
-                onPressOut={() => {
-                  setToggle(false);
-                }}
-              />
-          </CustomModal>
-        )}
-      </Container>
-      <Container flex crossCenter>
-        <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
-          <CustomText textColor={theme.brandColor.iconn_dark_grey} text={name ? `¡Hola ${name}!` : '¡Hola!'} typography="h4" fontBold />
+      </View>
+      <View style={{ zIndex: 0 }}>
+        <Container flex crossCenter>
+          <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
+            <CustomText textColor={theme.brandColor.iconn_dark_grey} text={name ? `¡Hola ${name}!` : '¡Hola!'} typography="h4" fontBold />
+          </Container>
+          <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+            Facturación
+          </Button>
+          <Button round onPress={onPressShowAddressesModal} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+            Modal con direcciones
+          </Button>
+          <Button round onPress={onPressAddNewAddress} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+            Boton para agregar nueva direccion
+          </Button>
+          <Button round onPress={onPressMyAccount} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+            Mi cuenta
+          </Button>
+          <Button round onPress={onPressShopCart} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+            Carrito de compras
+          </Button>
+          <Button
+            round
+            onPress={onPressLogOut}
+            fontSize="h4"
+            fontBold
+            style={{ marginTop: 8 }}
+            icon={<SimpleLineIcons name="logout" size={24} color="white" />}
+          >
+            Salir
+          </Button>
+          <Button
+            round
+            onPress={() => {
+              navigate('EcommerceStack');
+            }}
+            fontSize="h4"
+            fontBold
+            style={{ marginTop: 8 }}
+            icon={<SimpleLineIcons name="logout" size={24} color="white" />}
+          >
+            Ecommerce
+          </Button>
         </Container>
-        <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-          Facturación
-        </Button>
-        <Button round onPress={onPressShowAddressesModal} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-          Modal con direcciones
-        </Button>
-        <Button round onPress={onPressAddNewAddress} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-          Boton para agregar nueva direccion
-        </Button>
-        <Button round onPress={onPressMyAccount} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-          Mi cuenta
-        </Button>
-        <Button round onPress={onPressShopCart} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-          Carrito de compras
-        </Button>
-        <Button round onPress={onPressLogOut} fontSize="h4" fontBold style={{ marginTop: 8 }} icon={<SimpleLineIcons name="logout" size={24} color="white" />}>
-          Salir
-        </Button>
-        <Button
-          round
-          onPress={() => {
-            navigate('EcommerceStack');
-          }}
-          fontSize="h4"
-          fontBold
-          style={{ marginTop: 8 }}
-          icon={<SimpleLineIcons name="logout" size={24} color="white" />}
-        >
-          Ecommerce
-        </Button>
-      </Container>
-    </ScrollView>
+      </View>
+      {toggle && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 60 }} />}
+      {toggle && (
+        <View style={{ zIndex: 2, position: 'absolute', top: 60, width: '100%' }}>
+          <ShippingDropdown
+            onPressOut={() => {
+              setToggle(false);
+            }}
+          />
+        </View>
+      )}
+    </View>
   );
 };
 

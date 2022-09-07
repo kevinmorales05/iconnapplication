@@ -44,9 +44,6 @@ const BasketCounter = () => {
             <Container>
               <Image style={styles.image} source={ICONN_BASKET} />
             </Container>
-            <Container style={{ marginHorizontal: 2, marginTop: 2 }}>
-              <CustomText fontSize={17} alignSelf="center" textColor={theme.brandColor.iconn_white} text={String(counter)} fontBold />
-            </Container>
           </>
         )}
       </Container>

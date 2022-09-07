@@ -118,7 +118,7 @@ const ShippingDropdown = ({ onPressOut }: { onPressOut: () => void }) => {
   const [mode, setMode] = useState(ShippingMode.DELIVERY);
 
   return (
-    <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: 'white', marginTop: 90 }}>
+    <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: theme.brandColor.iconn_white }}>
       <Container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ShippingOption
           selected={mode === ShippingMode.DELIVERY}

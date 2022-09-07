@@ -246,7 +246,7 @@ const HomeController: React.FC = () => {
   };
 
   return (
-    <SafeArea topSafeArea={false} bottomSafeArea={false} backgroundColor={theme.brandColor.iconn_background} barStyle="dark">
+    <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }}  topSafeArea={false} bottomSafeArea={false} backgroundColor={theme.brandColor.iconn_background} barStyle="dark">
       <HomeScreen
         name={user.name}
         email={user.email}
