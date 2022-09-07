@@ -49,8 +49,8 @@ const HomeScreen: React.FC<Props> = ({
         </Touchable>
       </View>
       <View style={{ zIndex: 0 }}>
-        <Container flex crossCenter>
-          <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
+        <Container flex>
+          <Container row crossCenter style={{ marginVertical: 16 }}>
             <CustomText textColor={theme.brandColor.iconn_dark_grey} text={name ? `¡Hola ${name}!` : '¡Hola!'} typography="h4" fontBold />
           </Container>
           <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
