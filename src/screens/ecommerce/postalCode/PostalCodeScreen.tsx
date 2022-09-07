@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Image } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
-import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
+import { Input, CustomText, TextContainer, Button, Container } from 'components';
 import { ICONN_POSTAL_CODE_HEADER_ICON, ICONN_PIN_LOCATION } from 'assets/images';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useLoading } from 'context';
