@@ -16,9 +16,10 @@ interface Props {
   onPressEdit: (address: Address, position: number) => void;
   onPressDelete: (address: Address, position: number) => void;
   onPressClose: () => void;
+  onPressSetDefault: (address: Address, position: number) => void;
 }
 
-const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAddNewAddress, onPressEdit, onPressDelete, onPressClose }) => {
+const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAddNewAddress, onPressEdit, onPressDelete, onPressClose, onPressSetDefault }) => {
   const insets = useSafeAreaInsets();
   const [isOnline, setIsOnline] = useState(false);
 
@@ -81,14 +82,15 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
                   .map(function (address, i) {
                     return (
                       <Container key={i} style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_light_grey }}>
-                        <Touchable
-                          onPress={() => {
+                        <AddressCard
+                          onPressSetDefault={() => onPressSetDefault(address, i)}
+                          address={address}
+                          onPressEdit={() => {
                             onPressClose();
                             onPressEdit(address, i);
                           }}
-                        >
-                          <AddressCard address={address} onPressEdit={() => {}} index={i} />
-                        </Touchable>
+                          index={i}
+                        />
                       </Container>
                     );
                   })

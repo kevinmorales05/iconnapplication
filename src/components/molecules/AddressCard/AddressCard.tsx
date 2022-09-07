@@ -13,9 +13,10 @@ interface AddressCardProps {
   index: number;
   onPressEdit: () => void;
   onPressDelete?: () => void;
+  onPressSetDefault?: () => void;
 }
 
-const AddressCard: React.FC<AddressCardProps> = ({ address, onPressEdit, onPressDelete }: AddressCardProps) => {
+const AddressCard: React.FC<AddressCardProps> = ({ address, onPressEdit, onPressDelete, onPressSetDefault }: AddressCardProps) => {
   const AddressCardStyle: StyleProp<ViewStyle> = {
     borderRadius: 8,
     backgroundColor: theme.brandColor.iconn_white,
@@ -25,9 +26,18 @@ const AddressCard: React.FC<AddressCardProps> = ({ address, onPressEdit, onPress
 
   return (
     <Container row space="between" style={AddressCardStyle} crossCenter center>
-      <Container width={'80%'} flex space="between" style={{ marginLeft: 13 }}>
-        <TextContainer text={address.addressName!} fontBold />
-        <TextContainer text={`${address.street}, ${address.neighborhood}, ${address.city}, ${address.state}`} marginTop={12} />
+      {onPressSetDefault && (
+        <Touchable onPress={onPressSetDefault}>
+          <Container width={'10%'}>
+            <RadioButton selected={address.isDefault} />
+          </Container>
+        </Touchable>
+      )}
+      <Container width={'75%'} flex space="between" style={{ marginLeft: 13 }}>
+        <Touchable onPress={() => {}}>
+          <TextContainer text={address.addressName!} fontBold />
+          <TextContainer text={`${address.street}, ${address.neighborhood}, ${address.city}, ${address.state}`} marginTop={12} />
+        </Touchable>
         {onPressDelete && (
           <Container row>
             <Touchable onPress={onPressDelete}>
@@ -40,7 +50,7 @@ const AddressCard: React.FC<AddressCardProps> = ({ address, onPressEdit, onPress
           </Container>
         )}
       </Container>
-      <Touchable onPress={onPressEdit} width={'20%'}>
+      <Touchable onPress={onPressEdit} width={'15%'}>
         <Container crossAlignment="end" style={{ marginRight: 20 }}>
           <Octicons name="chevron-right" size={24} color={theme.fontColor.dark} />
         </Container>
@@ -50,3 +60,33 @@ const AddressCard: React.FC<AddressCardProps> = ({ address, onPressEdit, onPress
 };
 
 export default AddressCard;
+
+const RadioButton = (props: any) => {
+  return (
+    <Container
+      style={[
+        {
+          height: 24,
+          width: 24,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: theme.brandColor.iconn_green_original,
+          alignItems: 'center',
+          justifyContent: 'center'
+        },
+        props.style
+      ]}
+    >
+      {props.selected ? (
+        <Container
+          style={{
+            height: 17,
+            width: 17,
+            borderRadius: 10,
+            backgroundColor: theme.brandColor.iconn_green_original
+          }}
+        />
+      ) : null}
+    </Container>
+  );
+};

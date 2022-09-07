@@ -54,6 +54,7 @@ export interface Address {
   followers?: string[];
   tag?: string;
   auto_filter?: string;
+  isDefault?: boolean;
 }
 
 export interface PostalCodeInfo {

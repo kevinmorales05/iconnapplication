@@ -92,6 +92,10 @@ const authSlice = createSlice({
     },
     replaceAddressFromList(state, action: PayloadAction<AddressWithPositionInterface>) {
       state.user.addresses.splice(action.payload.position, 1, action.payload.address);
+    },
+    setAddressDefault(state, action: PayloadAction<number>) {
+      state.user.addresses.map(x => (x.isDefault = false));
+      state.user.addresses[action.payload].isDefault = true;
     }
   },
   extraReducers: builder => {
@@ -233,6 +237,7 @@ export const {
   setAddressesList,
   addAddressToList,
   deleteAddressFromList,
-  replaceAddressFromList
+  replaceAddressFromList,
+  setAddressDefault
 } = authSlice.actions;
 export default authSlice.reducer;

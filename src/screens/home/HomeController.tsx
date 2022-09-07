@@ -3,7 +3,7 @@ import React, { Component, useCallback, useEffect, useState } from 'react';
 import { Dimensions, Image, ImageSourcePropType, Pressable, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, Address, setAddressDefault } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -236,6 +236,15 @@ const HomeController: React.FC = () => {
     onPressAddNewAddress();
   };
 
+  /**
+   * Function to set a default address locally (just in redux store)
+   * @param address
+   * @param position
+   */
+  const onPressSetDefault = (address: Address, position: number) => {
+    dispatch(setAddressDefault(position));
+  };
+
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} backgroundColor={theme.brandColor.iconn_background} barStyle="dark">
       <HomeScreen
@@ -292,6 +301,7 @@ const HomeController: React.FC = () => {
         onPressDelete={removeAddress}
         onPressAddNewAddress={onPressAddNewAddressFromHome}
         onPressClose={onPressCloseAddressModalSelection}
+        onPressSetDefault={onPressSetDefault}
       />
       <AddressModalScreen
         visible={addressModalScreenVisible}
