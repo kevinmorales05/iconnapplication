@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { CustomText, Button, Container, Touchable, ShippingDropdown, CustomModal } from 'components';
@@ -77,18 +76,6 @@ const HomeScreen: React.FC<Props> = ({
             icon={<SimpleLineIcons name="logout" size={24} color="white" />}
           >
             Salir
-          </Button>
-          <Button
-            round
-            onPress={() => {
-              navigate('EcommerceStack');
-            }}
-            fontSize="h4"
-            fontBold
-            style={{ marginTop: 8 }}
-            icon={<SimpleLineIcons name="logout" size={24} color="white" />}
-          >
-            Ecommerce
           </Button>
         </Container>
       </View>

@@ -25,13 +25,14 @@ import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeRead
 import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
 
-import EcommerceStack from './EcommerceStack';
 import { BasketCounter, EcommerceHeader } from 'components';
+import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
+import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
 
 const Stack = createNativeStackNavigator<HomeStackParams>();
 
 const HomeStack: React.FC = () => (
-  <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="Home">
+  <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="PostalCode">
     <Stack.Screen
       options={{
         headerTitle: '',
@@ -66,7 +67,6 @@ const HomeStack: React.FC = () => (
     <Stack.Screen options={{ headerShown: false, gestureEnabled: false }} name="InvoiceGeneratedSeven" component={InvoiceGeneratedSevenController} />
     <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedPetro" component={ViewInvoiceGeneratedPetroController} />
     <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedSeven" component={ViewInvoiceGeneratedSevenController} />
-    <Stack.Screen options={{ headerShown: false }} name="EcommerceStack" component={EcommerceStack} />
     <Stack.Screen options={{ headerShown: false }} name="CodeReader" component={CodeReaderController} />
     <Stack.Screen
       options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '', headerTintColor: 'black' }}
@@ -74,6 +74,8 @@ const HomeStack: React.FC = () => (
       component={AddressesController}
     />
     <Stack.Screen options={{ headerShown: false }} name="ShopCart" component={ShopCartController} />
+    <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
+    <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
   </Stack.Navigator>
 );
 

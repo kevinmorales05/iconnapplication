@@ -8,7 +8,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useLoading } from 'context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { EcommerceStackParams, HomeStackParams } from 'navigation/types';
+import { HomeStackParams } from 'navigation/types';
 
 const PostalCodeScreen = () => {
   const {
@@ -20,7 +20,7 @@ const PostalCodeScreen = () => {
     mode: 'onChange'
   });
   const loader = useLoading();
-  const { navigate } = useNavigation<NativeStackNavigationProp<EcommerceStackParams>>();
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   async function stall(stallTime = 1000) {
     await new Promise(resolve => setTimeout(resolve, stallTime));
@@ -31,7 +31,7 @@ const PostalCodeScreen = () => {
 
     await stall();
 
-    navigate('Ecommerce');
+    navigate('Home');
 
     loader.hide();
   };

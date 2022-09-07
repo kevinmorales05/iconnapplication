@@ -26,4 +26,6 @@ export type HomeStackParams = {
   CodeReader: undefined;
   Address: undefined;
   ShopCart: undefined;
+  PostalCode: undefined;
+  SearchSeller: undefined;
 };
