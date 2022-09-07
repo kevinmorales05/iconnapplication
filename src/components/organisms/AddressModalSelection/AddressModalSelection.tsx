@@ -72,7 +72,7 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
               {!isOnline ? (
                 <InfoCard text={`No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.`} />
               ) : addresses.length === 0 ? (
-                <Container center style={{ top: '40%' }}>
+                <Container center>
                   <Image source={ICONN_NO_ADDRESSES} style={{ width: 40, height: 40 }} />
                   <TextContainer text="Sin direcciones guardadas" fontBold marginTop={10} />
                   <TextContainer text={`¡Aún no tienes ninguna\ndirección guardada!`} typography="description" textAlign="center" marginTop={11} />
