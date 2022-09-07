@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { CustomText, Button, Container } from 'components';
+import { CustomText, Button, Container, Touchable, ShippingDropdown, CustomModal } from 'components';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
-
+import Icon from 'react-native-vector-icons/AntDesign';
 interface Props {
   onPressMyAccount: () => void;
   onPressShopCart: () => void;
@@ -31,6 +31,7 @@ const HomeScreen: React.FC<Props> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const [toggle, setToggle] = useState(false);
 
   return (
     <ScrollView
@@ -38,12 +39,34 @@ const HomeScreen: React.FC<Props> = ({
       style={{ flex: 1 }}
       contentContainerStyle={{
         flexGrow: 1,
-        paddingBottom: insets.bottom,
-        paddingTop: insets.top
+        paddingBottom: insets.bottom
       }}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
+      <Container>
+        <Touchable
+          onPress={() => {
+            setToggle(current => {
+              return !current;
+            });
+          }}
+        >
+          <Container style={{ paddingVertical: 20, paddingHorizontal: 10, display: 'flex', justifyContent: 'space-between' }} row>
+            <CustomText text={'¿Como quieres recibir tus productos?'} fontBold />
+            {toggle ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
+          </Container>
+        </Touchable>
+        {toggle && (
+          <CustomModal visible={toggle} onDismiss={() => {}}>
+              <ShippingDropdown
+                onPressOut={() => {
+                  setToggle(false);
+                }}
+              />
+          </CustomModal>
+        )}
+      </Container>
       <Container flex crossCenter>
         <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
           <CustomText textColor={theme.brandColor.iconn_dark_grey} text={name ? `¡Hola ${name}!` : '¡Hola!'} typography="h4" fontBold />
@@ -69,7 +92,7 @@ const HomeScreen: React.FC<Props> = ({
         <Button
           round
           onPress={() => {
-            navigate('Ecommerce');
+            navigate('EcommerceStack');
           }}
           fontSize="h4"
           fontBold

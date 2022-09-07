@@ -26,12 +26,21 @@ import AddressesController from 'screens/home/myAccount/addresses/AddressesContr
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
 
 import EcommerceStack from './EcommerceStack';
+import { BasketCounter, EcommerceHeader } from 'components';
 
 const Stack = createNativeStackNavigator<HomeStackParams>();
 
 const HomeStack: React.FC = () => (
   <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="Home">
-    <Stack.Screen name="Home" component={HomeController} />
+    <Stack.Screen
+      options={{
+        headerTitle: '',
+        headerLeft: () => <EcommerceHeader />,
+        headerRight: () => <BasketCounter />
+      }}
+      name="Home"
+      component={HomeController}
+    />
     <Stack.Screen name="Mi Cuenta" component={AccountScreen} />
     <Stack.Screen name="Profile" options={{ title: 'Mi Perfil' }} component={ProfileController} />
     <Stack.Screen name="EditEmail" options={{ title: 'Editar Correo' }} component={EditEmailController} />
@@ -57,7 +66,7 @@ const HomeStack: React.FC = () => (
     <Stack.Screen options={{ headerShown: false, gestureEnabled: false }} name="InvoiceGeneratedSeven" component={InvoiceGeneratedSevenController} />
     <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedPetro" component={ViewInvoiceGeneratedPetroController} />
     <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedSeven" component={ViewInvoiceGeneratedSevenController} />
-    <Stack.Screen options={{ headerShown: false }} name="Ecommerce" component={EcommerceStack} />
+    <Stack.Screen options={{ headerShown: false }} name="EcommerceStack" component={EcommerceStack} />
     <Stack.Screen options={{ headerShown: false }} name="CodeReader" component={CodeReaderController} />
     <Stack.Screen
       options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '', headerTintColor: 'black' }}

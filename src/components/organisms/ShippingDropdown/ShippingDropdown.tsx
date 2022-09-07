@@ -69,15 +69,7 @@ const DefaultItem = () => {
         </Container>
       </Container>
       <Container style={{ marginVertical: 10 }}>
-        <Button
-          onPress={() => {
-            navigate('Home');
-          }}
-          round
-          fontBold
-          fontSize="h4"
-          length="long"
-        >
+        <Button onPress={() => {}} round fontBold fontSize="h4" length="long">
           Agregar dirección
         </Button>
       </Container>
@@ -126,7 +118,7 @@ const ShippingDropdown = ({ onPressOut }: { onPressOut: () => void }) => {
   const [mode, setMode] = useState(ShippingMode.DELIVERY);
 
   return (
-    <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: 'white' }}>
+    <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: 'white', marginTop: 90 }}>
       <Container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ShippingOption
           selected={mode === ShippingMode.DELIVERY}
@@ -159,7 +151,6 @@ const ShippingDropdown = ({ onPressOut }: { onPressOut: () => void }) => {
 export default ShippingDropdown;
 
 const styles = StyleSheet.create({
-  icon: {},
   defaultSeller: {
     borderWidth: 2,
     borderRadius: 8,
