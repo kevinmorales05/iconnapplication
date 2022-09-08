@@ -115,7 +115,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_grey, width:130, height:37
       }}>
           <Container style={{marginLeft: 13}}>
-          <Touchable onPress={addItem}>
+          <Touchable onPress={deleteItem}>
           <IconO name="minus" size={14} color={theme.brandColor.iconn_green_original} />
           </Touchable>
         </Container>
@@ -323,7 +323,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const emptyCartFooter = (
     <Container crossCenter style={{marginTop:0, marginBottom:0 , paddingLeft: 0, width: 390, backgroundColor: theme.brandColor.iconn_background }}>
-      <Button length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5 , marginLeft:60, width: 270 }}>
+      <Button length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5 , marginLeft:60, width: 270, backgroundColor: theme.brandColor.iconn_green_original }}>
         Ver artículos
       </Button>
     </Container>
@@ -335,7 +335,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
         <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?itemsReceived.totalizers[0].value:"10"): "10") + ' MXN'} fontSize={18} fontBold></CustomText>
       </Container>
-      <Button length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5 }}>
+      <Button length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5, backgroundColor: theme.brandColor.iconn_green_original }}>
         Continuar
       </Button>
     </Container>
