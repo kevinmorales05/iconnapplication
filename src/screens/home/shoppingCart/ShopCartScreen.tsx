@@ -53,13 +53,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   }
   console.log('------------------');
 
-  const Counter: React.RF = ( {orderFormId, item} ) => {
+  const Counter: React.RF = ( {orderFormId, item, itemIndex} ) => {
     const [counterValue, setCounterValue] = useState(0);
     const deleteItem = () => {
       console.log('***delete item***');
       item.quantity--;
       setCounterValue(item.quantity);
-      const request = {
+      let request = {
         "orderItems": [
           {
             "id": item.id,
@@ -67,6 +67,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             "seller": "1"
           }
         ]
+      }
+
+      if(item.quantity==0){
+        request.orderItems[0].index=itemIndex;
       }
       try {
         updateShoppingCart(orderFormId, request);
@@ -115,7 +119,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <CustomText text='' fontSize={7}></CustomText>
           </Container>
           <Container>
-            <CustomText text={counterValue} textAlign='auto' fontSize={11}></CustomText>
+            <CustomText text={item.quantity} textAlign='auto' fontSize={11}></CustomText>
           </Container>
           <Container>
             <CustomText text='' fontSize={7}></CustomText>
@@ -139,54 +143,57 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     console.log('jjjjjjjjjjjjjjkkk');
  
     let toShow = null;
-    if(itemss){
-     const itemsToShow = itemss.items;
-     if(Object.values(itemsToShow).length){
-      toShow = itemsToShow
-     }
-    } else {
-      const productsList = [
-        {
-          name: 'papas',
-          imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
-          description: 'golosinas',
-          price: 18.23,
-          oldPrice: 20.0,
-          priceDefinition: {
-            total: 1600,
-          }
-        },
-        {
-          name: 'pepsi de lata',
-          imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
-          description: 'bebidas azucaradas',
-          price: 17.24,
-          oldPrice: 25.23,
-          priceDefinition: {
-            total: 1600,
-          }
-        },
-        {
-          name: 'pepsi desechable',
-          imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
-          description: 'bebida azucarada',
-          price: 12.5,
-          oldPrice: 15.23,
-          priceDefinition: {
-            total: 1600,
-          }
-        },
-        {
-          name: 'Sabritas',
-          imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
-          description: 'comida salada',
-          price: 35.2,
-          oldPrice: 40.23,
-          priceDefinition: {
-            total: 1600,
-          }
+    const productsList = [
+      {
+        name: 'papas',
+        imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
+        description: 'golosinas',
+        price: 18.23,
+        oldPrice: 20.0,
+        priceDefinition: {
+          total: 1600,
         }
-      ];
+      }/*,
+      {
+        name: 'pepsi de lata',
+        imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
+        description: 'bebidas azucaradas',
+        price: 17.24,
+        oldPrice: 25.23,
+        priceDefinition: {
+          total: 1600,
+        }
+      },
+      {
+        name: 'pepsi desechable',
+        imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
+        description: 'bebida azucarada',
+        price: 12.5,
+        oldPrice: 15.23,
+        priceDefinition: {
+          total: 1600,
+        }
+      },
+      {
+        name: 'Sabritas',
+        imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
+        description: 'comida salada',
+        price: 35.2,
+        oldPrice: 40.23,
+        priceDefinition: {
+          total: 1600,
+        }
+      }*/
+    ];
+
+    if (itemss) {
+      const itemsToShow = itemss.items;
+      if (itemsToShow) {
+        if (Object.values(itemsToShow).length) {
+          toShow = itemsToShow
+        }else { toShow = productsList }
+      }else { toShow = productsList }
+    } else {
       toShow = productsList
     }
 
@@ -202,10 +209,9 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     return (
       <Container>
         {
-          toShow.map(
-            (value) => {
+          toShow.map((value, index) => {
               return (
-                <Item value={value} />
+                <Item value={value} arrayIndex={index} />
               )
             }
           )
@@ -234,26 +240,41 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     );
   };
 
-  const Item: React.FC = ({value}) => {
+  const Item: React.FC = ({value, arrayIndex}) => {
     const deleteShoppingCartItem = () => {
-      console.log('***delete item***');
+      console.log('***delete item: ',value.id);
+      const request = {
+        "orderItems": [
+          {
+            "id": ""+value.id,
+            "quantity": 0,
+            "seller": "1",
+            "index": arrayIndex
+          }
+        ]
+      }
+      try {
+        updateShoppingCart('655c3cc734e34ac3a14749e39a82e8b9',request);
+      } catch (error) {
+        console.log(error);
+      }
     };
 
     return (
       <Container row style={{ marginLeft: 16, marginRight: 16, marginTop: 9, marginBottom: 0, height: 110, backgroundColor: theme.brandColor.iconn_white }}>
         <Container>
-          <Image source={{uri:value.imageUrl}} style={{ marginTop: 10, width: 80, height: 88 }} />
+          <Image source={{uri:value.imageUrl}} style={{ marginTop: 10, width: 100, height: 88 }} />
         </Container>
         <Container>
           <Container row crossCenter space='between'>
-            <Text numberOfLines={3} style={{ width: 150, color: 'black'}}>
+            <Text numberOfLines={3} style={{ width: 175, color: 'black'}}>
             {value.name}
           </Text>
             <CustomText text={"$" + value.priceDefinition.total} fontBold></CustomText>
           </Container>
           <Container>
           <Text numberOfLines={1} style={{ width: 120, color: 'grey' }}>
-          {"$" + value.price + "  c/u"}
+          {"$" + value.price + " c/u"}
           </Text>
           </Container>
           <Container row space='between'>
@@ -261,10 +282,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
               color="iconn_red_original"
               size="medium"
               onPress={deleteShoppingCartItem}
-              transparent="true" leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} style={{ left: 1 }} />}>
+              transparent="true" leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} style={{ left: 3 }} />}>
               Eliminar
             </Button>
-            <Counter orderFormId={'655c3cc734e34ac3a14749e39a82e8b9'} item={value} />
+            <Counter orderFormId={'655c3cc734e34ac3a14749e39a82e8b9'} item={value} itemIndex={arrayIndex} />
           </Container>
         </Container>
       </Container>
@@ -293,7 +314,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     <Container style={{ paddingLeft: 10, width: 280 }}>
       <Container row space="between">
         <CustomText text="Subtotal:" fontSize={14}></CustomText>
-        <CustomText text={"$" + "100"} fontSize={18} fontBold></CustomText>
+        <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?itemsReceived.totalizers[0].value:"10"): "10")} fontSize={18} fontBold></CustomText>
       </Container>
       <Button length="long" round fontSize="h3" fontBold onPress={onPressMyAccount}>
         Continuar
