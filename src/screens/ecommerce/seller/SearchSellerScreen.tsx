@@ -5,33 +5,11 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
 import { ICONN_PIN_LOCATION } from 'assets/images';
 import items from 'assets/files/sellers.json';
+import { SellerInterface } from 'rtk';
 
 interface Seller {
   id: number;
   title: string;
-}
-
-interface SellerInterface {
-  '# Division': number | string;
-  Division: string;
-  '# Plaza': number | string;
-  Plaza: string;
-  Mercado: number | string;
-  Campo: number | string;
-  '# Tienda': number | string;
-  Tienda: string | any[];
-  'Fecha Apertura': string;
-  'Formato Tienda': string;
-  Latitud: number | string;
-  Longitud: number | string;
-  'Google Maps': string;
-  'Código postal': number | string;
-  Domicilio: string;
-  'Estación de servicio': string;
-  ATM: string;
-  Slurpee: string;
-  'Bake in Store': string;
-  'Pizza / Turbochef': string;
 }
 
 const SearchSellerScreen = () => {
