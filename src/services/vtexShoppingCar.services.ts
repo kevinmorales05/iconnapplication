@@ -26,8 +26,8 @@ import { SizeType } from '../components/types/size-type';
  * Function to empty shopping cart
  * shoppingCartId is the shopping cart identifier.
  */
- async function emptyShoppingCar(shoppingCartId:string): Promise<any> {
-  const response = await ShoppingCar.getInstance().postRequest(`/${shoppingCartId}/items/removeAll`);
+ async function emptyShoppingCar(shoppingCartId:string, doc: any): Promise<any> {
+  const response = await ShoppingCar.getInstance().postRequest(`/${shoppingCartId}/items/removeAll`,doc);
   if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
   const { data } = response;
   console.log(moment().format())

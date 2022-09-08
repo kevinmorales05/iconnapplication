@@ -45,7 +45,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     console.log('ssssssssss');
     console.log('ccccccccc');
     console.log(arrayValues[2]);
-    console.log('ccccccccc');
+    console.log('ccccccc');
     itemsReceived = arrayValues[2];
     console.log('.............');
     console.log(itemsReceived);
@@ -148,36 +148,56 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       const productsList = [
         {
           name: 'papas',
-          imageUrl: IMG_PRODUCT1,
+          imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
           description: 'golosinas',
           price: 18.23,
-          oldPrice: 20.0
+          oldPrice: 20.0,
+          priceDefinition: {
+            total: 1600,
+          }
         },
         {
           name: 'pepsi de lata',
-          imageUrl: IMG_PRODUCT2,
+          imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
           description: 'bebidas azucaradas',
           price: 17.24,
-          oldPrice: 25.23
+          oldPrice: 25.23,
+          priceDefinition: {
+            total: 1600,
+          }
         },
         {
           name: 'pepsi desechable',
-          imageUrl: IMG_PRODUCT3,
+          imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
           description: 'bebida azucarada',
           price: 12.5,
-          oldPrice: 15.23
+          oldPrice: 15.23,
+          priceDefinition: {
+            total: 1600,
+          }
         },
         {
           name: 'Sabritas',
-          imageUrl: IMG_PRODUCT5,
+          imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
           description: 'comida salada',
           price: 35.2,
-          oldPrice: 40.23
+          oldPrice: 40.23,
+          priceDefinition: {
+            total: 1600,
+          }
         }
       ];
       toShow = productsList
     }
 
+    const emptyShoppingCart = () => {
+      console.log('***empty ShoppingCart***');
+      try {
+        emptyShoppingCar('655c3cc734e34ac3a14749e39a82e8b9',{});
+      } catch (error) {
+        console.log(error);
+      }
+    };
   
     return (
       <Container>
@@ -203,6 +223,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             length="long"
             leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} />}
             color="grey"
+            onPress={emptyShoppingCart}
           >
             Vaciar canasta
           </Button>
@@ -214,17 +235,21 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   };
 
   const Item: React.FC = ({value}) => {
+    const deleteShoppingCartItem = () => {
+      console.log('***delete item***');
+    };
+
     return (
       <Container row style={{ marginLeft: 16, marginRight: 16, marginTop: 9, marginBottom: 0, height: 110, backgroundColor: theme.brandColor.iconn_white }}>
         <Container>
-          <Image source={ICONN_EMPTY_SHOPPING_CART} style={{ marginTop: 10, width: 80, height: 88 }} />
+          <Image source={{uri:value.imageUrl}} style={{ marginTop: 10, width: 80, height: 88 }} />
         </Container>
         <Container>
           <Container row crossCenter space='between'>
-            <Text numberOfLines={3} style={{ width: 120, color: 'black' }}>
+            <Text numberOfLines={3} style={{ width: 150, color: 'black'}}>
             {value.name}
           </Text>
-            <CustomText text={"$" + value.price} ></CustomText>
+            <CustomText text={"$" + value.priceDefinition.total} fontBold></CustomText>
           </Container>
           <Container>
           <Text numberOfLines={1} style={{ width: 120, color: 'grey' }}>
@@ -235,6 +260,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <Button fontSize="h6"
               color="iconn_red_original"
               size="medium"
+              onPress={deleteShoppingCartItem}
               transparent="true" leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} style={{ left: 1 }} />}>
               Eliminar
             </Button>
@@ -267,7 +293,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     <Container style={{ paddingLeft: 10, width: 280 }}>
       <Container row space="between">
         <CustomText text="Subtotal:" fontSize={14}></CustomText>
-        <CustomText text="$ 76.05 MXN" fontSize={18} fontBold></CustomText>
+        <CustomText text={"$" + "100"} fontSize={18} fontBold></CustomText>
       </Container>
       <Button length="long" round fontSize="h3" fontBold onPress={onPressMyAccount}>
         Continuar
