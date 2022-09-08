@@ -312,7 +312,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 );
 
   const emptyCart = (
-    <Container flex>
+    <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background, flex: 1, marginTop: 0, width:'110%'}}>
       <Container flex crossCenter>
         <Image source={ICONN_SHOPPING_CART_BASKET} style={{ width: 40, height: 40, alignSelf: 'center' }} />
         <CustomText text="Tu canasta está vacía" textAlign="center" fontBold></CustomText>
@@ -322,20 +322,20 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   );
 
   const emptyCartFooter = (
-    <Container>
-      <Button length="long" round fontSize="h3" fontBold onPress={onPressMyAccount}>
+    <Container crossCenter style={{marginTop:0, marginBottom:0 , paddingLeft: 0, width: 390, backgroundColor: theme.brandColor.iconn_background }}>
+      <Button length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5 , marginLeft:60, width: 270 }}>
         Ver artículos
       </Button>
     </Container>
   );
 
   const fullCartFooter = (
-    <Container style={{ paddingLeft: 10, width: 350 }}>
+    <Container style={{ paddingLeft: 10, width: 280 }}>
       <Container row space="between" style={{marginTop: 8}} >
         <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
         <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?itemsReceived.totalizers[0].value:"10"): "10") + ' MXN'} fontSize={18} fontBold></CustomText>
       </Container>
-      <Button color='iconn_green_original' length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount}>
+      <Button length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5 }}>
         Continuar
       </Button>
     </Container>
@@ -346,7 +346,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const cart = isEmpty ? emptyCart : fullCart;
 
   return (
-    <Container flex crossCenter center style={{ marginTop: 40, backgroundColor: theme.fontColor.white, width: '100%' }}>
+    <Container flex crossCenter center style={{ marginTop: 30, backgroundColor: theme.fontColor.white, width: '100%' }}>
       <Container row style={{ marginTop: 5, marginBottom:10}}>
         <CustomText text=''></CustomText>
         <TextContainer text='Mi canasta' fontSize={18} fontBold></TextContainer>
@@ -357,7 +357,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         </Container>
      </Container>
      {cart}
-      <View style={styles.footer}>{cartFooter}</View>
+      {cartFooter}
     </Container>
   );
 };
