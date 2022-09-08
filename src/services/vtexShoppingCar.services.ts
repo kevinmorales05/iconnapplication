@@ -46,9 +46,20 @@ import { SizeType } from '../components/types/size-type';
   console.log(moment().format())
   return data;
 }
+/**
+ * Function to create a shoppingCart
+ */
+ async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
+  console.log('***************************************');
+    const response = await ShoppingCar.getInstance().getRequest(``);
+    if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
+    const { data } = response;
+    return data;
+  }
   
 export {
   getShoppingCart,
   updateShoppingCart,
-  emptyShoppingCar
+  emptyShoppingCar,
+  getCurrentShoppingCartOrCreateNewOne
 };

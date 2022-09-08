@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authReducer from '../slices/authSlice';
 import appReducer from '../slices/appSlice';
 import guestReducer from '../slices/guestSlice';
+import cartReducer from '../slices/cartSlice';
 import invoicingReducer from '../slices/invoicingSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { persistReducer } from 'redux-persist';
@@ -11,7 +12,8 @@ const reducers = combineReducers({
   auth: authReducer,
   app: appReducer,
   guest: guestReducer,
-  invoicing: invoicingReducer
+  invoicing: invoicingReducer,
+  cart: cartReducer,
 });
 
 const persistConfig = {
