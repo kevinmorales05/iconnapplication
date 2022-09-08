@@ -15,6 +15,7 @@ interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
   onPressLogOut: () => void;
+  onPressProducts: () => void;
   name?: string;
   defaultAddress: Address;
 }
@@ -27,7 +28,8 @@ const HomeScreen: React.FC<Props> = ({
   onPressAddNewAddress,
   onPressLogOut,
   name,
-  defaultAddress
+  defaultAddress,
+  onPressProducts,
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [toggle, setToggle] = useState(false);
@@ -67,6 +69,9 @@ const HomeScreen: React.FC<Props> = ({
           </Button>
           <Button round onPress={onPressShopCart} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Carrito de compras
+          </Button>
+          <Button round onPress={onPressProducts} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+          Productos
           </Button>
           <Button
             round

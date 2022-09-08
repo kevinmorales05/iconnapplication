@@ -9,3 +9,12 @@ export function formatDate(date: Date, dateFormat: string = 'P'): string {
     return '';
   }
 }
+
+export function formatDate2(date: Date, dateFormat: string = 'PPP'): string {
+  try {
+    return format(date, dateFormat, { locale: localeEs });
+  } catch (error) {
+    console.warn(error);
+    return '';
+  }
+}

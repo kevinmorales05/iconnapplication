@@ -208,6 +208,10 @@ const HomeController: React.FC = () => {
     if (user.addresses?.length === 0) fetchAddresses();
   }, [fetchAddresses]);
 
+  const goToOrders = () => {
+    (isGuest) ? navigate('InviteSignUp') : navigate('MyOrders');
+  }
+
   /**
    * Load Invocing Profile List and store it in the redux store.
    */
@@ -288,6 +292,7 @@ const HomeController: React.FC = () => {
         onPressShowAddressesModal={() => setAddressModalSelectionVisible(true)}
         onPressShopCart={goToShopCart}
         defaultAddress={defaultAddress!}
+        onPressProducts={goToOrders}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>

@@ -4,3 +4,4 @@ export * from './guest.types';
 export * from './invoicing.types';
 export * from './cart.types';
 export * from './seller.types';
+export * from './order.types';
