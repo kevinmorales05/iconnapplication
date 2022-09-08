@@ -71,8 +71,8 @@ export class ShoppingCar extends HttpClient {
     return this.instance.get(path);
   }
 
-  async postRequest(path: string) {
-    return this.instance.post(path);
+  async postRequest(path: string, payload?: any) {
+    return this.instance.post(path,payload);
   }
 
   async patchRequest(path: string, payload?: any) {

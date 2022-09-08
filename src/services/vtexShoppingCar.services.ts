@@ -4,6 +4,17 @@ import { LengthType } from '../components/types/length-type';
 import { SizeType } from '../components/types/size-type';
 
 /**
+ * Function to create a shoppingCart
+ */
+ async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
+  console.log('***************************************');
+    const response = await ShoppingCar.getInstance().getRequest(``);
+    if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
+    const { data } = response;
+    return data;
+  }
+
+/**
  * Function to get shoppingCartById
  * shoppingCartId is the shopping cart identifier.
  */
@@ -26,8 +37,8 @@ import { SizeType } from '../components/types/size-type';
  * Function to empty shopping cart
  * shoppingCartId is the shopping cart identifier.
  */
- async function emptyShoppingCar(shoppingCartId:string): Promise<any> {
-  const response = await ShoppingCar.getInstance().postRequest(`/${shoppingCartId}/items/removeAll`);
+ async function emptyShoppingCar(shoppingCartId:string, doc: any): Promise<any> {
+  const response = await ShoppingCar.getInstance().postRequest(`/${shoppingCartId}/items/removeAll`,doc);
   if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
   const { data } = response;
   console.log(moment().format())
@@ -38,8 +49,9 @@ import { SizeType } from '../components/types/size-type';
  * Function to update shopping cart
  * shoppingCartId is the Cart identififer to update.
  */
- async function updateShoppingCart(shoppingCartId:string, allowedOutdatedData:string): Promise<any> {
-  const response = await ShoppingCar.getInstance().patchRequest(`/${shoppingCartId}/items?allowedOutdatedData=${allowedOutdatedData}`,45);
+ async function updateShoppingCart(shoppingCartId:string, doc: any): Promise<any> {
+  console.log('shoppingCartId:',shoppingCartId);
+  const response = await ShoppingCar.getInstance().patchRequest(`/${shoppingCartId}/items`, doc);
   if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
   const { data } = response;
   console.log(moment().format())
@@ -47,6 +59,7 @@ import { SizeType } from '../components/types/size-type';
 }
   
 export {
+  getCurrentShoppingCartOrCreateNewOne,
   getShoppingCart,
   updateShoppingCart,
   emptyShoppingCar

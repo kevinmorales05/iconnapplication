@@ -95,6 +95,7 @@ const ShopCartController: React.FC = () => {
     console.log('se imprime desde useEffect',prod);
     console.log('............................');
   }, [])
+
 /*
   useEffect(() => {
     (async () => {
