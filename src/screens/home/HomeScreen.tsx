@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -18,6 +18,7 @@ interface Props {
   onPressProducts: () => void;
   name?: string;
   defaultAddress: Address;
+  showShippingDropDown?: boolean;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -30,9 +31,13 @@ const HomeScreen: React.FC<Props> = ({
   name,
   defaultAddress,
   onPressProducts,
+  showShippingDropDown
 }) => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(showShippingDropDown);
+
+  useEffect(() => {
+    setToggle(showShippingDropDown);
+  }, [showShippingDropDown]);
 
   return (
     <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -71,7 +76,7 @@ const HomeScreen: React.FC<Props> = ({
             Carrito de compras
           </Button>
           <Button round onPress={onPressProducts} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-          Productos
+            Productos
           </Button>
           <Button
             round

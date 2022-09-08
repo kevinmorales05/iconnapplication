@@ -155,6 +155,7 @@ const HomeController: React.FC = () => {
   const loader = useLoading();
   const [addressModalSelectionVisible, setAddressModalSelectionVisible] = useState(false);
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
+  const [showShippingDropDown, setShowShippingDropDown] = useState(false);
 
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
@@ -209,8 +210,8 @@ const HomeController: React.FC = () => {
   }, [fetchAddresses]);
 
   const goToOrders = () => {
-    (isGuest) ? navigate('InviteSignUp') : navigate('MyOrders');
-  }
+    isGuest ? navigate('InviteSignUp') : navigate('MyOrders');
+  };
 
   /**
    * Load Invocing Profile List and store it in the redux store.
@@ -272,6 +273,7 @@ const HomeController: React.FC = () => {
 
   const markAsSeenCarousel = () => {
     setModVisibility(false);
+    setShowShippingDropDown(true);
     dispatch(setSeenCarousel(true));
   };
 
@@ -293,6 +295,7 @@ const HomeController: React.FC = () => {
         onPressShopCart={goToShopCart}
         defaultAddress={defaultAddress!}
         onPressProducts={goToOrders}
+        showShippingDropDown={showShippingDropDown}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
