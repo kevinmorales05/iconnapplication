@@ -43,7 +43,8 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
           style={{
             ...containerStyle,
             paddingBottom: insets.bottom + 16,
-            backgroundColor: theme.brandColor.iconn_white
+            backgroundColor: theme.brandColor.iconn_white,
+            height: '90%'
           }}
         >
           <Container row space="between" style={{ marginTop: 16, marginBottom: 16 }}>
@@ -68,7 +69,7 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
           >
-            <Container flex>
+            <Container flex space={addresses.length === 0 ? 'evenly' : undefined}>
               {!isOnline ? (
                 <InfoCard text={`No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.`} />
               ) : addresses.length === 0 ? (
@@ -97,7 +98,7 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
                   .sort(order)
               )}
             </Container>
-            <Container flex row center crossCenter style={{ marginTop: 24 }}>
+            <Container flex row center crossCenter style={{ marginTop: 24, alignItems: 'flex-end' }}>
               <Image source={ICONN_HOME_LOCATION} style={{ width: 24, height: 24 }} />
               <TouchableText
                 underline

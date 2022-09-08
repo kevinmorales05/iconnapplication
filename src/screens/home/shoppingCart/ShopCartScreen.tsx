@@ -64,14 +64,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           {
             "id": item.id,
             "quantity": item.quantity,
-            "seller": "1"
+            "seller": "1",
+            "index":itemIndex
           }
         ]
       }
 
-      if(item.quantity==0){
-        request.orderItems[0].index=itemIndex;
-      }
       try {
         updateShoppingCart(orderFormId, request);
       } catch (error) {
@@ -103,10 +101,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       <Container space='between' crossCenter row circle style={{
         borderStartWidth: 1, borderLeftColor: theme.brandColor.iconn_grey,
         borderEndWidth: 1, borderRightColor: theme.brandColor.iconn_grey, borderTopWidth: 1, borderTopColor: theme.brandColor.iconn_grey,
-        borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_grey, width:90, height:41
+        borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_grey, width:130, height:37
       }}>
                 <Button
-                  fontSize="h5"
+                  fontSize="h6"
                   size="small"
                   transparent="true"
                   fontBold="true"
@@ -126,7 +124,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           </Container>
         </Container>
                 <Button
-                  fontSize="h5"
+                  fontSize="h6"
                   size="small"
                   transparent="true"
                   onPress={addItem}
@@ -263,9 +261,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     return (
       <Container row style={{ marginLeft: 16, marginRight: 16, marginTop: 9, marginBottom: 0, height: 110, backgroundColor: theme.brandColor.iconn_white }}>
         <Container>
-          <Image source={{uri:value.imageUrl}} style={{ marginTop: 10, width: 100, height: 88 }} />
+          <Image source={{uri:value.imageUrl}} style={{ marginTop: 10, width: 90, height: 88 }} />
         </Container>
         <Container>
+          <Container style={{ marginTop: 10, width: 90, height: 55 }} >
           <Container row crossCenter space='between'>
             <Text numberOfLines={3} style={{ width: 175, color: 'black'}}>
             {value.name}
@@ -276,6 +275,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           <Text numberOfLines={1} style={{ width: 120, color: 'grey' }}>
           {"$" + value.price + " c/u"}
           </Text>
+          </Container>
           </Container>
           <Container row space='between'>
             <Button fontSize="h6"
@@ -348,7 +348,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       <Container row space='between' style={{ marginTop: 34, marginBottom:10 }}>
         <CustomText text=''></CustomText>
         <CustomText text='Mi canasta' fontBold></CustomText>
-        <Button fontSize="h6" transparent="true" size='ssmall' color="iconn_black_original" marginLeft={40}>X</Button>
+        <Button fontSize="h6" transparent="true" size='ssmall' color="iconn_black_original" marginLeft={40} onPress={onPressMyAccount}>X</Button>
       </Container>
       <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_light_grey }}>
         <ScrollView bounces={false}

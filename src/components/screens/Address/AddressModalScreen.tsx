@@ -20,9 +20,22 @@ interface Props {
   onPressFindPostalCodeInfo: (postalCode: string) => void;
   onSubmit: (address: FieldValues) => void;
   onPressClose: () => void;
+  postalCodeError: string;
+  setPostalCodeError: (err: string) => void;
 }
 
-const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address, mode, title, onPressFindPostalCodeInfo, onSubmit, onPressClose }) => {
+const AddressModalScreen: React.FC<Props> = ({
+  visible,
+  postalCodeInfo,
+  address,
+  mode,
+  title,
+  onPressFindPostalCodeInfo,
+  onSubmit,
+  onPressClose,
+  postalCodeError,
+  setPostalCodeError
+}) => {
   const {
     control,
     handleSubmit,
@@ -97,6 +110,7 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
   }, []);
 
   const validateChangesOnPostalCode = (newPostalCode: string) => {
+    setPostalCodeError('');
     if (mode === 'update' && newPostalCode !== address.postalCode) setPostalCodeChanged(true);
   };
 
@@ -154,7 +168,7 @@ const AddressModalScreen: React.FC<Props> = ({ visible, postalCodeInfo, address,
                       numeric
                       onSubmitEditing={() => streetRef.current?.focus()}
                       rules={numericWithSpecificLenght(5)}
-                      error={errors.postalCode}
+                      error={errors.postalCode?.message || postalCodeError}
                       onChangeText={postalCodeValue => validateChangesOnPostalCode(postalCodeValue)}
                     />
                   </Container>
@@ -283,7 +297,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     width: '100%',
-    padding: 16
+    padding: 16,
+    maxHeight: '80%'
   }
 });
 

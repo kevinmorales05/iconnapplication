@@ -1,5 +1,5 @@
-import React from 'react';
-import { ScrollView, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
 import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
@@ -9,6 +9,10 @@ import { useLoading } from 'context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import Geolocation from 'react-native-geolocation-service';
+import sellers from 'assets/files/sellers.json';
+
+import { RootState, setDefaultSeller, useAppDispatch, useAppSelector } from 'rtk';
 
 const PostalCodeScreen = () => {
   const {
@@ -21,6 +25,19 @@ const PostalCodeScreen = () => {
   });
   const loader = useLoading();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const [position, setPosition] = useState<null | Geolocation.GeoPosition>(null);
+  const dispatch = useAppDispatch();
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
+
+  useEffect(() => {
+    if (position) {
+      navigate('Home');
+    }
+  }, [position]);
+
+  useEffect(() => {
+    console.log('defaultSeller:', defaultSeller);
+  }, [defaultSeller]);
 
   async function stall(stallTime = 1000) {
     await new Promise(resolve => setTimeout(resolve, stallTime));
@@ -34,6 +51,103 @@ const PostalCodeScreen = () => {
     navigate('Home');
 
     loader.hide();
+  };
+
+  const hasPermissionIOS = async () => {
+    const openSetting = () => {
+      Linking.openSettings().catch(() => {
+        Alert.alert('Unable to open settings');
+      });
+    };
+    const status = await Geolocation.requestAuthorization('whenInUse');
+
+    if (status === 'granted') {
+      return true;
+    }
+
+    if (status === 'denied') {
+      Alert.alert('Location permission denied');
+    }
+
+    if (status === 'disabled') {
+      Alert.alert(`Turn on Location Services to allow "${appConfig.displayName}" to determine your location.`, '', [
+        { text: 'Go to Settings', onPress: openSetting },
+        { text: "Don't Use Location", onPress: () => {} }
+      ]);
+    }
+
+    return false;
+  };
+
+  const hasLocationPermission = async () => {
+    if (Platform.OS === 'ios') {
+      const hasPermission = await hasPermissionIOS();
+      return hasPermission;
+    }
+
+    if (Platform.OS === 'android' && Platform.Version < 23) {
+      return true;
+    }
+
+    const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+
+    if (hasPermission) {
+      return true;
+    }
+
+    const status = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+
+    if (status === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    }
+
+    if (status === PermissionsAndroid.RESULTS.DENIED) {
+      ToastAndroid.show('Location permission denied by user.', ToastAndroid.LONG);
+    } else if (status === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+      ToastAndroid.show('Location permission revoked by user.', ToastAndroid.LONG);
+    }
+
+    return false;
+  };
+
+  const getLocation = async () => {
+    const hasPermission = await hasLocationPermission();
+
+    if (!hasPermission) {
+      return;
+    }
+
+    loader.show();
+    Geolocation.getCurrentPosition(
+      position => {
+        loader.hide();
+        setPosition(position);
+        console.log(position);
+      },
+      error => {
+        loader.hide();
+        Alert.alert(`Code ${error.code}`, error.message);
+        setPosition(null);
+        console.log(error);
+      },
+      {
+        accuracy: {
+          android: 'high',
+          ios: 'best'
+        },
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 10000,
+        distanceFilter: 0,
+        forceRequestLocation: true,
+        forceLocationManager: true,
+        showLocationDialog: true
+      }
+    );
+  };
+
+  const handleGeolocation = async () => {
+    getLocation();
   };
 
   return (
@@ -56,6 +170,24 @@ const PostalCodeScreen = () => {
             minLength: {
               value: 5,
               message: `Mínimo 5 valores`
+            },
+            validate: (value: string) => {
+              if (value.length === 5) {
+                const input = Number(value);
+
+                const found = sellers.find(item => {
+                  const current = Number(item['Código postal']);
+                  return current === input;
+                });
+                if (found) {
+                  dispatch(setDefaultSeller({ defaultSeller: found }));
+                }
+                if (!found) {
+                  return 'Código Postal no encontrado';
+                }
+              }
+
+              return true;
             }
           }}
           name="postalCode"
@@ -83,12 +215,14 @@ const PostalCodeScreen = () => {
       >
         Buscar
       </Button>
-      <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 25 }}>
-        <Image source={ICONN_PIN_LOCATION} />
-        <Container style={{ marginLeft: 10 }}>
-          <CustomText text={'Usar mi ubicación actual'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+      <Touchable onPress={handleGeolocation}>
+        <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 25 }}>
+          <Image source={ICONN_PIN_LOCATION} />
+          <Container style={{ marginLeft: 10 }}>
+            <CustomText text={'Usar mi ubicación actual'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+          </Container>
         </Container>
-      </Container>
+      </Touchable>
     </ScrollView>
   );
 };

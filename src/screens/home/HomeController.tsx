@@ -144,6 +144,7 @@ const HomeController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const loader = useLoading();
   const [addressModalSelectionVisible, setAddressModalSelectionVisible] = useState(false);
+  const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
 
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
@@ -224,7 +225,9 @@ const HomeController: React.FC = () => {
     modalScreenTitle,
     fetchAddressByPostalCode,
     onSubmit,
-    onPressCloseModalScreen
+    onPressCloseModalScreen,
+    postalCodeError,
+    setPostalCodeError
   } = useAddresses();
 
   const onPressCloseAddressModalSelection = () => {
@@ -245,8 +248,22 @@ const HomeController: React.FC = () => {
     dispatch(setAddressDefault(position));
   };
 
+  useEffect(() => {
+    setDefaultAddress(
+      user.addresses.find(item => {
+        return item.isDefault === true;
+      }) ?? null
+    );
+  }, [user.addresses]);
+
   return (
-    <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }}  topSafeArea={false} bottomSafeArea={false} backgroundColor={theme.brandColor.iconn_background} barStyle="dark">
+    <SafeArea
+      childrenContainerStyle={{ paddingHorizontal: 0 }}
+      topSafeArea={false}
+      bottomSafeArea={false}
+      backgroundColor={theme.brandColor.iconn_background}
+      barStyle="dark"
+    >
       <HomeScreen
         name={user.name}
         email={user.email}
@@ -256,6 +273,7 @@ const HomeController: React.FC = () => {
         onPressAddNewAddress={onPressAddNewAddress}
         onPressShowAddressesModal={() => setAddressModalSelectionVisible(true)}
         onPressShopCart={goToShopCart}
+        defaultAddress={defaultAddress!}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
@@ -312,6 +330,8 @@ const HomeController: React.FC = () => {
         onPressFindPostalCodeInfo={fetchAddressByPostalCode}
         onSubmit={onSubmit}
         onPressClose={onPressCloseModalScreen}
+        postalCodeError={postalCodeError}
+        setPostalCodeError={setPostalCodeError}
       />
     </SafeArea>
   );
