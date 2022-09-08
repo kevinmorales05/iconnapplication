@@ -23,6 +23,7 @@ export const useAddresses = () => {
   const [postalCodeInfo, setPostalCodeInfo] = useState<PostalCodeInfo | null>();
   const [position, setPosition] = useState<number | null>();
   const [IDToUpdate, setIDToUpdate] = useState<string | null>();
+  const [postalCodeError, setPostalCodeError] = useState('');
 
   useEffect(() => {
     if (loading === false) {
@@ -38,20 +39,8 @@ export const useAddresses = () => {
     const data = await dispatch(getAddressByPostalCodeThunk(postalCode)).unwrap();
     const { state, city } = data;
     if (state === '' || city === '') {
-      setAddressModalScreenVisible(false);
-      alert.show(
-        {
-          title: 'Validación fallida',
-          message: `El código postal no se\npudo validar.`,
-          cancelTitle: 'Entendido',
-          onCancel() {
-            alert.hide();
-            setAddressModalScreenVisible(true);
-          }
-        },
-        'error',
-        false
-      );
+      toast.show({ message: `El código postal no se\n pudo validar.`, type: 'error' });
+      setPostalCodeError('Código no encontrado.');
     }
     setPostalCodeInfo(data);
   }, []);
@@ -185,6 +174,8 @@ export const useAddresses = () => {
     modalScreenTitle,
     fetchAddressByPostalCode,
     onSubmit,
-    onPressCloseModalScreen
+    onPressCloseModalScreen,
+    postalCodeError,
+    setPostalCodeError
   };
 };

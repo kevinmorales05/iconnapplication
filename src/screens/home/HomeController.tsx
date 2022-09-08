@@ -225,7 +225,9 @@ const HomeController: React.FC = () => {
     modalScreenTitle,
     fetchAddressByPostalCode,
     onSubmit,
-    onPressCloseModalScreen
+    onPressCloseModalScreen,
+    postalCodeError,
+    setPostalCodeError
   } = useAddresses();
 
   const onPressCloseAddressModalSelection = () => {
@@ -328,6 +330,8 @@ const HomeController: React.FC = () => {
         onPressFindPostalCodeInfo={fetchAddressByPostalCode}
         onSubmit={onSubmit}
         onPressClose={onPressCloseModalScreen}
+        postalCodeError={postalCodeError}
+        setPostalCodeError={setPostalCodeError}
       />
     </SafeArea>
   );
