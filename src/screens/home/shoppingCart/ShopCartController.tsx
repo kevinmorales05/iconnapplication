@@ -67,7 +67,7 @@ const ShopCartController: React.FC = () => {
   };
 
   const goToMyAccount = () => {
-   (isGuest) ? navigate('InviteSignUp') : navigate('Mi Cuenta');
+    navigate('Home');
   }
   const goToInvoice = () => {
     (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
@@ -120,8 +120,9 @@ const ShopCartController: React.FC = () => {
     <SafeArea
       topSafeArea={false}
       bottomSafeArea={false}
-      backgroundColor={theme.brandColor.iconn_background}
+      backgroundColor={theme.brandColor.iconn_white}
       barStyle="dark"
+      css={styles.backgroundImage}
     >
       <ShopCartScreen
         productsss={prod}
@@ -135,8 +136,10 @@ const ShopCartController: React.FC = () => {
 
 const styles = StyleSheet.create({
   backgroundImage: {
+    width: '100%',
     flex: 1,
-    resizeMode: 'cover'
+    marginHorizontal: 0,
+    paddingHorizontal: 0,
   },
   modalBackground: {
     justifyContent: 'space-evenly',
