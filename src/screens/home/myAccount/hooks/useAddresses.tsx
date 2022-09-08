@@ -36,6 +36,23 @@ export const useAddresses = () => {
 
   const fetchAddressByPostalCode = useCallback(async (postalCode: string) => {
     const data = await dispatch(getAddressByPostalCodeThunk(postalCode)).unwrap();
+    const { state, city } = data;
+    if (state === '' || city === '') {
+      setAddressModalScreenVisible(false);
+      alert.show(
+        {
+          title: 'Validación fallida',
+          message: `El código postal no se\npudo validar.`,
+          cancelTitle: 'Entendido',
+          onCancel() {
+            alert.hide();
+            setAddressModalScreenVisible(true);
+          }
+        },
+        'error',
+        false
+      );
+    }
     setPostalCodeInfo(data);
   }, []);
 
