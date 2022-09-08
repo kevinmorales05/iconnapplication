@@ -273,10 +273,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <Text numberOfLines={3} style={{ width: 175, color: 'black'}}>
             {value.name}
           </Text>
-            <TextContainer text={"$" + (value.priceDefinition.total).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} fontBold marginLeft={10}></TextContainer>
+            <TextContainer text={"$" + ((value.priceDefinition.total)/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} fontBold marginLeft={1}></TextContainer>
           </Container>
           <Container>
-          <TextContainer numberOfLines={1} text={"$" + (value.price).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + " c/u"} textColor= 'grey' fontSize={12} marginTop={4}>
+          <TextContainer numberOfLines={1} text={"$" + ((value.price)/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + " c/u"} textColor= 'grey' fontSize={12} marginTop={4}>
           </TextContainer>
           </Container>
           </Container>
@@ -335,7 +335,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     <Container style={{ paddingLeft: 10, width: 280 }}>
       <Container row space="between" style={{marginTop: 8}} >
         <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
-        <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?(itemsReceived.totalizers[0].value).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'):"10"): "10") + ' MXN'} fontSize={18} fontBold></CustomText>
+        <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?((itemsReceived.totalizers[0].value)/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'):"10"): "10") + ' MXN'} fontSize={18} fontBold></CustomText>
       </Container>
       <Container center>
       <Button length="long" fontSize="h5" round marginTop={25} fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height:50 }}>
