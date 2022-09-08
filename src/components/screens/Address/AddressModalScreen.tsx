@@ -265,7 +265,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   blurOnSubmit={true}
                   marginTop={21}
                   ref={tagRef}
-                  label="Etiqueta (opcional)"
+                  label="Etiqueta"
                   boldLabel
                   maxLength={150}
                   rules={openField(3)}

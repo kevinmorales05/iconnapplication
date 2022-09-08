@@ -39,7 +39,6 @@ export const useAddresses = () => {
     const data = await dispatch(getAddressByPostalCodeThunk(postalCode)).unwrap();
     const { state, city } = data;
     if (state === '' || city === '') {
-      toast.show({ message: `El código postal no se\n pudo validar.`, type: 'error' });
       setPostalCodeError('Código no encontrado.');
     }
     setPostalCodeInfo(data);
