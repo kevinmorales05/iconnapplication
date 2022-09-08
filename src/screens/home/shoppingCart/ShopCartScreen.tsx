@@ -64,14 +64,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           {
             "id": item.id,
             "quantity": item.quantity,
-            "seller": "1"
+            "seller": "1",
+            "index":itemIndex
           }
         ]
       }
 
-      if(item.quantity==0){
-        request.orderItems[0].index=itemIndex;
-      }
       try {
         updateShoppingCart(orderFormId, request);
       } catch (error) {
