@@ -67,7 +67,7 @@ const ShopCartController: React.FC = () => {
   };
 
   const goToMyAccount = () => {
-    navigate('Home');
+   navigate('Home');
   }
   const goToInvoice = () => {
     (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
@@ -159,5 +159,6 @@ const styles = StyleSheet.create({
     padding: 8
   }
 });
+
 
 export default ShopCartController;

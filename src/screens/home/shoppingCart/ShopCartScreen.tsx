@@ -17,7 +17,9 @@ import { Image, StyleProp, ViewStyle } from 'react-native';
 import { text } from '@storybook/addon-knobs';
 import { getShoppingCart, emptyShoppingCar, updateShoppingCart } from 'services/vtexShoppingCar.services';
 import items from 'assets/files/sellers.json';
-import Icon from 'react-native-vector-icons/AntDesign'
+import Icon from 'react-native-vector-icons/AntDesign';
+import IconO from 'react-native-vector-icons/FontAwesome5'
+
 
 interface Props {
   onPressInvoice: () => void;
@@ -112,34 +114,27 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         borderEndWidth: 1, borderRightColor: theme.brandColor.iconn_grey, borderTopWidth: 1, borderTopColor: theme.brandColor.iconn_grey,
         borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_grey, width:130, height:37
       }}>
-                <Button
-                  fontSize="h6"
-                  size="small"
-                  transparent="true"
-                  fontBold="true"
-                  onPress={deleteItem}
-                >
-                  -
-                </Button>
+          <Container style={{marginLeft: 13}}>
+          <Touchable onPress={addItem}>
+          <IconO name="minus" size={14} color={theme.brandColor.iconn_green_original} />
+          </Touchable>
+        </Container>
         <Container>
           <Container>
             <CustomText text='' fontSize={7}></CustomText>
           </Container>
           <Container>
-            <TextContainer text={item.quantity} textAlign='auto' fontSize={11}></TextContainer>
+            <TextContainer text={item.quantity} textAlign='auto' fontSize={14}></TextContainer>
           </Container>
           <Container>
             <CustomText text='' fontSize={7}></CustomText>
           </Container>
         </Container>
-                <Button
-                  fontSize="h6"
-                  size="small"
-                  transparent="true"
-                  onPress={addItem}
-                >
-                  +
-                </Button>
+        <Container style={{marginRight: 13}}>
+          <Touchable onPress={addItem}>
+          <IconO name="plus" size={14} color={theme.brandColor.iconn_green_original} />
+          </Touchable>
+        </Container>
       </Container>
     );
   };
@@ -223,7 +218,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             }
           )
         }
-            <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
+      <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
         <TextContainer textColor={theme.brandColor.iconn_grey} text='Artículos sujetos a disponibilidad en tienda. Los precios publicados pueden ser distintos a los señalizados en las tiendas.' fontSize={12} marginTop={24} textAlign='justify' marginBottom={8}>
         </TextContainer>
         <Container style={{
@@ -235,7 +230,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             fontSize="h5"
             length="long"
             leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} />}
-            color='iconn_grey'
+            color= 'iconn_grey'
             onPress={emptyShoppingCart}
           >
             Vaciar canasta
@@ -335,12 +330,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   );
 
   const fullCartFooter = (
-    <Container style={{ paddingLeft: 10, width: 280 }}>
-      <Container row space="between" style={{marginTop: 8}}>
-        <TextContainer text="Subtotal:" fontSize={14}></TextContainer>
-        <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?itemsReceived.totalizers[0].value:"10"): "10")+ ' MXN'} fontSize={18} fontBold></CustomText>
+    <Container style={{ paddingLeft: 10, width: 350 }}>
+      <Container row space="between" style={{marginTop: 8}} >
+        <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
+        <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?itemsReceived.totalizers[0].value:"10"): "10") + ' MXN'} fontSize={18} fontBold></CustomText>
       </Container>
-      <Button length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount}>
+      <Button color='iconn_green_original' length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount}>
         Continuar
       </Button>
     </Container>
@@ -352,12 +347,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   return (
     <Container flex crossCenter center style={{ marginTop: 40, backgroundColor: theme.fontColor.white, width: '100%' }}>
-      <Container row style={{ marginTop: 34, marginBottom:10}}>
+      <Container row style={{ marginTop: 5, marginBottom:10}}>
         <CustomText text=''></CustomText>
         <TextContainer text='Mi canasta' fontSize={18} fontBold></TextContainer>
-        <Container style={{position: 'absolute', left: '50%' }}> 
+        <Container style={{position: 'absolute', left: '55%' }}> 
         <Touchable onPress={onPressMyAccount} >
-        <Icon name='close' size={20} /> 
+        <Icon name='close' size={20} />
         </Touchable>  
         </Container>
      </Container>
