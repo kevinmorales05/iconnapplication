@@ -4,6 +4,17 @@ import { LengthType } from '../components/types/length-type';
 import { SizeType } from '../components/types/size-type';
 
 /**
+ * Function to create a shoppingCart
+ */
+ async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
+  console.log('***************************************');
+    const response = await ShoppingCar.getInstance().getRequest(``);
+    if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
+    const { data } = response;
+    return data;
+  }
+
+/**
  * Function to get shoppingCartById
  * shoppingCartId is the shopping cart identifier.
  */
@@ -48,6 +59,7 @@ import { SizeType } from '../components/types/size-type';
 }
   
 export {
+  getCurrentShoppingCartOrCreateNewOne,
   getShoppingCart,
   updateShoppingCart,
   emptyShoppingCar
