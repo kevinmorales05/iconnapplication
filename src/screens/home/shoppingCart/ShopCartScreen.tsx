@@ -32,8 +32,7 @@ interface Props {
 
 const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, onPressDeleteItem, onPressAddItem, productsss }) => {
   const insets = useSafeAreaInsets();
-  const isEmpty = false;
-
+  let isEmpty = true;
   console.log('------------------');
   console.log(productsss);
   let itemsReceived = null;
@@ -50,6 +49,15 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     itemsReceived = arrayValues[2];
     console.log('.............');
     console.log(itemsReceived);
+    if (itemsReceived) {
+      if (itemsReceived.items) {
+        const tam = Object.values(itemsReceived.items).length;
+        console.log('tamaño: ', tam);
+        if(tam > 0){
+          isEmpty = false;
+        }
+      }
+    }
     console.log('.............');
   }
   console.log('------------------');
@@ -293,6 +301,21 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     );
   };
 
+  const fullCart = (<Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background}}>
+  <ScrollView bounces={false}
+    style={{ flex: 1, marginTop: 0, width:'110%'}}
+    contentContainerStyle={{
+      flexGrow: 1,
+      paddingBottom: insets.bottom + 1,
+      backgroundColor: theme.brandColor.iconn_background
+    }}
+    keyboardShouldPersistTaps="handled"
+    showsVerticalScrollIndicator={false}>
+    <ItemsList itemss={itemsReceived} />
+  </ScrollView>
+</Container>
+);
+
   const emptyCart = (
     <Container flex>
       <Container flex crossCenter>
@@ -325,24 +348,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
 
   const cartFooter = isEmpty ? emptyCartFooter : fullCartFooter;
-
-/*
-  const [prod, setProd] = useState(Object);
-  useEffect(() => {
-    (async () => {
-      try {
-        console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-        const data = await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9');
-        console.log(Object.values(data.items));
-        console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-        setProd(data);
-      } catch (error) {
-        setProd(null);
-      } finally {
-        setProd(null);
-      }
-    })();
-  }, []);*/
+  const cart = isEmpty ? emptyCart : fullCart;
 
   return (
     <Container flex crossCenter center style={{ marginTop: 40, backgroundColor: theme.fontColor.white, width: '100%' }}>
@@ -355,19 +361,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         </Touchable>  
         </Container>
      </Container>
-      <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background}}>
-        <ScrollView bounces={false}
-          style={{ flex: 1, marginTop: 0, width:'110%'}}
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingBottom: insets.bottom + 1,
-            backgroundColor: theme.brandColor.iconn_background
-          }}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}>
-          <ItemsList itemss={itemsReceived} />
-        </ScrollView>
-      </Container>
+     {cart}
       <View style={styles.footer}>{cartFooter}</View>
     </Container>
   );
