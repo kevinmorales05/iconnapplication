@@ -20,6 +20,7 @@ export interface AuthDataInterface {
   password?: string;
   new_password?: string;
   addresses: Address[];
+  seenCarousel: boolean;
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';

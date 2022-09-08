@@ -25,7 +25,8 @@ const initialState: AuthDataInterface = {
   termsAndConditions: false,
   isLogged: false,
   sign_app_modes_id: undefined,
-  addresses: []
+  addresses: [],
+  seenCarousel: false
 };
 
 const authSlice = createSlice({
@@ -96,6 +97,9 @@ const authSlice = createSlice({
     setAddressDefault(state, action: PayloadAction<number>) {
       state.user.addresses.map(x => (x.isDefault = false));
       state.user.addresses[action.payload].isDefault = true;
+    },
+    setSeenCarousel(state, action: PayloadAction<boolean>) {
+      state.user.seenCarousel = action.payload;
     }
   },
   extraReducers: builder => {
@@ -238,6 +242,7 @@ export const {
   addAddressToList,
   deleteAddressFromList,
   replaceAddressFromList,
-  setAddressDefault
+  setAddressDefault,
+  setSeenCarousel
 } = authSlice.actions;
 export default authSlice.reducer;

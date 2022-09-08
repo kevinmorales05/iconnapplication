@@ -3,7 +3,17 @@ import React, { Component, useCallback, useEffect, useState } from 'react';
 import { Dimensions, Image, ImageSourcePropType, Pressable, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, Address, setAddressDefault } from 'rtk';
+import {
+  RootState,
+  useAppSelector,
+  useAppDispatch,
+  setAppInitialState,
+  setAuthInitialState,
+  setGuestInitialState,
+  Address,
+  setAddressDefault,
+  setSeenCarousel
+} from 'rtk';
 import HomeScreen from './HomeScreen';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -138,7 +148,7 @@ const HomeController: React.FC = () => {
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
   const { isGuest } = guestLogged;
   const { isLogged } = userLogged;
-  const modVis = isLogged ? false : false; // TODO: don't forget revert this to show carrusel...
+  const modVis = isLogged && !userLogged.seenCarousel ? true : false; // TODO: don't forget revert this to show carrusel...
   const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -256,6 +266,11 @@ const HomeController: React.FC = () => {
     );
   }, [user.addresses]);
 
+  const markAsSeenCarousel = () => {
+    setModVisibility(false);
+    dispatch(setSeenCarousel(true));
+  };
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -266,7 +281,6 @@ const HomeController: React.FC = () => {
     >
       <HomeScreen
         name={user.name}
-        email={user.email}
         onPressLogOut={logOut}
         onPressMyAccount={goToMyAccount}
         onPressInvoice={goToInvoice}
@@ -277,7 +291,7 @@ const HomeController: React.FC = () => {
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
-          <Pressable style={{ alignSelf: 'flex-end' }} onPress={() => setModVisibility(false)}>
+          <Pressable style={{ alignSelf: 'flex-end' }} onPress={markAsSeenCarousel}>
             <Container circle style={styles.iconContainer}>
               <Icon name="window-close" size={20} />
             </Container>
@@ -296,7 +310,7 @@ const HomeController: React.FC = () => {
               borderRadius: 16
             }}
           >
-            <Pressable onPress={() => setModVisibility(false)}>
+            <Pressable onPress={markAsSeenCarousel}>
               <TextContainer
                 text="Omitir"
                 typography="link"

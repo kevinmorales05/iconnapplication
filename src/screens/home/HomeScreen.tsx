@@ -16,7 +16,6 @@ interface Props {
   onPressAddNewAddress: () => void;
   onPressLogOut: () => void;
   name?: string;
-  email?: string;
   defaultAddress: Address;
 }
 
@@ -28,7 +27,6 @@ const HomeScreen: React.FC<Props> = ({
   onPressAddNewAddress,
   onPressLogOut,
   name,
-  email,
   defaultAddress
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -85,7 +83,12 @@ const HomeScreen: React.FC<Props> = ({
       {toggle && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 60 }} />}
       {toggle && (
         <View style={{ zIndex: 2, position: 'absolute', top: 60, width: '100%' }}>
-          <ShippingDropdown onPressAddAddress={onPressAddNewAddress} onPressShowAddressesModal={onPressShowAddressesModal} address={defaultAddress} onPressToogle={() => setToggle(false)}/>
+          <ShippingDropdown
+            onPressAddAddress={onPressAddNewAddress}
+            onPressShowAddressesModal={onPressShowAddressesModal}
+            address={defaultAddress}
+            onPressToogle={() => setToggle(false)}
+          />
         </View>
       )}
     </View>
