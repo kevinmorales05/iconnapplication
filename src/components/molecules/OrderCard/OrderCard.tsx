@@ -14,9 +14,9 @@ const OrderCard = (props: OrderInterface) => {
     const { status, creationDate, orderId, totalItems, totalValue, orderIsComplete } = props;
     const newDate = ( date: string) => {
       let formatDay = new Date(date);
-      console.log('HIPOPOTAMO', date);
-      console.log('CABRAS', formatDay.getDate());
-      console.log('MONOS', formatDay);
+      //console.log('HIPOPOTAMO', date);
+      //console.log('CABRAS', formatDay.getDate());
+      //console.log('MONOS', formatDay);
       let help: string = formatDate2(formatDay).toString();
       let halp = formatDate2(formatDay);
       console.log('MANGO', halp);
@@ -25,7 +25,7 @@ const OrderCard = (props: OrderInterface) => {
       return help;
     }
     const newMoney = ( amount: number ) => {
-      return amount / 100;
+      return ((amount)/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
     }
     console.log('ESTE ES EL ORDER ID', orderId);
     console.log('ESTE ES EL ORDER ID', typeof(orderId) );

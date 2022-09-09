@@ -3,16 +3,24 @@ import { Image, StyleSheet } from 'react-native';
 import { ICONN_BASKET, ICONN_REVERSE_BASKET } from 'assets/images';
 import { Container, CustomText, Touchable } from 'components';
 import theme from 'components/theme/theme';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from '../../../navigation/types';
+
 
 const BasketCounter = () => {
   const [counter, setCounter] = useState(0);
 
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
+  const openShoppingCart = () => {
+    navigate('ShopCart');
+   }
+
   return (
     <Touchable
       onPress={() => {
-        setCounter(current => {
-          return current + 1;
-        });
+        openShoppingCart();
       }}
     >
       <Container

@@ -40,11 +40,7 @@ import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthI
 const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, onPressDeleteItem, onPressAddItem, productsss }) => {
   const insets = useSafeAreaInsets();
 
-  const { cart : dataFromCart } = useAppSelector((state: RootState) => state.cart);
-
-
-  let isEmpty = true;
-  
+  const { cart : dataFromCart } = useAppSelector((state: RootState) => state.cart);  
   const {  internetReachability } = useAppSelector((state: RootState) => state.app);
   const toast = useToast();
   const [inter, setInter] = useState(true);
@@ -70,6 +66,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     }
   }
 
+  let isEmpty = false;
   console.log('------------------');
   //console.log(productsss);
   let itemsReceived = null;
@@ -355,7 +352,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   );
 
   const emptyCart = (
-    <Container flex>
+    <Container flex >
       <Container flex crossCenter>
         <Image source={ICONN_SHOPPING_CART_BASKET} style={{ width: 40, height: 40, alignSelf: 'center' }} />
         <CustomText text="Tu canasta está vacía" textAlign="center" fontBold></CustomText>
@@ -365,7 +362,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   );
 
   const emptyCartFooter = (
-    <Container>
+    <Container style={{marginBottom:24, width:'100%'}}>
       <Button length="long" round fontSize="h3" fontBold onPress={onPressMyAccount}>
         Ver artículos
       </Button>
@@ -392,17 +389,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const cart = isEmpty ? emptyCart : fullCart;
 
   return (
-    <Container flex crossCenter center style={{ marginTop: 40, backgroundColor: theme.fontColor.white, width: '100%' }}>
-      <Container row style={{ marginTop: 34, marginBottom: 10 }}>
-        <CustomText text=""></CustomText>
-        <TextContainer text="Mi canasta" fontSize={18} fontBold></TextContainer>
-        <Container style={{ position: 'absolute', left: '50%' }}>
-          <Touchable onPress={onPressMyAccount}>
-            <Icon name="close" size={20} />
-          </Touchable>
-        </Container>
-
-     </Container>
+    <Container flex crossCenter center style={{ marginTop: 0, backgroundColor: theme.fontColor.white, width: '100%' }}>
      {inter ? (
       <>
           {cart}

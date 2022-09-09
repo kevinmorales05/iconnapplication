@@ -107,7 +107,7 @@ const HomeScreen: React.FC<Props> = ({
             Carrito de compras
           </Button>
           <Button round onPress={onPressProducts} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-            Productos
+            Pedidos
           </Button>
           <Button
             round
