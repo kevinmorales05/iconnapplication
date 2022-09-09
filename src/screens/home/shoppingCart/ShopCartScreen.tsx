@@ -40,11 +40,7 @@ import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthI
 const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, onPressDeleteItem, onPressAddItem, productsss }) => {
   const insets = useSafeAreaInsets();
 
-  const { cart : dataFromCart } = useAppSelector((state: RootState) => state.cart);
-
-
-  let isEmpty = true;
-  
+  const { cart : dataFromCart } = useAppSelector((state: RootState) => state.cart);  
   const {  internetReachability } = useAppSelector((state: RootState) => state.app);
   const toast = useToast();
   const [inter, setInter] = useState(true);
@@ -70,6 +66,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     }
   }
 
+  let isEmpty = false;
   console.log('------------------');
   //console.log(productsss);
   let itemsReceived = null;
