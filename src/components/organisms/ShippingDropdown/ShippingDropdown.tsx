@@ -89,7 +89,7 @@ const DefaultSeller = ({ onPress }: { onPress: () => void }) => {
                       <CustomText text={defaultSeller.Tienda as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
                     </Container>
                   </Container>
-                  <Container style={{ flexDirection: 'row', marginVertical: 5 }}>
+                  <Container style={{ flexDirection: 'row', marginVertical: 5, paddingRight: 30 }}>
                     <CustomText lineHeight={22} fontSize={16} text={`${defaultSeller.Domicilio} `} />
                   </Container>
                 </Container>
