@@ -22,6 +22,10 @@ import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { setInvoicingInitialState, setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
 import { getShoppingCart, emptyShoppingCar, updateShoppingCart } from 'services/vtexShoppingCar.services';
 
+//import cart slice 
+import {getShoppingCartThunk} from 'rtk/thunks/vtex-shoppingCart.thunks'
+
+
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
 
@@ -42,6 +46,8 @@ const ShopCartController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
   const {guest : guestLogged} = useAppSelector((state: RootState) => state.guest);
+  const { cart : dataFromCart } = useAppSelector((state: RootState) => state.cart);
+
   const { isGuest } = guestLogged;  const { isLogged } = userLogged;
   const modVis = (isLogged) ? true : false;
   const [modVisibility, setModVisibility] = useState(modVis);
@@ -73,48 +79,59 @@ const ShopCartController: React.FC = () => {
     (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
   }
 
-  /**
-   * Load Invocing Profile List and store it in the redux store.
-   */
-
-   //const prod = getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9')
-   //console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-   //console.log(Object.values(prod.items));
-   //console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
 
    const [prod, setProd] = useState(Object);
-   //const [colonies, setColonies] = useState<Colony[] | null>(null);
 
+
+   const getOrders = useCallback(async () => {
+    const {list : data} = await vtexordersServices.getOrdersListByUserEmail('cristhian.mendez@citi.com.mx', 1,3);
+    console.log("ESTA ES LA DATA", JSON.stringify(data, null, 3));
+    let orderArray : OrderInterface[] = data.map((order) => {
+      return {
+      orderId: order.orderId,
+      creationDate: order.creationDate,
+      totalValue: order.totalValue,
+      status: order.status,
+      orderIsComplete: order.orderIsComplete,
+      totalItems: order.totalItems,
+      }
+    })
+  
+  }, []);
+
+const getCart = useCallback(
+  async () => {
+    try {
+      const response = await dispatch(getShoppingCartThunk('655c3cc734e34ac3a14749e39a82e8b9'));;    
+    } catch (error) {
+      console.warn(error);
+    }
+  }, []
+)
+
+
+//use call back
+   const getCart1 = async () => {
+    try {
+      const response = await dispatch(getShoppingCartThunk('655c3cc734e34ac3a14749e39a82e8b9'));;
+      //falta accion de despachar
+      
+    } catch (error) {
+      console.warn(error);
+    }
+  };
 
    useEffect(() => {
-    //dispatch(setTermsAndCond({termsAndConditions: value}));
-    //const prodLsit = getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9')
-    setProd(getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9'));
-    //setProd(prodLsit);
-    console.log('............................');
-    console.log('se imprime desde useEffect',prod);
-    console.log('............................');
-  }, [])
+    setProd(dataFromCart);
+  }, [dataFromCart])
 
-/*
   useEffect(() => {
-    (async () => {
-      try {
-        console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-        const data = await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9');
-        console.log(Object.values(data.items));
-        console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-        setProd(data);
-      } catch (error) {
-        setProd(null);
-      } finally {
-        setProd(null);
-      }
-    })();
-  }, []);*/
+    getCart();
+    console.log("data from cart", dataFromCart);
+    
+  }, [])
+  
 
-   //const deleteProd = emptyShoppingCar('655c3cc734e34ac3a14749e39a82e8b9')
-   //const updateProd = updateShoppingCart();
    
   return (
     <SafeArea
@@ -124,6 +141,7 @@ const ShopCartController: React.FC = () => {
       barStyle="dark"
       css={styles.backgroundImage}
     >
+      
       <ShopCartScreen
         productsss={prod}
         onPressLogOut={logOut}
