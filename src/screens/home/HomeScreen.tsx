@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { Image, View, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { CustomText, Button, Container, Touchable, ShippingDropdown, CustomModal } from 'components';
@@ -8,6 +8,7 @@ import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Address, RootState, useAppSelector } from 'rtk';
+import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
 
@@ -63,7 +64,8 @@ const HomeScreen: React.FC<Props> = ({
           <Container style={{ paddingVertical: 20, paddingHorizontal: 10, display: 'flex', justifyContent: 'space-between' }} row>
             {mode === null && <CustomText text={'¿Como quieres recibir tus productos?'} fontBold />}
             {defaultSeller && mode === ShippingMode.PICKUP && (
-              <Container style={{ flexDirection: 'row' }}>
+              <Container style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image style={styles.image} source={ICONN_STO} />
                 <CustomText fontSize={16} text={'Tienda: '} fontBold />
                 <Container>
                   <CustomText text={defaultSeller.Tienda as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
@@ -71,7 +73,8 @@ const HomeScreen: React.FC<Props> = ({
               </Container>
             )}
             {mode === ShippingMode.DELIVERY && (
-              <Container style={{ flexDirection: 'row' }}>
+              <Container style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Image style={styles.image} source={ICONN_STO} />
                 <CustomText fontSize={16} text={'A domicilio: '} fontBold />
                 <Container>
                   {defaultAddress ? (
@@ -139,5 +142,9 @@ const HomeScreen: React.FC<Props> = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  image: { width: 24, height: 24, marginRight: 3 }
+});
 
 export default HomeScreen;

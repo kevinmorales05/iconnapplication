@@ -60,6 +60,8 @@ import ICONN_LEFT_ARROW from './iconn-left-arrow.webp';
 import ICONN_ITEM_REFRESH from './iconn-item-refresh.webp';
 import ICONN_NO_CONNECTION_2 from './iconn-no-connection-2.webp';
 import ICONN_LOADER_ECOMMERCE from './iconn-loader-ecommerce.gif';
+import ICONN_SCOOT from './iconn-scoot.webp';
+import ICONN_STO from './iconn-sto.webp';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -123,5 +125,7 @@ export {
   ICONN_LEFT_ARROW,
   ICONN_ITEM_REFRESH,
   ICONN_NO_CONNECTION_2,
-  ICONN_LOADER_ECOMMERCE
+  ICONN_LOADER_ECOMMERCE,
+  ICONN_SCOOT,
+  ICONN_STO
 };

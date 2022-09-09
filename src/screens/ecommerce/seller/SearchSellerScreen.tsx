@@ -72,6 +72,14 @@ const SearchSellerScreen = () => {
     }
   }, [current]);
 
+  const format = (distance: number) => {
+    if (distance * 1000 < 1000) {
+      return `${(distance * 1000).toFixed(1)} m `;
+    } else {
+      return `${distance.toFixed(1)} km `;
+    }
+  };
+
   const SellerItem = ({ selected, onPress, seller }: { selected: boolean; onPress: () => void; seller: SellerInterface }) => {
     const { Tienda, distance } = seller;
 
@@ -94,11 +102,11 @@ const SearchSellerScreen = () => {
           <Container style={{ flexDirection: 'row', flex: 1 }}>
             <Container style={{ width: '100%' }}>
               <Container flex row style={{ flex: 1 }}>
-                <Container flex={3}>
+                <Container flex={3} style={{ paddingRight: 15 }}>
                   <CustomText numberOfLines={1} fontSize={16} text={Tienda as string} fontBold />
                 </Container>
                 <Container style={{ marginRight: 10 }}>
-                  <CustomText fontSize={16} text={distance ? `${(distance * 1000).toFixed(1)} m ` : ''} fontBold />
+                  <CustomText fontSize={16} text={distance ? format(distance) : ''} fontBold />
                 </Container>
               </Container>
               <Container style={{ marginVertical: 5 }}>
