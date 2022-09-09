@@ -82,7 +82,7 @@ const ShopCartController: React.FC = () => {
 
    const [prod, setProd] = useState(Object);
 
-
+/*
    const getOrders = useCallback(async () => {
     const {list : data} = await vtexordersServices.getOrdersListByUserEmail('cristhian.mendez@citi.com.mx', 1,3);
     console.log("ESTA ES LA DATA", JSON.stringify(data, null, 3));
@@ -130,8 +130,23 @@ const getCart = useCallback(
     console.log("data from cart", dataFromCart);
     setProd(dataFromCart);
     
-  }, [])
+  }, [])*/
   
+  useEffect(() => {
+    //setProd(getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9'));
+    console.log('............................');
+    console.log('se imprime desde useEffect',prod);
+    console.log('............................');
+    const fetchData = () => {
+      const data = getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9');
+      return data;
+    }
+
+    const result = fetchData()
+      .catch(console.error);
+
+    setProd(result);
+  }, [])
 
    
   return (
