@@ -19,7 +19,7 @@ const MyOrdersController: React.FC = () => {
 const getOrders = useCallback(async () => {
   const {list : data} = await vtexordersServices.getOrdersListByUserEmail('cristhian.mendez@citi.com.mx', 1,3);
   console.log("ESTA ES LA DATA", JSON.stringify(data, null, 3));
-  let orderArray : OrderInterface[] = data.map((order) => {
+  let orderArray : OrderInterface[] = data.map((order: OrderInterface) => {
     return {
     orderId: order.orderId,
     creationDate: order.creationDate,
@@ -34,32 +34,11 @@ const getOrders = useCallback(async () => {
   setLista(orderArray);
 }, []);
 
-const getOrder= async (id :string) : string => {
-  const {shippingData : data} = await vtexsingleOrdersServices.getOrderById(id);
-  const delCha = data;
-  // console.log('PAPAS', JSON.stringify(delCha, null, 3) );
-  console.log('PAPAS', delCha.logisticsInfo[1].selectedDeliveryChannel);
-  const channel: string = delCha.logisticsInfo[1].selectedDeliveryChannel;
-  console.log('CAMOTES', channel);
-  return channel;
-}
-/* const getOrder= (id : string) : string => {
-  vtexsingleOrdersServices.getOrderById(id).then((value) => {
-  const order = value;
-  console.log('PAPAS', order.shippingData.logisticsInfo[1].selectedDeliveryChannel);
-  const channel: string = order.shippingData.logisticsInfo[1].selectedDeliveryChannel;
-  console.log('CAMOTES', channel);
-  return channel;
-  });
-} */
 
 useEffect(() => {
   getOrders();
 }, [getOrders]);
 
-/* useEffect(() => {
-  if(lista) console.log('Lista dentro del USEEFFECT',lista);
-}, [lista]) */
 
 
   return (
