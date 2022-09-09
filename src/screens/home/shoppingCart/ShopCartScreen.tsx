@@ -389,7 +389,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const cart = isEmpty ? emptyCart : fullCart;
 
   return (
-    <Container flex crossCenter style={{ margin: 0, backgroundColor: theme.fontColor.medgrey, width: '100%', padding:0 }}>
+    <Container flex crossCenter center style={{ marginTop: 0, backgroundColor: theme.fontColor.white, width: '100%' }}>
      {inter ? (
       <>
           {cart}
