@@ -24,20 +24,20 @@ const SearchSellerScreen = () => {
   useEffect(() => {
     if (value) {
       if (value.length === 5) {
-        const found = items.find(item => {
+        const found = items.filter(item => {
           const code = Number(item['Código postal']);
 
           return code === Number(value);
         });
-        if (found) {
+        if (found.length > 0) {
           Geolocation.getCurrentPosition(
             position => {
               const pos = [Number(position.coords.longitude), Number(position.coords.latitude)];
 
-              setSellers(sortByDistance(pos, [found]));
+              setSellers(sortByDistance(pos, found));
             },
             error => {
-              setSellers([found]);
+              setSellers(found);
             },
             { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
           );
