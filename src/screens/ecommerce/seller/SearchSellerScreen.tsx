@@ -97,8 +97,8 @@ const SearchSellerScreen = () => {
                 <Container flex={3}>
                   <CustomText numberOfLines={1} fontSize={16} text={Tienda as string} fontBold />
                 </Container>
-                <Container flex={1}>
-                  <CustomText fontSize={16} numberOfLines={1} text={distance ? `${String(distance.toFixed(0).slice(1, 5))} m` : ''} fontBold />
+                <Container>
+                  <CustomText fontSize={16} text={distance ? `${(distance * 1000).toFixed(2)} m` : ''} fontBold />
                 </Container>
               </Container>
               <Container style={{ marginVertical: 5 }}>
