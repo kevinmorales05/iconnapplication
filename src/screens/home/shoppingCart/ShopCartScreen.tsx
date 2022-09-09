@@ -283,7 +283,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           <Container row space='around' style={{marginTop: 4}}>
             <Button fontSize="h6"
               color="iconn_red_original"
-              size="medium"
+              size="xxsmall"
               marginRight={30}
               onPress={deleteShoppingCartItem}
               transparent leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} />}>
