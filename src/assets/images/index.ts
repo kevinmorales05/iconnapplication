@@ -58,6 +58,7 @@ import ICONN_SHOPPING_BAG from './iconn-shopping-bag.webp';
 import ICONN_STORE_MODERN from './iconn-store-modern.webp';
 import ICONN_LEFT_ARROW from './iconn-left-arrow.webp';
 import ICONN_ITEM_REFRESH from './iconn-item-refresh.webp';
+import ICONN_NO_CONNECTION_2 from './iconn-no-connection-2.webp';
 
 
 export {
@@ -120,5 +121,6 @@ export {
   ICONN_SHOPPING_BAG,
   ICONN_STORE_MODERN,
   ICONN_LEFT_ARROW,
-  ICONN_ITEM_REFRESH
+  ICONN_ITEM_REFRESH,
+  ICONN_NO_CONNECTION_2
 };

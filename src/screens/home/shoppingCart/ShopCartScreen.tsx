@@ -19,6 +19,9 @@ import { getShoppingCart, emptyShoppingCar, updateShoppingCart } from 'services/
 import items from 'assets/files/sellers.json';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IconO from 'react-native-vector-icons/FontAwesome5'
+import { RootState, useAppSelector } from 'rtk';
+import { useToast } from 'context';
+import { ConnectionItem } from 'components/organisms/ConnectionItem';
 
 
 interface Props {
@@ -35,6 +38,32 @@ interface Props {
 const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, onPressDeleteItem, onPressAddItem, productsss }) => {
   const insets = useSafeAreaInsets();
   let isEmpty = true;
+  
+  const {  internetReachability } = useAppSelector((state: RootState) => state.app);
+  const toast = useToast();
+  const [inter, setInter] = useState(true);
+  useEffect(() => {
+    if (internetReachability !== 0) {
+      if (internetReachability === 1) setInter(true);
+      if (internetReachability === 2) setInter(false);
+  }
+}, [internetReachability])
+
+  function toastFunction(tag){
+    if(tag==="remove" || tag==="add"){
+      toast.show({
+        message: 'Se actualizó el artículo en la canasta.',
+        type: 'success'
+      });
+    }else{
+      toast.show({
+        message: 'Se eliminó el artículo de la canasta.',
+        type: 'success'
+      });
+
+    }
+  }
+
   console.log('------------------');
   console.log(productsss);
   let itemsReceived = null;
@@ -83,6 +112,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
       try {
         updateShoppingCart(orderFormId, request);
+        toastFunction("remove");
       } catch (error) {
         console.log(error);
       }
@@ -103,6 +133,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       }
       try {
         updateShoppingCart(orderFormId, request);
+        toastFunction("add");
       } catch (error) {
         console.log(error);
       }
@@ -257,6 +288,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       }
       try {
         updateShoppingCart('655c3cc734e34ac3a14749e39a82e8b9',request);
+        toastFunction("delete");;
       } catch (error) {
         console.log(error);
       }
@@ -360,7 +392,17 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         </Touchable>  
         </Container>
      </Container>
-     {cart}
+     {inter ? (
+      <>
+          {cart}
+      </>
+    ) : (
+      <>
+        <Container flex backgroundColor={theme.brandColor.iconn_background} style={{ width: '110%' }}>
+        <ConnectionItem></ConnectionItem>
+        </Container>
+      </>
+    )}
       {cartFooter}
     </Container>
   );
