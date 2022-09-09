@@ -13,8 +13,19 @@ import { formatDate, formatDate2 } from "utils/functions";
 const OrderCard = (props: OrderInterface) => {
     const { status, creationDate, orderId, totalItems, totalValue, orderIsComplete } = props;
     const newDate = ( date: string) => {
-      const formatDay = new Date(date);
-      return formatDate2(formatDay);
+      let formatDay = new Date(date);
+      console.log('HIPOPOTAMO', date);
+      console.log('CABRAS', formatDay.getDate());
+      console.log('MONOS', formatDay);
+      let help: string = formatDate2(formatDay).toString();
+      let halp = formatDate2(formatDay);
+      console.log('MANGO', halp);
+      help = help.replace('de', '');
+      help = help.replace(' de' ,',');
+      return help;
+    }
+    const newMoney = ( amount: number ) => {
+      return amount / 100;
     }
     console.log('ESTE ES EL ORDER ID', orderId);
     console.log('ESTE ES EL ORDER ID', typeof(orderId) );
@@ -55,36 +66,43 @@ const OrderCard = (props: OrderInterface) => {
               </Container>
                }
             </Container> 
+            <Container style={{marginLeft: 8, marginTop: 0}}>
             <TextContainer text={newDate(creationDate)} marginLeft={40} marginTop={8} fontSize={14} />
-            <TextContainer text= {"Núm. de pedido: " + orderId} marginLeft={40} marginTop={8} fontSize={12} />
+            <TextContainer text= {"Núm. de pedido: " + orderId} marginLeft={40} marginTop={4} fontSize={12} />
             <Container row>
-              <TextContainer text= {totalItems + " artículos" } marginLeft={40} marginTop={8} fontSize={12} />
+              {
+                (totalItems == 1 ) ? <TextContainer text= {totalItems + " artículo" } marginLeft={40} marginTop={8} fontSize={12} />
+                : <TextContainer text= {totalItems + " artículos" } marginLeft={40} marginTop={8} fontSize={12} />
+              }
               <Icon name="dot-single" size={10} style={{marginTop: 10, marginLeft: 1.5}} > </Icon>
-              <TextContainer text= {"Total $" + totalValue + '.00' } marginLeft={1} marginTop={8} fontSize={12} />
+              <TextContainer text= {"Total $" + newMoney(totalValue)  } marginLeft={1} marginTop={8} fontSize={12} />
             </Container>
+            </Container>
+            
             {
-              (status) ? <Container row alignment="end">
-                          <Touchable onPress={() => {}}>
-                            <Container row style={styles.contDetails}>
-                             <TextContainer text="Ver detalles" textColor={theme.brandColor.iconn_green_original} fontBold marginTop={3} marginRight={0} underline/>
-                             <Image source={ICONN_LEFT_ARROW}  style={{height: 24, width: 24}} />
-                            </Container>
-                          </Touchable>
-                        </Container> :
+              (status == 'canceled' || status == 'invoiced') ?  
                         <Container row space="between">
                         <Touchable  onPress={() => {}}>
                           <Container row style={styles.contShopAgain} >
                             <Image source={ICONN_ITEM_REFRESH} style={{height: 24, width: 24}} />
-                            <TextContainer text="Volver a comprar" marginTop={3} marginLeft={4} textColor={theme.brandColor.iconn_green_original} fontBold underline />
+                            <TextContainer text="Volver a comprar" fontSize={14} marginTop={1} marginLeft={4} textColor={theme.brandColor.iconn_green_original} fontBold underline />
                           </Container>
                         </Touchable>
                       <Touchable onPress={() => {}}>
                         <Container row style={styles.contDetails}>
-                          <TextContainer text="Ver detalles" textColor={theme.brandColor.iconn_green_original} fontBold marginTop={3} marginRight={0} underline/>
+                          <TextContainer text="Ver detalles" fontSize={14} textColor={theme.brandColor.iconn_green_original} fontBold marginTop={3} marginRight={0} underline/>
                           <Image source={ICONN_LEFT_ARROW}  style={{height: 24, width: 24}} />
                         </Container>
                       </Touchable>
                       </Container>
+                      : <Container row alignment="end">
+                      <Touchable onPress={() => {}}>
+                        <Container row style={styles.contDetails}>
+                         <TextContainer text="Ver detalles" textColor={theme.brandColor.iconn_green_original} fontBold marginTop={3} marginRight={0} underline/>
+                         <Image source={ICONN_LEFT_ARROW}  style={{height: 24, width: 24}} />
+                        </Container>
+                      </Touchable>
+                    </Container>
             }
             
         </Container>
@@ -106,16 +124,16 @@ const styles = StyleSheet.create({
     contInTransit: {
       backgroundColor: theme.brandColor.iconn_green_original,
       borderRadius: 12,
-      marginRight: 10,
+      marginRight: 4,
       marginLeft: 30,
-      marginTop: 12,
+      marginTop: 4,
     },
     contDelivered: {
       backgroundColor: theme.brandColor.iconn_med_grey,
       borderRadius: 12,
-      marginRight: 8,
+      marginRight: 4,
       marginLeft: 75,
-      marginTop: 12,
+      marginTop: 4,
     },
     contShopAgain: {
       marginLeft: 8,
