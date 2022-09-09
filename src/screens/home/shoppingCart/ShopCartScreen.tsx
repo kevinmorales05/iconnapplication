@@ -355,7 +355,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   );
 
   const emptyCart = (
-    <Container flex>
+    <Container flex >
       <Container flex crossCenter>
         <Image source={ICONN_SHOPPING_CART_BASKET} style={{ width: 40, height: 40, alignSelf: 'center' }} />
         <CustomText text="Tu canasta está vacía" textAlign="center" fontBold></CustomText>
@@ -365,7 +365,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   );
 
   const emptyCartFooter = (
-    <Container>
+    <Container style={{marginBottom:24, width:'100%'}}>
       <Button length="long" round fontSize="h3" fontBold onPress={onPressMyAccount}>
         Ver artículos
       </Button>
@@ -392,17 +392,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const cart = isEmpty ? emptyCart : fullCart;
 
   return (
-    <Container flex crossCenter center style={{ marginTop: 40, backgroundColor: theme.fontColor.white, width: '100%' }}>
-      <Container row style={{ marginTop: 34, marginBottom: 10 }}>
-        <CustomText text=""></CustomText>
-        <TextContainer text="Mi canasta" fontSize={18} fontBold></TextContainer>
-        <Container style={{ position: 'absolute', left: '50%' }}>
-          <Touchable onPress={onPressMyAccount}>
-            <Icon name="close" size={20} />
-          </Touchable>
-        </Container>
-
-     </Container>
+    <Container flex crossCenter style={{ margin: 0, backgroundColor: theme.fontColor.medgrey, width: '100%', padding:0 }}>
      {inter ? (
       <>
           {cart}

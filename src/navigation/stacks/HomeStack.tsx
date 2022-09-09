@@ -28,10 +28,24 @@ import { BasketCounter, EcommerceHeader } from 'components';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
 import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
 import MyOrdersController from 'screens/home/MyOrdersController';
+import Icon from 'react-native-vector-icons/AntDesign';
+import {Touchable} from '../../components';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-const Stack = createNativeStackNavigator<HomeStackParams>();
 
-const HomeStack: React.FC = () => (
+
+
+const HomeStack: React.FC = () => {
+  
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const Stack = createNativeStackNavigator<HomeStackParams>();
+  
+  const closeShoppingCart = () => {
+    navigate('Home');
+   }
+
+  return(
   <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="PostalCode">
     <Stack.Screen
       options={{
@@ -73,11 +87,40 @@ const HomeStack: React.FC = () => (
       name="Address"
       component={AddressesController}
     />
-    <Stack.Screen options={{ headerShown: false }} name="ShopCart" component={ShopCartController} />
+    <Stack.Screen
+      options={{
+        headerShown: true,
+        title: 'Mi Canasta',
+        headerTitleStyle: {
+          fontWeight: 'bold'
+        },
+        headerLeft: () => {
+          return <></>;
+        },
+        headerRight: () =>  <Touchable onPress={() => {
+          closeShoppingCart();
+        }}  ><Icon name="close" size={20} /></Touchable>,
+        
+        headerTitleAlign: 'center'
+      }}
+      name="ShopCart"
+      component={ShopCartController}
+    />
     <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
     <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
-    <Stack.Screen options={{ headerShown: true, title: 'Mis Pedidos' }} name="MyOrders" component={MyOrdersController} />
-  </Stack.Navigator>
-);
+    <Stack.Screen
+      options={{
+        headerShown: true,
+        title: 'Mis Pedidos',
+        headerTitleStyle: {
+          fontWeight: 'bold'
+        },
+        headerTitleAlign: 'center'
+      }}
+      name="MyOrders"
+      component={MyOrdersController}
+    />
+  </Stack.Navigator>);}
+
 
 export default HomeStack;
