@@ -19,4 +19,5 @@ export interface SellerInterface {
   Slurpee: string;
   'Bake in Store': string;
   'Pizza / Turbochef': string;
+  distance?: number;
 }

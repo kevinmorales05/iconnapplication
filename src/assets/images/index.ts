@@ -59,7 +59,7 @@ import ICONN_STORE_MODERN from './iconn-store-modern.webp';
 import ICONN_LEFT_ARROW from './iconn-left-arrow.webp';
 import ICONN_ITEM_REFRESH from './iconn-item-refresh.webp';
 import ICONN_NO_CONNECTION_2 from './iconn-no-connection-2.webp';
-
+import ICONN_LOADER_ECOMMERCE from './iconn-loader-ecommerce.gif';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -122,5 +122,6 @@ export {
   ICONN_STORE_MODERN,
   ICONN_LEFT_ARROW,
   ICONN_ITEM_REFRESH,
-  ICONN_NO_CONNECTION_2
+  ICONN_NO_CONNECTION_2,
+  ICONN_LOADER_ECOMMERCE
 };

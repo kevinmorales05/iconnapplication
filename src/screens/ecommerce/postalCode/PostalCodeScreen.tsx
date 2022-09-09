@@ -5,14 +5,18 @@ import { useForm } from 'react-hook-form';
 import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
 import { ICONN_POSTAL_CODE_HEADER_ICON, ICONN_PIN_LOCATION } from 'assets/images';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useLoading } from 'context';
+import { useLoading, useAlert } from 'context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import Geolocation from 'react-native-geolocation-service';
 import sellers from 'assets/files/sellers.json';
 
-import { RootState, setDefaultSeller, useAppDispatch, useAppSelector } from 'rtk';
+import { RootState, setAddressesList, setDefaultSeller, useAppDispatch, useAppSelector, Address } from 'rtk';
+import { sortByDistance } from 'utils/geolocation';
+
+import appConfig from '../../../../app.json';
+import items from 'assets/files/sellers.json';
 
 const PostalCodeScreen = () => {
   const {
@@ -28,9 +32,14 @@ const PostalCodeScreen = () => {
   const [position, setPosition] = useState<null | Geolocation.GeoPosition>(null);
   const dispatch = useAppDispatch();
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const alert = useAlert();
 
   useEffect(() => {
     if (position) {
+      const sorted = sortByDistance([position.coords.longitude, position.coords.latitude], sellers);
+      dispatch(setDefaultSeller({ defaultSeller: sorted[0] }));
+
       navigate('Home');
     }
   }, [position]);
@@ -66,7 +75,26 @@ const PostalCodeScreen = () => {
     }
 
     if (status === 'denied') {
-      Alert.alert('Location permission denied');
+      alert.show(
+        {
+          title: 'No se tiene acceso a localización',
+          message: 'Debes proporcionar acceso desde configuraciones',
+          acceptTitle: 'Entendido',
+          cancelTitle: 'Dar acceso',
+          cancelOutline: 'iconn_light_grey',
+          cancelTextColor: 'iconn_dark_grey',
+          async onAccept() {
+            alert.hide();
+          },
+          async onCancel() {
+            Linking.openSettings().catch(() => {
+              Alert.alert('No se pudo abrir configuraciones');
+            });
+            alert.hide();
+          }
+        },
+        'warning'
+      );
     }
 
     if (status === 'disabled') {
@@ -126,7 +154,26 @@ const PostalCodeScreen = () => {
       },
       error => {
         loader.hide();
-        Alert.alert(`Code ${error.code}`, error.message);
+        alert.show(
+          {
+            title: 'No se tiene acceso a localización',
+            message: 'Debes proporcionar acceso desde configuraciones',
+            acceptTitle: 'Entendido',
+            cancelTitle: 'Dar acceso',
+            cancelOutline: 'iconn_light_grey',
+            cancelTextColor: 'iconn_dark_grey',
+            async onAccept() {
+              alert.hide();
+            },
+            async onCancel() {
+              Linking.openSettings().catch(() => {
+                Alert.alert('No se pudo abrir configuraciones');
+              });
+              alert.hide();
+            }
+          },
+          'warning'
+        );
         setPosition(null);
         console.log(error);
       },

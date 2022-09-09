@@ -4,7 +4,7 @@ import SearchSellerScreen from 'screens/ecommerce/seller/SearchSellerScreen';
 
 const SearchSellerController: React.FC = () => {
   return (
-    <SafeArea topSafeArea={false} bottomSafeArea barStyle="dark">
+    <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
       <SearchSellerScreen />
     </SafeArea>
   );

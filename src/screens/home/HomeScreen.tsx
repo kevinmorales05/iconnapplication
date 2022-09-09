@@ -7,7 +7,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Address } from 'rtk';
+import { Address, RootState, useAppSelector } from 'rtk';
+
+import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
+
 interface Props {
   onPressMyAccount: () => void;
   onPressShopCart: () => void;
@@ -38,6 +41,14 @@ const HomeScreen: React.FC<Props> = ({
   useEffect(() => {
     setToggle(showShippingDropDown);
   }, [showShippingDropDown]);
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
+  const [mode, setMode] = useState<null | ShippingMode>(null);
+
+  useEffect(() => {
+    return () => {
+      setMode(null);
+    };
+  }, []);
 
   return (
     <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -50,7 +61,27 @@ const HomeScreen: React.FC<Props> = ({
           }}
         >
           <Container style={{ paddingVertical: 20, paddingHorizontal: 10, display: 'flex', justifyContent: 'space-between' }} row>
-            <CustomText text={'¿Como quieres recibir tus productos?'} fontBold />
+            {mode === null && <CustomText text={'¿Como quieres recibir tus productos?'} fontBold />}
+            {defaultSeller && mode === ShippingMode.PICKUP && (
+              <Container style={{ flexDirection: 'row' }}>
+                <CustomText fontSize={16} text={'Tienda: '} fontBold />
+                <Container>
+                  <CustomText text={defaultSeller.Tienda as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+                </Container>
+              </Container>
+            )}
+            {mode === ShippingMode.DELIVERY && (
+              <Container style={{ flexDirection: 'row' }}>
+                <CustomText fontSize={16} text={'A domicilio: '} fontBold />
+                <Container>
+                  {defaultAddress ? (
+                    <CustomText text={`${defaultAddress.addressName} - ${defaultAddress.city}, ${defaultAddress.street}`} fontSize={16} />
+                  ) : (
+                    <CustomText text={`Agrega dirección`} fontSize={16} />
+                  )}
+                </Container>
+              </Container>
+            )}
             {toggle ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
           </Container>
         </Touchable>
@@ -94,6 +125,10 @@ const HomeScreen: React.FC<Props> = ({
       {toggle && (
         <View style={{ zIndex: 2, position: 'absolute', top: 60, width: '100%' }}>
           <ShippingDropdown
+            mode={mode}
+            handleMode={mode => {
+              setMode(mode);
+            }}
             onPressAddAddress={onPressAddNewAddress}
             onPressShowAddressesModal={onPressShowAddressesModal}
             address={defaultAddress}
