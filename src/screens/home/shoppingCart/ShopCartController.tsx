@@ -128,6 +128,7 @@ const getCart = useCallback(
   useEffect(() => {
     getCart();
     console.log("data from cart", dataFromCart);
+    setProd(dataFromCart);
     
   }, [])
   

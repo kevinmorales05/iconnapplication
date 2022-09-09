@@ -18,6 +18,10 @@ import { text } from '@storybook/addon-knobs';
 import { getShoppingCart, emptyShoppingCar, updateShoppingCart } from 'services/vtexShoppingCar.services';
 import items from 'assets/files/sellers.json';
 import Icon from 'react-native-vector-icons/AntDesign';
+import IconO from 'react-native-vector-icons/FontAwesome5'
+import { useToast } from 'context';
+import { ConnectionItem } from 'components/organisms/ConnectionItem';
+
 
 interface Props {
   onPressInvoice: () => void;
@@ -40,6 +44,32 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
 
   let isEmpty = true;
+  
+  const {  internetReachability } = useAppSelector((state: RootState) => state.app);
+  const toast = useToast();
+  const [inter, setInter] = useState(true);
+  useEffect(() => {
+    if (internetReachability !== 0) {
+      if (internetReachability === 1) setInter(true);
+      if (internetReachability === 2) setInter(false);
+  }
+}, [internetReachability])
+
+  function toastFunction(tag){
+    if(tag==="remove" || tag==="add"){
+      toast.show({
+        message: 'Se actualizó el artículo en la canasta.',
+        type: 'success'
+      });
+    }else{
+      toast.show({
+        message: 'Se eliminó el artículo de la canasta.',
+        type: 'success'
+      });
+
+    }
+  }
+
   console.log('------------------');
   //console.log(productsss);
   let itemsReceived = null;
@@ -84,6 +114,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
       try {
         updateShoppingCart(orderFormId, request);
+        toastFunction("remove");
       } catch (error) {
         console.log(error);
       }
@@ -104,6 +135,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       };
       try {
         updateShoppingCart(orderFormId, request);
+        toastFunction("add");
       } catch (error) {
         console.log(error);
       }
@@ -247,7 +279,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         ]
       };
       try {
-        updateShoppingCart('655c3cc734e34ac3a14749e39a82e8b9', request);
+
+        updateShoppingCart('655c3cc734e34ac3a14749e39a82e8b9',request);
+        toastFunction("delete");;
+
       } catch (error) {
         console.log(error);
       }
@@ -366,9 +401,21 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <Icon name="close" size={20} />
           </Touchable>
         </Container>
-      </Container>
-      {cart}
-      <View style={styles.footer}>{cartFooter}</View>
+
+     </Container>
+     {inter ? (
+      <>
+          {cart}
+      </>
+    ) : (
+      <>
+        <Container flex backgroundColor={theme.brandColor.iconn_background} style={{ width: '110%' }}>
+        <ConnectionItem></ConnectionItem>
+        </Container>
+      </>
+    )}
+      {cartFooter}
+
     </Container>
   );
 };
