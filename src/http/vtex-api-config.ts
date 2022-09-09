@@ -1,9 +1,11 @@
 import { AxiosRequestConfig } from 'axios';
 
 // TODO: comnplete the rest of configuration, bearer token, auth headers, environment with react-native-config...
-const API_VTEX_ORDERS = 'https://oneiconn.myvtex.com/api/oms/user/orders';
+const API_VTEX_ORDERS = 'https://oneiconn.myvtex.com/api/oms/pvt/orders';
+const API_VTEX_ORDER = 'https://oneiconn.myvtex.com/api/orders/pvt';
 const API_VTEX_AUTH = '';
 const API_VTEX_SHOPPINGCAR = 'https://oneiconn.myvtex.com/api/checkout/pub/orderForm';
+const API_VTEX_PRODUCTS = 'https://oneiconn.myvtex.com/api/catalog_system/pvt/products';
 const VTEX_APPKEY = 'vtexappkey-oneiconn-SOYFEO';
 const VTEX_APPTOKEN = 'PNOSOIQKQXOYQSNSEIBGIYAWBWUWKPISEXCKGFMHMJYWKVXRQVEXRDTUSDPBTRTIEJFGLTUIVRLFTFTPGGYVAKOLCLCFYFVGYYMQJNAKMBTEAZFTORXDZWCYFALXSELQ'
 const VTEX_DOCS = 'https://oneiconn.myvtex.com/api';
@@ -13,12 +15,16 @@ const getApiUrl = (type: string) => {
   switch (type) {
     case 'orders':
       return API_VTEX_ORDERS;
+    case 'order':
+      return API_VTEX_ORDER;
     case 'auth':
       return API_VTEX_AUTH;
     case 'shoppingCar':
       return API_VTEX_SHOPPINGCAR;
     case 'docs':
       return VTEX_DOCS;
+    case 'products':
+      return API_VTEX_PRODUCTS;
     default:
       break;
   }

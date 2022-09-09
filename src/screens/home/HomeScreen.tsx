@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -15,8 +15,10 @@ interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
   onPressLogOut: () => void;
+  onPressProducts: () => void;
   name?: string;
   defaultAddress: Address;
+  showShippingDropDown?: boolean;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -27,10 +29,15 @@ const HomeScreen: React.FC<Props> = ({
   onPressAddNewAddress,
   onPressLogOut,
   name,
-  defaultAddress
+  defaultAddress,
+  onPressProducts,
+  showShippingDropDown
 }) => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(showShippingDropDown);
+
+  useEffect(() => {
+    setToggle(showShippingDropDown);
+  }, [showShippingDropDown]);
 
   return (
     <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%' }}>
@@ -67,6 +74,9 @@ const HomeScreen: React.FC<Props> = ({
           </Button>
           <Button round onPress={onPressShopCart} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Carrito de compras
+          </Button>
+          <Button round onPress={onPressProducts} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
+            Productos
           </Button>
           <Button
             round

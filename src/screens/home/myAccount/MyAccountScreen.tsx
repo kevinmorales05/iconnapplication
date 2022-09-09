@@ -109,11 +109,10 @@ export default function AccountScreen() {
             <AnnounceItem icon={<Ionicons name="megaphone-outline" size={25} color={theme.fontColor.white} />} message={'Completa tu perfil y obtén cupón'} />
           </Section>
           <Section label="Direcciones guardadas">
-            <AddressItems />
+            <AddressesItem />
           </Section>
           <Section label="Datos fiscales">
             <TaxItem />
-            <AddressesItem />
           </Section>
         </View>
       </ScrollView>

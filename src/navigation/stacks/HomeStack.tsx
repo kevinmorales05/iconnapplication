@@ -24,10 +24,10 @@ import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicin
 import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
 import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
-
 import { BasketCounter, EcommerceHeader } from 'components';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
 import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
+import MyOrdersController from 'screens/home/MyOrdersController';
 
 const Stack = createNativeStackNavigator<HomeStackParams>();
 
@@ -76,6 +76,7 @@ const HomeStack: React.FC = () => (
     <Stack.Screen options={{ headerShown: false }} name="ShopCart" component={ShopCartController} />
     <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
     <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
+    <Stack.Screen options={{ headerShown: true, title: 'Mis Pedidos' }} name="MyOrders" component={MyOrdersController} />
   </Stack.Navigator>
 );
 

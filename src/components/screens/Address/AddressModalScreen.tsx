@@ -182,6 +182,7 @@ const AddressModalScreen: React.FC<Props> = ({
                       color="iconn_med_grey"
                       fontColor="dark"
                       disabled={!!errors.postalCode?.message || getValues('postalCode')?.length === 0 || (mode === 'update' && postalCodeChanged === false)}
+                      style={errors.postalCode?.message || postalCodeError ? { marginBottom: 8 } : {}}
                     >
                       Validar
                     </Button>
@@ -264,7 +265,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   blurOnSubmit={true}
                   marginTop={21}
                   ref={tagRef}
-                  label="Etiqueta (opcional)"
+                  label="Etiqueta"
                   boldLabel
                   maxLength={150}
                   rules={openField(3)}

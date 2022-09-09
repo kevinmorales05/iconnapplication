@@ -53,6 +53,12 @@ import IMG_PRODUCT3 from './ipepsi.png';
 import IMG_PRODUCT4 from './ipepsitala.jpeg';
 import IMG_PRODUCT5 from './isabritas.jpeg';
 import ICONN_HOME_LOCATION from './iconn-home-location.png';
+import ICONN_BASKET_SHOPPING_CART from './iconn-basket-shopping-cart.webp';
+import ICONN_SHOPPING_BAG from './iconn-shopping-bag.webp';
+import ICONN_STORE_MODERN from './iconn-store-modern.webp';
+import ICONN_LEFT_ARROW from './iconn-left-arrow.webp';
+import ICONN_ITEM_REFRESH from './iconn-item-refresh.webp';
+
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -109,5 +115,10 @@ export {
   IMG_PRODUCT3,
   IMG_PRODUCT4,
   IMG_PRODUCT5,
-  ICONN_HOME_LOCATION
+  ICONN_HOME_LOCATION,
+  ICONN_BASKET_SHOPPING_CART,
+  ICONN_SHOPPING_BAG,
+  ICONN_STORE_MODERN,
+  ICONN_LEFT_ARROW,
+  ICONN_ITEM_REFRESH
 };
