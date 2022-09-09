@@ -23,42 +23,6 @@ const SearchSellerScreen = () => {
 
   useEffect(() => {
     if (value) {
-      if (value.length === 5) {
-        const found = items.filter(item => {
-          const code = Number(item['Código postal']);
-
-          return code === Number(value);
-        });
-        if (found.length > 0) {
-          Geolocation.getCurrentPosition(
-            position => {
-              const pos = [Number(position.coords.longitude), Number(position.coords.latitude)];
-
-              setSellers(sortByDistance(pos, found));
-            },
-            error => {
-              setSellers(found);
-            },
-            { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-          );
-        } else {
-          alert.show(
-            {
-              title: 'Ubicación no encontrada',
-              message: 'No pudimos encontrar la ubicación, revisa la dirección e intenta de nuevo.',
-              acceptTitle: 'Entendido',
-              cancelOutline: 'iconn_light_grey',
-              cancelTextColor: 'iconn_dark_grey',
-              async onAccept() {
-                alert.hide();
-              }
-            },
-            'error'
-          );
-
-          setSellers([]);
-        }
-      }
     }
   }, [value]);
 
@@ -220,6 +184,45 @@ const SearchSellerScreen = () => {
               if (!isNum) return;
             }
             onChangeText(text.toLowerCase());
+            if (text) {
+              if (text.length === 5) {
+                console.log('text:', text);
+                const found = items.filter(item => {
+                  const code = Number(item['Código postal']);
+
+                  return code === Number(text);
+                });
+                if (found.length > 0) {
+                  Geolocation.getCurrentPosition(
+                    position => {
+                      const pos = [Number(position.coords.longitude), Number(position.coords.latitude)];
+
+                      setSellers(sortByDistance(pos, found));
+                    },
+                    error => {
+                      setSellers(found);
+                    },
+                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                  );
+                } else {
+                  alert.show(
+                    {
+                      title: 'Ubicación no encontrada',
+                      message: 'No pudimos encontrar la ubicación, revisa la dirección e intenta de nuevo.',
+                      acceptTitle: 'Entendido',
+                      cancelOutline: 'iconn_light_grey',
+                      cancelTextColor: 'iconn_dark_grey',
+                      async onAccept() {
+                        alert.hide();
+                      }
+                    },
+                    'error'
+                  );
+
+                  setSellers([]);
+                }
+              }
+            }
           }}
           value={value}
           style={{ marginLeft: 10, width: '90%' }}
