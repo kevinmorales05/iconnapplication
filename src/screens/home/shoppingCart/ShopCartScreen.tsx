@@ -35,8 +35,6 @@ interface Props {
 
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
 
-//const [prod, setProd] = useState(Object);
-
 const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, onPressDeleteItem, onPressAddItem, productsss }) => {
   const insets = useSafeAreaInsets();
 
@@ -44,7 +42,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const {  internetReachability } = useAppSelector((state: RootState) => state.app);
   const toast = useToast();
   const [inter, setInter] = useState(true);
+
+  let isEmpty = false;
+  const [productList, setProductList] = useState(Object);
+
   useEffect(() => {
+    setProductList(productsss);
     if (internetReachability !== 0) {
       if (internetReachability === 1) setInter(true);
       if (internetReachability === 2) setInter(false);
@@ -66,24 +69,29 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     }
   }
 
-  let isEmpty = false;
-  console.log('------------------');
+  console.log('------------------ini');
   //console.log(productsss);
+  console.log('------------------fin');
   let itemsReceived = null;
-  if (productsss) {
+  console.log('------------------');
+  if (productList) {
     //const array = Object.values(productsss.items);
-    
-    const arrayValues = Object.values(productsss);
-    
-    //const itemsListRecieved = array[2];
-   
+    console.log('ssssssssss');
+    const arrayValues = Object.values(productList);
+    console.log(Object.values(productList).length);
+    //const itemsListRecieved = array[2]; 
+    console.log('ssssssssss');
+    console.log('ccccccccc');
+    console.log(arrayValues[2]);
+    console.log('ccccccc');
     itemsReceived = arrayValues[2];
-    
+    console.log('.............');
+    console.log(itemsReceived);
     if (itemsReceived) {
       if (itemsReceived.items) {
         const tam = Object.values(itemsReceived.items).length;
         console.log('tamaño: ', tam);
-        if (tam > 0) {
+        if(tam > 0){
           isEmpty = false;
         }
       }
@@ -110,7 +118,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       };
 
       try {
-        updateShoppingCart(orderFormId, request);
+        setProductList(updateShoppingCart(orderFormId, request));
         toastFunction("remove");
       } catch (error) {
         console.log(error);
@@ -131,7 +139,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         ]
       };
       try {
-        updateShoppingCart(orderFormId, request);
+        setProductList(updateShoppingCart(orderFormId, request));
         toastFunction("add");
       } catch (error) {
         console.log(error);
@@ -178,50 +186,43 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     );
   };
 
-  const ItemsList: React.FC = ({ itemss }) => {
+  const ItemsList: React.FC = ({ key, itemss }) => {
    let toShow = null;
-    const productsList = [
-      {
-        name: 'papas',
-        imageUrl: 'http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000',
-        description: 'golosinas',
-        price: 18.23,
-        oldPrice: 20.0,
-        priceDefinition: {
-          total: 1600
-        }
-      } 
-    ];
-
+   let itemsLenght;
     if (itemss) {
       const itemsToShow = itemss.items;
       if (itemsToShow) {
-        if (Object.values(itemsToShow).length) {
+        itemsLenght = Object.values(itemsToShow).length;
+        if (itemsLenght) {
           toShow = itemsToShow;
         } else {
-          toShow = productsList;
         }
       } else {
-        toShow = productsList;
+
       }
     } else {
-      toShow = productsList;
     }
 
     const emptyShoppingCart = () => {
       console.log('***empty ShoppingCart***');
       try {
-        emptyShoppingCar('655c3cc734e34ac3a14749e39a82e8b9', {});
+        setProductList(emptyShoppingCar('655c3cc734e34ac3a14749e39a82e8b9', {}));
       } catch (error) {
         console.log(error);
       }
     };
 
     return (
-      <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', paddingHorizontal: 50 }}>
-        {toShow.map((value, index) => {
-          return <Item value={value} arrayIndex={index} />;
-        })}
+      <Container style={{backgroundColor: theme.brandColor.iconn_background, width: '100%'}}>
+        {
+          itemsLenght>0?
+          toShow.map((value, index) => {
+              return (
+                <Item value={value} arrayIndex={index} />
+              )
+            }
+          ):<></>
+        }
         <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
           <TextContainer
             textColor={theme.brandColor.iconn_grey}
@@ -276,8 +277,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         ]
       };
       try {
-
-        updateShoppingCart('655c3cc734e34ac3a14749e39a82e8b9',request);
+        setProductList(updateShoppingCart('655c3cc734e34ac3a14749e39a82e8b9',request));
         toastFunction("delete");;
 
       } catch (error) {
@@ -308,10 +308,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
               <Text numberOfLines={3} style={{ width: 175, color: 'black' }}>
                 {value.name}
               </Text>
-              <TextContainer text={'$' + value.priceDefinition.total} fontBold marginLeft={10}></TextContainer>
+              <TextContainer text={'$' + (value.priceDefinition.total/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} fontBold marginLeft={10}></TextContainer>
             </Container>
             <Container>
-              <TextContainer numberOfLines={1} text={'$' + value.price + ' c/u'} textColor="grey" fontSize={12} marginTop={4}></TextContainer>
+              <TextContainer numberOfLines={1} text={'$' + (value.price/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'} textColor="grey" fontSize={12} marginTop={4}></TextContainer>
             </Container>
           </Container>
           <Container row space="around" style={{ marginTop: 4 }}>
@@ -333,22 +333,19 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     );
   };
 
-  const fullCart = (
-    <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background }}>
-      <ScrollView
-        bounces={false}
-        style={{ flex: 1, marginTop: 0, width: '110%' }}
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingBottom: insets.bottom + 1,
-          backgroundColor: theme.brandColor.iconn_background
-        }}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <ItemsList itemss={itemsReceived} />
-      </ScrollView>
-    </Container>
+  const fullCart = (<Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background}}>
+    <ScrollView bounces={false}
+      style={{ flex: 1, marginTop: 0, width:'110%'}}
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingBottom: insets.bottom + 1,
+        backgroundColor: theme.brandColor.iconn_background
+      }}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}>
+      <ItemsList key={1} itemss={itemsReceived} />
+    </ScrollView>
+  </Container>
   );
 
   const emptyCart = (
@@ -371,17 +368,16 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const fullCartFooter = (
     <Container style={{ paddingLeft: 10, width: 280 }}>
-      <Container row space="between" style={{ marginTop: 8 }}>
-        <TextContainer text="Subtotal:" fontSize={14}></TextContainer>
-        <CustomText
-          text={'$' + (itemsReceived != undefined ? (itemsReceived.totalizers != undefined ? itemsReceived.totalizers[0].value : '10') : '10') + ' MXN'}
-          fontSize={18}
-          fontBold
-        ></CustomText>
+      <Container row space="between" style={{marginTop: 8}} >
+        <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
+        <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?((
+          itemsReceived.totalizers[0]!=undefined?itemsReceived.totalizers[0].value:100)/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'):"0"): "0") + ' MXN'} fontSize={18} fontBold></CustomText>
       </Container>
-      <Button length="long" round fontSize="h3" marginTop={25} fontBold onPress={onPressMyAccount}>
+      <Container center>
+      <Button length="long" fontSize="h5" round marginTop={25} fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height:50 }}>
         Continuar
       </Button>
+      </Container>
     </Container>
   );
 
@@ -389,7 +385,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const cart = isEmpty ? emptyCart : fullCart;
 
   return (
-    <Container flex crossCenter center style={{ marginTop: 0, backgroundColor: theme.fontColor.white, width: '100%' }}>
+    <Container flex crossCenter style={{ margin: 0, backgroundColor: theme.fontColor.medgrey, width: '100%', padding:0 }}>
      {inter ? (
       <>
           {cart}
