@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking } from 'react-native';
+import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
 import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
@@ -12,11 +12,10 @@ import { HomeStackParams } from 'navigation/types';
 import Geolocation from 'react-native-geolocation-service';
 import sellers from 'assets/files/sellers.json';
 
-import { RootState, setAddressesList, setDefaultSeller, useAppDispatch, useAppSelector, Address } from 'rtk';
+import { setDefaultSeller, useAppDispatch } from 'rtk';
 import { sortByDistance } from 'utils/geolocation';
 
 import appConfig from '../../../../app.json';
-import items from 'assets/files/sellers.json';
 
 const PostalCodeScreen = () => {
   const {
@@ -31,8 +30,6 @@ const PostalCodeScreen = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [position, setPosition] = useState<null | Geolocation.GeoPosition>(null);
   const dispatch = useAppDispatch();
-  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
-  const { user } = useAppSelector((state: RootState) => state.auth);
   const alert = useAlert();
 
   useEffect(() => {
@@ -44,18 +41,8 @@ const PostalCodeScreen = () => {
     }
   }, [position]);
 
-  useEffect(() => {
-    console.log('defaultSeller:', defaultSeller);
-  }, [defaultSeller]);
-
-  async function stall(stallTime = 1000) {
-    await new Promise(resolve => setTimeout(resolve, stallTime));
-  }
-
   const onSubmit = async () => {
     loader.show('', 'ecommerce');
-
-    await stall();
 
     navigate('Home');
 
@@ -150,7 +137,6 @@ const PostalCodeScreen = () => {
       position => {
         loader.hide();
         setPosition(position);
-        console.log(position);
       },
       error => {
         loader.hide();
@@ -175,7 +161,6 @@ const PostalCodeScreen = () => {
           'warning'
         );
         setPosition(null);
-        console.log(error);
       },
       {
         accuracy: {
@@ -275,9 +260,3 @@ const PostalCodeScreen = () => {
 };
 
 export default PostalCodeScreen;
-
-const styles = StyleSheet.create({
-  billingSection: {
-    paddingHorizontal: theme.layoutSpace.medium
-  }
-});
