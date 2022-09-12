@@ -5,10 +5,11 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
 import { ICONN_PIN_LOCATION } from 'assets/images';
 import items from 'assets/files/sellers.json';
-import { SellerInterface, useAppSelector, RootState, setDefaultSeller, useAppDispatch, setInvoicingInitialState } from 'rtk';
+import { SellerInterface, setDefaultSeller, useAppDispatch } from 'rtk';
 import { sortByDistance } from 'utils/geolocation';
 import { useLoading, useAlert } from 'context';
 import Geolocation from 'react-native-geolocation-service';
+import appConfig from '../../../../app.json';
 
 const SearchSellerScreen = () => {
   const [value, onChangeText] = useState('');
@@ -159,21 +160,8 @@ const SearchSellerScreen = () => {
   };
 
   return (
-    <Container style={{ backgroundColor: '#F1F1F1' }}>
-      <Container
-        style={{
-          backgroundColor: 'white',
-          height: 40,
-          margin: 12,
-          borderWidth: 1,
-          borderRadius: 8,
-          padding: 10,
-          flexDirection: 'row',
-          borderColor: '#dadadb',
-          alignContent: 'center',
-          minHeight: 50
-        }}
-      >
+    <Container flex style={{ backgroundColor: theme.brandColor.iconn_grey_background }}>
+      <Container style={styles.content}>
         <AntDesign name="search1" size={24} color={theme.brandColor.iconn_green_original} />
         <TextInput
           multiline
@@ -186,7 +174,6 @@ const SearchSellerScreen = () => {
             onChangeText(text.toLowerCase());
             if (text) {
               if (text.length === 5) {
-                console.log('text:', text);
                 const found = items.filter(item => {
                   const code = Number(item['Código postal']);
 
@@ -225,7 +212,7 @@ const SearchSellerScreen = () => {
             }
           }}
           value={value}
-          style={{ marginLeft: 10, width: '90%' }}
+          style={{ marginLeft: 10 }}
         />
       </Container>
       <Touchable
@@ -242,13 +229,11 @@ const SearchSellerScreen = () => {
               loader.hide();
 
               const pos = [Number(position.coords.longitude), Number(position.coords.latitude)];
-              const sorted = sortByDistance(pos, items).slice(0, 5);
-              console.log('sorted:', sorted);
+              const sorted = sortByDistance(pos, items);
               setSellers(sorted);
             },
             error => {
               loader.hide();
-              console.log(error);
             },
             {
               accuracy: {
@@ -273,26 +258,39 @@ const SearchSellerScreen = () => {
           </Container>
         </Container>
       </Touchable>
-
-      <ScrollView style={{ height: '100%' }}>
-        {sellers.map((seller, index) => {
-          return (
-            <SellerItem
-              key={index}
-              seller={seller}
-              selected={Number(seller['# Tienda']) === Number(current?.['# Tienda'])}
-              onPress={() => {
-                setCurrent(seller);
-              }}
-            />
-          );
-        })}
-      </ScrollView>
+      <Container flex={1}>
+        <ScrollView>
+          {sellers.slice(0, 5).map((seller, index) => {
+            return (
+              <SellerItem
+                key={index}
+                seller={seller}
+                selected={Number(seller['# Tienda']) === Number(current?.['# Tienda'])}
+                onPress={() => {
+                  setCurrent(seller);
+                }}
+              />
+            );
+          })}
+        </ScrollView>
+      </Container>
     </Container>
   );
 };
 
 const styles = StyleSheet.create({
+  content: {
+    backgroundColor: 'white',
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 10,
+    flexDirection: 'row',
+    borderColor: '#dadadb',
+    alignContent: 'center',
+    minHeight: 50
+  },
   sellerItem: {
     borderWidth: 2,
     borderRadius: 8,

@@ -180,6 +180,7 @@ const theme: themeType = {
     iconn_grey: '#939598',
     iconn_dark_grey: '#333333',
     iconn_background: '#f4f4f4',
+    iconn_grey_background: '#f1f1f1',
     iconn_white: '#ffffff',
     iconn_success: '#34c28c',
     iconn_warning: '#f3d449',

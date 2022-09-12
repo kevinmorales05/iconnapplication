@@ -10,6 +10,7 @@ export type BrandColorTypes =
   | 'iconn_grey'
   | 'iconn_dark_grey'
   | 'iconn_background'
+  | 'iconn_grey_background'
   | 'iconn_white'
   | 'iconn_success'
   | 'iconn_warning'
