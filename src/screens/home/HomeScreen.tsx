@@ -3,9 +3,6 @@ import { Image, View, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import { CustomText, Button, Container, Touchable, ShippingDropdown, CustomModal } from 'components';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from 'navigation/types';
-import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Address, RootState, useAppSelector } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
@@ -74,7 +71,7 @@ const HomeScreen: React.FC<Props> = ({
             )}
             {mode === ShippingMode.DELIVERY && (
               <Container style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image style={styles.image} source={ICONN_STO} />
+                <Image style={styles.image} source={ICONN_SCOOT} />
                 <CustomText fontSize={16} text={'A domicilio: '} fontBold />
                 <Container>
                   {defaultAddress ? (
