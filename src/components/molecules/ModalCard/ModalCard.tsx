@@ -9,7 +9,7 @@ import {
 import { CustomModalProps } from 'components/atoms';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import { ICONN_ERROR, ICONN_SUCCESS, ICONN_WARNING } from 'assets/images';
+import { ICONN_SUCCESS, ICONN_WARNING_MARK, ICONN_ERROR_CROSS } from 'assets/images';
 import { modalType } from 'components/types/modal-type';
 
 interface Props extends CustomModalProps {
@@ -35,17 +35,17 @@ const ModalCard: React.FC<Props> = ({
           <Container style={ modalCenterCardStyle }>
             <LinearGradient
               colors={type === 'warning' ? [ '#efd363', '#d0b64d' ] : type === 'error' ? [ '#be646b', '#9f3038' ] : [ '#34c28c', '#319f72' ]}
-              style={{ height: 64, width: '100%', position: 'absolute', borderTopLeftRadius: 16, borderTopRightRadius: 16 }} >
+              style={{ height: 16, width: '100%', position: 'absolute', borderTopLeftRadius: 16, borderTopRightRadius: 16 }} >
             </LinearGradient>
             <Container style={{backgroundColor: 'transparent', borderTopLeftRadius: 16, borderTopRightRadius: 16}}>
               <Image
-                source={type === 'warning' ? ICONN_WARNING : type === 'error' ? ICONN_ERROR : ICONN_SUCCESS}
-                style={{ alignSelf: 'center', margin: 0, height: 80, top: 16 }}
+                source={type === 'warning' ? ICONN_WARNING_MARK : type === 'error' ? ICONN_ERROR_CROSS : ICONN_SUCCESS}
+                style={{ alignSelf: 'center', marginTop: "15%", height: 56, top: 16 }}
                 resizeMode="contain"
               />
               <Container style={closeContainer}>
                 <ActionButton
-                  style={{ shadowColor:'none' }}
+                  style={{ shadowColor:'none', marginTop:5 }}
                   icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
                   size="xxsmall"
                   onPress={onDismiss!}

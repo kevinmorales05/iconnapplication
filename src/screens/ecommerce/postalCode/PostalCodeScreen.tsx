@@ -132,7 +132,8 @@ const PostalCodeScreen = () => {
       return;
     }
 
-    loader.show();
+    loader.show('', 'ecommerce');
+
     Geolocation.getCurrentPosition(
       position => {
         loader.hide();

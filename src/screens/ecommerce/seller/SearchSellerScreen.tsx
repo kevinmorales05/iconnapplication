@@ -5,7 +5,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
 import { ICONN_PIN_LOCATION } from 'assets/images';
 import items from 'assets/files/sellers.json';
-import { SellerInterface, setDefaultSeller, useAppDispatch } from 'rtk';
+import { SellerInterface, setDefaultSeller, useAppDispatch, useAppSelector, RootState } from 'rtk';
 import { sortByDistance } from 'utils/geolocation';
 import { useLoading, useAlert } from 'context';
 import Geolocation from 'react-native-geolocation-service';
@@ -15,6 +15,8 @@ const SearchSellerScreen = () => {
   const [value, onChangeText] = useState('');
   const [current, setCurrent] = useState<SellerInterface | null>(null);
   const [sellers, setSellers] = useState<SellerInterface[]>([]);
+
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
 
   const dispatch = useAppDispatch();
 
@@ -187,7 +189,13 @@ const SearchSellerScreen = () => {
                       setSellers(sortByDistance(pos, found));
                     },
                     error => {
-                      setSellers(found);
+                      if (defaultSeller) {
+                        const pos = [Number(defaultSeller.Longitud), Number(defaultSeller.Latitud)];
+                        const sorted = sortByDistance(pos, found);
+                        setSellers(sorted);
+                      } else {
+                        setSellers(found);
+                      }
                     },
                     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                   );
@@ -223,7 +231,7 @@ const SearchSellerScreen = () => {
             return;
           }
 
-          loader.show();
+          loader.show("","ecommerce");
           Geolocation.getCurrentPosition(
             position => {
               loader.hide();

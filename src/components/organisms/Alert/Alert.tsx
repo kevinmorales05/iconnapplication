@@ -49,14 +49,14 @@ const Alert: React.FC<Props> = ({
         {secondMessage !== '' && ( 
           <TextContainer text={secondMessage} typography="h5" marginTop={16} marginHorizontal={16} textAlign='center' fontBold textColor={theme.brandColor.iconn_green_original}/> 
         )}
-        <Container style={{ marginVertical:24 }}>
+        <Container style={{ marginVertical: 10 }}>
           {acceptTitle && (
             <Button borderColor='iconn_med_grey' fontSize='h3' fontBold color='iconn_dark_grey' round onPress={onAccept!} outline length='short' style={{width:'95%', marginHorizontal:16, alignSelf:'center'}} >
               {acceptTitle || 'Aceptar'}
             </Button>
           )}
           {cancelTitle && (
-            <Button borderColor={cancelOutline} fontSize='h3' fontBold color={cancelTextColor} round onPress={onCancel!} outline length='short' style={{width:'95%', marginHorizontal:16, alignSelf:'center', marginTop: 8}}>
+            <Button borderColor={cancelOutline} fontSize='h3' fontBold color={cancelTextColor} round onPress={onCancel!} outline length='short' style={{width:'95%', marginHorizontal:16, alignSelf:'center', marginTop: 5}}>
               {cancelTitle || 'Cancelar'}
             </Button>
           )}
