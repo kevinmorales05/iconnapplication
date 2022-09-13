@@ -212,7 +212,7 @@ const SearchSellerScreen = () => {
             }
           }}
           value={value}
-          style={{ marginLeft: 10 }}
+          style={{ marginLeft: 10, flex: 1 }}
         />
       </Container>
       <Touchable

@@ -184,58 +184,37 @@ const ShippingOption = ({
     borderColor: theme.brandColor.iconn_green_original
   };
 
-  useEffect(() => {
-    return () => {
-      unmark();
-    };
-  }, []);
-
   return (
-    <>
-      <Container style={{ display: 'flex', justifyContent: 'center', alignContent: 'center', alignItems: 'center' }}>
-        {selected && (
-          <Container
-            style={{
-              width: 26,
-              height: 26,
-              borderRadius: 26,
-              backgroundColor: theme.brandColor.iconn_green_original,
-              position: 'absolute',
-              top: 15,
-              right: 0,
-              zIndex: 2,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <Touchable onPress={unmark}>
-              <Entypo name="cross" size={20} color={theme.brandColor.iconn_white} />
-            </Touchable>
-          </Container>
-        )}
-        <Container>
-          <Touchable onPress={onPress}>
-            <Container
-              style={[
-                {
-                  backgroundColor: '#F5F5F2',
-                  width: 100,
-                  height: 100,
-                  borderRadius: 100,
-                  marginVertical: 20,
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                },
-                selected && highlight
-              ]}
-            >
-              <Image source={icon} />
-            </Container>
+    <Container style={styles.content}>
+      {selected && (
+        <Container style={styles.option}>
+          <Touchable onPress={unmark}>
+            <Entypo name="cross" size={20} color={theme.brandColor.iconn_white} />
           </Touchable>
         </Container>
-        <CustomText text={text} />
+      )}
+      <Container>
+        <Touchable onPress={onPress}>
+          <Container
+            style={[
+              {
+                backgroundColor: '#F5F5F2',
+                width: 100,
+                height: 100,
+                borderRadius: 100,
+                marginVertical: 20,
+                justifyContent: 'center',
+                alignItems: 'center'
+              },
+              selected && highlight
+            ]}
+          >
+            <Image source={icon} />
+          </Container>
+        </Touchable>
       </Container>
-    </>
+      <CustomText text={text} />
+    </Container>
   );
 };
 
@@ -247,6 +226,19 @@ export enum ShippingMode {
 export default ShippingDropdown;
 
 const styles = StyleSheet.create({
+  content: { display: 'flex', justifyContent: 'center', alignContent: 'center', alignItems: 'center' },
+  option: {
+    width: 26,
+    height: 26,
+    borderRadius: 26,
+    backgroundColor: theme.brandColor.iconn_green_original,
+    position: 'absolute',
+    top: 15,
+    right: 0,
+    zIndex: 2,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   card: {
     borderWidth: 2,
     borderRadius: 8,

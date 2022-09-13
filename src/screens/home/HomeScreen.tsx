@@ -42,12 +42,6 @@ const HomeScreen: React.FC<Props> = ({
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const [mode, setMode] = useState<null | ShippingMode>(null);
 
-  useEffect(() => {
-    return () => {
-      setMode(null);
-    };
-  }, []);
-
   return (
     <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%' }}>
       <View style={{ zIndex: 0, width: '100%' }}>
@@ -59,7 +53,7 @@ const HomeScreen: React.FC<Props> = ({
           }}
         >
           <Container style={{ paddingVertical: 20, paddingHorizontal: 10, display: 'flex', justifyContent: 'space-between' }} row>
-            {mode === null && <CustomText text={'¿Como quieres recibir tus productos?'} fontBold />}
+            {mode === null && <CustomText text={'¿Cómo quieres recibir tus productos?'} fontBold />}
             {defaultSeller && mode === ShippingMode.PICKUP && (
               <Container style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image style={styles.image} source={ICONN_STO} />
