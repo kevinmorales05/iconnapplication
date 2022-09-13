@@ -1,5 +1,5 @@
-import { Container, CustomModal, SafeArea, TextContainer } from 'components';
-import React, { Component, useCallback, useEffect, useState } from 'react';
+import { SafeArea } from 'components';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -13,22 +13,16 @@ import theme from 'components/theme/theme';
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
 import ShopCartScreen from './ShopCartScreen';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { ICONN_COFFEE } from 'assets/images';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
-import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { setInvoicingInitialState, setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
 import { getShoppingCart, emptyShoppingCar, updateShoppingCart } from 'services/vtexShoppingCar.services';
-
 //import cart slice 
 import {getShoppingCartThunk} from 'rtk/thunks/vtex-shoppingCart.thunks'
 
-
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
-
 
 interface Props {
   carouselItems?: ItemProps;
@@ -79,73 +73,12 @@ const ShopCartController: React.FC = () => {
     (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
   }
 
-
    const [prod, setProd] = useState(Object);
-
-/*
-   const getOrders = useCallback(async () => {
-    const {list : data} = await vtexordersServices.getOrdersListByUserEmail('cristhian.mendez@citi.com.mx', 1,3);
-    console.log("ESTA ES LA DATA", JSON.stringify(data, null, 3));
-    let orderArray : OrderInterface[] = data.map((order) => {
-      return {
-      orderId: order.orderId,
-      creationDate: order.creationDate,
-      totalValue: order.totalValue,
-      status: order.status,
-      orderIsComplete: order.orderIsComplete,
-      totalItems: order.totalItems,
-      }
-    })
-  
-  }, []);
-
-const getCart = useCallback(
-  async () => {
-    try {
-      const response = await dispatch(getShoppingCartThunk('655c3cc734e34ac3a14749e39a82e8b9'));;    
-    } catch (error) {
-      console.warn(error);
-    }
-  }, []
-)
-
-
-//use call back
-   const getCart1 = async () => {
-    try {
-      const response = await dispatch(getShoppingCartThunk('655c3cc734e34ac3a14749e39a82e8b9'));;
-      //falta accion de despachar
-      
-    } catch (error) {
-      console.warn(error);
-    }
-  };
-
-   useEffect(() => {
-    setProd(dataFromCart);
-  }, [dataFromCart])
-
-  useEffect(() => {
-    getCart();
-    console.log("data from cart", dataFromCart);
-    setProd(dataFromCart);
-    
-  }, [])*/
-  
-  useEffect(() => {
-    //setProd(getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9'));
+    useLayoutEffect(() => {
+   setProd(getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9'));
     console.log('............................');
     console.log('se imprime desde useEffect',prod);
     console.log('............................');
-    const fetchData = () => {
-      const data = getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9');
-      return data;
-    }
-
-    const result = fetchData()
-      .catch(console.error);
-
-    setProd(result);
   }, [])
 
    
@@ -159,7 +92,7 @@ const getCart = useCallback(
     >
       
       <ShopCartScreen
-        productsss={prod}
+        products={prod}
         onPressLogOut={logOut}
         onPressMyAccount={goToMyAccount}
         onPressInvoice={goToInvoice}

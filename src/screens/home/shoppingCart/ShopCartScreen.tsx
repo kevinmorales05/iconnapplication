@@ -6,87 +6,108 @@ import { CustomText, Button, Container, Section, SafeArea, Touchable, TextContai
 import {
   ICONN_SHOPPING_CART_BASKET,
   ICONN_DELETE_SHOPPING_CART_ITEM,
-  ICONN_EMPTY_SHOPPING_CART,
-  IMG_PRODUCT1,
-  IMG_PRODUCT2,
-  IMG_PRODUCT3,
-  IMG_PRODUCT4,
-  IMG_PRODUCT5
+  ICONN_EMPTY_SHOPPING_CART
 } from 'assets/images';
 import { Image, StyleProp, ViewStyle } from 'react-native';
 import { text } from '@storybook/addon-knobs';
-import { getShoppingCart, emptyShoppingCar, updateShoppingCart } from 'services/vtexShoppingCar.services';
+import { getShoppingCart, emptyShoppingCar, updateShoppingCart, clearShoppingCartMessages } from 'services/vtexShoppingCar.services';
 import items from 'assets/files/sellers.json';
 import Icon from 'react-native-vector-icons/AntDesign';
 import IconO from 'react-native-vector-icons/FontAwesome5'
-import { useToast } from 'context';
 import { ConnectionItem } from 'components/organisms/ConnectionItem';
+import { useAlert, useLoading, useToast } from 'context';
 
 
 interface Props {
   onPressInvoice: () => void;
   onPressMyAccount: () => void;
   onPressLogOut: () => void;
-  onPressDeleteItem: () => void;
-  onPressAddItem: () => void;
-  productsss?: Object;
+  products: () => Object;
 }
 
 
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
 
-const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, onPressDeleteItem, onPressAddItem, productsss }) => {
+const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, products }) => {
   const insets = useSafeAreaInsets();
-
+  const loader = useLoading();
+  const { loading } = useAppSelector((state: RootState) => state.invoicing);
   const { cart : dataFromCart } = useAppSelector((state: RootState) => state.cart);  
   const {  internetReachability } = useAppSelector((state: RootState) => state.app);
   const toast = useToast();
   const [inter, setInter] = useState(true);
 
-  let isEmpty = false;
+  let isEmpty = true;
   const [productList, setProductList] = useState(Object);
 
+  /*
+  const getProducts = async () => {
+    try {
+      const prods = await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9')
+      setProductList(prods);  // set State
+    } catch (err) {
+      console.error('error');
+    }
+  };*/
+
   useEffect(() => {
-    setProductList(productsss);
+   // getProducts();
+ //  const prods = getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9')
+      setProductList(products);
+    if (internetReachability !== 0) {
+      if (internetReachability === 1) setInter(true);
+      if (internetReachability === 2) setInter(false);
+    }
+  }, [internetReachability]);
+  
+/*
+  useEffect(() => {
+    setProductList(getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9'));
     if (internetReachability !== 0) {
       if (internetReachability === 1) setInter(true);
       if (internetReachability === 2) setInter(false);
   }
+  console.log("..................");
+  console.log(productList);
+  console.log("..................");
 }, [internetReachability])
+*/
 
-  function toastFunction(tag){
-    if(tag==="remove" || tag==="add"){
+useEffect(() => {
+  if (loading === false) {
+    loader.hide();
+  }
+}, [loading]);
+
+  function toastFunction(tag, msg){
+    if(tag==="decrease" || tag==="increase"){
       toast.show({
-        message: 'Se actualizó el artículo en la canasta.',
+        message: msg,
         type: 'success'
       });
-    }else{
+    }else if(tag==="addingProductError"){
       toast.show({
-        message: 'Se eliminó el artículo de la canasta.',
+        message: msg,
+        type: 'error'
+      });
+    }else if(tag==="delete"){
+      toast.show({
+        message: msg,
         type: 'success'
       });
-
+    }else if(tag=="empty"){
+      toast.show({
+        message: msg,
+        type: 'success'
+      });
     }
   }
 
-  console.log('------------------ini');
-  //console.log(productsss);
-  console.log('------------------fin');
   let itemsReceived = null;
-  console.log('------------------');
+
   if (productList) {
-    //const array = Object.values(productsss.items);
-    console.log('ssssssssss');
-    const arrayValues = Object.values(productList);
-    console.log(Object.values(productList).length);
-    //const itemsListRecieved = array[2]; 
-    console.log('ssssssssss');
-    console.log('ccccccccc');
-    console.log(arrayValues[2]);
-    console.log('ccccccc');
+  const arrayValues = Object.values(productList);
     itemsReceived = arrayValues[2];
-    console.log('.............');
-    console.log(itemsReceived);
     if (itemsReceived) {
       if (itemsReceived.items) {
         const tam = Object.values(itemsReceived.items).length;
@@ -96,16 +117,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         }
       }
     }
-    console.log('.............');
   }
-  console.log('------------------');
 
   const Counter: React.RF = ({ orderFormId, item, itemIndex }) => {
-    const [counterValue, setCounterValue] = useState(0);
-    const deleteItem = () => {
-      console.log('***delete item***');
+    const decreaseItem = () => {
+      console.log('***decrease item***');
       item.quantity--;
-      setCounterValue(item.quantity);
       let request = {
         orderItems: [
           {
@@ -118,17 +135,20 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       };
 
       try {
+        loader.show();
+        clearShoppingCartMessages(orderFormId,{});
         setProductList(updateShoppingCart(orderFormId, request));
-        toastFunction("remove");
+        toastFunction("decrease",'Se actualizó el artículo en la canasta.');
       } catch (error) {
         console.log(error);
+      }finally{ 
+        loader.hide();
       }
     };
 
-    const addItem = () => {
-      console.log('***delete item***');
+    const increaseItem = () => {
+      console.log('***increase item***');
       item.quantity++;
-      setCounterValue(item.quantity);
       const request = {
         orderItems: [
           {
@@ -139,10 +159,34 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         ]
       };
       try {
-        setProductList(updateShoppingCart(orderFormId, request));
-        toastFunction("add");
+      loader.show();
+      clearShoppingCartMessages(orderFormId,{});
+      setProductList(updateShoppingCart(orderFormId, request));
+      let isthereErrorMessages =  false;
+      let errorMsg = "";
+        if (productList) {
+          const arrayValues = Object.values(productList);
+          itemsReceived = arrayValues[2];
+          if (itemsReceived) {
+            if (itemsReceived.messages) {
+              console.log('-----------');
+              console.log(itemsReceived.messages);
+              console.log('-----------');
+              const tam = Object.values(itemsReceived.messages).length;
+              console.log('tamañooo: ', tam);
+              if(tam > 0){
+                isthereErrorMessages = true;
+                errorMsg = itemsReceived.messages[0].text;
+                console.log("Error obtenido",errorMsg);
+              }
+            }
+          }
+        }
+        toastFunction(isthereErrorMessages?"addingProductError":"increase",isthereErrorMessages?errorMsg:'Se actualizó el artículo en la canasta.');
       } catch (error) {
         console.log(error);
+      }finally{
+        loader.hide();
       }
     };
     return (
@@ -165,7 +209,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           height: 37
         }}
       >
-        <Button fontSize="h6" size="small" transparent="true" fontBold="true" onPress={deleteItem}>
+        <Button fontSize="h6" size="small" transparent="true" fontBold="true" onPress={decreaseItem}>
           -
         </Button>
         <Container>
@@ -179,7 +223,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <CustomText text="" fontSize={7}></CustomText>
           </Container>
         </Container>
-        <Button fontSize="h6" size="small" transparent="true" onPress={addItem}>
+        <Button fontSize="h6" size="small" transparent="true" onPress={increaseItem}>
           +
         </Button>
       </Container>
@@ -206,9 +250,14 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     const emptyShoppingCart = () => {
       console.log('***empty ShoppingCart***');
       try {
+        loader.show();
+        clearShoppingCartMessages("655c3cc734e34ac3a14749e39a82e8b9",{});
         setProductList(emptyShoppingCar('655c3cc734e34ac3a14749e39a82e8b9', {}));
+        toastFunction("empty", "Se eliminaron los artículos de la canasta.");
       } catch (error) {
         console.log(error);
+      }finally{
+        loader.hide();
       }
     };
 
@@ -277,11 +326,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         ]
       };
       try {
-        setProductList(updateShoppingCart('655c3cc734e34ac3a14749e39a82e8b9',request));
-        toastFunction("delete");;
-
+        loader.show();
+        setProductList(updateShoppingCart('655c3cc734e34ac3a14749e39a82e8b9', request));
+        toastFunction("delete", "Se eliminó el artículo de la canasta.");
       } catch (error) {
         console.log(error);
+      } finally { 
+        loader.hide(); 
       }
     };
 
@@ -305,7 +356,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         <Container>
           <Container style={{ marginTop: 10, width: 90, height: 55 }}>
             <Container row crossCenter space="between">
-              <Text numberOfLines={3} style={{ width: 175, color: 'black' }}>
+              <Text numberOfLines={2} style={{ width: 175, color: 'black' }}>
                 {value.name}
               </Text>
               <TextContainer text={'$' + (value.priceDefinition.total/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} fontBold marginLeft={10}></TextContainer>
@@ -318,7 +369,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <Button
               fontSize="h6"
               color="iconn_red_original"
-              size="medium"
+              size="xxsmall"
               marginRight={30}
               onPress={deleteShoppingCartItem}
               transparent
@@ -335,7 +386,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const fullCart = (<Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background}}>
     <ScrollView bounces={false}
-      style={{ flex: 1, marginTop: 0, width:'110%'}}
+      style={{ flex: 1, marginTop: 0, width:'100%'}}
       contentContainerStyle={{
         flexGrow: 1,
         paddingBottom: insets.bottom + 1,
@@ -360,21 +411,21 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const emptyCartFooter = (
     <Container style={{marginBottom:24, width:'100%'}}>
-      <Button length="long" round fontSize="h3" fontBold onPress={onPressMyAccount}>
+      <Button length="long" round fontSize="h3" fontBold onPress={onPressMyAccount} style={{backgroundColor: theme.brandColor.iconn_green_original}}>
         Ver artículos
       </Button>
     </Container>
   );
 
   const fullCartFooter = (
-    <Container style={{ paddingLeft: 10, width: 280 }}>
+    <Container style={{ paddingLeft: 10, width: '100%', backgroundColor: theme.fontColor.white }}>
       <Container row space="between" style={{marginTop: 8}} >
         <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
         <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?((
           itemsReceived.totalizers[0]!=undefined?itemsReceived.totalizers[0].value:100)/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'):"0"): "0") + ' MXN'} fontSize={18} fontBold></CustomText>
       </Container>
-      <Container center>
-      <Button length="long" fontSize="h5" round marginTop={25} fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height:50 }}>
+      <Container>
+      <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height:50 }}>
         Continuar
       </Button>
       </Container>
@@ -385,20 +436,19 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const cart = isEmpty ? emptyCart : fullCart;
 
   return (
-    <Container flex crossCenter style={{ margin: 0, backgroundColor: theme.fontColor.medgrey, width: '100%', padding:0 }}>
+    <Container flex crossCenter style={{ margin: 0, backgroundColor: theme.brandColor.iconn_background, width: '100%', padding:0 }}>
      {inter ? (
       <>
           {cart}
       </>
     ) : (
       <>
-        <Container flex backgroundColor={theme.brandColor.iconn_background} style={{ width: '110%' }}>
+        <Container flex backgroundColor={theme.brandColor.iconn_background} style={{ width: '100%' }}>
         <ConnectionItem></ConnectionItem>
         </Container>
       </>
     )}
       {cartFooter}
-
     </Container>
   );
 };
