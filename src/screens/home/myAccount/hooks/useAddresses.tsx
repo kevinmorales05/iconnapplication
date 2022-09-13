@@ -1,7 +1,17 @@
 import { CrudType } from 'components/types/crud-type';
 import { useAlert, useLoading, useToast } from 'context';
 import { useCallback, useEffect, useState } from 'react';
-import { addAddressToList, Address, deleteAddressFromList, PostalCodeInfo, replaceAddressFromList, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import {
+  addAddressToList,
+  Address,
+  deleteAddressFromList,
+  PostalCodeInfo,
+  replaceAddressFromList,
+  RootState,
+  setAddressDefault,
+  useAppDispatch,
+  useAppSelector
+} from 'rtk';
 import {
   deleteUserAddressThunk,
   getAddressByPostalCodeThunk,
@@ -48,10 +58,16 @@ export const useAddresses = () => {
     if (user.addresses?.length === 0) fetchAddresses();
   }, [fetchAddresses]);
 
+  /**
+   * If no address is default, one is set.
+   * This validation is important specifically when the default address is removed, this way the user will never be left without a default address.
+   */
+  useEffect(() => {
+    const isThereAnyDefault = user.addresses.filter(x => x.isDefault === true);
+    if (isThereAnyDefault.length === 0 && user.addresses.length > 0) dispatch(setAddressDefault(0));
+  }, [user.addresses]);
+
   const editAddress: any = (address: Address, position: number) => {
-    console.log('first');
-    console.log(address);
-    console.log(position);
     fetchAddressByPostalCode(address.postalCode!);
     setAddress(address);
     setPosition(position);
@@ -130,6 +146,7 @@ export const useAddresses = () => {
       postalCode: addressTosubmit.postalCode,
       street: addressTosubmit.street,
       neighborhood: addressTosubmit.neighborhood,
+      reference: addressTosubmit.reference,
       userId: user.user_id
     };
 
@@ -139,7 +156,7 @@ export const useAddresses = () => {
         response = await dispatch(saveUserAddressThunk(addressPayload)).unwrap();
         if (response) {
           addressPayload.id = response.DocumentId;
-          if (user.addresses?.length === 0) addressPayload.isDefault = true; // if is the first address in the list, it's set to true.
+          if (user.addresses?.length === 0) addressPayload.isDefault = true; // if is the first address in the list, it's set to true (default address).
           dispatch(addAddressToList(addressPayload));
           toast.show({ message: `Dirección guardada\n correctamente.`, type: 'success' });
         } else {

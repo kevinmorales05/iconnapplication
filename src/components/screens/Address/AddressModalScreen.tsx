@@ -58,6 +58,7 @@ const AddressModalScreen: React.FC<Props> = ({
       city: '',
       neighborhood: '',
       street: '',
+      reference: '',
       tag: ''
     });
     if (postalCodeRef.current) postalCodeRef.current.focus();
@@ -67,10 +68,12 @@ const AddressModalScreen: React.FC<Props> = ({
     setValue('postalCode', address.postalCode);
     setValue('neighborhood', address.neighborhood);
     setValue('street', address.street);
+    setValue('reference', address.reference);
     setValue('tag', address.addressName);
     trigger('postalCode');
     trigger('neighborhood');
     trigger('street');
+    trigger('reference');
     trigger('tag');
   };
 
@@ -101,6 +104,7 @@ const AddressModalScreen: React.FC<Props> = ({
 
   const postalCodeRef = useRef<TextInput>(null);
   const streetRef = useRef<TextInput>(null);
+  const referenceRef = useRef<TextInput>(null);
   const tagRef = useRef<TextInput>(null);
 
   useEffect(() => {
@@ -200,7 +204,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   marginTop={21}
                   label="Estado / Provincia / Region"
                   boldLabel
-                  maxLength={100}
+                  maxLength={120}
                   rules={openField(3)}
                   error={errors.state?.message}
                   editable={false}
@@ -217,7 +221,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   marginTop={21}
                   label="Municipio, Ciudad o Delegación"
                   boldLabel
-                  maxLength={100}
+                  maxLength={120}
                   rules={openField(3)}
                   error={errors.city?.message}
                   editable={false}
@@ -249,10 +253,28 @@ const AddressModalScreen: React.FC<Props> = ({
                   ref={streetRef}
                   label="Calle y número exterior"
                   boldLabel
-                  maxLength={150}
-                  onSubmitEditing={() => tagRef.current?.focus()}
+                  maxLength={120}
+                  onSubmitEditing={() => referenceRef.current?.focus()}
                   rules={openField(3)}
                   error={errors.street?.message}
+                />
+
+                <Input
+                  {...register('reference')}
+                  name="reference"
+                  control={control}
+                  autoCorrect={false}
+                  keyboardType="default"
+                  placeholder={`Ej. Pasando la 2da glorieta, casa blanca.`}
+                  blurOnSubmit={true}
+                  marginTop={21}
+                  ref={referenceRef}
+                  label="Instrucción adicional o referencia"
+                  boldLabel
+                  maxLength={120}
+                  onSubmitEditing={() => tagRef.current?.focus()}
+                  rules={openField(3)}
+                  error={errors.reference?.message}
                 />
 
                 <Input
@@ -267,7 +289,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   ref={tagRef}
                   label="Etiqueta"
                   boldLabel
-                  maxLength={150}
+                  maxLength={120}
                   rules={openField(3)}
                   error={errors.tag?.message}
                 />
