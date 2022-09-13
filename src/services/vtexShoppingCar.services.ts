@@ -25,10 +25,10 @@ import { SizeType } from '../components/types/size-type';
     const { data } = response;
     console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
     console.log('size: ', Object.values(data.items).length);
-    console.log('text: ',data.messages[0].text);
-    console.log('imagen: ',data.items[0].imageUrl);
-    console.log('quantity: ',data.items[0].quantity);
-    console.log('name: ',data.items[0].name);
+    //console.log('text: ',data.messages[0].text);
+    //console.log('imagen: ',data.items[0].imageUrl);
+    //console.log('quantity: ',data.items[0].quantity);
+    //console.log('name: ',data.items[0].name);
     console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
     return data;
   }
@@ -58,9 +58,23 @@ import { SizeType } from '../components/types/size-type';
   return data;
 }
 
+/**
+ * Function to clear shoppingCart messages
+ * shoppingCartId is the Cart identififer to update.
+ */
+ async function clearShoppingCartMessages(shoppingCartId:string, doc: any): Promise<any> {
+  console.log('shoppingCartId:',shoppingCartId);
+  const response = await ShoppingCar.getInstance().postRequest(`/${shoppingCartId}/messages/clear`, doc);
+  if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
+  const { data } = response;
+  console.log(moment().format())
+  return data;
+}
+
 export {
   getCurrentShoppingCartOrCreateNewOne,
   getShoppingCart,
   updateShoppingCart,
   emptyShoppingCar,
+  clearShoppingCartMessages
 };
