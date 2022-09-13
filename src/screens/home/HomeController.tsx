@@ -148,7 +148,7 @@ const HomeController: React.FC = () => {
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
   const { isGuest } = guestLogged;
   const { isLogged } = userLogged;
-  const modVis = isLogged && !userLogged.seenCarousel ? true : false; // TODO: don't forget revert this to show carrusel...
+  const modVis = isLogged && !userLogged.seenCarousel ? true : false;
   const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -197,13 +197,13 @@ const HomeController: React.FC = () => {
    * Load User Addresses List and store it in the redux store
    */
   const fetchAddresses = useCallback(async () => {
-    console.log('fetchAddresses...');
     loader.show();
     await dispatch(getUserAddressesThunk(user.user_id!));
   }, []);
 
   /**
    * We get the user addresses just if there isn`t any address.
+   * TODO: if you need reload addresses on each load of the home screen, please remove the "if" sentence.
    */
   useEffect(() => {
     if (user.addresses?.length === 0) fetchAddresses();
@@ -217,7 +217,6 @@ const HomeController: React.FC = () => {
    * Load Invocing Profile List and store it in the redux store.
    */
   const fetchInvoicingProfileList = useCallback(async () => {
-    console.log('fetchInvoicingProfileList...');
     loader.show();
     await dispatch(getInvoicingProfileListThunk(user.user_id!));
   }, []);
