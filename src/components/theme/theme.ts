@@ -160,20 +160,21 @@ const theme: themeType = {
   fontColor: {
     dark: '#000000',
     dark_grey: '#333333',
-    white: 'white',
+    white: '#FFFFFF',
     paragraph: '#000000',
-    link: '#5fae8e',
-    medgrey: 'lightgrey',
-    grey: 'grey',
-    dark_orange: '#F39124',
-    light_green: '#33A479'
+    link: '#008060',
+    medgrey: '#DADADB',
+    grey: '#939598',
+    dark_orange: '#f37721',
+    light_green: '#008060',
+    placeholder: '#747476'
   },
   brandColor: {
     iconn_orange_original: '#f37721',
     iconn_green_original: '#008060',
     iconn_red_original: '#ed2525',
-    iconn_accent_principal: '#3cb18c',
-    iconn_accent_secondary: '#faa22d',
+    iconn_accent_principal: '#008060',
+    iconn_accent_secondary: '#000000',
     iconn_warm_grey: '#f7f7f5',
     iconn_light_grey: '#edebeb',
     iconn_med_grey: '#dadadb',
@@ -182,13 +183,15 @@ const theme: themeType = {
     iconn_background: '#f4f4f4',
     iconn_grey_background: '#f1f1f1',
     iconn_white: '#ffffff',
-    iconn_success: '#34c28c',
+    iconn_success: '#008060',
     iconn_warning: '#f3d449',
-    iconn_error: '#cb5e69',
-    iconn_info: '#5080b2',
+    iconn_error: '#D91212',
+    iconn_info: '#4B79AA',
     facebook: '#3b5998',
-    google: '#e33629'    
+    google: '#e33629'
   }
 };
 
+// TODO: we must change some current colors in the code of each component/screen.
+// Because in some components/screens we still keep using hardcoded hexadecimals, and that`s wrong.
 export default theme;
