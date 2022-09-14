@@ -7,7 +7,7 @@ import { ICONN_PIN_LOCATION } from 'assets/images';
 import items from 'assets/files/sellers.json';
 import { SellerInterface, setDefaultSeller, useAppDispatch, useAppSelector, RootState } from 'rtk';
 import { hasNearbySellers, sortByDistance } from 'utils/geolocation';
-import { useLoading, useAlert } from 'context';
+import { useLoading, useAlert, useToast } from 'context';
 import Geolocation from 'react-native-geolocation-service';
 import appConfig from '../../../../app.json';
 
@@ -23,6 +23,8 @@ const SearchSellerScreen = () => {
   const loader = useLoading();
 
   const alert = useAlert();
+
+  const toast = useToast();
 
   useEffect(() => {
     if (value) {
@@ -287,29 +289,11 @@ const SearchSellerScreen = () => {
                 onPress={async () => {
                   if (seller.distance) {
                     if (seller.distance > 8) {
-                      alert.show(
-                        {
-                          title: 'Advertencia',
-                          message: `Esta tienda está a ${format(seller.distance)} de distancia.\n ¿Deseas colocarla como tienda por defecto?`,
-                          acceptTitle: 'Si',
-                          cancelTitle: 'No',
-                          cancelOutline: 'iconn_light_grey',
-                          cancelTextColor: 'iconn_dark_grey',
-                          async onAccept() {
-                            setCurrent(seller);
-                            alert.hide();
-                          },
-                          async onCancel() {
-                            alert.hide();
-                          }
-                        },
-                        'warning'
-                      );
-                    } else {
-                      setCurrent(seller);
+                      toast.show({
+                        message: `Parece que estás lejos de la tienda seleccionada.`,
+                        type: 'warning'
+                      });
                     }
-
-                    return;
                   }
                   setCurrent(seller);
                 }}

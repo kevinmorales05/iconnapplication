@@ -56,7 +56,7 @@ export const Toast = () => {
           size={24}
         /> 
         </Container>
-        <Animated.Text style={{opacity: fade, color: theme.brandColor.iconn_white, fontSize: 16, fontWeight: '400', letterSpacing: 0.3, width: 250 }}> {toast.message}</Animated.Text>
+        <Animated.Text style={{opacity: fade, color: theme.brandColor.iconn_white, fontSize: 16, fontWeight: '400', letterSpacing: 0.3, width: 250 }}>{toast.message}</Animated.Text>
         <TouchableOpacity onPress={hide} style={{marginRight: 16}}>
           <Ionicons name={`close-outline`} size={24} color={theme.brandColor.iconn_white} />
         </TouchableOpacity>
