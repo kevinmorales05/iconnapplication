@@ -47,12 +47,9 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     console.log('fetchData...');
     const data = await getShoppingCart(orderFormId);
     const { items, messages, totalizers } = data;
-    console.log('**************************');
-    console.log(items[0].name);
-    console.log(totalizers[0].value);
-    console.log('**************************');
     setProductList(items);
     setMessages(messages);
+    console.log('messages on initial:',messages);
     setTotalizers(totalizers[0]);
     setOrderFormId(orderFormIdReceived);
   }, []);
@@ -63,39 +60,33 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const updateShoppingCartQuantityServiceCall = useCallback(async (orderFormId, request) => {
     console.log(orderFormId + ' - ' + request);
-    clearShoppingCartMessages(orderFormId, request);
+    await clearShoppingCartMessages(orderFormId, request);
     const data = await updateShoppingCart(orderFormId, request);
     const { items, messages, totalizers } = data;
     setProductList(items);
     setMessages(messages);
+    console.log('messages on updating:',messages);
     setTotalizers(totalizers[0]);
   }, []);
 
   const emptyShoppingCartItemsServiceCall = useCallback(async (orderFormId, request) => {
     console.log(orderFormId + ' - ' + request);
-    clearShoppingCartMessages(orderFormId, request);
+    await clearShoppingCartMessages(orderFormId, request);
     const data = await emptyShoppingCar(orderFormId, request);
     const { items, messages, totalizers } = data;
     setProductList(items);
+    console.log('messages on empty:',messages);
     setMessages(messages);
     setTotalizers(totalizers[0]);
   }, []);
 
 
-
-
-  /*  
     useEffect(() => {
-      (async () => {
-        const data = await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9');
-          setProductList(data);
-      })();
-  
       if (internetReachability !== 0) {
         if (internetReachability === 1) setInter(true);
         if (internetReachability === 2) setInter(false);
       }
-    }, [internetReachability]);*/
+    }, [internetReachability]);
 
   useEffect(() => {
     if (loading === false) {
