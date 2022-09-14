@@ -58,7 +58,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     fetchData();
   }, []);
 
-  const updateShoppingCartQuantityServiceCall = useCallback(async (orderFormId, request) => {
+  const updateShoppingCartQuantityServiceCall = useCallback(async (orderFormId, request, operation ,msgOperation) => {
     console.log(orderFormId + ' - ' + request);
     await clearShoppingCartMessages(orderFormId, request);
     const data = await updateShoppingCart(orderFormId, request);
@@ -67,6 +67,25 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     setMessages(messages);
     console.log('messages on updating:',messages);
     setTotalizers(totalizers[0]);
+
+    let isthereErrorMessages = false;
+    let errorMsg = "";
+    if (messages) {
+      const tam = messages.length;
+      console.log('tamaño mensajes: ', tam);
+      if (tam > 0) {
+        isthereErrorMessages = true;
+        errorMsg = messages[0].text;
+        console.log("Error obtenido", errorMsg);
+      }
+    }
+
+    if(operation==="increase"){
+      toastFunction(isthereErrorMessages ? "addingProductError" : operation, isthereErrorMessages ? errorMsg : msgOperation);
+    }else {
+      toastFunction(operation, msgOperation);
+    }
+
   }, []);
 
   const emptyShoppingCartItemsServiceCall = useCallback(async (orderFormId, request) => {
@@ -136,8 +155,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       try {
         //loader.show();
         setLoadingStatus(true);
-        updateShoppingCartQuantityServiceCall(orderFormId, request);
-        toastFunction("decrease", 'Se actualizó el artículo en la canasta.');
+        updateShoppingCartQuantityServiceCall(orderFormId, request,"decrease",'Se actualizó el artículo en la canasta.');
         //setLoadingStatus(false);
       } catch (error) {
         console.log(error);
@@ -161,19 +179,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       try {
         //loader.show();
         setLoadingStatus(true);
-        updateShoppingCartQuantityServiceCall(orderFormId, request);
-        let isthereErrorMessages = false;
-        let errorMsg = "";
-        if (messages) {
-          const tam = messages.length;
-          console.log('tamaño mensajes: ', tam);
-          if (tam > 0) {
-            isthereErrorMessages = true;
-            errorMsg = messages[0].text;
-            console.log("Error obtenido", errorMsg);
-          }
-        }
-        toastFunction(isthereErrorMessages ? "addingProductError" : "increase", isthereErrorMessages ? errorMsg : 'Se actualizó el artículo en la canasta.');
+        updateShoppingCartQuantityServiceCall(orderFormId, request,"increase","Se actualizó el artículo en la canasta.");
         //setLoadingStatus(false);
       } catch (error) {
         console.log(error);
@@ -323,8 +329,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       try {
         //loader.show();
         setLoadingStatus(true);
-        updateShoppingCartQuantityServiceCall(orderForm, request);
-        toastFunction("delete", "Se eliminó el artículo de la canasta.");
+        updateShoppingCartQuantityServiceCall(orderForm, request,"delete", "Se eliminó el artículo de la canasta.");
         //setLoadingStatus(false);
       } catch (error) {
         console.log(error);
