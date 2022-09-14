@@ -287,14 +287,6 @@ const SearchSellerScreen = () => {
                 seller={seller}
                 selected={Number(seller['# Tienda']) === Number(current?.['# Tienda'])}
                 onPress={async () => {
-                  if (seller.distance) {
-                    if (seller.distance > 8) {
-                      toast.show({
-                        message: `Parece que estás lejos de la tienda seleccionada.`,
-                        type: 'warning'
-                      });
-                    }
-                  }
                   setCurrent(seller);
                 }}
               />
