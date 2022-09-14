@@ -6,7 +6,7 @@ import theme from 'components/theme/theme';
 import { ICONN_PIN_LOCATION } from 'assets/images';
 import items from 'assets/files/sellers.json';
 import { SellerInterface, setDefaultSeller, useAppDispatch, useAppSelector, RootState } from 'rtk';
-import { sortByDistance } from 'utils/geolocation';
+import { hasNearbySellers, sortByDistance } from 'utils/geolocation';
 import { useLoading, useAlert } from 'context';
 import Geolocation from 'react-native-geolocation-service';
 import appConfig from '../../../../app.json';
@@ -186,16 +186,26 @@ const SearchSellerScreen = () => {
                     position => {
                       const pos = [Number(position.coords.longitude), Number(position.coords.latitude)];
 
-                      setSellers(sortByDistance(pos, found));
+                      const sorted = sortByDistance(pos, found);
+                      const has = hasNearbySellers(pos, sorted);
+                      if (!has) {
+                        alert.show(
+                          {
+                            title: 'No hay tiendas cerca',
+                            message: 'Lo sentimos, intenta buscar en otra ubicación o elige “Para llevar” y encuentra tiendas donde puedes recoger tu pedido.',
+                            acceptTitle: 'Entendido',
+                            async onAccept() {
+                              alert.hide();
+                            }
+                          },
+                          'warning'
+                        );
+                      }
+
+                      setSellers(sorted);
                     },
                     error => {
-                      if (defaultSeller) {
-                        const pos = [Number(defaultSeller.Longitud), Number(defaultSeller.Latitud)];
-                        const sorted = sortByDistance(pos, found);
-                        setSellers(sorted);
-                      } else {
-                        setSellers(found);
-                      }
+                      setSellers(found);
                     },
                     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                   );
@@ -231,7 +241,7 @@ const SearchSellerScreen = () => {
             return;
           }
 
-          loader.show("","ecommerce");
+          loader.show('', 'ecommerce');
           Geolocation.getCurrentPosition(
             position => {
               loader.hide();

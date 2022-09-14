@@ -1,7 +1,7 @@
 import React, { ReactNode, useMemo, useState } from 'react';
 import { LoadingInterface } from 'components/organisms/Loading';
 import { StyleSheet, View, Image } from 'react-native';
-import { ICONN_LOADER, ICONN_LOADER_ECOMMERCE } from 'assets/images';
+import { ICONN_LOADER_ECOMMERCE } from 'assets/images';
 import { CustomText } from 'components';
 
 interface Props {
@@ -33,7 +33,7 @@ export const LoadingContextProvider = ({ children }: Props) => {
       {children}
       {loadingState.visible && (
         <View style={styles.container}>
-          {loadingState.variant === 'ecommerce' ? <Image source={ICONN_LOADER_ECOMMERCE} /> : <Image source={ICONN_LOADER} />}
+          <Image source={ICONN_LOADER_ECOMMERCE} />
           {loadingState.variant === 'ecommerce' && (
             <View
               style={{

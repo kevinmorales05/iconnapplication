@@ -5,12 +5,9 @@ import ICONN_EMAIL from './iconn-email.webp';
 import ICONN_EYE_ON from './iconn-eye.webp';
 import ICONN_COFFEE from './iconn-coffee.webp';
 import ICONN_DOCUMENT_EDIT from './iconn-document-edit.webp';
-import ICONN_WARNING from './iconn-warning.webp';
 import ICONN_SUCCESS from './iconn-success.webp';
-import ICONN_ERROR from './iconn-error.webp';
 import ICONN_EYE_VISIBLE from './iconn-eye-visible.webp';
 import ICONN_USER from './iconn-user.webp';
-import ICONN_LOADER from './iconn-loader.gif';
 import ICONN_INVITE from './iconn-signin.webp';
 import ICONN_EYE_OFF from './iconn-eye-visible.webp';
 import ICONN_CARD_PETRO from './iconn-card-petro.webp';
@@ -68,12 +65,9 @@ export {
   ICONN_EYE_ON,
   ICONN_COFFEE,
   ICONN_DOCUMENT_EDIT,
-  ICONN_WARNING,
   ICONN_SUCCESS,
-  ICONN_ERROR,
   ICONN_EYE_VISIBLE,
   ICONN_USER,
-  ICONN_LOADER,
   ICONN_INVITE,
   ICONN_EYE_OFF,
   ICONN_CARD_PETRO,

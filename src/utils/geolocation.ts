@@ -18,3 +18,13 @@ export const sortByDistance = (position: number[], sellers: SellerInterface[]): 
       return (a.distance as number) - (b.distance as number);
     });
 };
+
+export const hasNearbySellers = (position: number[], sellers: SellerInterface[]) => {
+  const filtered = sellers.filter(seller => {
+    const to = [Number(seller.Longitud), Number(seller.Latitud)];
+    const extent = distance(position, to);
+    return extent < 8;
+  });
+
+  return filtered.length > 0;
+};
