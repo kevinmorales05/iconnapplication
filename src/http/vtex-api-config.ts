@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from 'axios';
 // TODO: comnplete the rest of configuration, bearer token, auth headers, environment with react-native-config...
 const API_VTEX_ORDERS = 'https://oneiconn.myvtex.com/api/oms/pvt/orders';
 const API_VTEX_ORDER = 'https://oneiconn.myvtex.com/api/orders/pvt';
-const API_VTEX_AUTH = '';
+const API_VTEX_AUTH = 'https://oneiconn.myvtex.com/api/vtexid/pub/authentication/';
 const API_VTEX_SHOPPINGCAR = 'https://oneiconn.myvtex.com/api/checkout/pub/orderForm';
 const API_VTEX_PRODUCTS = 'https://oneiconn.myvtex.com/api/catalog_system/pvt/products';
 const VTEX_APPKEY = 'vtexappkey-oneiconn-SOYFEO';

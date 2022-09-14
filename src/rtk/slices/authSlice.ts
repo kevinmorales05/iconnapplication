@@ -12,6 +12,7 @@ import {
   getUserThunk,
   sendEmailToRecoverPasswordThunk
 } from '../thunks/auth.thunks';
+import { startAuthenticationThunk } from '../thunks/vtex-auth.thunks';
 import { Address, AddressWithPositionInterface, AuthDataInterface } from '../types';
 
 const initialState: AuthDataInterface = {
@@ -218,6 +219,15 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(updateUserAddressThunk.rejected, state => {
+      state.loading = false;
+    });
+    builder.addCase(startAuthenticationThunk.pending, state => {
+      state.loading = true;
+    });
+    builder.addCase(startAuthenticationThunk.fulfilled, state => {
+      state.loading = false;
+    });
+    builder.addCase(startAuthenticationThunk.rejected, state => {
       state.loading = false;
     });
   }
