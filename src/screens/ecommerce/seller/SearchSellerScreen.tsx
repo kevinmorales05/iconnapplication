@@ -284,7 +284,33 @@ const SearchSellerScreen = () => {
                 key={index}
                 seller={seller}
                 selected={Number(seller['# Tienda']) === Number(current?.['# Tienda'])}
-                onPress={() => {
+                onPress={async () => {
+                  if (seller.distance) {
+                    if (seller.distance > 8) {
+                      alert.show(
+                        {
+                          title: 'Advertencia',
+                          message: `Esta tienda está a ${format(seller.distance)} de distancia.\n ¿Deseas colocarla como tienda por defecto?`,
+                          acceptTitle: 'Si',
+                          cancelTitle: 'No',
+                          cancelOutline: 'iconn_light_grey',
+                          cancelTextColor: 'iconn_dark_grey',
+                          async onAccept() {
+                            setCurrent(seller);
+                            alert.hide();
+                          },
+                          async onCancel() {
+                            alert.hide();
+                          }
+                        },
+                        'warning'
+                      );
+                    } else {
+                      setCurrent(seller);
+                    }
+
+                    return;
+                  }
                   setCurrent(seller);
                 }}
               />
