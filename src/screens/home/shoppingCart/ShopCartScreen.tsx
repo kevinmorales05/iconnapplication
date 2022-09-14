@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, View, StyleSheet, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
@@ -9,7 +9,7 @@ import {
   ICONN_EMPTY_SHOPPING_CART
 } from 'assets/images';
 import { Image, StyleProp, ViewStyle } from 'react-native';
-import { text } from '@storybook/addon-knobs';
+import { object, text } from '@storybook/addon-knobs';
 import { getShoppingCart, emptyShoppingCar, updateShoppingCart, clearShoppingCartMessages } from 'services/vtexShoppingCar.services';
 import items from 'assets/files/sellers.json';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -22,100 +22,118 @@ interface Props {
   onPressInvoice: () => void;
   onPressMyAccount: () => void;
   onPressLogOut: () => void;
-  products: () => Object;
+  orderFormIdReceived: () => string;
 }
 
 
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
 
-const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, products }) => {
+const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, orderFormIdReceived }) => {
   const insets = useSafeAreaInsets();
   const loader = useLoading();
   const { loading } = useAppSelector((state: RootState) => state.invoicing);
-  const { cart : dataFromCart } = useAppSelector((state: RootState) => state.cart);  
-  const {  internetReachability } = useAppSelector((state: RootState) => state.app);
+  const { cart: dataFromCart } = useAppSelector((state: RootState) => state.cart);
+  const { internetReachability } = useAppSelector((state: RootState) => state.app);
   const toast = useToast();
   const [inter, setInter] = useState(true);
 
-  let isEmpty = true;
-  const [productList, setProductList] = useState(Object);
+  const [productList, setProductList] = useState([]);
+  const [orderFormId, setOrderFormId] = useState('');
+  const [totalizers, setTotalizers] = useState(undefined);
+  const [messages, setMessages] = useState(null);
+  const [loadingStatus, setLoadingStatus] = useState(false);
 
-  /*
-  const getProducts = async () => {
-    try {
-      const prods = await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9')
-      setProductList(prods);  // set State
-    } catch (err) {
-      console.error('error');
-    }
-  };*/
+  const fetchData = useCallback(async () => {
+    console.log('fetchData...');
+    const data = await getShoppingCart(orderFormId);
+    const { items, messages, totalizers } = data;
+    setProductList(items);
+    setMessages(messages);
+    console.log('messages on initial:',messages);
+    setTotalizers(totalizers[0]);
+    setOrderFormId(orderFormIdReceived);
+  }, []);
 
   useEffect(() => {
-   // getProducts();
- //  const prods = getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9')
-      setProductList(products);
-    if (internetReachability !== 0) {
-      if (internetReachability === 1) setInter(true);
-      if (internetReachability === 2) setInter(false);
+    fetchData();
+  }, []);
+
+  const updateShoppingCartQuantityServiceCall = useCallback(async (orderFormId, request, operation ,msgOperation) => {
+    console.log(orderFormId + ' - ' + request);
+    await clearShoppingCartMessages(orderFormId, request);
+    const data = await updateShoppingCart(orderFormId, request);
+    const { items, messages, totalizers } = data;
+    setProductList(items);
+    setMessages(messages);
+    console.log('messages on updating:',messages);
+    setTotalizers(totalizers[0]);
+
+    let isthereErrorMessages = false;
+    let errorMsg = "";
+    if (messages) {
+      const tam = messages.length;
+      console.log('tamaño mensajes: ', tam);
+      if (tam > 0) {
+        isthereErrorMessages = true;
+        errorMsg = messages[0].text;
+        console.log("Error obtenido", errorMsg);
+      }
     }
-  }, [internetReachability]);
-  
-/*
+
+    if(operation==="increase"){
+      toastFunction(isthereErrorMessages ? "addingProductError" : operation, isthereErrorMessages ? errorMsg : msgOperation);
+    }else {
+      toastFunction(operation, msgOperation);
+    }
+
+  }, []);
+
+  const emptyShoppingCartItemsServiceCall = useCallback(async (orderFormId, request) => {
+    console.log(orderFormId + ' - ' + request);
+    await clearShoppingCartMessages(orderFormId, request);
+    const data = await emptyShoppingCar(orderFormId, request);
+    const { items, messages, totalizers } = data;
+    setProductList(items);
+    console.log('messages on empty:',messages);
+    setMessages(messages);
+    setTotalizers(totalizers[0]);
+  }, []);
+
+
+    useEffect(() => {
+      if (internetReachability !== 0) {
+        if (internetReachability === 1) setInter(true);
+        if (internetReachability === 2) setInter(false);
+      }
+    }, [internetReachability]);
+
   useEffect(() => {
-    setProductList(getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9'));
-    if (internetReachability !== 0) {
-      if (internetReachability === 1) setInter(true);
-      if (internetReachability === 2) setInter(false);
-  }
-  console.log("..................");
-  console.log(productList);
-  console.log("..................");
-}, [internetReachability])
-*/
+    if (loading === false) {
+      loader.hide();
+    }
+  }, [loading]);
 
-useEffect(() => {
-  if (loading === false) {
-    loader.hide();
-  }
-}, [loading]);
-
-  function toastFunction(tag, msg){
-    if(tag==="decrease" || tag==="increase"){
+  function toastFunction(tag, msg) {
+    if (tag === "decrease" || tag === "increase") {
       toast.show({
         message: msg,
         type: 'success'
       });
-    }else if(tag==="addingProductError"){
+    } else if (tag === "addingProductError") {
       toast.show({
         message: msg,
         type: 'error'
       });
-    }else if(tag==="delete"){
+    } else if (tag === "delete") {
       toast.show({
         message: msg,
         type: 'success'
       });
-    }else if(tag=="empty"){
+    } else if (tag == "empty") {
       toast.show({
         message: msg,
         type: 'success'
       });
-    }
-  }
-
-  let itemsReceived = null;
-
-  if (productList) {
-  const arrayValues = Object.values(productList);
-    itemsReceived = arrayValues[2];
-    if (itemsReceived) {
-      if (itemsReceived.items) {
-        const tam = Object.values(itemsReceived.items).length;
-        console.log('tamaño: ', tam);
-        if(tam > 0){
-          isEmpty = false;
-        }
-      }
     }
   }
 
@@ -135,14 +153,14 @@ useEffect(() => {
       };
 
       try {
-        loader.show();
-        clearShoppingCartMessages(orderFormId,{});
-        setProductList(updateShoppingCart(orderFormId, request));
-        toastFunction("decrease",'Se actualizó el artículo en la canasta.');
+        //loader.show();
+        setLoadingStatus(true);
+        updateShoppingCartQuantityServiceCall(orderFormId, request,"decrease",'Se actualizó el artículo en la canasta.');
+        //setLoadingStatus(false);
       } catch (error) {
         console.log(error);
-      }finally{ 
-        loader.hide();
+      } finally {
+        //loader.hide();
       }
     };
 
@@ -159,34 +177,14 @@ useEffect(() => {
         ]
       };
       try {
-      loader.show();
-      clearShoppingCartMessages(orderFormId,{});
-      setProductList(updateShoppingCart(orderFormId, request));
-      let isthereErrorMessages =  false;
-      let errorMsg = "";
-        if (productList) {
-          const arrayValues = Object.values(productList);
-          itemsReceived = arrayValues[2];
-          if (itemsReceived) {
-            if (itemsReceived.messages) {
-              console.log('-----------');
-              console.log(itemsReceived.messages);
-              console.log('-----------');
-              const tam = Object.values(itemsReceived.messages).length;
-              console.log('tamañooo: ', tam);
-              if(tam > 0){
-                isthereErrorMessages = true;
-                errorMsg = itemsReceived.messages[0].text;
-                console.log("Error obtenido",errorMsg);
-              }
-            }
-          }
-        }
-        toastFunction(isthereErrorMessages?"addingProductError":"increase",isthereErrorMessages?errorMsg:'Se actualizó el artículo en la canasta.');
+        //loader.show();
+        setLoadingStatus(true);
+        updateShoppingCartQuantityServiceCall(orderFormId, request,"increase","Se actualizó el artículo en la canasta.");
+        //setLoadingStatus(false);
       } catch (error) {
         console.log(error);
-      }finally{
-        loader.hide();
+      } finally {
+        //loader.hide();
       }
     };
     return (
@@ -209,68 +207,71 @@ useEffect(() => {
           height: 37
         }}
       >
-        <Button fontSize="h6" size="small" transparent="true" fontBold="true" onPress={decreaseItem}>
-          -
-        </Button>
+        <Container style={{ marginLeft: 13 }}>
+          <Touchable onPress={decreaseItem}>
+            <IconO name="minus" size={14} color={theme.brandColor.iconn_green_original} />
+          </Touchable>
+        </Container>
         <Container>
           <Container>
             <CustomText text="" fontSize={7}></CustomText>
           </Container>
           <Container>
-            <TextContainer text={item.quantity} textAlign="auto" fontSize={11}></TextContainer>
+            <TextContainer text={item.quantity} textAlign='auto' fontSize={14}></TextContainer>
           </Container>
           <Container>
             <CustomText text="" fontSize={7}></CustomText>
           </Container>
         </Container>
-        <Button fontSize="h6" size="small" transparent="true" onPress={increaseItem}>
-          +
-        </Button>
+        <Container style={{ marginRight: 13 }}>
+          <Touchable onPress={increaseItem}>
+            <IconO name="plus" size={14} color={theme.brandColor.iconn_green_original} />
+          </Touchable>
+        </Container>
       </Container>
     );
   };
 
-  const ItemsList: React.FC = ({ key, itemss }) => {
-   let toShow = null;
-   let itemsLenght;
-    if (itemss) {
-      const itemsToShow = itemss.items;
-      if (itemsToShow) {
-        itemsLenght = Object.values(itemsToShow).length;
-        if (itemsLenght) {
-          toShow = itemsToShow;
-        } else {
-        }
-      } else {
-
+  const ItemsList: React.FC<[]> = (itemss: []) => {
+    console.log('items en itemslist:::',orderFormId);
+    console.log(Object.values(itemss).length);
+    const itemsReceived = Object.values(itemss);
+    const itemLst = itemsReceived[0];
+    console.log(itemLst.length);
+    let toShow = null;
+    let itemsLenght;
+    if (itemLst) {
+      itemsLenght = itemLst.length;
+      if (itemsLenght > 0) {
+        toShow = itemLst;
       }
-    } else {
     }
 
     const emptyShoppingCart = () => {
       console.log('***empty ShoppingCart***');
       try {
-        loader.show();
-        clearShoppingCartMessages("655c3cc734e34ac3a14749e39a82e8b9",{});
-        setProductList(emptyShoppingCar('655c3cc734e34ac3a14749e39a82e8b9', {}));
+        //loader.show();
+        setLoadingStatus(true);
+        emptyShoppingCartItemsServiceCall(orderFormId, {});
         toastFunction("empty", "Se eliminaron los artículos de la canasta.");
       } catch (error) {
         console.log(error);
-      }finally{
-        loader.hide();
+      } finally {
+        setLoadingStatus(false);
+        //loader.hide();
       }
     };
 
     return (
-      <Container style={{backgroundColor: theme.brandColor.iconn_background, width: '100%'}}>
+      <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%' }}>
         {
-          itemsLenght>0?
-          toShow.map((value, index) => {
+          itemsLenght > 0 ?
+            toShow.map((value, index) => {
               return (
-                <Item value={value} arrayIndex={index} />
+                <Item key={index + value} value={value} arrayIndex={index} orderForm={orderFormId} />
               )
             }
-          ):<></>
+            ) : <></>
         }
         <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
           <TextContainer
@@ -312,7 +313,7 @@ useEffect(() => {
     );
   };
 
-  const Item: React.FC = ({ value, arrayIndex }) => {
+  const Item: React.FC = ({ value, arrayIndex, orderForm }) => {
     const deleteShoppingCartItem = () => {
       console.log('***delete item: ', value.id);
       const request = {
@@ -326,13 +327,14 @@ useEffect(() => {
         ]
       };
       try {
-        loader.show();
-        setProductList(updateShoppingCart('655c3cc734e34ac3a14749e39a82e8b9', request));
-        toastFunction("delete", "Se eliminó el artículo de la canasta.");
+        //loader.show();
+        setLoadingStatus(true);
+        updateShoppingCartQuantityServiceCall(orderForm, request,"delete", "Se eliminó el artículo de la canasta.");
+        //setLoadingStatus(false);
       } catch (error) {
         console.log(error);
-      } finally { 
-        loader.hide(); 
+      } finally {
+        //loader.hide(); 
       }
     };
 
@@ -359,10 +361,10 @@ useEffect(() => {
               <Text numberOfLines={2} style={{ width: 175, color: 'black' }}>
                 {value.name}
               </Text>
-              <TextContainer text={'$' + (value.priceDefinition.total/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} fontBold marginLeft={10}></TextContainer>
+              <TextContainer text={'$' + (value.priceDefinition.total / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} fontBold marginLeft={10}></TextContainer>
             </Container>
             <Container>
-              <TextContainer numberOfLines={1} text={'$' + (value.price/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'} textColor="grey" fontSize={12} marginTop={4}></TextContainer>
+              <TextContainer numberOfLines={1} text={'$' + (value.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'} textColor="grey" fontSize={12} marginTop={4}></TextContainer>
             </Container>
           </Container>
           <Container row space="around" style={{ marginTop: 4 }}>
@@ -377,16 +379,16 @@ useEffect(() => {
             >
               Eliminar
             </Button>
-            <Counter orderFormId={'655c3cc734e34ac3a14749e39a82e8b9'} item={value} itemIndex={arrayIndex} />
+            <Counter orderFormId={orderFormId} item={value} itemIndex={arrayIndex} />
           </Container>
         </Container>
       </Container>
     );
   };
 
-  const fullCart = (<Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background}}>
+  const fullCart = (<Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background }}>
     <ScrollView bounces={false}
-      style={{ flex: 1, marginTop: 0, width:'100%'}}
+      style={{ flex: 1, marginTop: 0, width: '100%' }}
       contentContainerStyle={{
         flexGrow: 1,
         paddingBottom: insets.bottom + 1,
@@ -394,7 +396,7 @@ useEffect(() => {
       }}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}>
-      <ItemsList key={1} itemss={itemsReceived} />
+      <ItemsList itemss={productList} />
     </ScrollView>
   </Container>
   );
@@ -410,44 +412,43 @@ useEffect(() => {
   );
 
   const emptyCartFooter = (
-    <Container style={{marginBottom:24, width:'100%'}}>
-      <Button length="long" round fontSize="h3" fontBold onPress={onPressMyAccount} style={{backgroundColor: theme.brandColor.iconn_green_original}}>
+    <Container style={{ marginBottom: 24, width: '100%' }}>
+      <Button length="long" round fontSize="h3" fontBold onPress={onPressMyAccount} style={{ backgroundColor: theme.brandColor.iconn_green_original }}>
         Ver artículos
       </Button>
     </Container>
   );
 
   const fullCartFooter = (
-    <Container style={{ paddingLeft: 10, width: '100%', backgroundColor: theme.fontColor.white }}>
-      <Container row space="between" style={{marginTop: 8}} >
+    <Container space='evenly' style={{ paddingLeft: 10, width: '100%', height: '20%', backgroundColor: theme.fontColor.white }}>
+      <Container row space="between" style={{ marginTop: 8 }} >
         <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
-        <CustomText text={"$" + (itemsReceived!=undefined?(itemsReceived.totalizers!=undefined?((
-          itemsReceived.totalizers[0]!=undefined?itemsReceived.totalizers[0].value:100)/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'):"0"): "0") + ' MXN'} fontSize={18} fontBold></CustomText>
+        <CustomText text={"$" + (totalizers != undefined ? (totalizers.value / 100) : 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'} fontSize={18} fontBold></CustomText>
       </Container>
       <Container>
-      <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{marginTop:5, marginBottom:5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height:50 }}>
-        Continuar
-      </Button>
+        <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{ marginTop: 5, marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50 }}>
+          Continuar
+        </Button>
       </Container>
     </Container>
   );
 
-  const cartFooter = isEmpty ? emptyCartFooter : fullCartFooter;
-  const cart = isEmpty ? emptyCart : fullCart;
+  const cartFooter = productList.length > 0 ? fullCartFooter : emptyCartFooter;
+  const cart = productList.length > 0 ? fullCart : emptyCart;
 
   return (
-    <Container flex crossCenter style={{ margin: 0, backgroundColor: theme.brandColor.iconn_background, width: '100%', padding:0 }}>
-     {inter ? (
-      <>
+    <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', padding: 0 }}>
+      {inter ? (
+        <>
           {cart}
-      </>
-    ) : (
-      <>
-        <Container flex backgroundColor={theme.brandColor.iconn_background} style={{ width: '100%' }}>
-        <ConnectionItem></ConnectionItem>
-        </Container>
-      </>
-    )}
+        </>
+      ) : (
+        <>
+          <Container flex backgroundColor={theme.brandColor.iconn_background} style={{ width: '100%' }}>
+            <ConnectionItem></ConnectionItem>
+          </Container>
+        </>
+      )}
       {cartFooter}
     </Container>
   );

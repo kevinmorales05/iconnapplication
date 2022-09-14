@@ -18,7 +18,6 @@ import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { setInvoicingInitialState, setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
 import { getShoppingCart, emptyShoppingCar, updateShoppingCart } from 'services/vtexShoppingCar.services';
-//import cart slice 
 import {getShoppingCartThunk} from 'rtk/thunks/vtex-shoppingCart.thunks'
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
@@ -73,14 +72,6 @@ const ShopCartController: React.FC = () => {
     (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
   }
 
-   const [prod, setProd] = useState(Object);
-    useLayoutEffect(() => {
-   setProd(getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9'));
-    console.log('............................');
-    console.log('se imprime desde useEffect',prod);
-    console.log('............................');
-  }, [])
-
    
   return (
     <SafeArea
@@ -92,7 +83,7 @@ const ShopCartController: React.FC = () => {
     >
       
       <ShopCartScreen
-        products={prod}
+        orderFormIdReceived={'655c3cc734e34ac3a14749e39a82e8b9'}
         onPressLogOut={logOut}
         onPressMyAccount={goToMyAccount}
         onPressInvoice={goToInvoice}
