@@ -28,7 +28,7 @@ export class UsersApi extends HttpClient {
           'INTERCEPTOR - Starting Request ===> \n\n',
           JSON.stringify(headers, null, 3),
           '\n',
-          `baseURL: ${baseURL}`,
+          `baseURL: https://oneiconn.myvtex.com/api`,
           '\n',
           `url: ${url}`,
           '\n',

@@ -9,7 +9,7 @@ import { useAlert, useLoading } from 'context';
 import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { setAuthEmail, setSignMode } from 'rtk/slices/authSlice';
-import {vtexauthServices} from 'services/vtexauth.services';
+import { authServices } from 'services';
 
 
 
@@ -71,7 +71,7 @@ const EnterEmailController: React.FC = () => {
   const createSession = async (email: string) => {
     loader.show();
     try {
-      await vtexauthServices.startAuthentication(email);
+      await authServices.startAuthentication(email);
       dispatch(setAuthEmail({email}));
       navigate('EnterPassword');
     } catch (error) {
