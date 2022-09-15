@@ -7,7 +7,7 @@ export const emailRules: RegisterOptions = {
   },
   validate: (value: string) => {
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i.test(value)) {
-      return `Ingresa un email válido.`;
+      return `Correo electrónico no válido.`;
     }
 
     return true;

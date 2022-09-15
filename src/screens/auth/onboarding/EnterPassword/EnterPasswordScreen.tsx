@@ -7,6 +7,7 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { ICONN_EMAIL } from 'assets/images';
 import React, { useEffect, useRef } from 'react';
 import { passwordMinimumRule } from 'utils/rules';
+import { HttpClient } from '../../../../http/http-client';
 
 interface Props {
   accountError?: string;
@@ -20,6 +21,8 @@ const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, 
   const insets = useSafeAreaInsets();
   const { handleSubmit, register, control, formState:{ errors, isValid } } = useForm({ mode: 'onChange' });
   const passwordRef = useRef<TextInput>(null);
+  const authToken = HttpClient.accessToken;
+
 
   useEffect(() => {
     if (passwordRef.current) {

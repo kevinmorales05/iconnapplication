@@ -11,14 +11,12 @@ interface Props {
   title: string;
   onSubmit: (email: string) => void;
   goBack: () => void;
-  onPressInfo: () => void;
 }
 
 const EnterEmailScreen: React.FC<Props> = ({
   title,
   onSubmit,
   goBack,
-  onPressInfo
 }) => {
   const insets = useSafeAreaInsets();
 
@@ -73,9 +71,7 @@ const EnterEmailScreen: React.FC<Props> = ({
         rules={emailRules}
         error={errors.email?.message}
         marginTop={36}
-        sufixOutIcon
         ref={emailRef}
-        onPressInfo={onPressInfo}
         renderErrorIcon={false}
       />
       <Container flex row crossAlignment="end" space="between">

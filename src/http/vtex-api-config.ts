@@ -47,3 +47,15 @@ export const VTEXApiConfig = (type: string): AxiosRequestConfig => {
     }
   };
 };
+
+export const VTEXApiAuthConfig = (type: string): AxiosRequestConfig => {
+  return {
+    baseURL: getApiUrl(type),
+    headers: {
+      Accept: '*/*',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-VTEX-API-AppKey': VTEX_APPKEY ,
+      'X-VTEX-API-AppToken': VTEX_APPTOKEN ,
+    }
+  };
+};

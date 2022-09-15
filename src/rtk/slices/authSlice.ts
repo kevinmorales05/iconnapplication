@@ -77,8 +77,8 @@ const authSlice = createSlice({
     },
     setUserId(state, action: PayloadAction<AuthDataInterface>) {
       // TODO (IMPORTANT!!!): REVERT THIS HARDCODED USER ID:
-      state.user.user_id = 'da5550d6-2a38-11ed-835d-129d14bde747';
-      //state.user.user_id = action.payload.user_id;
+      //state.user.user_id = 'da5550d6-2a38-11ed-835d-129d14bde747';
+      state.user.user_id = action.payload.user_id;
     },
     setIsLogged(state, action: PayloadAction<AuthDataInterface>) {
       state.user.isLogged = action.payload.isLogged;

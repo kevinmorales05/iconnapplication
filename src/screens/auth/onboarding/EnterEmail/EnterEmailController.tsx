@@ -9,10 +9,12 @@ import { useAlert, useLoading } from 'context';
 import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { setAuthEmail, setSignMode } from 'rtk/slices/authSlice';
+import {vtexauthServices} from 'services/vtexauth.services';
+
+
 
 const EnterEmailController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
-  const [aboutEmailVisible, setAboutEmailVisible] = useState<boolean>(false);
   const loader = useLoading();
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state: RootState) => state.auth);
@@ -24,13 +26,6 @@ const EnterEmailController: React.FC = () => {
     }
   }, [loading]);
 
-  const onPressEmailInfo = () => {
-    setAboutEmailVisible(true);
-  };
-
-  const onPressOut = () => {
-    setAboutEmailVisible(false);
-  };
 
   const showAlert = () => {
     alert.show({
@@ -73,18 +68,24 @@ const EnterEmailController: React.FC = () => {
     }
   };
 
+  const createSession = async (email: string) => {
+    loader.show();
+    try {
+      await vtexauthServices.startAuthentication(email);
+      dispatch(setAuthEmail({email}));
+      navigate('EnterPassword');
+    } catch (error) {
+      console.log('LOGIN ERROR', error);
+    }
+  }
+
+
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
       <EnterEmailScreen
         title={`Ingresa tu dirección de \ncorreo electrónico`}
         goBack={goBack}
-        onSubmit={onSubmit}
-        onPressInfo={onPressEmailInfo}
-      />
-      <AboutEmail
-        visible={aboutEmailVisible}
-        onUnderstood={onPressOut}
-        onPressOut={onPressOut}
+        onSubmit={createSession}
       />
     </SafeArea>
   );

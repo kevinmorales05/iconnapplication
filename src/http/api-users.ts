@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
-import { ApiConfig } from './api-config';
+import { VTEXApiAuthConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
 import { DeviceEventEmitter } from 'react-native'
 
@@ -11,10 +11,10 @@ export class UsersApi extends HttpClient {
   private constructor() {
     console.log(
       'AxiosRequestConfig ===> ApiConfig ===> \n\n',
-      JSON.stringify(ApiConfig('users'), null, 3)
+      JSON.stringify(VTEXApiAuthConfig('auth'), null, 3)
     );
 
-    super(ApiConfig('users'));
+    super(VTEXApiAuthConfig('auth'));
 
     // Interceptors (only for debug purpose), please do not remove the "return" line,
     // is  necessary to prevent a very confusing error and spend sometime to debug it.

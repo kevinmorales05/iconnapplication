@@ -19,8 +19,8 @@ export interface AuthDataInterface {
   gender?: string | number;
   password?: string;
   new_password?: string;
-  addresses: Address[];
-  seenCarousel: boolean;
+  addresses?: Address[];
+  seenCarousel?: boolean;
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';
@@ -74,4 +74,9 @@ export interface PostalCodeInfo {
 export interface AddressWithPositionInterface {
   position: number;
   address: Address;
+}
+
+export interface AuthCookie {
+  Name: string;
+  Value: string;
 }

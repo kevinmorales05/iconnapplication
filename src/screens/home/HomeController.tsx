@@ -182,6 +182,14 @@ const HomeController: React.FC = () => {
     }
   };
 
+  const logOutApp = async () => {
+        dispatch(setAppInitialState());
+        dispatch(setAuthInitialState());
+        dispatch(setGuestInitialState());
+        dispatch(setInvoicingInitialState());
+  };
+
+
   const goToMyAccount = () => {
     isGuest ? navigate('InviteSignUp') : navigate('Mi Cuenta');
   };
@@ -286,7 +294,7 @@ const HomeController: React.FC = () => {
     >
       <HomeScreen
         name={user.name}
-        onPressLogOut={logOut}
+        onPressLogOut={logOutApp}
         onPressMyAccount={goToMyAccount}
         onPressInvoice={goToInvoice}
         onPressAddNewAddress={onPressAddNewAddress}

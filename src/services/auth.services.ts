@@ -1,7 +1,45 @@
 import { AuthDataInterface } from 'rtk';
 import { OtpsApi } from '../http/api-otps';
 import { UsersApi } from '../http/api-users';
+import { HttpClient } from '../http/http-client';
 
+
+/**
+ * Function to login user
+ * @param email
+ * @param password
+ * @param authenticationToken
+ */
+ async function login(email: string, password: string, authenticationToken: string): Promise<any> {
+  const formData = new FormData();
+  formData.append('email', email);
+  formData.append('password', password);
+  formData.append('authenticationToken', authenticationToken);
+
+  const response = await UsersApi.getInstance().postRequest(`/classic/validate`, formData);
+
+  if (response === undefined) return Promise.reject(new Error(`/classic/validate`));  
+
+  const { data } = await response;
+  let authCookie = await data.authCookie;
+  HttpClient.authCookie = authCookie;
+  let accountAuthCookie = await data.accountAuthCookie;
+  HttpClient.accountAuthCookie = accountAuthCookie;
+  return data;
+}
+async function sendAccessKey(email: string, authenticationToken: string): Promise<any> {
+  const formData = new FormData();
+  formData.append('email', email);
+  formData.append('authenticationToken', authenticationToken);
+
+  const response = await UsersApi.getInstance().postRequest(`/accesskey/send`, formData);
+
+  if (response === undefined) return Promise.reject(new Error(`/accesskey/send`));  
+
+  const { data } = await response;
+
+  return data;
+}
 /**
  * Function to validate user status
  * @param email
@@ -114,6 +152,8 @@ async function sendEmailtoRecoverPassword(user: AuthDataInterface): Promise<any>
 }
 
 export const authServices = {
+  login,
+  sendAccessKey,
   validateUser,
   preSignUp,
   otpValidate,

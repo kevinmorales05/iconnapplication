@@ -11,7 +11,9 @@ import {
   useAppDispatch,
   useAppSelector
 } from 'rtk';
-import { useToast, useLoading } from 'context';
+import { useToast, useLoading, useAlert } from 'context';
+import { authServices } from 'services';
+import { HttpClient } from '../../../../http/http-client';
 
 const ForgotPasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -20,12 +22,30 @@ const ForgotPasswordController: React.FC = () => {
   const loader = useLoading();
   const toast = useToast();
   const dispatch = useAppDispatch();
+  const authToken = HttpClient.accessToken;
+  const alert = useAlert();
+
+
 
   useEffect(() => {
     if (loading === false) {
       loader.hide();
     }
   }, [loading]);
+
+  const sendKey = async ( ) => {
+    try {
+      const response = await authServices.sendAccessKey(email, authToken);
+      console.log('SE MANDO ACCESS KEY', response);
+      if (response.authStatus == 'InvalidToken') {
+        alert.show({ title: 'Ocurrió un error inesperado :(' }, 'error');
+      } else {
+        navigate('EnterOtp');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const onSubmit = async () => {
     loader.show();
@@ -48,7 +68,7 @@ const ForgotPasswordController: React.FC = () => {
   };
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <ForgotPasswordScreen goBack={goBack} email={email} onSubmit={onSubmit} />
+      <ForgotPasswordScreen goBack={goBack} email={email} onSubmit={sendKey} />
     </SafeArea>
   );
 };

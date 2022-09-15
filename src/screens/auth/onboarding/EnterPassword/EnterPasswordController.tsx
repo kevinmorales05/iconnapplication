@@ -5,6 +5,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
 import { useLoading, useAlert } from 'context';
+import { HttpClient } from '../../../../http/http-client';
+
 import {
   getUserThunk,
   RootState,
@@ -21,9 +23,11 @@ import {
   setUserId,
   signInWithEmailAndPasswordThunk,
   useAppDispatch,
-  useAppSelector
+  useAppSelector,
 } from 'rtk';
 import React, { useEffect, useState } from 'react';
+import { authServices } from 'services';
+import {vtexauthServices} from 'services/vtexauth.services';
 
 const EnterPasswordController: React.FC = () => {
   const { goBack, navigate } =
@@ -34,6 +38,7 @@ const EnterPasswordController: React.FC = () => {
   const { email } = user;
   const alert = useAlert();
   const [accountError, setAccountError] = useState('');
+  const authToken = HttpClient.accessToken;
 
   useEffect(() => {
     if (loading === false) {
@@ -57,6 +62,23 @@ const EnterPasswordController: React.FC = () => {
         return error;
     }
   };
+
+  const vauth = async ( password : string) => {
+    try {
+      const response = await authServices.login(email, password, authToken);
+      if(response.authStatus == 'Success') {
+        dispatch(setUserId({user_id: response.userId}))
+        dispatch(setIsLogged({ isLogged: true }));
+      } else if (response.authStatus == 'WrongCredentials') {
+        setAccountError('Contraseña incorrecta');
+      } else {
+        alert.show({ title: 'Lo sentimos', message: 'No pudimos ingresar a tu cuenta en este momento. Por favor intenta más tarde.',  });
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   const onSubmit = async (password: string) => {
     loader.show();
@@ -109,13 +131,14 @@ const EnterPasswordController: React.FC = () => {
     }
   };
 
+
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
       <EnterPasswordScreen
         accountError={accountError}
         goBack={goBack}
         email={email}
-        onSubmit={onSubmit}
+        onSubmit={vauth}
         goToForgotPassword={goToForgotPassword}
       />
     </SafeArea>
