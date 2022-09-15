@@ -29,3 +29,11 @@ export type HomeStackParams = {
   SearchSeller: undefined;
   MyOrders: undefined;
 };
+
+export type HomeTabScreens = {
+  HomeScreen: undefined;
+  CategoriesScreen: undefined;
+  PromosScreen: undefined;
+  BranchesScreen: undefined;
+  AccountScreen: undefined;
+};

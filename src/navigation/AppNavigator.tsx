@@ -1,21 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import AuthStack from './stacks/AuthStack';
-import HomeStack from './stacks/HomeStack';
 import auth from '@react-native-firebase/auth';
 import { useToast, useAlert, useLoading } from 'context';
 import { DeviceEventEmitter } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { RootState, useAppSelector, useAppDispatch, setAppError, setAppInitialState, setAppInternetReachability, setAppInternetReachabilityReviewed } from 'rtk';
+import {
+  RootState,
+  useAppSelector,
+  useAppDispatch,
+  setAppError,
+  setAppInitialState,
+  setAppInternetReachability,
+  setAppInternetReachabilityReviewed
+} from 'rtk';
 import NetInfo from '@react-native-community/netinfo';
 import { store } from 'rtk';
+import HomeStack from './stacks/HomeStack';
 
 const Stack = createNativeStackNavigator<any>();
-const AppNavigator = () => {
+const AppNavigator: any = () => {
   const alert = useAlert();
   const loader = useLoading();
   const toast = useToast();
   const dispatch = useAppDispatch();
-  const { error, internetReachability, internetReachabilityReviewed } = useAppSelector((state: RootState) => state.app);
+  const { error, internetReachability } = useAppSelector((state: RootState) => state.app);
   const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
   const { isLogged } = userLogged;
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
@@ -39,10 +47,10 @@ const AppNavigator = () => {
   /**
    * Show global http errors and reset AppError.
    */
-   useEffect(() => {
+  useEffect(() => {
     if (internetReachability !== 0) {
-      if (internetReachability === 1) toast.show({message: 'Conectado a internet.', type:'success'});
-      if (internetReachability === 2) toast.show({message: '¡Oops! No hay conexión a internet.', type:'warning'});
+      if (internetReachability === 1) toast.show({ message: 'Conectado a internet.', type: 'success' });
+      if (internetReachability === 2) toast.show({ message: '¡Oops! No hay conexión a internet.', type: 'warning' });
       dispatch(setAppInternetReachability({ internetReachability: 0 }));
     }
   }, [internetReachability]);
@@ -61,22 +69,22 @@ const AppNavigator = () => {
     // 2.
     NetInfo.configure({
       reachabilityUrl: 'https://clients3.google.com/generate_204',
-      reachabilityTest: async (response) => response.status === 204,
+      reachabilityTest: async response => response.status === 204,
       reachabilityLongTimeout: 7 * 1000, // 7s
       reachabilityShortTimeout: 1 * 1000, // 1s
-      reachabilityRequestTimeout: 5 * 1000, // 5s
+      reachabilityRequestTimeout: 5 * 1000 // 5s
     });
     NetInfo.addEventListener(state => {
       if (state.isConnected === true && state.isInternetReachable === true) {
         const reachabilityReviewed = store.getState().app.internetReachabilityReviewed;
         if (reachabilityReviewed === 1) {
-          dispatch(setAppInternetReachability({internetReachability: 1}));
-          dispatch(setAppInternetReachabilityReviewed({internetReachabilityReviewed: 1}));
+          dispatch(setAppInternetReachability({ internetReachability: 1 }));
+          dispatch(setAppInternetReachabilityReviewed({ internetReachabilityReviewed: 1 }));
         }
       }
       if (state.isInternetReachable === false) {
-        dispatch(setAppInternetReachability({internetReachability: 2}));
-        dispatch(setAppInternetReachabilityReviewed({internetReachabilityReviewed: 1}));
+        dispatch(setAppInternetReachability({ internetReachability: 2 }));
+        dispatch(setAppInternetReachabilityReviewed({ internetReachabilityReviewed: 1 }));
       }
     });
     // 3.
@@ -84,9 +92,11 @@ const AppNavigator = () => {
     // 4.
     dispatch(setAppInitialState());
     return subscriber;
-  }, []);  
+  }, []);
 
-  // Manages stack navigation based on logged user.
+  /**
+   * Manages stack navigation based on logged user.
+   */
   if (!isLogged && !isGuest) {
     console.log('No authenticated.');
     return (
@@ -94,18 +104,11 @@ const AppNavigator = () => {
         <Stack.Screen name="AuthStack" component={AuthStack} />
       </Stack.Navigator>
     );
-  } else if (isLogged && !isGuest) {
+  } else if (isLogged || isGuest) {
     console.log(`USUARIO LOGUEADO: ${auth().currentUser?.email}, emailVerified: ${auth().currentUser?.emailVerified} 🥳🥳🥳🥳`);
     return (
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeStack">
-        <Stack.Screen name="HomeStack" component={HomeStack} />
-      </Stack.Navigator>
-    );
-  } else if (!isLogged && isGuest) {
-    console.log('USUARIO INVITADO');
-    return (
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomeStack">
-        <Stack.Screen name="HomeStack" component={HomeStack} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Start" component={HomeStack} />
       </Stack.Navigator>
     );
   }

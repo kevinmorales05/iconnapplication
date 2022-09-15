@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { ScrollView, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { Button, AccountItem, Section, AddressItems, AnnounceItem } from 'components';
+import { Button, AccountItem, Section, AnnounceItem } from 'components';
 import { NavigationContext, useNavigation } from '@react-navigation/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState } from 'rtk';
@@ -81,11 +81,19 @@ const taxItemStyles = StyleSheet.create({
 
 export default function AccountScreen() {
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const { isLogged } = user;
   const dispatch = useAppDispatch();
 
   const logOut = async () => {
-    const { meta } = await dispatch(logoutThunk());
-    if (meta.requestStatus === 'fulfilled') {
+    if (isLogged) {
+      const { meta } = await dispatch(logoutThunk());
+      if (meta.requestStatus === 'fulfilled') {
+        dispatch(setAppInitialState());
+        dispatch(setAuthInitialState());
+        dispatch(setGuestInitialState());
+        dispatch(setInvoicingInitialState());
+      }
+    } else {
       dispatch(setAppInitialState());
       dispatch(setAuthInitialState());
       dispatch(setGuestInitialState());

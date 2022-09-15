@@ -10,12 +10,10 @@ import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
 
 interface Props {
-  onPressMyAccount: () => void;
   onPressShopCart: () => void;
   onPressInvoice: () => void;
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
-  onPressLogOut: () => void;
   onPressProducts: () => void;
   name?: string;
   defaultAddress: Address;
@@ -23,12 +21,10 @@ interface Props {
 }
 
 const HomeScreen: React.FC<Props> = ({
-  onPressMyAccount,
   onPressShopCart,
   onPressInvoice,
   onPressShowAddressesModal,
   onPressAddNewAddress,
-  onPressLogOut,
   name,
   defaultAddress,
   onPressProducts,
@@ -94,24 +90,11 @@ const HomeScreen: React.FC<Props> = ({
           <Button round onPress={onPressAddNewAddress} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Boton para agregar nueva direccion
           </Button>
-          <Button round onPress={onPressMyAccount} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-            Mi cuenta
-          </Button>
           <Button round onPress={onPressShopCart} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Carrito de compras
           </Button>
           <Button round onPress={onPressProducts} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Pedidos
-          </Button>
-          <Button
-            round
-            onPress={onPressLogOut}
-            fontSize="h4"
-            fontBold
-            style={{ marginTop: 8 }}
-            icon={<SimpleLineIcons name="logout" size={24} color="white" />}
-          >
-            Salir
           </Button>
         </Container>
       </View>
