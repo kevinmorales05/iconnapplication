@@ -5,13 +5,11 @@ import { AuthStackParams } from 'navigation/types';
 import EnterEmailScreen from './EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { AboutEmail } from 'components/organisms/AboutEmail';
-import { useAlert, useLoading } from 'context';
+import { useAlert, useLoading, useToast } from 'context';
 import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
-import { RootState, useAppDispatch, useAppSelector } from 'rtk';
-import { setAuthEmail, setSignMode } from 'rtk/slices/authSlice';
+import { RootState, useAppDispatch, useAppSelector, UserInterface } from 'rtk';
+import { setAuthEmail, setSignMode, setUserId } from 'rtk/slices/authSlice';
 import { authServices } from 'services';
-
-
 
 const EnterEmailController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -19,6 +17,7 @@ const EnterEmailController: React.FC = () => {
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state: RootState) => state.auth);
   const alert = useAlert();
+  const toast = useToast();
 
   useEffect(() => {
     if (loading === false) {
@@ -26,67 +25,76 @@ const EnterEmailController: React.FC = () => {
     }
   }, [loading]);
 
-
   const showAlert = () => {
     alert.show({
-      title: 'Ya tienes una cuenta', 
+      title: 'Ya tienes una cuenta',
       message: 'Este correo está asociado a una cuenta existente.',
       acceptTitle: 'Entendido',
-      onAccept() {                  
+      onAccept() {
         alert.hide();
-        navigate('ContinueWith');
       }
     });
   };
 
-  const onSubmit = async (email: string) => {
-    loader.show();
-    try {
-      const { payload } = await dispatch(validateUserThunk(email));
-      if (payload.responseCode === 200) {
-        dispatch(setAuthEmail({email}))
-        if (!payload.data.isRegistered && payload.data.signMode === 0) {
-          const { payload } = await dispatch(preSignUpThunk(email));
-          if (payload.responseCode === 201){
-            dispatch(setSignMode({sign_app_modes_id: 1}))
-            navigate('EnterOtp');
-          }        
-        } else if (payload.data.isRegistered) {
-          if (payload.data.signMode === 1) {
-            navigate('EnterPassword');
-          } else if (payload.data.signMode === 2) {
-            showAlert();
-          } else if (payload.data.signMode === 3) {
-            showAlert();
-          } else if (payload.data.signMode === 4) {
-            showAlert();
-          }
-        }
-      }      
-    } catch (error) {
-      console.error('Unknow Error', error);
-    }
-  };
-
   const createSession = async (email: string) => {
-    loader.show();
+    // check if user is already registered
     try {
-      await authServices.startAuthentication(email);
-      dispatch(setAuthEmail({email}));
+      const profiles = await authServices.getProfile(email);
+
+      console.log('profiles:', profiles);
+
+      const current: UserInterface | undefined = profiles.find((profile: UserInterface) => {
+        return profile.email === email;
+      });
+
+      if (!current) {
+        // start onboarding
+        try {
+          loader.show();
+
+          const { authenticationToken } = await authServices.startAuthentication(email);
+
+          console.log('authenticationToken:', authenticationToken);
+
+          await authServices.sendAccessKey(email, authenticationToken);
+          dispatch(setAuthEmail({ email }));
+          navigate('EnterOtp', { authenticationToken });
+
+          loader.hide();
+          return;
+        } catch (error) {
+          toast.show({
+            message: 'El correo no pude ser enviado,\n intenta mas tarde',
+            type: 'error'
+          });
+
+          loader.hide();
+          return;
+        }
+      } else {
+        showAlert();
+        setUserId({ user_id: current.id });
+      }
+    } catch (error) {
+      console.log('error');
+    }
+
+    // login
+
+    try {
+      const response = await authServices.startAuthentication(email);
+
+      console.log('response:', response);
+      dispatch(setAuthEmail({ email }));
       navigate('EnterPassword');
     } catch (error) {
       console.log('LOGIN ERROR', error);
     }
-  }
-
+  };
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <EnterEmailScreen
-        title={`Ingresa tu dirección de \ncorreo electrónico`}
-        goBack={goBack}
-        onSubmit={createSession}
-      />
+      <EnterEmailScreen title={`Ingresa tu dirección de \ncorreo electrónico`} goBack={goBack} onSubmit={createSession} />
     </SafeArea>
   );
 };

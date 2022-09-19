@@ -47,19 +47,6 @@ const ContinueWithScreen: React.FC<Props> = ({
       </Container>
 
       <Container flex alignment="end">
-        
-        {Platform.OS === 'ios' && appleAuth.isSupported &&
-          <Button
-            color="iconn_dark_grey"
-            round
-            onPress={() => onPressSocialButton('apple')}
-            fontSize="h4"
-            fontBold
-            icon={<FontAwesome5 name="apple" size={24} color="white" />}
-          >
-            Continúa con Apple ID
-          </Button>
-        }
         <Button
           color="facebook"
           round
@@ -96,7 +83,7 @@ const ContinueWithScreen: React.FC<Props> = ({
           <TouchableText
             underline
             textColor={theme.brandColor.iconn_white}
-            text="Otros métodos de acceso"
+            text="Entrar como invidato"
             typography="h4"
             fontBold
             onPress={onPressOthers}

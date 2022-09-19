@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
 import TermsAndCondScreen from './TermsAndCondScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from 'navigation/types';
+import { AuthStackParams, HomeStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
 import { RootState, setUserId, useAppDispatch, useAppSelector, setIsLogged } from 'rtk';
 import { registerWithFirebaseThunk, signInWithEmailAndPasswordThunk, signUpUserWithEmailAndPasswordThunk } from 'rtk/thunks/auth.thunks';
 import { useAlert, useLoading, useToast } from 'context';
 import theme from 'components/theme/theme';
+
+import { authServices } from 'services';
 
 const TermsAndCondController: React.FC = () => {
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -24,6 +26,10 @@ const TermsAndCondController: React.FC = () => {
     }
   }, [loading]);
 
+  const route = useRoute<RouteProp<AuthStackParams, 'TermsAndCond'>>();
+
+  const { authenticationToken, accessKey, newPassword } = route.params;
+
   /**
    * 1. Register email and pass into firebase.
    * 2. Register into DB.
@@ -31,39 +37,29 @@ const TermsAndCondController: React.FC = () => {
    */
   const onSubmit = async () => {
     loader.show();
-    let userToRegister = {...user};
-    if (user.sign_app_modes_id === 1) {
-      const { payload: signUpResponse } = await dispatch(signUpUserWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));
-      if (signUpResponse.user.uid) {
-        userToRegister = { ...userToRegister, user_id: signUpResponse.user.uid };
-        dispatch(setUserId({user_id: signUpResponse.user.uid}));
+    try {
+      const response = await authServices.createUser(user.email as string);
+
+      console.log('creation response:', response);
+
+      const { userId, authStatus } = await authServices.createPassword(newPassword, accessKey, user.email as string, authenticationToken);
+      loader.hide();
+
+      console.log('userId response:', userId);
+
+      if (authStatus === 'Success') {
+        dispatch(setUserId({ user_id: userId }));
+        dispatch(setIsLogged({ isLogged: true }));
+      } else {
       }
-    }
-    const { payload: registerResponse } = await dispatch(registerWithFirebaseThunk(userToRegister));
-    if (registerResponse.responseCode === 200) {
-      if (user.sign_app_modes_id === 1) {
-        const { payload: payloadSingIn } = await dispatch(signInWithEmailAndPasswordThunk({email: user.email!, pass: user.pass!}));
-        // TODO: we will need to manage the session token given by SingIn firebase imediately after a signup.
-        // This would be needed to request to the backend.
-      }
-      dispatch(setIsLogged({isLogged: true}));
-      toast.show({message: 'Cuenta creada exitosamente.', type: 'success'});
-    } else {
-      alert.show({
-        title: registerResponse.responseMessage
-      });
+    } catch (e) {
+      console.log('error');
     }
   };
 
   return (
-    <SafeArea
-      topSafeArea={false}
-      bottomSafeArea={false}
-      backgroundColor="white"
-      barStyle="dark"
-      css={styles.backgroundImage}
-    >
-      <TermsAndCondScreen goBack={goBack} onSubmit={onSubmit}/>
+    <SafeArea topSafeArea={false} bottomSafeArea={false} backgroundColor="white" barStyle="dark" css={styles.backgroundImage}>
+      <TermsAndCondScreen goBack={goBack} onSubmit={onSubmit} />
     </SafeArea>
   );
 };

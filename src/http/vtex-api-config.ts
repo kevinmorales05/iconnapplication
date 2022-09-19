@@ -7,9 +7,8 @@ const API_VTEX_AUTH = 'https://oneiconn.myvtex.com/api/vtexid/pub/authentication
 const API_VTEX_SHOPPINGCAR = 'https://oneiconn.myvtex.com/api/checkout/pub/orderForm';
 const API_VTEX_PRODUCTS = 'https://oneiconn.myvtex.com/api/catalog_system/pvt/products';
 const VTEX_APPKEY = 'vtexappkey-oneiconn-SOYFEO';
-const VTEX_APPTOKEN = 'PNOSOIQKQXOYQSNSEIBGIYAWBWUWKPISEXCKGFMHMJYWKVXRQVEXRDTUSDPBTRTIEJFGLTUIVRLFTFTPGGYVAKOLCLCFYFVGYYMQJNAKMBTEAZFTORXDZWCYFALXSELQ'
+const VTEX_APPTOKEN = 'PNOSOIQKQXOYQSNSEIBGIYAWBWUWKPISEXCKGFMHMJYWKVXRQVEXRDTUSDPBTRTIEJFGLTUIVRLFTFTPGGYVAKOLCLCFYFVGYYMQJNAKMBTEAZFTORXDZWCYFALXSELQ';
 const VTEX_DOCS = 'https://oneiconn.myvtex.com/api';
-
 
 const getApiUrl = (type: string) => {
   switch (type) {
@@ -18,7 +17,7 @@ const getApiUrl = (type: string) => {
     case 'order':
       return API_VTEX_ORDER;
     case 'auth':
-      return API_VTEX_AUTH;
+      return VTEX_DOCS;
     case 'shoppingCar':
       return API_VTEX_SHOPPINGCAR;
     case 'docs':
@@ -42,8 +41,8 @@ export const VTEXApiConfig = (type: string): AxiosRequestConfig => {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      'X-VTEX-API-AppKey': VTEX_APPKEY ,
-      'X-VTEX-API-AppToken': VTEX_APPTOKEN ,
+      'X-VTEX-API-AppKey': VTEX_APPKEY,
+      'X-VTEX-API-AppToken': VTEX_APPTOKEN
     }
   };
 };

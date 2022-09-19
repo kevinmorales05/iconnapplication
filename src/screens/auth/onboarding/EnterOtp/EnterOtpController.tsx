@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from 'navigation/types';
+import { AuthStackParams, HomeStackParams } from 'navigation/types';
 import EnterOtpScreen from './EnterOtpScreen';
 import { StyleSheet } from 'react-native';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useLoading } from 'context';
-import { RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { RootState, useAppDispatch, useAppSelector, setSecretKey } from 'rtk';
 import { validateOtpThunk } from 'rtk/thunks/auth.thunks';
 
 interface EnterOtpControllerProps {
@@ -14,8 +14,7 @@ interface EnterOtpControllerProps {
 }
 
 const EnterOtpController = ({ handleSubmit }: EnterOtpControllerProps) => {
-  const { goBack, navigate } =
-    useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const loader = useLoading();
   const dispatch = useAppDispatch();
 
@@ -30,33 +29,23 @@ const EnterOtpController = ({ handleSubmit }: EnterOtpControllerProps) => {
 
   const [wrongCode, setWrongCode] = useState(false);
 
-  const onSubmit = async (code: string) => {
-    loader.show();
-    try {
-      const { payload } = await dispatch(validateOtpThunk({ email, code }));
-      if (payload.responseCode === 201 && !payload.data.isValid) {
-        setWrongCode(true);
-      } else if (payload.responseCode === 201 && payload.data.isValid) {
-        if (handleSubmit) {
-          handleSubmit(email as string);
-          return;
-        }
+  const route = useRoute<RouteProp<AuthStackParams, 'EnterOtp'>>();
 
-        navigate('CreatePassword');
-      }
-    } catch (error) {
-      console.error('Unknow Error', error);
+  const { authenticationToken } = route.params;
+
+  const onSubmit = async (code: string) => {
+    // loader.show();
+    if (handleSubmit) {
+      handleSubmit(email as string);
+      return;
     }
+
+    navigate('CreatePassword', { accessKey: code, authenticationToken });
   };
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <EnterOtpScreen
-        goBack={goBack}
-        onSubmit={onSubmit}
-        email={email}
-        wrongCode={wrongCode}
-      />
+      <EnterOtpScreen goBack={goBack} onSubmit={onSubmit} email={email} wrongCode={wrongCode} />
     </SafeArea>
   );
 };

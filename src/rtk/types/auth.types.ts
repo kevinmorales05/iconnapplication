@@ -1,5 +1,22 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
+export interface UserInterface {
+  "id": string,
+  "email": string,
+  "firstName": string,
+  "lastName": string,
+  "document": string,
+  "documentType": any,
+  "homePhone": string,
+  "isCorporate": boolean,
+  "corporateDocument": any,
+  "tradeName": any,
+  "stateRegistration": any,
+  "isNewsletterOptIn": boolean,
+  "localeDefault": string,
+  "approved": any
+}
+
 export interface AuthDataInterface {
   user_id?: string;
   email?: string;

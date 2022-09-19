@@ -1,3 +1,4 @@
+import { AxiosRequestConfig } from 'axios';
 import { AuthDataInterface } from 'rtk';
 import { OtpsApi } from '../http/api-otps';
 import { UsersApi } from '../http/api-users';
@@ -24,6 +25,10 @@ async function login(email: string, password: string, authenticationToken: strin
   HttpClient.authCookie = authCookie;
   let accountAuthCookie = await data.accountAuthCookie;
   HttpClient.accountAuthCookie = accountAuthCookie;
+
+  console.log("HttpClient.authCookie:",HttpClient.authCookie)
+  console.log("HttpClient.accountAuthCookie:",HttpClient.accountAuthCookie)
+
   return data;
 }
 
@@ -31,9 +36,9 @@ const API_VTEX_AUTH = 'https://oneiconn.myvtex.com/api/vtexid/pub/authentication
 
 async function startAuthentication(email: string): Promise<any> {
   const response = await UsersApi.getInstance().getRequest(
-    `/vtexid/pub/authentication/start?callbackUrl=${API_VTEX_AUTH}/api/vtexid/pub/authentication/finish&scope=oneiconn&user=${email}&locale=MX&accountName=oneiconn&returnUrl=/&appStart=true`
+    `/vtexid/pub/authentication/start?callbackUrl=${API_VTEX_AUTH}/vtexid/pub/authentication/finish&scope=oneiconn&user=${email}&locale=MX&accountName=oneiconn&returnUrl=/&appStart=true`
   );
-  if (response === undefined) return Promise.reject(new Error('/api/vtexid/pub/authentication/start/'));
+  if (response === undefined) return Promise.reject(new Error('startAuthentication:vtexid/pub/authentication/finish'));
   console.log('Aqui termina el start Authentication');
   const { data } = response;
 
@@ -49,14 +54,54 @@ async function sendAccessKey(email: string, authenticationToken: string): Promis
   formData.append('email', email);
   formData.append('authenticationToken', authenticationToken);
 
-  const response = await UsersApi.getInstance().postRequest(`/accesskey/send`, formData);
+  const response = await UsersApi.getInstance().postRequest(`/vtexid/pub/authentication/accesskey/send`, formData);
 
-  if (response === undefined) return Promise.reject(new Error(`/accesskey/send`));
+  if (response === undefined) return Promise.reject(new Error(`sendAccessKey:vtexid/pub/authentication/accesskey/send`));
 
   const { data } = await response;
 
   return data;
 }
+
+async function createPassword(newPassword: string, accesskey: string, email: string, authenticationToken: string): Promise<any> {
+  const formData = new FormData();
+  formData.append('newPassword', newPassword);
+  formData.append('accesskey', accesskey);
+  formData.append('email', email);
+  formData.append('authenticationToken', authenticationToken);
+
+  console.log('HttpClient.authCookie:', HttpClient.authCookie);
+
+  const response = await UsersApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/setpassword?scope=oneiconn&locale=MX`, formData, {
+    headers: {
+      'X-VTEX-API-AppKey': 'vtexappkey-oneiconn-PSWGUP',
+      Cookie: `VtexIdclientAutCookie_3f3d3e79-0620-4445-89f0-8e9c9f37457f=eyJhbGciOiJFUzI1NiIsImtpZCI6IjAzMjA3NUZDMjZGQTE5NkE2MzUwQTM0OEZEOTI3MjQzOUNCMUIwNDgiLCJ0eXAiOiJqd3QifQ.eyJzdWIiOiJwYXRvMTQxOEB5YWhvby5jb20iLCJhY2NvdW50Ijoib25laWNvbm4iLCJhdWRpZW5jZSI6IndlYnN0b3JlIiwic2VzcyI6ImU5ZWViMmI3LTQzNGQtNDE4OC05ZDE3LTQ4MDcwMWRiNTRlMSIsImV4cCI6MTY2MzY5NDc1NCwidXNlcklkIjoiY2Q1MGIxNzctNzg5Yi00ZWRkLTg3YjQtOTU5NjM4NDhiZTliIiwiaWF0IjoxNjYzNjA4MzU0LCJpc3MiOiJ0b2tlbi1lbWl0dGVyIiwianRpIjoiM2YzMTRlZjgtODFiMy00YjE1LTg2ODctOWMyOGU5MTljYzQ3In0.ZC07qLwm-pfhFn77kaTa6yk9HGODhVco8CeAfZAML2ZW1sPQbz-4A6YkR4Fv8kyJNEuy1gkk-wXy5xDbiI8Q5Q; VtexIdclientAutCookie_oneiconn=eyJhbGciOiJFUzI1NiIsImtpZCI6IjAzMjA3NUZDMjZGQTE5NkE2MzUwQTM0OEZEOTI3MjQzOUNCMUIwNDgiLCJ0eXAiOiJqd3QifQ.eyJzdWIiOiJwYXRvMTQxOEB5YWhvby5jb20iLCJhY2NvdW50Ijoib25laWNvbm4iLCJhdWRpZW5jZSI6IndlYnN0b3JlIiwic2VzcyI6ImU5ZWViMmI3LTQzNGQtNDE4OC05ZDE3LTQ4MDcwMWRiNTRlMSIsImV4cCI6MTY2MzY5NDc1NCwidXNlcklkIjoiY2Q1MGIxNzctNzg5Yi00ZWRkLTg3YjQtOTU5NjM4NDhiZTliIiwiaWF0IjoxNjYzNjA4MzU0LCJpc3MiOiJ0b2tlbi1lbWl0dGVyIiwianRpIjoiM2YzMTRlZjgtODFiMy00YjE1LTg2ODctOWMyOGU5MTljYzQ3In0.ZC07qLwm-pfhFn77kaTa6yk9HGODhVco8CeAfZAML2ZW1sPQbz-4A6YkR4Fv8kyJNEuy1gkk-wXy5xDbiI8Q5Q`,
+      Accept: 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  });
+
+  if (response === undefined) return Promise.reject(new Error(`createPassword:/vtexid/pub/authentication/classic/setpassword`));
+
+  const { data } = await response;
+
+  return data;
+}
+
+async function createUser(email: string, name: string | null = null): Promise<any> {
+  const response = await UsersApi.getInstance().postRequest(
+    `/license-manager/users`,
+    { email, name },
+    { headers: { accept: 'application/json', 'content-type': 'application/json' } }
+  );
+
+  if (response === undefined) return Promise.reject(new Error(`createUser:/license-manager/users`));
+
+  const { data } = await response;
+
+  return data;
+}
+
 /**
  * Function to validate user status
  * @param email
@@ -131,6 +176,25 @@ async function getUser(user: AuthDataInterface): Promise<any> {
 }
 
 /**
+ * Function to get current UserProfile.
+ * @param email
+ * @returns
+ */
+async function getProfile(email: string): Promise<any> {
+  const response = await UsersApi.getInstance().getRequest(
+    `/dataentities/CL/search?email=${email}&_fields=id,email,firstName,lastName,document,documentType,homePhone,isCorporate,corporateDocument,tradeName,stateRegistration,isNewsletterOptIn,localeDefault,approved`,
+    {
+      baseUrl: 'https://api.vtex.com/iconn/'
+    } as AxiosRequestConfig
+  );
+
+  if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
+
+  const { data } = response;
+  return data;
+}
+
+/**
  * Function to update current User.
  * @param user
  * @returns
@@ -180,5 +244,8 @@ export const authServices = {
   putUser,
   sendEmailtoRecoverPassword,
   updateUserPassword,
-  startAuthentication
+  startAuthentication,
+  getProfile,
+  createUser,
+  createPassword
 };

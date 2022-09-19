@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { HttpClient } from './http-client';
 import { VTEXApiAuthConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
@@ -21,14 +21,12 @@ export class UsersApi extends HttpClient {
     // https://github.com/svrcekmichal/redux-axios-middleware/issues/83
     this.instance.interceptors.request.use(
       (request: any) => {
-        const {
-          headers, baseURL, method, url, data
-        } = request;
+        const { headers, baseURL, method, url, data } = request;
         console.log(
           'INTERCEPTOR - Starting Request ===> \n\n',
           JSON.stringify(headers, null, 3),
           '\n',
-          `baseURL: https://oneiconn.myvtex.com/api`,
+          `baseURL: ${baseURL}`,
           '\n',
           `url: ${url}`,
           '\n',
@@ -67,8 +65,8 @@ export class UsersApi extends HttpClient {
     return this.classInstance;
   }
 
-  async postRequest(path: string, payload: any) {
-    return this.instance.post(path, payload);
+  async postRequest(path: string, payload: any, config?: AxiosRequestConfig) {
+    return this.instance.post(path, payload, config);
   }
 
   async putRequest(path: string, payload: any) {

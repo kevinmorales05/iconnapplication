@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
@@ -9,11 +9,15 @@ import { setPassword, useAppDispatch } from 'rtk';
 
 const CreatePasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
-  const dispatch = useAppDispatch();  
+  const dispatch = useAppDispatch();
+
+  const route = useRoute<RouteProp<AuthStackParams, 'CreatePassword'>>();
+
+  const { authenticationToken, accessKey } = route.params;
 
   const onSubmit = (password: string) => {
-    dispatch(setPassword({pass: password}));
-    navigate('EnterFullName');
+    dispatch(setPassword({ pass: password }));
+    navigate('TermsAndCond', { authenticationToken, accessKey, newPassword: password });
   };
 
   return (
