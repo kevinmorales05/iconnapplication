@@ -81,24 +81,13 @@ const taxItemStyles = StyleSheet.create({
 
 export default function AccountScreen() {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { isLogged } = user;
   const dispatch = useAppDispatch();
 
   const logOut = async () => {
-    if (isLogged) {
-      const { meta } = await dispatch(logoutThunk());
-      if (meta.requestStatus === 'fulfilled') {
-        dispatch(setAppInitialState());
-        dispatch(setAuthInitialState());
-        dispatch(setGuestInitialState());
-        dispatch(setInvoicingInitialState());
-      }
-    } else {
-      dispatch(setAppInitialState());
-      dispatch(setAuthInitialState());
-      dispatch(setGuestInitialState());
-      dispatch(setInvoicingInitialState());
-    }
+    dispatch(setAppInitialState());
+    dispatch(setAuthInitialState());
+    dispatch(setGuestInitialState());
+    dispatch(setInvoicingInitialState());
   };
 
   const navigation = useContext(NavigationContext);
