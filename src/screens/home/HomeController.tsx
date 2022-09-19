@@ -15,7 +15,6 @@ import {
   setSeenCarousel
 } from 'rtk';
 import HomeScreen from './HomeScreen';
-import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { ICONN_COFFEE } from 'assets/images';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -165,34 +164,13 @@ const HomeController: React.FC = () => {
     if (authLoading === false) loader.hide();
   }, [authLoading]);
 
-  const logOut = async () => {
-    if (isLogged) {
-      const { meta } = await dispatch(logoutThunk());
-      if (meta.requestStatus === 'fulfilled') {
-        dispatch(setAppInitialState());
-        dispatch(setAuthInitialState());
-        dispatch(setGuestInitialState());
-        dispatch(setInvoicingInitialState());
-      }
-    } else {
-      dispatch(setAppInitialState());
-      dispatch(setAuthInitialState());
-      dispatch(setGuestInitialState());
-      dispatch(setInvoicingInitialState());
-    }
-  };
-
   const logOutApp = async () => {
-        dispatch(setAppInitialState());
-        dispatch(setAuthInitialState());
-        dispatch(setGuestInitialState());
-        dispatch(setInvoicingInitialState());
+    dispatch(setAppInitialState());
+    dispatch(setAuthInitialState());
+    dispatch(setGuestInitialState());
+    dispatch(setInvoicingInitialState());
   };
 
-
-  const goToMyAccount = () => {
-    isGuest ? navigate('InviteSignUp') : navigate('Mi Cuenta');
-  };
   const goToInvoice = () => {
     isGuest ? navigate('InviteSignUp') : navigate('Invoice');
   };
@@ -272,7 +250,7 @@ const HomeController: React.FC = () => {
 
   useEffect(() => {
     setDefaultAddress(
-      user.addresses.find(item => {
+      user.addresses!.find(item => {
         return item.isDefault === true;
       }) ?? null
     );
@@ -294,8 +272,6 @@ const HomeController: React.FC = () => {
     >
       <HomeScreen
         name={user.name}
-        onPressLogOut={logOutApp}
-        onPressMyAccount={goToMyAccount}
         onPressInvoice={goToInvoice}
         onPressAddNewAddress={onPressAddNewAddress}
         onPressShowAddressesModal={() => setAddressModalSelectionVisible(true)}
@@ -343,7 +319,7 @@ const HomeController: React.FC = () => {
 
       <AddressModalSelection
         visible={addressModalSelectionVisible}
-        addresses={user.addresses}
+        addresses={user.addresses!}
         onPressEdit={editAddress}
         onPressDelete={removeAddress}
         onPressAddNewAddress={onPressAddNewAddressFromHome}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import HomeController from 'screens/home/HomeController';
+import HomeController from 'screens/home/HomeController'; /** relocated to tabNavigator */
 import AccountScreen from 'screens/home/myAccount/MyAccountScreen';
 import EditEmailController from 'screens/auth/onboarding/EditEmail/EditEmailController';
 import EditEmailOtpController from 'screens/auth/onboarding/EditEmailOtp/EditEmailOtpController';
@@ -29,98 +29,102 @@ import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeControl
 import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
 import MyOrdersController from 'screens/home/MyOrdersController';
 import Icon from 'react-native-vector-icons/AntDesign';
-import {Touchable} from '../../components';
+import { Touchable } from '../../components';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-
-
+import { TabNavigator } from 'navigation/TabNavigator';
 
 const HomeStack: React.FC = () => {
-  
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const Stack = createNativeStackNavigator<HomeStackParams>();
-  
+
   const closeShoppingCart = () => {
     navigate('Home');
-   }
+  };
 
-  return(
-  <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="PostalCode">
-    <Stack.Screen
-      options={{
-        headerTitle: '',
-        headerLeft: () => <EcommerceHeader />,
-        headerRight: () => <BasketCounter />
-      }}
-      name="Home"
-      component={HomeController}
-    />
-    <Stack.Screen name="Mi Cuenta" component={AccountScreen} />
-    <Stack.Screen name="Profile" options={{ title: 'Mi Perfil' }} component={ProfileController} />
-    <Stack.Screen name="EditEmail" options={{ title: 'Editar Correo' }} component={EditEmailController} />
-    <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={EditEmailOtpController} />
-    <Stack.Screen name="Editar Contraseña" component={EditPasswordController} />
-    <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
-    <Stack.Screen options={{ title: 'Nuevo Perfil Fiscal' }} name="AddRFC" component={AddRFCController} />
-    <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
-    <Stack.Screen options={{ title: 'Facturar' }} name="Invoice" component={InvoiceController} />
-    <Stack.Screen options={{ title: 'Perfil Fiscal' }} name="CreateTaxProfile" component={CreateTaxProfileController} />
-    <Stack.Screen
-      options={{
-        title: 'Historial de facturas'
-      }}
-      name="InvoiceHistory"
-      component={InvoiceHistoryController}
-    />
-    <Stack.Screen options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} name="AddTicketPetro" component={AddTicketPetroController} />
-    <Stack.Screen options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} name="AddTicketSeven" component={AddTicketSevenController} />
-    <Stack.Screen options={{ headerShown: false }} name="InvoiceTicketPetro" component={InvoiceTicketPetroController} />
-    <Stack.Screen options={{ headerShown: false }} name="InvoiceTicketSeven" component={InvoiceTicketSevenController} />
-    <Stack.Screen options={{ headerShown: false, gestureEnabled: false }} name="InvoiceGeneratedPetro" component={InvoiceGeneratedPetroController} />
-    <Stack.Screen options={{ headerShown: false, gestureEnabled: false }} name="InvoiceGeneratedSeven" component={InvoiceGeneratedSevenController} />
-    <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedPetro" component={ViewInvoiceGeneratedPetroController} />
-    <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedSeven" component={ViewInvoiceGeneratedSevenController} />
-    <Stack.Screen options={{ headerShown: false }} name="CodeReader" component={CodeReaderController} />
-    <Stack.Screen
-      options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '', headerTintColor: 'black' }}
-      name="Address"
-      component={AddressesController}
-    />
-    <Stack.Screen
-      options={{
-        headerShown: true,
-        title: 'Mi Canasta',
-        headerTitleStyle: {
-          fontWeight: 'bold'
-        },
-        headerLeft: () => {
-          return <></>;
-        },
-        headerRight: () =>  <Touchable onPress={() => {
-          closeShoppingCart();
-        }}  ><Icon name="close" size={20} /></Touchable>,
-        
-        headerTitleAlign: 'center'
-      }}
-      name="ShopCart"
-      component={ShopCartController}
-    />
-    <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
-    <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
-    <Stack.Screen
-      options={{
-        headerShown: true,
-        title: 'Mis Pedidos',
-        headerTitleStyle: {
-          fontWeight: 'bold'
-        },
-        headerTitleAlign: 'center'
-      }}
-      name="MyOrders"
-      component={MyOrdersController}
-    />
-  </Stack.Navigator>);}
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="PostalCode">
+      <Stack.Screen
+        options={{
+          headerTitle: '',
+          headerLeft: () => <EcommerceHeader />,
+          headerRight: () => <BasketCounter />
+        }}
+        name="Home"
+        component={TabNavigator}
+      />
+      <Stack.Screen name="Mi Cuenta" component={AccountScreen} />
+      <Stack.Screen name="Profile" options={{ title: 'Mi Perfil' }} component={ProfileController} />
+      <Stack.Screen name="EditEmail" options={{ title: 'Editar Correo' }} component={EditEmailController} />
+      <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={EditEmailOtpController} />
+      <Stack.Screen name="Editar Contraseña" component={EditPasswordController} />
+      <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
+      <Stack.Screen options={{ title: 'Nuevo Perfil Fiscal' }} name="AddRFC" component={AddRFCController} />
+      <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
+      <Stack.Screen options={{ title: 'Facturar' }} name="Invoice" component={InvoiceController} />
+      <Stack.Screen options={{ title: 'Perfil Fiscal' }} name="CreateTaxProfile" component={CreateTaxProfileController} />
+      <Stack.Screen
+        options={{
+          title: 'Historial de facturas'
+        }}
+        name="InvoiceHistory"
+        component={InvoiceHistoryController}
+      />
+      <Stack.Screen options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} name="AddTicketPetro" component={AddTicketPetroController} />
+      <Stack.Screen options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} name="AddTicketSeven" component={AddTicketSevenController} />
+      <Stack.Screen options={{ headerShown: false }} name="InvoiceTicketPetro" component={InvoiceTicketPetroController} />
+      <Stack.Screen options={{ headerShown: false }} name="InvoiceTicketSeven" component={InvoiceTicketSevenController} />
+      <Stack.Screen options={{ headerShown: false, gestureEnabled: false }} name="InvoiceGeneratedPetro" component={InvoiceGeneratedPetroController} />
+      <Stack.Screen options={{ headerShown: false, gestureEnabled: false }} name="InvoiceGeneratedSeven" component={InvoiceGeneratedSevenController} />
+      <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedPetro" component={ViewInvoiceGeneratedPetroController} />
+      <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedSeven" component={ViewInvoiceGeneratedSevenController} />
+      <Stack.Screen options={{ headerShown: false }} name="CodeReader" component={CodeReaderController} />
+      <Stack.Screen
+        options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '', headerTintColor: 'black' }}
+        name="Address"
+        component={AddressesController}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: 'Mi Canasta',
+          headerTitleStyle: {
+            fontWeight: 'bold'
+          },
+          headerLeft: () => {
+            return <></>;
+          },
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                closeShoppingCart();
+              }}
+            >
+              <Icon name="close" size={20} />
+            </Touchable>
+          ),
 
+          headerTitleAlign: 'center'
+        }}
+        name="ShopCart"
+        component={ShopCartController}
+      />
+      <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
+      <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: 'Mis Pedidos',
+          headerTitleStyle: {
+            fontWeight: 'bold'
+          },
+          headerTitleAlign: 'center'
+        }}
+        name="MyOrders"
+        component={MyOrdersController}
+      />
+    </Stack.Navigator>
+  );
+};
 
 export default HomeStack;

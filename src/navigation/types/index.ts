@@ -1,5 +1,5 @@
 import { AuthStackParams } from './AuthStackParams';
 import { HomeStackParams } from './HomeStackParams';
-import { EcommerceStackParams } from './EcommerceStackParams';
+import { HomeTabScreens } from './HomeStackParams';
 
-export type { AuthStackParams, HomeStackParams, EcommerceStackParams };
+export type { AuthStackParams, HomeStackParams, HomeTabScreens };

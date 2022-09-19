@@ -8,3 +8,4 @@ export type FontColorTypes =
   | 'grey'
   | 'dark_orange'
   | 'light_green'
+  | 'placeholder'
