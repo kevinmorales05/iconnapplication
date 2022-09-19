@@ -5,15 +5,33 @@ import { AuthStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
 import { SafeArea } from 'components/atoms/SafeArea';
 import CreatePasswordScreen from './CreatePasswordScreen';
-import { setPassword, useAppDispatch } from 'rtk';
+import { RootState, setPassword, setUserId, useAppDispatch, useAppSelector } from 'rtk';
+import { authServices } from 'services';
+import { HttpClient } from '../../../../http/http-client';
 
 const CreatePasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { email } = user;
 
   const route = useRoute<RouteProp<AuthStackParams, 'CreatePassword'>>();
 
   const { authenticationToken, accessKey } = route.params;
+
+  const changePassword = async (pwd: string) => {
+    try {
+      const changed = await  authServices.createPassword(pwd, accessKey, email, authenticationToken);
+      if (changed.authStatus == 'Success') {
+        navigate('EnterEmail');
+      }  else {
+        console.log('ERROR CAMBIO CONTRASEÑA');
+      }
+      
+    } catch (error) {
+      console.log('ERROR CAMBIO CONTRASEÑA', error);
+    }
+  }
 
   const onSubmit = (password: string) => {
     dispatch(setPassword({ pass: password }));
@@ -22,7 +40,7 @@ const CreatePasswordController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <CreatePasswordScreen goBack={goBack} onSubmit={onSubmit} />
+      <CreatePasswordScreen goBack={goBack} onSubmit={changePassword} />
     </SafeArea>
   );
 };

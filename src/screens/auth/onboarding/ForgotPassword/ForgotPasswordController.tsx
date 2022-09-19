@@ -40,7 +40,7 @@ const ForgotPasswordController: React.FC = () => {
       if (response.authStatus == 'InvalidToken') {
         alert.show({ title: 'Ocurrió un error inesperado :(' }, 'error');
       } else {
-        navigate('EnterOtp');
+        navigate('EnterOtp', {authenticationToken: authToken as string});
       }
     } catch (error) {
       console.log(error);
