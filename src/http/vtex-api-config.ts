@@ -52,7 +52,7 @@ export const VTEXApiAuthConfig = (type: string): AxiosRequestConfig => {
     baseURL: getApiUrl(type),
     headers: {
       Accept: '*/*',
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'multipart/form-data',
       'X-VTEX-API-AppKey': VTEX_APPKEY ,
       'X-VTEX-API-AppToken': VTEX_APPTOKEN ,
     }

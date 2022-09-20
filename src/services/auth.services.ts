@@ -75,7 +75,6 @@ async function createPassword(newPassword: string, accesskey: string, email: str
   const response = await UsersApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/setpassword?scope=oneiconn&locale=MX`, formData, {
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded'
     }
   });
 
