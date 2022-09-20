@@ -17,30 +17,33 @@ const CreatePasswordController: React.FC = () => {
 
   const route = useRoute<RouteProp<AuthStackParams, 'CreatePassword'>>();
 
-  const { authenticationToken, accessKey } = route.params;
+  const { authenticationToken, accessKey, variant } = route.params;
 
-  const changePassword = async (pwd: string) => {
-    try {
-      const changed = await  authServices.createPassword(pwd, accessKey, email, authenticationToken);
-      if (changed.authStatus == 'Success') {
-        navigate('EnterEmail');
-      }  else {
-        console.log('ERROR CAMBIO CONTRASEÑA');
-      }
-      
-    } catch (error) {
-      console.log('ERROR CAMBIO CONTRASEÑA', error);
+  const onSubmit = async (password: string) => {
+    if (variant === 'register') {
+      dispatch(setPassword({ pass: password }));
+      navigate('TermsAndCond', { authenticationToken, accessKey, newPassword: password });
+      return;
     }
-  }
 
-  const onSubmit = (password: string) => {
-    dispatch(setPassword({ pass: password }));
-    navigate('TermsAndCond', { authenticationToken, accessKey, newPassword: password });
+    if (variant === 'recoverPassword') {
+      try {
+        const changed = await authServices.createPassword(password, accessKey, email as string, authenticationToken);
+        if (changed.authStatus == 'Success') {
+          navigate('EnterEmail');
+        } else {
+          console.log('ERROR CAMBIO CONTRASEÑA');
+        }
+      } catch (error) {
+        console.log('ERROR CAMBIO CONTRASEÑA', error);
+      }
+      return;
+    }
   };
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <CreatePasswordScreen goBack={goBack} onSubmit={changePassword} />
+      <CreatePasswordScreen goBack={goBack} onSubmit={onSubmit} />
     </SafeArea>
   );
 };

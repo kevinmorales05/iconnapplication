@@ -43,13 +43,11 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
   const [val2Item, setVal2Item] = useState('ellipse');
   const [val3Item, setVal3Item] = useState('ellipse');
   const [val4Item, setVal4Item] = useState('ellipse');
-  const [val5Item, setVal5Item] = useState('ellipse');
   //colors
   const [val1Color, setVal1Color] = useState(theme.brandColor.iconn_med_grey);
   const [val2Color, setVal2Color] = useState(theme.brandColor.iconn_med_grey);
   const [val3Color, setVal3Color] = useState(theme.brandColor.iconn_med_grey);
   const [val4Color, setVal4Color] = useState(theme.brandColor.iconn_med_grey);
-  const [val5Color, setVal5Color] = useState(theme.brandColor.iconn_med_grey);
   //password validation
   const [passValid, setPassValid] = useState(false);
   //activitus error
@@ -69,8 +67,6 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
       setVal3Color(theme.brandColor.iconn_med_grey);
       setVal4Item("ellipse");
       setVal4Color(theme.brandColor.iconn_med_grey);
-      setVal5Item("ellipse");
-      setVal5Color(theme.brandColor.iconn_med_grey);
       setPasswordError('1');
       setPassValid(false);
     }
@@ -115,16 +111,6 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
     } else {
       setVal4Item("checkmark-circle-sharp");
       setVal4Color(theme.brandColor.iconn_success);
-    }
-
-    if (!value.match(/\W/) || value.match(/\s/)) {
-      setVal5Item("close-circle-sharp");
-      setVal5Color(theme.brandColor.iconn_error);
-      setPasswordError('1');
-      setPassValid(false);
-    } else {
-      setVal5Item("checkmark-circle-sharp");
-      setVal5Color(theme.brandColor.iconn_success);
     }
 
     if (!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/) && !value.match(/\s/)) {
@@ -197,10 +183,6 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
         <Container flex row center style={{marginTop:10}}>
           <Ionicons name={val4Item} size={24} color={val4Color} />
           <TextContainer text='Contiene un número' typography='h5' marginLeft={10}/>
-        </Container>
-        <Container flex row center style={{marginTop:10}}>
-          <Ionicons name={val5Item} size={24} color={val5Color} />
-          <TextContainer text='Contiene un caracter especial' typography='h5' marginLeft={10}/>
         </Container>
       </Container>
 

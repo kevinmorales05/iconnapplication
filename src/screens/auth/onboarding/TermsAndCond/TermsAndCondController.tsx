@@ -20,6 +20,8 @@ const TermsAndCondController: React.FC = () => {
   const alert = useAlert();
   const toast = useToast();
 
+  const { navigate: nav } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
+
   useEffect(() => {
     if (loading === false) {
       loader.hide();
@@ -40,17 +42,37 @@ const TermsAndCondController: React.FC = () => {
     try {
       const response = await authServices.createUser(user.email as string);
 
-      console.log('creation response:', response);
-
       const { userId, authStatus } = await authServices.createPassword(newPassword, accessKey, user.email as string, authenticationToken);
       loader.hide();
-
-      console.log('userId response:', userId);
 
       if (authStatus === 'Success') {
         dispatch(setUserId({ user_id: userId }));
         dispatch(setIsLogged({ isLogged: true }));
+      } else if (authStatus === 'WrongCredentials') {
+        alert.show(
+          {
+            title: 'El código que ingresaste es incorrecto',
+            message: 'Ingresa los 6 dígitos que enviamos a tu correo.',
+            acceptTitle: 'Entendido',
+            async onAccept() {
+              alert.hide();
+            }
+          },
+          'error'
+        );
+        nav('EnterOtp');
       } else {
+        alert.show(
+          {
+            title: 'Lo sentimos',
+            message: 'No pudimos crear tu cuenta en este momento. Por favor, intenta más tarde.',
+            acceptTitle: 'Entendido',
+            async onAccept() {
+              alert.hide();
+            }
+          },
+          'error'
+        );
       }
     } catch (e) {
       console.log('error');

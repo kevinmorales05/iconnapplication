@@ -40,7 +40,7 @@ const EnterOtpController = ({ handleSubmit }: EnterOtpControllerProps) => {
       return;
     }
 
-    navigate('CreatePassword', { accessKey: code, authenticationToken });
+    navigate('CreatePassword', { accessKey: code, authenticationToken, variant: 'register' });
   };
 
   return (
