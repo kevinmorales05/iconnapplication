@@ -6,3 +6,4 @@ export * from './InvoicingHelper';
 export * from './ResendInvoice';
 export * from './AddressModalSelection';
 export * from './ShippingDropdown';
+export * from './AnimatedCarousel';

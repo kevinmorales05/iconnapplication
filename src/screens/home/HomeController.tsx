@@ -12,7 +12,8 @@ import {
   setGuestInitialState,
   Address,
   setAddressDefault,
-  setSeenCarousel
+  setSeenCarousel,
+  CarouselItem
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -25,6 +26,7 @@ import { setInvoicingInitialState } from 'rtk/slices/invoicingSlice';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useLoading } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
+import { HOME_ITEMS } from 'assets/files';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -262,6 +264,22 @@ const HomeController: React.FC = () => {
     dispatch(setSeenCarousel(true));
   };
 
+  const onPressCarouselItem = (CarouselItem: CarouselItem) => {
+    console.log('El item seleccionado en carousel es ===> ', CarouselItem);
+  };
+
+  const [principal, setPrincipal] = useState<CarouselItem[] | null>(null);
+  const [second, setSecond] = useState<CarouselItem[] | null>(null);
+  const [all_promotions, setAll_promotions] = useState<CarouselItem[] | null>(null);
+  const [day_promotion, setDay_promotion] = useState<CarouselItem[] | null>(null);
+
+  useEffect(() => {
+    setPrincipal(HOME_ITEMS.filter(item => item.promotion_type === 'principal'));
+    setSecond(HOME_ITEMS.filter(item => item.promotion_type === 'second'));
+    setAll_promotions(HOME_ITEMS.filter(item => item.promotion_type === 'all_promotions'));
+    setDay_promotion(HOME_ITEMS.filter(item => item.promotion_type === 'day_promotion'));
+  }, []);
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -279,6 +297,8 @@ const HomeController: React.FC = () => {
         defaultAddress={defaultAddress!}
         onPressProducts={goToOrders}
         showShippingDropDown={showShippingDropDown}
+        principalItems={principal!}
+        onPressCarouselItem={onPressCarouselItem}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>

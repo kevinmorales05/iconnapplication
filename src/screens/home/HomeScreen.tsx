@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Image, View, StyleSheet } from 'react-native';
+import { Image, View, StyleSheet, ScrollView, Platform } from 'react-native';
 import theme from 'components/theme/theme';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { CustomText, Button, Container, Touchable, ShippingDropdown, CustomModal } from 'components';
+import { CustomText, Button, Container, Touchable, ShippingDropdown, CustomModal, AnimatedCarousel } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Address, RootState, useAppSelector } from 'rtk';
+import { Address, CarouselItem, RootState, useAppSelector } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   onPressShopCart: () => void;
@@ -18,6 +19,8 @@ interface Props {
   name?: string;
   defaultAddress: Address;
   showShippingDropDown?: boolean;
+  principalItems: CarouselItem[];
+  onPressCarouselItem: (CarouselItem: CarouselItem) => void;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -28,9 +31,12 @@ const HomeScreen: React.FC<Props> = ({
   name,
   defaultAddress,
   onPressProducts,
-  showShippingDropDown
+  showShippingDropDown,
+  principalItems,
+  onPressCarouselItem
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     setToggle(showShippingDropDown);
@@ -76,8 +82,17 @@ const HomeScreen: React.FC<Props> = ({
           </Container>
         </Touchable>
       </View>
-      <View style={{ zIndex: 0 }}>
-        <Container flex>
+
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+
+      <AnimatedCarousel type='principal' visible={true} items={principalItems} onPressItem={onPressCarouselItem}/>
+      
+        <Container flex style={{paddingHorizontal: 16}}>
           <Container row crossCenter style={{ marginVertical: 16 }}>
             <CustomText textColor={theme.brandColor.iconn_dark_grey} text={name ? `¡Hola ${name}!` : '¡Hola!'} typography="h4" fontBold />
           </Container>
@@ -97,7 +112,8 @@ const HomeScreen: React.FC<Props> = ({
             Pedidos
           </Button>
         </Container>
-      </View>
+      
+      </ScrollView>
       {toggle && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 60 }} />}
       {toggle && (
         <View style={{ zIndex: 2, position: 'absolute', top: 60, width: '100%' }}>
