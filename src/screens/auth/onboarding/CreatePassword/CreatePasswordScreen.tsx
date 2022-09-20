@@ -198,10 +198,10 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
           <Ionicons name={val4Item} size={24} color={val4Color} />
           <TextContainer text='Contiene un número' typography='h5' marginLeft={10}/>
         </Container>
-        <Container flex row center style={{marginTop:10}}>
+        {/* <Container flex row center style={{marginTop:10}}>
           <Ionicons name={val5Item} size={24} color={val5Color} />
           <TextContainer text='Contiene un caracter especial' typography='h5' marginLeft={10}/>
-        </Container>
+        </Container> */}
       </Container>
 
       <Container flex row crossAlignment="end" space="between">

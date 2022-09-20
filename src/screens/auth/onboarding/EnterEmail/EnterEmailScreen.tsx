@@ -62,6 +62,8 @@ const EnterEmailScreen: React.FC<Props> = ({
       <Input
         {...register('email')}
         name="email"
+        label="Correo electrónico"
+        boldLabel
         control={control}
         autoComplete="email"
         autoCorrect={false}

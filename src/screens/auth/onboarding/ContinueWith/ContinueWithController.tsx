@@ -165,7 +165,7 @@ const ContinueWithController: React.FC = () => {
           onPressFacebook={onFacebookButtonPress}
           onPressGoogle={onGoogleButtonPress}          
           onPressEmail={onContinueWithEmail}
-          onPressOthers={onPressOtherMethods}
+          onPressOthers={onContinueAsGuest}
         />
         <OtherInputMethods
           visible={otherMethodsVisible}
