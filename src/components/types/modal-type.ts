@@ -1,1 +1,1 @@
-export type modalType = 'warning' | 'error' | 'success';
+export type modalType = 'warning' | 'error' | 'success'| 'limited';

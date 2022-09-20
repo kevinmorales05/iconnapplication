@@ -42,7 +42,8 @@ export const Toast = () => {
         { backgroundColor: toast.type === 'error' ? 
           theme.brandColor.iconn_error : toast.type === 'success' ? 
           theme.brandColor.iconn_success : toast.type === 'warning' ? 
-          theme.brandColor.iconn_warning : undefined!},
+          theme.brandColor.iconn_warning : toast.type === 'limited' ? 
+          theme.brandColor.iconn_dark_grey: undefined!},
       ]}>
       <Container row center crossCenter space='between'>
         <Container center space='between'>
@@ -50,13 +51,14 @@ export const Toast = () => {
           name={toast.type === 'error' ? 
             'closecircleo' : toast.type === 'success' ? 
             `checkcircleo` : toast.type === 'warning' ? 
-            'warning' : undefined!} 
+            'warning' : toast.type === 'limited' ? 
+            'checkcircleo' : undefined!} 
           color={theme.brandColor.iconn_white}
           style={{marginLeft:16, marginRight: 16}}
           size={24}
         /> 
         </Container>
-        <Animated.Text style={{opacity: fade, color: theme.brandColor.iconn_white, fontSize: 16, fontWeight: '400', letterSpacing: 0.3, width: 250 }}>{toast.message}</Animated.Text>
+        <Animated.Text style={{opacity: fade, color: theme.brandColor.iconn_white, fontSize: 16, fontWeight: '400', letterSpacing: 0.3, width: 250 }}> {toast.message}</Animated.Text>
         <TouchableOpacity onPress={hide} style={{marginRight: 16}}>
           <Ionicons name={`close-outline`} size={24} color={theme.brandColor.iconn_white} />
         </TouchableOpacity>

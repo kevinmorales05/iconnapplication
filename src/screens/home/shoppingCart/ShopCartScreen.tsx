@@ -230,7 +230,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     } else if (tag === "addingProductError") {
       toast.show({
         message: msg,
-        type: 'success'
+        type: 'limited'
       });
     } else if (tag === "delete") {
       toast.show({
