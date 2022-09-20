@@ -25,16 +25,7 @@ const EnterEmailController: React.FC = () => {
     }
   }, [loading]);
 
-  const showAlert = () => {
-    alert.show({
-      title: 'Ya tienes una cuenta',
-      message: 'Este correo está asociado a una cuenta existente.',
-      acceptTitle: 'Entendido',
-      onAccept() {
-        alert.hide();
-      }
-    });
-  };
+  const showAlert = () => {};
 
   const createSession = async (email: string) => {
     // check if user is already registered
@@ -72,23 +63,26 @@ const EnterEmailController: React.FC = () => {
           return;
         }
       } else {
-        showAlert();
-        setUserId({ user_id: current.id });
+        alert.show({
+          title: 'Ya tienes una cuenta',
+          message: 'Este correo está asociado a una cuenta existente.',
+          acceptTitle: 'Entendido',
+          async onAccept() {
+            alert.hide();
+            setUserId({ user_id: current.id });
+            // login
+            try {
+              await authServices.startAuthentication(email);
+              dispatch(setAuthEmail({ email }));
+              navigate('EnterPassword');
+            } catch (error) {
+              console.log('LOGIN ERROR', error);
+            }
+          }
+        });
       }
     } catch (error) {
       console.log('error');
-    }
-
-    // login
-
-    try {
-      const response = await authServices.startAuthentication(email);
-
-      console.log('response:', response);
-      dispatch(setAuthEmail({ email }));
-      navigate('EnterPassword');
-    } catch (error) {
-      console.log('LOGIN ERROR', error);
     }
   };
 
