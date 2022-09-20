@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Image, View, StyleSheet, ScrollView, Platform } from 'react-native';
+import { Image, View, StyleSheet, ScrollView } from 'react-native';
 import theme from 'components/theme/theme';
-import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
-import { CustomText, Button, Container, Touchable, ShippingDropdown, CustomModal, AnimatedCarousel } from 'components';
+import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Address, CarouselItem, RootState, useAppSelector } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
@@ -20,6 +19,10 @@ interface Props {
   defaultAddress: Address;
   showShippingDropDown?: boolean;
   principalItems: CarouselItem[];
+  homeOptions: CarouselItem[];
+  secondItems: CarouselItem[];
+  dayPromotionItems: CarouselItem[];
+  allPromotionsItems: CarouselItem[];
   onPressCarouselItem: (CarouselItem: CarouselItem) => void;
 }
 
@@ -33,6 +36,10 @@ const HomeScreen: React.FC<Props> = ({
   onPressProducts,
   showShippingDropDown,
   principalItems,
+  homeOptions,
+  secondItems,
+  dayPromotionItems,
+  allPromotionsItems,
   onPressCarouselItem
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
@@ -45,7 +52,7 @@ const HomeScreen: React.FC<Props> = ({
   const [mode, setMode] = useState<null | ShippingMode>(null);
 
   return (
-    <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%' }}>
+    <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%', backgroundColor: theme.brandColor.iconn_white }}>
       <View style={{ zIndex: 0, width: '100%' }}>
         <Touchable
           onPress={() => {
@@ -83,19 +90,40 @@ const HomeScreen: React.FC<Props> = ({
         </Touchable>
       </View>
 
-      <ScrollView
-        bounces={false}
-        contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-
-      <AnimatedCarousel type='principal' visible={true} items={principalItems} onPressItem={onPressCarouselItem}/>
-      
-        <Container flex style={{paddingHorizontal: 16}}>
-          <Container row crossCenter style={{ marginVertical: 16 }}>
-            <CustomText textColor={theme.brandColor.iconn_dark_grey} text={name ? `¡Hola ${name}!` : '¡Hola!'} typography="h4" fontBold />
+      <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <Container>
+          <Container>
+            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} />
           </Container>
+          <Container style={{ marginTop: 16 }}>
+            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} />
+          </Container>
+          <Container style={{ marginTop: 16 }}>
+            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} />
+          </Container>
+          <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
+            <Container row space="between" style={{ margin: 16 }}>
+              <TextContainer text="Recomendados para ti" fontBold typography="h4" />
+              <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
+            </Container>
+          </Container>
+          <Container style={{ marginTop: 16 }}>
+            <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
+            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} />
+          </Container>
+          <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
+            <Container row space="between" style={{ margin: 16 }}>
+              <TextContainer text={`Otros productos`} fontBold typography="h4" />
+              <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
+            </Container>
+          </Container>
+          <Container style={{ marginTop: 16, marginBottom: 16 }}>
+            <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
+            <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} />
+          </Container>
+        </Container>
+
+        <Container flex style={{ paddingHorizontal: 16 }}>
           <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Facturación
           </Button>
@@ -112,7 +140,6 @@ const HomeScreen: React.FC<Props> = ({
             Pedidos
           </Button>
         </Container>
-      
       </ScrollView>
       {toggle && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 60 }} />}
       {toggle && (

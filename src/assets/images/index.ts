@@ -56,6 +56,12 @@ import ICONN_SCOOT from './iconn-scoot.webp';
 import ICONN_STO from './iconn-sto.webp';
 import ICONN_WARNING_MARK from './iconn-warning-mark.webp';
 import ICONN_ERROR_CROSS from './iconn-error-cross.webp';
+import ICONN_HOME_OPTION_SEVEN from './iconn-home-option-seven.png';
+import ICONN_HOME_OPTION_PETRO from './iconn-home-option-petro.png';
+import ICONN_HOME_OPTION_HEART from './iconn-home-option-heart.png';
+import ICONN_HOME_OPTION_ACUMMULATE from './iconn-home-option-acummulate.png';
+import ICONN_HOME_OPTION_WALLET from './iconn-home-option-wallet.png';
+import ICONN_HOME_OPTION_ORDERS from './iconn-home-option-orders.png';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -115,5 +121,11 @@ export {
   ICONN_SCOOT,
   ICONN_STO,
   ICONN_WARNING_MARK,
-  ICONN_ERROR_CROSS
+  ICONN_ERROR_CROSS,
+  ICONN_HOME_OPTION_SEVEN,
+  ICONN_HOME_OPTION_PETRO,
+  ICONN_HOME_OPTION_HEART,
+  ICONN_HOME_OPTION_ACUMMULATE,
+  ICONN_HOME_OPTION_WALLET,
+  ICONN_HOME_OPTION_ORDERS
 };

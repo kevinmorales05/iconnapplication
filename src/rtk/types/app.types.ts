@@ -6,7 +6,7 @@ export interface AppInterface {
   internetReachabilityReviewed?: number;
 }
 
-export type PromotionType = 'principal' | 'second' | 'all_promotions' | 'day_promotion';
+export type CarouselType = 'homeOptions' | 'principal' | 'second' | 'all_promotions' | 'day_promotion';
 export type NavigationType = 'internal' | 'external';
 
 export interface CarouselItem {
