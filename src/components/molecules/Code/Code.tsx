@@ -1,19 +1,9 @@
 import { getStyles } from './Code.styles';
-import {
-  NativeSyntheticEvent,
-  Text,
-  TextInput,
-  TextInputSelectionChangeEventData,
-  TextStyle,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { NativeSyntheticEvent, Text, TextInput, TextInputSelectionChangeEventData, TextStyle, View, ViewStyle } from 'react-native';
 
-import { TouchableText } from '../TouchableText';
 import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
-import { Container, CustomText } from 'components/atoms';
-import theme from 'components/theme/theme';
-  
+import { Container } from 'components/atoms';
+
 type Props = {
   label: string;
   error?: boolean;
@@ -21,11 +11,8 @@ type Props = {
   onChangeText?: (text: string) => void;
   caption?: string;
   lengthInput?: number;
-  labelAction?: string;
-  onPressAction?: () => void;
   secureTextEntry?: boolean;
   disable?: boolean;
-  disabledAction?: boolean;
   testID?: string;
   accessibilityLabel?: string;
   newCode?: string;
@@ -39,11 +26,8 @@ const Code: FunctionComponent<Props> = ({
   onChangeText,
   caption,
   lengthInput,
-  labelAction = '',
-  onPressAction = () => {},
   secureTextEntry = false,
   disable = false,
-  disabledAction = false,
   testID = '',
   accessibilityLabel = '',
   newCode = ''
@@ -60,14 +44,9 @@ const Code: FunctionComponent<Props> = ({
     style,
     error ? styles.pin__holder__error : null,
     styles.pin__code__holder,
-    disable ? styles.pin__holder__disabled : null,
+    disable ? styles.pin__holder__disabled : null
   ];
-  const pinStyle = [
-    styles.pin,
-    error ? styles.pin__label__error : null,
-    styles.pin__code,
-    disable ? styles.pin__verification__disabled : null,
-  ];
+  const pinStyle = [styles.pin, error ? styles.pin__label__error : null, styles.pin__code, disable ? styles.pin__verification__disabled : null];
 
   useEffect(() => {
     let newFullcode = '';
@@ -83,9 +62,7 @@ const Code: FunctionComponent<Props> = ({
   const keyChangeDelete = (key: string, focusedIndex: number) => {
     if (key === 'Backspace' && focusedIndex >= 0) {
       setTextCode(focusedIndex, '');
-      (inputEl.current[
-        focusedIndex - (focusedIndex === 0 ? 0 : 1)
-      ] as TextInput).focus();
+      (inputEl.current[focusedIndex - (focusedIndex === 0 ? 0 : 1)] as TextInput).focus();
     }
   };
 
@@ -147,14 +124,10 @@ const Code: FunctionComponent<Props> = ({
   };
 
   const inputChangeText = (index: number, text: string) => {
-    /^[0-9]*$/.test(text)
-      ? changeText(index, text)
-      : changeText(index, text.toString().replace(/[^\d]/, ''));
+    /^[0-9]*$/.test(text) ? changeText(index, text) : changeText(index, text.toString().replace(/[^\d]/, ''));
   };
 
-  const onSelectionChange = (
-    e: NativeSyntheticEvent<TextInputSelectionChangeEventData>,
-  ) => {
+  const onSelectionChange = (e: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => {
     const { selection } = e.nativeEvent;
     setSelection(selection);
     setSelection(undefined);
@@ -166,29 +139,20 @@ const Code: FunctionComponent<Props> = ({
   }
 
   useEffect(() => {
-    inputEl.current[0]?.focus();    
-  }, [])
+    inputEl.current[0]?.focus();
+  }, []);
 
   return (
     <View style={styles.pin__container}>
-      <Text
-        style={[styles.pin__label, error ? styles.pin__label__error : null]}>
-        {label}
-      </Text>
+      <Text style={[styles.pin__label, error ? styles.pin__label__error : null]}>{label}</Text>
       <View style={styles.pin__holder__container}>
         {arrayInputs.map((a, index) => {
           return (
-            <View
-              key={a}
-              style={[
-                pinHolderStyle,
-                (index === arrayInputs.length - 1) ? {marginRight: 0} : {},
-                focus[index] ? styles.pin__holder__focus : null,
-              ]}>
+            <View key={a} style={[pinHolderStyle, index === arrayInputs.length - 1 ? { marginRight: 0 } : {}, focus[index] ? styles.pin__holder__focus : null]}>
               <TextInput
                 testID={`${testID}${index}`}
                 accessibilityLabel={`${accessibilityLabel}${index}`}
-                ref={ (ref) => (inputEl.current[index] = ref) }
+                ref={ref => (inputEl.current[index] = ref)}
                 selection={selection}
                 value={code[index]}
                 editable={!disable}
@@ -198,8 +162,8 @@ const Code: FunctionComponent<Props> = ({
                 secureTextEntry={secureTextEntry}
                 onFocus={() => onFocus(index)}
                 onBlur={() => focusCode(index, false)}
-                onChangeText={(text) => inputChangeText(index, text)}
-                onKeyPress={(e) => keyChangeDelete(e.nativeEvent.key, index)}
+                onChangeText={text => inputChangeText(index, text)}
+                onKeyPress={e => keyChangeDelete(e.nativeEvent.key, index)}
                 onSelectionChange={onSelectionChange}
                 style={pinStyle}
               />
@@ -211,53 +175,14 @@ const Code: FunctionComponent<Props> = ({
       {!!caption && error ? (
         <>
           <View style={styles.pin__caption__container}>
-            <Text style={[styles.pin__caption, styles.pin__caption__error]}>
-              {caption}
-            </Text>
+            <Text style={[styles.pin__caption, styles.pin__caption__error]}>{caption}</Text>
           </View>
-          {!!labelAction === false ? (
-            <>
-              <Container row crossCenter style={{ marginTop: 50, marginBottom: 16 }}>
-                <TouchableText
-                  underline
-                  textColor={theme.brandColor.iconn_accent_principal}
-                  text="Solicitar un código nuevo"
-                  typography="h5"
-                  fontBold
-                  onPress={onPressAction}
-                  marginTop={8}
-                />
-              </Container>
-            </>
-          ): (
-            <>
-              <Container row crossCenter style={{ marginTop: 50, marginBottom: 16 }}/>                            
-            </>
-          )}
         </>
-      ): (
+      ) : (
         <>
-          <View style={styles.pin__caption__container} />            
-          <Container row crossCenter style={{ marginTop: 50, marginBottom: 16 }} />            
+          <View style={styles.pin__caption__container} />
+          <Container row crossCenter style={{ marginTop: 50, marginBottom: 16 }} />
         </>
-      )}
-
-      {!!labelAction && (
-        <Container backgroundColor={theme.brandColor.iconn_warm_grey} style={{marginHorizontal:34, paddingHorizontal:16, paddingVertical: 24}}>
-          <CustomText
-            textColor={theme.fontColor.dark}
-            text="Podrás seleccionar un código nuevo en:"
-            typography="h5"
-            textAlign={'center'}
-          />
-          <CustomText
-            textColor={theme.fontColor.dark}
-            text={`\n ${labelAction} segundos`}
-            alignSelf='center'            
-            typography="h5"
-            fontBold            
-          />
-        </Container>        
       )}
     </View>
   );

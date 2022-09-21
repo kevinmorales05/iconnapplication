@@ -6,7 +6,6 @@ import { ActionButton, TextContainer, Button, Container, Code } from 'components
 import theme from 'components/theme/theme';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { ICONN_EMAIL } from 'assets/images';
-import { useAppDispatch, preSignUpThunk } from 'rtk';
 
 interface Props {
   onSubmit: (code: string) => void;
@@ -17,16 +16,9 @@ interface Props {
 
 const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode }) => {
 
-  let currentIntervalId: any;
   const insets = useSafeAreaInsets();
-  const verificationCodeSecondsIntervalValue = 60;
   const [code, setCode] = useState('');
-  const [disableAction, setDisableAction] = useState(true);
-  const [verificationCodeIntervalId, setVerificationCodeIntervalId] = useState(0);
-  const [timeleft, setTimeleft] = useState('00:00');
   const [isCodeError, setIsCodeError] = useState(false);
-  const dispatch = useAppDispatch();
-  const [codeReset, setCodeReset] = useState("")
   
   const codding = (c: string) => {
     setCode(c);
@@ -35,66 +27,13 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
   const { handleSubmit } = useForm();
 
   useEffect(() => {
-    startInterval();
-    return () => {
-      clearInterval(currentIntervalId);
-    }
-  }, []);
-
-  useEffect(() => {
     if (wrongCode === true) {      
       setIsCodeError(true);      
     }    
   }, [wrongCode])
   
-  const startInterval = () => {
-    setIsCodeError(false);
-    setDisableAction(true);
-    setCode('')
-    let enabledTimeInSeconds = verificationCodeSecondsIntervalValue;
-
-    currentIntervalId = setInterval(() => {
-      const stateIntervalId = verificationCodeIntervalId;
-      enabledTimeInSeconds -= 1;
-      if (
-        (stateIntervalId && stateIntervalId !== Number(currentIntervalId)) ||
-        enabledTimeInSeconds < 0
-      ) {
-        clearInterval(currentIntervalId);
-        setVerificationCodeIntervalId(0);
-        setTimeleft('');
-        setDisableAction(false);
-        setIsCodeError(true);
-        return;
-      }
-
-      setTimeleft(enabledTimeInSeconds.toString());
-    }, 1000);
-
-    setVerificationCodeIntervalId(Number(currentIntervalId));
-    setTimeleft(enabledTimeInSeconds.toString());
-  };
-
   const submit: SubmitHandler<FieldValues> = () => {
     onSubmit(code);
-  };
-
-const cleanCode = () => {
-  setCodeReset(" ")
-  if (codeReset === " ") { setCodeReset("  ") }
-}
-
-  const onResendCode = async () => {
-    startInterval();
-    cleanCode();
-    try {
-      const { payload } = await dispatch(preSignUpThunk(email!));
-      if (payload.responseCode === 200 && payload.data.isValid) {
-        console.log('NUEVO OTP REENVIADO...');        
-      } 
-    } catch (error) {
-      console.error('Unknow Error', error);      
-    }
   };
 
   return (
@@ -138,13 +77,10 @@ const cleanCode = () => {
           error={isCodeError}
           caption="Código incorrecto"
           disable={false}
-          disabledAction={disableAction}
           lengthInput={6}
           secureTextEntry={false}
-          labelAction={timeleft}
           onChangeText={c => codding(c)}
-          onPressAction={() => onResendCode()}
-          newCode={codeReset}
+          newCode={""}
         />
         </Container>
       </Container>
