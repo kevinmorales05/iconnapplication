@@ -61,23 +61,15 @@ const EnterEmailController: React.FC = () => {
           return;
         }
       } else {
-        alert.show({
-          title: 'Ya tienes una cuenta',
-          message: 'Este correo está asociado a una cuenta existente.',
-          acceptTitle: 'Entendido',
-          async onAccept() {
-            alert.hide();
-            setUserId({ user_id: current.id });
-            // login
-            try {
-              await authServices.startAuthentication(email);
-              dispatch(setAuthEmail({ email }));
-              navigate('EnterPassword');
-            } catch (error) {
-              console.log('LOGIN ERROR', error);
-            }
-          }
-        });
+        setUserId({ user_id: current.id });
+        // login
+        try {
+          await authServices.startAuthentication(email);
+          dispatch(setAuthEmail({ email }));
+          navigate('EnterPassword');
+        } catch (error) {
+          console.log('LOGIN ERROR', error);
+        }
       }
     } catch (error) {
       console.log('error');
