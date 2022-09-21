@@ -176,7 +176,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         title: 'Eliminar articulos no disponibles',
         message: 'Los articulos ya no apareceran en tu canasta y podras continuar con tu compra',
         acceptTitle: 'Eliminar',
-        acceptTextColor: 'iconn_white',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
         cancelTextColor: 'iconn_dark_grey',
