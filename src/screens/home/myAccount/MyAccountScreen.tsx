@@ -11,6 +11,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { authServices } from 'services';
 
 const TaxItem: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -84,10 +85,16 @@ export default function AccountScreen() {
   const dispatch = useAppDispatch();
 
   const logOut = async () => {
-    dispatch(setAppInitialState());
-    dispatch(setAuthInitialState());
-    dispatch(setGuestInitialState());
-    dispatch(setInvoicingInitialState());
+    try {
+      await authServices.logOutUser();
+    } catch (error) {
+      console.log('ERROR DE LOGOUT', error);
+    } finally {
+      dispatch(setAppInitialState());
+      dispatch(setAuthInitialState());
+      dispatch(setGuestInitialState());
+      dispatch(setInvoicingInitialState());
+    }
   };
 
   const navigation = useContext(NavigationContext);

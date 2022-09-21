@@ -32,6 +32,17 @@ async function login(email: string, password: string, authenticationToken: strin
   return data;
 }
 
+/**
+ * Function to logout
+ */
+async function logOutUser(): Promise<any> {
+  const response = await UsersApi.getInstance().getRequest(`/vtexid/pub/authentication/logout?scope=oneiconn`);
+  if (response === undefined) return Promise.reject(new Error(`/vtexid/pub/authentication/logout?scope=oneiconn`));
+  const { data } = response;
+  console.log('LOGOUT', data);
+  return data;
+}
+
 const API_VTEX_AUTH = 'https://oneiconn.myvtex.com/api/vtexid/pub/authentication/';
 
 async function startAuthentication(email: string): Promise<any> {
@@ -244,5 +255,6 @@ export const authServices = {
   startAuthentication,
   getProfile,
   createUser,
-  createPassword
+  createPassword,
+  logOutUser
 };
