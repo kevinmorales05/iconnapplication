@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { ICONN_BASKET, ICONN_REVERSE_BASKET } from 'assets/images';
 import { Container, CustomText, Touchable } from 'components';
@@ -6,12 +6,21 @@ import theme from 'components/theme/theme';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../navigation/types';
-
+import { InvoicingProfileInterface, Colony, RootState, useAppDispatch, useAppSelector } from 'rtk';
 
 const BasketCounter = () => {
+  const { cart } = useAppSelector((state: RootState) => state.cart);
   const [counter, setCounter] = useState(0);
-
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
+  const getCount = () => {
+    console.log('canastaTam: ',cart.length);
+    setCounter(cart.length);
+  };
+
+  useEffect(() => {
+    getCount();
+  }, [cart]);
 
   const openShoppingCart = () => {
     navigate('ShopCart');

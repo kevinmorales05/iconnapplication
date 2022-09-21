@@ -52,16 +52,16 @@ const ShopCartController: React.FC = () => {
     if (isLogged) {
       const { meta } = await dispatch(logoutThunk());
       if (meta.requestStatus === 'fulfilled') {
-        dispatch(setAppInitialState());
+        /*dispatch(setAppInitialState());
         dispatch(setAuthInitialState());
         dispatch(setGuestInitialState());
-        dispatch(setInvoicingInitialState());
+        dispatch(setInvoicingInitialState());*/
       }  
-    } else {
+    } else {/*
       dispatch(setAppInitialState());
       dispatch(setAuthInitialState());
       dispatch(setGuestInitialState());
-      dispatch(setInvoicingInitialState());
+      dispatch(setInvoicingInitialState());*/
     }
   };
 

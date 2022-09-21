@@ -16,7 +16,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import IconO from 'react-native-vector-icons/FontAwesome5'
 import { ConnectionItem } from 'components/organisms/ConnectionItem';
 import { useAlert, useLoading, useToast } from 'context';
-
+import { setShoppingCartInitialState, getShoppingCartItems, updateShoppingCartItems, cleanShoppingCart } from 'rtk/slices/cartSlice';
 
 interface Props {
   onPressInvoice: () => void;
@@ -32,9 +32,10 @@ import { WidthType } from '../../../components/types/width-type';
 
 const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, orderFormIdReceived }) => {
   const insets = useSafeAreaInsets();
+  const dispatch = useAppDispatch();
   const loader = useLoading();
   const { loading } = useAppSelector((state: RootState) => state.invoicing);
-  const { cart: dataFromCart } = useAppSelector((state: RootState) => state.cart);
+  //const { cart: dataFromCart } = useAppSelector((state: RootState) => state.cart);
   const { internetReachability } = useAppSelector((state: RootState) => state.app);
   const toast = useToast();
   const alert = useAlert();
@@ -50,8 +51,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const fetchData = useCallback(async () => {
     console.log('fetchData...');
-    const data = await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9');
-    const { items, messages, totalizers } = data;
+    const data = await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9').then(response => {
+    const { items, messages, totalizers } = response;
     let orderItems = [];
     items.map((item, index) => {
       orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
@@ -80,8 +81,11 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           value.errorMessage = '';
         }
       })
-      setProductList(items);
+      setProductList(items);      
     }
+    dispatch(updateShoppingCartItems(items));
+  }).catch((error) => console.log(error));
+
   }, []);
 
   useEffect(() => {
@@ -90,13 +94,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const updateShoppingCartQuantityServiceCall = useCallback(async (orderFormId, request, operation ,msgOperation, updatedIndex) => {
     console.log(orderFormId + ' -request ' + request.orderItems);
-    let data = undefined;
     try {
       let oldQuantity = request.orderItems[updatedIndex].quantity;
       await clearShoppingCartMessages(orderFormId, request);
-      data = await updateShoppingCart(orderFormId, request);    
-    const { items, messages, totalizers } = data;
-
+      await updateShoppingCart(orderFormId, request).then(response => {
+    const { items, messages, totalizers } = response;
+    let itemsToBasket = items;
     setMessages(messages);
     setTotalizers(totalizers[0]);
 
@@ -124,7 +127,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       }
     }
 
-    let isError = false;
     if (items.length > 0) {
       items.map((value,index) => {
         if(withoutStockM.get(index)){
@@ -136,13 +138,11 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         }
       })
 
-      if(items[updatedIndex]){
-        isError = true;
-      }
       setProductList(items);
     }else {
       setProductList(undefined);
     }
+    dispatch(updateShoppingCartItems(itemsToBasket));
 
     console.log('****************operation:'+operation);
     if(operation == "increase"){
@@ -150,7 +150,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     } else {
       toastFunction(operation, msgOperation);
     }
-
+  }).catch((error) => console.log(error));
   } catch (error) {
       console.log(error);
   }
@@ -159,13 +159,15 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const emptyShoppingCartItemsServiceCall = useCallback(async (orderFormId, request) => {
     await clearShoppingCartMessages(orderFormId, request);
-    const data = await emptyShoppingCar(orderFormId, request);
-    const { items, messages, totalizers } = data;
+    await emptyShoppingCar(orderFormId, request).then(response => {
+    const { items, messages, totalizers } = response;
     setProductList(items);
+    dispatch(updateShoppingCartItems(items));
     setMessages(messages);
     setTotalizers(totalizers[0]);
     setRequestList(null);
     setWithoutStockMap(null);
+  }).catch((error) => console.log(error));
   }, []);
 
   const showAlert = () => {
@@ -174,7 +176,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         title: 'Eliminar articulos no disponibles',
         message: 'Los articulos ya no apareceran en tu canasta y podras continuar con tu compra',
         acceptTitle: 'Eliminar',
-        acceptOutline: 'iconn_error',
+        acceptTextColor: 'iconn_white',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
         cancelTextColor: 'iconn_dark_grey',
@@ -253,10 +255,11 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const Counter: React.RF = ({ orderFormId, item, itemIndex }) => {
     const decreaseItem = () => {
       console.log('***decrease item***');
-      item.quantity--;
-      const orderItems = requestList;
-      orderItems[itemIndex].quantity = item.quantity;
       try {
+      let itemQuantityReceived = parseInt(item.quantity);
+      itemQuantityReceived--;
+      let orderItems = requestList;
+      orderItems[itemIndex].quantity = itemQuantityReceived;
         //loader.show();
         setLoadingStatus(true);
         updateShoppingCartQuantityServiceCall(orderFormId, { orderItems },"decrease",'Se actualizó el artículo en la canasta.',itemIndex);
@@ -270,12 +273,11 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
     const increaseItem = () => {
       console.log('***increase item***');
-      item.quantity++;
-
-      const orderItems = requestList;
-      orderItems[itemIndex].quantity = item.quantity;
-
       try {
+      let itemQuantityReceived = parseInt(item.quantity);
+      itemQuantityReceived++;
+      const orderItems = requestList;
+      orderItems[itemIndex].quantity = itemQuantityReceived;
         //loader.show();
         setLoadingStatus(true);
         updateShoppingCartQuantityServiceCall(orderFormId, {orderItems} ,"increase","Se actualizó el artículo en la canasta.",itemIndex);
