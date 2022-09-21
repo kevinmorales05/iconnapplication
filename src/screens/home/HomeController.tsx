@@ -12,7 +12,8 @@ import {
   setGuestInitialState,
   Address,
   setAddressDefault,
-  setSeenCarousel
+  setSeenCarousel,
+  CarouselItem
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -25,6 +26,8 @@ import { setInvoicingInitialState } from 'rtk/slices/invoicingSlice';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useLoading } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
+import { HOME_ITEMS, HOME_OPTIONS } from 'assets/files';
+import { getHomeItemsThunk } from 'rtk/thunks/vtex-home.thunks';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -262,6 +265,43 @@ const HomeController: React.FC = () => {
     dispatch(setSeenCarousel(true));
   };
 
+  const onPressCarouselItem = (CarouselItem: CarouselItem) => {
+    console.log('El item seleccionado en carousel es ===> ', CarouselItem);
+  };
+
+  const [homeItems, setHomeItems] = useState<CarouselItem[] | null>(null);
+  const [principal, setPrincipal] = useState<CarouselItem[] | null>(null);
+  const [homeOptions, setHomeOptions] = useState<CarouselItem[] | null>(null);
+  const [second, setSecond] = useState<CarouselItem[] | null>(null);
+  const [day_promotion, setDay_promotion] = useState<CarouselItem[] | null>(null);
+  const [all_promotions, setAll_promotions] = useState<CarouselItem[] | null>(null);
+
+  /**
+   * Load home items list.
+   */
+  const fetchHomeItems = useCallback(async () => {
+    loader.show();
+    const homeItems = await dispatch(getHomeItemsThunk()).unwrap();
+    setHomeItems(homeItems);
+  }, []);
+
+  /**
+   * We get the full home items.
+   */
+  useEffect(() => {
+    fetchHomeItems();
+  }, [fetchHomeItems]);
+
+  useEffect(() => {
+    if (homeItems) {
+      setHomeOptions(HOME_OPTIONS);
+      setPrincipal(homeItems!.filter(item => item.promotion_type === 'principal'));
+      setSecond(homeItems!.filter(item => item.promotion_type === 'second'));
+      setDay_promotion(homeItems!.filter(item => item.promotion_type === 'day_promotion'));
+      setAll_promotions(homeItems!.filter(item => item.promotion_type === 'all_promotions'));
+    }
+  }, [homeItems]);
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -279,6 +319,12 @@ const HomeController: React.FC = () => {
         defaultAddress={defaultAddress!}
         onPressProducts={goToOrders}
         showShippingDropDown={showShippingDropDown}
+        principalItems={principal!}
+        homeOptions={homeOptions!}
+        secondItems={second!}
+        dayPromotionItems={day_promotion!}
+        allPromotionsItems={all_promotions!}
+        onPressCarouselItem={onPressCarouselItem}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
