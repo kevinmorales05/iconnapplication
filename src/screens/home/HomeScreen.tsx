@@ -61,7 +61,7 @@ const HomeScreen: React.FC<Props> = ({
             });
           }}
         >
-          <Container style={{ paddingVertical: 20, paddingHorizontal: 10, display: 'flex', justifyContent: 'space-between' }} row>
+          <Container style={{ paddingVertical: 10, paddingHorizontal: 16, display: 'flex', justifyContent: 'space-between' }} row>
             {mode === null && <CustomText text={'¿Cómo quieres recibir tus productos?'} fontBold />}
             {defaultSeller && mode === ShippingMode.PICKUP && (
               <Container style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -141,9 +141,9 @@ const HomeScreen: React.FC<Props> = ({
           </Button>
         </Container>
       </ScrollView>
-      {toggle && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 60 }} />}
+      {toggle && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 35 }} />}
       {toggle && (
-        <View style={{ zIndex: 2, position: 'absolute', top: 60, width: '100%' }}>
+        <View style={{ zIndex: 2, position: 'absolute', top: 35, width: '100%' }}>
           <ShippingDropdown
             mode={mode}
             handleMode={mode => {
