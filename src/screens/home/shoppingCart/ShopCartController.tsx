@@ -75,29 +75,27 @@ const ShopCartController: React.FC = () => {
    
   return (
     <SafeArea
+      childrenContainerStyle={{ paddingHorizontal: 0 }}
       topSafeArea={false}
       bottomSafeArea={false}
-      backgroundColor={theme.brandColor.iconn_white}
+      backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
-      css={styles.backgroundImage}
     >
-      
-      <ShopCartScreen
+     <ShopCartScreen
         orderFormIdReceived={'655c3cc734e34ac3a14749e39a82e8b9'}
         onPressLogOut={logOut}
         onPressMyAccount={goToMyAccount}
         onPressInvoice={goToInvoice}
       />
+
     </SafeArea>
   );
 };
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    width: '100%',
     flex: 1,
-    marginHorizontal: 0,
-    paddingHorizontal: 0,
+    resizeMode: 'cover'
   },
   modalBackground: {
     justifyContent: 'space-evenly',
