@@ -29,7 +29,8 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
     backgroundColor: theme.brandColor.iconn_white,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
-    marginBottom: 16
+    marginBottom: 16,
+    elevation: 1
   };
 
   const image: StyleProp<ImageStyle> = {
@@ -54,7 +55,8 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
     backgroundColor: theme.brandColor.iconn_white,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
-    margin: 8
+    margin: 8,
+    elevation: 1
   };
 
   const secondImageStyle: StyleProp<ImageStyle> = {
@@ -69,7 +71,8 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
     backgroundColor: theme.brandColor.iconn_white,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
-    margin: 8
+    margin: 8,
+    elevation: 1
   };
 
   const dayPromotionImageStyle: StyleProp<ImageStyle> = {
@@ -88,7 +91,8 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
     backgroundColor: theme.brandColor.iconn_white,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.2,
-    marginVertical: 8
+    marginVertical: 8,
+    elevation: 1
   };
 
   const allPromotionsImage: StyleProp<ImageStyle> = {
