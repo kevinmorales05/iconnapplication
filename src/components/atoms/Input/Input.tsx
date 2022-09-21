@@ -1,17 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { ForwardedRef, forwardRef, useState } from 'react';
-import {
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  TextInput,
-  TextInputProps
-} from 'react-native';
-import theme from 'components/theme/theme'
+import { Image, ImageSourcePropType, StyleSheet, TextInput, TextInputProps } from 'react-native';
+import theme from 'components/theme/theme';
 import Collapsible from 'react-native-collapsible';
-import {
-  Control, Controller, FieldValues, RegisterOptions
-} from 'react-hook-form';
+import { Control, Controller, FieldValues, RegisterOptions } from 'react-hook-form';
 import { Touchable } from '../Touchable';
 import { Container } from '../Container';
 import { TextContainer } from '../../molecules/TextContainer';
@@ -57,198 +49,185 @@ export interface Props {
   boldLabel?: boolean;
 }
 
-const Input = forwardRef(({
-  label = '',
-  placeholder = '',
-  autoCapitalize = 'none',
-  autoComplete = 'off',
-  autoCorrect,
-  autoFocus,
-  blurOnSubmit = true,
-  editable = true,
-  keyboardType = 'default',
-  onSubmitEditing,
-  defaultValue,
-  passwordField,
-  showPasswordEnable = true,
-  error = '',
-  onFocus,
-  onBlur,
-  marginTop = 8,
-  maxLength,
-  prefixImage,
-  centerElements,
-  hideLabel,
-  name,
-  control,
-  rules,
-  testID,
-  sufixOutIcon = false,
-  onPressInfo,
-  onChangeText,
-  datePicker = false,
-  onPressDatePickerIcon,
-  phone = false,
-  numeric = false,
-  boldLabel = false,
-}: Props, ref: ForwardedRef<any>) => {
-  const {
-    inputStyle, inputContainerStyle, passwordImageStyle, prefixImageStyle
-  } = styles;
-  const [secureTextEntry, setSecureTextEntry] = useState<boolean>(passwordField || false);
-  const [focused, setFocused] = useState<boolean>(false);
+const Input = forwardRef(
+  (
+    {
+      label = '',
+      placeholder = '',
+      autoCapitalize = 'none',
+      autoComplete = 'off',
+      autoCorrect,
+      autoFocus,
+      blurOnSubmit = true,
+      editable = true,
+      keyboardType = 'default',
+      onSubmitEditing,
+      defaultValue,
+      passwordField,
+      showPasswordEnable = true,
+      error = '',
+      onFocus,
+      onBlur,
+      marginTop = 8,
+      maxLength,
+      prefixImage,
+      centerElements,
+      hideLabel,
+      name,
+      control,
+      rules,
+      testID,
+      sufixOutIcon = false,
+      onPressInfo,
+      onChangeText,
+      datePicker = false,
+      onPressDatePickerIcon,
+      phone = false,
+      numeric = false,
+      boldLabel = false
+    }: Props,
+    ref: ForwardedRef<any>
+  ) => {
+    const { inputStyle, inputContainerStyle, passwordImageStyle, prefixImageStyle } = styles;
+    const [secureTextEntry, setSecureTextEntry] = useState<boolean>(passwordField || false);
+    const [focused, setFocused] = useState<boolean>(false);
 
-  const textInputProps: TextInputProps = {
-    placeholder,
-    placeholderTextColor: theme.brandColor.iconn_med_grey,
-    autoCapitalize,
-    autoComplete,
-    autoCorrect,
-    autoFocus,
-    blurOnSubmit,
-    editable,
-    keyboardType,
-    maxLength: maxLength || 100,
-    onSubmitEditing,
-    returnKeyType: 'done',
-    underlineColorAndroid: 'transparent',
-    selectionColor: theme.brandColor.iconn_accent_principal,
-    onFocus: (e) => {
-      if (onFocus) onFocus(e);
-      setFocused(true);
-    },
-    onBlur: (e) => {
-      if (onBlur) onBlur(e);
-      setFocused(false);
-    },
-    secureTextEntry,
-    style: [inputStyle, {
-      textAlign: centerElements ? 'center' : 'left',
-      textAlignVertical: 'center',
-      paddingBottom: 14,
-      paddingTop: hideLabel ? 2 : 14
-    }],
-    selection: !editable ? { start: 0, end: 0 } : undefined
-  };
+    const textInputProps: TextInputProps = {
+      placeholder,
+      placeholderTextColor: theme.brandColor.iconn_med_grey,
+      autoCapitalize,
+      autoComplete,
+      autoCorrect,
+      autoFocus,
+      blurOnSubmit,
+      editable,
+      keyboardType,
+      maxLength: maxLength || 100,
+      onSubmitEditing,
+      returnKeyType: 'done',
+      underlineColorAndroid: 'transparent',
+      selectionColor: theme.brandColor.iconn_accent_principal,
+      onFocus: e => {
+        if (onFocus) onFocus(e);
+        setFocused(true);
+      },
+      onBlur: e => {
+        if (onBlur) onBlur(e);
+        setFocused(false);
+      },
+      secureTextEntry,
+      style: [
+        inputStyle,
+        {
+          textAlign: centerElements ? 'center' : 'left',
+          textAlignVertical: 'center',
+          paddingBottom: 14,
+          paddingTop: hideLabel ? 2 : 14
+        }
+      ],
+      selection: !editable ? { start: 0, end: 0 } : undefined
+    };
 
-  const borderColor = error ? theme.brandColor.iconn_error : (focused && theme.brandColor.iconn_accent_principal) || theme.brandColor.iconn_med_grey;
+    const borderColor = error ? theme.brandColor.iconn_error : (focused && theme.brandColor.iconn_accent_principal) || theme.brandColor.iconn_med_grey;
 
-  return (
-    <Container testID={testID} style={{ marginTop }}>
-      {!!label && !hideLabel && (
-      <TextContainer
-        testID={`${testID}-label`}
-        text={label}
-        typography="label"
-        marginBottom={8}
-        fontBold={boldLabel}
-      />
-      )}
-      <Container flex row space='between' center>
-        <Container
-          row
-          center
-          height={hideLabel ? 68 : undefined}
-          style={{
-            ...inputContainerStyle,
-            borderColor,
-            backgroundColor: !editable ? theme.brandColor.iconn_light_grey : undefined,
-            width: sufixOutIcon ? '91%' : '100%'
-          }}
-        >
-          {prefixImage && (
-          <Image
-            testID={`${testID}-prefix-image`}
-            source={prefixImage}
-            style={prefixImageStyle}
-            resizeMode="contain"
-          />
-          )}
-          <Container flex>
-            {!!label && hideLabel && (
-              <Container style={{ marginHorizontal: 12, marginTop: 12 }}>
-                <Collapsible collapsed={!focused}>
-                  <TextContainer
-                    testID={`${testID}-hidden-label`}
-                    text={label}
-                    typography="label"
-                    fontBold={boldLabel}
-                  />
-                </Collapsible>
-              </Container>
-            )}
-            <Controller
-              name={name}
-              defaultValue={defaultValue}
-              control={control}
-              rules={rules}
-              render={({ field }) => (
-                <>
-                <Container row center>
-                  {phone && (<CustomText text='   +52'/>)}
-                  <TextInput
-                    pointerEvents={datePicker ? "none" : "auto"}
-                    testID={`${testID}-input`}
-                    ref={ref}
-                    {...textInputProps}
-                    value={defaultValue ? defaultValue : field.value}
-                    onChangeText={e => {
-                      if(phone || numeric){
-                        if(e){
-                          let isNum = /^\d+$/.test(e);
-                          if (!isNum) return;
-                        }
-                      }
-                      
-                      field.value = e;                      
-                      field.onChange(e);
-                      if (onChangeText) {
-                        onChangeText(field.value)  
-                      }
-                    }}
-                  />
+    return (
+      <Container testID={testID} style={{ marginTop }}>
+        {!!label && !hideLabel && <TextContainer testID={`${testID}-label`} text={label} typography="label" marginBottom={8} fontBold={boldLabel} />}
+        <Container flex row space="between" center>
+          <Container
+            row
+            center
+            height={hideLabel ? 68 : undefined}
+            style={{
+              ...inputContainerStyle,
+              borderColor,
+              backgroundColor: !editable ? theme.brandColor.iconn_light_grey : undefined,
+              width: sufixOutIcon ? '91%' : '100%'
+            }}
+          >
+            {prefixImage && <Image testID={`${testID}-prefix-image`} source={prefixImage} style={prefixImageStyle} resizeMode="contain" />}
+            <Container flex>
+              {!!label && hideLabel && (
+                <Container style={{ marginHorizontal: 12, marginTop: 12 }}>
+                  <Collapsible collapsed={!focused}>
+                    <TextContainer testID={`${testID}-hidden-label`} text={label} typography="label" fontBold={boldLabel} />
+                  </Collapsible>
                 </Container>
-                </>
               )}
-            />
+              <Controller
+                name={name}
+                defaultValue={defaultValue}
+                control={control}
+                rules={rules}
+                render={({ field }) => (
+                  <>
+                    <Container row center>
+                      {phone && <CustomText text="   +52" />}
+                      <TextInput
+                        pointerEvents={datePicker ? 'none' : 'auto'}
+                        testID={`${testID}-input`}
+                        ref={ref}
+                        {...textInputProps}
+                        value={defaultValue ? defaultValue : field.value}
+                        onChangeText={e => {
+                          if (phone || numeric) {
+                            if (e) {
+                              let isNum = /^\d+$/.test(e);
+                              if (!isNum) return;
+                            }
+                          }
+
+                          field.value = e;
+                          field.onChange(e);
+                          if (onChangeText) {
+                            onChangeText(field.value);
+                          }
+                        }}
+                      />
+                    </Container>
+                  </>
+                )}
+              />
+            </Container>
+            {passwordField && showPasswordEnable && (
+              <Touchable testID={`${testID}-hide-password`} onPress={() => setSecureTextEntry(!secureTextEntry)} opacityEffect>
+                <Image source={secureTextEntry ? ICONN_EYE_ON : ICONN_EYE_OFF} style={passwordImageStyle} />
+              </Touchable>
+            )}
+            {datePicker && (
+              <ActionButton
+                size="xsmall"
+                color=""
+                onPress={onPressDatePickerIcon!}
+                icon={<AntDesign name="calendar" size={24} color={theme.fontColor.grey} />}
+              />
+            )}
           </Container>
-          {passwordField && showPasswordEnable && (
-            <Touchable testID={`${testID}-hide-password`} onPress={() => setSecureTextEntry(!secureTextEntry)} opacityEffect>
-              <Image source={secureTextEntry ? ICONN_EYE_ON : ICONN_EYE_OFF} style={passwordImageStyle} />
-            </Touchable>
-          )}
-          {datePicker && (
-            <ActionButton size='xsmall' color='' onPress={onPressDatePickerIcon!}
-              icon={<AntDesign
-                name="calendar"
-                size={24}
-                color={theme.fontColor.grey} />}
+          {sufixOutIcon && (
+            <ActionButton
+              circle
+              size="xxxsmall"
+              color="iconn_accent_secondary"
+              onPress={onPressInfo}
+              icon={<Ionicons name="information" size={15} color={theme.fontColor.white} />}
             />
           )}
         </Container>
-        {sufixOutIcon && (
-          <ActionButton circle size='xxxsmall' color='iconn_accent_secondary' onPress={onPressInfo}
-          icon={<Ionicons
-            name="information"
-            size={15}
-            color={theme.fontColor.white} />}
+
+        {!!error && error.length > 1 && (
+          <TextContainer
+            testID={`${testID}-error-label`}
+            text={error}
+            typography="description"
+            textColor={theme.brandColor.iconn_error}
+            marginTop={2}
+            textAlign={centerElements ? 'center' : 'left'}
           />
         )}
       </Container>
-      
-      {(!!error && error.length > 1) && (
-      <TextContainer
-        testID={`${testID}-error-label`}
-        text={error}
-        typography="description"
-        textColor={theme.brandColor.iconn_error}
-        marginTop={2}
-        textAlign={centerElements ? 'center' : 'left'}
-      />
-      )}
-    </Container>
-  );
-});
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   inputStyle: {
@@ -269,10 +248,9 @@ const styles = StyleSheet.create({
     marginVertical: 15
   },
   prefixImageStyle: {
-    width: 16,
-    height: 16,
-    marginLeft: 15,
-    marginVertical: 15
+    width: 28,
+    height: 28,
+    marginLeft: 10
   }
 });
 

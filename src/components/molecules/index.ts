@@ -10,3 +10,5 @@ export * from './ListSwipeableItem';
 export * from './EcommerceHeader';
 export * from './BasketCounter';
 export * from './AddressCard';
+export * from './CardHorizontal';
+export * from './PriceWithDiscount';
