@@ -31,16 +31,23 @@ const EnterOtpController = ({ handleSubmit }: EnterOtpControllerProps) => {
 
   const route = useRoute<RouteProp<AuthStackParams, 'EnterOtp'>>();
 
-  const { authenticationToken } = route.params;
+  const { authenticationToken, variant } = route.params;
 
   const onSubmit = async (code: string) => {
-    // loader.show();
     if (handleSubmit) {
       handleSubmit(email as string);
       return;
     }
 
-    navigate('CreatePassword', { accessKey: code, authenticationToken, variant: 'register' });
+    if (variant === 'register') {
+      navigate('CreatePassword', { accessKey: code, authenticationToken, variant: 'register' });
+      return;
+    }
+
+    if (variant === 'recoverPassword') {
+      navigate('CreatePassword', { accessKey: code, authenticationToken, variant: 'recoverPassword' });
+      return;
+    }
   };
 
   return (

@@ -5,8 +5,8 @@ export type AuthStackParams = {
   ForgotPassword: undefined;
   ContinueWith: undefined;
   EnterEmail: undefined;
-  EnterOtp: { authenticationToken: string };
+  EnterOtp: { authenticationToken: string; variant?: 'register' | 'recoverPassword' };
   TermsAndCond: { accessKey: string; authenticationToken: string; newPassword: string };
-  CreatePassword: { accessKey: string; authenticationToken: string, variant?: 'register' | 'recoverPassword' };
+  CreatePassword: { accessKey: string; authenticationToken: string; variant?: 'register' | 'recoverPassword' };
   EnterFullName: undefined;
 };

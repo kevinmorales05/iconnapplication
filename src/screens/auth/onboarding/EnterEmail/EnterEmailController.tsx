@@ -4,11 +4,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import EnterEmailScreen from './EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
-import { AboutEmail } from 'components/organisms/AboutEmail';
 import { useAlert, useLoading, useToast } from 'context';
-import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
 import { RootState, useAppDispatch, useAppSelector, UserInterface } from 'rtk';
-import { setAuthEmail, setSignMode, setUserId } from 'rtk/slices/authSlice';
+import { setAuthEmail, setUserId } from 'rtk/slices/authSlice';
 import { authServices } from 'services';
 
 const EnterEmailController: React.FC = () => {
@@ -49,7 +47,7 @@ const EnterEmailController: React.FC = () => {
 
           await authServices.sendAccessKey(email, authenticationToken);
           dispatch(setAuthEmail({ email }));
-          navigate('EnterOtp', { authenticationToken });
+          navigate('EnterOtp', { authenticationToken, variant: 'register' });
 
           loader.hide();
           return;

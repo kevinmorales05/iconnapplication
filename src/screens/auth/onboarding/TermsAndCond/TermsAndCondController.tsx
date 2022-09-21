@@ -6,11 +6,10 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams, HomeStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
 import { RootState, setUserId, useAppDispatch, useAppSelector, setIsLogged } from 'rtk';
-import { registerWithFirebaseThunk, signInWithEmailAndPasswordThunk, signUpUserWithEmailAndPasswordThunk } from 'rtk/thunks/auth.thunks';
 import { useAlert, useLoading, useToast } from 'context';
-import theme from 'components/theme/theme';
 
 import { authServices } from 'services';
+import { AxiosError } from 'axios';
 
 const TermsAndCondController: React.FC = () => {
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -40,7 +39,7 @@ const TermsAndCondController: React.FC = () => {
   const onSubmit = async () => {
     loader.show();
     try {
-      const response = await authServices.createUser(user.email as string);
+      await authServices.createUser(user.email as string);
 
       const { userId, authStatus } = await authServices.createPassword(newPassword, accessKey, user.email as string, authenticationToken);
       loader.hide();
@@ -48,19 +47,6 @@ const TermsAndCondController: React.FC = () => {
       if (authStatus === 'Success') {
         dispatch(setUserId({ user_id: userId }));
         dispatch(setIsLogged({ isLogged: true }));
-      } else if (authStatus === 'WrongCredentials') {
-        alert.show(
-          {
-            title: 'El código que ingresaste es incorrecto',
-            message: 'Ingresa los 6 dígitos que enviamos a tu correo.',
-            acceptTitle: 'Entendido',
-            async onAccept() {
-              alert.hide();
-            }
-          },
-          'error'
-        );
-        nav('EnterOtp');
       } else {
         alert.show(
           {
@@ -74,8 +60,26 @@ const TermsAndCondController: React.FC = () => {
           'error'
         );
       }
-    } catch (e) {
-      console.log('error');
+    } catch (error) {
+      loader.hide();
+      const { response } = error as AxiosError;
+      const data = response?.data as any;
+      const { authStatus } = data;
+
+      if (authStatus === 'WrongCredentials') {
+        alert.show(
+          {
+            title: 'El código que ingresaste es incorrecto',
+            message: 'Ingresa los 6 dígitos que enviamos a tu correo.',
+            acceptTitle: 'Entendido',
+            async onAccept() {
+              nav('EnterOtp', { authenticationToken, variant: 'register' });
+              alert.hide();
+            }
+          },
+          'error'
+        );
+      }
     }
   };
 

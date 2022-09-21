@@ -113,7 +113,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
       setVal4Color(theme.brandColor.iconn_success);
     }
 
-    if (!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/) && !value.match(/\s/)) {
+    if (!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && !value.match(/\s/)) {
       setPasswordError('');
       setPassValid(true);
     }
