@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Image, View, StyleSheet, ScrollView } from 'react-native';
 import theme from 'components/theme/theme';
-import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText } from 'components';
+import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, Input } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Address, CarouselItem, RootState, useAppSelector } from 'rtk';
-import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
+import { ICONN_STO, ICONN_SCOOT, ICONN_HOME_SEARCH } from 'assets/images';
 
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useForm } from 'react-hook-form';
+import { openField } from 'utils/rules';
 
 interface Props {
   onPressShopCart: () => void;
@@ -43,7 +44,13 @@ const HomeScreen: React.FC<Props> = ({
   onPressCarouselItem
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
-  const insets = useSafeAreaInsets();
+  const {
+    control,
+    register,
+    formState: { errors }
+  } = useForm({
+    mode: 'onChange'
+  });
 
   useEffect(() => {
     setToggle(showShippingDropDown);
@@ -61,7 +68,17 @@ const HomeScreen: React.FC<Props> = ({
             });
           }}
         >
-          <Container style={{ paddingVertical: 10, paddingHorizontal: 16, display: 'flex', justifyContent: 'space-between' }} row>
+          <Container
+            style={{
+              paddingVertical: 10,
+              paddingHorizontal: 16,
+              display: 'flex',
+              justifyContent: 'space-between',
+              borderBottomWidth: 1,
+              borderBottomColor: theme.brandColor.iconn_light_grey
+            }}
+            row
+          >
             {mode === null && <CustomText text={'¿Cómo quieres recibir tus productos?'} fontBold />}
             {defaultSeller && mode === ShippingMode.PICKUP && (
               <Container style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -91,8 +108,24 @@ const HomeScreen: React.FC<Props> = ({
       </View>
 
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <Container style={{ marginHorizontal: 16 }}>
+          <Input
+            {...register('search')}
+            name="search"
+            control={control}
+            keyboardType="default"
+            placeholder={`Busca en 7-Eleven`}
+            boldLabel
+            maxLength={100}
+            rules={openField(3)}
+            error={errors.state?.message}
+            editable={true}
+            prefixImage={ICONN_HOME_SEARCH}
+          />
+        </Container>
+
         <Container>
-          <Container>
+          <Container style={{ marginTop: 16 }}>
             <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} />
           </Container>
           <Container style={{ marginTop: 16 }}>
