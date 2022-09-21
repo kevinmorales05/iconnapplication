@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Image, View, StyleSheet, ScrollView } from 'react-native';
 import theme from 'components/theme/theme';
 import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, Input } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Address, CarouselItem, RootState, useAppSelector } from 'rtk';
+import { Address, CarouselItem, RootState, useAppSelector, useAppDispatch } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT, ICONN_HOME_SEARCH } from 'assets/images';
-
+import { getShoppingCart } from 'services/vtexShoppingCar.services';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
+import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
 import { useForm } from 'react-hook-form';
 import { openField } from 'utils/rules';
 
@@ -52,7 +53,17 @@ const HomeScreen: React.FC<Props> = ({
     mode: 'onChange'
   });
 
+  const dispatch = useAppDispatch();
+
+  const fetchData = useCallback(async () => {
+    await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9').then(response => {
+    const { items } = response;
+    dispatch(updateShoppingCartItems(items));
+  }).catch((error) => console.log(error));
+  }, []);
+
   useEffect(() => {
+    fetchData();
     setToggle(showShippingDropDown);
   }, [showShippingDropDown]);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
