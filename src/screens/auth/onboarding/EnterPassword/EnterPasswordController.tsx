@@ -65,7 +65,7 @@ const EnterPasswordController: React.FC = () => {
 
   const vauth = async ( password : string) => {
     try {
-      const response = await authServices.login(email, password, authToken);
+      const response = await authServices.login(email as string, password, authToken as string);
       if(response.authStatus == 'Success') {
         dispatch(setUserId({user_id: response.userId}))
         dispatch(setIsLogged({ isLogged: true }));

@@ -9,4 +9,5 @@ export type AuthStackParams = {
   TermsAndCond: { accessKey: string; authenticationToken: string; newPassword: string };
   CreatePassword: { accessKey: string; authenticationToken: string; variant?: 'register' | 'recoverPassword' };
   EnterFullName: undefined;
+  ChangedPassword: { authenticationToken: string; password: string };
 };

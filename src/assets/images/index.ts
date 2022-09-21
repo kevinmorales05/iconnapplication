@@ -62,6 +62,7 @@ import ICONN_HOME_OPTION_HEART from './iconn-home-option-heart.png';
 import ICONN_HOME_OPTION_ACUMMULATE from './iconn-home-option-acummulate.png';
 import ICONN_HOME_OPTION_WALLET from './iconn-home-option-wallet.png';
 import ICONN_HOME_OPTION_ORDERS from './iconn-home-option-orders.png';
+import ICONN_CHECK_PWD from './iconn-check-pwd.webp';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -127,5 +128,6 @@ export {
   ICONN_HOME_OPTION_HEART,
   ICONN_HOME_OPTION_ACUMMULATE,
   ICONN_HOME_OPTION_WALLET,
-  ICONN_HOME_OPTION_ORDERS
+  ICONN_HOME_OPTION_ORDERS,
+  ICONN_CHECK_PWD
 };

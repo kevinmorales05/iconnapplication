@@ -1,13 +1,14 @@
-import React from 'react';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams } from 'navigation/types';
-import { StyleSheet } from 'react-native';
+import { AxiosError } from 'axios';
 import { SafeArea } from 'components/atoms/SafeArea';
-import CreatePasswordScreen from './CreatePasswordScreen';
-import { RootState, setPassword, setUserId, useAppDispatch, useAppSelector } from 'rtk';
+import { useAlert, useLoading } from 'context';
+import { AuthStackParams } from 'navigation/types';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { RootState, setPassword, useAppDispatch, useAppSelector } from 'rtk';
 import { authServices } from 'services';
-import { HttpClient } from '../../../../http/http-client';
+import CreatePasswordScreen from './CreatePasswordScreen';
 
 const CreatePasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -19,6 +20,9 @@ const CreatePasswordController: React.FC = () => {
 
   const { authenticationToken, accessKey, variant } = route.params;
 
+  const loader = useLoading();
+  const alert = useAlert();
+
   const onSubmit = async (password: string) => {
     if (variant === 'register') {
       dispatch(setPassword({ pass: password }));
@@ -27,16 +31,39 @@ const CreatePasswordController: React.FC = () => {
     }
 
     if (variant === 'recoverPassword') {
+      loader.show();
+
       try {
         const changed = await authServices.createPassword(password, accessKey, email as string, authenticationToken);
         if (changed.authStatus == 'Success') {
-          navigate('EnterEmail');
+          navigate('ChangedPassword', { authenticationToken: authenticationToken, password });
         } else {
           console.log('ERROR CAMBIO CONTRASEÑA');
         }
       } catch (error) {
         console.log('ERROR CAMBIO CONTRASEÑA', error);
+        const { response } = error as AxiosError;
+        const data = response?.data as any;
+        const { authStatus } = data;
+
+        if (authStatus === 'WrongCredentials') {
+          alert.show(
+            {
+              title: 'El código que ingresaste es incorrecto',
+              message: 'Ingresa los 6 dígitos que enviamos a tu correo.',
+              acceptTitle: 'Entendido',
+              async onAccept() {
+                navigate('EnterOtp', { authenticationToken, variant: 'recoverPassword' });
+                alert.hide();
+              }
+            },
+            'error'
+          );
+        }
+      } finally {
+        loader.hide();
       }
+
       return;
     }
   };

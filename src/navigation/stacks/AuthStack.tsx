@@ -6,6 +6,7 @@ import EnterEmailController from 'screens/auth/onboarding/EnterEmail/EnterEmailC
 import EnterOtpController from 'screens/auth/onboarding/EnterOtp/EnterOtpController'
 import TermsAndCondController from 'screens/auth/onboarding/TermsAndCond/TermsAndCondController';
 import CreatePasswordController from 'screens/auth/onboarding/CreatePassword/CreatePasswordController';
+import ChangedPasswordController from 'screens/auth/onboarding/ChangedPassword/ChangedPasswordController';
 import EnterFullNameController from 'screens/auth/onboarding/EnterFullName/EnterFullNameController';
 import EnterPasswordController from 'screens/auth/onboarding/EnterPassword/EnterPasswordController';
 import ForgotPasswordController from 'screens/auth/onboarding/ForgotPassword/ForgotPasswordController';
@@ -20,6 +21,7 @@ const AuthStack: React.FC = () => (
     <Stack.Screen name="EnterOtp" component={EnterOtpController} />
     <Stack.Screen name="TermsAndCond" component={TermsAndCondController} />
     <Stack.Screen name="CreatePassword" component={CreatePasswordController} />
+    <Stack.Screen name="ChangedPassword" component={ChangedPasswordController} />
     <Stack.Screen name="EnterFullName" component={EnterFullNameController} />
     <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
   </Stack.Navigator>
