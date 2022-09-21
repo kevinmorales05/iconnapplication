@@ -172,6 +172,7 @@ const theme: themeType = {
   brandColor: {
     iconn_orange_original: '#f37721',
     iconn_green_original: '#008060',
+    iconn_green_discount: '#ebf5f2',
     iconn_red_original: '#ed2525',
     iconn_accent_principal: '#008060',
     iconn_accent_secondary: '#000000',
