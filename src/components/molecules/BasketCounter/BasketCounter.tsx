@@ -14,8 +14,9 @@ const BasketCounter = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   const getCount = () => {
-    console.log('canastaTam: ',cart.length);
-    setCounter(cart.length);
+    const { items } = cart;
+    console.log('canastaTam: ', (items!=undefined ?items.length:0));
+    setCounter( items!=undefined ? items.length:0);
   };
 
   useEffect(() => {

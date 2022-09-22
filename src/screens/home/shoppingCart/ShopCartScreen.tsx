@@ -88,7 +88,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         setSubTotalCalculated(calculated);
         setProductList(items);
       }
-      dispatch(updateShoppingCartItems(items));
+      dispatch(updateShoppingCartItems(response));
     }).catch((error) => console.log(error));
 
   }, []);
@@ -153,7 +153,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         } else {
           setProductList(undefined);
         }
-        dispatch(updateShoppingCartItems(itemsToBasket));
+        dispatch(updateShoppingCartItems(response));
 
         console.log('****************operation:' + operation);
         if (operation == "increase") {
@@ -173,7 +173,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     await emptyShoppingCar(orderFormId, request).then(response => {
       const { items, messages, totalizers } = response;
       setProductList(items);
-      dispatch(updateShoppingCartItems(items));
+      dispatch(updateShoppingCartItems(response));
       setMessages(messages);
       setTotalizers(totalizers[0]);
       setRequestList(null);
@@ -573,7 +573,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         <CustomText text="Tu canasta está vacía" textAlign="center" fontBold></CustomText>
         <Container center style={{ marginTop: 5 }}>
           <Text numberOfLines={2} style={{ color: 'black', width: 260, textAlign: 'center' }}>
-            "!Encuentra y selecciona los articulos de tu preferencia!"
+            !Encuentra y selecciona los articulos de tu preferencia!
           </Text>
         </Container>
       </Container>

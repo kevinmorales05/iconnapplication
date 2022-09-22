@@ -57,8 +57,7 @@ const HomeScreen: React.FC<Props> = ({
 
   const fetchData = useCallback(async () => {
     await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9').then(response => {
-    const { items } = response;
-    dispatch(updateShoppingCartItems(items));
+    dispatch(updateShoppingCartItems(response));
   }).catch((error) => console.log(error));
   }, []);
 
