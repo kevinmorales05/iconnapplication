@@ -9,6 +9,7 @@ const API_VTEX_PRODUCTS = 'https://oneiconn.myvtex.com/api/catalog_system/pvt/pr
 const VTEX_APPKEY = 'vtexappkey-oneiconn-SOYFEO';
 const VTEX_APPTOKEN = 'PNOSOIQKQXOYQSNSEIBGIYAWBWUWKPISEXCKGFMHMJYWKVXRQVEXRDTUSDPBTRTIEJFGLTUIVRLFTFTPGGYVAKOLCLCFYFVGYYMQJNAKMBTEAZFTORXDZWCYFALXSELQ';
 const VTEX_DOCS = 'https://oneiconn.myvtex.com/api';
+const VTEX_DOCS_NO_API_PREFIX = 'https://oneiconn.myvtex.com';
 
 const getApiUrl = (type: string) => {
   switch (type) {
@@ -24,6 +25,8 @@ const getApiUrl = (type: string) => {
       return VTEX_DOCS;
     case 'products':
       return API_VTEX_PRODUCTS;
+    case 'docsNoApiPrefix':
+      return VTEX_DOCS_NO_API_PREFIX;
     default:
       break;
   }
@@ -53,8 +56,8 @@ export const VTEXApiAuthConfig = (type: string): AxiosRequestConfig => {
     headers: {
       Accept: '*/*',
       'Content-Type': 'multipart/form-data',
-      'X-VTEX-API-AppKey': VTEX_APPKEY ,
-      'X-VTEX-API-AppToken': VTEX_APPTOKEN ,
+      'X-VTEX-API-AppKey': VTEX_APPKEY,
+      'X-VTEX-API-AppToken': VTEX_APPTOKEN
     }
   };
 };

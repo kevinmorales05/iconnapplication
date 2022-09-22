@@ -4,13 +4,13 @@ import { VTEXApiConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
 import { DeviceEventEmitter } from 'react-native';
 
-export class DocsApi extends HttpClient {
-  static classInstance?: DocsApi;
+export class DocsNoPrefixApi extends HttpClient {
+  static classInstance?: DocsNoPrefixApi;
 
   private constructor() {
-    console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docs'), null, 3));
+    console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docsNoApiPrefix'), null, 3));
 
-    super(VTEXApiConfig('docs'));
+    super(VTEXApiConfig('docsNoApiPrefix'));
 
     // Interceptors (only for debug purpose), please do not remove the "return" line,
     // is  necessary to prevent a very confusing error and spend sometime to debug it.
@@ -52,7 +52,7 @@ export class DocsApi extends HttpClient {
 
   public static getInstance() {
     if (!this.classInstance) {
-      this.classInstance = new DocsApi();
+      this.classInstance = new DocsNoPrefixApi();
     }
 
     return this.classInstance;

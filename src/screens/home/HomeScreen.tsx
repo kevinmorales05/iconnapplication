@@ -3,7 +3,7 @@ import { Image, View, StyleSheet, ScrollView } from 'react-native';
 import theme from 'components/theme/theme';
 import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, Input } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Address, CarouselItem, RootState, useAppSelector, useAppDispatch } from 'rtk';
+import { Address, CarouselItem, RootState, useAppSelector, useAppDispatch, ProductInterface } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT, ICONN_HOME_SEARCH } from 'assets/images';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
@@ -27,6 +27,7 @@ interface Props {
   dayPromotionItems: CarouselItem[];
   allPromotionsItems: CarouselItem[];
   onPressCarouselItem: (CarouselItem: CarouselItem) => void;
+  homeProducts: ProductInterface[];
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -43,7 +44,8 @@ const HomeScreen: React.FC<Props> = ({
   secondItems,
   dayPromotionItems,
   allPromotionsItems,
-  onPressCarouselItem
+  onPressCarouselItem,
+  homeProducts
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const {
@@ -160,6 +162,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text="Recomendados para ti" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
+            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true} />
           </Container>
           <Container style={{ marginTop: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
@@ -170,6 +173,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
+            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true} />
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
@@ -177,7 +181,7 @@ const HomeScreen: React.FC<Props> = ({
           </Container>
         </Container>
 
-        <Container flex style={{ paddingHorizontal: 16 }}>
+        {/* <Container flex style={{ paddingHorizontal: 16 }}>
           <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Facturación
           </Button>
@@ -193,7 +197,7 @@ const HomeScreen: React.FC<Props> = ({
           <Button round onPress={onPressProducts} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Pedidos
           </Button>
-        </Container>
+        </Container> */}
       </ScrollView>
       {toggle && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 35 }} />}
       {toggle && (

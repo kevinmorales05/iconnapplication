@@ -6,19 +6,20 @@ import {
   ICONN_HOME_OPTION_SEVEN,
   ICONN_HOME_OPTION_WALLET
 } from 'assets/images';
-import { Container, CustomText, TextContainer, Touchable } from 'components';
+import { CardProduct, Container, CustomText, TextContainer, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import React from 'react';
 import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle } from 'react-native';
-import { CarouselItem } from 'rtk';
+import { CarouselItem, ProductInterface } from 'rtk';
 
 interface Props {
-  data: CarouselItem;
+  data: CarouselItem | ProductInterface;
   position: number;
   onPressItem: (item: CarouselItem) => void;
+  products?: boolean;
 }
 
-const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
+const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem, products }) => {
   const { width } = useWindowDimensions();
   const rightCardSpace = width * 0.08 * 2;
   position = position === 0 ? 16 : 8;
@@ -103,12 +104,25 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
   };
 
   {
-    return data.promotion_type === 'principal' ? (
+    return products === true ? (
+      <CardProduct
+        key={Math.random()}
+        image={data.image}
+        name={data.name}
+        price={data.price}
+        productId={data.productId}
+        quantity={data.quantity}
+        onPressAddCart={() => {}}
+        onPressAddQuantity={() => {}}
+        onPressDeleteCart={() => {}}
+      />
+    ) : data.promotion_type === 'principal' ? (
       <Touchable
         onPress={() => {
           onPressItem(data);
         }}
         marginLeft={position}
+        key={Math.random()}
       >
         <Container style={containerStyle}>
           <Container style={imageContainer}>
@@ -126,6 +140,7 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
           onPressItem(data);
         }}
         marginLeft={position}
+        key={Math.random()}
       >
         <Container width={72} center>
           <Image
@@ -154,6 +169,7 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
         onPress={() => {
           onPressItem(data);
         }}
+        key={Math.random()}
       >
         <Container style={containerSecond}>
           <Image source={{ uri: data.image }} style={secondImageStyle} />
@@ -164,6 +180,7 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
         onPress={() => {
           onPressItem(data);
         }}
+        key={Math.random()}
       >
         <Container style={dayPromotionContainer}>
           <Container style={dayPromotionImageStyle}>
@@ -181,6 +198,7 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem }) => {
           onPressItem(data);
         }}
         marginLeft={position}
+        key={Math.random()}
       >
         <Container style={allPromotionsContainer}>
           <Image source={{ uri: data.image }} style={allPromotionsImage} />

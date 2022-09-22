@@ -87,7 +87,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.brandColor.iconn_white,
     marginTop: moderateScale(16),
     borderRadius: moderateScale(10),
-    padding: moderateScale(8)
+    padding: moderateScale(8),
+    marginLeft: 8
   },
   subContainer: {
     flex: 1,

@@ -13,7 +13,13 @@ import {
   Address,
   setAddressDefault,
   setSeenCarousel,
-  CarouselItem
+  CarouselItem,
+  ProductPriceResponseInterface,
+  getHomeItemsThunk,
+  getProductPriceByProductIdThunk,
+  getProductRatingByProductIdThunk,
+  ProductRaitingResponseInterface,
+  ProductInterface
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -26,8 +32,8 @@ import { setInvoicingInitialState } from 'rtk/slices/invoicingSlice';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useLoading } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
-import { HOME_ITEMS, HOME_OPTIONS } from 'assets/files';
-import { getHomeItemsThunk } from 'rtk/thunks/vtex-home.thunks';
+import { HOME_OPTIONS } from 'assets/files';
+import { useProducts } from './hooks/useProducts';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -302,6 +308,59 @@ const HomeController: React.FC = () => {
     }
   }, [homeItems]);
 
+  const { fetchProducts, products } = useProducts();
+  const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const getPriceByProductId = async (productId: string) => {
+    return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
+  };
+
+  const getRatingByProductId = async (productId: string) => {
+    return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
+  };
+
+  async function getPrices() {
+    const withPrice = await Promise.all(products!.map(product => getPriceByProductId(product.ProductId)));
+    return withPrice;
+  }
+
+  async function getRatings() {
+    const withRating = await Promise.all(products!.map(product => getRatingByProductId(product.ProductId)));
+    return withRating;
+  }
+
+  const refillProductsWithPrice = (prices: ProductPriceResponseInterface[], ratings: ProductRaitingResponseInterface[]) => {
+    const homeProductsArr: ProductInterface[] | undefined = products?.map((p, idx) => {
+      const newProduct: ProductInterface = {
+        productId: p.ProductId,
+        name: p.ProductName,
+        image: { uri: p.SkuImageUrl },
+        price: prices.find(price => price.itemId === p.ProductId.toString())?.basePrice,
+        oldPrice: prices.find(price => price.itemId === p.ProductId.toString())?.basePrice,
+        porcentDiscount: 0,
+        quantity: 0,
+        ratingValue: ratings[idx].average
+      };
+      return newProduct;
+    });
+
+    setHomeProducts(homeProductsArr);
+  };
+
+  useEffect(() => {
+    if (products?.length! > 0) {
+      getPrices().then(prices => {
+        getRatings().then(ratings => {
+          refillProductsWithPrice(prices, ratings);
+        });
+      });
+    }
+  }, [products]);
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -325,6 +384,7 @@ const HomeController: React.FC = () => {
         dayPromotionItems={day_promotion!}
         allPromotionsItems={all_promotions!}
         onPressCarouselItem={onPressCarouselItem}
+        homeProducts={homeProducts!}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>

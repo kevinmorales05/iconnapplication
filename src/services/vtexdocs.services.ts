@@ -67,23 +67,11 @@ async function getAddressByPostalCode(postalCode: string): Promise<any> {
   return data;
 }
 
-/**
- * Function to get full Home Items.
- */
-async function getHomeItems(dataentity: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(
-    `/dataentities/${dataentity}/search?_fields=id,description,image,link,navigationType,promotion_name,promotion_type,screeen,status`
-  );
-  const { data } = response;
-  return data;
-}
-
 export const vtexDocsServices = {
   createDoc,
   getAllDocByUserID,
   deleteDocByDocID,
   updateDocByDocID,
   getDocByDocID,
-  getAddressByPostalCode,
-  getHomeItems
+  getAddressByPostalCode
 };

@@ -1,15 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { FlatList, Animated } from 'react-native';
 import { Container } from '../../atoms';
-import { CarouselItem } from 'rtk';
+import { CarouselItem, ProductInterface } from 'rtk';
 import AnimatedItem from './AnimatedItem';
 
 interface Props {
-  items: CarouselItem[];
+  items: CarouselItem[] | ProductInterface[];
   onPressItem: (item: CarouselItem) => void;
+  products?: boolean;
 }
 
-const AnimatedCarousel: React.FC<Props> = ({ items, onPressItem }) => {
+const AnimatedCarousel: React.FC<Props> = ({ items, onPressItem, products = false }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -25,7 +26,7 @@ const AnimatedCarousel: React.FC<Props> = ({ items, onPressItem }) => {
     <Container flex center crossCenter>
       <FlatList
         data={items}
-        renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={onPressItem} />}
+        renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={onPressItem} products={products} />}
         horizontal
         bounces={items?.length > 1 ? true : false}
         keyExtractor={item => item.id}
