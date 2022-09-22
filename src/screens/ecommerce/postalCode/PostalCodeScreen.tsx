@@ -32,35 +32,38 @@ const PostalCodeScreen = () => {
   const dispatch = useAppDispatch();
   const alert = useAlert();
 
+  // Redirect to home if permissions are granted
   useEffect(() => {
     (async () => {
+      loader.show('', 'ecommerce');
       const hasPermission = await hasLocationPermission();
 
-      if (hasPermission) {
-        loader.show();
-        Geolocation.getCurrentPosition(
-          position => {
-            loader.hide();
-            navigate('Home');
-          },
-          error => {
-            loader.hide();
-          },
-          {
-            accuracy: {
-              android: 'high',
-              ios: 'best'
-            },
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 10000,
-            distanceFilter: 0,
-            forceRequestLocation: true,
-            forceLocationManager: true,
-            showLocationDialog: true
-          }
-        );
+      if (!hasPermission) {
+        loader.hide();
+        return;
       }
+
+      Geolocation.getCurrentPosition(
+        position => {
+          setPosition(position);
+        },
+        error => {
+          loader.hide();
+        },
+        {
+          accuracy: {
+            android: 'high',
+            ios: 'best'
+          },
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 10000,
+          distanceFilter: 0,
+          forceRequestLocation: true,
+          forceLocationManager: true,
+          showLocationDialog: true
+        }
+      );
     })();
   }, []);
 
@@ -68,7 +71,7 @@ const PostalCodeScreen = () => {
     if (position) {
       const sorted = sortByDistance([position.coords.longitude, position.coords.latitude], sellers);
       dispatch(setDefaultSeller({ defaultSeller: sorted[0] }));
-
+      loader.hide();
       navigate('Home');
     }
   }, [position]);
