@@ -27,6 +27,7 @@ const BasketCounter = () => {
     }
 
     let totalItems = 0;
+    if(items){
     if (items.length > 0) {
       items.map((value, index) => {
         if (withoutStockM.get(index)) {
@@ -35,6 +36,7 @@ const BasketCounter = () => {
         }
       })
     }
+  }
 
     setCounter( items!=undefined ? totalItems:0);
   };
