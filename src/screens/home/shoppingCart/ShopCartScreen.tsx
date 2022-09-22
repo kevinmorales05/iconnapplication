@@ -22,7 +22,6 @@ interface Props {
   onPressInvoice: () => void;
   onPressMyAccount: () => void;
   onPressLogOut: () => void;
-  orderFormIdReceived: () => string;
 }
 
 
@@ -30,12 +29,12 @@ import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthI
 import { registerWithFirebaseThunk } from '../../../rtk/thunks/auth.thunks';
 import { WidthType } from '../../../components/types/width-type';
 
-const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut, orderFormIdReceived }) => {
+const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut }) => {
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const loader = useLoading();
   const { loading } = useAppSelector((state: RootState) => state.invoicing);
-  //const { cart: dataFromCart } = useAppSelector((state: RootState) => state.cart);
+  const { cart } = useAppSelector((state: RootState) => state.cart);
   const { internetReachability } = useAppSelector((state: RootState) => state.app);
   const toast = useToast();
   const alert = useAlert();
@@ -52,7 +51,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const fetchData = useCallback(async () => {
     console.log('fetchData...');
-    const data = await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9').then(response => {
+    const data = await getShoppingCart(cart.orderFormId).then(response => {
       const { items, messages, totalizers } = response;
       let orderItems = [];
       items.map((item, index) => {
@@ -61,7 +60,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       setRequestList(orderItems);
       setMessages(messages);
       setTotalizers(totalizers[0]);
-      setOrderFormId(orderFormIdReceived);
+      setOrderFormId(cart.orderFormId);
       let withoutStockM = new Map();
       if (messages.length > 0) {
         messages.map((value) => {
@@ -603,13 +602,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   );
 
   const cartFooter = productList != undefined && productList.length > 0 ? fullCartFooter : emptyCartFooter;
-  const cart = productList != undefined && productList.length > 0 ? fullCart : emptyCart;
+  const cartBody = productList != undefined && productList.length > 0 ? fullCart : emptyCart;
 
   return (
     <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', padding: 0 }}>
       {inter ? (
         <>
-          {cart}
+          {cartBody}
         </>
       ) : (
         <>

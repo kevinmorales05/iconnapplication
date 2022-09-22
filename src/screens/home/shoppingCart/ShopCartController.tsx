@@ -82,7 +82,6 @@ const ShopCartController: React.FC = () => {
       barStyle="dark"
     >
      <ShopCartScreen
-        orderFormIdReceived={'655c3cc734e34ac3a14749e39a82e8b9'}
         onPressLogOut={logOut}
         onPressMyAccount={goToMyAccount}
         onPressInvoice={goToInvoice}
