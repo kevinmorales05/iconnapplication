@@ -18,10 +18,10 @@ const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice }
   return (
     <Container>
       <Container style={styles.container}>
-        <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price.toFixed(2)}`} />
+        <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
         {oldPrice && (
           <Container style={styles.containerText}>
-            <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice.toFixed(2)}`} />
+            <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice}`} />
             <Container style={styles.containerLine} />
           </Container>
         )}

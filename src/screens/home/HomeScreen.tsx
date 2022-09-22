@@ -162,6 +162,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text="Recomendados para ti" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
+            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true}/>
           </Container>
           <Container style={{ marginTop: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
@@ -172,6 +173,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
+            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true}/>
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
@@ -179,7 +181,7 @@ const HomeScreen: React.FC<Props> = ({
           </Container>
         </Container>
 
-        <Container flex style={{ paddingHorizontal: 16 }}>
+        {/* <Container flex style={{ paddingHorizontal: 16 }}>
           <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Facturación
           </Button>
@@ -195,7 +197,7 @@ const HomeScreen: React.FC<Props> = ({
           <Button round onPress={onPressProducts} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Pedidos
           </Button>
-        </Container>
+        </Container> */}
       </ScrollView>
       {toggle && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 35 }} />}
       {toggle && (
