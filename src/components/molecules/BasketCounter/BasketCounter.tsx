@@ -15,8 +15,6 @@ const BasketCounter = () => {
 
   const getCount = () => {
     const { items, messages } = cart;
-    console.log('messages::: ',messages);
-
     let withoutStockM = new Map();
     if(messages){
       if (messages.length > 0) {
@@ -33,7 +31,6 @@ const BasketCounter = () => {
       items.map((value, index) => {
         if (withoutStockM.get(index)) {
         } else {
-          console.log(value.quantity);
           totalItems = (totalItems + value.quantity);
         }
       })
