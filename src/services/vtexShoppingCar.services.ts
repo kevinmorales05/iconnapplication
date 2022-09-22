@@ -6,9 +6,9 @@ import { SizeType } from '../components/types/size-type';
 /**
  * Function to create a shoppingCart
  */
- async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
+ async function getCurrentShoppingCartOrCreateNewOne(authName: string, authValue:string ,accountTName: string,accountTValue:string): Promise<any> {
   console.log('***************************************');
-    const response = await ShoppingCar.getInstance().getRequest(``);
+    const response = await ShoppingCar.getInstance().getRequest(``,{ headers: { Cookie:  accountTName+'='+accountTValue+'; '+authName+'='+authValue} });
     if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
     const { data } = response;
     return data;
@@ -20,7 +20,7 @@ import { SizeType } from '../components/types/size-type';
  */
  async function getShoppingCart(shoppingCartId:string): Promise<any> {
   console.log('***************************************');
-    const response = await ShoppingCar.getInstance().getRequest(`${shoppingCartId}`);
+    const response = await ShoppingCar.getInstance().getRequest(`${shoppingCartId}`,undefined);
     if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
     const { data } = response;
     console.log('AAAAAAAAAAAAAAAAAAAAAAAA');

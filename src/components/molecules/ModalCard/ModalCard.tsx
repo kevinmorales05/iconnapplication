@@ -34,7 +34,7 @@ const ModalCard: React.FC<Props> = ({
         <TouchableOpacity activeOpacity={1}>
           <Container style={ modalCenterCardStyle }>
             <LinearGradient
-              colors={type === 'warning' ? [ '#efd363', '#d0b64d' ] : type === 'error' ? [ '#be646b', '#9f3038' ] : [ '#34c28c', '#319f72' ]}
+              colors={type === 'warning' ? [ '#efd363', '#d0b64d' ] : type === 'error' ? [ '#D91212', '#D91212' ] : [ '#34c28c', '#319f72' ]}
               style={{ height: 16, width: '100%', position: 'absolute', borderTopLeftRadius: 16, borderTopRightRadius: 16 }} >
             </LinearGradient>
             <Container style={{backgroundColor: 'transparent', borderTopLeftRadius: 16, borderTopRightRadius: 16}}>

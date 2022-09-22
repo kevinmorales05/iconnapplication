@@ -5,11 +5,12 @@ import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCar
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Address, CarouselItem, RootState, useAppSelector, useAppDispatch } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT, ICONN_HOME_SEARCH } from 'assets/images';
-import { getShoppingCart } from 'services/vtexShoppingCar.services';
+import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
-import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
+import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
 import { useForm } from 'react-hook-form';
 import { openField } from 'utils/rules';
+import { HttpClient } from '../../http/http-client';
 
 interface Props {
   onPressShopCart: () => void;
@@ -56,10 +57,17 @@ const HomeScreen: React.FC<Props> = ({
   const dispatch = useAppDispatch();
 
   const fetchData = useCallback(async () => {
-    await getShoppingCart('655c3cc734e34ac3a14749e39a82e8b9').then(response => {
-    const { items } = response;
-    dispatch(updateShoppingCartItems(items));
-  }).catch((error) => console.log(error));
+  const accountName = HttpClient.accountAuthCookie?.Name;
+  const accountValue = HttpClient.accountAuthCookie?.Value;
+  const authName = HttpClient.authCookie?.Name;
+  const authValue = HttpClient.authCookie?.Value;
+    await getCurrentShoppingCartOrCreateNewOne(accountName as string,accountValue as string, authName as string,authValue as string).then(newCart => {
+      dispatch(setOrderFormId(newCart));
+      console.log('orderFormId ::: ',newCart.orderFormId);
+      getShoppingCart(newCart.orderFormId).then(response => {
+        dispatch(updateShoppingCartItems(response));
+      }).catch((error) => console.log(error));
+    })
   }, []);
 
   useEffect(() => {

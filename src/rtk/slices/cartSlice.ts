@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getShoppingCartThunk, emptyShoppingCartThunk, updateShoppingCartThunk } from '../thunks/vtex-shoppingCart.thunks';
 
 //importo interfaz de carrito de compras
-import { ShoppingCartInteface } from '../types';
+import { ShoppingCartInteface, updateShoppingCartInterface } from '../types';
 
 //estado inicial del carrito de compras
 const initialStateShoppingCart: any = {};
@@ -18,6 +18,9 @@ const shoppingCartSlice = createSlice({
   reducers: {
     setShoppingCartInitialState(state) {
       state.cart = initialStateShoppingCart;
+    },
+    setOrderFormId(state, action: PayloadAction<any>) {
+      state.cart.orderFormId = action.payload.orderFormId;
     },
     getShoppingCartItems(state, action: PayloadAction<any>) {
       state.cart = action.payload;
@@ -34,5 +37,5 @@ const shoppingCartSlice = createSlice({
   }
 });
 
-export const { setShoppingCartInitialState, getShoppingCartItems, updateShoppingCartItems, cleanShoppingCart, createShoppingCart } = shoppingCartSlice.actions;
+export const { setShoppingCartInitialState, getShoppingCartItems, updateShoppingCartItems, cleanShoppingCart, createShoppingCart, setOrderFormId } = shoppingCartSlice.actions;
 export default shoppingCartSlice.reducer;
