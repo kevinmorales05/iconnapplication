@@ -3,7 +3,7 @@ import { Image, View, StyleSheet, ScrollView } from 'react-native';
 import theme from 'components/theme/theme';
 import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, Input } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Address, CarouselItem, RootState, useAppSelector, useAppDispatch } from 'rtk';
+import { Address, CarouselItem, RootState, useAppSelector, useAppDispatch, ProductInterface } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT, ICONN_HOME_SEARCH } from 'assets/images';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
@@ -27,6 +27,7 @@ interface Props {
   dayPromotionItems: CarouselItem[];
   allPromotionsItems: CarouselItem[];
   onPressCarouselItem: (CarouselItem: CarouselItem) => void;
+  homeProducts: ProductInterface[];
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -43,8 +44,11 @@ const HomeScreen: React.FC<Props> = ({
   secondItems,
   dayPromotionItems,
   allPromotionsItems,
-  onPressCarouselItem
+  onPressCarouselItem,
+  homeProducts
 }) => {
+  console.log('LOS PRODUCTOS DEL HOME HAN LLEGADO ===:');
+  console.log(JSON.stringify(homeProducts, null, 3));
   const [toggle, setToggle] = useState(showShippingDropDown);
   const {
     control,

@@ -14,7 +14,8 @@ module.exports = {
           components: './src/components',
           rtk: './src/rtk',
           context: './src/context',
-          services: './src/services'
+          services: './src/services',
+          apis: './src/http'
         }
       }
     ],
