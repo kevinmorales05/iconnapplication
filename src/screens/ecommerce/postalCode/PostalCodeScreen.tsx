@@ -33,6 +33,38 @@ const PostalCodeScreen = () => {
   const alert = useAlert();
 
   useEffect(() => {
+    (async () => {
+      const hasPermission = await hasLocationPermission();
+
+      if (hasPermission) {
+        loader.show();
+        Geolocation.getCurrentPosition(
+          position => {
+            loader.hide();
+            navigate('Home');
+          },
+          error => {
+            loader.hide();
+          },
+          {
+            accuracy: {
+              android: 'high',
+              ios: 'best'
+            },
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 10000,
+            distanceFilter: 0,
+            forceRequestLocation: true,
+            forceLocationManager: true,
+            showLocationDialog: true
+          }
+        );
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
     if (position) {
       const sorted = sortByDistance([position.coords.longitude, position.coords.latitude], sellers);
       dispatch(setDefaultSeller({ defaultSeller: sorted[0] }));
