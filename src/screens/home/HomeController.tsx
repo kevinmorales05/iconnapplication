@@ -358,8 +358,6 @@ const HomeController: React.FC = () => {
           refillProductsWithPrice(prices, ratings);
         });
       });
-      // hoy voy a juntar esa data para poder representar ekl listado de productos del home ya con el componente que desarrollo juan.
-      // planeo terminar esa parte antes de la comida y luego ponerme  a integrar el boton agregar al carrito, lo cual son 2 escenarios desde el home, si ya hay carrito con ese producto agregado, incrementar la cantidad, si no hay nada pues crear un carrito. eso lo trabajare hasta donde se pueda hoy.
     }
   }, [products]);
 
