@@ -14,9 +14,32 @@ const BasketCounter = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   const getCount = () => {
-    const { items } = cart;
-    console.log('canastaTam: ', (items!=undefined ?items.length:0));
-    setCounter( items!=undefined ? items.length:0);
+    const { items, messages } = cart;
+    console.log('messages::: ',messages);
+
+    let withoutStockM = new Map();
+    if(messages){
+      if (messages.length > 0) {
+        messages.map((value) => {
+          if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
+            withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
+          }
+        })
+      }
+    }
+
+    let totalItems = 0;
+    if (items.length > 0) {
+      items.map((value, index) => {
+        if (withoutStockM.get(index)) {
+        } else {
+          console.log(value.quantity);
+          totalItems = (totalItems + value.quantity);
+        }
+      })
+    }
+
+    setCounter( items!=undefined ? totalItems:0);
   };
 
   useEffect(() => {
