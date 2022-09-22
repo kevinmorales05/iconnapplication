@@ -57,17 +57,19 @@ const HomeScreen: React.FC<Props> = ({
   const dispatch = useAppDispatch();
 
   const fetchData = useCallback(async () => {
-  const accountName = HttpClient.accountAuthCookie?.Name;
-  const accountValue = HttpClient.accountAuthCookie?.Value;
-  const authName = HttpClient.authCookie?.Name;
-  const authValue = HttpClient.authCookie?.Value;
-    await getCurrentShoppingCartOrCreateNewOne(accountName as string,accountValue as string, authName as string,authValue as string).then(newCart => {
+    const accountName = HttpClient.accountAuthCookie?.Name;
+    const accountValue = HttpClient.accountAuthCookie?.Value;
+    const authName = HttpClient.authCookie?.Name;
+    const authValue = HttpClient.authCookie?.Value;
+    await getCurrentShoppingCartOrCreateNewOne(accountName as string, accountValue as string, authName as string, authValue as string).then(newCart => {
       dispatch(setOrderFormId(newCart));
-      console.log('orderFormId ::: ',newCart.orderFormId);
-      getShoppingCart(newCart.orderFormId).then(response => {
-        dispatch(updateShoppingCartItems(response));
-      }).catch((error) => console.log(error));
-    })
+      console.log('orderFormId ::: ', newCart.orderFormId);
+      getShoppingCart(newCart.orderFormId)
+        .then(response => {
+          dispatch(updateShoppingCartItems(response));
+        })
+        .catch(error => console.log(error));
+    });
   }, []);
 
   useEffect(() => {

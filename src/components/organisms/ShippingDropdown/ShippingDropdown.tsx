@@ -127,8 +127,8 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
             <Image source={ICONN_HOUSE_PIN_LOCATION} style={{ width: 24, height: 24 }} />
           </Container>
           <Container style={{ marginLeft: 10 }}>
-            <Container style={{ flexDirection: 'row' }}>
-              <CustomText fontSize={16} text={address ? address.addressName! : 'Agrega una dirección de entrega'} fontBold />
+            <Container row flex={1}>
+              <CustomText numberOfLines={1} fontSize={16} text={address ? address.addressName! : 'Agrega una dirección de entrega'} fontBold />
             </Container>
             <Container style={{ flexDirection: 'row', width: '95%', marginVertical: 5 }}>
               <CustomText

@@ -43,8 +43,6 @@ const EnterEmailController: React.FC = () => {
 
           const { authenticationToken } = await authServices.startAuthentication(email);
 
-          console.log('authenticationToken:', authenticationToken);
-
           await authServices.sendAccessKey(email, authenticationToken);
           dispatch(setAuthEmail({ email }));
           navigate('CreatePassword', { authenticationToken, variant: 'register' });

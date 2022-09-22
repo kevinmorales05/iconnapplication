@@ -135,7 +135,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      <TextContainer typography="h2" fontBold text={`Crea tu contraseña`} fontSize={24} marginTop={hasNavigationTitle ? 0 : 54}></TextContainer>
+      <TextContainer typography="h2" fontBold text={`Crea tu contraseña`} fontSize={24} marginTop={hasNavigationTitle ? 0 : 30}></TextContainer>
       <TextContainer typography="h2" text={`Ingresa el código de 6 dígitos que enviamos a:`} marginTop={9} fontSize={17}></TextContainer>
       <Container row style={{ alignItems: 'center', marginTop: 12 }}>
         <Image style={{ height: 24, width: 24, marginRight: 8 }} source={ICONN_EMAIL} resizeMode="center" />
@@ -168,7 +168,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
           }
         }}
       />
-      <TextContainer typography="h6" fontBold text={`Crea Contraseña`} marginTop={24} />
+      <TextContainer typography="h6" fontBold text={`Crear contraseña`} marginTop={24} />
       <Input
         {...register('password')}
         name="password"

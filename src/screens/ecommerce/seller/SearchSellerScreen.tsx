@@ -166,7 +166,7 @@ const SearchSellerScreen = () => {
   return (
     <Container flex style={{ backgroundColor: theme.brandColor.iconn_grey_background }}>
       <Container style={styles.content}>
-        <AntDesign name="search1" size={24} color={theme.brandColor.iconn_green_original} />
+        <AntDesign style={{ padding: 5 }} name="search1" size={24} color={theme.brandColor.iconn_green_original} />
         <TextInput
           multiline
           onChangeText={text => {
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     borderRadius: 8,
-    padding: 10,
+    padding: 5,
     flexDirection: 'row',
     borderColor: '#dadadb',
     alignContent: 'center',
