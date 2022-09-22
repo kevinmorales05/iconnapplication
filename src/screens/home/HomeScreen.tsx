@@ -47,8 +47,6 @@ const HomeScreen: React.FC<Props> = ({
   onPressCarouselItem,
   homeProducts
 }) => {
-  console.log('LOS PRODUCTOS DEL HOME HAN LLEGADO ===:');
-  console.log(JSON.stringify(homeProducts, null, 3));
   const [toggle, setToggle] = useState(showShippingDropDown);
   const {
     control,
@@ -61,17 +59,19 @@ const HomeScreen: React.FC<Props> = ({
   const dispatch = useAppDispatch();
 
   const fetchData = useCallback(async () => {
-  const accountName = HttpClient.accountAuthCookie?.Name;
-  const accountValue = HttpClient.accountAuthCookie?.Value;
-  const authName = HttpClient.authCookie?.Name;
-  const authValue = HttpClient.authCookie?.Value;
-    await getCurrentShoppingCartOrCreateNewOne(accountName as string,accountValue as string, authName as string,authValue as string).then(newCart => {
+    const accountName = HttpClient.accountAuthCookie?.Name;
+    const accountValue = HttpClient.accountAuthCookie?.Value;
+    const authName = HttpClient.authCookie?.Name;
+    const authValue = HttpClient.authCookie?.Value;
+    await getCurrentShoppingCartOrCreateNewOne(accountName as string, accountValue as string, authName as string, authValue as string).then(newCart => {
       dispatch(setOrderFormId(newCart));
-      console.log('orderFormId ::: ',newCart.orderFormId);
-      getShoppingCart(newCart.orderFormId).then(response => {
-        dispatch(updateShoppingCartItems(response));
-      }).catch((error) => console.log(error));
-    })
+      console.log('orderFormId ::: ', newCart.orderFormId);
+      getShoppingCart(newCart.orderFormId)
+        .then(response => {
+          dispatch(updateShoppingCartItems(response));
+        })
+        .catch(error => console.log(error));
+    });
   }, []);
 
   useEffect(() => {
@@ -162,7 +162,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text="Recomendados para ti" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true}/>
+            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true} />
           </Container>
           <Container style={{ marginTop: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
@@ -173,7 +173,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true}/>
+            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true} />
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
