@@ -5,12 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
-import {
-  RootState,
-  sendEmailToRecoverPasswordThunk,
-  useAppDispatch,
-  useAppSelector
-} from 'rtk';
+import { RootState, sendEmailToRecoverPasswordThunk, useAppDispatch, useAppSelector } from 'rtk';
 import { useToast, useLoading, useAlert } from 'context';
 import { authServices } from 'services';
 import { HttpClient } from '../../../../http/http-client';
@@ -25,33 +20,33 @@ const ForgotPasswordController: React.FC = () => {
   const authToken = HttpClient.accessToken;
   const alert = useAlert();
 
-
-
   useEffect(() => {
     if (loading === false) {
       loader.hide();
     }
   }, [loading]);
 
-  const sendKey = async ( ) => {
+  const sendKey = async () => {
     try {
-      const response = await authServices.sendAccessKey(email, authToken);
+      const response = await authServices.sendAccessKey(email as string, authToken as string);
       console.log('SE MANDO ACCESS KEY', response);
       if (response.authStatus == 'InvalidToken') {
         alert.show({ title: 'Ocurrió un error inesperado :(' }, 'error');
       } else {
-        navigate('EnterOtp', {authenticationToken: authToken as string, variant:"recoverPassword"});
+        navigate('CreatePassword', { authenticationToken: authToken as string, variant: 'recoverPassword' });
       }
     } catch (error) {
       console.log(error);
+      toast.show({
+        message: 'El correo no pude ser enviado,\n intenta mas tarde',
+        type: 'error'
+      });
     }
-  }
+  };
 
   const onSubmit = async () => {
     loader.show();
-    const { payload: sendEmailResponse } = await dispatch(
-      sendEmailToRecoverPasswordThunk({ email })
-    );
+    const { payload: sendEmailResponse } = await dispatch(sendEmailToRecoverPasswordThunk({ email }));
     // TODO: The response code must be updated according to the document "Microservicio Users v_1.2.pdf"
     if (sendEmailResponse.responseCode === 12) {
       toast.show({

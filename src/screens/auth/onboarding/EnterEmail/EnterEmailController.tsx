@@ -47,7 +47,7 @@ const EnterEmailController: React.FC = () => {
 
           await authServices.sendAccessKey(email, authenticationToken);
           dispatch(setAuthEmail({ email }));
-          navigate('EnterOtp', { authenticationToken, variant: 'register' });
+          navigate('CreatePassword', { authenticationToken, variant: 'register' });
 
           loader.hide();
           return;

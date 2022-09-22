@@ -1,29 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, TextInput } from 'react-native';
+import { Image, ScrollView, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ActionButton, Input, TextContainer, Button, Container } from 'components';
 import theme from 'components/theme/theme';
-import { FieldValues, RegisterOptions, SubmitHandler, useForm } from 'react-hook-form';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { FieldValues, RegisterOptions, SubmitHandler, useFormContext } from 'react-hook-form';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ICONN_EMAIL } from 'assets/images';
 
 interface Props {
-  onSubmit: (password: string) => void;
+  onSubmit: (data: FieldValues) => void;
   goBack: () => void;
   hasNavigationTitle: boolean;
+  email: string;
 }
 
-const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigationTitle }) => {
-  const insets = useSafeAreaInsets();  
+const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigationTitle, email }) => {
+  const insets = useSafeAreaInsets();
 
   const {
     control,
     handleSubmit,
-    formState: { isValid },
+    formState: { isValid, errors },
     register
-  } = useForm({
-    mode: 'onChange'
-  });
+  } = useFormContext();
 
   const passwordRef = useRef<TextInput>(null);
 
@@ -35,7 +35,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
 
   const submit: SubmitHandler<FieldValues> = fields => {
     console.log(fields);
-    onSubmit(fields.password);
+    onSubmit(fields);
   };
 
   //items
@@ -53,74 +53,74 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
   //activitus error
   const [passwordError, setPasswordError] = useState('');
 
-/**
- * Function to validate password criteria.
- * @param value 
- */
+  /**
+   * Function to validate password criteria.
+   * @param value
+   */
   const validatePassword = (value: string) => {
-    if (value === "") {
-      setVal1Item("ellipse");
+    if (value === '') {
+      setVal1Item('ellipse');
       setVal1Color(theme.brandColor.iconn_med_grey);
-      setVal2Item("ellipse");
+      setVal2Item('ellipse');
       setVal2Color(theme.brandColor.iconn_med_grey);
-      setVal3Item("ellipse");
+      setVal3Item('ellipse');
       setVal3Color(theme.brandColor.iconn_med_grey);
-      setVal4Item("ellipse");
+      setVal4Item('ellipse');
       setVal4Color(theme.brandColor.iconn_med_grey);
       setPasswordError('1');
       setPassValid(false);
     }
 
-    if (value.length < 8) {      
-      setVal1Item("close-circle-sharp");
+    if (value.length < 8) {
+      setVal1Item('close-circle-sharp');
       setVal1Color(theme.brandColor.iconn_error);
       setPasswordError('1');
       setPassValid(false);
     } else {
-      setVal1Item("checkmark-circle-sharp");
+      setVal1Item('checkmark-circle-sharp');
       setVal1Color(theme.brandColor.iconn_success);
     }
 
     if (!value.match(/[A-Z]/)) {
-      setVal2Item("close-circle-sharp");
+      setVal2Item('close-circle-sharp');
       setVal2Color(theme.brandColor.iconn_error);
       setPasswordError('1');
       setPassValid(false);
     } else {
-      setVal2Item("checkmark-circle-sharp");
+      setVal2Item('checkmark-circle-sharp');
       setVal2Color(theme.brandColor.iconn_success);
       setPasswordError('1');
       setPassValid(false);
     }
 
     if (!value.match(/[a-z]/)) {
-      setVal3Item("close-circle-sharp");
+      setVal3Item('close-circle-sharp');
       setVal3Color(theme.brandColor.iconn_error);
       setPasswordError('1');
       setPassValid(false);
     } else {
-      setVal3Item("checkmark-circle-sharp");
+      setVal3Item('checkmark-circle-sharp');
       setVal3Color(theme.brandColor.iconn_success);
     }
 
     if (!value.match(/\d/)) {
-      setVal4Item("close-circle-sharp");
+      setVal4Item('close-circle-sharp');
       setVal4Color(theme.brandColor.iconn_error);
       setPasswordError('1');
       setPassValid(false);
     } else {
-      setVal4Item("checkmark-circle-sharp");
+      setVal4Item('checkmark-circle-sharp');
       setVal4Color(theme.brandColor.iconn_success);
     }
 
-    if (!(value.length < 8) && (value.match(/[A-Z]/)) && value.match(/[a-z]/) && value.match(/\d/) && !value.match(/\s/)) {
+    if (!(value.length < 8) && value.match(/[A-Z]/) && value.match(/[a-z]/) && value.match(/\d/) && !value.match(/\s/)) {
       setPasswordError('');
       setPassValid(true);
     }
-  }
+  };
 
   const passRule: RegisterOptions = {
-    validate: () => passValid ? true : false
+    validate: () => (passValid ? true : false)
   };
 
   return (
@@ -135,20 +135,40 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      <TextContainer
-        typography="h2"
-        fontBold
-        text={`Crea tu contraseña`}
-        fontSize={24}
-        marginTop={hasNavigationTitle? 0 : 54}
-        ></TextContainer>
-      <TextContainer
-        typography="h2"
-        text={`Recuerda no compartirla.`}
-        marginTop={9}
-        fontSize={17}
-        
-      ></TextContainer>
+      <TextContainer typography="h2" fontBold text={`Crea tu contraseña`} fontSize={24} marginTop={hasNavigationTitle ? 0 : 54}></TextContainer>
+      <TextContainer typography="h2" text={`Ingresa el código de 6 dígitos que enviamos a:`} marginTop={9} fontSize={17}></TextContainer>
+      <Container row style={{ alignItems: 'center', marginTop: 12 }}>
+        <Image style={{ height: 24, width: 24, marginRight: 8 }} source={ICONN_EMAIL} resizeMode="center" />
+        <TextContainer typography="h4" fontBold text={email} textColor={theme.brandColor.iconn_green_original}></TextContainer>
+      </Container>
+
+      <TextContainer typography="h6" fontBold text={`Código de verificación`} marginTop={35} />
+      <Input
+        {...register('code')}
+        name="code"
+        control={control}
+        autoCorrect={false}
+        placeholder={`6 dígitos`}
+        blurOnSubmit
+        onChangeText={() => {}}
+        maxLength={30}
+        error={errors.code?.message}
+        rules={{
+          required: {
+            value: true,
+            message: `Campo requerido.`
+          },
+          minLength: {
+            value: 6,
+            message: `Mínimo 6 valores`
+          },
+          maxLength: {
+            value: 6,
+            message: `Máximo 6 valores`
+          }
+        }}
+      />
+      <TextContainer typography="h6" fontBold text={`Crea Contraseña`} marginTop={24} />
       <Input
         {...register('password')}
         name="password"
@@ -158,7 +178,6 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
         passwordField
         placeholder={`Ingresa tu contraseña`}
         blurOnSubmit
-        marginTop={36}
         error={passwordError}
         ref={passwordRef}
         showPasswordEnable
@@ -168,37 +187,26 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
       />
 
       <Container>
-        <Container flex row center style={{marginTop:34}}>          
+        <Container flex row center style={{ marginTop: 34 }}>
           <Ionicons name={val1Item} size={24} color={val1Color} />
-          <TextContainer text='Mínimo 8 caracteres' typography='h5' marginLeft={10}/>
+          <TextContainer text="Mínimo 8 caracteres" typography="h5" marginLeft={10} />
         </Container>
-        <Container flex row center style={{marginTop:10}}>
+        <Container flex row center style={{ marginTop: 10 }}>
           <Ionicons name={val2Item} size={24} color={val2Color} />
-          <TextContainer text='Contiene una letra mayúscula' typography='h5' marginLeft={10}/>
+          <TextContainer text="Contiene una letra mayúscula" typography="h5" marginLeft={10} />
         </Container>
-        <Container flex row center style={{marginTop:10}}>
+        <Container flex row center style={{ marginTop: 10 }}>
           <Ionicons name={val3Item} size={24} color={val3Color} />
-          <TextContainer text='Contiene una letra minúscula' typography='h5' marginLeft={10}/>
+          <TextContainer text="Contiene una letra minúscula" typography="h5" marginLeft={10} />
         </Container>
-        <Container flex row center style={{marginTop:10}}>
+        <Container flex row center style={{ marginTop: 10 }}>
           <Ionicons name={val4Item} size={24} color={val4Color} />
-          <TextContainer text='Contiene un número' typography='h5' marginLeft={10}/>
+          <TextContainer text="Contiene un número" typography="h5" marginLeft={10} />
         </Container>
       </Container>
 
       <Container flex row crossAlignment="end" space="between">
-        <ActionButton
-          size="large"
-          onPress={goBack}
-          color="iconn_med_grey"
-          icon={
-            <AntDesign
-              name="arrowleft"
-              size={24}
-              color={theme.fontColor.dark}
-            />
-          }
-        />
+        <ActionButton size="large" onPress={goBack} color="iconn_med_grey" icon={<AntDesign name="arrowleft" size={24} color={theme.fontColor.dark} />} />
 
         <Button
           length="short"
