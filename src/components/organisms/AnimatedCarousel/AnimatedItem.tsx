@@ -13,13 +13,13 @@ import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle } from 're
 import { CarouselItem, ProductInterface } from 'rtk';
 
 interface Props {
-  data: CarouselItem | ProductInterface;
+  data?: CarouselItem;
+  product?: ProductInterface;
   position: number;
   onPressItem: (item: CarouselItem) => void;
-  products?: boolean;
 }
 
-const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem, products }) => {
+const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem }) => {
   const { width } = useWindowDimensions();
   const rightCardSpace = width * 0.08 * 2;
   position = position === 0 ? 16 : 8;
@@ -104,25 +104,23 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem, products }
   };
 
   {
-    return products === true ? (
+    return product ? (
       <CardProduct
-        key={Math.random()}
-        image={data.image}
-        name={data.name}
-        price={data.price}
-        productId={data.productId}
-        quantity={data.quantity}
+        image={product.image!}
+        name={product.name!}
+        price={product.price!}
+        productId={product.productId}
+        quantity={product.quantity!}
         onPressAddCart={() => {}}
         onPressAddQuantity={() => {}}
         onPressDeleteCart={() => {}}
       />
-    ) : data.promotion_type === 'principal' ? (
+    ) : data !== undefined && data.promotion_type === 'principal' ? (
       <Touchable
         onPress={() => {
           onPressItem(data);
         }}
         marginLeft={position}
-        key={Math.random()}
       >
         <Container style={containerStyle}>
           <Container style={imageContainer}>
@@ -134,13 +132,12 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem, products }
           </Container>
         </Container>
       </Touchable>
-    ) : data.promotion_type === 'homeOptions' ? (
+    ) : data !== undefined && data.promotion_type === 'homeOptions' ? (
       <Touchable
         onPress={() => {
           onPressItem(data);
         }}
         marginLeft={position}
-        key={Math.random()}
       >
         <Container width={72} center>
           <Image
@@ -164,23 +161,21 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem, products }
           <TextContainer text={data.description} marginTop={6} typography="h5" />
         </Container>
       </Touchable>
-    ) : data.promotion_type === 'second' ? (
+    ) : data !== undefined && data.promotion_type === 'second' ? (
       <Touchable
         onPress={() => {
           onPressItem(data);
         }}
-        key={Math.random()}
       >
         <Container style={containerSecond}>
           <Image source={{ uri: data.image }} style={secondImageStyle} />
         </Container>
       </Touchable>
-    ) : data.promotion_type === 'day_promotion' ? (
+    ) : data !== undefined && data.promotion_type === 'day_promotion' ? (
       <Touchable
         onPress={() => {
           onPressItem(data);
         }}
-        key={Math.random()}
       >
         <Container style={dayPromotionContainer}>
           <Container style={dayPromotionImageStyle}>
@@ -192,13 +187,12 @@ const AnimatedItem: React.FC<Props> = ({ data, position, onPressItem, products }
           </Container>
         </Container>
       </Touchable>
-    ) : data.promotion_type === 'all_promotions' ? (
+    ) : data !== undefined && data.promotion_type === 'all_promotions' ? (
       <Touchable
         onPress={() => {
           onPressItem(data);
         }}
         marginLeft={position}
-        key={Math.random()}
       >
         <Container style={allPromotionsContainer}>
           <Image source={{ uri: data.image }} style={allPromotionsImage} />

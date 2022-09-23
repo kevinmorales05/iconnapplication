@@ -5,12 +5,12 @@ import { CarouselItem, ProductInterface } from 'rtk';
 import AnimatedItem from './AnimatedItem';
 
 interface Props {
-  items: CarouselItem[] | ProductInterface[];
+  items?: CarouselItem[];
+  products?: ProductInterface[];
   onPressItem: (item: CarouselItem) => void;
-  products?: boolean;
 }
 
-const AnimatedCarousel: React.FC<Props> = ({ items, onPressItem, products = false }) => {
+const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -24,18 +24,33 @@ const AnimatedCarousel: React.FC<Props> = ({ items, onPressItem, products = fals
 
   return (
     <Container flex center crossCenter>
-      <FlatList
-        data={items}
-        renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={onPressItem} products={products} />}
-        horizontal
-        bounces={items?.length > 1 ? true : false}
-        keyExtractor={item => item.id}
-        onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
-        scrollEventThrottle={32}
-        onViewableItemsChanged={viewableItemsChanged}
-        viewabilityConfig={viewConfig}
-        ref={slidesRef}
-      />
+      {products && products.length > 0 ? (
+        <FlatList
+          data={products}
+          renderItem={({ item, index }) => <AnimatedItem product={item} position={index} onPressItem={onPressItem} />}
+          horizontal
+          bounces={products?.length > 1 ? true : false}
+          keyExtractor={item => item.productId}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+          scrollEventThrottle={32}
+          onViewableItemsChanged={viewableItemsChanged}
+          viewabilityConfig={viewConfig}
+          ref={slidesRef}
+        />
+      ) : items && items.length > 0 ? (
+        <FlatList
+          data={items}
+          renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={onPressItem} />}
+          horizontal
+          bounces={items!.length > 1 ? true : false}
+          keyExtractor={item => item.id}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+          scrollEventThrottle={32}
+          onViewableItemsChanged={viewableItemsChanged}
+          viewabilityConfig={viewConfig}
+          ref={slidesRef}
+        />
+      ) : null}
     </Container>
   );
 };

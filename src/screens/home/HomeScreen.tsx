@@ -162,7 +162,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text="Recomendados para ti" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true} />
+            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} />
           </Container>
           <Container style={{ marginTop: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
@@ -173,7 +173,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel items={homeProducts} onPressItem={onPressCarouselItem} products={true} />
+            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} />
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
