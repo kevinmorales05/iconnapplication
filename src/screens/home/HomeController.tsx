@@ -19,7 +19,8 @@ import {
   getProductPriceByProductIdThunk,
   getProductRatingByProductIdThunk,
   ProductRaitingResponseInterface,
-  ProductInterface
+  ProductInterface,
+  ProductResponseInterface
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -308,11 +309,13 @@ const HomeController: React.FC = () => {
     }
   }, [homeItems]);
 
-  const { fetchProducts, products } = useProducts();
+  const { fetchProducts, products, otherProducts } = useProducts();
   const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
+  const [homeOtherProducts, setHomeOtherProducts] = useState<ProductInterface[] | null>();
 
   useEffect(() => {
-    fetchProducts();
+    fetchProducts('137');
+    fetchProducts('138');
   }, []);
 
   const getPriceByProductId = async (productId: string) => {
@@ -323,18 +326,21 @@ const HomeController: React.FC = () => {
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
 
-  async function getPrices() {
-    const withPrice = await Promise.all(products!.map(product => getPriceByProductId(product.ProductId)));
+  async function getPrices(collectionId: string) {
+    const arr: ProductResponseInterface[] | null | undefined = collectionId === '137' ? products : otherProducts;
+    const withPrice = await Promise.all(arr!.map(product => getPriceByProductId(product.ProductId)));
     return withPrice;
   }
 
-  async function getRatings() {
-    const withRating = await Promise.all(products!.map(product => getRatingByProductId(product.ProductId)));
+  async function getRatings(collectionId: string) {
+    const arr: ProductResponseInterface[] | null | undefined = collectionId === '137' ? products : otherProducts;
+    const withRating = await Promise.all(arr!.map(product => getRatingByProductId(product.ProductId)));
     return withRating;
   }
 
-  const refillProductsWithPrice = (prices: ProductPriceResponseInterface[], ratings: ProductRaitingResponseInterface[]) => {
-    const homeProductsArr: ProductInterface[] | undefined = products?.map((p, idx) => {
+  const refillProductsWithPrice = (prices: ProductPriceResponseInterface[], ratings: ProductRaitingResponseInterface[], collectionId: string) => {
+    const arr: ProductResponseInterface[] | null | undefined = collectionId === '137' ? products : otherProducts;
+    const homeProductsArr: ProductInterface[] | undefined = arr?.map((p, idx) => {
       const newProduct: ProductInterface = {
         productId: p.ProductId,
         name: p.ProductName,
@@ -347,19 +353,29 @@ const HomeController: React.FC = () => {
       };
       return newProduct;
     });
-
-    setHomeProducts(homeProductsArr);
+    if (collectionId === '137') setHomeProducts(homeProductsArr);
+    if (collectionId === '138') setHomeOtherProducts(homeProductsArr);
   };
 
   useEffect(() => {
     if (products?.length! > 0) {
-      getPrices().then(prices => {
-        getRatings().then(ratings => {
-          refillProductsWithPrice(prices, ratings);
+      getPrices('137').then(prices => {
+        getRatings('137').then(ratings => {
+          refillProductsWithPrice(prices, ratings, '137');
         });
       });
     }
   }, [products]);
+
+  useEffect(() => {
+    if (otherProducts?.length! > 0) {
+      getPrices('138').then(prices => {
+        getRatings('138').then(ratings => {
+          refillProductsWithPrice(prices, ratings, '138');
+        });
+      });
+    }
+  }, [otherProducts]);
 
   return (
     <SafeArea
@@ -385,6 +401,7 @@ const HomeController: React.FC = () => {
         allPromotionsItems={all_promotions!}
         onPressCarouselItem={onPressCarouselItem}
         homeProducts={homeProducts!}
+        homeOtherProducts={homeOtherProducts!}
       />
       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>

@@ -105,16 +105,18 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem })
 
   {
     return product ? (
-      <CardProduct
-        image={product.image!}
-        name={product.name!}
-        price={product.price!}
-        productId={product.productId}
-        quantity={product.quantity!}
-        onPressAddCart={() => {}}
-        onPressAddQuantity={() => {}}
-        onPressDeleteCart={() => {}}
-      />
+      <Container>
+        <CardProduct
+          image={product.image!}
+          name={product.name!}
+          price={product.price!}
+          productId={product.productId}
+          quantity={product.quantity!}
+          onPressAddCart={() => {}}
+          onPressAddQuantity={() => {}}
+          onPressDeleteCart={() => {}}
+        />
+      </Container>
     ) : data !== undefined && data.promotion_type === 'principal' ? (
       <Touchable
         onPress={() => {

@@ -28,6 +28,7 @@ interface Props {
   allPromotionsItems: CarouselItem[];
   onPressCarouselItem: (CarouselItem: CarouselItem) => void;
   homeProducts: ProductInterface[];
+  homeOtherProducts: ProductInterface[];
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -45,7 +46,8 @@ const HomeScreen: React.FC<Props> = ({
   dayPromotionItems,
   allPromotionsItems,
   onPressCarouselItem,
-  homeProducts
+  homeProducts,
+  homeOtherProducts
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const {
@@ -173,7 +175,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} />
+            <AnimatedCarousel products={homeOtherProducts} onPressItem={onPressCarouselItem} />
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />

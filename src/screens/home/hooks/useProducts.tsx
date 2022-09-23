@@ -8,6 +8,7 @@ export const useProducts = () => {
   const loader = useLoading();
 
   const [products, setProducts] = useState<ProductResponseInterface[] | null>();
+  const [otherProducts, setOtherProducts] = useState<ProductResponseInterface[] | null>();
 
   useEffect(() => {
     if (loading === false) {
@@ -15,8 +16,8 @@ export const useProducts = () => {
     }
   }, [loading]);
 
-  const fetchProducts = useCallback(async () => {
-    const { Data } = await dispatch(getProductsByCollectionIdThunk('137')).unwrap();
+  const fetchProducts = useCallback(async (collectionId: string) => {
+    const { Data } = await dispatch(getProductsByCollectionIdThunk(collectionId)).unwrap();
     const productsArr: ProductResponseInterface[] = Data.map(
       ({ ProductId, SkuId, SubCollectionId, Position, ProductName, SkuImageUrl }: ProductResponseInterface) => ({
         ProductId,
@@ -27,11 +28,14 @@ export const useProducts = () => {
         SkuImageUrl
       })
     );
-    setProducts(productsArr);
+
+    if (collectionId === '137') setProducts(productsArr);
+    if (collectionId === '138') setOtherProducts(productsArr);
   }, []);
 
   return {
     fetchProducts,
-    products
+    products,
+    otherProducts
   };
 };
