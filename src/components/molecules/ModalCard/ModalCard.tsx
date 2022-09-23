@@ -34,26 +34,29 @@ const ModalCard: React.FC<Props> = ({
         <TouchableOpacity activeOpacity={1}>
           <Container style={ modalCenterCardStyle }>
             <LinearGradient
-              colors={type === 'warning' ? [ '#efd363', '#d0b64d' ] : type === 'error' ? [ '#D91212', '#D91212' ] : [ '#34c28c', '#319f72' ]}
+              colors={type === 'warning' ? [ '#efd363', '#d0b64d' ] : type === 'error' ? [ '#D91212', '#D91212' ] : type === 'deleteCart' ? [ '#D91212', '#D91212' ] : [ '#34c28c', '#319f72' ]}
               style={{ height: 16, width: '100%', position: 'absolute', borderTopLeftRadius: 16, borderTopRightRadius: 16 }} >
             </LinearGradient>
-            <Container style={{backgroundColor: 'transparent', borderTopLeftRadius: 16, borderTopRightRadius: 16}}>
-              <Image
-                source={type === 'warning' ? ICONN_WARNING_MARK : type === 'error' ? ICONN_ERROR_CROSS : ICONN_SUCCESS}
-                style={{ alignSelf: 'center', marginTop: "15%", height: 56, top: 16 }}
-                resizeMode="contain"
-              />
-              <Container style={closeContainer}>
-                <ActionButton
-                  style={{ shadowColor:'none', marginTop:5 }}
-                  icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
-                  size="xxsmall"
-                  onPress={onDismiss!}
-                  color='iconn_med_grey'
-                  circle
-                />                
-              </Container>              
-            </Container>
+            {
+              type !== 'deleteCart' && 
+                <Container style={{backgroundColor: 'transparent', borderTopLeftRadius: 16, borderTopRightRadius: 16}}>
+                  <Image
+                    source={type === 'warning' ? ICONN_WARNING_MARK : type === 'error' ? ICONN_ERROR_CROSS : ICONN_SUCCESS}
+                    style={{ alignSelf: 'center', marginTop: "15%", height: 56, top: 16 }}
+                    resizeMode="contain"
+                  />
+                  <Container style={closeContainer}>
+                    <ActionButton
+                      style={{ shadowColor:'none', marginTop:5 }}
+                      icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
+                      size="xxsmall"
+                      onPress={onDismiss!}
+                      color='iconn_med_grey'
+                      circle
+                    />                
+                  </Container>              
+                </Container>
+            }
             {children}
           </Container>
         </TouchableOpacity>
@@ -65,7 +68,8 @@ const styles = StyleSheet.create({
   modalCenterCardStyle: {
     backgroundColor: theme.brandColor.iconn_white,
     borderRadius: 16,
-    width: 280    
+    width: 280,
+    paddingVertical: 15,
   },  
   closeContainer: {
     position: 'absolute',

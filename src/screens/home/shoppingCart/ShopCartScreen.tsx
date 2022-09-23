@@ -197,7 +197,9 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           alert.hide('cancelar');
         }
       },
-      'error'
+      'deleteCart',
+      false,
+      true
     )
   }
 
@@ -441,6 +443,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         //loader.hide(); 
       }
     };
+    
+    console.log({value})
 
     return (
       <Container
@@ -460,13 +464,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           <Image source={{ uri: value.imageUrl }} style={{ marginTop: 10, width: 90, height: 88 }} />
         </Container>
         <Container space='between' style={{ marginTop: 10, width: '100%', height: 58 }}>
-          <Container row space="between" style={{ marginTop: 3 }}>
-            <Container style={{ width: '50%' }}>
+          <Container row space="between" style={{ marginTop: 3, paddingRight: 100}}>
+            <Container style={{ width: '60%' }}>
               <Text numberOfLines={2} style={{ color: 'black' }}>
                 {value.name}
               </Text>
             </Container>
-            <Container style={{ width: '50%' }}>
+            <Container style={{ width: '40%', alignItems: "flex-end"}}>
               {
                 value.hasErrorMessage ? <></> :
                   <TextContainer text={'$' + (value.priceDefinition.total / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} fontBold marginLeft={10}></TextContainer>
@@ -492,10 +496,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
               value.hasErrorMessage ?
                 <Container space='around' alignment='start' style={{
                   backgroundColor: theme.brandColor.iconn_light_grey,
-                  borderRadius: 10,
-                  paddingBottom: 10,
-                  height: 23,
-                  width: 79
+                  borderRadius: 15,
+                  paddingVertical: 5,
+                  paddingHorizontal: 10,
+                  
                 }} backgroundColor={theme.brandColor.iconn_med_grey}>
                   <TextContainer text="No disponible" fontSize={12} textColor={theme.fontColor.paragraph} fontBold ></TextContainer>
                 </Container>
@@ -531,10 +535,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
               marginRight: 16,
               marginTop: 9,
               marginBottom: 0,
-              height: 110,
+              height: 120,
               backgroundColor: theme.brandColor.iconn_white,
               borderRadius: 8,
-              paddingBottom: 10
+              paddingVertical: 15
             }}>
             <Container style={{
               borderLeftColor: theme.brandColor.iconn_white,
@@ -552,7 +556,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
                 transparent
                 onPress={showAlert}
                 leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} />}
-                style={{ marginTop: 3 }}
+                style={{ paddingTop: 8 }}
               >
                 Eliminar artículos no disponibles
               </Button>
@@ -580,8 +584,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   );
 
   const emptyCartFooter = (
-    <Container center style={{ paddingLeft: 0, width: '100%', height: '20%' }}>
-      <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{ marginTop: 50, marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50 }}>
+    <Container center style={{ paddingLeft: 0, width: '100%', height: '20%',  paddingTop: 50 }}>
+      <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}>
         Ver artículos
       </Button>
     </Container>
@@ -590,18 +594,18 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const fullCartFooter = (
     <Container space='evenly' style={{ paddingLeft: 10, width: '100%', height: '20%', backgroundColor: theme.fontColor.white }}>
       <Container row space="between" style={{ marginTop: 8, width: '90%' }} >
-        <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
+        <TextContainer marginLeft={7.5} text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
         <CustomText text={"$" + (totalizers != undefined ? (subTotalCalculated / 100) : 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'} fontSize={18} fontBold></CustomText>
       </Container>
       <Container center>
-        <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50 }}>
+        <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50,  borderRadius: 10  }}>
           Continuar
         </Button>
       </Container>
     </Container>
   );
 
-  const cartFooter = productList != undefined && productList.length > 0 ? fullCartFooter : emptyCartFooter;
+  const cartFooter = ((productList != undefined) && (productList.length > 0)) ? fullCartFooter : emptyCartFooter;
   const cartBody = productList != undefined && productList.length > 0 ? fullCart : emptyCart;
 
   return (
