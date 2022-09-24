@@ -1,8 +1,16 @@
 import { AxiosRequestConfig } from 'axios';
-import { AuthDataInterface } from 'rtk';
+import { AuthDataInterface, UserVtex } from 'rtk';
 import { OtpsApi } from '../http/api-otps';
 import { UsersApi } from '../http/api-users';
 import { HttpClient } from '../http/http-client';
+
+async function newUser(userEmail: UserVtex): Promise<any> {
+  const response = await UsersApi.getInstance().postRequest(`/dataentities/CL/documents`, userEmail, { headers: { Accept: 'application/json', 'Content-type': 'application/json' } });
+  if (response === undefined) return Promise.reject(new Error(`/vtexid/pub/authentication/logout?scope=oneiconn`));
+  const { data } = response;
+  console.log('NEW USER', data);
+  return data;
+}
 
 /**
  * Function to login user
@@ -26,8 +34,8 @@ async function login(email: string, password: string, authenticationToken: strin
   let accountAuthCookie = await data.accountAuthCookie;
   HttpClient.accountAuthCookie = accountAuthCookie;
 
-  console.log("HttpClient.authCookie:",HttpClient.authCookie)
-  console.log("HttpClient.accountAuthCookie:",HttpClient.accountAuthCookie)
+  console.log("HttpClient.authCookie:",HttpClient.authCookie);
+  console.log("HttpClient.accountAuthCookie:",HttpClient.accountAuthCookie);
 
   return data;
 }
@@ -79,9 +87,9 @@ async function createPassword(newPassword: string, accesskey: string, email: str
   formData.append('newPassword', newPassword);
   formData.append('accesskey', accesskey);
   formData.append('email', email);
-  formData.append('authenticationToken', authenticationToken);
+  formData.append('authenticationToken create: ', authenticationToken);
 
-  console.log('HttpClient.authCookie:', HttpClient.authCookie);
+  console.log('HttpClient.authCookie create:', HttpClient.authCookie);
 
   const response = await UsersApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/setpassword?scope=oneiconn&locale=MX`, formData, {
     headers: {
@@ -92,6 +100,13 @@ async function createPassword(newPassword: string, accesskey: string, email: str
   if (response === undefined) return Promise.reject(new Error(`createPassword:/vtexid/pub/authentication/classic/setpassword`));
 
   const { data } = await response;
+  let authCookie = await data.authCookie;
+  HttpClient.authCookie = authCookie;
+  let accountAuthCookie = await data.accountAuthCookie;
+  HttpClient.accountAuthCookie = accountAuthCookie;
+
+  console.log("HttpClient.authCookie:",HttpClient.authCookie);
+  console.log("HttpClient.accountAuthCookie:",HttpClient.accountAuthCookie);
 
   return data;
 }
@@ -100,7 +115,7 @@ async function createUser(email: string, name: string | null = null): Promise<an
   const response = await UsersApi.getInstance().postRequest(
     `/license-manager/users`,
     { email, name },
-    { headers: { accept: 'application/json', 'content-type': 'application/json' } }
+    { headers: { Accept: 'application/json', 'content-type': 'application/json' } }
   );
 
   if (response === undefined) return Promise.reject(new Error(`createUser:/license-manager/users`));
@@ -241,6 +256,7 @@ async function sendEmailtoRecoverPassword(user: AuthDataInterface): Promise<any>
 }
 
 export const authServices = {
+  logOutUser,
   login,
   sendAccessKey,
   validateUser,
@@ -256,5 +272,5 @@ export const authServices = {
   getProfile,
   createUser,
   createPassword,
-  logOutUser
+  newUser
 };

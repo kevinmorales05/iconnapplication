@@ -13,7 +13,7 @@ import {
   sendEmailToRecoverPasswordThunk
 } from '../thunks/auth.thunks';
 import { startAuthenticationThunk } from '../thunks/vtex-auth.thunks';
-import { Address, AddressWithPositionInterface, AuthDataInterface } from '../types';
+import { Address, AddressWithPositionInterface, AuthDataInterface, UserVtex } from '../types';
 
 const initialState: AuthDataInterface = {
   user_id: '',
@@ -30,19 +30,34 @@ const initialState: AuthDataInterface = {
   seenCarousel: false
 };
 
+const vtexInitialState: UserVtex = {
+  email: '',
+  firstName: '',
+  lastName: '',
+  document: '',
+  documentType: '',
+  homePhone: ''
+}
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: initialState,
-    loading: false
+    loading: false, 
+    userVtex: vtexInitialState
   },
   reducers: {
     setAuthInitialState(state) {
       state.user = { ...initialState };
       state.loading = false;
     },
+    setVtexInitialState(state) {
+      state.userVtex = { ...vtexInitialState };
+      state.loading = false;
+    },
     setAuthEmail(state, action: PayloadAction<AuthDataInterface>) {
       state.user.email = action.payload.email;
+      state.userVtex.email = action.payload.email as string;
     },
     setSignMode(state, action: PayloadAction<AuthDataInterface>) {
       state.user.sign_app_modes_id = action.payload.sign_app_modes_id;
@@ -56,6 +71,8 @@ const authSlice = createSlice({
     setFullName(state, action: PayloadAction<AuthDataInterface>) {
       state.user.name = action.payload.name;
       state.user.lastName = action.payload.lastName;
+      state.userVtex.firstName = action.payload.name as string;
+      state.userVtex.lastName = action.payload.lastName as string;
     },
     setPhoto(state, action: PayloadAction<AuthDataInterface>) {
       state.user.photo = action.payload.photo;
@@ -235,6 +252,7 @@ const authSlice = createSlice({
 // TODO: validate if it is possible to reduce extra reducers.
 export const {
   setAuthInitialState,
+  setVtexInitialState,
   setAuthEmail,
   setSignMode,
   setSecretKey,

@@ -5,7 +5,7 @@ import { AuthStackParams } from 'navigation/types';
 import EnterEmailScreen from './EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useAlert, useLoading, useToast } from 'context';
-import { RootState, useAppDispatch, useAppSelector, UserInterface } from 'rtk';
+import { RootState, useAppDispatch, useAppSelector, UserInterface, UserVtex } from 'rtk';
 import { setAuthEmail, setUserId } from 'rtk/slices/authSlice';
 import { authServices } from 'services';
 
@@ -40,15 +40,22 @@ const EnterEmailController: React.FC = () => {
         // start onboarding
         try {
           loader.show();
+          const user : UserVtex = {
+            email: email,
+            firstName: '',
+            lastName: '',
+            homePhone: '',
+          };
 
-          const { authenticationToken } = await authServices.startAuthentication(email);
-
-          await authServices.sendAccessKey(email, authenticationToken);
-          dispatch(setAuthEmail({ email }));
-          navigate('CreatePassword', { authenticationToken, variant: 'register' });
-
-          loader.hide();
-          return;
+          const response = await authServices.newUser(user);
+          if (response.Id) {
+            const { authenticationToken } = await authServices.startAuthentication(email);
+            dispatch(setAuthEmail({ email }));
+            await authServices.sendAccessKey(email, authenticationToken);
+            navigate('CreatePassword', { authenticationToken, variant: 'register' });
+            loader.hide();
+            return;
+          }
         } catch (error) {
           toast.show({
             message: 'El correo no pude ser enviado,\n intenta mas tarde',
