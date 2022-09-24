@@ -11,6 +11,8 @@ import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
 import { useForm } from 'react-hook-form';
 import { openField } from 'utils/rules';
 import { HttpClient } from '../../http/http-client';
+import { vtexDocsServices } from 'services/vtexdocs.services';
+import { LengthType } from '../../components/types/length-type';
 
 interface Props {
   onPressShopCart: () => void;
@@ -50,6 +52,9 @@ const HomeScreen: React.FC<Props> = ({
   homeOtherProducts
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { cart } = useAppSelector((state: RootState) => state.cart);
+  
   const {
     control,
     register,
@@ -61,19 +66,32 @@ const HomeScreen: React.FC<Props> = ({
   const dispatch = useAppDispatch();
 
   const fetchData = useCallback(async () => {
-    const accountName = HttpClient.accountAuthCookie?.Name;
-    const accountValue = HttpClient.accountAuthCookie?.Value;
-    const authName = HttpClient.authCookie?.Name;
-    const authValue = HttpClient.authCookie?.Value;
-    await getCurrentShoppingCartOrCreateNewOne(accountName as string, accountValue as string, authName as string, authValue as string).then(newCart => {
-      dispatch(setOrderFormId(newCart));
-      console.log('orderFormId ::: ', newCart.orderFormId);
-      getShoppingCart(newCart.orderFormId)
-        .then(response => {
-          dispatch(updateShoppingCartItems(response));
-        })
-        .catch(error => console.log(error));
-    });
+    const{ user_id, name } = user;
+    console.log('user.id: ',user_id);
+    console.log('name.id: ',name);
+    console.log('cart.orderFormId: ',cart.orderFormId);
+    console.log('userProfileId: ',cart.userProfileId);
+
+    if(user_id==cart.userProfileId){
+      console.log('es igual al del usuario guardado');
+      getShoppingCart(cart.orderFormId)
+      .then(oldCart => {
+        dispatch(setOrderFormId(cart));
+      })
+      .catch(error => console.log(error));
+    }else {
+      console.log('NO es igual');
+      await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
+        dispatch(setOrderFormId(newCart));
+        console.log('orderFormId ::: ', newCart.orderFormId);
+        getShoppingCart(newCart.orderFormId)
+          .then(response => {
+            dispatch(updateShoppingCartItems(response));
+          })
+          .catch(error => console.log(error));
+      });
+    }
+
   }, []);
 
   useEffect(() => {

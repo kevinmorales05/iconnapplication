@@ -2,7 +2,7 @@ import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
 import { VTEXApiConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
-import { DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter, AsyncStorage } from 'react-native';
 
 export class DocsNoPrefixApi extends HttpClient {
   static classInstance?: DocsNoPrefixApi;
@@ -31,6 +31,13 @@ export class DocsNoPrefixApi extends HttpClient {
           `data: ${JSON.stringify(data, null, 3)}`
         );
 
+        const completeCookie = HttpClient.authCookie?.Name + '=' + HttpClient.authCookie?.Value + '; ' + HttpClient.accountAuthCookie?.Name + '=' + HttpClient.accountAuthCookie?.Value + ';';
+        request.headers.Cookie = completeCookie;
+
+        console.log('requestWithCookies');
+        console.log('baseURL: ',baseURL);
+        console.log(request);
+        console.log('requestWithCookies');
         return request;
       },
       (error: any) => console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3))

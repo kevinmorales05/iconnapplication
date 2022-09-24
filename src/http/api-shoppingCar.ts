@@ -37,6 +37,14 @@ export class ShoppingCar extends HttpClient {
           `data: ${JSON.stringify(data, null, 3)}`
         );
 
+        const completeCookie = HttpClient.authCookie?.Name + '=' + HttpClient.authCookie?.Value + '; ' + HttpClient.accountAuthCookie?.Name + '=' + HttpClient.accountAuthCookie?.Value + ';';
+        request.headers.Cookie = completeCookie;
+
+        console.log('requestWithCookies shoppingcart');
+        console.log('baseURL: ',baseURL);
+        console.log(request);
+        console.log('requestWithCookies');
+
         return request;
       },
       (error: any) => console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3))
@@ -67,8 +75,8 @@ export class ShoppingCar extends HttpClient {
     return this.classInstance;
   }
 
-  async getRequest(path: string, cookies: any) {
-    return this.instance.get(path, cookies);
+  async getRequest(path: string) {
+    return this.instance.get(path);
   }
 
   async postRequest(path: string, payload?: any) {
