@@ -8,7 +8,7 @@ export class DocsNoPrefixApi extends HttpClient {
   static classInstance?: DocsNoPrefixApi;
 
   private constructor() {
-    console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docsNoApiPrefix'), null, 3));
+    // console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docsNoApiPrefix'), null, 3));
 
     super(VTEXApiConfig('docsNoApiPrefix'));
 
@@ -18,18 +18,18 @@ export class DocsNoPrefixApi extends HttpClient {
     this.instance.interceptors.request.use(
       (request: any) => {
         const { headers, baseURL, method, url, data } = request;
-        console.log(
-          'INTERCEPTOR - Starting Request ===> \n\n',
-          JSON.stringify(headers, null, 3),
-          '\n',
-          `baseURL: ${baseURL}`,
-          '\n',
-          `url: ${url}`,
-          '\n',
-          `method: ${method}`,
-          '\n',
-          `data: ${JSON.stringify(data, null, 3)}`
-        );
+        // console.log(
+        //   'INTERCEPTOR - Starting Request ===> \n\n',
+        //   JSON.stringify(headers, null, 3),
+        //   '\n',
+        //   `baseURL: ${baseURL}`,
+        //   '\n',
+        //   `url: ${url}`,
+        //   '\n',
+        //   `method: ${method}`,
+        //   '\n',
+        //   `data: ${JSON.stringify(data, null, 3)}`
+        // );
 
         const completeCookie = HttpClient.authCookie?.Name + '=' + HttpClient.authCookie?.Value + '; ' + HttpClient.accountAuthCookie?.Name + '=' + HttpClient.accountAuthCookie?.Value + ';';
         request.headers.Cookie = completeCookie;
@@ -46,7 +46,7 @@ export class DocsNoPrefixApi extends HttpClient {
     this.instance.interceptors.response.use(
       (response: any) => {
         const { data } = response;
-        console.log('INTERCEPTOR - The Response is ===> \n\n', JSON.stringify(data, null, 3));
+        // console.log('INTERCEPTOR - The Response is ===> \n\n', JSON.stringify(data, null, 3));
         return response;
       },
       (error: any) => {

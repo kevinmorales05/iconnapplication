@@ -9,10 +9,10 @@ export class InvoicingApi extends HttpClient {
   static classInstance?: InvoicingApi;
 
   private constructor() {
-    console.log(
-      'AxiosRequestConfig ===> ApiConfig ===> \n\n',
-      JSON.stringify(ApiConfig('invoicing'), null, 3)
-    );
+    // console.log(
+    //   'AxiosRequestConfig ===> ApiConfig ===> \n\n',
+    //   JSON.stringify(ApiConfig('invoicing'), null, 3)
+    // );
 
     super(ApiConfig('invoicing'));
 
@@ -24,18 +24,18 @@ export class InvoicingApi extends HttpClient {
         const {
           headers, baseURL, method, url, data
         } = request;
-        console.log(
-          'INTERCEPTOR - Starting Request ===> \n\n',
-          JSON.stringify(headers, null, 3),
-          '\n',
-          `baseURL: ${baseURL}`,
-          '\n',
-          `url: ${url}`,
-          '\n',
-          `method: ${method}`,
-          '\n',
-          `data: ${JSON.stringify(data, null, 3)}`
-        );
+        // console.log(
+        //   'INTERCEPTOR - Starting Request ===> \n\n',
+        //   JSON.stringify(headers, null, 3),
+        //   '\n',
+        //   `baseURL: ${baseURL}`,
+        //   '\n',
+        //   `url: ${url}`,
+        //   '\n',
+        //   `method: ${method}`,
+        //   '\n',
+        //   `data: ${JSON.stringify(data, null, 3)}`
+        // );
 
         return request;
       },
@@ -45,10 +45,10 @@ export class InvoicingApi extends HttpClient {
     this.instance.interceptors.response.use(
       (response: any) => {
         const { data } = response;
-        console.log(
-          'INTERCEPTOR - The Response is ===> \n\n',
-          JSON.stringify(data, null, 3)
-        );
+        // console.log(
+        //   'INTERCEPTOR - The Response is ===> \n\n',
+        //   JSON.stringify(data, null, 3)
+        // );
         return response;
       },
       (error: any) => {

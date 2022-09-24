@@ -52,9 +52,9 @@ export class ShoppingCar extends HttpClient {
 
     this.instance.interceptors.response.use(
       (response: any) => {
-        const { data } = response;
+        const { data, config } = response;
         console.log(
-          'INTERCEPTOR - The Response is ===> \n\n',
+          `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
           JSON.stringify(data, null, 3)
         );
         return response;
