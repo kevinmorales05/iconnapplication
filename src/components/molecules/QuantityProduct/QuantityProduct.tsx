@@ -9,6 +9,7 @@ interface QuantityProductProps {
   quantity: number;
   onPressDeleteCart: () => void;
   onPressAddQuantity: () => void;
+  onPressDecreaseQuantity: () => void;
 }
 
 const { width } = Dimensions.get('window');
@@ -16,13 +17,24 @@ const dw = 350;
 const scale = (size: number) => (width / dw) * size;
 const moderateScale = (size: number, factor: number = 0.5) => size + (scale(size) - size) * factor;
 
-const QuantityProduct: React.FC<QuantityProductProps> = ({ quantity, onPressDeleteCart, onPressAddQuantity }: QuantityProductProps) => {
+const QuantityProduct: React.FC<QuantityProductProps> = ({
+  quantity,
+  onPressDeleteCart,
+  onPressAddQuantity,
+  onPressDecreaseQuantity
+}: QuantityProductProps) => {
   return (
     <Container style={styles.container}>
       <Container style={styles.containerDelete}>
-        <Touchable onPress={onPressDeleteCart}>
-          <Feather name="trash-2" size={theme.iconSize.small} color={theme.brandColor.iconn_red_original} />
-        </Touchable>
+        {quantity === 1 ? (
+          <Touchable onPress={onPressDeleteCart}>
+            <Feather name="trash-2" size={theme.iconSize.small} color={theme.brandColor.iconn_red_original} />
+          </Touchable>
+        ) : (
+          <Touchable onPress={onPressDecreaseQuantity}>
+            <Feather name="minus" size={theme.iconSize.small} color={theme.brandColor.iconn_green_original} />
+          </Touchable>
+        )}
       </Container>
       <Container style={styles.containerText}>
         <CustomText text={quantity.toString()} fontWeight={'900'} fontSize={theme.fontSize.h5} />

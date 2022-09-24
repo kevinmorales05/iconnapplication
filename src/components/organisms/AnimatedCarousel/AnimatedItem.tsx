@@ -112,9 +112,11 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem })
           price={product.price!}
           productId={product.productId}
           quantity={product.quantity!}
+          // quantity={2}
           onPressAddCart={() => {}}
           onPressAddQuantity={() => {}}
           onPressDeleteCart={() => {}}
+          onPressDecreaseQuantity={() => {}}
         />
       </Container>
     ) : data !== undefined && data.promotion_type === 'principal' ? (

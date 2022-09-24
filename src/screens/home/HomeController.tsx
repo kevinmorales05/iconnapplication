@@ -20,7 +20,8 @@ import {
   getProductRatingByProductIdThunk,
   ProductRaitingResponseInterface,
   ProductInterface,
-  ProductResponseInterface
+  ProductResponseInterface,
+  ExistingProductInCartInterface
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -155,6 +156,7 @@ const HomeController: React.FC = () => {
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
+  const { cart } = useAppSelector((state: RootState) => state.cart);
   const { isGuest } = guestLogged;
   const { isLogged } = userLogged;
   const modVis = isLogged && !userLogged.seenCarousel ? true : false;
@@ -338,7 +340,26 @@ const HomeController: React.FC = () => {
     return withRating;
   }
 
-  const refillProductsWithPrice = (prices: ProductPriceResponseInterface[], ratings: ProductRaitingResponseInterface[], collectionId: string) => {
+  const getExistingProductsInCart = () => {
+    const { items } = cart;
+    if (items && items.length > 0) {
+      const existingProducts: ExistingProductInCartInterface[] = items.map((p: any) => {
+        const product: ExistingProductInCartInterface = {
+          itemId: p.productId,
+          quantity: p.quantity
+        };
+        return product;
+      });
+      return existingProducts;
+    }
+  };
+
+  const refillProductsWithPrice = (
+    prices: ProductPriceResponseInterface[],
+    ratings: ProductRaitingResponseInterface[],
+    existingProductsInCart: ExistingProductInCartInterface[],
+    collectionId: string
+  ) => {
     const arr: ProductResponseInterface[] | null | undefined = collectionId === '137' ? products : otherProducts;
     const homeProductsArr: ProductInterface[] | undefined = arr?.map((p, idx) => {
       const newProduct: ProductInterface = {
@@ -348,7 +369,7 @@ const HomeController: React.FC = () => {
         price: prices.find(price => price.itemId === p.ProductId.toString())?.basePrice,
         oldPrice: prices.find(price => price.itemId === p.ProductId.toString())?.basePrice,
         porcentDiscount: 0,
-        quantity: 0,
+        quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.ProductId.toString())?.quantity : 0,
         ratingValue: ratings[idx].average
       };
       return newProduct;
@@ -361,7 +382,8 @@ const HomeController: React.FC = () => {
     if (products?.length! > 0) {
       getPrices('137').then(prices => {
         getRatings('137').then(ratings => {
-          refillProductsWithPrice(prices, ratings, '137');
+          const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+          refillProductsWithPrice(prices, ratings, existingProducts, '137');
         });
       });
     }
@@ -371,7 +393,8 @@ const HomeController: React.FC = () => {
     if (otherProducts?.length! > 0) {
       getPrices('138').then(prices => {
         getRatings('138').then(ratings => {
-          refillProductsWithPrice(prices, ratings, '138');
+          const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+          refillProductsWithPrice(prices, ratings, existingProducts, '138');
         });
       });
     }
