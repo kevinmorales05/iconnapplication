@@ -328,10 +328,14 @@ const HomeController: React.FC = () => {
     if (user_id == cart.userProfileId) {
       console.log('es igual al del usuario guardado');
       getShoppingCart(cart.orderFormId)
-        .then(oldCart => {
-          dispatch(setOrderFormId(cart));
+      .then(oldCart => {
+        getShoppingCart(cart.orderFormId)
+        .then(response => {
+          dispatch(updateShoppingCartItems(response));
         })
         .catch(error => console.log(error));
+      })
+      .catch(error => console.log(error));
     } else {
       console.log('NO es igual');
       await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
