@@ -31,13 +31,17 @@ export class DocsNoPrefixApi extends HttpClient {
         //   `data: ${JSON.stringify(data, null, 3)}`
         // );
 
-        const completeCookie = HttpClient.authCookie?.Name + '=' + HttpClient.authCookie?.Value + '; ' + HttpClient.accountAuthCookie?.Name + '=' + HttpClient.accountAuthCookie?.Value + ';';
+        const completeCookie =
+          HttpClient.authCookie?.Name +
+          '=' +
+          HttpClient.authCookie?.Value +
+          '; ' +
+          HttpClient.accountAuthCookie?.Name +
+          '=' +
+          HttpClient.accountAuthCookie?.Value +
+          ';';
         request.headers.Cookie = completeCookie;
 
-        console.log('requestWithCookies');
-        console.log('baseURL: ',baseURL);
-        console.log(request);
-        console.log('requestWithCookies');
         return request;
       },
       (error: any) => console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3))

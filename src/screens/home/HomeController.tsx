@@ -36,6 +36,9 @@ import { useLoading } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
+import { useShoppingCart } from './hooks/useShoppingCart';
+import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
+import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -226,6 +229,9 @@ const HomeController: React.FC = () => {
     if (user.user_id && invoicingProfileList.length === 0) fetchInvoicingProfileList();
   }, [fetchInvoicingProfileList]);
 
+  /**
+   * This hook manages every business logic for addresses feature.
+   */
   const {
     editAddress,
     removeAddress,
@@ -286,7 +292,7 @@ const HomeController: React.FC = () => {
   const [all_promotions, setAll_promotions] = useState<CarouselItem[] | null>(null);
 
   /**
-   * Load home items list.
+   * Load home items list (banners, promotions, options menu).
    */
   const fetchHomeItems = useCallback(async () => {
     loader.show();
@@ -314,10 +320,34 @@ const HomeController: React.FC = () => {
   const { fetchProducts, products, otherProducts } = useProducts();
   const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
   const [homeOtherProducts, setHomeOtherProducts] = useState<ProductInterface[] | null>();
+  const { updateShoppingCartProduct } = useShoppingCart();
+
+  const fetchData = useCallback(async () => {
+    const { user_id, name } = user;
+
+    if (user_id == cart.userProfileId) {
+      console.log('es igual al del usuario guardado');
+      getShoppingCart(cart.orderFormId)
+        .then(oldCart => {
+          dispatch(setOrderFormId(cart));
+        })
+        .catch(error => console.log(error));
+    } else {
+      console.log('NO es igual');
+      await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
+        dispatch(setOrderFormId(newCart));
+        console.log('orderFormId ::: ', newCart.orderFormId);
+        getShoppingCart(newCart.orderFormId)
+          .then(response => {
+            dispatch(updateShoppingCartItems(response));
+          })
+          .catch(error => console.log(error));
+      });
+    }
+  }, []);
 
   useEffect(() => {
-    fetchProducts('137');
-    fetchProducts('138');
+    fetchData();
   }, []);
 
   const getPriceByProductId = async (productId: string) => {
@@ -400,6 +430,14 @@ const HomeController: React.FC = () => {
     }
   }, [otherProducts]);
 
+  /**
+   * Load home products when shopping cart is modified. For example if there is a substract, remove, add, in the cart.
+   */
+  useEffect(() => {
+    fetchProducts('137');
+    fetchProducts('138');
+  }, [cart]);
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -425,8 +463,9 @@ const HomeController: React.FC = () => {
         onPressCarouselItem={onPressCarouselItem}
         homeProducts={homeProducts!}
         homeOtherProducts={homeOtherProducts!}
+        updateShoppingCartProduct={updateShoppingCartProduct}
       />
-{/*       <CustomModal visible={modVisibility}>
+      {/*       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
           <Pressable style={{ alignSelf: 'flex-end' }} onPress={markAsSeenCarousel}>
             <Container circle style={styles.iconContainer}>

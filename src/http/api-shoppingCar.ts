@@ -1,18 +1,14 @@
 import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
-import { VTEXApiConfig} from './vtex-api-config';
+import { VTEXApiConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
-import { DeviceEventEmitter } from 'react-native'
+import { DeviceEventEmitter } from 'react-native';
 
 export class ShoppingCar extends HttpClient {
-  
   static classInstance?: ShoppingCar;
 
   private constructor() {
-    console.log(
-      'AxiosRequestConfig ===> VTEXApiConfig ===> \n\n',
-      JSON.stringify(VTEXApiConfig('shoppingCar'), null, 3)
-    );
+    console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('shoppingCar'), null, 3));
 
     super(VTEXApiConfig('shoppingCar'));
 
@@ -21,9 +17,7 @@ export class ShoppingCar extends HttpClient {
     // https://github.com/svrcekmichal/redux-axios-middleware/issues/83
     this.instance.interceptors.request.use(
       (request: any) => {
-        const {
-          headers, baseURL, method, url, data
-        } = request;
+        const { headers, baseURL, method, url, data } = request;
         console.log(
           'INTERCEPTOR - Starting Request ===> \n\n',
           JSON.stringify(headers, null, 3),
@@ -37,13 +31,16 @@ export class ShoppingCar extends HttpClient {
           `data: ${JSON.stringify(data, null, 3)}`
         );
 
-        const completeCookie = HttpClient.authCookie?.Name + '=' + HttpClient.authCookie?.Value + '; ' + HttpClient.accountAuthCookie?.Name + '=' + HttpClient.accountAuthCookie?.Value + ';';
+        const completeCookie =
+          HttpClient.authCookie?.Name +
+          '=' +
+          HttpClient.authCookie?.Value +
+          '; ' +
+          HttpClient.accountAuthCookie?.Name +
+          '=' +
+          HttpClient.accountAuthCookie?.Value +
+          ';';
         request.headers.Cookie = completeCookie;
-
-        console.log('requestWithCookies shoppingcart');
-        console.log('baseURL: ',baseURL);
-        console.log(request);
-        console.log('requestWithCookies');
 
         return request;
       },
@@ -80,7 +77,7 @@ export class ShoppingCar extends HttpClient {
   }
 
   async postRequest(path: string, payload?: any) {
-    return this.instance.post(path,payload);
+    return this.instance.post(path, payload);
   }
 
   async patchRequest(path: string, payload?: any) {
@@ -90,11 +87,11 @@ export class ShoppingCar extends HttpClient {
   private handlerError = (err: Error | AxiosError) => {
     if (axios.isAxiosError(err)) {
       let problem: GeneralApiProblem;
-      problem = getGeneralApiProblem(err.response._response || err.response.status);      
+      problem = getGeneralApiProblem(err.response._response || err.response.status);
       console.error('GLOBAL EXCEPCIÓN ===> ', problem);
       if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
     } else {
       DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');
     }
-  }
+  };
 }
