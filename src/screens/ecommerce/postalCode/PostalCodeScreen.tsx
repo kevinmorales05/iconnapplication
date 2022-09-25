@@ -251,7 +251,8 @@ const PostalCodeScreen = () => {
                   dispatch(setDefaultSeller({ defaultSeller: found }));
                 }
                 if (!found) {
-                  return 'Código Postal no encontrado';
+                  //return 'Código Postal no encontrado';
+                  return true;
                 }
               }
 
