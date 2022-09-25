@@ -403,7 +403,7 @@ const HomeController: React.FC = () => {
         homeProducts={homeProducts!}
         homeOtherProducts={homeOtherProducts!}
       />
-      <CustomModal visible={modVisibility}>
+{/*       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
           <Pressable style={{ alignSelf: 'flex-end' }} onPress={markAsSeenCarousel}>
             <Container circle style={styles.iconContainer}>
@@ -438,7 +438,7 @@ const HomeController: React.FC = () => {
             </Pressable>
           </Container>
         </Container>
-      </CustomModal>
+      </CustomModal> */}
 
       <AddressModalSelection
         visible={addressModalSelectionVisible}
