@@ -34,6 +34,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabNavigator } from 'navigation/TabNavigator';
 import ChangedPasswordController from 'screens/auth/onboarding/ChangedPassword/ChangedPasswordController';
+import ProductDetailController from 'screens/ecommerce/productDetail/ProductDetailController';
 
 
 const HomeStack: React.FC = () => {
@@ -126,6 +127,13 @@ const HomeStack: React.FC = () => {
         name="MyOrders"
         component={MyOrdersController}
       />
+      <Stack.Screen name="ProductDetail" component={ProductDetailController} options={{
+          headerShown: true,
+          headerTitle:"",
+          headerRight: () => (
+            <BasketCounter />
+          ),
+        }}/>
     </Stack.Navigator>
   );
 };
