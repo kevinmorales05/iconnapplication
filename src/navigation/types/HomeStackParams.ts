@@ -28,6 +28,7 @@ export type HomeStackParams = {
   PostalCode: undefined;
   SearchSeller: undefined;
   MyOrders: undefined;
+  ChangedPassword: undefined;
 };
 
 export type HomeTabScreens = {

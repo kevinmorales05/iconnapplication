@@ -31,3 +31,8 @@ export interface ProductPriceResponseInterface {
   basePrice: number;
   fixedPrices: [];
 }
+
+export interface ExistingProductInCartInterface {
+  itemId: string;
+  quantity?: number;
+}

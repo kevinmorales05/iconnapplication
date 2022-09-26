@@ -45,7 +45,7 @@ export const VTEXApiConfig = (type: string): AxiosRequestConfig => {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       'X-VTEX-API-AppKey': VTEX_APPKEY,
-      'X-VTEX-API-AppToken': VTEX_APPTOKEN
+      'X-VTEX-API-AppToken': VTEX_APPTOKEN,
     }
   };
 };

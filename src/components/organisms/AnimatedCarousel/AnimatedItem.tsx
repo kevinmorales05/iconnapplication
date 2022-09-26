@@ -8,6 +8,7 @@ import {
 } from 'assets/images';
 import { CardProduct, Container, CustomText, TextContainer, Touchable } from 'components';
 import theme from 'components/theme/theme';
+import { CounterType } from 'components/types/counter-type';
 import React from 'react';
 import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle } from 'react-native';
 import { CarouselItem, ProductInterface } from 'rtk';
@@ -17,9 +18,10 @@ interface Props {
   product?: ProductInterface;
   position: number;
   onPressItem: (item: CarouselItem) => void;
+  onPressProduct?: (type: CounterType, productId: string) => void;
 }
 
-const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem }) => {
+const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, onPressProduct }) => {
   const { width } = useWindowDimensions();
   const rightCardSpace = width * 0.08 * 2;
   position = position === 0 ? 16 : 8;
@@ -112,9 +114,19 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem })
           price={product.price!}
           productId={product.productId}
           quantity={product.quantity!}
-          onPressAddCart={() => {}}
-          onPressAddQuantity={() => {}}
-          onPressDeleteCart={() => {}}
+          // quantity={2}
+          onPressAddCart={() => {
+            onPressProduct!('create', product.productId);
+          }}
+          onPressAddQuantity={() => {
+            onPressProduct!('add', product.productId);
+          }}
+          onPressDeleteCart={() => {
+            onPressProduct!('remove', product.productId);
+          }}
+          onPressDecreaseQuantity={() => {
+            onPressProduct!('substract', product.productId);
+          }}
         />
       </Container>
     ) : data !== undefined && data.promotion_type === 'principal' ? (

@@ -37,6 +37,21 @@ async function getAllDocByUserID(dataentity: string, userId: string): Promise<an
   return data;
 }
 
+async function getDocByEmail(dataentity: string, userEmail: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
+  console.log('getDocByEmail: '+response);
+  //error handling
+  const { data } = response;
+  return data;
+}
+
+async function saveOrderFormIdDoc(dataentity: string, userEmail: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=userId=${userEmail}`);
+  //error handling
+  const { data } = response;
+  return data;
+}
+
 /**
  * Function to detele one doc.
  */
@@ -70,6 +85,7 @@ async function getAddressByPostalCode(postalCode: string): Promise<any> {
 export const vtexDocsServices = {
   createDoc,
   getAllDocByUserID,
+  getDocByEmail,
   deleteDocByDocID,
   updateDocByDocID,
   getDocByDocID,

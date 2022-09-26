@@ -2,15 +2,17 @@ import { ShoppingCar } from '../http/api-shoppingCar';
 import moment from 'moment'
 import { LengthType } from '../components/types/length-type';
 import { SizeType } from '../components/types/size-type';
+import axios from 'axios'
+
 
 /**
  * Function to create a shoppingCart
  */
- async function getCurrentShoppingCartOrCreateNewOne(authName: string, authValue:string ,accountTName: string,accountTValue:string): Promise<any> {
+ async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
   console.log('***************************************');
-    const response = await ShoppingCar.getInstance().getRequest(``,{ headers: { Cookie:  accountTName+'='+accountTValue+'; '+authName+'='+authValue} });
+    const response = await ShoppingCar.getInstance().getRequest(``);
     if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
-    const { data } = response;
+    const { data } = response;    
     return data;
   }
 
@@ -20,7 +22,7 @@ import { SizeType } from '../components/types/size-type';
  */
  async function getShoppingCart(shoppingCartId:string): Promise<any> {
   console.log('***************************************');
-    const response = await ShoppingCar.getInstance().getRequest(`${shoppingCartId}`,undefined);
+    const response = await ShoppingCar.getInstance().getRequest(`${shoppingCartId}`);
     if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
     const { data } = response;
     console.log('AAAAAAAAAAAAAAAAAAAAAAAA');

@@ -1,18 +1,14 @@
 import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
-import { VTEXApiConfig} from './vtex-api-config';
+import { VTEXApiConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
-import { DeviceEventEmitter } from 'react-native'
+import { DeviceEventEmitter } from 'react-native';
 
 export class ShoppingCar extends HttpClient {
-  
   static classInstance?: ShoppingCar;
 
   private constructor() {
-    console.log(
-      'AxiosRequestConfig ===> VTEXApiConfig ===> \n\n',
-      JSON.stringify(VTEXApiConfig('shoppingCar'), null, 3)
-    );
+    console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('shoppingCar'), null, 3));
 
     super(VTEXApiConfig('shoppingCar'));
 
@@ -21,9 +17,7 @@ export class ShoppingCar extends HttpClient {
     // https://github.com/svrcekmichal/redux-axios-middleware/issues/83
     this.instance.interceptors.request.use(
       (request: any) => {
-        const {
-          headers, baseURL, method, url, data
-        } = request;
+        const { headers, baseURL, method, url, data } = request;
         console.log(
           'INTERCEPTOR - Starting Request ===> \n\n',
           JSON.stringify(headers, null, 3),
@@ -37,6 +31,17 @@ export class ShoppingCar extends HttpClient {
           `data: ${JSON.stringify(data, null, 3)}`
         );
 
+        const completeCookie =
+          HttpClient.authCookie?.Name +
+          '=' +
+          HttpClient.authCookie?.Value +
+          '; ' +
+          HttpClient.accountAuthCookie?.Name +
+          '=' +
+          HttpClient.accountAuthCookie?.Value +
+          ';';
+        request.headers.Cookie = completeCookie;
+
         return request;
       },
       (error: any) => console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3))
@@ -44,9 +49,9 @@ export class ShoppingCar extends HttpClient {
 
     this.instance.interceptors.response.use(
       (response: any) => {
-        const { data } = response;
+        const { data, config } = response;
         console.log(
-          'INTERCEPTOR - The Response is ===> \n\n',
+          `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
           JSON.stringify(data, null, 3)
         );
         return response;
@@ -67,12 +72,12 @@ export class ShoppingCar extends HttpClient {
     return this.classInstance;
   }
 
-  async getRequest(path: string, cookies: any) {
-    return this.instance.get(path, cookies);
+  async getRequest(path: string) {
+    return this.instance.get(path);
   }
 
   async postRequest(path: string, payload?: any) {
-    return this.instance.post(path,payload);
+    return this.instance.post(path, payload);
   }
 
   async patchRequest(path: string, payload?: any) {
@@ -82,11 +87,11 @@ export class ShoppingCar extends HttpClient {
   private handlerError = (err: Error | AxiosError) => {
     if (axios.isAxiosError(err)) {
       let problem: GeneralApiProblem;
-      problem = getGeneralApiProblem(err.response._response || err.response.status);      
+      problem = getGeneralApiProblem(err.response._response || err.response.status);
       console.error('GLOBAL EXCEPCIÓN ===> ', problem);
       if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
     } else {
       DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');
     }
-  }
+  };
 }

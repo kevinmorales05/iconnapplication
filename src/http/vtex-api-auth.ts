@@ -9,10 +9,10 @@ export class Auth extends HttpClient {
   static classInstance?: Auth;
 
   private constructor() {
-    console.log(
-      'AxiosRequestConfig ===> VTEXApiConfig ===> \n\n',
-      JSON.stringify(VTEXApiConfig('auth'), null, 3)
-    );
+    // console.log(
+    //   'AxiosRequestConfig ===> VTEXApiConfig ===> \n\n',
+    //   JSON.stringify(VTEXApiConfig('auth'), null, 3)
+    // );
 
     super(VTEXApiConfig('auth'));
 
@@ -24,18 +24,18 @@ export class Auth extends HttpClient {
         const {
           headers, baseURL, method, url, data
         } = request;
-        console.log(
-          'INTERCEPTOR - Starting Request ===> \n\n',
-          JSON.stringify(headers, null, 3),
-          '\n',
-          `baseURL: ${baseURL}`,
-          '\n',
-          `url: ${url}`,
-          '\n',
-          `method: ${method}`,
-          '\n',
-          `data: ${JSON.stringify(data, null, 3)}`
-        );
+        // console.log(
+        //   'INTERCEPTOR - Starting Request ===> \n\n',
+        //   JSON.stringify(headers, null, 3),
+        //   '\n',
+        //   `baseURL: ${baseURL}`,
+        //   '\n',
+        //   `url: ${url}`,
+        //   '\n',
+        //   `method: ${method}`,
+        //   '\n',
+        //   `data: ${JSON.stringify(data, null, 3)}`
+        // );
 
         return request;
       },
@@ -45,10 +45,10 @@ export class Auth extends HttpClient {
     this.instance.interceptors.response.use(
       (response: any) => {
         const { data } = response;
-        console.log(
-          'INTERCEPTOR - The Response is ===> \n\n',
-          JSON.stringify(data, null, 3)
-        );
+        // console.log(
+        //   'INTERCEPTOR - The Response is ===> \n\n',
+        //   JSON.stringify(data, null, 3)
+        // );
         return response;
       },
       (error: any) => {

@@ -20,7 +20,8 @@ import {
   getProductRatingByProductIdThunk,
   ProductRaitingResponseInterface,
   ProductInterface,
-  ProductResponseInterface
+  ProductResponseInterface,
+  ExistingProductInCartInterface
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -35,6 +36,9 @@ import { useLoading } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
+import { useShoppingCart } from './hooks/useShoppingCart';
+import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
+import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -155,6 +159,7 @@ const HomeController: React.FC = () => {
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
+  const { cart } = useAppSelector((state: RootState) => state.cart);
   const { isGuest } = guestLogged;
   const { isLogged } = userLogged;
   const modVis = isLogged && !userLogged.seenCarousel ? true : false;
@@ -224,6 +229,9 @@ const HomeController: React.FC = () => {
     if (user.user_id && invoicingProfileList.length === 0) fetchInvoicingProfileList();
   }, [fetchInvoicingProfileList]);
 
+  /**
+   * This hook manages every business logic for addresses feature.
+   */
   const {
     editAddress,
     removeAddress,
@@ -284,7 +292,7 @@ const HomeController: React.FC = () => {
   const [all_promotions, setAll_promotions] = useState<CarouselItem[] | null>(null);
 
   /**
-   * Load home items list.
+   * Load home items list (banners, promotions, options menu).
    */
   const fetchHomeItems = useCallback(async () => {
     loader.show();
@@ -312,10 +320,38 @@ const HomeController: React.FC = () => {
   const { fetchProducts, products, otherProducts } = useProducts();
   const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
   const [homeOtherProducts, setHomeOtherProducts] = useState<ProductInterface[] | null>();
+  const { updateShoppingCartProduct } = useShoppingCart();
+
+  const fetchData = useCallback(async () => {
+    const { user_id, name } = user;
+
+    if (user_id == cart.userProfileId) {
+      console.log('es igual al del usuario guardado');
+      getShoppingCart(cart.orderFormId)
+      .then(oldCart => {
+        getShoppingCart(cart.orderFormId)
+        .then(response => {
+          dispatch(updateShoppingCartItems(response));
+        })
+        .catch(error => console.log(error));
+      })
+      .catch(error => console.log(error));
+    } else {
+      console.log('NO es igual');
+      await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
+        dispatch(setOrderFormId(newCart));
+        console.log('orderFormId ::: ', newCart.orderFormId);
+        getShoppingCart(newCart.orderFormId)
+          .then(response => {
+            dispatch(updateShoppingCartItems(response));
+          })
+          .catch(error => console.log(error));
+      });
+    }
+  }, []);
 
   useEffect(() => {
-    fetchProducts('137');
-    fetchProducts('138');
+    fetchData();
   }, []);
 
   const getPriceByProductId = async (productId: string) => {
@@ -338,7 +374,26 @@ const HomeController: React.FC = () => {
     return withRating;
   }
 
-  const refillProductsWithPrice = (prices: ProductPriceResponseInterface[], ratings: ProductRaitingResponseInterface[], collectionId: string) => {
+  const getExistingProductsInCart = () => {
+    const { items } = cart;
+    if (items && items.length > 0) {
+      const existingProducts: ExistingProductInCartInterface[] = items.map((p: any) => {
+        const product: ExistingProductInCartInterface = {
+          itemId: p.productId,
+          quantity: p.quantity
+        };
+        return product;
+      });
+      return existingProducts;
+    }
+  };
+
+  const refillProductsWithPrice = (
+    prices: ProductPriceResponseInterface[],
+    ratings: ProductRaitingResponseInterface[],
+    existingProductsInCart: ExistingProductInCartInterface[],
+    collectionId: string
+  ) => {
     const arr: ProductResponseInterface[] | null | undefined = collectionId === '137' ? products : otherProducts;
     const homeProductsArr: ProductInterface[] | undefined = arr?.map((p, idx) => {
       const newProduct: ProductInterface = {
@@ -348,7 +403,7 @@ const HomeController: React.FC = () => {
         price: prices.find(price => price.itemId === p.ProductId.toString())?.basePrice,
         oldPrice: prices.find(price => price.itemId === p.ProductId.toString())?.basePrice,
         porcentDiscount: 0,
-        quantity: 0,
+        quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.ProductId.toString())?.quantity : 0,
         ratingValue: ratings[idx].average
       };
       return newProduct;
@@ -361,7 +416,8 @@ const HomeController: React.FC = () => {
     if (products?.length! > 0) {
       getPrices('137').then(prices => {
         getRatings('137').then(ratings => {
-          refillProductsWithPrice(prices, ratings, '137');
+          const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+          refillProductsWithPrice(prices, ratings, existingProducts, '137');
         });
       });
     }
@@ -371,11 +427,20 @@ const HomeController: React.FC = () => {
     if (otherProducts?.length! > 0) {
       getPrices('138').then(prices => {
         getRatings('138').then(ratings => {
-          refillProductsWithPrice(prices, ratings, '138');
+          const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+          refillProductsWithPrice(prices, ratings, existingProducts, '138');
         });
       });
     }
   }, [otherProducts]);
+
+  /**
+   * Load home products when shopping cart is modified. For example if there is a substract, remove, add, in the cart.
+   */
+  useEffect(() => {
+    fetchProducts('137');
+    fetchProducts('138');
+  }, [cart]);
 
   return (
     <SafeArea
@@ -402,8 +467,9 @@ const HomeController: React.FC = () => {
         onPressCarouselItem={onPressCarouselItem}
         homeProducts={homeProducts!}
         homeOtherProducts={homeOtherProducts!}
+        updateShoppingCartProduct={updateShoppingCartProduct}
       />
-      <CustomModal visible={modVisibility}>
+      {/*       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>
           <Pressable style={{ alignSelf: 'flex-end' }} onPress={markAsSeenCarousel}>
             <Container circle style={styles.iconContainer}>
@@ -438,7 +504,7 @@ const HomeController: React.FC = () => {
             </Pressable>
           </Container>
         </Container>
-      </CustomModal>
+      </CustomModal> */}
 
       <AddressModalSelection
         visible={addressModalSelectionVisible}

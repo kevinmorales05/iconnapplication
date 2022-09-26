@@ -17,6 +17,7 @@ interface CardProductProps {
   onPressAddCart: () => void;
   onPressDeleteCart: () => void;
   onPressAddQuantity: () => void;
+  onPressDecreaseQuantity: () => void;
   oldPrice?: number;
   ratingValue?: number;
   porcentDiscount?: number;
@@ -38,7 +39,8 @@ const CardProduct: React.FC<CardProductProps> = ({
   productId,
   onPressAddCart,
   onPressDeleteCart,
-  onPressAddQuantity
+  onPressAddQuantity,
+  onPressDecreaseQuantity
 }: CardProductProps) => {
   return (
     <Container style={styles.container}>
@@ -58,7 +60,12 @@ const CardProduct: React.FC<CardProductProps> = ({
       </Container>
       <Container style={styles.containerButton}>
         {quantity ? (
-          <QuantityProduct quantity={quantity} onPressAddQuantity={onPressAddQuantity} onPressDeleteCart={onPressDeleteCart} />
+          <QuantityProduct
+            quantity={quantity}
+            onPressAddQuantity={onPressAddQuantity}
+            onPressDeleteCart={onPressDeleteCart}
+            onPressDecreaseQuantity={onPressDecreaseQuantity}
+          />
         ) : (
           <Button
             color="iconn_green_original"

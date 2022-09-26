@@ -595,7 +595,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     <Container space='evenly' style={{ paddingLeft: 10, width: '100%', height: '20%', backgroundColor: theme.fontColor.white }}>
       <Container row space="between" style={{ marginTop: 8, width: '90%' }} >
         <TextContainer marginLeft={7.5} text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
-        <CustomText text={"$" + (totalizers != undefined ? (subTotalCalculated / 100) : 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'} fontSize={18} fontBold></CustomText>
+        <CustomText text={"$" + (totalizers != undefined ? (subTotalCalculated / 100) : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'} fontSize={18} fontBold></CustomText>
       </Container>
       <Container center>
         <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50,  borderRadius: 10  }}>

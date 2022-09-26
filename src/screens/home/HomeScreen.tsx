@@ -1,16 +1,14 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, View, StyleSheet, ScrollView } from 'react-native';
 import theme from 'components/theme/theme';
 import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, Input } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Address, CarouselItem, RootState, useAppSelector, useAppDispatch, ProductInterface } from 'rtk';
+import { Address, CarouselItem, RootState, useAppSelector, ProductInterface } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT, ICONN_HOME_SEARCH } from 'assets/images';
-import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
-import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
 import { useForm } from 'react-hook-form';
 import { openField } from 'utils/rules';
-import { HttpClient } from '../../http/http-client';
+import { CounterType } from 'components/types/counter-type';
 
 interface Props {
   onPressShopCart: () => void;
@@ -29,6 +27,7 @@ interface Props {
   onPressCarouselItem: (CarouselItem: CarouselItem) => void;
   homeProducts: ProductInterface[];
   homeOtherProducts: ProductInterface[];
+  updateShoppingCartProduct: (type: CounterType, productId: string) => void;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -47,9 +46,11 @@ const HomeScreen: React.FC<Props> = ({
   allPromotionsItems,
   onPressCarouselItem,
   homeProducts,
-  homeOtherProducts
+  homeOtherProducts,
+  updateShoppingCartProduct
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
+
   const {
     control,
     register,
@@ -58,26 +59,7 @@ const HomeScreen: React.FC<Props> = ({
     mode: 'onChange'
   });
 
-  const dispatch = useAppDispatch();
-
-  const fetchData = useCallback(async () => {
-    const accountName = HttpClient.accountAuthCookie?.Name;
-    const accountValue = HttpClient.accountAuthCookie?.Value;
-    const authName = HttpClient.authCookie?.Name;
-    const authValue = HttpClient.authCookie?.Value;
-    await getCurrentShoppingCartOrCreateNewOne(accountName as string, accountValue as string, authName as string, authValue as string).then(newCart => {
-      dispatch(setOrderFormId(newCart));
-      console.log('orderFormId ::: ', newCart.orderFormId);
-      getShoppingCart(newCart.orderFormId)
-        .then(response => {
-          dispatch(updateShoppingCartItems(response));
-        })
-        .catch(error => console.log(error));
-    });
-  }, []);
-
   useEffect(() => {
-    fetchData();
     setToggle(showShippingDropDown);
   }, [showShippingDropDown]);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
@@ -164,7 +146,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text="Recomendados para ti" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} />
+            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} />
           </Container>
           <Container style={{ marginTop: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
@@ -175,7 +157,7 @@ const HomeScreen: React.FC<Props> = ({
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel products={homeOtherProducts} onPressItem={onPressCarouselItem} />
+            <AnimatedCarousel products={homeOtherProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} />
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
