@@ -53,7 +53,7 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
       childrenContainerStyle={{ paddingHorizontal: 0 }}
       topSafeArea={false}
       bottomSafeArea={false}
-      backgroundColor={theme.brandColor.iconn_background}
+      backgroundColor={theme.brandColor.iconn_white}
       barStyle="dark"
     >
       <MyAccountScreen logOut={logOut} app_version={app_version} />
