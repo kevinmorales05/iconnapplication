@@ -260,7 +260,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           />
           {sign_app_modes_id === 1 && <TouchableOpacity
             onPress={() => {
-              navigation?.navigate('Editar Contraseña');
+              navigation?.navigate('EditPassword');
             }}
           >
             <Container row center crossCenter>

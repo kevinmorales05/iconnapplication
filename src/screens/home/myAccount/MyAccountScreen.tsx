@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView } from 'react-native';
 import { Button, NavigationMenuItem, Container, TextContainer } from 'components';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -143,7 +143,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           disable={false}
           icon={<Ionicons name="md-information-circle-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
           onPressNavigateTo={() => {
-            console.log('Quiénes somos...');
+            navigate('AboutUs');
           }}
         />
         <NavigationMenuItem

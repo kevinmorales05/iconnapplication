@@ -35,6 +35,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabNavigator } from 'navigation/TabNavigator';
 import ChangedPasswordController from 'screens/auth/onboarding/ChangedPassword/ChangedPasswordController';
 import ProductDetailController from 'screens/ecommerce/productDetail/ProductDetailController';
+import AboutUsController from 'screens/home/myAccount/aboutUs/AboutUsController';
+import theme from 'components/theme/theme';
+import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -55,11 +58,11 @@ const HomeStack: React.FC = () => {
         name="Home"
         component={TabNavigator}
       />
-      <Stack.Screen name="Mi Cuenta" component={MyAccountController} />
+      <Stack.Screen name="MyAccount" component={MyAccountController} />
       <Stack.Screen name="Profile" options={{ title: 'Mi Perfil' }} component={ProfileController} />
       <Stack.Screen name="EditEmail" options={{ title: 'Editar Correo' }} component={EditEmailController} />
       <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={EditEmailOtpController} />
-      <Stack.Screen name="Editar Contraseña" component={EditPasswordController} />
+      <Stack.Screen name="EditPassword" component={EditPasswordController} />
       <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
       <Stack.Screen options={{ title: 'Nuevo Perfil Fiscal' }} name="AddRFC" component={AddRFCController} />
       <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
@@ -134,6 +137,12 @@ const HomeStack: React.FC = () => {
           headerTitle: '',
           headerRight: () => <BasketCounter />
         }}
+      />
+      <Stack.Screen name="AboutUs" options={{ title: 'Quiénes somos', headerTintColor: theme.fontColor.dark }} component={AboutUsController} />
+      <Stack.Screen
+        name="Legal"
+        options={{ title: 'Legal', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
+        component={LegalController}
       />
     </Stack.Navigator>
   );

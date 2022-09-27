@@ -8,7 +8,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 
 interface NavigationMenuItemProps {
   disable?: boolean;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   text: string;
   onPressNavigateTo: () => void;
 }
@@ -27,7 +27,7 @@ const NavigationMenuItem: React.FC<NavigationMenuItemProps> = ({ text, icon, dis
     <Touchable onPress={onPressNavigateTo} disabled={disable}>
       <Container row space="between" style={NavigationMenuItemStyle} crossCenter center>
         <Container width={'80%'} flex row center>
-          {icon}
+          {icon ? icon : null}
           <TextContainer text={text} marginLeft={16} />
         </Container>
         <Container width={'20%'} crossAlignment="end" style={{ marginRight: 20 }}>
