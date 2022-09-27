@@ -73,8 +73,9 @@ export const TabNavigator = () => {
         name="AccountScreen"
         component={isGuest ? InviteSignUpController : AccountScreen}
         options={{
-          headerShown: false,
-          title: 'Cuenta',
+          unmountOnBlur: true,
+          headerShown: true,
+          title: 'Mi Cuenta',
           tabBarIcon: ({ focused }) => {
             return (
               <MaterialCommunityIcons
