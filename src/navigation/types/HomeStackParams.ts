@@ -36,5 +36,5 @@ export type HomeTabScreens = {
   CategoriesScreen: undefined;
   PromosScreen: undefined;
   BranchesScreen: undefined;
-  AccountScreen: undefined;
+  MyAccountScreen: undefined;
 };

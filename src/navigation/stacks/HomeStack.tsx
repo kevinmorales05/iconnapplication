@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import HomeController from 'screens/home/HomeController'; /** relocated to tabNavigator */
-import AccountScreen from 'screens/home/myAccount/MyAccountScreen';
+import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import EditEmailController from 'screens/auth/onboarding/EditEmail/EditEmailController';
 import EditEmailOtpController from 'screens/auth/onboarding/EditEmailOtp/EditEmailOtpController';
 import EditPasswordController from 'screens/auth/onboarding/EditPassword/EditPasswordController';
@@ -55,7 +55,7 @@ const HomeStack: React.FC = () => {
         name="Home"
         component={TabNavigator}
       />
-      <Stack.Screen name="Mi Cuenta" component={AccountScreen} />
+      <Stack.Screen name="Mi Cuenta" component={MyAccountController} />
       <Stack.Screen name="Profile" options={{ title: 'Mi Perfil' }} component={ProfileController} />
       <Stack.Screen name="EditEmail" options={{ title: 'Editar Correo' }} component={EditEmailController} />
       <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={EditEmailOtpController} />

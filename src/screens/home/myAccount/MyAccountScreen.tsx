@@ -1,64 +1,25 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { Button, Section, NavigationMenuItem, Container, TextContainer } from 'components';
+import { ScrollView, StyleSheet } from 'react-native';
+import { Button, NavigationMenuItem, Container, TextContainer } from 'components';
 import { useNavigation } from '@react-navigation/native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState } from 'rtk';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { authServices } from 'services';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 
-export default function AccountScreen({ navigation, route }: any) {
+interface HomeScreenProps {
+  logOut: () => void;
+  app_version: string;
+}
+
+const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  const dispatch = useAppDispatch();
-
-  const logOut = async () => {
-    try {
-      await authServices.logOutUser();
-    } catch (error) {
-      console.log('ERROR DE LOGOUT', error);
-    } finally {
-      dispatch(setAppInitialState());
-      dispatch(setAuthInitialState());
-      dispatch(setGuestInitialState());
-      dispatch(setInvoicingInitialState());
-    }
-  };
-
-  // removing navigation header in this screen.
-  React.useLayoutEffect(() => {
-    if (!navigation || !route) return;
-
-    // Get parent by id
-    const homeStack = navigation.getParent('HomeStack');
-
-    if (homeStack) {
-      // Make sure the route name is "AccountScreen" before turn header off
-      if (route.name === 'AccountScreen') {
-        homeStack.setOptions({
-          headerShown: false
-        });
-      }
-    }
-
-    // Turn header back on when unmount
-    return homeStack
-      ? () => {
-          homeStack.setOptions({
-            headerShown: true
-          });
-        }
-      : undefined;
-  }, [navigation, route]);
 
   return (
     <Container style={styles.container}>
@@ -219,12 +180,12 @@ export default function AccountScreen({ navigation, route }: any) {
           backgroundColor={theme.brandColor.iconn_background}
           style={{ paddingHorizontal: -100, marginBottom: -20, paddingVertical: 0 }}
         >
-          <TextContainer text="Version 1.7.2" textAlign="center" textColor={theme.fontColor.placeholder} />
+          <TextContainer text={app_version} textAlign="center" textColor={theme.fontColor.placeholder} />
         </Container>
       </Container>
     </Container>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: { flex: 1, paddingLeft: 10, paddingRight: 10, backgroundColor: theme.brandColor.iconn_white },
@@ -235,3 +196,5 @@ const styles = StyleSheet.create({
     marginHorizontal: -10
   }
 });
+
+export default MyAccountScreen;
