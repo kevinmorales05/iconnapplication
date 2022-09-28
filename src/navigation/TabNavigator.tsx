@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import theme from 'components/theme/theme';
 import HomeController from 'screens/home/HomeController';
 import { HomeTabScreens } from './types';
-import AccountScreen from 'screens/home/myAccount/MyAccountScreen';
+import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -70,11 +70,12 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="AccountScreen"
-        component={isGuest ? InviteSignUpController : AccountScreen}
+        name="MyAccountScreen"
+        component={isGuest ? InviteSignUpController : MyAccountController}
         options={{
-          headerShown: false,
-          title: 'Cuenta',
+          unmountOnBlur: true,
+          headerShown: true,
+          title: 'Mi Cuenta',
           tabBarIcon: ({ focused }) => {
             return (
               <MaterialCommunityIcons

@@ -1,149 +1,181 @@
-import React, { useContext } from 'react';
-import { ScrollView, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { Button, AccountItem, Section, AnnounceItem } from 'components';
-import { NavigationContext, useNavigation } from '@react-navigation/native';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState } from 'rtk';
+import React from 'react';
+import { ScrollView } from 'react-native';
+import { Button, NavigationMenuItem, Container, TextContainer } from 'components';
+import { useNavigation } from '@react-navigation/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { logoutThunk } from 'rtk/thunks/auth.thunks';
-
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { authServices } from 'services';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Octicons from 'react-native-vector-icons/Octicons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Feather from 'react-native-vector-icons/Feather';
 
-const TaxItem: React.FC = () => {
+interface HomeScreenProps {
+  logOut: () => void;
+  app_version: string;
+}
+
+const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  //const goToTaxInfo = () => navigate('TaxInfo');
-  const goToTaxInfo = () => console.log("Funcion oculta para presentacion de sprint de home");
-  return (
-    <TouchableOpacity style={taxItemStyles.container} onPress={goToTaxInfo}>
-      <View style={taxItemStyles.content}>
-        <View style={taxItemStyles.middle}>
-          <Text numberOfLines={1}>Administra tu información de facturación</Text>
-        </View>
-        <View style={taxItemStyles.end}>
-          <AntDesign name="right" size={24} color="black" />
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const AddressesItem: React.FC = () => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const goToAddresses = () => navigate('Address');
-  return (
-    <TouchableOpacity style={[taxItemStyles.container, { backgroundColor: theme.brandColor.iconn_white }]} onPress={goToAddresses}>
-      <View style={taxItemStyles.content}>
-        <View style={taxItemStyles.middle}>
-          <Text numberOfLines={1}>Administra tus direcciones de entrega</Text>
-        </View>
-        <View style={taxItemStyles.end}>
-          <AntDesign name="right" size={24} color="black" />
-        </View>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
-const taxItemStyles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    borderRadius: 20,
-    marginTop: 10,
-    padding: 10
-  },
-  content: {
-    flexDirection: 'row'
-  },
-  start: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center'
-  },
-  middle: {
-    flex: 4,
-    justifyContent: 'center',
-    height: 55
-  },
-  end: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'flex-end'
-  },
-  primary: { fontWeight: 'bold', marginLeft: 20 },
-  secondary: {
-    marginLeft: 20,
-    color: 'darkgray',
-    fontSize: 12
-  }
-});
-
-export default function AccountScreen() {
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  const dispatch = useAppDispatch();
-
-  const logOut = async () => {
-    try {
-      await authServices.logOutUser();
-    } catch (error) {
-      console.log('ERROR DE LOGOUT', error);
-    } finally {
-      dispatch(setAppInitialState());
-      dispatch(setAuthInitialState());
-      dispatch(setGuestInitialState());
-      dispatch(setInvoicingInitialState());
-    }
-  };
-
-  const navigation = useContext(NavigationContext);
 
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        <View>
-          <Section label="Perfil">
-            <AccountItem
-              user={user}
-              onPress={() => {
-                navigation?.navigate('Profile');
-              }}
-            />
-            <AnnounceItem icon={<Ionicons name="megaphone-outline" size={25} color={theme.fontColor.white} />} message={'Completa tu perfil y obtén cupón'} />
-          </Section>
-          <Section label="Direcciones guardadas">
-            <AddressesItem />
-          </Section>
-          <Section label="Datos fiscales">
-            <TaxItem />
-          </Section>
-        </View>
-      </ScrollView>
-      <View style={styles.footer}>
+    <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
+      <Container style={{ marginHorizontal: 8 }}>
+        <NavigationMenuItem
+          text="Mi Perfil"
+          disable={false}
+          icon={<MaterialCommunityIcons name="account-circle-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            navigate('Profile');
+          }}
+        />
+        <NavigationMenuItem
+          text="Direcciones"
+          disable={false}
+          icon={<Ionicons name="location-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            navigate('Address');
+          }}
+        />
+        <NavigationMenuItem
+          text="Mis pedidos"
+          disable={false}
+          icon={<Octicons name="list-unordered" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            navigate('MyOrders');
+          }}
+        />
+        <NavigationMenuItem
+          text="Favoritos"
+          disable={false}
+          icon={<MaterialCommunityIcons name="heart-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            console.log('Favoritos...');
+          }}
+        />
+
+        <TextContainer
+          text="Ofertas y recompensas"
+          typography="h4"
+          fontBold
+          marginTop={16}
+          textColor={theme.brandColor.iconn_green_original}
+          marginLeft={8}
+          marginBottom={12}
+        />
+
+        <NavigationMenuItem
+          text="Promociones"
+          disable={false}
+          icon={<MaterialCommunityIcons name="sale" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            console.log('Promociones...');
+          }}
+        />
+
+        <NavigationMenuItem
+          text="Mi cuponera"
+          disable={false}
+          icon={<Entypo name="ticket" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            console.log('Mi Cuponera...');
+          }}
+        />
+
+        <TextContainer
+          text="Servicios"
+          typography="h4"
+          fontBold
+          marginTop={16}
+          textColor={theme.brandColor.iconn_green_original}
+          marginLeft={8}
+          marginBottom={12}
+        />
+
+        <NavigationMenuItem
+          text="Sucursales"
+          disable={false}
+          icon={<Entypo name="location" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            console.log('Sucursales...');
+          }}
+        />
+        <NavigationMenuItem
+          text="Wallet"
+          disable={false}
+          icon={<Ionicons name="wallet-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            console.log('Wallet...');
+          }}
+        />
+        <NavigationMenuItem
+          text="Datos fiscales"
+          disable={false}
+          icon={<AntDesign name="idcard" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            navigate('TaxInfo');
+          }}
+        />
+        <NavigationMenuItem
+          text="Facturación"
+          disable={false}
+          icon={<FontAwesome5 name="file-invoice-dollar" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            navigate('Invoice');
+          }}
+        />
+
+        <TextContainer
+          text="Ajustes e información"
+          typography="h4"
+          fontBold
+          marginTop={16}
+          textColor={theme.brandColor.iconn_green_original}
+          marginLeft={8}
+          marginBottom={12}
+        />
+
+        <NavigationMenuItem
+          text="Quiénes somos"
+          disable={false}
+          icon={<Ionicons name="md-information-circle-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            navigate('AboutUs');
+          }}
+        />
+        <NavigationMenuItem
+          text="Centro de ayuda"
+          disable={false}
+          icon={<Feather name="life-buoy" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          onPressNavigateTo={() => {
+            console.log('Centro de ayuda...');
+          }}
+        />
+      </Container>
+
+      <Container style={{ marginLeft: 16, marginRight: 16, marginBottom: 24, marginTop: 24, justifyContent: 'center' }}>
         <Button
-          color="iconn_background"
+          outline
           borderColor="iconn_med_grey"
           round
           fontBold
           fontSize="h4"
-          fontColor={'dark_grey'}
+          color="iconn_dark_grey"
           onPress={logOut}
-          icon={<MaterialIcons name="logout" size={20} color={theme.brandColor.iconn_red_original} />}
+          icon={<MaterialCommunityIcons name="location-exit" size={24} color={theme.brandColor.iconn_red_original} />}
         >
           Cerrar sesión
         </Button>
-      </View>
-    </View>
-  );
-}
+      </Container>
 
-const styles = StyleSheet.create({
-  container: { flex: 1, paddingLeft: 10, paddingRight: 10 },
-  footer: {
-    paddingTop: 20,
-    paddingBottom: 20,
-    justifyContent: 'center'
-  }
-});
+      <Container width={'100%'} height={32} center crossCenter backgroundColor={theme.brandColor.iconn_background}>
+        <TextContainer text={app_version} textAlign="center" textColor={theme.fontColor.placeholder} />
+      </Container>
+    </ScrollView>
+  );
+};
+
+export default MyAccountScreen;
