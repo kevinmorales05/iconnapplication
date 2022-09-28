@@ -161,7 +161,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           blurOnSubmit={false}
           error={errors.name?.message}
           maxLength={30}
-          renderErrorIcon={false}
         />
 
         <TextContainer
@@ -183,7 +182,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           blurOnSubmit={false}
           error={errors.lastName?.message}
           maxLength={30}
-          renderErrorIcon={false}
         />
 
         <TextContainer
@@ -291,7 +289,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           blurOnSubmit={true}
           error={errors.telephone?.message}
           maxLength={10}
-          renderErrorIcon={false}
           phone
         />
 

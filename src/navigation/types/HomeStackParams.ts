@@ -8,6 +8,7 @@ export type HomeStackParams = {
   AddTicketSeven: { ticket?: any; position?: number };
   ChangedPassword: undefined;
   CodeReader: undefined;
+  ContactInformation: undefined;
   CreateTaxProfile: undefined | InvoicingProfileInterface;
   EditEmail: undefined;
   EditPassword: undefined;

@@ -238,7 +238,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             error={errors.rfc?.message}
             maxLength={13}
             marginTop={4}
-            renderErrorIcon={false}
           />
 
           <TextContainer typography="h5" fontBold text={`Razón Social`} marginTop={21}></TextContainer>
@@ -263,7 +262,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             error={errors.businessName?.message}
             maxLength={100}
             marginTop={4}
-            renderErrorIcon={false}
           />
 
           <TextContainer typography="h5" fontBold text={`Correo electrónico`} marginTop={21} />
@@ -286,7 +284,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             error={errors.email?.message}
             maxLength={30}
             marginTop={4}
-            renderErrorIcon={false}
           />
 
           <TextContainer typography="h5" fontBold text={`Régimen fiscal`} marginTop={21} />
@@ -343,7 +340,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             error={errors.postalCode?.message}
             maxLength={5}
             marginTop={4}
-            renderErrorIcon={false}
             numeric
           />
           {loading && (
