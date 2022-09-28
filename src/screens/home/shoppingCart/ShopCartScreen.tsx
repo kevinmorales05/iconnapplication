@@ -307,6 +307,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         row
         circle
         style={{
+          marginRight:14,
           borderStartWidth: 1,
           borderLeftColor: theme.brandColor.iconn_grey,
           borderEndWidth: 1,
@@ -315,7 +316,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           borderTopColor: theme.brandColor.iconn_grey,
           borderBottomWidth: 1,
           borderBottomColor: theme.brandColor.iconn_grey,
-          width: 130,
+          width: '44%',
           height: 31
         }}
       >
@@ -461,16 +462,16 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         }}
       >
         <Container>
-          <Image source={{ uri: value.imageUrl }} style={{ marginTop: 10, width: 90, height: 88 }} />
+            <Image source={{ uri: value.imageUrl }} style={{ marginTop: 10, width: 90, height: 88 }} />
         </Container>
         <Container space='between' style={{ marginTop: 10, width: '100%', height: 58 }}>
           <Container row space="between" style={{ marginTop: 3, paddingRight: 100}}>
-            <Container style={{ width: '60%' }}>
-              <Text numberOfLines={2} style={{ color: 'black' }}>
-                {value.name}
-              </Text>
+            <Container style={{ width: '70%' }}>
+                <Text numberOfLines={2} style={{ color: 'black' }}>
+                  {value.name}
+                </Text>
             </Container>
-            <Container style={{ width: '40%', alignItems: "flex-end"}}>
+            <Container style={{ width: '38%'}}>
               {
                 value.hasErrorMessage ? <></> :
                   <TextContainer text={'$' + (value.priceDefinition.total / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} fontBold marginLeft={10}></TextContainer>
@@ -495,6 +496,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             {
               value.hasErrorMessage ?
                 <Container space='around' alignment='start' style={{
+                  marginRight:12,
                   backgroundColor: theme.brandColor.iconn_light_grey,
                   borderRadius: 15,
                   paddingVertical: 5,
@@ -576,7 +578,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         <CustomText text="Tu canasta está vacía" textAlign="center" fontBold></CustomText>
         <Container center style={{ marginTop: 5 }}>
           <Text numberOfLines={2} style={{ color: 'black', width: 260, textAlign: 'center' }}>
-            !Encuentra y selecciona los articulos de tu preferencia!
+            ¡Encuentra y selecciona los artículos de tu preferencia!
           </Text>
         </Container>
       </Container>
