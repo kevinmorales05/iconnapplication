@@ -66,7 +66,7 @@ const ShopCartController: React.FC = () => {
   };
 
   const goToMyAccount = () => {
-   navigate('ContactInformation');
+   navigate('Checkout');
   }
   const goToInvoice = () => {
     (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');

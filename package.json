@@ -55,6 +55,7 @@
     "react-native-screens": "^3.13.1",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-vision-camera": "2.13.3",
+    "react-native-webview": "^11.23.1",
     "react-redux": "^8.0.2",
     "redux-persist": "^6.0.0",
     "turf": "^3.0.14",

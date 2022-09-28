@@ -39,6 +39,7 @@ import AboutUsController from 'screens/home/myAccount/aboutUs/AboutUsController'
 import theme from 'components/theme/theme';
 import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalController';
 import ContactInformationController from 'screens/home/shoppingCart/ContactInformation/ContactInformationController';
+import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -149,6 +150,11 @@ const HomeStack: React.FC = () => {
         name="ContactInformation"
         options={{ title: 'Información de contacto', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
         component={ContactInformationController}
+      />
+      <Stack.Screen
+        name="Checkout"
+        options={{ title: 'Confirmar pedido', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
+        component={CheckoutController}
       />
     </Stack.Navigator>
   );
