@@ -15,7 +15,8 @@ import { authServices } from 'services';
 
 const TaxItem: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const goToTaxInfo = () => navigate('TaxInfo');
+  //const goToTaxInfo = () => navigate('TaxInfo');
+  const goToTaxInfo = () => console.log("Funcion oculta para presentacion de sprint de home");
   return (
     <TouchableOpacity style={taxItemStyles.container} onPress={goToTaxInfo}>
       <View style={taxItemStyles.content}>
