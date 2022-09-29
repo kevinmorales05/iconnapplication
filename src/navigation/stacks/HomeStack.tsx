@@ -24,6 +24,7 @@ import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicin
 import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
 import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
+import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
 import { BasketCounter, EcommerceHeader } from 'components';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
 import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
@@ -117,6 +118,7 @@ const HomeStack: React.FC = () => {
         name="ShopCart"
         component={ShopCartController}
       />
+      <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />
       <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
       <Stack.Screen

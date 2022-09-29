@@ -23,6 +23,7 @@ export type HomeStackParams = {
   InvoiceHistory: undefined;
   InvoiceTicketPetro: undefined;
   InvoiceTicketSeven: undefined;
+  ImageZoom: undefined;
   Legal: undefined;
   MyAccount: undefined;
   MyOrders: undefined;

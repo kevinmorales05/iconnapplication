@@ -6,6 +6,8 @@ export * from './CardDivided';
 export * from './CardHorizontal';
 export * from './Code';
 export * from './EcommerceHeader';
+export * from './ImagesCarusel';
+export * from './ImageZoom';
 export * from './ListSwipeableItem';
 export * from './ModalCard';
 export * from './NavigationMenuItem';
