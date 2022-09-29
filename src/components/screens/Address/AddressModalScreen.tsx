@@ -5,7 +5,7 @@ import { CustomModal, Container, Input, Select, CustomText, ActionButton } from 
 import { Button, TextContainer } from '../../molecules';
 import { ICONN_ADDRESS_FIND } from 'assets/images';
 import { FieldValues, useForm } from 'react-hook-form';
-import { numericWithSpecificLenght, openField } from 'utils/rules';
+import { numericWithSpecificLenght, openField, alphaNumericWithSpacesAndDot, alphaNumericWithoutSpaces } from 'utils/rules';
 import { Address, PostalCodeInfo } from 'rtk';
 import { CrudType } from '../../types/crud-type';
 import theme from 'components/theme/theme';
@@ -253,9 +253,9 @@ const AddressModalScreen: React.FC<Props> = ({
                   ref={streetRef}
                   label="Calle y número exterior"
                   boldLabel
-                  maxLength={120}
+                  maxLength={50}
                   onSubmitEditing={() => referenceRef.current?.focus()}
-                  rules={openField(3)}
+                  rules={alphaNumericWithSpacesAndDot(3)}
                   error={errors.street?.message}
                 />
 
@@ -271,9 +271,9 @@ const AddressModalScreen: React.FC<Props> = ({
                   ref={referenceRef}
                   label="Instrucción adicional o referencia"
                   boldLabel
-                  maxLength={120}
+                  maxLength={50}
                   onSubmitEditing={() => tagRef.current?.focus()}
-                  rules={openField(3)}
+                  rules={alphaNumericWithSpacesAndDot(3)}
                   error={errors.reference?.message}
                 />
 
@@ -289,8 +289,8 @@ const AddressModalScreen: React.FC<Props> = ({
                   ref={tagRef}
                   label="Etiqueta"
                   boldLabel
-                  maxLength={120}
-                  rules={openField(3)}
+                  maxLength={20}
+                  rules={alphaNumericWithoutSpaces(3)}
                   error={errors.tag?.message}
                 />
               </Container>
