@@ -31,7 +31,7 @@ const AddressesScreen: React.FC<Props> = ({ addresses, onPressAddNewAddress, onP
     <Container flex useKeyboard>
       <ScrollView
         bounces={false}
-        contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 16 }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
