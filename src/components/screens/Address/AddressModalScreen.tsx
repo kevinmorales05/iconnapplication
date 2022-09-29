@@ -202,7 +202,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   placeholder={`Ej. Estado de México`}
                   blurOnSubmit={true}
                   marginTop={21}
-                  label="Estado / Provincia / Region"
+                  label="Estado / Provincia / Región"
                   boldLabel
                   maxLength={120}
                   rules={openField(3)}
