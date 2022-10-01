@@ -8,7 +8,7 @@ export class ShoppingCar extends HttpClient {
   static classInstance?: ShoppingCar;
 
   private constructor() {
-    console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('shoppingCar'), null, 3));
+    // console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('shoppingCar'), null, 3));
 
     super(VTEXApiConfig('shoppingCar'));
 
@@ -18,18 +18,18 @@ export class ShoppingCar extends HttpClient {
     this.instance.interceptors.request.use(
       (request: any) => {
         const { headers, baseURL, method, url, data } = request;
-        console.log(
-          'INTERCEPTOR - Starting Request ===> \n\n',
-          JSON.stringify(headers, null, 3),
-          '\n',
-          `baseURL: ${baseURL}`,
-          '\n',
-          `url: ${url}`,
-          '\n',
-          `method: ${method}`,
-          '\n',
-          `data: ${JSON.stringify(data, null, 3)}`
-        );
+        // console.log(
+        //   'INTERCEPTOR - Starting Request ===> \n\n',
+        //   JSON.stringify(headers, null, 3),
+        //   '\n',
+        //   `baseURL: ${baseURL}`,
+        //   '\n',
+        //   `url: ${url}`,
+        //   '\n',
+        //   `method: ${method}`,
+        //   '\n',
+        //   `data: ${JSON.stringify(data, null, 3)}`
+        // );
 
         const completeCookie =
           HttpClient.authCookie?.Name +
@@ -50,10 +50,10 @@ export class ShoppingCar extends HttpClient {
     this.instance.interceptors.response.use(
       (response: any) => {
         const { data, config } = response;
-        console.log(
-          `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
-          JSON.stringify(data, null, 3)
-        );
+        // console.log(
+        //   `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
+        //   JSON.stringify(data, null, 3)
+        // );
         return response;
       },
       (error: any) => {

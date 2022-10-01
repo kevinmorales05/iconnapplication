@@ -3,6 +3,10 @@ import { HttpClient } from './http-client';
 import { VTEXApiConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
 import { DeviceEventEmitter } from 'react-native';
+import { store } from 'rtk';
+
+const VTEX_BRANCH_PREFIX = 'https://oneiconntienda';
+const VTEX_BRANCH_SUFIX = '.myvtex.com/api';
 
 export class DocsApi extends HttpClient {
   static classInstance?: DocsApi;
@@ -17,7 +21,18 @@ export class DocsApi extends HttpClient {
     // https://github.com/svrcekmichal/redux-axios-middleware/issues/83
     this.instance.interceptors.request.use(
       (request: any) => {
+        const newConfig: any = this.handleApiConfigByBranch(request.url);
+
+        if (newConfig) {
+          const { appKey, appToken } = newConfig.newHeaders;
+          const { newBaseUrl } = newConfig;
+          request.baseURL = newBaseUrl;
+          request.headers['X-VTEX-API-AppKey'] = appKey;
+          request.headers['X-VTEX-API-AppToken'] = appToken; // creo que todo este if ya quedo... pruebalo...
+        }
+
         const { headers, baseURL, method, url, data } = request;
+
         // console.log(
         //   'INTERCEPTOR - Starting Request ===> \n\n',
         //   JSON.stringify(headers, null, 3),
@@ -86,5 +101,21 @@ export class DocsApi extends HttpClient {
     } else {
       DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');
     }
+  };
+
+  private handleApiConfigByBranch = (url: string) => {
+    const { '# Tienda': storeId, '# Plaza': squareId } = store.getState().seller.defaultSeller!;
+    const { VTEX_APPKEY: appKey } = store.getState().seller.defaultSeller!;
+    const { VTEX_APPTOKEN: appToken } = store.getState().seller.defaultSeller!;
+
+    if (url.includes('catalog/pvt/collection') || url.includes('pricing/prices')) {
+      let branchConfig = {
+        newBaseUrl: `${VTEX_BRANCH_PREFIX}${squareId}${storeId}${VTEX_BRANCH_SUFIX}`,
+        newHeaders: { appKey: appKey, appToken: appToken }
+      };
+
+      return branchConfig;
+    }
+    return null;
   };
 }

@@ -160,6 +160,7 @@ const HomeController: React.FC = () => {
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const { isGuest } = guestLogged;
   const { isLogged } = userLogged;
   const modVis = isLogged && !userLogged.seenCarousel ? true : false;
@@ -328,14 +329,14 @@ const HomeController: React.FC = () => {
     if (user_id == cart.userProfileId) {
       console.log('es igual al del usuario guardado');
       getShoppingCart(cart.orderFormId)
-      .then(oldCart => {
-        getShoppingCart(cart.orderFormId)
-        .then(response => {
-          dispatch(updateShoppingCartItems(response));
+        .then(oldCart => {
+          getShoppingCart(cart.orderFormId)
+            .then(response => {
+              dispatch(updateShoppingCartItems(response));
+            })
+            .catch(error => console.log(error));
         })
         .catch(error => console.log(error));
-      })
-      .catch(error => console.log(error));
     } else {
       console.log('NO es igual');
       await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
@@ -440,7 +441,7 @@ const HomeController: React.FC = () => {
   useEffect(() => {
     fetchProducts('137');
     fetchProducts('138');
-  }, [cart]);
+  }, [cart, defaultSeller]);
 
   return (
     <SafeArea
