@@ -268,7 +268,6 @@ const PostalCodeScreen = () => {
           error={errors.postalCode?.message}
           maxLength={5}
           marginTop={4}
-          renderErrorIcon={false}
           numeric
         />
       </Container>

@@ -225,3 +225,37 @@ export const emailsList = (lenght: number): RegisterOptions => ({
     return true;
   }
 });
+
+export const alphaNumericWithSpacesAndDot = (lenght: number): RegisterOptions => ({
+  required: {
+    value: true,
+    message: `Campo requerido.`
+  },
+  minLength: {
+    value: lenght,
+    message: `Longitud invalida.`
+  },
+  validate: (value: string) => {
+    if (!value.match(/^[A-Za-z0-9 .]*[A-Za-z0-9][A-Za-z0-9 .]*$/)) {
+      return false;
+    }
+    return true;
+  }
+});
+
+export const alphaNumericWithoutSpaces = (lenght: number): RegisterOptions => ({
+  required: {
+    value: true,
+    message: `Campo requerido.`
+  },
+  minLength: {
+    value: lenght,
+    message: `Longitud invalida.`
+  },
+  validate: (value: string) => {
+    if (!value.match(/^[A-Za-z0-9]*[A-Za-z0-9][A-Za-z0-9]*$/)) {
+      return false;
+    }
+    return true;
+  }
+});

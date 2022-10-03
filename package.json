@@ -1,6 +1,6 @@
 {
   "name": "iconn",
-  "version": "0.0.1",
+  "version": "1.7.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -57,6 +57,7 @@
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^13.2.0",
     "react-native-vision-camera": "2.13.3",
+    "react-native-webview": "^11.23.1",
     "react-redux": "^8.0.2",
     "redux-persist": "^6.0.0",
     "turf": "^3.0.14",

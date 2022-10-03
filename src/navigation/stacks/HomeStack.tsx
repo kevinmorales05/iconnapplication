@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import HomeController from 'screens/home/HomeController'; /** relocated to tabNavigator */
-import AccountScreen from 'screens/home/myAccount/MyAccountScreen';
+import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import EditEmailController from 'screens/auth/onboarding/EditEmail/EditEmailController';
 import EditEmailOtpController from 'screens/auth/onboarding/EditEmailOtp/EditEmailOtpController';
 import EditPasswordController from 'screens/auth/onboarding/EditPassword/EditPasswordController';
@@ -24,6 +24,7 @@ import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicin
 import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
 import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
+import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
 import { BasketCounter, EcommerceHeader } from 'components';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
 import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
@@ -38,6 +39,11 @@ import ProductDetailController from 'screens/ecommerce/productDetail/ProductDeta
 import CategoryProductsScreen from 'screens/categories/categoryProducts/CategoryProductsScreen';
 import SearchScreen from 'screens/search/SearchScreen';
 import SearchProductResultsScreen from 'screens/search/searchProductResult/SearchProductResult';
+import AboutUsController from 'screens/home/myAccount/aboutUs/AboutUsController';
+import theme from 'components/theme/theme';
+import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalController';
+import ContactInformationController from 'screens/home/shoppingCart/ContactInformation/ContactInformationController';
+import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -48,7 +54,7 @@ const HomeStack: React.FC = () => {
   };
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="PostalCode">
+    <Stack.Navigator screenOptions={{ headerShown: true }} initialRouteName="PostalCode" id="HomeStack">
       <Stack.Screen
         options={{
           headerTitle: '',
@@ -58,11 +64,11 @@ const HomeStack: React.FC = () => {
         name="Home"
         component={TabNavigator}
       />
-      <Stack.Screen name="Mi Cuenta" component={AccountScreen} />
+      <Stack.Screen name="MyAccount" component={MyAccountController} />
       <Stack.Screen name="Profile" options={{ title: 'Mi Perfil' }} component={ProfileController} />
       <Stack.Screen name="EditEmail" options={{ title: 'Editar Correo' }} component={EditEmailController} />
       <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={EditEmailOtpController} />
-      <Stack.Screen name="Editar Contraseña" component={EditPasswordController} />
+      <Stack.Screen name="EditPassword" component={EditPasswordController} />
       <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
       <Stack.Screen options={{ title: 'Nuevo Perfil Fiscal' }} name="AddRFC" component={AddRFCController} />
       <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
@@ -115,6 +121,7 @@ const HomeStack: React.FC = () => {
         name="ShopCart"
         component={ShopCartController}
       />
+      <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />
       <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
       <Stack.Screen
@@ -162,6 +169,22 @@ const HomeStack: React.FC = () => {
         }}
         name="SearchProductsResults"
         component={SearchProductResultsScreen}
+      />
+      <Stack.Screen name="AboutUs" options={{ title: 'Quiénes somos', headerTintColor: theme.fontColor.dark }} component={AboutUsController} />
+      <Stack.Screen
+        name="Legal"
+        options={{ title: 'Legal', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
+        component={LegalController}
+      />
+      <Stack.Screen
+        name="ContactInformation"
+        options={{ title: 'Información de contacto', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
+        component={ContactInformationController}
+      />
+      <Stack.Screen
+        name="Checkout"
+        options={{ title: 'Confirmar pedido', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
+        component={CheckoutController}
       />
     </Stack.Navigator>
   );

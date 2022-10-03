@@ -24,7 +24,7 @@ const AddressesController: React.FC = () => {
   } = useAddresses();
 
   return (
-    <SafeArea topSafeArea={false} bottomSafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
+    <SafeArea topSafeArea={true} bottomSafeArea={true} barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
       <AddressesScreen addresses={user.addresses!} onPressEdit={editAddress} onPressDelete={removeAddress} onPressAddNewAddress={onPressAddNewAddress} />
       <AddressModalScreen
         visible={addressModalScreenVisible}

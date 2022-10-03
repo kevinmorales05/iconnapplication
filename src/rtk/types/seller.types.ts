@@ -20,4 +20,6 @@ export interface SellerInterface {
   'Bake in Store': string;
   'Pizza / Turbochef': string;
   distance?: number;
+  VTEX_APPKEY?: string;
+  VTEX_APPTOKEN?: string;
 }

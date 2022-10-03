@@ -2,43 +2,53 @@ import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface, ProductSe
 import { CategoryInterface } from 'rtk/types/category.types';
 
 export type HomeStackParams = {
-  HomeStack: undefined;
-  Home: undefined;
-  'Mi Cuenta': undefined;
-  Profile: undefined;
-  EditEmail: undefined;
-  EnterOtp: { email: string };
-  ['Editar Contraseña']: undefined;
-  InviteSignUp: undefined;
+  AboutUs: undefined;
+  Address: undefined;
   AddRFC: undefined;
-  TaxInfo: undefined;
-  Invoice: undefined;
-  CreateTaxProfile: undefined | InvoicingProfileInterface;
-  InvoiceHistory: undefined;
   AddTicketPetro: { ticket?: any; position?: number };
   AddTicketSeven: { ticket?: any; position?: number };
-  InvoiceTicketPetro: undefined;
-  InvoiceTicketSeven: undefined;
+  ChangedPassword: undefined;
+  Checkout: undefined;
+  CodeReader: undefined;
+  ContactInformation: undefined;
+  CreateTaxProfile: undefined | InvoicingProfileInterface;
+  EditEmail: undefined;
+  EditPassword: undefined;
+  EnterOtp: { email: string };
+  Home: undefined;
+  HomeStack: undefined;
+  InviteSignUp: undefined;
+  Invoice: undefined;
   InvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   InvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
-  ViewInvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
-  ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
-  CodeReader: undefined;
-  Address: undefined;
-  ShopCart: undefined;
-  PostalCode: undefined;
-  SearchSeller: undefined;
+  InvoiceHistory: undefined;
+  InvoiceTicketPetro: undefined;
+  InvoiceTicketSeven: undefined;
+  ImageZoom: undefined;
+  Legal: undefined;
+  MyAccount: undefined;
   MyOrders: undefined;
-  ChangedPassword: undefined;
+  PostalCode: undefined;
+  ProductDetail: undefined;
+  Profile: undefined;
+  SearchSeller: undefined;
   CategoryProducts: { category: CategoryInterface; categories: CategoryInterface[] };
   SearchProducts: undefined;
   SearchProductsResults: { products: ProductSearchItemInterface[]; textSearch: string };
+  ShopCart: undefined;
+  TaxInfo: undefined;
+  ViewInvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
+  ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
 };
 
 export type HomeTabScreens = {
-  HomeScreen: undefined;
-  CategoriesScreen: undefined;
-  PromosScreen: undefined;
   BranchesScreen: undefined;
-  AccountScreen: undefined;
+  CategoriesScreen: undefined;
+  HomeScreen: undefined;
+  MyAccountScreen: undefined;
+  PromosScreen: undefined;
 };
+
+/**   A  T   E   N   T   I   O   N
+ * TO MAINTAIN ORDER PLEASE PLACE EVERYTHING IN ALPHABETICAL ORDER.
+ */

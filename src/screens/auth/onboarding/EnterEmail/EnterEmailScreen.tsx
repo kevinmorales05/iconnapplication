@@ -74,7 +74,6 @@ const EnterEmailScreen: React.FC<Props> = ({
         error={errors.email?.message}
         marginTop={36}
         ref={emailRef}
-        renderErrorIcon={false}
       />
       <Container flex row crossAlignment="end" space="between">
         <ActionButton

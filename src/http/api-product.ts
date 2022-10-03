@@ -4,13 +4,13 @@ import { VTEXApiConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
 import { DeviceEventEmitter } from 'react-native';
 
-export class ShoppingCar extends HttpClient {
-  static classInstance?: ShoppingCar;
+export class Product extends HttpClient {
+  static classInstance?: Product;
 
   private constructor() {
-    // console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('shoppingCar'), null, 3));
+    // console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('product'), null, 3));
 
-    super(VTEXApiConfig('shoppingCar'));
+    super(VTEXApiConfig('product'));
 
     // Interceptors (only for debug purpose), please do not remove the "return" line,
     // is  necessary to prevent a very confusing error and spend sometime to debug it.
@@ -66,7 +66,7 @@ export class ShoppingCar extends HttpClient {
 
   public static getInstance() {
     if (!this.classInstance) {
-      this.classInstance = new ShoppingCar();
+      this.classInstance = new Product();
     }
 
     return this.classInstance;
@@ -74,14 +74,6 @@ export class ShoppingCar extends HttpClient {
 
   async getRequest(path: string) {
     return this.instance.get(path);
-  }
-
-  async postRequest(path: string, payload?: any) {
-    return this.instance.post(path, payload);
-  }
-
-  async patchRequest(path: string, payload?: any) {
-    return this.instance.patch(path, payload);
   }
 
   private handlerError = (err: Error | AxiosError) => {

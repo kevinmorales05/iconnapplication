@@ -11,7 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
-import ShopCartScreen from './ShopCartScreen';
+import ProductZoomScreen from './ProductZoomScreen';
 import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
@@ -52,21 +52,14 @@ const ShopCartController: React.FC = () => {
     if (isLogged) {
       const { meta } = await dispatch(logoutThunk());
       if (meta.requestStatus === 'fulfilled') {
-        /*dispatch(setAppInitialState());
-        dispatch(setAuthInitialState());
-        dispatch(setGuestInitialState());
-        dispatch(setInvoicingInitialState());*/
+
       }  
-    } else {/*
-      dispatch(setAppInitialState());
-      dispatch(setAuthInitialState());
-      dispatch(setGuestInitialState());
-      dispatch(setInvoicingInitialState());*/
+    } else {
     }
   };
 
   const goToMyAccount = () => {
-   navigate('Checkout');
+   navigate('Home');
   }
   const goToInvoice = () => {
     (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
@@ -81,11 +74,7 @@ const ShopCartController: React.FC = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-     <ShopCartScreen
-        onPressLogOut={logOut}
-        onPressMyAccount={goToMyAccount}
-        onPressInvoice={goToInvoice}
-      />
+     <ProductZoomScreen/>
 
     </SafeArea>
   );
