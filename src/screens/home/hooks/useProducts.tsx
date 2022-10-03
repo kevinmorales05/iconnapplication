@@ -29,8 +29,8 @@ export const useProducts = () => {
       })
     );
 
-    if (collectionId === '137') setProducts(productsArr);
-    if (collectionId === '138') setOtherProducts(productsArr);
+    if (collectionId === global.recommended_products) setProducts(productsArr);
+    if (collectionId === global.other_products) setOtherProducts(productsArr);
   }, []);
 
   return {

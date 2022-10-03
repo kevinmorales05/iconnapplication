@@ -196,9 +196,8 @@ const HomeController: React.FC = () => {
   };
 
   const onPressSearch = () => {
-    navigate("SearchProducts")
-  }
-
+    navigate('SearchProducts');
+  };
 
   /**
    * Load User Addresses List and store it in the redux store
@@ -369,13 +368,13 @@ const HomeController: React.FC = () => {
   };
 
   async function getPrices(collectionId: string) {
-    const arr: ProductResponseInterface[] | null | undefined = collectionId === '137' ? products : otherProducts;
+    const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
     const withPrice = await Promise.all(arr!.map(product => getPriceByProductId(product.ProductId)));
     return withPrice;
   }
 
   async function getRatings(collectionId: string) {
-    const arr: ProductResponseInterface[] | null | undefined = collectionId === '137' ? products : otherProducts;
+    const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
     const withRating = await Promise.all(arr!.map(product => getRatingByProductId(product.ProductId)));
     return withRating;
   }
@@ -400,7 +399,7 @@ const HomeController: React.FC = () => {
     existingProductsInCart: ExistingProductInCartInterface[],
     collectionId: string
   ) => {
-    const arr: ProductResponseInterface[] | null | undefined = collectionId === '137' ? products : otherProducts;
+    const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
     const homeProductsArr: ProductInterface[] | undefined = arr?.map((p, idx) => {
       const newProduct: ProductInterface = {
         productId: p.ProductId,
@@ -414,16 +413,16 @@ const HomeController: React.FC = () => {
       };
       return newProduct;
     });
-    if (collectionId === '137') setHomeProducts(homeProductsArr);
-    if (collectionId === '138') setHomeOtherProducts(homeProductsArr);
+    if (collectionId === global.recommended_products) setHomeProducts(homeProductsArr);
+    if (collectionId === global.other_products) setHomeOtherProducts(homeProductsArr);
   };
 
   useEffect(() => {
     if (products?.length! > 0) {
-      getPrices('137').then(prices => {
-        getRatings('137').then(ratings => {
+      getPrices(global.recommended_products).then(prices => {
+        getRatings(global.recommended_products).then(ratings => {
           const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-          refillProductsWithPrice(prices, ratings, existingProducts, '137');
+          refillProductsWithPrice(prices, ratings, existingProducts, global.recommended_products);
         });
       });
     }
@@ -431,10 +430,10 @@ const HomeController: React.FC = () => {
 
   useEffect(() => {
     if (otherProducts?.length! > 0) {
-      getPrices('138').then(prices => {
-        getRatings('138').then(ratings => {
+      getPrices(global.other_products).then(prices => {
+        getRatings(global.other_products).then(ratings => {
           const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-          refillProductsWithPrice(prices, ratings, existingProducts, '138');
+          refillProductsWithPrice(prices, ratings, existingProducts, global.other_products);
         });
       });
     }
@@ -444,8 +443,8 @@ const HomeController: React.FC = () => {
    * Load home products when shopping cart is modified. For example if there is a substract, remove, add, in the cart.
    */
   useEffect(() => {
-    fetchProducts('137');
-    fetchProducts('138');
+    fetchProducts(global.recommended_products);
+    fetchProducts(global.other_products);
   }, [cart, defaultSeller]);
 
   return (
