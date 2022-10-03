@@ -1,3 +1,5 @@
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { moderateScale } from 'utils/scaleMetrics';
 import { themeType } from '../types/theme';
 
 const theme: themeType = {
@@ -189,8 +191,11 @@ const theme: themeType = {
     iconn_error: '#D91212',
     iconn_info: '#4B79AA',
     facebook: '#3b5998',
-    google: '#e33629'
-  }
+    google: '#e33629',
+    yellow_star: '#f5d736'
+  },
+  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(10) : moderateScale(5)
+
 };
 
 // TODO: we must change some current colors in the code of each component/screen.

@@ -7,6 +7,7 @@ import { Rating } from 'components/molecules/Rating';
 import { PriceWithDiscount } from 'components/molecules/PriceWithDiscount';
 import { QuantityProduct } from 'components/molecules/QuantityProduct';
 import { Container, CustomText } from 'components/atoms';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface CardProductProps {
   price: number;
@@ -21,12 +22,8 @@ interface CardProductProps {
   oldPrice?: number;
   ratingValue?: number;
   porcentDiscount?: number;
+  notNeedMarginLeft?: boolean;
 }
-
-const { width } = Dimensions.get('window');
-const dw = 350;
-const scale = (size: number) => (width / dw) * size;
-const moderateScale = (size: number, factor: number = 0.5) => size + (scale(size) - size) * factor;
 
 const CardProduct: React.FC<CardProductProps> = ({
   ratingValue,
@@ -40,10 +37,11 @@ const CardProduct: React.FC<CardProductProps> = ({
   onPressAddCart,
   onPressDeleteCart,
   onPressAddQuantity,
-  onPressDecreaseQuantity
+  onPressDecreaseQuantity,
+  notNeedMarginLeft
 }: CardProductProps) => {
   return (
-    <Container style={styles.container}>
+    <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? 0 : 8) }]}>
       <Container style={styles.subContainer}>
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
           {porcentDiscount && (
@@ -89,13 +87,12 @@ export default CardProduct;
 
 const styles = StyleSheet.create({
   container: {
-    width: moderateScale(156),
+    width: moderateScale(160),
     minHeight: moderateScale(254),
     backgroundColor: theme.brandColor.iconn_white,
     marginTop: moderateScale(16),
     borderRadius: moderateScale(10),
-    padding: moderateScale(8),
-    marginLeft: 8
+    padding: moderateScale(8)
   },
   subContainer: {
     flex: 1,

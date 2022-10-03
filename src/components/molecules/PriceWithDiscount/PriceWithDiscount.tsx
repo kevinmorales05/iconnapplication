@@ -1,25 +1,21 @@
 import React from 'react';
 import { Container } from '../../atoms/Container';
 import { CustomText } from 'components/atoms';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import theme from '../../theme/theme';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface PriceWithDiscountProps {
   price: number;
   oldPrice?: number;
 }
 
-const { width } = Dimensions.get('window');
-const dw = 350;
-const scale = (size: number) => (width / dw) * size;
-const moderateScale = (size: number, factor: number = 0.5) => size + (scale(size) - size) * factor;
-
 const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice }: PriceWithDiscountProps) => {
   return (
     <Container>
       <Container style={styles.container}>
         <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
-        {oldPrice && (
+        {oldPrice && oldPrice != price && (
           <Container style={styles.containerText}>
             <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice}`} />
             <Container style={styles.containerLine} />

@@ -1,4 +1,5 @@
-import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface } from 'rtk';
+import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface, ProductSearchItemInterface } from 'rtk';
+import { CategoryInterface } from 'rtk/types/category.types';
 
 export type HomeStackParams = {
   HomeStack: undefined;
@@ -29,6 +30,9 @@ export type HomeStackParams = {
   SearchSeller: undefined;
   MyOrders: undefined;
   ChangedPassword: undefined;
+  CategoryProducts: { category: CategoryInterface; categories: CategoryInterface[] };
+  SearchProducts: undefined;
+  SearchProductsResults: { products: ProductSearchItemInterface[]; textSearch: string };
 };
 
 export type HomeTabScreens = {

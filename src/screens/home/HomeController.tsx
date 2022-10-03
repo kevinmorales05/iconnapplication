@@ -194,6 +194,11 @@ const HomeController: React.FC = () => {
     navigate('ShopCart');
   };
 
+  const onPressSearch = () => {
+    navigate("SearchProducts")
+  }
+
+
   /**
    * Load User Addresses List and store it in the redux store
    */
@@ -456,6 +461,7 @@ const HomeController: React.FC = () => {
         onPressAddNewAddress={onPressAddNewAddress}
         onPressShowAddressesModal={() => setAddressModalSelectionVisible(true)}
         onPressShopCart={goToShopCart}
+        onPressSearch={onPressSearch}
         defaultAddress={defaultAddress!}
         onPressProducts={goToOrders}
         showShippingDropDown={showShippingDropDown}

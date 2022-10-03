@@ -17,4 +17,6 @@ export type BrandColorTypes =
   | 'iconn_error'
   | 'iconn_info'
   | 'facebook'
-  | 'google';
+  | 'google'
+  | 'iconn_green_discount'
+  | 'yellow_star';

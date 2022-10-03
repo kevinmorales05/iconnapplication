@@ -7,3 +7,5 @@ export * from './vtexdocs.services';
 export * from './vtexorder.services';
 export * from './vtexShoppingCar.services';
 export * from './vtexsingleorder.services';
+export * from './vtex-categories.services';
+export * from './vtex-search.services'

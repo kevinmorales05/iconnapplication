@@ -4,6 +4,7 @@ import { CustomText, Touchable } from 'components/atoms';
 import { StyleSheet, Dimensions } from 'react-native';
 import theme from '../../theme/theme';
 import Feather from 'react-native-vector-icons/Feather';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface QuantityProductProps {
   quantity: number;
@@ -11,11 +12,6 @@ interface QuantityProductProps {
   onPressAddQuantity: () => void;
   onPressDecreaseQuantity: () => void;
 }
-
-const { width } = Dimensions.get('window');
-const dw = 350;
-const scale = (size: number) => (width / dw) * size;
-const moderateScale = (size: number, factor: number = 0.5) => size + (scale(size) - size) * factor;
 
 const QuantityProduct: React.FC<QuantityProductProps> = ({
   quantity,

@@ -6,7 +6,8 @@ import theme from 'components/theme/theme';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../navigation/types';
-import { InvoicingProfileInterface, Colony, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { RootState, useAppSelector } from 'rtk';
+import { moderateScale } from 'utils/scaleMetrics';
 
 const BasketCounter = () => {
   const { cart } = useAppSelector((state: RootState) => state.cart);
@@ -16,29 +17,29 @@ const BasketCounter = () => {
   const getCount = () => {
     const { items, messages } = cart;
     let withoutStockM = new Map();
-    if(messages){
+    if (messages) {
       if (messages.length > 0) {
-        messages.map((value) => {
+        messages.map(value => {
           if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
             withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
           }
-        })
+        });
       }
     }
 
     let totalItems = 0;
-    if(items!=undefined){
-    if (items.length > 0) {
-      items.map((value, index) => {
-        if (withoutStockM.get(index)) {
-        } else {
-          totalItems = (totalItems + value.quantity);
-        }
-      })
+    if (items != undefined) {
+      if (items.length > 0) {
+        items.map((value, index) => {
+          if (withoutStockM.get(index)) {
+          } else {
+            totalItems = totalItems + value.quantity;
+          }
+        });
+      }
     }
-  }
 
-    setCounter( items!=undefined ? totalItems:0);
+    setCounter(items != undefined ? totalItems : 0);
   };
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const BasketCounter = () => {
 
   const openShoppingCart = () => {
     navigate('ShopCart');
-   }
+  };
 
   return (
     <Touchable
@@ -57,7 +58,6 @@ const BasketCounter = () => {
     >
       <Container
         row={counter > 0}
-        flex={counter > 0}
         style={[
           {
             marginBottom: 10,
@@ -81,7 +81,7 @@ const BasketCounter = () => {
           </>
         ) : (
           <>
-            <Container>
+            <Container center style={{ alignItems: 'flex-end' }} width={'100%'}>
               <Image style={styles.image} source={ICONN_BASKET} />
             </Container>
           </>
@@ -95,9 +95,8 @@ export default BasketCounter;
 
 const styles = StyleSheet.create({
   image: {
-    flex: 1,
-    width: 25,
-    height: 25,
+    width: moderateScale(25),
+    height: moderateScale(25),
     resizeMode: 'contain'
   },
   highlight: {

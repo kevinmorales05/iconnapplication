@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import theme from 'components/theme/theme';
 import HomeController from 'screens/home/HomeController';
+import CategoriesController from 'screens/categories/CategoriesController';
 import { HomeTabScreens } from './types';
 import AccountScreen from 'screens/home/myAccount/MyAccountScreen';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -38,7 +39,7 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         name="CategoriesScreen"
-        component={InviteSignUpController}
+        component={CategoriesController}
         options={{
           headerShown: false,
           title: 'Categorías',

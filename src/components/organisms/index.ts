@@ -8,3 +8,5 @@ export * from './AddressModalSelection';
 export * from './ShippingDropdown';
 export * from './AnimatedCarousel';
 export * from './CardProduct';
+export * from './TabAnimatable';
+export * from './FilterContainer';

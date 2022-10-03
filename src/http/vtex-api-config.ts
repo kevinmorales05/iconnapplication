@@ -10,6 +10,7 @@ const VTEX_APPKEY = 'vtexappkey-oneiconn-SOYFEO';
 const VTEX_APPTOKEN = 'PNOSOIQKQXOYQSNSEIBGIYAWBWUWKPISEXCKGFMHMJYWKVXRQVEXRDTUSDPBTRTIEJFGLTUIVRLFTFTPGGYVAKOLCLCFYFVGYYMQJNAKMBTEAZFTORXDZWCYFALXSELQ';
 const VTEX_DOCS = 'https://oneiconn.myvtex.com/api';
 const VTEX_DOCS_NO_API_PREFIX = 'https://oneiconn.myvtex.com';
+const API_VTEX_SEARCH_PRODUCTS = 'http://oneiconn.vtexcommercestable.com.br/buscaautocomplete?productNameContains=';
 
 const getApiUrl = (type: string) => {
   switch (type) {
@@ -27,6 +28,8 @@ const getApiUrl = (type: string) => {
       return API_VTEX_PRODUCTS;
     case 'docsNoApiPrefix':
       return VTEX_DOCS_NO_API_PREFIX;
+    case 'searchProducts':
+      return API_VTEX_SEARCH_PRODUCTS;
     default:
       break;
   }
@@ -45,7 +48,7 @@ export const VTEXApiConfig = (type: string): AxiosRequestConfig => {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       'X-VTEX-API-AppKey': VTEX_APPKEY,
-      'X-VTEX-API-AppToken': VTEX_APPTOKEN,
+      'X-VTEX-API-AppToken': VTEX_APPTOKEN
     }
   };
 };

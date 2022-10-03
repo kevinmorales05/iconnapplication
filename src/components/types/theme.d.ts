@@ -61,4 +61,5 @@ export interface themeType {
   };
   fontColor: possibleFontColors;
   brandColor: possibleBrandColors;
+  paddingHeader: number
 }

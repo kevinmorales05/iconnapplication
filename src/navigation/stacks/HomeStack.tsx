@@ -35,7 +35,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabNavigator } from 'navigation/TabNavigator';
 import ChangedPasswordController from 'screens/auth/onboarding/ChangedPassword/ChangedPasswordController';
 import ProductDetailController from 'screens/ecommerce/productDetail/ProductDetailController';
-
+import CategoryProductsScreen from 'screens/categories/categoryProducts/CategoryProductsScreen';
+import SearchScreen from 'screens/search/SearchScreen';
+import SearchProductResultsScreen from 'screens/search/searchProductResult/SearchProductResult';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -66,7 +68,7 @@ const HomeStack: React.FC = () => {
       <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
       <Stack.Screen options={{ title: 'Facturar' }} name="Invoice" component={InvoiceController} />
       <Stack.Screen options={{ title: 'Perfil Fiscal' }} name="CreateTaxProfile" component={CreateTaxProfileController} />
-      <Stack.Screen name="ChangedPassword" options={{ headerShown: false }} component = {ChangedPasswordController} />
+      <Stack.Screen name="ChangedPassword" options={{ headerShown: false }} component={ChangedPasswordController} />
       <Stack.Screen
         options={{
           title: 'Historial de facturas'
@@ -127,13 +129,40 @@ const HomeStack: React.FC = () => {
         name="MyOrders"
         component={MyOrdersController}
       />
-      <Stack.Screen name="ProductDetail" component={ProductDetailController} options={{
+      <Stack.Screen
+        name="ProductDetail"
+        component={ProductDetailController}
+        options={{
           headerShown: true,
-          headerTitle:"",
-          headerRight: () => (
-            <BasketCounter />
-          ),
-        }}/>
+          headerTitle: '',
+          headerRight: () => <BasketCounter />
+        }}
+      />
+      <Stack.Screen
+        options={{
+          title: '',
+          headerTitleStyle: {
+            fontWeight: 'bold'
+          },
+          headerRight: () => <BasketCounter />
+        }}
+        name="CategoryProducts"
+        component={CategoryProductsScreen}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false
+        }}
+        name="SearchProducts"
+        component={SearchScreen}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false
+        }}
+        name="SearchProductsResults"
+        component={SearchProductResultsScreen}
+      />
     </Stack.Navigator>
   );
 };

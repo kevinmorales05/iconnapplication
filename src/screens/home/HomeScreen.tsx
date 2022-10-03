@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Image, View, StyleSheet, ScrollView } from 'react-native';
 import theme from 'components/theme/theme';
-import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, Input } from 'components';
+import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, Input, SearchBar } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Address, CarouselItem, RootState, useAppSelector, ProductInterface } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT, ICONN_HOME_SEARCH } from 'assets/images';
@@ -33,6 +33,7 @@ interface Props {
 const HomeScreen: React.FC<Props> = ({
   onPressShopCart,
   onPressInvoice,
+  onPressSearch,
   onPressShowAddressesModal,
   onPressAddNewAddress,
   name,
@@ -64,6 +65,7 @@ const HomeScreen: React.FC<Props> = ({
   }, [showShippingDropDown]);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const [mode, setMode] = useState<null | ShippingMode>(null);
+
 
   return (
     <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%', backgroundColor: theme.brandColor.iconn_white }}>
@@ -115,19 +117,12 @@ const HomeScreen: React.FC<Props> = ({
       </View>
 
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-        <Container style={{ marginHorizontal: 16 }}>
-          <Input
-            {...register('search')}
-            name="search"
-            control={control}
-            keyboardType="default"
-            placeholder={`Busca en 7-Eleven`}
-            boldLabel
-            maxLength={100}
-            rules={openField(3)}
-            error={errors.state?.message}
-            editable={true}
-            prefixImage={ICONN_HOME_SEARCH}
+        <Container style={{ marginHorizontal: 16, marginTop: 10 }}>
+          <SearchBar
+            isButton
+            onPressSearch={onPressSearch}
+            onChangeTextSearch={()=>{}}
+            placeHolderText={"Busca en 7-Eleven"}
           />
         </Container>
 

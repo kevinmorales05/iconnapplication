@@ -7,3 +7,4 @@ export * from './api-otps';
 export * from './api-shoppingCar';
 export * from './api-users';
 export * from './vtex-api-auth';
+export * from './api-search'
