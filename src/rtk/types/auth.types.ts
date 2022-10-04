@@ -7,6 +7,12 @@ export interface UserVtex {
   document?: string;
   documentType?: string;
   homePhone?: string;
+  birthDate?: string;
+  gender?: string | number;
+  profilePicture?: string;
+  accountId?: string;
+  id?: string;
+  userId?: string;
 }
 
 export interface UserInterface {

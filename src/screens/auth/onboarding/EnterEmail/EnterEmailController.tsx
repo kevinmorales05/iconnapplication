@@ -40,25 +40,15 @@ const EnterEmailController: React.FC = () => {
         // start onboarding
         try {
           loader.show();
-          const user : UserVtex = {
-            email: email,
-            firstName: '',
-            lastName: '',
-            homePhone: '',
-          };
-
-          const response = await authServices.newUser(user);
-          if (response.Id) {
             const { authenticationToken } = await authServices.startAuthentication(email);
             dispatch(setAuthEmail({ email }));
             await authServices.sendAccessKey(email, authenticationToken);
             navigate('CreatePassword', { authenticationToken, variant: 'register' });
             loader.hide();
             return;
-          }
         } catch (error) {
           toast.show({
-            message: 'El correo no pude ser enviado,\n intenta mas tarde',
+            message: 'El correo no pudo ser enviado,\n intenta más tarde',
             type: 'error'
           });
 
@@ -82,7 +72,7 @@ const EnterEmailController: React.FC = () => {
   };
 
   return (
-    <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
+    <SafeArea topSafeArea={true} bottomSafeArea={true} barStyle="dark">
       <EnterEmailScreen title={`Ingresa tu dirección de \ncorreo electrónico`} goBack={goBack} onSubmit={createSession} />
     </SafeArea>
   );

@@ -36,7 +36,13 @@ const vtexInitialState: UserVtex = {
   lastName: '',
   document: '',
   documentType: '',
-  homePhone: ''
+  homePhone: '',
+  birthDate: '',
+  gender: '',
+  profilePicture: '',
+  accountId: '',
+  id: '',
+  userId: '',
 }
 
 const authSlice = createSlice({
@@ -44,11 +50,12 @@ const authSlice = createSlice({
   initialState: {
     user: initialState,
     loading: false, 
-    userVtex: vtexInitialState
+    userVtex: vtexInitialState,
   },
   reducers: {
     setAuthInitialState(state) {
       state.user = { ...initialState };
+      state.userVtex = {...vtexInitialState};
       state.loading = false;
     },
     setVtexInitialState(state) {
@@ -74,20 +81,30 @@ const authSlice = createSlice({
       state.userVtex.firstName = action.payload.name as string;
       state.userVtex.lastName = action.payload.lastName as string;
     },
+    setName(state, action: PayloadAction<AuthDataInterface>) {
+      state.userVtex.firstName = action.payload.name;
+    },
+    setLastName(state, action: PayloadAction<AuthDataInterface>) {
+      state.userVtex.lastName = action.payload.lastName;
+    },
     setPhoto(state, action: PayloadAction<AuthDataInterface>) {
       state.user.photo = action.payload.photo;
+      state.userVtex.profilePicture = action.payload.photo;
     },
     setEmailVerified(state, action: PayloadAction<AuthDataInterface>) {
       state.user.emailVerified = action.payload.emailVerified;
     },
     setTelephone(state, action: PayloadAction<AuthDataInterface>) {
       state.user.telephone = action.payload.telephone;
+      state.userVtex.homePhone = action.payload.telephone;
     },
     setBirthday(state, action: PayloadAction<AuthDataInterface>) {
       state.user.birthday = action.payload.birthday;
+      state.userVtex.birthDate = action.payload.birthday;
     },
     setGender(state, action: PayloadAction<AuthDataInterface>) {
       state.user.gender = action.payload.gender;
+      state.userVtex.gender = action.payload.gender;
     },
     setTermsAndCond(state, action: PayloadAction<AuthDataInterface>) {
       state.user.termsAndConditions = action.payload.termsAndConditions;
@@ -96,6 +113,13 @@ const authSlice = createSlice({
       // TODO (IMPORTANT!!!): REVERT THIS HARDCODED USER ID:
       //state.user.user_id = 'da5550d6-2a38-11ed-835d-129d14bde747';
       state.user.user_id = action.payload.user_id;
+      state.userVtex.userId = action.payload.user_id;
+    },
+    setId(state, action: PayloadAction<UserVtex>) {
+      state.userVtex.id = action.payload.id;
+    },
+    setAccountId(state, action: PayloadAction<UserVtex>) {
+      state.userVtex.accountId = action.payload.accountId;
     },
     setIsLogged(state, action: PayloadAction<AuthDataInterface>) {
       state.user.isLogged = action.payload.isLogged;
@@ -113,8 +137,8 @@ const authSlice = createSlice({
       state.user.addresses.splice(action.payload.position, 1, action.payload.address);
     },
     setAddressDefault(state, action: PayloadAction<number>) {
-      state.user.addresses.map(x => (x.isDefault = false));
-      state.user.addresses[action.payload].isDefault = true;
+      state.user.addresses.map(x => (x.isDefault = true));
+      state.user.addresses[action.payload].isDefault = false;
     },
     setSeenCarousel(state, action: PayloadAction<boolean>) {
       state.user.seenCarousel = action.payload;
@@ -251,7 +275,11 @@ const authSlice = createSlice({
 });
 // TODO: validate if it is possible to reduce extra reducers.
 export const {
+  setAccountId,
+  setId,
   setAuthInitialState,
+  setName,
+  setLastName,
   setVtexInitialState,
   setAuthEmail,
   setSignMode,

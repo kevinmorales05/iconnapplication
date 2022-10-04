@@ -8,7 +8,9 @@ export class DocsNoPrefixApi extends HttpClient {
   static classInstance?: DocsNoPrefixApi;
 
   private constructor() {
-    // console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docsNoApiPrefix'), null, 3));
+    if (global.showLogs__api_docs_no_api_prefix) {
+      console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docsNoApiPrefix'), null, 3));
+    }
 
     super(VTEXApiConfig('docsNoApiPrefix'));
 
@@ -18,18 +20,20 @@ export class DocsNoPrefixApi extends HttpClient {
     this.instance.interceptors.request.use(
       (request: any) => {
         const { headers, baseURL, method, url, data } = request;
-        // console.log(
-        //   'INTERCEPTOR - Starting Request ===> \n\n',
-        //   JSON.stringify(headers, null, 3),
-        //   '\n',
-        //   `baseURL: ${baseURL}`,
-        //   '\n',
-        //   `url: ${url}`,
-        //   '\n',
-        //   `method: ${method}`,
-        //   '\n',
-        //   `data: ${JSON.stringify(data, null, 3)}`
-        // );
+        if (global.showLogs__api_docs_no_api_prefix) {
+          console.log(
+            'INTERCEPTOR - Starting Request ===> \n\n',
+            JSON.stringify(headers, null, 3),
+            '\n',
+            `baseURL: ${baseURL}`,
+            '\n',
+            `url: ${url}`,
+            '\n',
+            `method: ${method}`,
+            '\n',
+            `data: ${JSON.stringify(data, null, 3)}`
+          );
+        }
 
         const completeCookie =
           HttpClient.authCookie?.Name +
@@ -44,17 +48,28 @@ export class DocsNoPrefixApi extends HttpClient {
 
         return request;
       },
-      (error: any) => console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3))
+      (error: any) => {
+        if (global.showLogs__api_docs_no_api_prefix) {
+          console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3));
+        }
+      }
     );
 
     this.instance.interceptors.response.use(
       (response: any) => {
-        const { data } = response;
-        // console.log('INTERCEPTOR - The Response is ===> \n\n', JSON.stringify(data, null, 3));
+        const { data, config } = response;
+        if (global.showLogs__api_docs_no_api_prefix) {
+          console.log(
+            `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
+            JSON.stringify(data, null, 3)
+          );
+        }
         return response;
       },
       (error: any) => {
-        console.log('INTERCEPTOR Response Error ===> \n\n', JSON.stringify(error, null, 3));
+        if (global.showLogs__api_docs_no_api_prefix) {
+          console.log('INTERCEPTOR Response Error ===> \n\n', JSON.stringify(error, null, 3));
+        }
         this.handlerError(error);
         return Promise.reject(error);
       }

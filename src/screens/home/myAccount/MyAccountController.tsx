@@ -1,13 +1,14 @@
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import React from 'react';
-import { setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState, useAppDispatch } from 'rtk';
+import { RootState, setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState, setVtexInitialState, useAppDispatch, useAppSelector } from 'rtk';
 import { authServices } from 'services';
 import { version as app_version } from './../../../../package.json';
 import MyAccountScreen from './MyAccountScreen';
 
 const MyAccountController: React.FC = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
+  const { userVtex } = useAppSelector((state: RootState) => state.auth);
 
   // removing navigation header in this screen.
   React.useLayoutEffect(() => {
@@ -44,7 +45,9 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
       dispatch(setAppInitialState());
       dispatch(setAuthInitialState());
       dispatch(setGuestInitialState());
+      dispatch(setVtexInitialState());
       dispatch(setInvoicingInitialState());
+      console.log('FREJOLES', userVtex);
     }
   };
 

@@ -3,14 +3,12 @@ import { HttpClient } from './http-client';
 import { VTEXApiAuthConfig } from './vtex-api-config';
 
 export class UsersApi extends HttpClient {
-  
   static classInstance?: UsersApi;
 
   private constructor() {
-    // console.log(
-    //   'AxiosRequestConfig ===> ApiConfig ===> \n\n',
-    //   JSON.stringify(VTEXApiAuthConfig('auth'), null, 3)
-    // );
+    if (global.showLogs__api_users) {
+      console.log('AxiosRequestConfig ===> ApiConfig ===> \n\n', JSON.stringify(VTEXApiAuthConfig('auth'), null, 3));
+    }
 
     super(VTEXApiAuthConfig('auth'));
 
@@ -20,34 +18,40 @@ export class UsersApi extends HttpClient {
     this.instance.interceptors.request.use(
       (request: any) => {
         const { headers, baseURL, method, url, data } = request;
-        // console.log(
-        //   'INTERCEPTOR - Starting Request ===> \n\n',
-        //   JSON.stringify(headers, null, 3),
-        //   '\n',
-        //   `baseURL: ${baseURL}`,
-        //   '\n',
-        //   `url: ${url}`,
-        //   '\n',
-        //   `method: ${method}`,
-        //   '\n',
-        //   `data: ${JSON.stringify(data, null, 3)}`
-        // );
+        if (global.showLogs__api_users) {
+          console.log(
+            'INTERCEPTOR - Starting Request ===> \n\n',
+            JSON.stringify(headers, null, 3),
+            '\n',
+            `baseURL: ${baseURL}`,
+            '\n',
+            `url: ${url}`,
+            '\n',
+            `method: ${method}`,
+            '\n',
+            `data: ${JSON.stringify(data, null, 3)}`
+          );
+        }
 
         return request;
       },
-      (error: any) => console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3))
-    );
-
-    this.instance.interceptors.response.use(
-      (response: any) => {
-        const { data } = response;
-        // console.log(
-        //   'INTERCEPTOR - The Response is ===> \n\n',
-        //   JSON.stringify(data, null, 3)
-        // );
-        return response;
+      (error: any) => {
+        if (global.showLogs__api_users) {
+          console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3));
+        }
       }
     );
+
+    this.instance.interceptors.response.use((response: any) => {
+      const { data, config } = response;
+      if (global.showLogs__api_users) {
+        console.log(
+          `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
+          JSON.stringify(data, null, 3)
+        );
+      }
+      return response;
+    });
   }
 
   public static getInstance() {
@@ -69,5 +73,4 @@ export class UsersApi extends HttpClient {
   async getRequest(path: string, payload?: any) {
     return this.instance.get(path, payload);
   }
-
 }
