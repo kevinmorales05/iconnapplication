@@ -1,4 +1,5 @@
 export interface SellerInterface {
+  seller: string;
   '# Division': number | string;
   Division: string;
   '# Plaza': number | string;

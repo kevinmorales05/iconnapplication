@@ -374,7 +374,7 @@ const HomeController: React.FC = () => {
   const { fetchProducts, products, otherProducts } = useProducts();
   const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
   const [homeOtherProducts, setHomeOtherProducts] = useState<ProductInterface[] | null>();
-  const { updateShoppingCartProduct } = useShoppingCart();
+  const { updateShoppingCartProduct, migrateCartToAnotherBranch } = useShoppingCart();
 
   const fetchData = useCallback(async () => {
     const { user_id, name } = user;
@@ -495,6 +495,13 @@ const HomeController: React.FC = () => {
     fetchProducts(global.recommended_products);
     fetchProducts(global.other_products);
   }, [cart, defaultSeller]);
+
+  useEffect(() => {
+    const { items } = cart;
+    if (items && items.length > 0) {
+      migrateCartToAnotherBranch(defaultSeller?.seller!);
+    }
+  }, [defaultSeller]);
 
   return (
     <SafeArea

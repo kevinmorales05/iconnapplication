@@ -7,13 +7,19 @@ import { store } from 'rtk';
 
 export const useShoppingCart = () => {
   const dispatch = useAppDispatch();
-  const getCartItemsFromRedux = (): cartItemInterface[] | undefined => {
+  /**
+   *
+   * @param newSeller: optional, is used when we want migrate the cart to another branch, in this case we must send the new branch/store/seller name.
+   * @param zeroQuantity: optional, is used when we want empty shopping cart, in this case we must send this param with zero value.
+   * @returns
+   */
+  const getCartItemsFromRedux = (newSeller?: string, zeroQuantity?: number): cartItemInterface[] | undefined => {
     const { items } = store.getState().cart.cart;
     if (items && items.length > 0) {
       const cartItems: cartItemInterface[] = items.map(({ id, quantity, seller }: cartItemInterface, index: number) => ({
         id,
-        quantity,
-        seller,
+        quantity: zeroQuantity === 0 ? 0 : quantity,
+        seller: newSeller ? newSeller : seller,
         index
       }));
       return cartItems;
@@ -27,10 +33,11 @@ export const useShoppingCart = () => {
     let cartItemsRequest: cartItemsRequestInterface;
 
     if (type === 'create') {
+      const { defaultSeller } = store.getState().seller;
       reduxCartItems?.push({
         id: productId,
         quantity: 1,
-        seller: '1'
+        seller: defaultSeller?.seller!
       });
 
       cartItemsRequest = { orderItems: reduxCartItems! };
@@ -67,7 +74,34 @@ export const useShoppingCart = () => {
     dispatch(updateShoppingCartItems(response));
   }, []);
 
+  const migrateCartToAnotherBranch = useCallback(async (seller: string) => {
+    const { orderFormId } = store.getState().cart.cart;
+
+    // 1. We need to empty the shopping cart:
+    const clearCartItems: cartItemInterface[] | undefined = getCartItemsFromRedux(undefined, 0);
+    const newEmptyCartItems = { orderItems: clearCartItems };
+    const emptyCart = await updateShoppingCart(orderFormId, newEmptyCartItems);
+    // 2. Once it has been emptied, we proceed to migrate to the new branch/store/seller:
+    if (emptyCart) {
+      const cartItems: cartItemInterface[] | undefined = getCartItemsFromRedux(seller);
+      // Very important: When you need to migrate a shopping cart to another branch, you need to send the products array without indexes!
+      const cartItemsWithoutIndexes: cartItemInterface[] = cartItems?.map(({ id, quantity, seller }: cartItemInterface) => {
+        return {
+          id: id,
+          quantity: quantity,
+          seller: seller
+        };
+      }) as cartItemInterface[];
+      const newCartItemsRequest = { orderItems: cartItemsWithoutIndexes };
+      const response = await updateShoppingCart(orderFormId, newCartItemsRequest);
+      dispatch(updateShoppingCartItems(response));
+    } else {
+      console.warn('Ups! algo pasó al vaciar el carrito');
+    }
+  }, []);
+
   return {
-    updateShoppingCartProduct
+    updateShoppingCartProduct,
+    migrateCartToAnotherBranch
   };
 };
