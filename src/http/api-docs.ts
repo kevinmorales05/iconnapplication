@@ -61,9 +61,12 @@ export class DocsApi extends HttpClient {
 
     this.instance.interceptors.response.use(
       (response: any) => {
-        const { data } = response;
+        const { data, config } = response;
         if (global.showLogs__api_docs) {
-          console.log('INTERCEPTOR - The Response is ===> \n\n', JSON.stringify(data, null, 3));
+          console.log(
+            `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
+            JSON.stringify(data, null, 3)
+          );
         }
         return response;
       },
