@@ -44,6 +44,7 @@ import theme from 'components/theme/theme';
 import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalController';
 import ContactInformationController from 'screens/home/shoppingCart/ContactInformation/ContactInformationController';
 import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
+import FavoriteScreen from 'screens/home/favoriteScreen/FavoriteScreen';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -185,6 +186,17 @@ const HomeStack: React.FC = () => {
         name="Checkout"
         options={{ title: 'Confirmar pedido', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
         component={CheckoutController}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Favoritos',
+          headerTitleStyle: {
+            fontWeight: 'bold'
+          },
+          headerRight: () => <BasketCounter />
+        }}
+        name="FavoriteProducts"
+        component={FavoriteScreen}
       />
     </Stack.Navigator>
   );

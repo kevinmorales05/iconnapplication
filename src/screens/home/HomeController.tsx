@@ -287,6 +287,9 @@ const HomeController: React.FC = () => {
   };
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
+    if(CarouselItem.navigateTo){
+      navigate(CarouselItem.navigateTo);
+    }
     console.log('El item seleccionado en carousel es ===> ', CarouselItem);
   };
 

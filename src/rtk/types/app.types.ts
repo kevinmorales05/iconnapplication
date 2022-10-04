@@ -18,6 +18,7 @@ export interface CarouselItem {
   promotion_name: string;
   promotion_type: string;
   status: string;
+  navigateTo?: string;
 }
 
 export interface TabItem {

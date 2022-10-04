@@ -19,7 +19,7 @@
     "promotion_type": "homeOptions",
     "status": "active"
   },
-  {
+  { 
     "id": "2",
     "description": "Favoritos",
     "image": "iconn-home-option-orders.png",
@@ -27,6 +27,7 @@
     "navigationType": "external",
     "promotion_name": "Apex",
     "promotion_type": "homeOptions",
+    "navigateTo": "FavoriteProducts",
     "status": "active"
   },
   {

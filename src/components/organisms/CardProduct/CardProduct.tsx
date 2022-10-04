@@ -1,14 +1,13 @@
 import React from 'react';
 import { StyleSheet, ImageBackground, Dimensions, Image, ImageSourcePropType } from 'react-native';
 import theme from 'components/theme/theme';
-import { Button } from 'components/molecules';
+import { Button, FavoriteButton } from 'components/molecules';
 import { ICONN_REVERSE_BASKET } from 'assets/images';
 import { Rating } from 'components/molecules/Rating';
 import { PriceWithDiscount } from 'components/molecules/PriceWithDiscount';
 import { QuantityProduct } from 'components/molecules/QuantityProduct';
 import { Container, CustomText } from 'components/atoms';
 import { moderateScale } from 'utils/scaleMetrics';
-
 interface CardProductProps {
   price: number;
   name: string;
@@ -23,6 +22,7 @@ interface CardProductProps {
   ratingValue?: number;
   porcentDiscount?: number;
   notNeedMarginLeft?: boolean;
+  isFavorite?: boolean;
 }
 
 const CardProduct: React.FC<CardProductProps> = ({
@@ -34,6 +34,7 @@ const CardProduct: React.FC<CardProductProps> = ({
   image,
   quantity,
   productId,
+  isFavorite,
   onPressAddCart,
   onPressDeleteCart,
   onPressAddQuantity,
@@ -44,11 +45,16 @@ const CardProduct: React.FC<CardProductProps> = ({
     <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? 0 : 8) }]}>
       <Container style={styles.subContainer}>
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
-          {porcentDiscount && (
-            <Container style={styles.containerPorcentDiscount}>
-              <CustomText fontSize={theme.fontSize.h6} textColor={theme.brandColor.iconn_green_original} fontWeight={'bold'} text={`-${porcentDiscount}%`} />
+          <Container row width={'100%'} space="between">
+            {porcentDiscount && (
+              <Container style={styles.containerPorcentDiscount}>
+                <CustomText fontSize={theme.fontSize.h6} textColor={theme.brandColor.iconn_green_original} fontWeight={'bold'} text={`-${porcentDiscount}%`} />
+              </Container>
+            )}
+            <Container center middle>
+              <FavoriteButton sizeIcon={moderateScale(24)} isFavorite onPressItem={() => {}} />
             </Container>
-          )}
+          </Container>
         </ImageBackground>
         <Container style={styles.containerTitle}>
           <CustomText fontSize={theme.fontSize.h5} text={`${name}`} numberOfLines={3} />

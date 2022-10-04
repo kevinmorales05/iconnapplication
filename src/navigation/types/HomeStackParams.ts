@@ -39,6 +39,7 @@ export type HomeStackParams = {
   TaxInfo: undefined;
   ViewInvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
+  FavoriteProducts: undefined;
 };
 
 export type HomeTabScreens = {

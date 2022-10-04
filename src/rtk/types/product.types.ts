@@ -9,6 +9,7 @@ export interface ProductInterface {
   productId: string;
   oldPrice?: number;
   porcentDiscount?: number;
+  isFavorite?: boolean;
 }
 
 export interface ProductResponseInterface {

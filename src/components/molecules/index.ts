@@ -23,3 +23,4 @@ export * from './Rating';
 export * from './TaxInfoCard';
 export * from './TextContainer';
 export * from './TouchableText';
+export * from './FavoriteButton'
