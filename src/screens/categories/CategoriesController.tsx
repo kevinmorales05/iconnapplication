@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Container, SafeArea, CardHorizontal, SearchBar } from 'components';
-import { StyleSheet } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -53,20 +53,26 @@ const CategoriesController: React.FC = () => {
         <Container style={styles.containerHeader}>
           <SearchBar isButton onPressSearch={onPressSearch} onChangeTextSearch={() => {}} />
         </Container>
-        <Container space="between" row style={{ flexWrap: 'wrap', paddingHorizontal: moderateScale(10) }}>
-          {categories?.length
-            ? categories.map(category => {
-                return (
-                  <CardHorizontal
-                    text={category.name}
-                    image={{ uri: category.image }}
-                    onPress={() => {
-                      onPressCategory(category);
-                    }}
-                  />
-                );
-              })
-            : null}
+        <Container style={{height: Dimensions.get("window").height * .75}}>
+          <ScrollView
+            contentContainerStyle={{paddingBottom: moderateScale(50)}}
+          >
+            <Container space="between" row style={{ flexWrap: 'wrap', paddingHorizontal: moderateScale(10) }}>
+              {categories?.length
+                ? categories.map(category => {
+                    return (
+                      <CardHorizontal
+                        text={category.name}
+                        image={{ uri: category.image }}
+                        onPress={() => {
+                          onPressCategory(category);
+                        }}
+                      />
+                    );
+                  })
+                : null}
+            </Container>
+          </ScrollView>
         </Container>
       </Container>
     </SafeArea>
