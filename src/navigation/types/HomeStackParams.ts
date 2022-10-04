@@ -29,7 +29,7 @@ export type HomeStackParams = {
   MyAccount: undefined;
   MyOrders: undefined;
   PostalCode: undefined;
-  ProductDetail: undefined;
+  ProductDetail: undefined | { productIdentifier?: string };
   Profile: undefined;
   SearchSeller: undefined;
   CategoryProducts: { category: CategoryInterface; categories: CategoryInterface[] };

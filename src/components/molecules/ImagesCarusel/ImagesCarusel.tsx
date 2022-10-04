@@ -10,106 +10,68 @@ import { HomeStackParams } from '../../../navigation/types';
 const { width } = Dimensions.get("window");
 const height = width * 0.6;
 
-const ImagesCarusel = () => {
+interface ImageCaruselProps {
+  imagesList: [Object];
+  imageSize: number;
+  selectecPointColor: string;
+  generalPointsColor: string;
+}
+
+const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, selectecPointColor, generalPointsColor }) => {
   const [statusPoints, setStatusPoints] = useState([]);
+  const [points, setPoints] = useState([]);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
-  const getProduct = () => {
-    const productObject = {
-      productId: "1wwfsdf",
-      productName: "miproducto",
-      productDescription: "producto de prueba",
-      productInfo: "este es un producto fake",
-      imagesUrl: [
-        {
-          id: "1",
-          url: "http://oneiconn.vteximg.com.br/arquivos/ids/155405-55-55/01-coca.png?v=637969749439630000",
-          initialX: 0,
-          selectedColor: true
-        },
-        {
-          id: "2",
-          url: "http://oneiconn.vteximg.com.br/arquivos/ids/155409-55-55/06-Chips-Jalapenos.png?v=637969766610030000",
-          initialX: 240,
-          selectedColor: false
-        },
-        {
-          id: "3",
-          url: "http://oneiconn.vteximg.com.br/arquivos/ids/155407-55-55/04-gatorade.png?v=637969763253770000",
-          initialX: 480,
-          selectedColor: false
-        },
-        {
-          id: "4",
-          url: "http://oneiconn.vteximg.com.br/arquivos/ids/155410-55-55/07-cacahuates.png?v=637969769174970000",
-          initialX: 720,
-          selectedColor: false
-        },
-        {
-          id: "5",
-          url: "http://oneiconn.vteximg.com.br/arquivos/ids/155411-55-55/08-Rancheritos.png?v=637969936914230000",
-          initialX: 960,
-          selectedColor: false
-        }
-      ]
-    };
-    let { imagesUrl } = productObject;
-    setStatusPoints(imagesUrl);
-  };
-
   const setImagePosition = selected => {
+    /*
     console.log('press', selected);
-    //    let statusImg = statusPoints;
     statusPoints.map((status, index) => {
-      status.selectedColor = (selected == index);
+      status.isMain = (selected == index);
     })
-    console.log(JSON.stringify(statusPoints, null, 4));
-    setStatusPoints(statusPoints);
+    setStatusPoints(statusPoints);*/
   };
 
   const changePointsColorFromScroll = ({ nativeEvent }) => {
-//    let statusToChange = statusPoints;
-    const { contentOffset } = nativeEvent
-    console.log('contentOffset.x: ',contentOffset.x);
 
-    /*
-    statusPoints.map((status, index) => {
-      if (contentOffset.x == (status.initialX)) {
-        status.selectedColor = true;
-      } else { status.selectedColor = false; }
-    })
-*/
-statusPoints[0].selectedColor = false;
-statusPoints[4].selectedColor = true;
-    console.log('---');
-    console.log(statusPoints);
-    console.log('---');
-    setStatusPoints(statusPoints);
   }
 
   useEffect(() => {
-    getProduct();
-  }, []);
+    let pointList = [];
+    imagesList.map((img) => {
+      pointList.push({ isMain: img.isMain  });
+    });
+    setPoints(pointList);
+    setStatusPoints(imagesList);
+  }, [imagesList, statusPoints]);
 
   const openImageZoom = () => {
-    navigate('ProductZoom');
-   }
+    navigate('ProductZoom', statusPoints);
+  }
 
   return (
     <Container >
       <View style={style.container}>
-        <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false} style={style.scroll} onScroll={(nativeEvent) => {
-          //const { contentOffset } = nativeEvent
-          statusPoints[0].selectedColor = false;
-          statusPoints[4].selectedColor = true;
-          console.log(statusPoints);
-          setStatusPoints(statusPoints);
+        <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false} style={style.scroll} onScroll={(navEvent) => {
+          const { nativeEvent } = navEvent;
+          let poinLst = points;
+          let statusP = statusPoints;
+          statusP.map((status, index) => {
+            if (nativeEvent.contentOffset.x == status.valueX) {
+              status.isMain = true;
+              poinLst[index].isMain = true;
+            } else {
+              status.isMain = false;
+              poinLst[index].isMain = false;
+            }
+          })
+          setStatusPoints(statusP);
+          setPoints(poinLst);
         }}>
           {
-            statusPoints.map((image) => {
+            statusPoints.map((image, index) => {
               return (
-                <Touchable onPress={openImageZoom}>
-                <Image key={image.id} source={{ uri: image.url }} style={style.image} />
+                <Touchable onPress={openImageZoom} key={'tchForImg'+index}>
+                  <Image key={'imgF'+index} source={{ uri: image.url + imageSize }} style={style.image} />
                 </Touchable>
               )
             })
@@ -117,18 +79,18 @@ statusPoints[4].selectedColor = true;
         </ScrollView>
         <View style={{ flexDirection: 'row', position: 'absolute', bottom: 0, alignSelf: 'center' }}>
           {
-            statusPoints.map((img, indx) => {
+            points.map((img, indx) => {
               return (
                 <>
-                  <Touchable onPress={() => setImagePosition(indx)} key={"tch"+indx}>
+                  <Touchable onPress={() => setImagePosition(indx)} key={"tch" + indx}>
                     <TextContainer
-                      textColor={img.selectedColor ? "#333333" : "#f37721"}
+                      textColor={img.isMain ? selectecPointColor : generalPointsColor}
                       text={"⬤"}
-                      key={"txt"+indx}
+                      key={"txt" + indx}
                       fontSize={14}
                       marginTop={4}
-                      marginLeft={6}
-                      marginRight={6}
+                      marginLeft={5}
+                      marginRight={5}
                     ></TextContainer>
                   </Touchable>
                 </>

@@ -1,5 +1,6 @@
 import { Product } from '../http/api-product';
-import moment from 'moment'
+import { ProductPrice } from '../http/api-productPrice';
+
 
 /**
  * Function to get product detail by id.
@@ -19,7 +20,17 @@ import moment from 'moment'
   return data;
 }
 
+/**
+ * Function to get product price by id.
+ */
+ async function getProductPriceById(productId: string): Promise<any> {
+  const response = await ProductPrice.getInstance().getRequest(`/${productId}`);
+  const { data } = response;
+  return data;
+}
+
 export {
   getProductDetailById,
-  getSkuFilesById
+  getSkuFilesById,
+  getProductPriceById
 };
