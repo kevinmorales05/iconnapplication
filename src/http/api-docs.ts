@@ -12,7 +12,9 @@ export class DocsApi extends HttpClient {
   static classInstance?: DocsApi;
 
   private constructor() {
-    // console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docs'), null, 3));
+    if (global.showLogs__api_docs) {
+      console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docs'), null, 3));
+    }
 
     super(VTEXApiConfig('docs'));
 
@@ -33,32 +35,42 @@ export class DocsApi extends HttpClient {
 
         const { headers, baseURL, method, url, data } = request;
 
-        // console.log(
-        //   'INTERCEPTOR - Starting Request ===> \n\n',
-        //   JSON.stringify(headers, null, 3),
-        //   '\n',
-        //   `baseURL: ${baseURL}`,
-        //   '\n',
-        //   `url: ${url}`,
-        //   '\n',
-        //   `method: ${method}`,
-        //   '\n',
-        //   `data: ${JSON.stringify(data, null, 3)}`
-        // );
+        if (global.showLogs__api_docs) {
+          console.log(
+            'INTERCEPTOR - Starting Request ===> \n\n',
+            JSON.stringify(headers, null, 3),
+            '\n',
+            `baseURL: ${baseURL}`,
+            '\n',
+            `url: ${url}`,
+            '\n',
+            `method: ${method}`,
+            '\n',
+            `data: ${JSON.stringify(data, null, 3)}`
+          );
+        }
 
         return request;
       },
-      (error: any) => console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3))
+      (error: any) => {
+        if (global.showLogs__api_docs) {
+          console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3));
+        }
+      }
     );
 
     this.instance.interceptors.response.use(
       (response: any) => {
         const { data } = response;
-        // console.log('INTERCEPTOR - The Response is ===> \n\n', JSON.stringify(data, null, 3));
+        if (global.showLogs__api_docs) {
+          console.log('INTERCEPTOR - The Response is ===> \n\n', JSON.stringify(data, null, 3));
+        }
         return response;
       },
       (error: any) => {
-        console.log('INTERCEPTOR Response Error ===> \n\n', JSON.stringify(error, null, 3));
+        if (global.showLogs__api_docs) {
+          console.log('INTERCEPTOR Response Error ===> \n\n', JSON.stringify(error, null, 3));
+        }
         this.handlerError(error);
         return Promise.reject(error);
       }
