@@ -21,7 +21,7 @@ import {
 } from 'rtk/thunks/vtex-addresses.thunks';
 
 export const useAddresses = () => {
-  const { loading, user } = useAppSelector((state: RootState) => state.auth);
+  const { loading, user, userVtex } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
   const alert = useAlert();
   const loader = useLoading();
@@ -42,7 +42,8 @@ export const useAddresses = () => {
   }, [loading]);
 
   const fetchAddresses = useCallback(async () => {
-    await dispatch(getUserAddressesThunk(user.user_id!));
+    const address = await dispatch(getUserAddressesThunk(userVtex.id!));
+    console.log('PIZZA ', userVtex.id, '-> ', address  );
   }, []);
 
   const fetchAddressByPostalCode = useCallback(async (postalCode: string) => {

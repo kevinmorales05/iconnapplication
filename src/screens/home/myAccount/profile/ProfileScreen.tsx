@@ -8,7 +8,8 @@ import {
   Select,
   TextContainer,
   SafeArea,
-  Touchable
+  Touchable,
+  CountryCodeSelect,
 } from 'components';
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle, View } from 'react-native';
@@ -24,6 +25,9 @@ import { RootState, useAppSelector } from 'rtk';
 import * as PhotosPicker from '../../../../components/organisms/PhotosPicker/PhotosPicker';
 import { NavigationContext } from '@react-navigation/native';
 import moment from 'moment';
+import countries from 'assets/files/countries.json';
+import { formatDate, formatDate2 } from "utils/functions";
+
 
 type Props = {
   onSubmit: (data: any) => void;
@@ -31,18 +35,24 @@ type Props = {
   goBack?: () => void;
   onPress?: () => void;
   editIconStyle?: StyleProp<ViewStyle>;
+  prueba: () => void;
 };
 
-const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  const { email, name, telephone, gender, birthday, lastName, sign_app_modes_id, photo } = user;
+const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
+  const { userVtex } = useAppSelector((state: RootState) => state.auth);
+  const { email, firstName, homePhone, gender, birthDate, lastName, profilePicture } = userVtex;
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
   const navigation = useContext(NavigationContext);
   const [disabled, setDisabled] = useState(false);
+  const newDate = ( date: string) => {
+    let formatDay = new Date(date);
+    let help: string = formatDate(formatDay).toString();
+    return help;
+  }
 
   // storage bucket folder
-  const bucketPath = `userPhotos/${user.user_id}/profile/`;
+  const bucketPath = `userPhotos/${userVtex.accountId}/profile/`;
 
   const { currentPhoto, launch } = PhotosPicker.usePhotosPicker(1, bucketPath,
     () => {
@@ -79,9 +89,10 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
   const phoneRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    setValue('name', name );
+    setValue('name', firstName );
     setValue('lastName', lastName );
-    setValue('telephone', telephone );
+    setValue('telephone', homePhone );
+    setValue('email', email);
     
     if (gender) {
       const previusGender = GENDERS.find(element => {
@@ -90,8 +101,8 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
       setValue('gender', previusGender?.name);
     }
 
-    if(birthday){
-      setValue('birthday',  birthday);
+    if(birthDate){
+      setValue('birthday',  newDate(birthDate));
     }
 
     if (nameRef.current) {
@@ -134,7 +145,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
       <Container>
         <Avatar
           source={{
-            uri: photo ? photo : currentPhoto
+            uri: profilePicture ? profilePicture : currentPhoto
           }}
           editable={true}
           onPress={() => {
@@ -156,7 +167,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           autoCorrect
           autoCapitalize="words"
           keyboardType="default"
-          placeholder={''}
+          placeholder={firstName}
           rules={alphabetRule(true)}
           blurOnSubmit={false}
           error={errors.name?.message}
@@ -177,7 +188,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           autoCorrect
           autoCapitalize="words"
           keyboardType="default"
-          placeholder={''}
+          placeholder={lastName}
           rules={alphabetRule(true)}
           blurOnSubmit={false}
           error={errors.lastName?.message}
@@ -190,7 +201,20 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           text={`Correo electrónico`}
           marginTop={21}
         />
-        <View style={{flex:1, flexDirection:"row"}}>
+        <Input
+          {...register('email')}
+          editable={false}
+          control={control}
+          autoCorrect
+          autoCapitalize="words"
+          keyboardType="default"
+          placeholder={email}
+          rules={alphabetRule(true)}
+          blurOnSubmit={false}
+          error={errors.lastName?.message}
+          maxLength={30}
+        />
+        {/* <View style={{flex:1, flexDirection:"row"}}>
           <View style={{flex:3}}>
             <TextContainer
               text={email!}
@@ -217,9 +241,9 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
                 fontWeight="normal"
               />
             </Container>
-          </View>
+          </View> */}
 
-          {sign_app_modes_id === 1 && <View style={{flex:3, marginTop:19}}>
+         {/*  {sign_app_modes_id === 1 && <View style={{flex:3, marginTop:19}}>
             <Touchable onPress={() => {
               navigation?.navigate("EditEmail");
             }}>
@@ -233,8 +257,8 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
                 <CustomText text={'Editar'} typography="h6" />
               </Container>
             </Touchable>
-          </View>}
-        </View>
+          </View>} */}
+       {/*  </View> */}
 
         <TextContainer
           typography="h6"
@@ -256,7 +280,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
             text={`••••••••`}
             textColor={theme.brandColor.iconn_dark_grey}
           />
-          {sign_app_modes_id === 1 && <TouchableOpacity
+          {/* {sign_app_modes_id === 1 && <TouchableOpacity
             onPress={() => {
               navigation?.navigate('EditPassword');
             }}
@@ -270,7 +294,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
               />
               <CustomText text={'Editar'} typography="h6" />
             </Container>
-          </TouchableOpacity>}
+          </TouchableOpacity>} */}
         </Container>
 
         <TextContainer
@@ -279,8 +303,28 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           text={`Celular`}
           marginTop={24}
         />
-
-        <Input
+         <Select
+          name="telephone"
+          control={control}
+          options={countries.map (item => item.flag + item.code)}
+          onSelect={value => setValue('telephone', value)}
+          androidMode="dialog"
+          label={countries[135].code}
+          placeholder={'10 dígitos'+ countries[133].flag}
+          error={errors.gender?.message}
+        />
+       {/*  <CountryCodeSelect
+        name="telephone"
+        control={control}
+        options={countries.map (item => item.flag + item.code)}
+        onSelect={value => setValue('telephone', value)}
+        androidMode="dialog"
+        label={countries[135].code}
+        placeholder={countries[133].flag}
+        error={errors.gender?.message}
+        />
+ */}
+    {/*     <Input
           {...register('telephone')}
           ref={phoneRef}
           control={control}
@@ -290,7 +334,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           error={errors.telephone?.message}
           maxLength={10}
           phone
-        />
+        /> */}
 
         <TextContainer
           typography="h6"
@@ -327,8 +371,8 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           options={GENDERS.map(item => item.name)}
           onSelect={value => setValue('gender', value)}
           androidMode="dialog"
-          label={`Genero`}
-          placeholder={`Genero`}
+          label={gender as string}
+          placeholder={(gender == null ? 'Selecciona' : (gender == 'male') ? 'Masculino': 'Femenino')}
           error={errors.gender?.message}
         />
         <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
@@ -355,6 +399,17 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit }) => {
           marginTop={32}
         >
           Guardar
+        </Button>
+        <Button
+          length="long"
+          round
+          disabled={disabled}
+          onPress={prueba}
+          fontSize="h4"
+          fontBold
+          marginTop={32}
+        >
+          Prueba
         </Button>
       </Container>
     </ScrollView>

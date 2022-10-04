@@ -21,7 +21,17 @@ import {
   ProductRaitingResponseInterface,
   ProductInterface,
   ProductResponseInterface,
-  ExistingProductInCartInterface
+  ExistingProductInCartInterface,
+  UserVtex,
+  setAuthEmail,
+  setAccountId,
+  setBirthday,
+  setGender,
+  setId,
+  setLastName,
+  setName,
+  setTelephone,
+  setUserId
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -39,6 +49,7 @@ import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
+import { vtexUserServices } from 'services';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -155,7 +166,8 @@ class CustomCarousel extends Component<Props, State> {
 }
 
 const HomeController: React.FC = () => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user, userVtex } = useAppSelector((state: RootState) => state.auth);
+  const {email} = userVtex;
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
@@ -172,6 +184,36 @@ const HomeController: React.FC = () => {
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
   const [showShippingDropDown, setShowShippingDropDown] = useState(false);
 
+  const getUser = useCallback(async () => {
+    const { data } = await vtexUserServices.getUserByEmail(email);
+    const dataVtex : UserVtex = {
+      homePhone: data[0].homePhone,
+      email: data[0].email,
+      gender: data[0].gender,
+      firstName: data[0].firstName,
+      lastName: data[0].lastName,
+      birthDate: data[0].birthDate,
+      profilePicture: data[0].profilePicture,
+      accountId: data[0].accountId,
+      id: data[0].id,
+      userId: data[0].userId, 
+    }
+    dispatch(setAuthEmail({email: dataVtex.email}));
+    dispatch(setTelephone({telephone: dataVtex.homePhone}));
+    dispatch(setGender({gender: dataVtex.gender}));
+    dispatch(setName({name: dataVtex.firstName}));
+    dispatch(setLastName({lastName: dataVtex.lastName}));
+    dispatch(setUserId({user_id: dataVtex.userId }));
+    dispatch(setId({id: dataVtex.id, email: email }));
+    dispatch(setBirthday({birthday: dataVtex.birthDate}));
+    dispatch(setAccountId({accountId: dataVtex.accountId, email: email}));
+
+
+    console.log('TOMATE HOME', JSON.stringify(data[0], null, 3) );
+    console.log('PLATANOS HOME', JSON.stringify(dataVtex, null, 3) );
+
+  }, []);
+
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
   }, [invoicingLoading]);
@@ -179,6 +221,10 @@ const HomeController: React.FC = () => {
   useEffect(() => {
     if (authLoading === false) loader.hide();
   }, [authLoading]);
+
+  useEffect(() => {
+    getUser();
+  }, [getUser]);
 
   const logOutApp = async () => {
     dispatch(setAppInitialState());

@@ -38,7 +38,7 @@ const ForgotPasswordController: React.FC = () => {
     } catch (error) {
       console.log(error);
       toast.show({
-        message: 'El correo no pude ser enviado,\n intenta mas tarde',
+        message: 'El correo no pudo ser enviado,\n intenta más tarde',
         type: 'error'
       });
     }

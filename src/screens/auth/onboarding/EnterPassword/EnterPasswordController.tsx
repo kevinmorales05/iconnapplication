@@ -24,9 +24,14 @@ import {
   signInWithEmailAndPasswordThunk,
   useAppDispatch,
   useAppSelector,
+  setName,
+  setAccountId,
+  setId,
+  setLastName,
+  UserVtex,
 } from 'rtk';
-import React, { useEffect, useState } from 'react';
-import { authServices } from 'services';
+import React, { useCallback, useEffect, useState } from 'react';
+import { authServices, vtexUserServices } from 'services';
 import {vtexauthServices} from 'services/vtexauth.services';
 
 const EnterPasswordController: React.FC = () => {
@@ -34,11 +39,41 @@ const EnterPasswordController: React.FC = () => {
     useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const dispatch = useAppDispatch();
   const loader = useLoading();
-  const { loading, user } = useAppSelector((state: RootState) => state.auth);
+  const { loading, user, userVtex } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
   const alert = useAlert();
   const [accountError, setAccountError] = useState('');
   const authToken = HttpClient.accessToken;
+
+  const getUser = useCallback(async (email: string) => {
+    const { data } = await vtexUserServices.getUserByEmail(email);
+    const dataVtex : UserVtex = {
+      homePhone: data[0].homePhone,
+      email: data[0].email,
+      gender: data[0].gender,
+      firstName: data[0].firstName,
+      lastName: data[0].lastName,
+      birthDate: data[0].birthDate,
+      profilePicture: data[0].profilePicture,
+      accountId: data[0].accountId,
+      id: data[0].id,
+      userId: data[0].userId, 
+    }
+    dispatch(setAuthEmail({email: dataVtex.email}));
+    dispatch(setTelephone({telephone: dataVtex.homePhone}));
+    dispatch(setGender({gender: dataVtex.gender}));
+    dispatch(setName({name: dataVtex.firstName}));
+    dispatch(setLastName({lastName: dataVtex.lastName}));
+    dispatch(setUserId({user_id: dataVtex.userId }));
+    dispatch(setId({id: dataVtex.id, email: email as string}));
+    dispatch(setBirthday({birthday: dataVtex.birthDate}));
+    dispatch(setAccountId({accountId: dataVtex.accountId, email: email as string}));
+
+
+    console.log('TOMATE CONTRASEÑA', JSON.stringify(data[0], null, 3) );
+    console.log('PLATANOS CONTRASEÑA', JSON.stringify(dataVtex, null, 3) );
+
+  }, []);
 
   useEffect(() => {
     if (loading === false) {
@@ -67,7 +102,7 @@ const EnterPasswordController: React.FC = () => {
     try {
       const response = await authServices.login(email as string, password, authToken as string);
       if(response.authStatus == 'Success') {
-        dispatch(setUserId({user_id: response.userId}))
+        getUser(email as string);
         dispatch(setIsLogged({ isLogged: true }));
       } else if (response.authStatus == 'WrongCredentials') {
         setAccountError('Contraseña incorrecta');

@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useAlert, useLoading } from 'context';
 import { AuthStackParams } from 'navigation/types';
-import { RootState, setIsLogged, setUserId, useAppDispatch, useAppSelector } from 'rtk';
+import { RootState, setAuthInitialState, setIsLogged, setUserId, useAppDispatch, useAppSelector, UserVtex } from 'rtk';
 import { authServices } from 'services';
 import CreatePasswordScreen from './CreatePasswordScreen';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
@@ -29,18 +29,33 @@ const CreatePasswordController: React.FC = () => {
   const loader = useLoading();
   const alert = useAlert();
 
+  const returnToSend = async (fields: FieldValues) => {
+    const { password, code } = fields;
+    dispatch(setAuthInitialState());
+    console.log('PLATANO', password, code);
+    goBack();
+  }
+
   const onSubmit = async (fields: FieldValues) => {
     const { password, code } = fields;
+    const user : UserVtex = {
+      email: email as string,
+      firstName: '',
+      lastName: '',
+      homePhone: '',
+    };
 
     loader.show();
     try {
-      await authServices.createUser(user.email as string);
-      const { userId, authStatus } = await authServices.createPassword(password, code, user.email as string, authenticationToken);
-
       if (variant === 'register') {
-        if (authStatus === 'Success') {
-          dispatch(setUserId({ user_id: userId }));
-          dispatch(setIsLogged({ isLogged: true }));
+          const { userId, authStatus } = await authServices.createPassword(password, code, user.email as string, authenticationToken);
+          console.log('GORILA', userId, authStatus);
+          console.log('PLATANO', password, code);
+          if (authStatus === 'Success') {
+            const response = await authServices.newUser(user);
+            dispatch(setUserId({ user_id: userId }));
+            dispatch(setIsLogged({ isLogged: true }));
+            console.log('MUNCHO', response)
         } else {
           alert.show(
             {
@@ -81,7 +96,7 @@ const CreatePasswordController: React.FC = () => {
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
       <FormProvider {...methods}>
-        <CreatePasswordScreen hasNavigationTitle={false} goBack={goBack} onSubmit={onSubmit} email={email as string} />
+        <CreatePasswordScreen hasNavigationTitle={false} goBack={returnToSend} onSubmit={onSubmit} email={email as string} />
       </FormProvider>
     </SafeArea>
   );
