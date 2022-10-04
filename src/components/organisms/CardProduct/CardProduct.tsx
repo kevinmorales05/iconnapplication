@@ -47,11 +47,13 @@ const CardProduct: React.FC<CardProductProps> = ({
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
           <Container row width={'100%'} space="between">
             {porcentDiscount && (
-              <Container style={styles.containerPorcentDiscount}>
-                <CustomText fontSize={theme.fontSize.h6} textColor={theme.brandColor.iconn_green_original} fontWeight={'bold'} text={`-${porcentDiscount}%`} />
+              <Container flex width={"100%"}>
+                <Container style={styles.containerPorcentDiscount}>
+                  <CustomText fontSize={theme.fontSize.h6} textColor={theme.brandColor.iconn_green_original} fontWeight={'bold'} text={`-${porcentDiscount}%`} />
+                </Container>
               </Container>
             )}
-            <Container center middle>
+            <Container flex width={"100%"} style={{justifyContent:"center", alignItems:"flex-end"}}>
               <FavoriteButton sizeIcon={moderateScale(24)} isFavorite onPressItem={() => {}} />
             </Container>
           </Container>
