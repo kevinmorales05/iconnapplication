@@ -10,3 +10,4 @@ export * from './vtexsingleorder.services';
 export * from './vtex-categories.services';
 export * from './vtex-search.services';
 export * from './vtexuser.services';
+export * from './vtex-reviewsRatings.services';

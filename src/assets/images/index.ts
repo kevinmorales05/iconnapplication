@@ -64,6 +64,7 @@ import ICONN_HOME_OPTION_WALLET from './iconn-home-option-wallet.png';
 import ICONN_HOME_OPTION_ORDERS from './iconn-home-option-orders.png';
 import ICONN_CHECK_PWD from './iconn-check-pwd.webp';
 import ICONN_HOME_SEARCH from './iconn-home-search-icon.png';
+import ICONN_STAR from './star.webp';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -131,5 +132,6 @@ export {
   ICONN_HOME_OPTION_WALLET,
   ICONN_HOME_OPTION_ORDERS,
   ICONN_CHECK_PWD,
-  ICONN_HOME_SEARCH
+  ICONN_HOME_SEARCH,
+  ICONN_STAR
 };

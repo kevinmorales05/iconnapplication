@@ -10,3 +10,5 @@ export * from './AnimatedCarousel';
 export * from './CardProduct';
 export * from './TabAnimatable';
 export * from './FilterContainer';
+export * from './ReviewModal';
+export * from './ReviewPercentage';

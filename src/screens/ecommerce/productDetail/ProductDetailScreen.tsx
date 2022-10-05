@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, View, Text, StyleSheet, Dimensions } from 'react-native';
-import { Input, CustomText, TextContainer, Container, Touchable, TouchableText, Button } from 'components';
+import { Input, CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage, ReviewModal } from 'components';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Background } from '@react-navigation/elements';
@@ -163,11 +163,7 @@ const ProductDetailScreen = (itemId) => {
             </Container>
           </Container>
 
-          <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_white}>
-            <Container style={{ margin: 16 }}>
-            <TextContainer text={`Calificaciones de clientes`} fontBold typography="h4" />
-            </Container>
-          </Container>
+          <ReviewPercentage></ReviewPercentage>
 
         </Container>
 

@@ -13,6 +13,7 @@ const VTEX_APPTOKEN = 'SOLVDAEGJAIWHXZATCDTDGNYKYYKKEUKEQNGWBAKCTJNLTMKIXFQMCASW
 const VTEX_DOCS = 'https://oneiconn.myvtex.com/api';
 const VTEX_DOCS_NO_API_PREFIX = 'https://oneiconn.myvtex.com';
 const API_VTEX_SEARCH_PRODUCTS = 'http://oneiconn.vtexcommercestable.com.br/buscaautocomplete?productNameContains=';
+const VTEX_REVIEWS_RATINGS = 'https://oneiconn.myvtex.com/reviews-and-ratings/api/'
 
 const getApiUrl = (type: string) => {
   switch (type) {
@@ -38,6 +39,8 @@ const getApiUrl = (type: string) => {
       return API_VTEX_SEARCH_PRODUCTS;
     case 'user': 
       return API_VTEX_USER;
+    case 'reviews':
+      return VTEX_REVIEWS_RATINGS;
     default:
       break;
   }
