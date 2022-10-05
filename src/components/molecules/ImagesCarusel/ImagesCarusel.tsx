@@ -53,19 +53,19 @@ const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, sel
       <View style={style.container}>
         <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false} style={style.scroll} onScroll={(navEvent) => {
           const { nativeEvent } = navEvent;
-          let poinLst = points;
+          //let poinLst = points;
           let statusP = statusPoints;
           statusP.map((status, index) => {
             if (nativeEvent.contentOffset.x == status.valueX) {
               status.isMain = true;
-              poinLst[index].isMain = true;
+              //poinLst[index].isMain = true;
             } else {
               status.isMain = false;
-              poinLst[index].isMain = false;
+              //poinLst[index].isMain = false;
             }
           })
           setStatusPoints(statusP);
-          setPoints(poinLst);
+          //setPoints(poinLst);
         }}>
           {
             statusPoints.map((image, index) => {
@@ -79,7 +79,7 @@ const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, sel
         </ScrollView>
         <View style={{ flexDirection: 'row', position: 'absolute', bottom: 0, alignSelf: 'center' }}>
           {
-            points.map((img, indx) => {
+            statusPoints.map((img, indx) => {
               return (
                 <>
                   <Touchable onPress={() => setImagePosition(indx)} key={"tch" + indx}>

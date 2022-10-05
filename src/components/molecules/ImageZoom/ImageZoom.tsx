@@ -7,7 +7,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../navigation/types';
 import { InvoicingProfileInterface, Colony, RootState, useAppDispatch, useAppSelector } from 'rtk';
-//import ImageView from "react-native-image-viewing";
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 interface ImageZoomProps {
   imagesList: [Object];
@@ -23,11 +23,11 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ imagesList, mainImageSize, caruse
   const [visible, setIsVisible] = useState(true);
 
   const openImageZoom = selected => {
-    setSelectedImage(statusPoints[selected]);
+    setSelectedImage([statusPoints[selected]]);
   };
 
   useEffect(() => {
-    setSelectedImage(params != undefined && params.length > 0 ? params[0] : undefined)
+    setSelectedImage(params != undefined && params.length > 0 ? [params[0]] : undefined)
     setStatusPoints(params);
   }, [statusPoints]);
 
@@ -36,7 +36,13 @@ const ImageZoom: React.FC<ImageZoomProps> = ({ imagesList, mainImageSize, caruse
       <Container center style={{ marginTop: 120, backgroundColor: theme.brandColor.iconn_white, width: '95%', height: '50%' }}>
         <ScrollView minimumZoomScale={3} maximumZoomScale={8}>
           {
-            selectedImage ? <Image source={{ uri: selectedImage.url + 400 }} style={{ width: 312, height: 312, alignSelf: 'center' }} ></Image>
+            selectedImage.length>0 ?
+            <View style={{ backgroundColor: theme.brandColor.iconn_red_original, width: 300, height: 328 }}>
+            <ImageViewer
+                  imageUrls={selectedImage}
+                  backgroundColor='white'
+          />
+          </View>
               :
               <></>
           }
@@ -69,4 +75,11 @@ const style = StyleSheet.create({
   container: { marginTop: 100, marginLeft: 20, },
   scroll: { width: '60%', height: 56 },
   image: { width: 56, height: 56, resizeMode: 'cover' },
+  containerView: {
+    marginTop: 100,
+    width:300,
+    height:300,
+    flex:1,
+    backgroundColor: theme.brandColor.iconn_red_original,
+  }
 });

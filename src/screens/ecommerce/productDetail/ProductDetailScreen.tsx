@@ -98,11 +98,11 @@ const ProductDetailScreen = (itemId) => {
             </Container>
           </Container>
               <Container row style={{marginTop:16}}>
-              <Rating ratingValue={3.5}/><TouchableText
+              <Rating ratingValue={4.1}/><TouchableText
                   marginLeft={8}
                   underline
                   textColor={theme.brandColor.iconn_accent_principal}
-                  text="65 Calificaciones"
+                  text="80 Calificaciones"
                   typography="h4"
                   fontBold
                   onPress={()=>{}}
@@ -173,16 +173,20 @@ const ProductDetailScreen = (itemId) => {
 
         <Container style={{marginBottom:16}}>
         {
-          true?
+          cartItemQuantity>0?
         <QuantityProduct
             quantity={cartItemQuantity}
             onPressAddQuantity={() => {
+              let currentQuantity = cartItemQuantity+1;
+              setCartItemQuantity(currentQuantity);
               updateShoppingCartProduct('add', itemId.productIdentifier);
             }}
             onPressDeleteCart={() => {
               updateShoppingCartProduct('remove', itemId.productIdentifier);
             }}
             onPressDecreaseQuantity={() => {
+              let currentQuantity = cartItemQuantity-1;
+              setCartItemQuantity(currentQuantity);
               updateShoppingCartProduct('substract', itemId.productIdentifier);
             }}
           />:
