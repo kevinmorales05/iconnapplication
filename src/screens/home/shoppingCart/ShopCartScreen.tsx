@@ -28,6 +28,9 @@ interface Props {
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
 import { registerWithFirebaseThunk } from '../../../rtk/thunks/auth.thunks';
 import { WidthType } from '../../../components/types/width-type';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
+import { HomeStackParams } from '../../../navigation/types';
 
 const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut }) => {
   const insets = useSafeAreaInsets();
@@ -35,6 +38,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   const loader = useLoading();
   const { loading } = useAppSelector((state: RootState) => state.invoicing);
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { internetReachability } = useAppSelector((state: RootState) => state.app);
   const toast = useToast();
   const alert = useAlert();
@@ -462,14 +466,22 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         }}
       >
         <Container>
+          <Touchable onPress={() => {
+            navigate('ProductDetail', {productIdentifier: value.id});
+          }}>
             <Image source={{ uri: value.imageUrl }} style={{ marginTop: 10, width: 90, height: 88 }} />
+          </Touchable>
         </Container>
         <Container space='between' style={{ marginTop: 10, width: '100%', height: 58 }}>
           <Container row space="between" style={{ marginTop: 3, paddingRight: 100}}>
             <Container style={{ width: '70%' }}>
+              <Touchable onPress={() => {
+                navigate('ProductDetail', {productIdentifier: value.id});
+              }}>
                 <Text numberOfLines={2} style={{ color: 'black' }}>
                   {value.name}
                 </Text>
+              </Touchable>
             </Container>
             <Container style={{ width: '38%'}}>
               {
