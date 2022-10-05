@@ -55,7 +55,6 @@ const authSlice = createSlice({
   reducers: {
     setAuthInitialState(state) {
       state.user = { ...initialState };
-      state.userVtex = {...vtexInitialState};
       state.loading = false;
     },
     setVtexInitialState(state) {
@@ -137,8 +136,8 @@ const authSlice = createSlice({
       state.user.addresses.splice(action.payload.position, 1, action.payload.address);
     },
     setAddressDefault(state, action: PayloadAction<number>) {
-      state.user.addresses.map(x => (x.isDefault = true));
-      state.user.addresses[action.payload].isDefault = false;
+      state.user.addresses.map(x => (x.isDefault = false));
+      state.user.addresses[action.payload].isDefault = true;
     },
     setSeenCarousel(state, action: PayloadAction<boolean>) {
       state.user.seenCarousel = action.payload;

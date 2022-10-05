@@ -35,7 +35,7 @@ const AddressCard: React.FC<AddressCardProps> = ({ address, onPressEdit, onPress
       )}
       <Container width={'75%'} flex space="between" style={{ marginLeft: 13 }}>
         <Touchable onPress={() => {}}>
-          <TextContainer text={address.addressName!} fontBold />
+          <TextContainer text={address?.addressName} fontBold />
           <TextContainer text={`${address.street}, ${address.neighborhood}, ${address.city}, ${address.state}`} marginTop={12} />
         </Touchable>
         {onPressDelete && (
