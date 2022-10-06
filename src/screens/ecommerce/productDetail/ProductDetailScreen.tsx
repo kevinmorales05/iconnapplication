@@ -61,6 +61,10 @@ const ProductDetailScreen = (itemId) => {
       setProductRating(responseRating);
     }).catch((error) => console.log(error));
 
+    setCartItemQuantity(isProductIdInShoppingCart(itemId.productIdentifier));
+  }, []);
+
+  const getComplementaryProducts = useCallback(async () => {
     vtexProductsServices.getProductsByCollectionId("143").then(responseCollection => {
       const { Data } = responseCollection;
       let complementaryList = [];
@@ -69,7 +73,7 @@ const ProductDetailScreen = (itemId) => {
           Data.map((product) => {
            vtexProductsServices.getProductPriceByProductId(product.ProductId).then(async responsePrice => {
               if (responsePrice) {
-                complementaryList.push({ productId: product.ProductId, name: product.ProductName, image: product.SkuImageUrl, price: responsePrice.basePrice, quantity: isProductIdInShoppingCart(product.ProductId) });
+                complementaryList.push({ productId: product.ProductId, name: product.ProductName, image: { uri: product.SkuImageUrl }, price: responsePrice.basePrice, quantity: isProductIdInShoppingCart(product.ProductId) });
               }
             }).catch((error) => console.log(error));
           })
@@ -77,8 +81,6 @@ const ProductDetailScreen = (itemId) => {
       }
       setComplementaryProducts(complementaryList);
     }).catch((error) => console.log(error));
-
-    setCartItemQuantity(isProductIdInShoppingCart(itemId.productIdentifier));
   }, []);
 
   const isProductIdInShoppingCart = (productId) => {
@@ -95,6 +97,10 @@ const ProductDetailScreen = (itemId) => {
   useEffect(() => {
     fetchData();
   }, [cart]);
+
+  useEffect(() => {
+    getComplementaryProducts();
+  }, []);
 
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}
