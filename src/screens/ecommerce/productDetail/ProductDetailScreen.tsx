@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, View, Text, StyleSheet, Dimensions } from 'react-native';
-import { Input, CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage, ReviewModal } from 'components';
+import { ScrollView, Image, Text } from 'react-native';
+import { CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage } from 'components';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { Background } from '@react-navigation/elements';
-import { ICONN_ADDRESS_FIND, ICONN_BASKET } from 'assets/images';
+import { ICONN_BASKET } from 'assets/images';
 import { ImagesCarusel} from 'components/molecules/ImagesCarusel';
 import { CardProduct} from 'components/organisms/CardProduct';
 import { Rating } from 'components/molecules/Rating';
@@ -27,7 +26,6 @@ const ProductDetailScreen = (itemId) => {
 
   const fetchData = useCallback(async () => {
     const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/"
-
     await getSkuFilesById(itemId.productIdentifier).then(async responseSku => {
       let skuForImages = [];
       if(responseSku){
@@ -63,30 +61,36 @@ const ProductDetailScreen = (itemId) => {
       setProductRating(responseRating);
     }).catch((error) => console.log(error));
 
-
-    await vtexProductsServices.getProductsByCollectionId("143").then(async responseCollection => {
+    vtexProductsServices.getProductsByCollectionId("143").then(responseCollection => {
       const { Data } = responseCollection;
       let complementaryList = [];
-      if(Data){ 
-        if(Data.length>0){
+      if (Data) {
+        if (Data.length > 0) {
           Data.map((product) => {
-            complementaryList.push({ productId: product.ProductId, name: product.ProductName, image: product.SkuImageUrl, price: 10, quantity:10 });
+           vtexProductsServices.getProductPriceByProductId(product.ProductId).then(async responsePrice => {
+              if (responsePrice) {
+                complementaryList.push({ productId: product.ProductId, name: product.ProductName, image: product.SkuImageUrl, price: responsePrice.basePrice, quantity: isProductIdInShoppingCart(product.ProductId) });
+              }
+            }).catch((error) => console.log(error));
           })
         }
-       }
-
+      }
       setComplementaryProducts(complementaryList);
     }).catch((error) => console.log(error));
 
+    setCartItemQuantity(isProductIdInShoppingCart(itemId.productIdentifier));
+  }, []);
+
+  const isProductIdInShoppingCart = (productId) => {
     const { items } = cart;
     let quantityItem = 0;
     items.map((itm) => {
-      if(itm.productId===itemId.productIdentifier){
+      if(itm.productId==productId){
         quantityItem = itm.quantity;
-        setCartItemQuantity(itm.quantity);
       }
     });
-  }, [complementaryProducts]);
+    return quantityItem;
+  }
 
   useEffect(() => {
     fetchData();
@@ -171,35 +175,37 @@ const ProductDetailScreen = (itemId) => {
           <Container row space="between" style={{ margin: 16 }}>
             <TextContainer text={`Productos Complementarios`} fontBold typography="h4" />
           </Container>
-          <Container row>
-            <ScrollView>
-            {
-              complementaryProducts!=undefined && complementaryProducts.length>0?
-                complementaryProducts.map((product) => {
-                  <CardProduct
-                    image={product.image!}
-                    name={product.name!}
-                    price={product.price!}
-                    productId={product.productId}
-                    quantity={product.quantity!}
-                    onPressAddCart={() => {
-                      updateShoppingCartProduct('create', itemId.productIdentifier);
-                    }}
-                    onPressAddQuantity={() => {
-                      updateShoppingCartProduct('add', itemId.productIdentifier);
-                    }}
-                    onPressDeleteCart={() => {
-                      updateShoppingCartProduct('remove', itemId.productIdentifier);
-                    }}
-                    onPressDecreaseQuantity={() => {
-                      updateShoppingCartProduct('substract', itemId.productIdentifier);
-                    }}
-                  />
+            <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false}>
+              <Container row style={{ height: 200, width: '100%' }}>
+                {
+                  complementaryProducts.length > 0 ?
+                    complementaryProducts.map((prod, index) => {
+                      return (
+                        <CardProduct
+                          image={prod.image!}
+                          name={prod.name!}
+                          price={prod.price!}
+                          productId={prod.productId}
+                          quantity={prod.quantity!}
+                          onPressAddCart={() => {
+                            updateShoppingCartProduct('create', itemId.productIdentifier);
+                          }}
+                          onPressAddQuantity={() => {
+                            updateShoppingCartProduct('add', itemId.productIdentifier);
+                          }}
+                          onPressDeleteCart={() => {
+                            updateShoppingCartProduct('remove', itemId.productIdentifier);
+                          }}
+                          onPressDecreaseQuantity={() => {
+                            updateShoppingCartProduct('substract', itemId.productIdentifier);
+                          }}
+                        />
+                      )
+                    }
+                    ) : <></>
                 }
-                ):<></>
-            }
+              </Container>
             </ScrollView>
-          </Container>
         </Container>
 
           <ReviewPercentage></ReviewPercentage>
