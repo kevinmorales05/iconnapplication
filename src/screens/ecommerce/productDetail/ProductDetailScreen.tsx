@@ -6,33 +6,33 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { Background } from '@react-navigation/elements';
 import { ICONN_ADDRESS_FIND, ICONN_BASKET } from 'assets/images';
 import { ImagesCarusel} from 'components/molecules/ImagesCarusel';
+import { CardProduct} from 'components/organisms/CardProduct';
 import { Rating } from 'components/molecules/Rating';
-import { getProductDetailById,getSkuFilesById, getProductPriceById } from 'services/vtexProduct.services';
+import { getProductDetailById,getSkuFilesById } from 'services/vtexProduct.services';
 import { QuantityProduct } from 'components/molecules/QuantityProduct';
+import { vtexProductsServices } from 'services';
 import { RootState, useAppSelector } from 'rtk';
 import { useShoppingCart } from '../../home/hooks/useShoppingCart';
-//import { useShoppingCart } from './hooks/useShoppingCart';
 
 const ProductDetailScreen = (itemId) => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const [productPrice, setProductPrice] = useState(0);
   const [productDetail, setProductDetail] = useState(Object);
   const [skusForProductImages, setSkusForProductImages] = useState([]);
+  const [complementaryProducts, setComplementaryProducts] = useState([]);  
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [cartItemQuantity, setCartItemQuantity] = useState(0);
+  const [productRating, setProductRating] = useState(Object);
   const { cart } = useAppSelector((state: RootState) => state.cart);
 
   const fetchData = useCallback(async () => {
     const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/"
-    console.log('itemId:::',itemId.productIdentifier);
+
     await getSkuFilesById(itemId.productIdentifier).then(async responseSku => {
-      console.log("2222");
-      console.log(JSON.stringify(responseSku, null, 4));
       let skuForImages = [];
       if(responseSku){
-        if(responseSku.length){
+        if(responseSku.length>0){
           responseSku.map((sku) => {
-            console.log({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot+sku.ArchiveId + '-' + sku.Id + '-' + 100});
             skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot+ sku.ArchiveId + '-' + sku.Id + '-'});
           })
           const imgsForTest =
@@ -49,34 +49,44 @@ const ProductDetailScreen = (itemId) => {
           setSkusForProductImages(/*imgsForTest*/skuForImages);
         }
       }
-      console.log("2222");
     }).catch((error) => console.log(error));
     
     await getProductDetailById(itemId.productIdentifier).then(async responseProductDetail => {
-      console.log("1234567");
-      console.log(JSON.stringify(responseProductDetail, null, 4));
       setProductDetail(responseProductDetail);
-      console.log("1234567");
     }).catch((error) => console.log(error));
 
-    await getProductPriceById(itemId.productIdentifier).then(async responsePrice => {
-      console.log('333333');
-      console.log(JSON.stringify(responsePrice, null, 4));
+    await vtexProductsServices.getProductPriceByProductId(itemId.productIdentifier).then(async responsePrice => {
       setProductPrice(responsePrice);
-      console.log('333333');
+    }).catch((error) => console.log(error));
+
+    await vtexProductsServices.getProductRatingByProductId(itemId.productIdentifier).then(async responseRating => {
+      setProductRating(responseRating);
+    }).catch((error) => console.log(error));
+
+
+    await vtexProductsServices.getProductsByCollectionId("143").then(async responseCollection => {
+      const { Data } = responseCollection;
+      let complementaryList = [];
+      if(Data){ 
+        if(Data.length>0){
+          Data.map((product) => {
+            complementaryList.push({ productId: product.ProductId, name: product.ProductName, image: product.SkuImageUrl, price: 10, quantity:10 });
+          })
+        }
+       }
+
+      setComplementaryProducts(complementaryList);
     }).catch((error) => console.log(error));
 
     const { items } = cart;
     let quantityItem = 0;
     items.map((itm) => {
-      console.log('productId: '+itm.productId+' quantity: '+itm.quantity);
       if(itm.productId===itemId.productIdentifier){
         quantityItem = itm.quantity;
         setCartItemQuantity(itm.quantity);
       }
     });
-    console.log('quantityItem:::'+cartItemQuantity+' productIdentifier:::'+itemId.productIdentifier);
-  }, []);
+  }, [complementaryProducts]);
 
   useEffect(() => {
     fetchData();
@@ -98,11 +108,11 @@ const ProductDetailScreen = (itemId) => {
             </Container>
           </Container>
               <Container row style={{marginTop:16}}>
-              <Rating ratingValue={4.1}/><TouchableText
+              <Rating ratingValue={productRating.average}/><TouchableText
                   marginLeft={8}
                   underline
                   textColor={theme.brandColor.iconn_accent_principal}
-                  text="80 Calificaciones"
+                  text={productRating.totalCount+" Calificaciones"}
                   typography="h4"
                   fontBold
                   onPress={()=>{}}
@@ -158,10 +168,39 @@ const ProductDetailScreen = (itemId) => {
         
 
         <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
-            <Container row space="between" style={{ margin: 16 }}>
-              <TextContainer text={`Productos Complementarios`} fontBold typography="h4" />
-            </Container>
+          <Container row space="between" style={{ margin: 16 }}>
+            <TextContainer text={`Productos Complementarios`} fontBold typography="h4" />
           </Container>
+          <Container row>
+            <ScrollView>
+            {
+              complementaryProducts!=undefined && complementaryProducts.length>0?
+                complementaryProducts.map((product) => {
+                  <CardProduct
+                    image={product.image!}
+                    name={product.name!}
+                    price={product.price!}
+                    productId={product.productId}
+                    quantity={product.quantity!}
+                    onPressAddCart={() => {
+                      updateShoppingCartProduct('create', itemId.productIdentifier);
+                    }}
+                    onPressAddQuantity={() => {
+                      updateShoppingCartProduct('add', itemId.productIdentifier);
+                    }}
+                    onPressDeleteCart={() => {
+                      updateShoppingCartProduct('remove', itemId.productIdentifier);
+                    }}
+                    onPressDecreaseQuantity={() => {
+                      updateShoppingCartProduct('substract', itemId.productIdentifier);
+                    }}
+                  />
+                }
+                ):<></>
+            }
+            </ScrollView>
+          </Container>
+        </Container>
 
           <ReviewPercentage></ReviewPercentage>
 

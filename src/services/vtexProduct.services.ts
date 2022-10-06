@@ -1,6 +1,6 @@
 import { Product } from '../http/api-product';
 import { ProductPrice } from '../http/api-productPrice';
-
+import { SuggestedProducts } from '../http/api-suggestedProduct';
 
 /**
  * Function to get product detail by id.
@@ -29,8 +29,18 @@ import { ProductPrice } from '../http/api-productPrice';
   return data;
 }
 
+/**
+ * Function to get suggested products of product selected by sellerId and sellerSkuId.
+ */
+ async function getSuggestedProductsBySellerIdAndSellerSkuId(sellerId: string, sellerSkuId: string): Promise<any> {
+  const response = await SuggestedProducts.getInstance().getRequest(`/${sellerId}/${sellerSkuId}`);
+  const { data } = response;
+  return data;
+}
+
 export {
   getProductDetailById,
   getSkuFilesById,
-  getProductPriceById
+  getProductPriceById,
+  getSuggestedProductsBySellerIdAndSellerSkuId
 };
