@@ -250,7 +250,9 @@ const HomeController: React.FC = () => {
    */
   const fetchAddresses = useCallback(async () => {
     loader.show();
-    await dispatch(getUserAddressesThunk(user.user_id!));
+    if(userVtex.id){
+      await dispatch(getUserAddressesThunk(userVtex.id!));
+    }
   }, []);
 
   /**
@@ -258,7 +260,7 @@ const HomeController: React.FC = () => {
    * TODO: if you need reload addresses on each load of the home screen, please remove the "if" sentence.
    */
   useEffect(() => {
-    if (user.addresses?.length === 0) fetchAddresses();
+    fetchAddresses();
   }, [fetchAddresses]);
 
   const goToOrders = () => {

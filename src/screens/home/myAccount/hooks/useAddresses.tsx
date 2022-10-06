@@ -42,8 +42,9 @@ export const useAddresses = () => {
   }, [loading]);
 
   const fetchAddresses = useCallback(async () => {
-    const address = await dispatch(getUserAddressesThunk(userVtex.id!));
-    console.log('PIZZA ', userVtex.id, '-> ', address  );
+    if(userVtex.id){
+      await dispatch(getUserAddressesThunk(userVtex.id!));
+    }
   }, []);
 
   const fetchAddressByPostalCode = useCallback(async (postalCode: string) => {
@@ -56,7 +57,7 @@ export const useAddresses = () => {
   }, []);
 
   useEffect(() => {
-    if (user.addresses?.length === 0) fetchAddresses();
+    fetchAddresses();
   }, [fetchAddresses]);
 
   /**

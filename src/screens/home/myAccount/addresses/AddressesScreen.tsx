@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, Platform, ScrollView } from 'react-native';
+import { Image, RefreshControl, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TextContainer, Button, Container, AddressCard, InfoCard } from 'components';
 import { ICONN_NO_ADDRESSES } from 'assets/images';
@@ -11,9 +11,11 @@ interface Props {
   onPressAddNewAddress: () => void;
   onPressEdit: (address: Address, position: number) => void;
   onPressDelete: (address: Address, position: number) => void;
+  onRefresh: ()=>{};
+  refreshing: boolean;
 }
 
-const AddressesScreen: React.FC<Props> = ({ addresses, onPressAddNewAddress, onPressEdit, onPressDelete }) => {
+const AddressesScreen: React.FC<Props> = ({ addresses, onPressAddNewAddress, onPressEdit, onPressDelete, onRefresh, refreshing }) => {
   const insets = useSafeAreaInsets();
   const [isOnline, setIsOnline] = useState(false);
 
@@ -26,14 +28,23 @@ const AddressesScreen: React.FC<Props> = ({ addresses, onPressAddNewAddress, onP
   const order = (a: any, b: any) => {
     return a < b ? -1 : a > b ? 1 : 0;
   };
+  
 
   return (
     <Container flex useKeyboard>
       <ScrollView
-        bounces={false}
+        bounces={true}
         contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom + 16 }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={()=>{
+              onRefresh()
+            }}
+          />
+        }
       >
         <Container flex>
           {!isOnline ? (
