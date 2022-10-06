@@ -8,9 +8,9 @@ import { store } from 'rtk';
 export const useShoppingCart = () => {
   const dispatch = useAppDispatch();
   /**
-   *
-   * @param newSeller: optional, is used when we want migrate the cart to another branch, in this case we must send the new branch/store/seller name.
-   * @param zeroQuantity: optional, is used when we want empty shopping cart, in this case we must send this param with zero value.
+   * Get the shopping cart items in redux.
+   * @param newSeller optional, is used when we want migrate the cart to another branch, in this case we must send the new branch/store/seller name.
+   * @param zeroQuantity optional, is used when we want empty shopping cart, in this case we must send this param with zero value.
    * @returns
    */
   const getCartItemsFromRedux = (newSeller?: string, zeroQuantity?: number): cartItemInterface[] | undefined => {
@@ -28,6 +28,12 @@ export const useShoppingCart = () => {
     }
   };
 
+  /**
+   * This function allows to manage all the logic for the assembly of the "items" that the PATCH endpoint needs to update the shopping cart.
+   * @param type is the CounterType; create, add, substract, remove a product from the shopping cart.
+   * @param productId is the vtex product id.
+   * @returns
+   */
   const buildNewCartItems = (type: CounterType, productId: string): cartItemsRequestInterface | undefined => {
     const reduxCartItems: cartItemInterface[] | undefined = getCartItemsFromRedux();
     let cartItemsRequest: cartItemsRequestInterface;
@@ -84,7 +90,7 @@ export const useShoppingCart = () => {
     // 2. Once it has been emptied, we proceed to migrate to the new branch/store/seller:
     if (emptyCart) {
       const cartItems: cartItemInterface[] | undefined = getCartItemsFromRedux(seller);
-      // Very important: When you need to migrate a shopping cart to another branch, you need to send the products array without indexes!
+      // Very important: When you need to migrate a shopping cart to another branch, you need to send the products array without indexes, as you can see here:
       const cartItemsWithoutIndexes: cartItemInterface[] = cartItems?.map(({ id, quantity, seller }: cartItemInterface) => {
         return {
           id: id,

@@ -492,6 +492,7 @@ const HomeController: React.FC = () => {
 
   /**
    * Load home products when shopping cart is modified. For example if there is a substract, remove, add, in the cart.
+   * Also load home products again if user changes the default seller.
    */
   useEffect(() => {
     fetchProducts(global.recommended_products);
