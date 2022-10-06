@@ -188,16 +188,16 @@ const ProductDetailScreen = (itemId) => {
                           productId={prod.productId}
                           quantity={prod.quantity!}
                           onPressAddCart={() => {
-                            updateShoppingCartProduct('create', itemId.productIdentifier);
+                            updateShoppingCartProduct('create', prod.productId);
                           }}
                           onPressAddQuantity={() => {
-                            updateShoppingCartProduct('add', itemId.productIdentifier);
+                            updateShoppingCartProduct('add', prod.productId);
                           }}
                           onPressDeleteCart={() => {
-                            updateShoppingCartProduct('remove', itemId.productIdentifier);
+                            updateShoppingCartProduct('remove', prod.productId);
                           }}
                           onPressDecreaseQuantity={() => {
-                            updateShoppingCartProduct('substract', itemId.productIdentifier);
+                            updateShoppingCartProduct('substract', prod.productId);
                           }}
                         />
                       )
