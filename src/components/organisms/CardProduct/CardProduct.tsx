@@ -8,6 +8,8 @@ import { PriceWithDiscount } from 'components/molecules/PriceWithDiscount';
 import { QuantityProduct } from 'components/molecules/QuantityProduct';
 import { Container, CustomText } from 'components/atoms';
 import { moderateScale } from 'utils/scaleMetrics';
+import { Touchable } from 'components';
+import { useNavigation } from '@react-navigation/native';
 interface CardProductProps {
   price: number;
   name: string;
@@ -41,23 +43,29 @@ const CardProduct: React.FC<CardProductProps> = ({
   onPressDecreaseQuantity,
   notNeedMarginLeft
 }: CardProductProps) => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
   return (
     <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? 0 : 8) }]}>
       <Container style={styles.subContainer}>
-        <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
-          <Container row width={'100%'} space="between">
-            {porcentDiscount && (
-              <Container flex width={"100%"}>
-                <Container style={styles.containerPorcentDiscount}>
-                  <CustomText fontSize={theme.fontSize.h6} textColor={theme.brandColor.iconn_green_original} fontWeight={'bold'} text={`-${porcentDiscount}%`} />
+        <Touchable onPress={() => {
+          navigate('ProductDetail', { productIdentifier: productId });
+        }}>
+          <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
+            <Container row width={'100%'} space="between">
+              {porcentDiscount && (
+                <Container flex width={"100%"}>
+                  <Container style={styles.containerPorcentDiscount}>
+                    <CustomText fontSize={theme.fontSize.h6} textColor={theme.brandColor.iconn_green_original} fontWeight={'bold'} text={`-${porcentDiscount}%`} />
+                  </Container>
                 </Container>
+              )}
+              <Container flex width={"100%"} style={{ justifyContent: "center", alignItems: "flex-end" }}>
+                <FavoriteButton sizeIcon={moderateScale(24)} isFavorite onPressItem={() => { }} />
               </Container>
-            )}
-            <Container flex width={"100%"} style={{justifyContent:"center", alignItems:"flex-end"}}>
-              <FavoriteButton sizeIcon={moderateScale(24)} isFavorite onPressItem={() => {}} />
             </Container>
-          </Container>
-        </ImageBackground>
+          </ImageBackground>
+        </Touchable>
         <Container style={styles.containerTitle}>
           <CustomText fontSize={theme.fontSize.h5} text={`${name}`} numberOfLines={3} />
         </Container>
