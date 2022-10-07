@@ -49,7 +49,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           }}
         />
         <NavigationMenuItem
-          text="Favoritos"
+          text="Mis favoritos"
           disable={false}
           icon={<MaterialCommunityIcons name="heart-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
           onPressNavigateTo={() => {
