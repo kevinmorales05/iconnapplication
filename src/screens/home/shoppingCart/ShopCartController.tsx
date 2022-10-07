@@ -1,78 +1,53 @@
+import React from 'react';
 import { SafeArea } from 'components';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import {
-  Dimensions,
-  Image,
-  ImageSourcePropType,
-  Pressable,
-  StyleSheet,
-  View
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, ClientProfileDataInterface } from 'rtk';
 import ShopCartScreen from './ShopCartScreen';
-import { logoutThunk } from 'rtk/thunks/auth.thunks';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
-import { setInvoicingInitialState, setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
-import { getShoppingCart, emptyShoppingCar, updateShoppingCart } from 'services/vtexShoppingCar.services';
-import {getShoppingCartThunk} from 'rtk/thunks/vtex-shoppingCart.thunks'
-
-const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
-const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
-
-interface Props {
-  carouselItems?: ItemProps;
-}
-interface ItemProps {
-  image: ImageSourcePropType;
-  text: string;
-}
-interface State {
-  activeIndex: number;
-  carouselItems: ItemProps[];
-}
+import { saveClientProfileDataThunk } from 'rtk/thunks/vtex-shoppingCart.thunks';
+import { useLoading, useToast } from 'context';
 
 const ShopCartController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
-  const {guest : guestLogged} = useAppSelector((state: RootState) => state.guest);
-  const { cart : dataFromCart } = useAppSelector((state: RootState) => state.cart);
+  const { cart } = useAppSelector((state: RootState) => state.cart);
+  const loader = useLoading();
+  const toast = useToast();
 
-  const { isGuest } = guestLogged;  const { isLogged } = userLogged;
-  const modVis = (isLogged) ? true : false;
-  const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
-  const { navigate } =
-    useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
-  const logOut = async () => {
-    if (isLogged) {
-      const { meta } = await dispatch(logoutThunk());
-      if (meta.requestStatus === 'fulfilled') {
-        /*dispatch(setAppInitialState());
-        dispatch(setAuthInitialState());
-        dispatch(setGuestInitialState());
-        dispatch(setInvoicingInitialState());*/
-      }  
-    } else {/*
-      dispatch(setAppInitialState());
-      dispatch(setAuthInitialState());
-      dispatch(setGuestInitialState());
-      dispatch(setInvoicingInitialState());*/
+  const goToCheckout = async () => {
+    loader.show();
+
+    const clientProfileDataPayload: ClientProfileDataInterface = {
+      email: user.email,
+      firstName: user.name,
+      lastName: user.lastName,
+      documentType: '',
+      document: '',
+      phone: user.telephone,
+      corporateName: '',
+      tradeName: '',
+      corporateDocument: '',
+      stateInscription: '',
+      corporatePhone: '',
+      isCorporate: false
+    };
+
+    try {
+      let response: any;
+      response = await dispatch(saveClientProfileDataThunk({ orderFormId: cart.orderFormId, clientProfileData: clientProfileDataPayload })).unwrap();
+      if (response) navigate('Checkout');
+      else toast.show({ message: 'Error al procesar la informacion de su perfil.', type: 'warning' });
+    } catch (error: any) {
+      toast.show({ message: error, type: 'error' });
+    } finally {
+      loader.hide();
     }
   };
 
-  const goToMyAccount = () => {
-   navigate('Checkout');
-  }
-  const goToInvoice = () => {
-    (isGuest) ? navigate('InviteSignUp') : navigate('Invoice');
-  }
-
-   
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -81,39 +56,9 @@ const ShopCartController: React.FC = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-     <ShopCartScreen
-        onPressLogOut={logOut}
-        onPressMyAccount={goToMyAccount}
-        onPressInvoice={goToInvoice}
-      />
-
+      <ShopCartScreen onPressCheckout={goToCheckout} onPressSeeMore={() => console.log('Ver artículos...')} />
     </SafeArea>
   );
 };
-
-const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover'
-  },
-  modalBackground: {
-    justifyContent: 'space-evenly',
-    backgroundColor: 'white',
-    flex: 1,
-    height: CONTAINER_HEIGHT,
-    marginVertical: CONTAINER_HEIGHT,
-    marginHorizontal: 40,
-    borderRadius: 16,
-    paddingTop: 10
-  },
-  iconContainer: {
-    backgroundColor: theme.brandColor.iconn_warm_grey,
-    alignSelf: 'flex-end',
-    marginTop: 12,
-    marginRight: 12,
-    padding: 8
-  }
-});
-
 
 export default ShopCartController;

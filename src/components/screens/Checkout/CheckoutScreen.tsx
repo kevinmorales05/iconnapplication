@@ -10,7 +10,7 @@ interface Props {
   orderFormId: string;
 }
 
-const ContactInformationScreen: React.FC<Props> = ({ onSubmit, goBack, user, orderFormId }) => {
+const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, user, orderFormId }) => {
   const toast = useToast();
 
   function onMessage(data: any) {
@@ -18,8 +18,8 @@ const ContactInformationScreen: React.FC<Props> = ({ onSubmit, goBack, user, ord
   }
 
   const onNavigationStateChange = (navState: any) => {
-    console.log('navState from webview:');
-    console.log(navState);
+    // console.log('navState from webview:');
+    // console.log(navState);
   };
 
   return (
@@ -71,4 +71,4 @@ const ContactInformationScreen: React.FC<Props> = ({ onSubmit, goBack, user, ord
   );
 };
 
-export default ContactInformationScreen;
+export default CheckoutScreen;

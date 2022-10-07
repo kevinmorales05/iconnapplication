@@ -1,38 +1,27 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, View, StyleSheet, Text } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
-import { CustomText, Button, Container, Section, SafeArea, Touchable, TextContainer } from 'components';
-import {
-  ICONN_SHOPPING_CART_BASKET,
-  ICONN_DELETE_SHOPPING_CART_ITEM,
-  ICONN_EMPTY_SHOPPING_CART
-} from 'assets/images';
-import { Image, StyleProp, ViewStyle } from 'react-native';
-import { object, text } from '@storybook/addon-knobs';
+import { CustomText, Button, Container, Touchable, TextContainer } from 'components';
+import { ICONN_SHOPPING_CART_BASKET, ICONN_DELETE_SHOPPING_CART_ITEM, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
+import { Image } from 'react-native';
 import { getShoppingCart, emptyShoppingCar, updateShoppingCart, clearShoppingCartMessages } from 'services/vtexShoppingCar.services';
-import items from 'assets/files/sellers.json';
-import Icon from 'react-native-vector-icons/AntDesign';
-import IconO from 'react-native-vector-icons/FontAwesome5'
+import IconO from 'react-native-vector-icons/FontAwesome5';
 import { ConnectionItem } from 'components/organisms/ConnectionItem';
 import { useAlert, useLoading, useToast } from 'context';
-import { setShoppingCartInitialState, getShoppingCartItems, updateShoppingCartItems, cleanShoppingCart } from 'rtk/slices/cartSlice';
+import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
 
 interface Props {
-  onPressInvoice: () => void;
-  onPressMyAccount: () => void;
-  onPressLogOut: () => void;
+  onPressSeeMore: () => void;
+  onPressCheckout: () => void;
 }
 
-
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
-import { registerWithFirebaseThunk } from '../../../rtk/thunks/auth.thunks';
-import { WidthType } from '../../../components/types/width-type';
+import { RootState, useAppSelector, useAppDispatch } from 'rtk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { HomeStackParams } from '../../../navigation/types';
 
-const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onPressLogOut }) => {
+const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout }) => {
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const loader = useLoading();
@@ -55,45 +44,46 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
   const fetchData = useCallback(async () => {
     console.log('fetchData...');
-    const data = await getShoppingCart(cart.orderFormId).then(response => {
-      const { items, messages, totalizers } = response;
-      let orderItems = [];
-      items.map((item, index) => {
-        orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
+    const data = await getShoppingCart(cart.orderFormId)
+      .then(response => {
+        const { items, messages, totalizers } = response;
+        let orderItems = [];
+        items.map((item, index) => {
+          orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
+        });
+        setRequestList(orderItems);
+        setMessages(messages);
+        setTotalizers(totalizers[0]);
+        setOrderFormId(cart.orderFormId);
+        let withoutStockM = new Map();
+        if (messages.length > 0) {
+          messages.map(value => {
+            if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
+              withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
+            }
+          });
+          setWithoutStockMap(withoutStockM);
+        }
+
+        let calculated = 0;
+        if (items.length > 0) {
+          items.map((value, index) => {
+            if (withoutStockM.get(index)) {
+              value.hasErrorMessage = true;
+              value.errorMessage = withoutStockM.get(index);
+            } else {
+              console.log(value.priceDefinition.total);
+              calculated = calculated + value.priceDefinition.total;
+              value.hasErrorMessage = false;
+              value.errorMessage = '';
+            }
+          });
+          setSubTotalCalculated(calculated);
+          setProductList(items);
+        }
+        dispatch(updateShoppingCartItems(response));
       })
-      setRequestList(orderItems);
-      setMessages(messages);
-      setTotalizers(totalizers[0]);
-      setOrderFormId(cart.orderFormId);
-      let withoutStockM = new Map();
-      if (messages.length > 0) {
-        messages.map((value) => {
-          if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
-            withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
-          }
-        })
-        setWithoutStockMap(withoutStockM);
-      }
-
-      let calculated = 0;
-      if (items.length > 0) {
-        items.map((value, index) => {
-          if (withoutStockM.get(index)) {
-            value.hasErrorMessage = true;
-            value.errorMessage = withoutStockM.get(index);
-          } else {
-            console.log(value.priceDefinition.total);
-            calculated = (calculated + value.priceDefinition.total);
-            value.hasErrorMessage = false;
-            value.errorMessage = '';
-          }
-        })
-        setSubTotalCalculated(calculated);
-        setProductList(items);
-      }
-      dispatch(updateShoppingCartItems(response));
-    }).catch((error) => console.log(error));
-
+      .catch(error => console.log(error));
   }, []);
 
   useEffect(() => {
@@ -105,83 +95,89 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
     try {
       let oldQuantity = request.orderItems[updatedIndex].quantity;
       await clearShoppingCartMessages(orderFormId, request);
-      await updateShoppingCart(orderFormId, request).then(response => {
-        const { items, messages, totalizers } = response;
-        let itemsToBasket = items;
-        setMessages(messages);
-        setTotalizers(totalizers[0]);
+      await updateShoppingCart(orderFormId, request)
+        .then(response => {
+          const { items, messages, totalizers } = response;
+          let itemsToBasket = items;
+          setMessages(messages);
+          setTotalizers(totalizers[0]);
 
-        let orderItems = [];
-        items.map((item, index) => {
-          orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
-        })
-        setRequestList(orderItems);
+          let orderItems = [];
+          items.map((item, index) => {
+            orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
+          });
+          setRequestList(orderItems);
 
-        let withoutStockM = new Map();
-        let hasAvailableMessage = false;
-        if (messages) {
-          const tam = messages.length;
-          console.log('tamaño mensajes: ', tam);
-          if (tam > 0) {
-            let unAvailableItemsNumber = 0;
-            messages.map((value) => {
-              if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
-                withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
-                unAvailableItemsNumber++;
-              }
-              if (value.code == 'itemQuantityNotAvailable') {
-                hasAvailableMessage = true;
-              }
-            })
+          let withoutStockM = new Map();
+          let hasAvailableMessage = false;
+          if (messages) {
+            const tam = messages.length;
+            console.log('tamaño mensajes: ', tam);
+            if (tam > 0) {
+              let unAvailableItemsNumber = 0;
+              messages.map(value => {
+                if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
+                  withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
+                  unAvailableItemsNumber++;
+                }
+                if (value.code == 'itemQuantityNotAvailable') {
+                  hasAvailableMessage = true;
+                }
+              });
 
-            setWithoutStockMap(withoutStockM);
-          }
-        }
-
-        if (items.length > 0) {
-          let calculated = 0;
-          items.map((value, index) => {
-            if (withoutStockM.get(index)) {
-              value.hasErrorMessage = true;
-              value.errorMessage = withoutStockM.get(index);
-            } else {
-              console.log(value.priceDefinition.total);
-              calculated = (calculated + value.priceDefinition.total);
-              value.hasErrorMessage = false;
-              value.errorMessage = '';
+              setWithoutStockMap(withoutStockM);
             }
-          })
-          setSubTotalCalculated(calculated);
-          setProductList(items);
-        } else {
-          setProductList(undefined);
-        }
-        dispatch(updateShoppingCartItems(response));
+          }
 
-        console.log('****************operation:' + operation);
-        if (operation == "increase") {
-          toastFunction(hasAvailableMessage ? "addingProductError" : operation, hasAvailableMessage ? 'La compra esta limitada a ' + (oldQuantity - 1) + ' unidades de este artículo.' : msgOperation);
-        } else {
-          toastFunction(operation, msgOperation);
-        }
-      }).catch((error) => console.log(error));
+          if (items.length > 0) {
+            let calculated = 0;
+            items.map((value, index) => {
+              if (withoutStockM.get(index)) {
+                value.hasErrorMessage = true;
+                value.errorMessage = withoutStockM.get(index);
+              } else {
+                console.log(value.priceDefinition.total);
+                calculated = calculated + value.priceDefinition.total;
+                value.hasErrorMessage = false;
+                value.errorMessage = '';
+              }
+            });
+            setSubTotalCalculated(calculated);
+            setProductList(items);
+          } else {
+            setProductList(undefined);
+          }
+          dispatch(updateShoppingCartItems(response));
+
+          console.log('****************operation:' + operation);
+          if (operation == 'increase') {
+            toastFunction(
+              hasAvailableMessage ? 'addingProductError' : operation,
+              hasAvailableMessage ? 'La compra esta limitada a ' + (oldQuantity - 1) + ' unidades de este artículo.' : msgOperation
+            );
+          } else {
+            toastFunction(operation, msgOperation);
+          }
+        })
+        .catch(error => console.log(error));
     } catch (error) {
       console.log(error);
     }
-
   }, []);
 
   const emptyShoppingCartItemsServiceCall = useCallback(async (orderFormId, request) => {
     await clearShoppingCartMessages(orderFormId, request);
-    await emptyShoppingCar(orderFormId, request).then(response => {
-      const { items, messages, totalizers } = response;
-      setProductList(items);
-      dispatch(updateShoppingCartItems(response));
-      setMessages(messages);
-      setTotalizers(totalizers[0]);
-      setRequestList(null);
-      setWithoutStockMap(null);
-    }).catch((error) => console.log(error));
+    await emptyShoppingCar(orderFormId, request)
+      .then(response => {
+        const { items, messages, totalizers } = response;
+        setProductList(items);
+        dispatch(updateShoppingCartItems(response));
+        setMessages(messages);
+        setTotalizers(totalizers[0]);
+        setRequestList(null);
+        setWithoutStockMap(null);
+      })
+      .catch(error => console.log(error));
   }, []);
 
   const showAlert = () => {
@@ -204,13 +200,18 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       'deleteCart',
       false,
       true
-    )
-  }
+    );
+  };
 
   const deleteUnavailableItems = () => {
     let orderItems = [];
     withoutStockMap.forEach((value, key, map) => {
-      orderItems.push({ id: (productList[key] != undefined && productList[key].productId != undefined ? productList[key].productId : 0), quantity: 0, seller: 1, index: key });
+      orderItems.push({
+        id: productList[key] != undefined && productList[key].productId != undefined ? productList[key].productId : 0,
+        quantity: 0,
+        seller: 1,
+        index: key
+      });
     });
     // una opcion podria se mandar withoutStockMap a vacio para que no tenga que eliminar
     let request = { orderItems };
@@ -219,10 +220,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
       if (!value.hasErrorMessage) {
         itOld.push(value);
       }
-    })
+    });
     setProductList(itOld);
     setWithoutStockMap(undefined);
-    updateShoppingCartQuantityServiceCall(orderFormId, request, "deleteUnavailable", 'Se eliminaron los articulos no disponibles de la canasta.', 0);
+    updateShoppingCartQuantityServiceCall(orderFormId, request, 'deleteUnavailable', 'Se eliminaron los articulos no disponibles de la canasta.', 0);
   };
 
   useEffect(() => {
@@ -239,27 +240,27 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   }, [loading]);
 
   function toastFunction(tag, msg) {
-    if (tag === "decrease" || tag === "increase") {
+    if (tag === 'decrease' || tag === 'increase') {
       toast.show({
         message: msg,
         type: 'success'
       });
-    } else if (tag === "addingProductError") {
+    } else if (tag === 'addingProductError') {
       toast.show({
         message: msg,
         type: 'limited'
       });
-    } else if (tag === "delete") {
+    } else if (tag === 'delete') {
       toast.show({
         message: msg,
         type: 'success'
       });
-    } else if (tag === "deleteUnavailable") {
+    } else if (tag === 'deleteUnavailable') {
       toast.show({
         message: msg,
         type: 'success'
       });
-    } else if (tag == "empty") {
+    } else if (tag == 'empty') {
       toast.show({
         message: msg,
         type: 'success'
@@ -277,7 +278,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         orderItems[itemIndex].quantity = itemQuantityReceived;
         //loader.show();
         setLoadingStatus(true);
-        updateShoppingCartQuantityServiceCall(orderFormId, { orderItems }, "decrease", 'Se actualizó el artículo en la canasta.', itemIndex);
+        updateShoppingCartQuantityServiceCall(orderFormId, { orderItems }, 'decrease', 'Se actualizó el artículo en la canasta.', itemIndex);
         //setLoadingStatus(false);
       } catch (error) {
         console.log(error);
@@ -295,7 +296,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         orderItems[itemIndex].quantity = itemQuantityReceived;
         //loader.show();
         setLoadingStatus(true);
-        updateShoppingCartQuantityServiceCall(orderFormId, { orderItems }, "increase", "Se actualizó el artículo en la canasta.", itemIndex);
+        updateShoppingCartQuantityServiceCall(orderFormId, { orderItems }, 'increase', 'Se actualizó el artículo en la canasta.', itemIndex);
         //setLoadingStatus(false);
       } catch (error) {
         console.log(error);
@@ -311,7 +312,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         row
         circle
         style={{
-          marginRight:14,
+          marginRight: 14,
           borderStartWidth: 1,
           borderLeftColor: theme.brandColor.iconn_grey,
           borderEndWidth: 1,
@@ -334,7 +335,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             <CustomText text="" fontSize={7}></CustomText>
           </Container>
           <Container>
-            <TextContainer text={item.quantity} textAlign='auto' fontSize={14}></TextContainer>
+            <TextContainer text={item.quantity} textAlign="auto" fontSize={14}></TextContainer>
           </Container>
           <Container>
             <CustomText text="" fontSize={7}></CustomText>
@@ -367,7 +368,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         //loader.show();
         setLoadingStatus(true);
         emptyShoppingCartItemsServiceCall(orderFormId, {});
-        toastFunction("empty", "Se eliminaron los artículos de la canasta.");
+        toastFunction('empty', 'Se eliminaron los artículos de la canasta.');
       } catch (error) {
         console.log(error);
       } finally {
@@ -378,15 +379,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
 
     return (
       <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%' }}>
-        {
-          itemsLenght > 0 ?
-            toShow.map((value, index) => {
-              return (
-                <Item key={index + value} value={value} arrayIndex={index} orderForm={orderFormId} />
-              )
-            }
-            ) : <></>
-        }
+        {itemsLenght > 0 ? (
+          toShow.map((value, index) => {
+            return <Item key={index + value} value={value} arrayIndex={index} orderForm={orderFormId} />;
+          })
+        ) : (
+          <></>
+        )}
         <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
           <TextContainer
             textColor={theme.brandColor.iconn_grey}
@@ -438,12 +437,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
           setWithoutStockMap(undefined);
         }
         setLoadingStatus(true);
-        updateShoppingCartQuantityServiceCall(orderForm, { orderItems }, "delete", "Se eliminó el artículo de la canasta.", arrayIndex);
+        updateShoppingCartQuantityServiceCall(orderForm, { orderItems }, 'delete', 'Se eliminó el artículo de la canasta.', arrayIndex);
         //setLoadingStatus(false);
       } catch (error) {
         console.log(error);
       } finally {
-        //loader.hide(); 
+        //loader.hide();
       }
     };
 
@@ -462,34 +461,49 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         }}
       >
         <Container>
-          <Touchable onPress={() => {
-            navigate('ProductDetail', {productIdentifier: value.id});
-          }}>
+          <Touchable
+            onPress={() => {
+              navigate('ProductDetail', { productIdentifier: value.id });
+            }}
+          >
             <Image source={{ uri: value.imageUrl }} style={{ marginTop: 10, width: 90, height: 88 }} />
           </Touchable>
         </Container>
-        <Container space='between' style={{ marginTop: 10, width: '100%', height: 58 }}>
-          <Container row space="between" style={{ marginTop: 3, paddingRight: 100}}>
+        <Container space="between" style={{ marginTop: 10, width: '100%', height: 58 }}>
+          <Container row space="between" style={{ marginTop: 3, paddingRight: 100 }}>
             <Container style={{ width: '70%' }}>
-              <Touchable onPress={() => {
-                navigate('ProductDetail', {productIdentifier: value.id});
-              }}>
+              <Touchable
+                onPress={() => {
+                  navigate('ProductDetail', { productIdentifier: value.id });
+                }}
+              >
                 <Text numberOfLines={2} style={{ color: 'black' }}>
                   {value.name}
                 </Text>
               </Touchable>
             </Container>
-            <Container style={{ width: '38%'}}>
-              {
-                value.hasErrorMessage ? <></> :
-                  <TextContainer text={'$' + (value.priceDefinition.total / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} fontBold marginLeft={10}></TextContainer>
-              }
+            <Container style={{ width: '38%' }}>
+              {value.hasErrorMessage ? (
+                <></>
+              ) : (
+                <TextContainer
+                  text={'$' + (value.priceDefinition.total / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                  fontBold
+                  marginLeft={10}
+                ></TextContainer>
+              )}
             </Container>
           </Container>
           <Container style={{ marginTop: 2 }}>
-            <TextContainer numberOfLines={1} text={'$' + (value.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'} textColor="grey" fontSize={12} marginTop={4}></TextContainer>
+            <TextContainer
+              numberOfLines={1}
+              text={'$' + (value.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'}
+              textColor="grey"
+              fontSize={12}
+              marginTop={4}
+            ></TextContainer>
           </Container>
-          <Container row crossCenter space="between" style={{ width: '73%', marginTop: 4 }} >
+          <Container row crossCenter space="between" style={{ width: '73%', marginTop: 4 }}>
             <Button
               fontSize="h6"
               color="iconn_red_original"
@@ -501,40 +515,46 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
             >
               Eliminar
             </Button>
-            {
-              value.hasErrorMessage ?
-                <Container space='around' alignment='start' style={{
-                  marginRight:12,
+            {value.hasErrorMessage ? (
+              <Container
+                space="around"
+                alignment="start"
+                style={{
+                  marginRight: 12,
                   backgroundColor: theme.brandColor.iconn_light_grey,
                   borderRadius: 15,
                   paddingVertical: 5,
-                  paddingHorizontal: 10,
-                  
-                }} backgroundColor={theme.brandColor.iconn_med_grey}>
-                  <TextContainer text="No disponible" fontSize={12} textColor={theme.fontColor.paragraph} fontBold ></TextContainer>
-                </Container>
-                :
-                <Counter orderFormId={orderFormId} item={value} itemIndex={arrayIndex} />
-            }
+                  paddingHorizontal: 10
+                }}
+                backgroundColor={theme.brandColor.iconn_med_grey}
+              >
+                <TextContainer text="No disponible" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
+              </Container>
+            ) : (
+              <Counter orderFormId={orderFormId} item={value} itemIndex={arrayIndex} />
+            )}
           </Container>
         </Container>
       </Container>
     );
   };
 
-  const fullCart = (<Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background }}>
-    <ScrollView bounces={false}
-      style={{ flex: 1, marginTop: 0, width: '100%' }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingBottom: insets.bottom + 1,
-        backgroundColor: theme.brandColor.iconn_background
-      }}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}>
-      {
-        withoutStockMap != undefined && withoutStockMap.size > 0 ?
-          <Container space='around'
+  const fullCart = (
+    <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background }}>
+      <ScrollView
+        bounces={false}
+        style={{ flex: 1, marginTop: 0, width: '100%' }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingBottom: insets.bottom + 1,
+          backgroundColor: theme.brandColor.iconn_background
+        }}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        {withoutStockMap != undefined && withoutStockMap.size > 0 ? (
+          <Container
+            space="around"
             style={{
               borderLeftColor: theme.brandColor.iconn_red_original,
               borderRightColor: theme.brandColor.iconn_red_original,
@@ -549,15 +569,23 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
               backgroundColor: theme.brandColor.iconn_white,
               borderRadius: 8,
               paddingVertical: 15
-            }}>
-            <Container style={{
-              borderLeftColor: theme.brandColor.iconn_white,
-              borderRightColor: theme.brandColor.iconn_white,
-              borderBottomColor: theme.brandColor.iconn_white,
-              borderTopColor: theme.brandColor.iconn_white,
-              borderWidth: 7
-            }} >
-              <CustomText fontSize={13} alignSelf='center' text="Algunos artículos ya no están disponibles en tienda y deben ser eliminados de tu canasta para poder continuar con tu compra." textAlign="justify"></CustomText>
+            }}
+          >
+            <Container
+              style={{
+                borderLeftColor: theme.brandColor.iconn_white,
+                borderRightColor: theme.brandColor.iconn_white,
+                borderBottomColor: theme.brandColor.iconn_white,
+                borderTopColor: theme.brandColor.iconn_white,
+                borderWidth: 7
+              }}
+            >
+              <CustomText
+                fontSize={13}
+                alignSelf="center"
+                text="Algunos artículos ya no están disponibles en tienda y deben ser eliminados de tu canasta para poder continuar con tu compra."
+                textAlign="justify"
+              ></CustomText>
               <Button
                 fontSize="h6"
                 color="iconn_red_original"
@@ -571,16 +599,17 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
                 Eliminar artículos no disponibles
               </Button>
             </Container>
-          </Container> :
+          </Container>
+        ) : (
           <></>
-      }
-      <ItemsList itemss={productList} />
-    </ScrollView>
-  </Container>
+        )}
+        <ItemsList itemss={productList} />
+      </ScrollView>
+    </Container>
   );
 
   const emptyCart = (
-    <Container flex >
+    <Container flex>
       <Container flex crossCenter>
         <Image source={ICONN_SHOPPING_CART_BASKET} style={{ width: 40, height: 40, alignSelf: 'center' }} />
         <CustomText text="Tu canasta está vacía" textAlign="center" fontBold></CustomText>
@@ -594,36 +623,52 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   );
 
   const emptyCartFooter = (
-    <Container center style={{ paddingLeft: 0, width: '100%', height: '20%',  paddingTop: 50 }}>
-      <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}>
+    <Container center style={{ paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50 }}>
+      <Button
+        length="long"
+        fontSize="h5"
+        round
+        fontBold
+        onPress={onPressSeeMore}
+        style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
+      >
         Ver artículos
       </Button>
     </Container>
   );
 
   const fullCartFooter = (
-    <Container space='evenly' style={{ paddingLeft: 10, width: '100%', height: '20%', backgroundColor: theme.fontColor.white }}>
-      <Container row space="between" style={{ marginTop: 8, width: '90%' }} >
-        <TextContainer marginLeft={7.5} text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} ></TextContainer>
-        <CustomText text={"$" + (totalizers != undefined ? (subTotalCalculated / 100) : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'} fontSize={18} fontBold></CustomText>
+    <Container space="evenly" style={{ paddingLeft: 10, width: '100%', height: '20%', backgroundColor: theme.fontColor.white }}>
+      <Container row space="between" style={{ marginTop: 8, width: '90%' }}>
+        <TextContainer marginLeft={7.5} text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+        <CustomText
+          text={'$' + (totalizers != undefined ? subTotalCalculated / 100 : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'}
+          fontSize={18}
+          fontBold
+        ></CustomText>
       </Container>
       <Container center>
-        <Button length="long" fontSize="h5" round fontBold onPress={onPressMyAccount} style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50,  borderRadius: 10  }}>
+        <Button
+          length="long"
+          fontSize="h5"
+          round
+          fontBold
+          onPress={onPressCheckout}
+          style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
+        >
           Continuar
         </Button>
       </Container>
     </Container>
   );
 
-  const cartFooter = ((productList != undefined) && (productList.length > 0)) ? fullCartFooter : emptyCartFooter;
+  const cartFooter = productList != undefined && productList.length > 0 ? fullCartFooter : emptyCartFooter;
   const cartBody = productList != undefined && productList.length > 0 ? fullCart : emptyCart;
 
   return (
     <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', padding: 0 }}>
       {inter ? (
-        <>
-          {cartBody}
-        </>
+        <>{cartBody}</>
       ) : (
         <>
           <Container flex backgroundColor={theme.brandColor.iconn_background} style={{ width: '100%' }}>

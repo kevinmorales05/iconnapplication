@@ -114,3 +114,23 @@ export interface AuthCookie {
   Name: string;
   Value: string;
 }
+
+export interface ClientProfileDataInterface {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  documentType?: string;
+  document?: string;
+  phone?: string;
+  corporateName?: string;
+  tradeName?: string;
+  corporateDocument?: string;
+  stateInscription?: string;
+  corporatePhone?: string;
+  isCorporate?: boolean;
+}
+
+export interface ClientProfileDataWithOrderFormInterface {
+  orderFormId: string;
+  clientProfileData: ClientProfileDataInterface;
+}
