@@ -69,7 +69,7 @@ export default SearchBar;
 const styles = StyleSheet.create({
   containerSearchBar: {
     width: '100%',
-    height: moderateScale(36),
+    height: moderateScale(40),
     backgroundColor: theme.brandColor.iconn_white,
     borderRadius: moderateScale(10),
     borderColor: theme.brandColor.iconn_med_grey,

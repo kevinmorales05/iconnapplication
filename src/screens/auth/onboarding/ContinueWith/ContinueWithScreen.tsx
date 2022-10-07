@@ -6,25 +6,67 @@ import { TouchableText, Button, Container } from 'components';
 import theme from 'components/theme/theme';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import { SocialNetworkType } from 'rtk';
+import { AuthProviderInterface, SocialNetworkType } from 'rtk';
 import appleAuth from '@invertase/react-native-apple-authentication';
 
 interface Props {
-  onPressSocialButton: (type: SocialNetworkType) => void;  
+  onPressSocialButton: (type: string) => void;  
   onPressEmail: () => void;
   onPressOthers: () => void; 
-  onPressGoogle: () => void; 
-  onPressFacebook: () =>void;
+  providers: AuthProviderInterface[];
 }
 
 const ContinueWithScreen: React.FC<Props> = ({
   onPressSocialButton,
-  onPressFacebook,
   onPressEmail,
   onPressOthers,
-  onPressGoogle
+  providers
 }) => {
   const insets = useSafeAreaInsets();
+
+  const renderButtons = ()=>{
+    if(providers.length){
+      return providers.map((provider)=>{
+        if(provider.providerName === "Google"){
+          return(
+            <Button
+              color="google"
+              round
+              onPress={()=>{
+                onPressSocialButton(provider.providerName)
+              }}
+              fontSize="h4"
+              fontBold
+              style={{ marginTop: 8 }}
+              icon={<FontAwesome5 name="google" size={24} color="white" />}
+            >
+              Continúa con Google
+            </Button>
+          )
+        }else if(provider.providerName === "Facebook"){
+          return(
+            <Button
+              color="facebook"
+              round
+              onPress={()=>{
+                onPressSocialButton(provider.providerName)
+              }}
+              fontSize="h4"
+              fontBold
+              style={{ marginTop: 8 }}
+              icon={<FontAwesome5 name="facebook" size={24} color="white" />}
+            >
+              Continúa con Facebook
+            </Button>
+          )
+        }else{
+          return null
+        }
+      })
+    }else{
+      return null
+    }
+  }
 
   return (
     <ScrollView
@@ -47,28 +89,9 @@ const ContinueWithScreen: React.FC<Props> = ({
       </Container>
 
       <Container flex alignment="end">
-        <Button
-          color="facebook"
-          round
-          onPress={onPressFacebook}
-          fontSize="h4"
-          fontBold
-          style={{ marginTop: 8 }}
-          icon={<FontAwesome5 name="facebook" size={24} color="white" />}
-        >
-          Continúa con Facebook
-        </Button>
-        <Button
-          color="google"
-          round
-          onPress={onPressGoogle}
-          fontSize="h4"
-          fontBold
-          style={{ marginTop: 8 }}
-          icon={<FontAwesome5 name="google" size={24} color="white" />}
-        >
-          Continúa con Google
-        </Button>
+        {
+          renderButtons()
+        }
         <Button
           round
           onPress={onPressEmail}

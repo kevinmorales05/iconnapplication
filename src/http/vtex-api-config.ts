@@ -44,6 +44,8 @@ const getApiUrl = (type: string) => {
       return API_VTEX_USER;
     case 'reviews':
       return VTEX_REVIEWS_RATINGS;
+    case 'authUserSocial':
+        return VTEX_DOCS;
     default:
       break;
   }

@@ -30,8 +30,8 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
   const { email, firstName, homePhone, gender, birthDate, lastName, profilePicture } = userVtex;
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
-  const [code, setCode] = useState(countries[1].code);
-  const [flag, setFlag] = useState(countries[1].flag);
+  const [code, setCode] = useState<string>();
+  const [flag, setFlag] = useState<string>();
   const [mobilePhone, setMobilePhone] = useState<string>();
   const navigation = useContext(NavigationContext);
   const [disabled, setDisabled] = useState(false);
@@ -78,16 +78,22 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
   const codeRef = useRef<TextInput>(null);
 
   const getCountryCode = () => {
+    console.log({mobilePhone})
     const countryC: any = countries.find(i => {
       const prefix = mobilePhone?.substring(i.code.length, 0);
       if (prefix === i.code) {
-        setCode(i.code);
+        setCode(prefix);
         setFlag(i.flag);
+        const numberPhone = homePhone?.slice(prefix.length + 1);
+        console.log('PHONENUMBER', numberPhone);
+        setValue('telephone', numberPhone);
         return i;
       }
+      //console.log('PREFIX', code)
     })
     console.log('country code', countryC);
     setValue('countryCode', countryC);
+    setValue('countryFlag', countryC);
   }
 
 
@@ -103,11 +109,10 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
     setValue('countryFlag', flag);
     if (homePhone) {
       const justPhone = homePhone.replace('+', '');
-      setValue('telephone', justPhone);
       //setMobilePhone(justPhone);
       setMobilePhone(justPhone);
     } else {
-      setValue('telephone', homePhone);
+      setValue('telephone', '');
     }
     setValue('email', email);
     
@@ -125,15 +130,13 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
     if (nameRef.current) {
       nameRef.current.focus();
     }
-    console.log('CODE', code);
-    console.log('FLAG', flag);
   }, []);
   
   useEffect(() => {
     getCountryCode();
   }, [mobilePhone])
   
-
+  console.log('CODEP', code);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {

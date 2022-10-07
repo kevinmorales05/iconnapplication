@@ -127,3 +127,11 @@ export const signInWithAppleThunk = createAsyncThunk('auth/signInWithAppleThunk'
     console.log(error);
   }  
 });
+
+/**
+ * VTEX loginSocialNetwork
+ */
+
+ export const getLoginProvidersThunk = createAsyncThunk('auth/getLoginProviders', async () => {
+  return await authServices.getLoginProviders();
+});

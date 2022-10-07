@@ -194,7 +194,7 @@ const theme: themeType = {
     google: '#e33629',
     yellow_star: '#f5d736'
   },
-  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(10) : moderateScale(5)
+  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(10) : moderateScale(30)
 
 };
 

@@ -1,7 +1,8 @@
 import { AxiosRequestConfig } from 'axios';
-import { AuthDataInterface, UserVtex } from 'rtk';
+import { AuthCookie, AuthDataInterface, UserVtex } from 'rtk';
 import { OtpsApi } from '../http/api-otps';
 import { UsersApi } from '../http/api-users';
+import { AuthUserSocial } from '../http/api-authUserSocial';
 import { HttpClient } from '../http/http-client';
 
 async function newUser(userEmail: UserVtex): Promise<any> {
@@ -255,6 +256,50 @@ async function sendEmailtoRecoverPassword(user: AuthDataInterface): Promise<any>
   return data;
 }
 
+async function getLoginProviders(): Promise<any> {
+  const response = await UsersApi.getInstance().getRequest(
+    `/vtexid/pub/authentication/start?callbackUrl=oneiconn.vtexcommercestable.com.br/api/vtexid/pub/authentication/finish&scope=oneiconn&locale=MX&accountName=oneiconn&returnUrl=/&appStart=true`
+  );
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function saveAuthCookies whit socialNetwork
+ * @param authCookie
+ * @param accountAuthCookie
+ */
+ async function loginWhitSocialNetwork(authCookie: AuthCookie, accountAuthCookie: AuthCookie): Promise<any> {
+  HttpClient.authCookie = authCookie;
+  HttpClient.accountAuthCookie = accountAuthCookie;
+
+  console.log("HttpClient.authCookie:",HttpClient.authCookie);
+  console.log("HttpClient.accountAuthCookie:",HttpClient.accountAuthCookie);
+}
+
+/**
+ * Function to get User by Id.
+ * @param user
+ * @returns
+ */
+ async function valideteUserSocial(): Promise<any> {
+  const response = await AuthUserSocial.getInstance().getRequest(`/vtexid/pub/authenticated/user`);
+  if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
+  const { data } = response;
+  return data;
+ }
+/**
+ * Function to get User by Id.
+ * @param user
+ * @returns
+ */
+ async function getUserById(user_id: string): Promise<any> {
+  const response = await UsersApi.getInstance().getRequest(`/users/getUser/${user_id}`);
+  if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
+  const { data } = response;
+  return data.resp;
+}
+
 export const authServices = {
   logOutUser,
   login,
@@ -272,5 +317,9 @@ export const authServices = {
   getProfile,
   createUser,
   createPassword,
-  newUser
+  newUser,
+  getLoginProviders,
+  loginWhitSocialNetwork,
+  getUserById,
+  valideteUserSocial
 };

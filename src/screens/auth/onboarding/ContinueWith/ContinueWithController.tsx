@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
@@ -9,7 +9,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import LinearGradient from 'react-native-linear-gradient';
 import { OtherInputMethods } from 'components/organisms/OtherInputMethods';
 import { setAuthEmail, setEmailVerified, setFullName, setIsLogged, setTelephone, setPhoto, setSignMode, setUserId, signInWithAppleThunk, 
-  signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch, setIsGuest, validateUserThunk } from 'rtk';
+  signInWithFacebookThunk, signInWithGoogleThunk, useAppDispatch, setIsGuest, validateUserThunk, getLoginProvidersThunk, AuthProviderInterface } from 'rtk';
 
 const ContinueWithController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -20,6 +20,13 @@ const ContinueWithController: React.FC = () => {
     await delay(1000);
     dispatch(setIsGuest({isGuest: true}));
   }
+
+  const [ providersAuth, setProvidersAuth] = useState<AuthProviderInterface[]>([]);
+  const [ authToken, setAuthToken] = useState<string>("");
+
+  useEffect(()=>{
+    getProvidersLoginEffect()
+  },[])
 
   const onAppleButtonPress = async () => {
     try {
@@ -112,6 +119,22 @@ const ContinueWithController: React.FC = () => {
     }    
   }
 
+  const onPressSocialMedia = (socialMedia: string) => {
+    navigate("LoginWhitSocialNetwork",{ authenticationToken: authToken, providerLogin: socialMedia  })
+  }
+
+  const getProvidersLoginEffect = async () => {
+    const providersRequest = await getProvidersLogin();
+    if(providersRequest?.oauthProviders){
+      console.log({providersRequest})
+      setProvidersAuth(providersRequest?.oauthProviders);
+      setAuthToken(providersRequest?.authenticationToken)
+    }
+  };
+  const  getProvidersLogin = async () => {
+    return await dispatch(getLoginProvidersThunk()).unwrap();
+  };
+
   const onContinueWithEmail = () => {
     setotherMethodsVisible(false);
     navigate('EnterEmail')
@@ -161,11 +184,10 @@ const ContinueWithController: React.FC = () => {
         barStyle="light"
       >
         <ContinueWithScreen
-          onPressSocialButton={onAppleButtonPress}
-          onPressFacebook={onFacebookButtonPress}
-          onPressGoogle={onGoogleButtonPress}          
+          onPressSocialButton={onPressSocialMedia}        
           onPressEmail={onContinueWithEmail}
           onPressOthers={onContinueAsGuest}
+          providers={providersAuth}
         />
         <OtherInputMethods
           visible={otherMethodsVisible}

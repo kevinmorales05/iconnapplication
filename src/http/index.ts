@@ -10,3 +10,4 @@ export * from './vtex-api-reviews';
 export * from './vtex-api-auth';
 export * from './api-search';
 export * from './vtex-api-users';
+export * from './api-authUserSocial';
