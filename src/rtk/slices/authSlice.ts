@@ -145,6 +145,7 @@ const authSlice = createSlice({
       state.user.seenCarousel = action.payload;
     },
     setAuthCookie(state, action: PayloadAction<AuthCookie>) {
+      console.log({setAuthCookie: action.payload})
       state.user.authCookie = action.payload;
     },
     setAccountAuthCookie(state, action: PayloadAction<AuthCookie>) {

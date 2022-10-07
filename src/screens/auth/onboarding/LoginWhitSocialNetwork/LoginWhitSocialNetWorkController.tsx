@@ -9,7 +9,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { Platform, Text } from 'react-native';
 import CookieManager from '@react-native-cookies/cookies'
 import { authServices, vtexUserServices } from 'services';
-import { AuthCookie, setAccountId, setAuthEmail, setBirthday, setGender, setId, setIsLogged, setLastName, setName, setTelephone, setUserId, useAppDispatch, UserVtex } from 'rtk';
+import { AuthCookie, setAccountAuthCookie, setAccountId, setAuthCookie, setAuthEmail, setBirthday, setGender, setId, setIsLogged, setLastName, setName, setTelephone, setUserId, useAppDispatch, UserVtex } from 'rtk';
 import { useLoading } from 'context';
 import LoginWhitSocialNetworkScreen from './LoginWhitSocialNetwork';
 
@@ -22,15 +22,13 @@ const LoginWhitSocialNetworkController: React.FC = () => {
   const { authenticationToken, providerLogin } = route.params;
 
   const navChange = async (e: WebViewNavigation) => {
-    console.log({e}, "navChange")
     if(e.title !== "Acceso: Cuentas de Google"){
         if(Platform.OS === "ios"){
             const cookiesIos = await CookieManager.getAll(true);
             const keys: string[] = Object.getOwnPropertyNames(cookiesIos);
             const indexAccountCookie = keys.findIndex((key) => !!key.split("VtexIdclientAutCookie_")[1])
-            console.log({cookiesIos},keys[indexAccountCookie])
             if(!!cookiesIos.VtexIdclientAutCookie_oneiconn){
-                // loader.show()
+                loader.show()
                 const authCookie: AuthCookie = {
                     Name: cookiesIos.VtexIdclientAutCookie_oneiconn.name,
                     Value: cookiesIos.VtexIdclientAutCookie_oneiconn.value
@@ -39,8 +37,8 @@ const LoginWhitSocialNetworkController: React.FC = () => {
                     Name: cookiesIos[keys[indexAccountCookie]].name,
                     Value: cookiesIos[keys[indexAccountCookie]].value
                 }
-                console.log({authCookie}, {accountCookie})
-                await authServices.loginWhitSocialNetwork(authCookie, accountCookie );
+                dispatch(setAuthCookie(authCookie));
+                dispatch(setAccountAuthCookie(accountCookie));
                 const userData = await authServices.valideteUserSocial();
                 getUser(userData.user)
                 loader.hide()
@@ -49,7 +47,6 @@ const LoginWhitSocialNetworkController: React.FC = () => {
             }
         }else{
             CookieManager.get(e.url).then(async res => {
-              console.log("CookieManager.getAll =>", res);
               if(res.VtexIdclientAutCookie_oneiconn){
                   loader.show()
                   const keys: string[] = Object.getOwnPropertyNames(res);
@@ -61,7 +58,8 @@ const LoginWhitSocialNetworkController: React.FC = () => {
                       Name: res[keys[0]].name,
                       Value: res[keys[0]].value
                   }
-                  await authServices.loginWhitSocialNetwork(authCookie, accountCookie );
+                  dispatch(setAuthCookie(authCookie));
+                  dispatch(setAccountAuthCookie(accountCookie));
                   const userData = await authServices.valideteUserSocial();
                   getUser(userData.user)
                   loader.hide()
