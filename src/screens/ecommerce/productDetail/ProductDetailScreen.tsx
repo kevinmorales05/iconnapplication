@@ -80,7 +80,7 @@ interface Props {
     }).catch((error) => console.log(error));
 
     setCartItemQuantity(isProductIdInShoppingCart(itemId));
-  }, []);
+  }, [cart]);
 
   const getComplementaryProducts = useCallback(async () => {
     vtexProductsServices.getProductsByCollectionId("143").then(responseCollection => {
