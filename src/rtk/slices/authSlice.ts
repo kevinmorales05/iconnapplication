@@ -13,8 +13,7 @@ import {
   sendEmailToRecoverPasswordThunk
 } from '../thunks/auth.thunks';
 import { startAuthenticationThunk } from '../thunks/vtex-auth.thunks';
-import { Address, AddressWithPositionInterface, AuthDataInterface, CountryInterface, UserVtex } from '../types';
-import countries from 'assets/files/countries.json';
+import { Address, AddressWithPositionInterface, AuthCookie, AuthDataInterface, UserVtex } from '../types';
 
 const initialState: AuthDataInterface = {
   user_id: '',
@@ -28,7 +27,9 @@ const initialState: AuthDataInterface = {
   isLogged: false,
   sign_app_modes_id: undefined,
   addresses: [],
-  seenCarousel: false
+  seenCarousel: false,
+  authCookie: { Name: '', Value: '' },
+  accountAuthCookie: { Name: '', Value: '' }
 };
 
 const vtexInitialState: UserVtex = {
@@ -43,16 +44,15 @@ const vtexInitialState: UserVtex = {
   profilePicture: '',
   accountId: '',
   id: '',
-  userId: '',
-}
-
+  userId: ''
+};
 
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: initialState,
-    loading: false, 
-    userVtex: vtexInitialState,
+    loading: false,
+    userVtex: vtexInitialState
   },
   reducers: {
     setAuthInitialState(state) {
@@ -129,20 +129,26 @@ const authSlice = createSlice({
       state.user.addresses = action.payload;
     },
     addAddressToList(state, action: PayloadAction<Address>) {
-      state.user.addresses.push(action.payload);
+      state.user.addresses!.push(action.payload);
     },
     deleteAddressFromList(state, action: PayloadAction<number>) {
-      state.user.addresses.splice(action.payload, 1);
+      state.user.addresses!.splice(action.payload, 1);
     },
     replaceAddressFromList(state, action: PayloadAction<AddressWithPositionInterface>) {
-      state.user.addresses.splice(action.payload.position, 1, action.payload.address);
+      state.user.addresses!.splice(action.payload.position, 1, action.payload.address);
     },
     setAddressDefault(state, action: PayloadAction<number>) {
-      state.user.addresses.map(x => (x.isDefault = false));
-      state.user.addresses[action.payload].isDefault = true;
+      state.user.addresses!.map(x => (x.isDefault = false));
+      state.user.addresses![action.payload].isDefault = true;
     },
     setSeenCarousel(state, action: PayloadAction<boolean>) {
       state.user.seenCarousel = action.payload;
+    },
+    setAuthCookie(state, action: PayloadAction<AuthCookie>) {
+      state.user.authCookie = action.payload;
+    },
+    setAccountAuthCookie(state, action: PayloadAction<AuthCookie>) {
+      state.user.accountAuthCookie = action.payload;
     }
   },
   extraReducers: builder => {
@@ -300,6 +306,8 @@ export const {
   deleteAddressFromList,
   replaceAddressFromList,
   setAddressDefault,
-  setSeenCarousel
+  setSeenCarousel,
+  setAuthCookie,
+  setAccountAuthCookie
 } = authSlice.actions;
 export default authSlice.reducer;

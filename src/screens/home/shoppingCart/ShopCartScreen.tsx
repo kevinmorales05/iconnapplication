@@ -350,8 +350,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
   };
 
   const ItemsList: React.FC<[]> = (itemss: []) => {
-    console.log('items en itemslist:::', orderFormId);
-    console.log(Object.values(itemss).length);
     const itemsReceived = Object.values(itemss);
     const itemLst = itemsReceived[0];
     let toShow = null;
@@ -448,8 +446,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressMyAccount, onPressInvoice, onP
         //loader.hide(); 
       }
     };
-    
-    console.log({value})
 
     return (
       <Container

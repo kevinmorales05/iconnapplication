@@ -31,17 +31,6 @@ export class ProductPrice extends HttpClient {
           `data: ${JSON.stringify(data, null, 3)}`
         );
 
-        const completeCookie =
-          HttpClient.authCookie?.Name +
-          '=' +
-          HttpClient.authCookie?.Value +
-          '; ' +
-          HttpClient.accountAuthCookie?.Name +
-          '=' +
-          HttpClient.accountAuthCookie?.Value +
-          ';';
-        request.headers.Cookie = completeCookie;
-
         return request;
       },
       (error: any) => console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3))

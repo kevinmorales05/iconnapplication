@@ -7,7 +7,6 @@ import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { ICONN_EMAIL } from 'assets/images';
 import React, { useEffect, useRef } from 'react';
 import { passwordMinimumRule } from 'utils/rules';
-import { HttpClient } from '../../../../http/http-client';
 
 interface Props {
   accountError?: string;
@@ -19,10 +18,13 @@ interface Props {
 
 const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, goToForgotPassword, email }) => {
   const insets = useSafeAreaInsets();
-  const { handleSubmit, register, control, formState:{ errors, isValid } } = useForm({ mode: 'onChange' });
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors, isValid }
+  } = useForm({ mode: 'onChange' });
   const passwordRef = useRef<TextInput>(null);
-  const authToken = HttpClient.accessToken;
-
 
   useEffect(() => {
     if (passwordRef.current) {
@@ -30,7 +32,7 @@ const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, 
     }
   }, []);
 
-  const submit: SubmitHandler<FieldValues> = (fields) => {
+  const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields.password);
   };
 
@@ -47,37 +49,13 @@ const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, 
       showsVerticalScrollIndicator={false}
     >
       <Container>
-        <TextContainer
-          typography="h2"
-          fontBold
-          text={`¡Hola!`}
-          marginTop={34}
-        ></TextContainer>
-        <TextContainer
-          typography="h2"
-          text={`Ingresa tu contraseña`}
-          marginTop={4}
-        ></TextContainer>
+        <TextContainer typography="h2" fontBold text={`¡Hola!`} marginTop={34}></TextContainer>
+        <TextContainer typography="h2" text={`Ingresa tu contraseña`} marginTop={4}></TextContainer>
 
-        <TextContainer
-          typography="h5"
-          text={`Cuenta vinculada al correo:`}
-          textColor={theme.fontColor.paragraph}
-          marginTop={25}
-        ></TextContainer>
+        <TextContainer typography="h5" text={`Cuenta vinculada al correo:`} textColor={theme.fontColor.paragraph} marginTop={25}></TextContainer>
         <Container flex row>
-          <Image
-            source={ICONN_EMAIL}
-            resizeMode="center"
-            style={{ width: 28, height: 28, marginRight: 8, marginTop: 5 }}
-          />
-          <TextContainer
-            typography="h4"
-            fontBold
-            marginTop={10}
-            text={email}
-            textColor={theme.brandColor.iconn_green_original}
-          ></TextContainer>
+          <Image source={ICONN_EMAIL} resizeMode="center" style={{ width: 28, height: 28, marginRight: 8, marginTop: 5 }} />
+          <TextContainer typography="h4" fontBold marginTop={10} text={email} textColor={theme.brandColor.iconn_green_original}></TextContainer>
         </Container>
 
         <Input
@@ -90,7 +68,7 @@ const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, 
           placeholder={`Ingresa tu contraseña`}
           blurOnSubmit={false}
           marginTop={27}
-          error={accountError ? accountError : errors.password?.message }
+          error={accountError ? accountError : errors.password?.message}
           ref={passwordRef}
           showPasswordEnable
           rules={passwordMinimumRule}
@@ -108,18 +86,7 @@ const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, 
         </Container>
       </Container>
       <Container flex row crossAlignment="end" space="between">
-        <ActionButton
-          size="large"
-          onPress={goBack}
-          color="iconn_med_grey"
-          icon={
-            <AntDesign
-              name="arrowleft"
-              size={24}
-              color={theme.fontColor.dark}
-            />
-          }
-        />
+        <ActionButton size="large" onPress={goBack} color="iconn_med_grey" icon={<AntDesign name="arrowleft" size={24} color={theme.fontColor.dark} />} />
 
         <Button
           length="short"

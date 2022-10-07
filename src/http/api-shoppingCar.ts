@@ -20,10 +20,12 @@ export class ShoppingCar extends HttpClient {
     this.instance.interceptors.request.use(
       (request: any) => {
         const { headers, baseURL, method, url, data } = request;
+        const { common, get, head, delete: toDelete, post, put, patch, ...mainHeaders } = headers;
+
         if (global.showLogs__api_shoppingCart) {
           console.log(
             'INTERCEPTOR - Starting Request ===> \n\n',
-            JSON.stringify(headers, null, 3),
+            JSON.stringify(mainHeaders, null, 3),
             '\n',
             `baseURL: ${baseURL}`,
             '\n',
@@ -34,17 +36,6 @@ export class ShoppingCar extends HttpClient {
             `data: ${JSON.stringify(data, null, 3)}`
           );
         }
-
-        const completeCookie =
-          HttpClient.authCookie?.Name +
-          '=' +
-          HttpClient.authCookie?.Value +
-          '; ' +
-          HttpClient.accountAuthCookie?.Name +
-          '=' +
-          HttpClient.accountAuthCookie?.Value +
-          ';';
-        request.headers.Cookie = completeCookie;
 
         return request;
       },

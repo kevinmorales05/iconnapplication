@@ -5,7 +5,9 @@ import { UsersApi } from '../http/api-users';
 import { HttpClient } from '../http/http-client';
 
 async function newUser(userEmail: UserVtex): Promise<any> {
-  const response = await UsersApi.getInstance().postRequest(`/dataentities/CL/documents`, userEmail, { headers: { Accept: 'application/json', 'Content-type': 'application/json' } });
+  const response = await UsersApi.getInstance().postRequest(`/dataentities/CL/documents`, userEmail, {
+    headers: { Accept: 'application/json', 'Content-type': 'application/json' }
+  });
   if (response === undefined) return Promise.reject(new Error(`/vtexid/pub/authentication/logout?scope=oneiconn`));
   const { data } = response;
   console.log('NEW USER', data);
@@ -23,20 +25,9 @@ async function login(email: string, password: string, authenticationToken: strin
   formData.append('email', email);
   formData.append('password', password);
   formData.append('authenticationToken', authenticationToken);
-
   const response = await UsersApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/validate`, formData);
-
   if (response === undefined) return Promise.reject(new Error(`login:/vtexid/pub/authentication/classic/validate`));
-
   const { data } = response;
-  let authCookie = await data.authCookie;
-  HttpClient.authCookie = authCookie;
-  let accountAuthCookie = await data.accountAuthCookie;
-  HttpClient.accountAuthCookie = accountAuthCookie;
-
-  console.log("HttpClient.authCookie:",HttpClient.authCookie);
-  console.log("HttpClient.accountAuthCookie:",HttpClient.accountAuthCookie);
-
   return data;
 }
 
@@ -89,25 +80,14 @@ async function createPassword(newPassword: string, accesskey: string, email: str
   formData.append('email', email);
   formData.append('authenticationToken create: ', authenticationToken);
 
-  console.log('HttpClient.authCookie create:', HttpClient.authCookie);
-
   const response = await UsersApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/setpassword?scope=oneiconn&locale=MX`, formData, {
     headers: {
-      Accept: 'application/json',
+      Accept: 'application/json'
     }
   });
 
   if (response === undefined) return Promise.reject(new Error(`createPassword:/vtexid/pub/authentication/classic/setpassword`));
-
   const { data } = await response;
-  let authCookie = await data.authCookie;
-  HttpClient.authCookie = authCookie;
-  let accountAuthCookie = await data.accountAuthCookie;
-  HttpClient.accountAuthCookie = accountAuthCookie;
-
-  console.log("HttpClient.authCookie:",HttpClient.authCookie);
-  console.log("HttpClient.accountAuthCookie:",HttpClient.accountAuthCookie);
-
   return data;
 }
 

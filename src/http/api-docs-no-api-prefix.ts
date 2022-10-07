@@ -35,17 +35,6 @@ export class DocsNoPrefixApi extends HttpClient {
           );
         }
 
-        const completeCookie =
-          HttpClient.authCookie?.Name +
-          '=' +
-          HttpClient.authCookie?.Value +
-          '; ' +
-          HttpClient.accountAuthCookie?.Name +
-          '=' +
-          HttpClient.accountAuthCookie?.Value +
-          ';';
-        request.headers.Cookie = completeCookie;
-
         return request;
       },
       (error: any) => {
