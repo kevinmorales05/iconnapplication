@@ -1,5 +1,5 @@
 import { Image, ScrollView } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import { Container, InfoCard } from 'components/atoms';
@@ -8,7 +8,7 @@ import {ICONN_BASKET_SHOPPING_CART} from 'assets/images';
 import { OrderCard } from 'components/molecules/OrderCard';
 import NetInfo from '@react-native-community/netinfo';
 import { vtexordersServices, vtexsingleOrdersServices } from 'services';
-import { OrderInterface } from 'rtk';
+import { DeliveryChannel, OrderInterface } from 'rtk';
 
 interface Props {
   goBack: () => void;
@@ -23,6 +23,15 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
     }
   });
   const insets = useSafeAreaInsets();
+
+  //const [delivery, setDelivery] = useState<DeliveryChannel>();
+  const getOrderr = useCallback(async (oid : string) => {
+      const data = await vtexsingleOrdersServices.getOrderById(oid);
+      console.log("AQUI JAMON", data);
+      const orderDC : DeliveryChannel = data.shippingData.logisticsInfo[1].selectedDeliveryChannel;
+      console.log('GELATINA', orderDC, '=>', oid);
+      return orderDC;
+  }, []);
   
   return (
     <ScrollView
@@ -44,8 +53,14 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
         {
           (!isOnline) ? <></> : (officialOrderArray.length == 0) ? <></> 
           : officialOrderArray.map((order, i) => {
-            if (order.status == 'ready-for-handling' || order.status == 'payment-approved' || order.status == 'waiting-for-sellers-confirmation' || order.status == 'payment-pending' || order.status == 'window-to-cancel' || order.status == 'handling') {
-              return <OrderCard orderId={order.orderId} creationDate={order.creationDate} status={order.status} totalItems={order.totalItems} totalValue={order.totalValue} />
+            const dc = (order.orderId);
+            if (order.status == 'ready-for-handling' || order.status == 'payment-approved' || 
+            order.status == 'waiting-for-sellers-confirmation' || order.status == 'payment-pending' || 
+            order.status == 'window-to-cancel' || order.status == 'handling') {
+              console.log('MERMELADA', order.orderId)
+              return <OrderCard orderId={order.orderId} creationDate={order.creationDate} 
+              status={order.status} totalItems={order.totalItems} totalValue={order.totalValue} 
+             />
             }
           })
 
@@ -66,7 +81,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
             <TextContainer text='Aquí verás tus pedidos anteriores y pedidos en curso.' textAlign='center' marginTop={11}/>
             <Button onPress={goBack} fontBold fontSize='h4' color='iconn_green_original' round marginTop={234}> Ver articulos </Button>
             </Container>
-            : officialOrderArray.map(function(order, i) {
+            : officialOrderArray.map((order, i) => {
               if(order.status == 'canceled' || order.status == 'invoiced')
                 return <OrderCard creationDate={order.creationDate} totalItems={order.totalItems} totalValue={order.totalValue} status={order.status} orderId={order.orderId} />
             })

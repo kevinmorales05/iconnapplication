@@ -45,6 +45,7 @@ import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalControlle
 import ContactInformationController from 'screens/home/shoppingCart/ContactInformation/ContactInformationController';
 import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
 import FavoriteScreen from 'screens/home/favoriteScreen/FavoriteScreen';
+import ChangePasswordController from 'screens/home/myAccount/changePassword/ChangePasswordController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -125,6 +126,7 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />
       <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
+      <Stack.Screen name='ChangePassword' options={{title: 'Editar contraseña'}} component={ChangePasswordController}/>
       <Stack.Screen
         options={{
           headerShown: true,

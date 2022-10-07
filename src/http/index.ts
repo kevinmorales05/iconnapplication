@@ -8,4 +8,5 @@ export * from './api-shoppingCar';
 export * from './api-users';
 export * from './vtex-api-reviews';
 export * from './vtex-api-auth';
-export * from './api-search'
+export * from './api-search';
+export * from './vtex-api-users';

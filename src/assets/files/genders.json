@@ -1,18 +1,18 @@
 [
   {
     "id": 1,
-    "name": "Mujer"
+    "name": "Femenino"
   },
   {
     "id": 2,
-    "name": "Hombre"
-  },
-  {
+    "name": "Masculino"
+  }
+  /* {
     "id": 3,
     "name": "Otro género"
   },
   {
     "id": 4,
     "name": "Prefiero no decir"
-  }
+  } */
 ]
