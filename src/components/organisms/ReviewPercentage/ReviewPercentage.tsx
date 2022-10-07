@@ -58,27 +58,27 @@ return(
               <Container row style={{marginTop:16, justifyContent:'space-between'}}>
               <TextContainer text='5 estrellas' fontSize={theme.fontSize.h6}/>
               <Bar  style={{marginLeft:16}} width={220} progress={countFive ? countFive : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentCinco ? percentCinco : 0}%`} fontSize={theme.fontSize.h6}/>
+              <TextContainer marginLeft={16} text={`${percentCinco > 0 ? percentCinco : 0}%`} fontSize={theme.fontSize.h6}/>
               </Container>
               <Container  row style={{marginTop:12, justifyContent:'space-between'}}>
               <TextContainer text='4 estrellas' fontSize={theme.fontSize.h6}/>
               <Bar  style={{marginLeft:16}} width={220} progress={countFour ? countFour : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentCuatro ? percentCuatro : 0}%`} fontSize={theme.fontSize.h6}/>
+              <TextContainer marginLeft={16} text={`${percentCuatro > 0 ? percentCuatro : 0}%`} fontSize={theme.fontSize.h6}/>
               </Container>
               <Container  row style={{marginTop:12, justifyContent:'space-between'}}>
               <TextContainer text='3 estrellas' fontSize={theme.fontSize.h6}/>
               <Bar  style={{marginLeft:16}} width={220} progress={countTres ? countTres : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentTres ? percentTres : 0}%`} fontSize={theme.fontSize.h6}/>
+              <TextContainer marginLeft={16} text={`${percentTres > 0 ? percentTres : 0}%`} fontSize={theme.fontSize.h6}/>
               </Container>
               <Container  row style={{marginTop:12, justifyContent:'space-between'}}>
               <TextContainer text='2 estrellas' fontSize={theme.fontSize.h6}/>
               <Bar  style={{marginLeft:16}} width={220} progress={countDos ? countDos : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentDos ? percentDos : 0}%`} fontSize={theme.fontSize.h6}/>
+              <TextContainer marginLeft={16} text={`${percentDos > 0 ? percentDos : 0}%`} fontSize={theme.fontSize.h6}/>
               </Container>
               <Container  row style={{marginTop:12, justifyContent:'space-between'}}>
               <TextContainer text='1 estrellas' fontSize={theme.fontSize.h6}/>
               <Bar  style={{marginLeft:16}} width={220} progress={countUno ? countUno : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentUno ? percentUno : 0}%`} fontSize={theme.fontSize.h6}/>
+              <TextContainer marginLeft={16} text={`${percentUno > 0 ? percentUno : 0}%`} fontSize={theme.fontSize.h6}/>
               </Container>
               <Container style={{marginTop:24, marginBottom:58}}>
               {reviewed ? (
@@ -86,10 +86,10 @@ return(
           <Container row space='between'>
                 <TextContainer fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text='Ya calificaste este producto.'/>
                 <Touchable onPress={deleteReview} opacityEffect>
-                <Container row>
+                {/* <Container row>
                 <Image source={ICONN_EMPTY_SHOPPING_CART} tintColor={theme.brandColor.iconn_error} resizeMode="cover" style={{ width: 16, height: 16}} />
                 <TextContainer marginLeft={2} fontSize={theme.fontSize.h6} textColor={theme.brandColor.iconn_error} text='Eliminar calificación'/>
-                </Container>
+                </Container> */}
                 </Touchable>
 
           </Container>
