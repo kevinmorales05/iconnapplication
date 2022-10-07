@@ -13,7 +13,25 @@ import { vtexProductsServices } from 'services';
 import { RootState, useAppSelector } from 'rtk';
 import { useShoppingCart } from '../../home/hooks/useShoppingCart';
 
-const ProductDetailScreen = (itemId) => {
+interface Props {
+  itemId: string;
+   fetchReviewData: () => void;
+   ratingCompleted: () => void;
+   postRating: () => void;
+   showModal?: () => void;
+   closeModal?: () => void;
+   star1?:number;
+   star2?:number;
+   star3?:number;
+   star4?:number;
+   star5?:number;
+   totalCount?:number;
+   average?:number;
+   isReviewed?:boolean;
+   prodId?:number;
+ }
+ 
+ const ProductDetailScreen: React.FC<Props> = ({itemId, fetchReviewData, showModal, star1, star2, star3, star4, star5, totalCount, average, isReviewed, prodId}) => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const [productPrice, setProductPrice] = useState(0);
   const [productDetail, setProductDetail] = useState(Object);
@@ -26,7 +44,7 @@ const ProductDetailScreen = (itemId) => {
 
   const fetchData = useCallback(async () => {
     const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/"
-    await getSkuFilesById(itemId.productIdentifier).then(async responseSku => {
+    await getSkuFilesById(itemId).then(async responseSku => {
       let skuForImages = [];
       if(responseSku){
         if(responseSku.length>0){
@@ -49,18 +67,22 @@ const ProductDetailScreen = (itemId) => {
       }
     }).catch((error) => console.log(error));
     
-    await getProductDetailById(itemId.productIdentifier).then(async responseProductDetail => {
+    await getProductDetailById(itemId).then(async responseProductDetail => {
       setProductDetail(responseProductDetail);
     }).catch((error) => console.log(error));
 
-    await vtexProductsServices.getProductPriceByProductId(itemId.productIdentifier).then(async responsePrice => {
+    await vtexProductsServices.getProductPriceByProductId(itemId).then(async responsePrice => {
       setProductPrice(responsePrice);
     }).catch((error) => console.log(error));
 
-    await vtexProductsServices.getProductRatingByProductId(itemId.productIdentifier).then(async responseRating => {
+    await vtexProductsServices.getProductRatingByProductId(itemId).then(async responseRating => {
       setProductRating(responseRating);
     }).catch((error) => console.log(error));
 
+    setCartItemQuantity(isProductIdInShoppingCart(itemId));
+  }, [cart]);
+
+  const getComplementaryProducts = useCallback(async () => {
     vtexProductsServices.getProductsByCollectionId("143").then(responseCollection => {
       const { Data } = responseCollection;
       let complementaryList = [];
@@ -69,7 +91,7 @@ const ProductDetailScreen = (itemId) => {
           Data.map((product) => {
            vtexProductsServices.getProductPriceByProductId(product.ProductId).then(async responsePrice => {
               if (responsePrice) {
-                complementaryList.push({ productId: product.ProductId, name: product.ProductName, image: product.SkuImageUrl, price: responsePrice.basePrice, quantity: isProductIdInShoppingCart(product.ProductId) });
+                complementaryList.push({ productId: product.ProductId, name: product.ProductName, image: { uri: product.SkuImageUrl }, price: responsePrice.basePrice, quantity: isProductIdInShoppingCart(product.ProductId) });
               }
             }).catch((error) => console.log(error));
           })
@@ -77,8 +99,6 @@ const ProductDetailScreen = (itemId) => {
       }
       setComplementaryProducts(complementaryList);
     }).catch((error) => console.log(error));
-
-    setCartItemQuantity(isProductIdInShoppingCart(itemId.productIdentifier));
   }, []);
 
   const isProductIdInShoppingCart = (productId) => {
@@ -95,6 +115,14 @@ const ProductDetailScreen = (itemId) => {
   useEffect(() => {
     fetchData();
   }, [cart]);
+  
+  useEffect(() => {
+    getComplementaryProducts();
+  }, []);
+
+  useEffect(() => {
+    fetchReviewData();
+  }, [itemId]);
 
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}
@@ -208,8 +236,22 @@ const ProductDetailScreen = (itemId) => {
             </ScrollView>
         </Container>
 
-          <ReviewPercentage></ReviewPercentage>
-
+          <ReviewPercentage
+          average={average}
+          reviews={totalCount}
+          countUno={((star1/totalCount))}
+          countDos={((star2/totalCount))}
+          countTres={((star3/totalCount))}
+          countFour={((star4/totalCount))}
+          countFive={((star5/totalCount))}
+          percentUno={((star1/totalCount)*100).toFixed(0)}
+          percentDos={((star2/totalCount)*100).toFixed(0)}
+          percentTres={((star3/totalCount)*100).toFixed(0)}
+          percentCuatro={((star4/totalCount)*100).toFixed(0)}
+          percentCinco={((star5/totalCount)*100).toFixed(0)}
+          reviewed={isReviewed}
+          reviewProduct={showModal}
+          />
         </Container>
 
         <Container style={{marginBottom:16}}>
@@ -220,15 +262,15 @@ const ProductDetailScreen = (itemId) => {
             onPressAddQuantity={() => {
               let currentQuantity = cartItemQuantity+1;
               setCartItemQuantity(currentQuantity);
-              updateShoppingCartProduct('add', itemId.productIdentifier);
+              updateShoppingCartProduct('add', itemId);
             }}
             onPressDeleteCart={() => {
-              updateShoppingCartProduct('remove', itemId.productIdentifier);
+              updateShoppingCartProduct('remove', itemId);
             }}
             onPressDecreaseQuantity={() => {
               let currentQuantity = cartItemQuantity-1;
               setCartItemQuantity(currentQuantity);
-              updateShoppingCartProduct('substract', itemId.productIdentifier);
+              updateShoppingCartProduct('substract', itemId);
             }}
           />:
                     <Button
@@ -237,7 +279,7 @@ const ProductDetailScreen = (itemId) => {
                       fontBold
                       fontSize="h4"
                       onPress={() => {
-                        updateShoppingCartProduct('create', itemId.productIdentifier);
+                        updateShoppingCartProduct('create', itemId);
                       }}
                       >
                       Agregar a canasta

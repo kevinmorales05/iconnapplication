@@ -16,6 +16,7 @@ import { CustomText } from '../CustomText';
 export interface Props {
   label?: string;
   placeholder?: string;
+  placeholderBold?: string;
   autoCapitalize?: TextInputProps['autoCapitalize'];
   autoComplete?: TextInputProps['autoComplete'];
   autoCorrect?: TextInputProps['autoCorrect'];
@@ -54,6 +55,7 @@ const Input = forwardRef(
     {
       label = '',
       placeholder = '',
+      placeholderBold = '',
       autoCapitalize = 'none',
       autoComplete = 'off',
       autoCorrect,
@@ -162,7 +164,7 @@ const Input = forwardRef(
                 render={({ field }) => (
                   <>
                     <Container row center>
-                      {phone && <CustomText text="   +52" />}
+                      {phone && <CustomText text={`   +${placeholderBold}`} />}
                       <TextInput
                         pointerEvents={datePicker ? 'none' : 'auto'}
                         testID={`${testID}-input`}

@@ -17,7 +17,7 @@ const MyOrdersController: React.FC = () => {
   const [lista, setLista] = useState<OrderInterface[]>([
 ]);
 const getOrders = useCallback(async () => {
-  const {list : data} = await vtexordersServices.getOrdersListByUserEmail('cristhian.mendez@citi.com.mx', 1,3);
+  const {list : data} = await vtexordersServices.getOrdersListByUserEmail('mario.lopez@ntt-dev.com', 1,3);
   console.log("ESTA ES LA DATA", JSON.stringify(data, null, 3));
   let orderArray : OrderInterface[] = data.map((order: OrderInterface) => {
     return {

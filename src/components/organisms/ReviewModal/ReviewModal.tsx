@@ -10,23 +10,26 @@ import { ICONN_STAR } from 'assets/images';
 
 interface Props {
   visible: boolean;
-  onPressClose?: () => void;
+  closeModal: () => void;
   postRating?: () => void;
   ratingCompleted?: () => void;
+  modalClosed?: () => void;
 }
 
 const ReviewModal: React.FC<Props> = ({
   visible,
-  onPressClose,
+  closeModal,
   postRating,
-  ratingCompleted
+  ratingCompleted,
+  modalClosed
 }) => {
 
 const insets = useSafeAreaInsets();
 const { containerStyle } = styles;
 
+
   return (
-    <CustomModal visible={visible} onDismiss={()=>{onPressClose}} animationType="slide">
+    <CustomModal visible={visible} onDismiss={modalClosed} animationType="slide">
         <Container flex alignment="end">
       <TouchableOpacity
         activeOpacity={1}
@@ -46,7 +49,7 @@ const { containerStyle } = styles;
               style={{ marginTop: -6, shadowColor: 'none' }}
               icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
               size="xxsmall"
-              onPress={()=>{}}
+              onPress={closeModal}
               color="iconn_med_grey"
               circle
             />
@@ -58,6 +61,7 @@ const { containerStyle } = styles;
             count={5}
             showRating={false}
             size={48}
+            defaultRating={0}
             onFinishRating={ratingCompleted}
             starImage={ICONN_STAR}
             selectedColor={theme.brandColor.iconn_yellow}

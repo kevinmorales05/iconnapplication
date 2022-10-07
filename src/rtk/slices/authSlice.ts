@@ -13,7 +13,8 @@ import {
   sendEmailToRecoverPasswordThunk
 } from '../thunks/auth.thunks';
 import { startAuthenticationThunk } from '../thunks/vtex-auth.thunks';
-import { Address, AddressWithPositionInterface, AuthDataInterface, UserVtex } from '../types';
+import { Address, AddressWithPositionInterface, AuthDataInterface, CountryInterface, UserVtex } from '../types';
+import countries from 'assets/files/countries.json';
 
 const initialState: AuthDataInterface = {
   user_id: '',
@@ -44,6 +45,7 @@ const vtexInitialState: UserVtex = {
   id: '',
   userId: '',
 }
+
 
 const authSlice = createSlice({
   name: 'auth',

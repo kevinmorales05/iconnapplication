@@ -25,7 +25,7 @@
   },
   {
     "id": 5,
-    "name": "Samoa Americana",
+    "name": "SamoaAmericana",
     "code": "1684",
     "flag": "🇦🇸"
   },
@@ -50,12 +50,12 @@
   {
     "id": 9,
     "name": "Antartica",
-    "code": "",
+    "code": "12312",
     "flag": "🇦🇶"
   },
   {
     "id": 10,
-    "name": "Antigua y Barbuda",
+    "name": "AntiguayBarbuda",
     "code": "1268",
     "flag": "🇦🇬"
   },
@@ -157,7 +157,7 @@
     "flag": "🇧🇶"
   },{
     "id": 29,
-    "name": "Bosnia y Herzegovina",
+    "name": "BosniayHerzegovina",
     "code": "387",
     "flag": "🇧🇦"
   },{
@@ -204,17 +204,17 @@
     "flag": "🇨🇲"
   },{
     "id": 38,
-    "name": "Cabo Verde",
+    "name": "CaboVerde",
     "code": "238",
     "flag": "🇨🇻"
   },{
     "id": 39,
-    "name": "Islas Caimán",
+    "name": "IslasCaimán",
     "code": "345",
     "flag": "🇻🇬"
   },{
     "id": 40,
-    "name": "República Centroafricana",
+    "name": "RepúblicaCentroafricana",
     "code": "236",
     "flag": "🇨🇫"
   },{
@@ -275,7 +275,7 @@
   },
   {
     "id": 51,
-    "name": "República Checa",
+    "name": "RepúblicaCheca",
     "code": "420",
     "flag": "🇨🇿"
   },
@@ -296,12 +296,12 @@
     "flag": "🇩🇲"
   },{
     "id": 55,
-    "name": "República Dominicana",
+    "name": "RepúblicaDominicana",
     "code": "809",
     "flag": "🇩🇴"
   },{
     "id": 56,
-    "name": "DR Congo",
+    "name": "DRCongo",
     "code": "243",
     "flag": "🇨🇩"
   },{
@@ -316,12 +316,12 @@
     "flag": "🇪🇬"
   },{
     "id": 59,
-    "name": "El Salvador",
+    "name": "ElSalvador",
     "code": "503",
     "flag": "🇸🇻"
   },{
     "id": 60,
-    "name": "Guinea Ecuatorial",
+    "name": "GuineaEcuatorial",
     "code": "240",
     "flag": "🇬🇶"
   },{
@@ -346,12 +346,12 @@
     "flag": "🇪🇹"
   },{
     "id": 65,
-    "name": "Islas Malvinas",
+    "name": "IslasMalvinas",
     "code": "500",
     "flag": "🇫🇰"
   },{
     "id": 66,
-    "name": "Islas Feroe",
+    "name": "IslasFeroe",
     "code": "293",
     "flag": "🇫🇴"
   },{
@@ -373,12 +373,12 @@
   },
   {
     "id": 70,
-    "name": "Guinea Francesa",
+    "name": "GuineaFrancesa",
     "code": "594",
     "flag": "🇬🇫"
   },{
     "id": 71,
-    "name": "Polinesia Francesa",
+    "name": "PolinesiaFrancesa",
     "code": "689",
     "flag": "🇵🇫"
   },{
@@ -510,7 +510,7 @@
     "flag": "🇮🇪"
   },{
     "id": 97,
-    "name": "Isla de Man",
+    "name": "IsladeMan",
     "code": "44",
     "flag": "🇮🇲"
   },{
@@ -525,7 +525,7 @@
     "flag": "🇮🇹"
   },{
     "id": 100,
-    "name": "Costa de Marfil",
+    "name": "CostadeMarfil",
     "code": "225",
     "flag": "🇨🇮"
   },{
@@ -665,7 +665,7 @@
     "flag": "🇲🇹"
   },{
     "id": 129,
-    "name": "Islas Marshall",
+    "name": "IslasMarshall",
     "code": "692",
     "flag": "🇲🇭"
   },{
@@ -755,17 +755,17 @@
     "flag": "🇳🇵"
   },{
     "id": 147,
-    "name": "Países Bajos",
+    "name": "PaísesBajos",
     "code": "31",
     "flag": "🇳🇱"
   },{
     "id": 148,
-    "name": "Nueva Caledonia",
+    "name": "NuevaCaledonia",
     "code": "687",
     "flag": "🇳🇨"
   },{
     "id": 149,
-    "name": "Nueva Zelanda",
+    "name": "NuevaZelanda",
     "code": "64",
     "flag": "🇳🇿"
   },{
@@ -790,17 +790,17 @@
     "flag": "🇳🇺"
   },{
     "id": 154,
-    "name": "Isla Norfolk",
+    "name": "IslaNorfolk",
     "code": "672",
     "flag": "🇳🇫"
   },{
     "id": 155,
-    "name": "Corea del Norte",
+    "name": "CoreadelNorte",
     "code": "850",
     "flag": "🇰🇵"
   },{
     "id": 156,
-    "name": "Islas Marianas del Norte",
+    "name": "IslasMarianasdelNorte",
     "code": "1670",
     "flag": "🇲🇵"
   },{
@@ -835,7 +835,7 @@
     "flag": "🇵🇦"
   },{
     "id": 163,
-    "name": "Papúa Nueva Guinea",
+    "name": "PapúaNuevaGuinea",
     "code": "675",
     "flag": "🇵🇬"
   },{
@@ -855,7 +855,7 @@
     "flag": "🇵🇭"
   },{
     "id": 167,
-    "name": "Islas Pitcairn",
+    "name": "IslasPitcairn",
     "code": "64",
     "flag": "🇵🇳"
   },{
@@ -870,7 +870,7 @@
     "flag": "🇵🇹"
   },{
     "id": 170,
-    "name": "Puerto Rico",
+    "name": "PuertoRico",
     "code": "1787",
     "flag": "🇵🇷"
   },{
@@ -910,22 +910,22 @@
     "flag": "🇸🇧"
   },{
     "id": 178,
-    "name": "Santa Lucia",
+    "name": "SantaLucia",
     "code": "1758",
     "flag": "🇱🇨"
   },{
     "id": 179,
-    "name": "San Martín",
+    "name": "SanMartín",
     "code": "590",
     "flag": "🇫🇷"
   },{
     "id": 180,
-    "name": "San Pedro y Miquelón",
+    "name": "SanPedroyMiquelón",
     "code": "508",
     "flag": "🇵🇲"
   },{
     "id": 181,
-    "name": "San Vicente y las Granadinas",
+    "name": "SanVicenteylasGranadinas",
     "code": "1784",
     "flag": "🇻🇨"
   },{
@@ -935,17 +935,17 @@
     "flag": "🇹🇼"
   },{
     "id": 183,
-    "name": "San Marino",
+    "name": "SanMarino",
     "code": "378",
     "flag": "🇸🇲"
   },{
     "id": 184,
-    "name": "Santo Tomé y Príncipe",
+    "name": "SantoToméyPríncipe",
     "code": "239",
     "flag": "🇸🇹"
   },{
     "id": 185,
-    "name": "Arabia Saudita",
+    "name": "ArabiaSaudita",
     "code": "966",
     "flag": "🇸🇦"
   },{
@@ -965,7 +965,7 @@
     "flag": "🇸🇨"
   },{
     "id": 189,
-    "name": "Sierra Leona",
+    "name": "SierraLeona",
     "code": "232",
     "flag": "🇸🇱"
   },{
@@ -975,7 +975,7 @@
     "flag": "🇸🇬"
   },{
     "id": 191,
-    "name": "San Martín",
+    "name": "SanMartín",
     "code": "1721",
     "flag": "🇸🇽"
   },{
@@ -990,7 +990,7 @@
     "flag": "🇸🇮"
   },{
     "id": 194,
-    "name": "Islas Salomón",
+    "name": "IslasSalomón",
     "code": "677",
     "flag": "🇸🇧"
   },{
@@ -1005,17 +1005,17 @@
     "flag": "🇿🇦"
   },{
     "id": 197,
-    "name": "Islas Georgias del Sur",
+    "name": "IslasGeorgiasdelSur",
     "code": "500",
     "flag": "🇬🇸"
   },{
     "id": 198,
-    "name": "Corea del Sur",
+    "name": "CoreadelSur",
     "code": "82",
     "flag": "🇰🇷"
   },{
     "id": 199,
-    "name": "Sudán del Sur",
+    "name": "SudándelSur",
     "code": "211",
     "flag": "🇸🇸"
   },{
@@ -1025,7 +1025,7 @@
     "flag": "🇪🇸"
   },{
     "id": 201,
-    "name": "Sri Lanka",
+    "name": "SriLanka",
     "code": "94",
     "flag": "🇱🇰"
   },{
@@ -1040,7 +1040,7 @@
     "flag": "🇸🇷"
   },{
     "id": 204,
-    "name": "Svalbard y Jan Mayen",
+    "name": "SvalbardyJan Mayen",
     "code": "4779",
     "flag": "🇳🇴"
   },{
@@ -1079,7 +1079,7 @@
     "code": "66",
     "flag": "🇹🇭"
   },{
-    "name": "Timor Oriental",
+    "name": "TimorOriental",
     "code": "670",
     "flag": "🇹🇱"
   },{
@@ -1095,7 +1095,7 @@
     "code": "676",
     "flag": "🇹🇴"
   },{
-    "name": "Trinidad y Tobago",
+    "name": "TrinidadyTobago",
     "code": "1868",
     "flag": "🇹🇹"
   },{
@@ -1111,7 +1111,7 @@
     "code": "993",
     "flag": "🇹🇲"
   },{
-    "name": "Islas Turcas y Caicos",
+    "name": "IslasTurcasyCaicos",
     "code": "1649",
     "flag": "🇹🇨"
   },{
@@ -1127,15 +1127,15 @@
     "code": "380",
     "flag": "🇺🇦"
   },{
-    "name": "Emiratos Arabes",
+    "name": "EmiratosArabes",
     "code": "971",
     "flag": "🇦🇪"
   },{
-    "name": "Reino Unido",
+    "name": "ReinoUnido",
     "code": "44",
     "flag": "🇬🇧"
   },{
-    "name": "Estados Unidos",
+    "name": "EstadosUnidos",
     "code": "1",
     "flag": "🇺🇸"
   },{
@@ -1151,7 +1151,7 @@
     "code": "678",
     "flag": "🇻🇺"
   },{
-    "name": "Ciudad del Vaticano",
+    "name": "CiudaddelVaticano",
     "code": "3906698",
     "flag": "🇻🇦"
   },{
@@ -1163,11 +1163,11 @@
     "code": "84",
     "flag": "🇻🇳"
   },{
-    "name": "Wallis y Futuna",
+    "name": "WallisyFutuna",
     "code": "681",
     "flag": "🇼🇫"
   },{
-    "name": "Sahara Occidental",
+    "name": "SaharaOccidental",
     "code": "212",
     "flag": "🇪🇭"
   },{

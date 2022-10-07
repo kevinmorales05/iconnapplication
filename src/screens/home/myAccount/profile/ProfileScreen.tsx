@@ -1,16 +1,4 @@
-import {
-  Avatar,
-  Button,
-  Container,
-  CustomText,
-  DatePicker,
-  Input,
-  Select,
-  TextContainer,
-  SafeArea,
-  Touchable,
-  CountryCodeSelect,
-} from 'components';
+import { Avatar, Button, Container, CustomText, DatePicker, Input, Select, TextContainer, SafeArea, Touchable, CountryCodeSelect } from 'components';
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -26,39 +14,39 @@ import * as PhotosPicker from '../../../../components/organisms/PhotosPicker/Pho
 import { NavigationContext } from '@react-navigation/native';
 import moment from 'moment';
 import countries from 'assets/files/countries.json';
-import { formatDate, formatDate2 } from "utils/functions";
-
+import { formatDate } from 'utils/functions';
 
 type Props = {
-  onSubmit: (data: any) => void;
+  onSubmit: (data: FieldValues) => void;
   onLogout: () => void;
   goBack?: () => void;
   onPress?: () => void;
   editIconStyle?: StyleProp<ViewStyle>;
-  prueba: () => void;
+  goToChangePwd: () => void;
 };
 
-const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
+const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
   const { userVtex } = useAppSelector((state: RootState) => state.auth);
   const { email, firstName, homePhone, gender, birthDate, lastName, profilePicture } = userVtex;
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
+  const [code, setCode] = useState(countries[1].code);
+  const [flag, setFlag] = useState(countries[1].flag);
+  const [mobilePhone, setMobilePhone] = useState<string>();
   const navigation = useContext(NavigationContext);
   const [disabled, setDisabled] = useState(false);
-  const newDate = ( date: string) => {
+  const newDate = (date: string) => {
     let formatDay = new Date(date);
     let help: string = formatDate(formatDay).toString();
     return help;
-  }
+  };
 
   // storage bucket folder
   const bucketPath = `userPhotos/${userVtex.accountId}/profile/`;
 
-  const { currentPhoto, launch } = PhotosPicker.usePhotosPicker(1, bucketPath,
-    () => {
-      setVisible(false)
-    },
-    );
+  const { currentPhoto, launch } = PhotosPicker.usePhotosPicker(1, bucketPath, () => {
+    setVisible(false);
+  });
 
   const {
     control,
@@ -66,7 +54,8 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
     register,
     handleSubmit,
     watch,
-    setValue
+    setValue,
+    trigger
   } = useForm({
     mode: 'onChange'
   });
@@ -80,18 +69,46 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
       setDisabled(true);
     }
   }, [nameField, lastNameField]);
-  
 
   const nameRef = useRef<TextInput>(null);
   const surnameRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
+  const codeRef = useRef<TextInput>(null);
 
+  const getCountryCode = () => {
+    const countryC: any = countries.find(i => {
+      const prefix = mobilePhone?.substring(i.code.length, 0);
+      if (prefix === i.code) {
+        setCode(i.code);
+        setFlag(i.flag);
+        return i;
+      }
+    })
+    console.log('country code', countryC);
+    setValue('countryCode', countryC);
+  }
+
+
+  
+  /* useEffect(() => {
+    setValue('countryFlag', paymentMethod ? PAYMENT_METHODS.find(i => i.id === paymentMethod)?.name : '');
+  }, [PaymentMethod]); */
+  
   useEffect(() => {
-    setValue('name', firstName );
-    setValue('lastName', lastName );
-    setValue('telephone', homePhone );
+    setValue('name', firstName);
+    setValue('lastName', lastName);
+    setValue('countryCode', code);
+    setValue('countryFlag', flag);
+    if (homePhone) {
+      const justPhone = homePhone.replace('+', '');
+      setValue('telephone', justPhone);
+      //setMobilePhone(justPhone);
+      setMobilePhone(justPhone);
+    } else {
+      setValue('telephone', homePhone);
+    }
     setValue('email', email);
     
     if (gender) {
@@ -100,15 +117,22 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
       });
       setValue('gender', previusGender?.name);
     }
-
-    if(birthDate){
-      setValue('birthday',  newDate(birthDate));
+    
+    if (birthDate) {
+      setValue('birthday', newDate(birthDate));
     }
-
+    
     if (nameRef.current) {
       nameRef.current.focus();
     }
+    console.log('CODE', code);
+    console.log('FLAG', flag);
   }, []);
+  
+  useEffect(() => {
+    getCountryCode();
+  }, [mobilePhone])
+  
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -120,14 +144,21 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
     setDatePickerVisibility(false);
   };
 
-  const handleConfirm = (date:Date) => {
-    setValue('birthday',moment(date).format("DD/MM/YYYY"));
+  const handleConfirm = (date: Date) => {
+    setValue('birthday', moment(date).format('DD/MM/YYYY'));
     hideDatePicker();
   };
 
-
   const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields);
+  };
+
+  const updateCode = (newCode: string) => {
+    const newNew = newCode.split(' ', 3);
+    setValue('countryCode', newNew[2]);
+    setValue('countryFlag', newNew[0]);
+    setCode(newNew[2]);
+    setFlag(newNew[0]);
   };
 
   return (
@@ -143,43 +174,21 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
       showsVerticalScrollIndicator={false}
     >
       <Container>
-        <Avatar
-          source={{
-            uri: profilePicture ? profilePicture : currentPhoto
-          }}
-          editable={true}
-          onPress={() => {
-            setVisible(true);
-          }}
-        />
-
-        <TextContainer
-          typography="h6"
-          fontBold
-          text={`Nombres`}
-          marginTop={25}
-        />
+        <TextContainer typography="h6" fontBold text={`Nombres`} marginTop={0} />
 
         <Input
           {...register('name')}
+          name="name"
           ref={nameRef}
           control={control}
           autoCorrect
           autoCapitalize="words"
           keyboardType="default"
-          placeholder={firstName}
-          rules={alphabetRule(true)}
-          blurOnSubmit={false}
-          error={errors.name?.message}
+          onChangeText={nameValue => setValue('name', nameValue)}
           maxLength={30}
         />
 
-        <TextContainer
-          typography="h6"
-          fontBold
-          text={`Apellidos`}
-          marginTop={21}
-        />
+        <TextContainer typography="h6" fontBold text={`Apellidos`} marginTop={21} />
 
         <Input
           {...register('lastName')}
@@ -189,18 +198,10 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
           autoCapitalize="words"
           keyboardType="default"
           placeholder={lastName}
-          rules={alphabetRule(true)}
-          blurOnSubmit={false}
-          error={errors.lastName?.message}
           maxLength={30}
         />
 
-        <TextContainer
-          typography="h6"
-          fontBold
-          text={`Correo electrónico`}
-          marginTop={21}
-        />
+        <TextContainer typography="h6" fontBold text={`Correo electrónico`} marginTop={21} />
         <Input
           {...register('email')}
           editable={false}
@@ -209,101 +210,25 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
           autoCapitalize="words"
           keyboardType="default"
           placeholder={email}
-          rules={alphabetRule(true)}
-          blurOnSubmit={false}
-          error={errors.lastName?.message}
           maxLength={30}
         />
-        {/* <View style={{flex:1, flexDirection:"row"}}>
-          <View style={{flex:3}}>
-            <TextContainer
-              text={email!}
-              typography="h5"
-              textColor={theme.brandColor.iconn_grey}
-              marginTop={19}
-            />
 
-            <Container flex row style={{ marginTop: 10 }} center>
-              <Icon
-                name="checkcircle"
-                size={18}
-                color={theme.brandColor.iconn_success}
-                style={{ marginRight: 5 }}
-              />
-              <CustomText
-                textColor={theme.brandColor.iconn_green_original}
-                text={
-                  sign_app_modes_id === 1
-                    ? 'Correo verificado'
-                    : 'Correo verificado con red social'
-                }
-                typography="h6"
-                fontWeight="normal"
-              />
-            </Container>
-          </View> */}
+        <TextContainer typography="h6" fontBold text={`Contraseña`} marginTop={21} />
 
-         {/*  {sign_app_modes_id === 1 && <View style={{flex:3, marginTop:19}}>
-            <Touchable onPress={() => {
-              navigation?.navigate("EditEmail");
-            }}>
-              <Container row center style={{justifyContent :"flex-end"}}>
-                <Octicons
-                  name="pencil"
-                  size={theme.avatarSize.xxxsmall}
-                  color={theme.brandColor.iconn_accent_secondary}
-                  style={{ marginRight: 5 }}
-                />
+        <Container row center crossCenter space="between" style={{ marginTop: 10 }}>
+          <CustomText fontBold typography="dot" text={`••••••••`} textColor={theme.brandColor.iconn_dark_grey} />
+          {
+            <TouchableOpacity onPress={goToChangePwd}>
+              <Container row center crossCenter>
+                <Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_accent_secondary} style={{ marginRight: 5 }} />
                 <CustomText text={'Editar'} typography="h6" />
               </Container>
-            </Touchable>
-          </View>} */}
-       {/*  </View> */}
-
-        <TextContainer
-          typography="h6"
-          fontBold
-          text={`Contraseña`}
-          marginTop={21}
-        />
-
-        <Container
-          row
-          center
-          crossCenter
-          space="between"
-          style={{ marginTop: 10 }}
-        >
-          <CustomText
-            fontBold
-            typography="dot"
-            text={`••••••••`}
-            textColor={theme.brandColor.iconn_dark_grey}
-          />
-          {/* {sign_app_modes_id === 1 && <TouchableOpacity
-            onPress={() => {
-              navigation?.navigate('EditPassword');
-            }}
-          >
-            <Container row center crossCenter>
-              <Octicons
-                name="pencil"
-                size={theme.avatarSize.xxxsmall}
-                color={theme.brandColor.iconn_accent_secondary}
-                style={{ marginRight: 5 }}
-              />
-              <CustomText text={'Editar'} typography="h6" />
-            </Container>
-          </TouchableOpacity>} */}
+            </TouchableOpacity>
+          }
         </Container>
 
-        <TextContainer
-          typography="h6"
-          fontBold
-          text={`Celular`}
-          marginTop={24}
-        />
-         <Select
+        <TextContainer typography="h6" fontBold text={`Celular`} marginTop={24} />
+        {/*  <Select
           name="telephone"
           control={control}
           options={countries.map (item => item.flag + item.code)}
@@ -311,37 +236,33 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
           androidMode="dialog"
           label={countries[135].code}
           placeholder={'10 dígitos'+ countries[133].flag}
-          error={errors.gender?.message}
-        />
-       {/*  <CountryCodeSelect
-        name="telephone"
-        control={control}
-        options={countries.map (item => item.flag + item.code)}
-        onSelect={value => setValue('telephone', value)}
-        androidMode="dialog"
-        label={countries[135].code}
-        placeholder={countries[133].flag}
-        error={errors.gender?.message}
-        />
- */}
-    {/*     <Input
-          {...register('telephone')}
-          ref={phoneRef}
-          control={control}
-          keyboardType="number-pad"
-          placeholder={'000-000-0000'}
-          blurOnSubmit={true}
-          error={errors.telephone?.message}
-          maxLength={10}
-          phone
         /> */}
+        <Container row style={{ justifyContent: 'space-around', paddingHorizontal: 35 }}>
+          <CountryCodeSelect
+            name="countryFlag"
+            control={control}
+            options={countries.map(item => item.flag + ' ' + item.name + ' ' + item.code)}
+            onSelect={value => {
+              updateCode(value);
+            }}
+            androidMode="dialog"
+            placeholder={flag}
+          />
+          <Input
+            {...register('telephone')}
+            ref={phoneRef}
+            control={control}
+            keyboardType="number-pad"
+            placeholder={'10 digitos'}
+            placeholderBold={code}
+            blurOnSubmit={true}
+            error={errors.telephone?.message}
+            maxLength={10}
+            phone
+          />
+        </Container>
 
-        <TextContainer
-          typography="h6"
-          fontBold
-          text={`Fecha de nacimiento`}
-          marginTop={21}
-        />
+        <TextContainer typography="h6" fontBold text={`Fecha de nacimiento`} marginTop={21} />
 
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
@@ -351,19 +272,9 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
           textColor={theme.brandColor.iconn_accent_principal}
         />
 
-        <DatePicker
-          name="birthday"
-          control={control}
-          onPressDatePickerIcon={showDatePicker}
-          error={errors.birthday?.message}
-        />
+        <DatePicker name="birthday" control={control} onPressDatePickerIcon={showDatePicker} error={errors.birthday?.message} />
 
-        <TextContainer
-          typography="h6"
-          fontBold
-          text={`Genero`}
-          marginTop={21}
-        />
+        <TextContainer typography="h6" fontBold text={`Genero`} marginTop={21} />
 
         <Select
           name="gender"
@@ -371,8 +282,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
           options={GENDERS.map(item => item.name)}
           onSelect={value => setValue('gender', value)}
           androidMode="dialog"
-          label={gender as string}
-          placeholder={(gender == null ? 'Selecciona' : (gender == 'male') ? 'Masculino': 'Femenino')}
+          placeholder={gender == null ? 'Selecciona' : gender == 'Femenino' ? 'Femenino' : 'Masculino'}
           error={errors.gender?.message}
         />
         <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
@@ -389,27 +299,8 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
             }}
           />
         </SafeArea>
-        <Button
-          length="long"
-          round
-          disabled={disabled}
-          onPress={handleSubmit(submit)}
-          fontSize="h4"
-          fontBold
-          marginTop={32}
-        >
+        <Button length="long" round disabled={disabled} onPress={handleSubmit(submit)} fontSize="h4" fontBold marginTop={32}>
           Guardar
-        </Button>
-        <Button
-          length="long"
-          round
-          disabled={disabled}
-          onPress={prueba}
-          fontSize="h4"
-          fontBold
-          marginTop={32}
-        >
-          Prueba
         </Button>
       </Container>
     </ScrollView>
@@ -417,3 +308,5 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, prueba }) => {
 };
 
 export default ProfileScreen;
+
+
