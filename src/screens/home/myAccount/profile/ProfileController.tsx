@@ -99,6 +99,7 @@ const ProfileController: React.FC = () => {
       email: email,
       birthDate: userFields.birthday == undefined ? null : newDate(userFields.birthday)
     };
+    console.log("this is the date ", updatedUser.birthDate)
     //prevents unhandled email update
     const { id } = userVtex;
     userFields.id = id;

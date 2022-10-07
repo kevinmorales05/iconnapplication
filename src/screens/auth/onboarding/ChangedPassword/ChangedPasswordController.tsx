@@ -4,7 +4,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { AuthStackParams, HomeStackParams } from 'navigation/types';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { RootState, setIsLogged, setUserId, useAppDispatch, useAppSelector } from 'rtk';
+import { RootState, setAccountAuthCookie, setAuthCookie, setIsLogged, setUserId, useAppDispatch, useAppSelector } from 'rtk';
 import { authServices } from 'services';
 import ChangedPasswordScreen from './ChangedPasswordScreen';
 import { useAlert } from 'context';
@@ -25,6 +25,8 @@ const ChangedPasswordController: React.FC = () => {
     try {
       const response = await authServices.login(email as string, password, authenticationToken);
       if (response.authStatus == 'Success') {
+        dispatch(setAuthCookie(response.authCookie));
+        dispatch(setAccountAuthCookie(response.accountAuthCookie));
         dispatch(setUserId({ user_id: response.userId }));
         dispatch(setIsLogged({ isLogged: true }));
       } else {

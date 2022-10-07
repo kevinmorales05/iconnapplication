@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useAlert, useLoading } from 'context';
 import { AuthStackParams } from 'navigation/types';
-import { RootState, setAuthInitialState, setIsLogged, setUserId, useAppDispatch, useAppSelector, UserVtex } from 'rtk';
+import { RootState, setAccountAuthCookie, setAuthCookie, setAuthInitialState, setIsLogged, setUserId, useAppDispatch, useAppSelector, UserVtex } from 'rtk';
 import { authServices } from 'services';
 import CreatePasswordScreen from './CreatePasswordScreen';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
@@ -34,28 +34,35 @@ const CreatePasswordController: React.FC = () => {
     dispatch(setAuthInitialState());
     console.log('PLATANO', password, code);
     goBack();
-  }
+  };
 
   const onSubmit = async (fields: FieldValues) => {
     const { password, code } = fields;
-    const user : UserVtex = {
+    const user: UserVtex = {
       email: email as string,
       firstName: '',
       lastName: '',
-      homePhone: '',
+      homePhone: ''
     };
 
     loader.show();
     try {
       if (variant === 'register') {
-          const { userId, authStatus } = await authServices.createPassword(password, code, user.email as string, authenticationToken);
-          console.log('GORILA', userId, authStatus);
-          console.log('PLATANO', password, code);
-          if (authStatus === 'Success') {
-            const response = await authServices.newUser(user);
-            dispatch(setUserId({ user_id: userId }));
-            dispatch(setIsLogged({ isLogged: true }));
-            console.log('MUNCHO', response)
+        const { userId, authStatus, authCookie, accountAuthCookie } = await authServices.createPassword(
+          password,
+          code,
+          user.email as string,
+          authenticationToken
+        );
+        console.log('GORILA', userId, authStatus);
+        console.log('PLATANO', password, code);
+        if (authStatus === 'Success') {
+          const response = await authServices.newUser(user);
+          dispatch(setAuthCookie(authCookie));
+          dispatch(setAccountAuthCookie(accountAuthCookie));
+          dispatch(setUserId({ user_id: userId }));
+          dispatch(setIsLogged({ isLogged: true }));
+          console.log('MUNCHO', response);
         } else {
           alert.show(
             {

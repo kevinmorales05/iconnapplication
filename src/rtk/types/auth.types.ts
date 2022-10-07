@@ -53,6 +53,8 @@ export interface AuthDataInterface {
   new_password?: string;
   addresses?: Address[];
   seenCarousel?: boolean;
+  authCookie?: AuthCookie;
+  accountAuthCookie?: AuthCookie;
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';

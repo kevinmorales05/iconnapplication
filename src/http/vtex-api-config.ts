@@ -1,9 +1,10 @@
 import { AxiosRequestConfig } from 'axios';
+import { store } from 'rtk';
 
 // TODO: comnplete the rest of configuration, bearer token, auth headers, environment with react-native-config...
 const API_VTEX_ORDERS = 'https://oneiconn.myvtex.com/api/oms/pvt/orders';
 const API_VTEX_ORDER = 'https://oneiconn.myvtex.com/api/orders/pvt';
-const API_VTEX_USER = 'https://api.vtex.com/oneiconn'
+const API_VTEX_USER = 'https://api.vtex.com/oneiconn';
 const API_VTEX_SHOPPINGCAR = 'https://oneiconn.myvtex.com/api/checkout/pub/orderForm';
 const API_VTEX_PRODUCTS = 'https://oneiconn.myvtex.com/api/catalog_system/pvt/products';
 const API_VTEX_PRODUCT = 'https://oneiconn.myvtex.com/api/catalog/pvt';
@@ -14,7 +15,7 @@ const VTEX_APPTOKEN = 'SOLVDAEGJAIWHXZATCDTDGNYKYYKKEUKEQNGWBAKCTJNLTMKIXFQMCASW
 const VTEX_DOCS = 'https://oneiconn.myvtex.com/api';
 const VTEX_DOCS_NO_API_PREFIX = 'https://oneiconn.myvtex.com';
 const API_VTEX_SEARCH_PRODUCTS = 'http://oneiconn.vtexcommercestable.com.br/buscaautocomplete?productNameContains=';
-const VTEX_REVIEWS_RATINGS = 'https://oneiconn.myvtex.com/reviews-and-ratings/api/'
+const VTEX_REVIEWS_RATINGS = 'https://oneiconn.myvtex.com/reviews-and-ratings/api/';
 
 const getApiUrl = (type: string) => {
   switch (type) {
@@ -40,7 +41,7 @@ const getApiUrl = (type: string) => {
       return VTEX_DOCS_NO_API_PREFIX;
     case 'searchProducts':
       return API_VTEX_SEARCH_PRODUCTS;
-    case 'user': 
+    case 'user':
       return API_VTEX_USER;
     case 'reviews':
       return VTEX_REVIEWS_RATINGS;
@@ -58,13 +59,15 @@ const getApiUrl = (type: string) => {
  * |,,,,,|
  */
 export const VTEXApiConfig = (type: string): AxiosRequestConfig => {
+  const { authCookie, accountAuthCookie } = store.getState().auth.user;
   return {
     baseURL: getApiUrl(type),
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       'X-VTEX-API-AppKey': VTEX_APPKEY,
-      'X-VTEX-API-AppToken': VTEX_APPTOKEN
+      'X-VTEX-API-AppToken': VTEX_APPTOKEN,
+      Cookie: authCookie?.Name + '=' + authCookie?.Value + '; ' + accountAuthCookie?.Name + '=' + accountAuthCookie?.Value + ';'
     }
   };
 };

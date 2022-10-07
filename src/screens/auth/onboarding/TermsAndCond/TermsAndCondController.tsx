@@ -5,7 +5,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams, HomeStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
-import { RootState, setUserId, useAppDispatch, useAppSelector, setIsLogged } from 'rtk';
+import { RootState, setUserId, useAppDispatch, useAppSelector, setIsLogged, setAuthCookie, setAccountAuthCookie } from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 
 import { authServices } from 'services';
@@ -41,10 +41,17 @@ const TermsAndCondController: React.FC = () => {
     try {
       await authServices.createUser(user.email as string);
 
-      const { userId, authStatus } = await authServices.createPassword(newPassword, accessKey, user.email as string, authenticationToken);
+      const { userId, authStatus, authCookie, accountAuthCookie } = await authServices.createPassword(
+        newPassword,
+        accessKey,
+        user.email as string,
+        authenticationToken
+      );
       loader.hide();
 
       if (authStatus === 'Success') {
+        dispatch(setAuthCookie(authCookie));
+        dispatch(setAccountAuthCookie(accountAuthCookie));
         dispatch(setUserId({ user_id: userId }));
         dispatch(setIsLogged({ isLogged: true }));
       } else {
