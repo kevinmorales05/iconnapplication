@@ -114,6 +114,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
           price={product.price!}
           productId={product.productId}
           quantity={product.quantity!}
+          ratingValue={product.ratingValue}
           // quantity={2}
           onPressAddCart={() => {
             onPressProduct!('create', product.productId);
