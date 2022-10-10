@@ -41,6 +41,7 @@ interface Props {
   const [cartItemQuantity, setCartItemQuantity] = useState(0);
   const [productRating, setProductRating] = useState(Object);
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const [productToUpdate, setProductToUpdate] = useState(Object);
 
   const fetchData = useCallback(async () => {
     const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/"
@@ -99,7 +100,7 @@ interface Props {
       }
       setComplementaryProducts(complementaryList);
     }).catch((error) => console.log(error));
-  }, []);
+  }, [itemId]);
 
   const isProductIdInShoppingCart = (productId) => {
     const { items } = cart;
@@ -114,7 +115,7 @@ interface Props {
 
   useEffect(() => {
     fetchData();
-  }, [cart]);
+  }, [cart, complementaryProducts, itemId]);
   
   useEffect(() => {
     getComplementaryProducts();
@@ -216,15 +217,19 @@ interface Props {
                           productId={prod.productId}
                           quantity={prod.quantity!}
                           onPressAddCart={() => {
+                            complementaryProducts[index].quantity = 1;
                             updateShoppingCartProduct('create', prod.productId);
                           }}
                           onPressAddQuantity={() => {
+                            complementaryProducts[index].quantity = complementaryProducts[index].quantity+1;
                             updateShoppingCartProduct('add', prod.productId);
                           }}
                           onPressDeleteCart={() => {
+                            complementaryProducts[index].quantity = 0;
                             updateShoppingCartProduct('remove', prod.productId);
                           }}
                           onPressDecreaseQuantity={() => {
+                            complementaryProducts[index].quantity = complementaryProducts[index].quantity - 1;
                             updateShoppingCartProduct('substract', prod.productId);
                           }}
                         />

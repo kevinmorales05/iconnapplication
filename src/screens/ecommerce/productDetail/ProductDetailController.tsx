@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import ProductDetailScreen from './ProductDetailScreen';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -106,7 +106,9 @@ const ProductDetailController: React.FC<Props> = () => {
     setModal(false);
   }
 
+  useEffect(() => {
 
+  }, [productIdentifier])
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea barStyle="dark">
