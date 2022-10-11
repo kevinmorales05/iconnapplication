@@ -1,20 +1,5 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
-export interface UserVtex {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  document?: string;
-  documentType?: string;
-  homePhone?: string;
-  birthDate?: string | null;
-  gender?: string | number;
-  profilePicture?: string;
-  accountId?: string;
-  id?: string;
-  userId?: string;
-}
-
 export interface UserInterface {
   id: string;
   email: string;
@@ -33,28 +18,36 @@ export interface UserInterface {
 }
 
 export interface AuthDataInterface {
-  user_id?: string;
-  email?: string;
-  name?: string;
-  lastName?: string;
-  secondLastName?: string;
-  pass?: string;
-  secretKey?: string;
-  termsAndConditions?: boolean;
-  isLogged?: boolean;
-  sign_app_modes_id?: number;
-  photo?: string;
-  emailVerified?: boolean;
-  telephone?: string;
+  accountAuthCookie?: AuthCookie;
+  accountId?: string; // added from UserVtex
+  addresses?: Address[];
+  authCookie?: AuthCookie;
+  birthDate?: string | null; // added from UserVtex. birthDate should be unused.
   birthday?: string;
+  document?: string;
+  documentType?: string;
+  email?: string;
+  emailVerified?: boolean;
+  firstName?: string; // added from UserVtex, please change name instead of firstName. firstName should be unused.
   gender_id?: number;
   gender?: string | number;
-  password?: string;
+  homePhone?: string; // added from UserVtex. homePhone should be unused.
+  id?: string; // added from UserVtex
+  isLogged?: boolean;
+  lastName?: string;
+  name?: string;
   new_password?: string;
-  addresses?: Address[];
+  pass?: string;
+  password?: string;
+  photo?: string;
+  profilePicture?: string; // added from UserVtex. profilePicture should be unused.
+  secondLastName?: string;
+  secretKey?: string;
   seenCarousel?: boolean;
-  authCookie?: AuthCookie;
-  accountAuthCookie?: AuthCookie;
+  sign_app_modes_id?: number;
+  telephone?: string;
+  termsAndConditions?: boolean;
+  userId?: string; // added from UserVtex (MAIN).
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';

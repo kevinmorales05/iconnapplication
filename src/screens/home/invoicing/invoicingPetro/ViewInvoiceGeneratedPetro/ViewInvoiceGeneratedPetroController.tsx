@@ -16,7 +16,7 @@ const ViewInvoiceGeneratedPetroController: React.FC<any> = ({ route }) => {
 
   const fetchInvoice = useCallback(async () => {
     const { data } = await dispatch(
-      getInvoicePDFThunk({ userId: user.user_id!, uuid: route.params ? route.params.invoiceGenerated.uuidInvoice : undefined })
+      getInvoicePDFThunk({ userId: user.userId!, uuid: route.params ? route.params.invoiceGenerated.uuidInvoice : undefined })
     ).unwrap();
     setBase64(data.b64);
   }, []);

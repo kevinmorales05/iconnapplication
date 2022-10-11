@@ -23,19 +23,18 @@ const AddressesController: React.FC = () => {
     setPostalCodeError
   } = useAddresses();
 
-  const { userVtex, user } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
-  const [ refreshing, setRefreshing] = useState<boolean>(false)
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   /**
    * Load User Addresses List and store it in the redux store
    */
-   const fetchAddresses = useCallback(async () => {
+  const fetchAddresses = useCallback(async () => {
     // loader.show();
-    await setRefreshing(true)
-    console.log({user: userVtex.id})
-    if(userVtex.id){
-      await dispatch(getUserAddressesThunk(userVtex.id!));
-      setRefreshing(false)
+    await setRefreshing(true);
+    if (user.id) {
+      await dispatch(getUserAddressesThunk(user.id!));
+      setRefreshing(false);
     }
   }, []);
 
@@ -49,7 +48,14 @@ const AddressesController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={true} bottomSafeArea={true} barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
-      <AddressesScreen refreshing={refreshing} onRefresh={fetchAddresses} addresses={user.addresses!} onPressEdit={editAddress} onPressDelete={removeAddress} onPressAddNewAddress={onPressAddNewAddress} />
+      <AddressesScreen
+        refreshing={refreshing}
+        onRefresh={fetchAddresses}
+        addresses={user.addresses!}
+        onPressEdit={editAddress}
+        onPressDelete={removeAddress}
+        onPressAddNewAddress={onPressAddNewAddress}
+      />
       <AddressModalScreen
         visible={addressModalScreenVisible}
         postalCodeInfo={postalCodeInfo!}

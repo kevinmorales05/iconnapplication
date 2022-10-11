@@ -1,11 +1,12 @@
 import { AxiosRequestConfig } from 'axios';
-import { AuthCookie, AuthDataInterface, UserVtex } from 'rtk';
+import { AuthCookie, AuthDataInterface } from 'rtk';
 import { OtpsApi } from '../http/api-otps';
 import { UsersApi } from '../http/api-users';
 import { AuthUserSocial } from '../http/api-authUserSocial';
 import { HttpClient } from '../http/http-client';
 
-async function newUser(userEmail: UserVtex): Promise<any> {
+// TODO: relocate the headers to api-config file.
+async function newUser(userEmail: AuthDataInterface): Promise<any> {
   const response = await UsersApi.getInstance().postRequest(`/dataentities/CL/documents`, userEmail, {
     headers: { Accept: 'application/json', 'Content-type': 'application/json' }
   });
@@ -43,6 +44,7 @@ async function logOutUser(): Promise<any> {
   return data;
 }
 
+// TODO: relocate this constant to api-config file or to .env
 const API_VTEX_AUTH = 'https://oneiconn.myvtex.com/api/vtexid/pub/authentication/';
 
 async function startAuthentication(email: string): Promise<any> {
@@ -92,6 +94,7 @@ async function createPassword(newPassword: string, accesskey: string, email: str
   return data;
 }
 
+// TODO: relocate this headers to api-config file.
 async function createUser(email: string, name: string | null = null): Promise<any> {
   const response = await UsersApi.getInstance().postRequest(
     `/license-manager/users`,
@@ -173,7 +176,7 @@ async function registerWithFirebase(user: AuthDataInterface): Promise<any> {
  * @returns
  */
 async function getUser(user: AuthDataInterface): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(`/users/getUser/${user.user_id}`);
+  const response = await UsersApi.getInstance().getRequest(`/users/getUser/${user.userId}`);
   if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
   const { data } = response;
   return data.resp;
@@ -185,6 +188,7 @@ async function getUser(user: AuthDataInterface): Promise<any> {
  * @returns
  */
 async function getProfile(email: string): Promise<any> {
+  // TODO: relocate the baseUrl constant to api-config or .env file
   const response = await UsersApi.getInstance().getRequest(
     `/dataentities/CL/search?email=${email}&_fields=id,email,firstName,lastName,document,documentType,homePhone,isCorporate,corporateDocument,tradeName,stateRegistration,isNewsletterOptIn,localeDefault,approved`,
     {
@@ -204,8 +208,8 @@ async function getProfile(email: string): Promise<any> {
  * @returns
  */
 async function putUser(user: AuthDataInterface): Promise<any> {
-  const { user_id } = user;
-  const response = await UsersApi.getInstance().putRequest(`/users/putUser/${user_id}`, user);
+  const { userId } = user;
+  const response = await UsersApi.getInstance().putRequest(`/users/putUser/${userId}`, user);
   if (response === undefined) return Promise.reject(new Error('putUser:/users/putUser'));
   const { data } = response;
   return data;
@@ -217,8 +221,8 @@ async function putUser(user: AuthDataInterface): Promise<any> {
  * @returns
  */
 async function updateUserPassword(user: AuthDataInterface): Promise<any> {
-  const { user_id } = user;
-  const response = await UsersApi.getInstance().putRequest(`/users/updateUserPassword/${user_id}`, user);
+  const { userId } = user;
+  const response = await UsersApi.getInstance().putRequest(`/users/updateUserPassword/${userId}`, user);
   if (response === undefined) return Promise.reject(new Error('updateUserPassword:/users/updateUserPassword'));
   const { data } = response;
   return data;
@@ -249,12 +253,12 @@ async function getLoginProviders(): Promise<any> {
  * @param authCookie
  * @param accountAuthCookie
  */
- async function loginWhitSocialNetwork(authCookie: AuthCookie, accountAuthCookie: AuthCookie): Promise<any> {
+async function loginWhitSocialNetwork(authCookie: AuthCookie, accountAuthCookie: AuthCookie): Promise<any> {
   HttpClient.authCookie = authCookie;
   HttpClient.accountAuthCookie = accountAuthCookie;
 
-  console.log("HttpClient.authCookie:",HttpClient.authCookie);
-  console.log("HttpClient.accountAuthCookie:",HttpClient.accountAuthCookie);
+  console.log('HttpClient.authCookie:', HttpClient.authCookie);
+  console.log('HttpClient.accountAuthCookie:', HttpClient.accountAuthCookie);
 }
 
 /**
@@ -262,18 +266,19 @@ async function getLoginProviders(): Promise<any> {
  * @param user
  * @returns
  */
- async function valideteUserSocial(): Promise<any> {
+async function valideteUserSocial(): Promise<any> {
   const response = await AuthUserSocial.getInstance().getRequest(`/vtexid/pub/authenticated/user`);
   if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
   const { data } = response;
   return data;
- }
+}
+
 /**
  * Function to get User by Id.
  * @param user
  * @returns
  */
- async function getUserById(user_id: string): Promise<any> {
+async function getUserById(user_id: string): Promise<any> {
   const response = await UsersApi.getInstance().getRequest(`/users/getUser/${user_id}`);
   if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
   const { data } = response;

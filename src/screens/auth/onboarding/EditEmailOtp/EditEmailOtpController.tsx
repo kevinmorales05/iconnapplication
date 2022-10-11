@@ -31,11 +31,12 @@ const EditEmailOtpController = () => {
 
   const [wrongCode, setWrongCode] = useState(false);
 
+  // TODO: check this putUser. Maybe we need add user_id property to AuthDataInterface.
   const updateEmail = async (email: string) => {
     loader.show();
     try {
       await authServices.putUser({
-        user_id: user.user_id,
+        user_id: user.userId,
         email
       } as AuthDataInterface);
       dispatch(setAuthEmail({ email }));

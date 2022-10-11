@@ -1,4 +1,4 @@
-import { UserVtex } from 'rtk';
+import { AuthDataInterface } from 'rtk';
 import { VtexUserApi } from '../http/vtex-api-users';
 
 async function getUserByEmail(email: string): Promise<any> {
@@ -7,15 +7,14 @@ async function getUserByEmail(email: string): Promise<any> {
   console.log('Aqui termina el getUserByEmail');
   return response;
 }
-async function putUserByEmail(updatedUser: UserVtex): Promise<any> {
+async function putUserByEmail(updatedUser: AuthDataInterface): Promise<any> {
   const response = await VtexUserApi.getInstance().putRequest('/dataentities/CL/documents', updatedUser);
   if (response === undefined) return Promise.reject(new Error('putUser:/users/putUser'));
   const { data } = response;
   return data;
 }
 
-
 export const vtexUserServices = {
-    getUserByEmail,
-    putUserByEmail
+  getUserByEmail,
+  putUserByEmail
 };

@@ -105,7 +105,6 @@ const AppNavigator: any = () => {
       </Stack.Navigator>
     );
   } else if (isLogged || isGuest) {
-    console.log(`USUARIO LOGUEADO: ${auth().currentUser?.email}, emailVerified: ${auth().currentUser?.emailVerified} 🥳🥳🥳🥳`);
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Start" component={HomeStack} />

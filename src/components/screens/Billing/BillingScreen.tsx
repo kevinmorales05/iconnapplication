@@ -181,7 +181,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
     }) as any;
 
     const invoicingProfile = {
-      user_id: user.user_id,
+      user_id: user.userId,
       rfc: fields.rfc,
       business_name: fields.businessName,
       email: fields.email,

@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, ScrollView, TextInput } from 'react-native';
+import { ScrollView, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import { ActionButton, Input, TextContainer, Button, Container } from 'components';
+import { Input, TextContainer, Button, Container } from 'components';
 import theme from 'components/theme/theme';
 import { FieldValues, RegisterOptions, SubmitHandler, useFormContext } from 'react-hook-form';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ICONN_EMAIL } from 'assets/images';
 
 interface Props {
   onSubmit: (data: FieldValues) => void;
@@ -27,7 +25,6 @@ const ChangePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
 
   const oldPasswordRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
-
 
   useEffect(() => {
     if (passwordRef.current) {
@@ -137,8 +134,7 @@ const ChangePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      <TextContainer typography="h2"  text={`Por tu seguridad, ingresa tu contraseña`} fontSize={14} marginTop={0}></TextContainer>
-      
+      <TextContainer typography="h2" text={`Por tu seguridad, ingresa tu contraseña`} fontSize={14} marginTop={0}></TextContainer>
 
       <TextContainer typography="h6" fontBold text={`Contraseña actual`} marginTop={35} />
       <Input
@@ -191,18 +187,9 @@ const ChangePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
           <TextContainer text="Contiene un número" typography="h5" marginLeft={10} />
         </Container>
       </Container>
-      <Button
-          length="long"
-          round
-          disabled={!isValid}
-          onPress={handleSubmit(submit)}
-          fontSize="h4"
-          fontBold
-          style={{ marginTop: '30%' }}
-        >
-          Guardar
-        </Button>        
-
+      <Button length="long" round disabled={!isValid} onPress={handleSubmit(submit)} fontSize="h4" fontBold style={{ marginTop: '30%' }}>
+        Guardar
+      </Button>
     </ScrollView>
   );
 };

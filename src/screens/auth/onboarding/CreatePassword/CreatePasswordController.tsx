@@ -5,7 +5,17 @@ import { AxiosError } from 'axios';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useAlert, useLoading } from 'context';
 import { AuthStackParams } from 'navigation/types';
-import { RootState, setAccountAuthCookie, setAuthCookie, setAuthInitialState, setIsLogged, setUserId, useAppDispatch, useAppSelector, UserVtex } from 'rtk';
+import {
+  AuthDataInterface,
+  RootState,
+  setAccountAuthCookie,
+  setAuthCookie,
+  setAuthInitialState,
+  setIsLogged,
+  setUserId,
+  useAppDispatch,
+  useAppSelector
+} from 'rtk';
 import { authServices } from 'services';
 import CreatePasswordScreen from './CreatePasswordScreen';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
@@ -29,17 +39,15 @@ const CreatePasswordController: React.FC = () => {
   const loader = useLoading();
   const alert = useAlert();
 
-  const returnToSend = async (fields: FieldValues) => {
-    const { password, code } = fields;
+  const returnToSend = () => {
     dispatch(setAuthInitialState());
-    console.log('PLATANO', password, code);
     goBack();
   };
 
   const onSubmit = async (fields: FieldValues) => {
     const { password, code } = fields;
-    const user: UserVtex = {
-      email: email as string,
+    const user: AuthDataInterface = {
+      email: email,
       firstName: '',
       lastName: '',
       homePhone: ''
@@ -54,15 +62,12 @@ const CreatePasswordController: React.FC = () => {
           user.email as string,
           authenticationToken
         );
-        console.log('GORILA', userId, authStatus);
-        console.log('PLATANO', password, code);
         if (authStatus === 'Success') {
           const response = await authServices.newUser(user);
           dispatch(setAuthCookie(authCookie));
           dispatch(setAccountAuthCookie(accountAuthCookie));
-          dispatch(setUserId({ user_id: userId }));
+          dispatch(setUserId({ userId: userId }));
           dispatch(setIsLogged({ isLogged: true }));
-          console.log('MUNCHO', response);
         } else {
           alert.show(
             {

@@ -1,17 +1,14 @@
-import { Avatar, Button, Container, CustomText, DatePicker, Input, Select, TextContainer, SafeArea, Touchable, CountryCodeSelect } from 'components';
-import React, { useEffect, useRef, useState, useContext } from 'react';
-import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle, View } from 'react-native';
+import { Button, Container, CustomText, DatePicker, Input, Select, TextContainer, SafeArea, CountryCodeSelect } from 'components';
+import React, { useEffect, useRef, useState } from 'react';
+import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
-import { alphabetRule } from 'utils/rules';
 import theme from 'components/theme/theme';
-import Icon from 'react-native-vector-icons/AntDesign';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { GENDERS } from 'assets/files';
 import { RootState, useAppSelector } from 'rtk';
 import * as PhotosPicker from '../../../../components/organisms/PhotosPicker/PhotosPicker';
-import { NavigationContext } from '@react-navigation/native';
 import moment from 'moment';
 import countries from 'assets/files/countries.json';
 import { formatDate } from 'utils/functions';
@@ -25,15 +22,15 @@ type Props = {
   goToChangePwd: () => void;
 };
 
+// TODO: please remove unused code.
 const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
-  const { userVtex } = useAppSelector((state: RootState) => state.auth);
-  const { email, firstName, homePhone, gender, birthDate, lastName, profilePicture } = userVtex;
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { email, firstName, homePhone, gender, birthDate, lastName } = user;
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
   const [code, setCode] = useState<string>();
   const [flag, setFlag] = useState<string>();
   const [mobilePhone, setMobilePhone] = useState<string>();
-  const navigation = useContext(NavigationContext);
   const [disabled, setDisabled] = useState(false);
   const newDate = (date: string) => {
     let formatDay = new Date(date);
@@ -42,7 +39,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
   };
 
   // storage bucket folder
-  const bucketPath = `userPhotos/${userVtex.accountId}/profile/`;
+  const bucketPath = `userPhotos/${user.accountId}/profile/`;
 
   const { currentPhoto, launch } = PhotosPicker.usePhotosPicker(1, bucketPath, () => {
     setVisible(false);
@@ -78,7 +75,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
   const codeRef = useRef<TextInput>(null);
 
   const getCountryCode = () => {
-    console.log({mobilePhone})
+    console.log({ mobilePhone });
     const countryC: any = countries.find(i => {
       const prefix = mobilePhone?.substring(i.code.length, 0);
       if (prefix === i.code) {
@@ -90,18 +87,16 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
         return i;
       }
       //console.log('PREFIX', code)
-    })
+    });
     console.log('country code', countryC);
     setValue('countryCode', countryC);
     setValue('countryFlag', countryC);
-  }
+  };
 
-
-  
   /* useEffect(() => {
     setValue('countryFlag', paymentMethod ? PAYMENT_METHODS.find(i => i.id === paymentMethod)?.name : '');
   }, [PaymentMethod]); */
-  
+
   useEffect(() => {
     setValue('name', firstName);
     setValue('lastName', lastName);
@@ -115,27 +110,27 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
       setValue('telephone', '');
     }
     setValue('email', email);
-    
+
     if (gender) {
       const previusGender = GENDERS.find(element => {
         return gender === element.id;
       });
       setValue('gender', previusGender?.name);
     }
-    
+
     if (birthDate) {
       setValue('birthday', newDate(birthDate));
     }
-    
+
     if (nameRef.current) {
       nameRef.current.focus();
     }
   }, []);
-  
+
   useEffect(() => {
     getCountryCode();
-  }, [mobilePhone])
-  
+  }, [mobilePhone]);
+
   console.log('CODEP', code);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -311,5 +306,3 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
 };
 
 export default ProfileScreen;
-
-
