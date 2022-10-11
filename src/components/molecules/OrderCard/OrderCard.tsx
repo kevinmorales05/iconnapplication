@@ -45,14 +45,29 @@ const OrderCard = (props: OrderInterface) => {
     console.log('PANICO', items.length);
     items.forEach(function (item) {
       console.log('HALP', item.productId);
-      console.log('CONTADOR', itemsCart.length);
-      if (itemsCart.length == 0) {
+      console.log('CONTADOR', JSON.stringify(itemsCart, null, 3));
+      if (itemsCart.length > 0) {
+        itemsCart.forEach(function (itemCart) {
+          console.log('HALP2 ORDEN', item.productId);
+          console.log('HALP2 CARRITO', itemCart.productId);
+          if (item.productId == itemCart.productId) {
+            updateShoppingCartProduct('add', item.productId);
+          }
+          else {
+            updateShoppingCartProduct('create', item.productId);
+          }
+        })
+      } else {
+        updateShoppingCartProduct('create', item.productId);
+      }
+      
+    /*   if (itemsCart.length == 0) {
         updateShoppingCartProduct('create', item.productId);
         console.log('se añadio producto');
       } else {
         updateShoppingCartProduct('add', item.productId);
         console.log('se aumento el producto');
-      }
+      } */
     });
     toast.show({ message: 'Se añadieron los productos al carrito', type: 'success' });
     console.log('AQUI OTOMANOS', JSON.stringify(items, null, 3));
@@ -229,3 +244,4 @@ const styles = StyleSheet.create({
 });
 
 export default OrderCard;
+
