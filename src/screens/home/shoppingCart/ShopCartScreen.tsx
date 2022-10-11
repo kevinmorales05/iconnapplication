@@ -9,7 +9,7 @@ import { getShoppingCart, emptyShoppingCar, updateShoppingCart, clearShoppingCar
 import IconO from 'react-native-vector-icons/FontAwesome5';
 import { ConnectionItem } from 'components/organisms/ConnectionItem';
 import { useAlert, useLoading, useToast } from 'context';
-import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
+import { updateShoppingCartItems, setDetailSelected } from 'rtk/slices/cartSlice';
 
 interface Props {
   onPressSeeMore: () => void;
@@ -463,6 +463,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout }) =>
         <Container>
           <Touchable
             onPress={() => {
+              dispatch(setDetailSelected(value.id));
               navigate('ProductDetail', { productIdentifier: value.id });
             }}
           >
@@ -474,6 +475,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout }) =>
             <Container style={{ width: '70%' }}>
               <Touchable
                 onPress={() => {
+                  dispatch(setDetailSelected(value.id));
                   navigate('ProductDetail', { productIdentifier: value.id });
                 }}
               >

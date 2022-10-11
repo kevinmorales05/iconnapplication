@@ -13,6 +13,7 @@ const initialStateShoppingCart: any = {};
 const shoppingCartSlice = createSlice({
   name: 'shoppingCart',
   initialState: {
+    detailSelected:'',
     cart: initialStateShoppingCart
   },
   reducers: {
@@ -21,6 +22,9 @@ const shoppingCartSlice = createSlice({
     },
     setOrderFormId(state, action: PayloadAction<any>) {
       state.cart.orderFormId = action.payload.orderFormId;
+    },
+    setDetailSelected(state, action: PayloadAction<string>) {
+      state.detailSelected = (action.payload);
     },
     getShoppingCartItems(state, action: PayloadAction<any>) {
       state.cart = action.payload;
@@ -37,5 +41,5 @@ const shoppingCartSlice = createSlice({
   }
 });
 
-export const { setShoppingCartInitialState, getShoppingCartItems, updateShoppingCartItems, cleanShoppingCart, createShoppingCart, setOrderFormId } = shoppingCartSlice.actions;
+export const { setShoppingCartInitialState, getShoppingCartItems, updateShoppingCartItems, cleanShoppingCart, createShoppingCart, setOrderFormId, setDetailSelected } = shoppingCartSlice.actions;
 export default shoppingCartSlice.reducer;
