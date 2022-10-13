@@ -50,7 +50,7 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
             <AnnounceItem
               message="Verifica tu correo para facturar"
               withActionButton
-              ActionButtonText="Reenviar"
+              ActionButtonText="Enviar correo de verificación"
               icon={<AntDesign name="warning" size={25} color={theme.brandColor.iconn_white} />}
               onPressActionButton={resendEmail}
             ></AnnounceItem>

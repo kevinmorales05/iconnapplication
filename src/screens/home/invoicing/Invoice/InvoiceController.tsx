@@ -60,7 +60,7 @@ const InvoiceController: React.FC = () => {
           alert.hide();
         }
       },
-      'success'
+      'warning'
     );
   };
 

@@ -236,7 +236,7 @@ const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; 
         </Container>
       ) : (
         <FlatList
-          style={{ maxHeight: '90%' }}
+          style={{ maxHeight: '100%' }}
           data={results}
           renderItem={v =>
             renderItem(
@@ -556,12 +556,14 @@ const InvoiceScreen: React.FC = () => {
                 </View>
               </ScrollView>
             </View>
+            <ScrollView contentContainerStyle={{flexGrow: 1, height: '100%'}}>
             <Results
               results={results}
               handleSend={(invoice: Result) => {
                 setSelected(invoice);
               }}
             />
+            </ScrollView>
           </>
         )}
 
@@ -667,7 +669,7 @@ const InvoiceScreen: React.FC = () => {
 export default InvoiceScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F2F2F2' },
+  container: { flex: 1, backgroundColor: theme.brandColor.iconn_grey_background, height: '100%' },
   empty: { height: '100%', marginTop: 100 },
   content: {},
   title: { marginTop: 20 },
