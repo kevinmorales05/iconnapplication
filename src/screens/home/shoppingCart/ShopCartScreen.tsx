@@ -183,8 +183,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout }) =>
   const showAlert = () => {
     alert.show(
       {
-        title: 'Eliminar articulos no disponibles',
-        message: 'Los articulos ya no apareceran en tu canasta y podras continuar con tu compra',
+        title: 'Eliminar artículos no disponibles',
+        message: 'Los artículos ya no aparecerán en tu canasta y podrás continuar con tu compra.',
         acceptTitle: 'Eliminar',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
