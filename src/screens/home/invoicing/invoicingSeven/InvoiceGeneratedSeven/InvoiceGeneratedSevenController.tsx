@@ -50,7 +50,7 @@ const InvoiceGeneratedSevenController: React.FC<any> = ({ route }) => {
           emails: fields.emailsList.split(',')
         })
       ).unwrap();
-      if (response.responseCode !== 901) {
+      if (response.responseCode === 901) {
         alert.show(
           {
             title: 'Factura reenviada',

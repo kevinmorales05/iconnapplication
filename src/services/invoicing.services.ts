@@ -149,7 +149,7 @@ async function getInvoice(payload: InvoiceInterface): Promise<any> {
  * Function to get invoice PDF
  */
 async function getInvoicePDF(payload: InvoicingGetInvoicePDFRequestInterface): Promise<any> {
-  const response = await InvoicingApi.getInstance().getRequest('/invoicing/invoicingData/getInvoicePDF', payload);
+  const response = await InvoicingApi.getInstance().getRequest(`/invoicing/invoicingData/getInvoicePDF?uuid=${payload.uuid}`);
   if (response === undefined) return Promise.reject(new Error('getInvoicePDF:/invoicing/invoicingData/getInvoicePDF'));
   const { data } = response;
   return data;

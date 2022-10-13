@@ -73,6 +73,8 @@ const InvoiceController: React.FC = () => {
       }
     } catch (error) {
       console.warn(error);
+    } finally {
+      loader.hide();
     }
   };
 
