@@ -47,6 +47,7 @@ export interface AuthDataInterface {
   sign_app_modes_id?: number;
   telephone?: string;
   termsAndConditions?: boolean;
+  user_id?: string;
   userId?: string; // added from UserVtex (MAIN).
 }
 

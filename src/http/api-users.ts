@@ -1,16 +1,18 @@
-import { AxiosRequestConfig } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
-import { VTEXApiAuthConfig } from './vtex-api-config';
+import { ApiConfig } from './api-config';
+import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
+import { DeviceEventEmitter } from 'react-native';
 
 export class UsersApi extends HttpClient {
   static classInstance?: UsersApi;
 
   private constructor() {
     if (global.showLogs__api_users) {
-      console.log('AxiosRequestConfig ===> ApiConfig ===> \n\n', JSON.stringify(VTEXApiAuthConfig('auth'), null, 3));
+      console.log('AxiosRequestConfig ===> ApiConfig ===> \n\n', JSON.stringify(ApiConfig('users'), null, 3));
     }
 
-    super(VTEXApiAuthConfig('auth'));
+    super(ApiConfig('users'));
 
     // Interceptors (only for debug purpose), please do not remove the "return" line,
     // is  necessary to prevent a very confusing error and spend sometime to debug it.
@@ -32,7 +34,6 @@ export class UsersApi extends HttpClient {
             `data: ${JSON.stringify(data, null, 3)}`
           );
         }
-
         return request;
       },
       (error: any) => {
@@ -42,16 +43,25 @@ export class UsersApi extends HttpClient {
       }
     );
 
-    this.instance.interceptors.response.use((response: any) => {
-      const { data, config } = response;
-      if (global.showLogs__api_users) {
-        console.log(
-          `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
-          JSON.stringify(data, null, 3)
-        );
+    this.instance.interceptors.response.use(
+      (response: any) => {
+        const { data, config } = response;
+        if (global.showLogs__api_users) {
+          console.log(
+            `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
+            JSON.stringify(data, null, 3)
+          );
+        }
+        return response;
+      },
+      (error: any) => {
+        if (global.showLogs__api_users) {
+          console.log('INTERCEPTOR Response Error ===> \n\n', JSON.stringify(error, null, 3));
+        }
+        this.handlerError(error);
+        return Promise.reject(error);
       }
-      return response;
-    });
+    );
   }
 
   public static getInstance() {
@@ -62,8 +72,8 @@ export class UsersApi extends HttpClient {
     return this.classInstance;
   }
 
-  async postRequest(path: string, payload: any, config?: AxiosRequestConfig) {
-    return this.instance.post(path, payload, config);
+  async postRequest(path: string, payload: any) {
+    return this.instance.post(path, payload);
   }
 
   async putRequest(path: string, payload: any) {
@@ -73,4 +83,15 @@ export class UsersApi extends HttpClient {
   async getRequest(path: string, payload?: any) {
     return this.instance.get(path, payload);
   }
+
+  private handlerError = (err: Error | AxiosError) => {
+    if (axios.isAxiosError(err)) {
+      let problem: GeneralApiProblem;
+      problem = getGeneralApiProblem(err.response._response || err.response.status);
+      console.error('GLOBAL EXCEPCIÓN ===> ', problem);
+      if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
+    } else {
+      DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');
+    }
+  };
 }

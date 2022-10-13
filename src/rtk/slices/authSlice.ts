@@ -5,7 +5,6 @@ import {
   preSignUpThunk,
   registerThunk,
   signUpUserWithEmailAndPasswordThunk,
-  registerWithFirebaseThunk,
   validateOtpThunk,
   validateUserThunk,
   signInWithEmailAndPasswordThunk,
@@ -192,15 +191,6 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(validateUserThunk.rejected, state => {
-      state.loading = false;
-    });
-    builder.addCase(registerWithFirebaseThunk.pending, state => {
-      state.loading = true;
-    });
-    builder.addCase(registerWithFirebaseThunk.fulfilled, state => {
-      state.loading = false;
-    });
-    builder.addCase(registerWithFirebaseThunk.rejected, state => {
       state.loading = false;
     });
     builder.addCase(signInWithEmailAndPasswordThunk.pending, state => {

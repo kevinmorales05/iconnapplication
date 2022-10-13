@@ -7,6 +7,7 @@ import { useAlert, useLoading } from 'context';
 import { AuthStackParams } from 'navigation/types';
 import {
   AuthDataInterface,
+  registerThunk,
   RootState,
   setAccountAuthCookie,
   setAuthCookie,
@@ -62,12 +63,26 @@ const CreatePasswordController: React.FC = () => {
           user.email as string,
           authenticationToken
         );
-        if (authStatus === 'Success') {
+        // TODO: very important!! check with Alex Almanza, why in some cases the fields are null! :/
+        // Meanwhile it is better to validate them:
+        if (userId !== null && authCookie !== null && accountAuthCookie !== null && authStatus === 'Success') {
           const response = await authServices.newUser(user);
-          dispatch(setAuthCookie(authCookie));
-          dispatch(setAccountAuthCookie(accountAuthCookie));
-          dispatch(setUserId({ userId: userId }));
-          dispatch(setIsLogged({ isLogged: true }));
+          if (response) {
+            // We save the vtex user in DB.
+            const registerInDBResponse = await dispatch(
+              registerThunk({
+                user_id: userId,
+                email: email
+              })
+            ).unwrap();
+
+            if (registerInDBResponse && registerInDBResponse.responseCode === 200) {
+              dispatch(setAuthCookie(authCookie));
+              dispatch(setAccountAuthCookie(accountAuthCookie));
+              dispatch(setUserId({ userId: userId }));
+              dispatch(setIsLogged({ isLogged: true }));
+            }
+          }
         } else {
           alert.show(
             {
