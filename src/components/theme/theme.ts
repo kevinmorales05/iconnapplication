@@ -192,9 +192,10 @@ const theme: themeType = {
     iconn_info: '#4B79AA',
     facebook: '#3b5998',
     google: '#e33629',
-    yellow_star: '#f5d736'
+    yellow_star: '#f5d736',
+    yellow_container: 'rgba(243, 206, 79, 0.18)'
   },
-  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(10) : moderateScale(30)
+  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(10) : moderateScale(40)
 
 };
 

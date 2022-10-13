@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking } from 'react-native';
+import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
 import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
@@ -11,11 +11,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import Geolocation from 'react-native-geolocation-service';
 import sellers from 'assets/files/sellers.json';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 import { setDefaultSeller, useAppDispatch } from 'rtk';
 import { sortByDistance } from 'utils/geolocation';
 
 import appConfig from '../../../../app.json';
+import { moderateScale } from 'utils/scaleMetrics';
 
 const PostalCodeScreen = () => {
   const {
@@ -78,7 +80,7 @@ const PostalCodeScreen = () => {
 
   const onSubmit = async () => {
     loader.show('', 'ecommerce');
-
+    dispatch(setDefaultSeller({ defaultSeller: sellers[1] }));
     navigate('Home');
 
     loader.hide();
@@ -291,8 +293,33 @@ const PostalCodeScreen = () => {
           </Container>
         </Container>
       </Touchable>
+      <Touchable onPress={()=>{
+        
+        onSubmit()
+      }}>
+        <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: moderateScale(200) }}>
+          <CustomText text={'En otro momento'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+        </Container>
+      </Touchable>
     </ScrollView>
   );
 };
 
 export default PostalCodeScreen;
+
+const styles = StyleSheet.create({
+  containerInfo: {
+    width: moderateScale(309),
+    height: moderateScale(55),
+    borderRadius: moderateScale(8),
+    backgroundColor: theme.brandColor.yellow_container,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: theme.brandColor.iconn_warning,
+    marginHorizontal: moderateScale(12),
+    marginTop: moderateScale(40),
+    paddingHorizontal: moderateScale(15),
+    flexDirection: 'row',
+    alignItems:'center'
+  }
+})

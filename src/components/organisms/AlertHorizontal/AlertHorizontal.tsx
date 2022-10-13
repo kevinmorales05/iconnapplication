@@ -22,6 +22,7 @@ interface Props {
   data: AlertDataInterface;
   onDismiss?: () => void;
   type: modalType;
+  isAddressModal: boolean;
 }
 
 const AlertHorizontal: React.FC<Props> = ({
@@ -38,11 +39,12 @@ const AlertHorizontal: React.FC<Props> = ({
     cancelTextColor = 'iconn_dark_grey',
   },
   onDismiss,
-  type
+  type,
+  isAddressModal
 }: Props) => {  
 
   return (
-    <ModalCard visible={visible} onDismiss={onDismiss} secondButton={cancelTitle ? true : false} type={type}>
+    <ModalCard isAddressModal visible={visible} onDismiss={onDismiss} secondButton={cancelTitle ? true : false} type={type}>
       <Container middle style={{marginTop: 24}} >
         <TextContainer text={title!} typography='h3' fontWeight='600' marginTop={15} marginHorizontal={32} textAlign='center'/>
         {message !== '' && ( <TextContainer text={message} typography="h5" marginTop={16} marginHorizontal={16} textAlign='center'/> )}
@@ -56,7 +58,7 @@ const AlertHorizontal: React.FC<Props> = ({
             </Button>
           )}
           {acceptTitle && (
-            <Button size={"xxsmall"} borderColor={'iconn_red_original'} fontSize='h3' fontBold color='iconn_white' style={{backgroundColor: theme.brandColor.iconn_red_original, borderRadius: 10}} round onPress={onAccept!} length='short' width='xsmall' >
+            <Button size={isAddressModal ? 'xsmall' : 'xxsmall'} borderColor={'iconn_red_original'} fontSize='h3' fontBold color='iconn_white' style={{backgroundColor: theme.brandColor.iconn_red_original, borderRadius: 10}} round onPress={onAccept!} length='short' width={isAddressModal ? 'small' : 'xsmall'} >
               {acceptTitle || 'Aceptar'}
             </Button>
           )}

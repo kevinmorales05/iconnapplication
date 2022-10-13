@@ -16,7 +16,7 @@ export type HomeStackParams = {
   EditEmail: undefined;
   EditPassword: undefined;
   EnterOtp: { email: string };
-  Home: undefined;
+  Home: { paySuccess?: boolean; };
   HomeStack: undefined;
   InviteSignUp: undefined;
   Invoice: undefined;

@@ -62,6 +62,7 @@ const CategoriesController: React.FC = () => {
                 ? categories.map(category => {
                     return (
                       <CardHorizontal
+                        key={category.id + ""}
                         text={category.name}
                         image={{ uri: category.image }}
                         onPress={() => {

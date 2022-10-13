@@ -30,6 +30,7 @@ const ContinueWithScreen: React.FC<Props> = ({
         if(provider.providerName === "Google"){
           return(
             <Button
+              key={"google"}
               color="google"
               round
               onPress={()=>{
@@ -46,6 +47,7 @@ const ContinueWithScreen: React.FC<Props> = ({
         }else if(provider.providerName === "Facebook"){
           return(
             <Button
+              key={"facebook"}
               color="facebook"
               round
               onPress={()=>{

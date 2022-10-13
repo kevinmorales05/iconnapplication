@@ -8,7 +8,9 @@ export interface AlertInterface {
   data: AlertDataInterface,
   dismissible?: boolean,
   type: modalType,
-  isHorizontal: boolean
+  isHorizontal?: boolean,
+  isAddressModal?: boolean,
+
 }
 
 interface Props {
@@ -16,20 +18,19 @@ interface Props {
 }
 
 interface AlertContextInterface {
-  show: (data: AlertDataInterface, type?: modalType, dismissible?: boolean, isHorizontal?: boolean) => void,
+  show: (data: AlertDataInterface, type?: modalType, dismissible?: boolean, isHorizontal?: boolean, isAddressModal?: boolean) => void,
   hide: () => void
 }
 
 export const AlertContext = React.createContext<AlertContextInterface>({} as AlertContextInterface);
 
-const initialState: AlertInterface = { visible: false, data: { title: '', message: '' }, type: 'warning', isHorizontal: false };
+const initialState: AlertInterface = { visible: false, data: { title: '', message: '' }, type: 'warning', isHorizontal: false, isAddressModal: false};
 
 export const AlertContextProvider = ({ children }: Props) => {
   const [alertState, setAlertState] = useState<AlertInterface>(initialState);
 
-  const show = async (data: AlertDataInterface, type: modalType = 'warning', dismissible: boolean = true, isHorizontal: boolean = false) => {
-    console.log(isHorizontal, "alertState")
-    setAlertState({ visible: true, data, type, dismissible, isHorizontal });
+  const show = async (data: AlertDataInterface, type: modalType = 'warning', dismissible: boolean = true, isHorizontal: boolean = false, isAddressModal: boolean = false) => {
+    setAlertState({ visible: true, data, type, dismissible, isHorizontal, isAddressModal});
   };
 
   const hide = () => {
@@ -46,6 +47,7 @@ export const AlertContextProvider = ({ children }: Props) => {
           <AlertHorizontal
             type={alertState.type}
             visible={alertState.visible}
+            isAddressModal={alertState.isAddressModal}
             data={alertState.data}
             onDismiss={alertState.dismissible ? () => {
               setAlertState(initialState);

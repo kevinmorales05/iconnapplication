@@ -18,13 +18,15 @@ interface Props extends CustomModalProps {
   renderCloseComponent?: boolean;
   secondButton: boolean;
   type: modalType;
+  isAddressModal?: boolean;
 }
 
 const ModalCard: React.FC<Props> = ({
   visible,
   children,
   onDismiss,
-  type = 'warning'
+  type = 'warning',
+  isAddressModal
 }: Props) => {
   const { modalCenterCardStyle, closeContainer } = styles;
 
@@ -32,7 +34,7 @@ const ModalCard: React.FC<Props> = ({
     <CustomModal visible={visible} onDismiss={onDismiss}>
       <Container flex middle>
         <TouchableOpacity activeOpacity={1}>
-          <Container style={ modalCenterCardStyle }>
+          <Container style={[modalCenterCardStyle, isAddressModal && { width: 300 }]}>
             <LinearGradient
               colors={type === 'warning' ? [ '#efd363', '#d0b64d' ] : type === 'error' ? [ '#D91212', '#D91212' ] : type === 'deleteCart' ? [ '#D91212', '#D91212' ] : [ '#34c28c', '#319f72' ]}
               style={{ height: 16, width: '100%', position: 'absolute', borderTopLeftRadius: 16, borderTopRightRadius: 16 }} >

@@ -1,6 +1,6 @@
 import { AddressModalScreen, Container, CustomModal, SafeArea, TextContainer, AddressModalSelection } from 'components';
 import React, { Component, useCallback, useEffect, useState } from 'react';
-import { Dimensions, Image, ImageSourcePropType, Pressable, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, ImageSourcePropType, Text, StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from 'components/theme/theme';
 import {
@@ -38,11 +38,11 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { ICONN_COFFEE } from 'assets/images';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { setInvoicingInitialState } from 'rtk/slices/invoicingSlice';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
-import { useLoading } from 'context';
+import { useLoading, useToast } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
@@ -179,10 +179,13 @@ const HomeController: React.FC = () => {
   const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const route = useRoute<RouteProp<HomeStackParams, 'CategoryProducts'>>();
+  const { paySuccess } = route;
   const loader = useLoading();
   const [addressModalSelectionVisible, setAddressModalSelectionVisible] = useState(false);
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
   const [showShippingDropDown, setShowShippingDropDown] = useState(false);
+  const toast = useToast();
 
   const getUser = useCallback(async () => {
     const { data } = await vtexUserServices.getUserByEmail(email);
@@ -211,7 +214,6 @@ const HomeController: React.FC = () => {
 
     console.log('TOMATE HOME', JSON.stringify(data[0], null, 3) );
     console.log('PLATANOS HOME', JSON.stringify(dataVtex, null, 3) );
-
   }, []);
 
   useEffect(() => {
@@ -232,6 +234,8 @@ const HomeController: React.FC = () => {
     dispatch(setGuestInitialState());
     dispatch(setInvoicingInitialState());
   };
+
+  
 
   const goToInvoice = () => {
     isGuest ? navigate('InviteSignUp') : navigate('Invoice');
@@ -382,7 +386,7 @@ const HomeController: React.FC = () => {
     const { user_id, name } = user;
 
     if (user_id == cart.userProfileId) {
-      console.log('es igual al del usuario guardado');
+      console.log('es igual al del usuario guardado', { cart });
       getShoppingCart(cart.orderFormId)
         .then(oldCart => {
           getShoppingCart(cart.orderFormId)
@@ -396,6 +400,7 @@ const HomeController: React.FC = () => {
       console.log('NO es igual');
       await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         dispatch(setOrderFormId(newCart));
+        console.log({newCart})
         console.log('orderFormId ::: ', newCart.orderFormId);
         getShoppingCart(newCart.orderFormId)
           .then(response => {
@@ -409,6 +414,17 @@ const HomeController: React.FC = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if(paySuccess){
+      toast.show({
+        message: (
+          <Text>Pedido creado con exito. Para ver el pedido ir al apartado <Text style={{textDecorationLine: "underline", textDecorationColor: theme.brandColor.iconn_white}} onPress={()=>{ navigate('MyOrders') }}>Pedidos</Text> </Text>
+        ),
+        type: 'success'
+      });
+    }
+  }, [paySuccess]);
 
   const getPriceByProductId = async (productId: string) => {
     return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
@@ -506,6 +522,11 @@ const HomeController: React.FC = () => {
     }
   }, [defaultSeller]);
 
+  const onSubmitAddress = (address: Address) =>{
+    setShowShippingDropDown(false)
+    onSubmit(address)
+  }
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -587,7 +608,7 @@ const HomeController: React.FC = () => {
         mode={mode!}
         title={modalScreenTitle}
         onPressFindPostalCodeInfo={fetchAddressByPostalCode}
-        onSubmit={onSubmit}
+        onSubmit={onSubmitAddress}
         onPressClose={onPressCloseModalScreen}
         postalCodeError={postalCodeError}
         setPostalCodeError={setPostalCodeError}

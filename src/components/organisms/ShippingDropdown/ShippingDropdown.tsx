@@ -138,12 +138,21 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
                 text={address ? `${address?.street}, ${address?.neighborhood}, ${address?.city}, ${address?.state}` : '64680, Monterrey, N.L.'}
               />
             </Container>
-            {address && (
-              <Container row center>
-                <Ionicons name="md-checkmark-sharp" size={24} color={theme.brandColor.iconn_green_original} />
-                <CustomText text="Entrega a domicilio" />
-              </Container>
-            )}
+            {address && 
+              address.postalCode === '66230' ? (
+                  <Container row center>
+                    <Ionicons name="md-checkmark-sharp" size={24} color={theme.brandColor.iconn_green_original} />
+                    <CustomText text="Entrega a domicilio" />
+                  </Container>
+                )
+              :
+                (
+                  <Container row center>
+                    <Ionicons name="close-outline" size={24} color={theme.brandColor.iconn_error} />
+                    <CustomText text="Entrega a domicilio no disponible." textColor={theme.brandColor.iconn_error}/>
+                  </Container>
+                )
+          }
           </Container>
         </Container>
         {!address && (

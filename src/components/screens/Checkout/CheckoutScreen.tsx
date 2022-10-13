@@ -1,25 +1,35 @@
 import React from 'react';
 import { AuthDataInterface } from 'rtk';
-import { WebView } from 'react-native-webview';
+import { WebView, WebViewNavigation } from 'react-native-webview';
 import { useToast } from 'context';
+import { PartialState, StackNavigationState } from '@react-navigation/native';
+import { HomeStackParams } from 'navigation/types';
 
 interface Props {
   onSubmit: (fields: any) => void;
   goBack: () => void;
+  reset: (param: StackNavigationState<HomeStackParams> | PartialState<StackNavigationState<HomeStackParams>>) => void;
   user?: AuthDataInterface;
   orderFormId: string;
 }
 
-const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, user, orderFormId }) => {
+const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset,user, orderFormId }) => {
   const toast = useToast();
 
   function onMessage(data: any) {
     toast.show({ message: `${data.nativeEvent.data}`, type: 'success' });
   }
 
-  const onNavigationStateChange = (navState: any) => {
-    // console.log('navState from webview:');
-    // console.log(navState);
+  const onNavigationStateChange = (navState: WebViewNavigation) => {
+    const urlParams = navState.url.split("https://nttdev--oneiconn.myvtex.com/_v/segment/admin-login/v1/login?")[1]?.split("=%")
+    if(urlParams){
+      if(urlParams[0] === "returnUrl"){
+        reset({
+          index: 0,
+          routes: [{ name: 'Home', params:{ paySuccess: true }}],
+        });
+      }
+    }
   };
 
   return (

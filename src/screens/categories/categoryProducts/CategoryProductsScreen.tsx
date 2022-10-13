@@ -407,7 +407,7 @@ const CategoryProductsScreen: React.FC = () => {
                     />
                   </Container>
                 </Container>
-                <Container style={{ marginTop: moderateScale(200) }}>
+                {/* <Container style={{ marginTop: moderateScale(200) }}>
                   <Button
                     style={{ width: moderateScale(328) }}
                     size="small"
@@ -423,7 +423,7 @@ const CategoryProductsScreen: React.FC = () => {
                   >
                     {'Limpiar'}
                   </Button>
-                </Container>
+                </Container> */}
               </Container>
             )}
           </Container>

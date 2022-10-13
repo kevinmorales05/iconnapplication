@@ -12,16 +12,17 @@ import { useAlert, useLoading, useToast } from 'context';
 import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
 
 interface Props {
+  routes: any;
   onPressSeeMore: () => void;
   onPressCheckout: () => void;
 }
 
 import { RootState, useAppSelector, useAppDispatch } from 'rtk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { HomeStackParams } from '../../../navigation/types';
 
-const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout }) => {
+const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, routes }) => {
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const loader = useLoading();
@@ -44,10 +45,11 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout }) =>
 
   const fetchData = useCallback(async () => {
     console.log('fetchData...');
-    const data = await getShoppingCart(cart.orderFormId)
+    await getShoppingCart(cart.orderFormId)
       .then(response => {
         const { items, messages, totalizers } = response;
         let orderItems = [];
+        console.log({items})
         items.map((item, index) => {
           orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
         });
@@ -79,16 +81,21 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout }) =>
             }
           });
           setSubTotalCalculated(calculated);
-          setProductList(items);
         }
+        setProductList(items);
         dispatch(updateShoppingCartItems(response));
       })
       .catch(error => console.log(error));
   }, []);
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if(routes.length){
+      if(routes[routes.length-1].name === 'ShopCart'){
+        fetchData();
+        console.log({routes})
+      }
+    }
+  }, [routes]);
 
   const updateShoppingCartQuantityServiceCall = useCallback(async (orderFormId, request, operation, msgOperation, updatedIndex) => {
     console.log(orderFormId + ' -request ' + request.orderItems);

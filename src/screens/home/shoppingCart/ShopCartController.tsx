@@ -1,22 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import { RootState, useAppSelector, useAppDispatch, ClientProfileDataInterface } from 'rtk';
 import ShopCartScreen from './ShopCartScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useNavigationState, useRoute } from '@react-navigation/native';
 import { saveClientProfileDataThunk } from 'rtk/thunks/vtex-shoppingCart.thunks';
 import { useLoading, useToast } from 'context';
 
 const ShopCartController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const routes  = useNavigationState(state => state.routes)
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const loader = useLoading();
   const toast = useToast();
 
   const dispatch = useAppDispatch();
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   const goToCheckout = async () => {
     loader.show();
@@ -56,7 +57,7 @@ const ShopCartController: React.FC = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <ShopCartScreen onPressCheckout={goToCheckout} onPressSeeMore={() => console.log('Ver artículos...')} />
+      <ShopCartScreen routes={routes} onPressCheckout={goToCheckout} onPressSeeMore={() => goBack()} />
     </SafeArea>
   );
 };
