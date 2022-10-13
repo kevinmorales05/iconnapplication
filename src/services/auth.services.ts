@@ -1,12 +1,14 @@
 import { AxiosRequestConfig } from 'axios';
-import { AuthCookie, AuthDataInterface, UserVtex } from 'rtk';
+import { AuthCookie, AuthDataInterface } from 'rtk';
 import { OtpsApi } from '../http/api-otps';
-import { UsersApi } from '../http/api-users';
+import { OnboardingApi } from '../http/vtex-api-onboarding';
 import { AuthUserSocial } from '../http/api-authUserSocial';
+import { UsersApi } from '../http/api-users';
 import { HttpClient } from '../http/http-client';
 
-async function newUser(userEmail: UserVtex): Promise<any> {
-  const response = await UsersApi.getInstance().postRequest(`/dataentities/CL/documents`, userEmail, {
+// TODO: relocate the headers to api-config file.
+async function newUser(userEmail: AuthDataInterface): Promise<any> {
+  const response = await OnboardingApi.getInstance().postRequest(`/dataentities/CL/documents`, userEmail, {
     headers: { Accept: 'application/json', 'Content-type': 'application/json' }
   });
   if (response === undefined) return Promise.reject(new Error(`/vtexid/pub/authentication/logout?scope=oneiconn`));
@@ -26,7 +28,7 @@ async function login(email: string, password: string, authenticationToken: strin
   formData.append('email', email);
   formData.append('password', password);
   formData.append('authenticationToken', authenticationToken);
-  const response = await UsersApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/validate`, formData);
+  const response = await OnboardingApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/validate`, formData);
   if (response === undefined) return Promise.reject(new Error(`login:/vtexid/pub/authentication/classic/validate`));
   const { data } = response;
   return data;
@@ -36,17 +38,18 @@ async function login(email: string, password: string, authenticationToken: strin
  * Function to logout
  */
 async function logOutUser(): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(`/vtexid/pub/authentication/logout?scope=oneiconn`);
+  const response = await OnboardingApi.getInstance().getRequest(`/vtexid/pub/authentication/logout?scope=oneiconn`);
   if (response === undefined) return Promise.reject(new Error(`/vtexid/pub/authentication/logout?scope=oneiconn`));
   const { data } = response;
   console.log('LOGOUT', data);
   return data;
 }
 
+// TODO: relocate this constant to api-config file or to .env
 const API_VTEX_AUTH = 'https://oneiconn.myvtex.com/api/vtexid/pub/authentication/';
 
 async function startAuthentication(email: string): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(
+  const response = await OnboardingApi.getInstance().getRequest(
     `/vtexid/pub/authentication/start?callbackUrl=${API_VTEX_AUTH}/vtexid/pub/authentication/finish&scope=oneiconn&user=${email}&locale=MX&accountName=oneiconn&returnUrl=/&appStart=true`
   );
   if (response === undefined) return Promise.reject(new Error('startAuthentication:vtexid/pub/authentication/finish'));
@@ -65,7 +68,7 @@ async function sendAccessKey(email: string, authenticationToken: string): Promis
   formData.append('email', email);
   formData.append('authenticationToken', authenticationToken);
 
-  const response = await UsersApi.getInstance().postRequest(`/vtexid/pub/authentication/accesskey/send`, formData);
+  const response = await OnboardingApi.getInstance().postRequest(`/vtexid/pub/authentication/accesskey/send`, formData);
 
   if (response === undefined) return Promise.reject(new Error(`sendAccessKey:vtexid/pub/authentication/accesskey/send`));
 
@@ -81,7 +84,7 @@ async function createPassword(newPassword: string, accesskey: string, email: str
   formData.append('email', email);
   formData.append('authenticationToken create: ', authenticationToken);
 
-  const response = await UsersApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/setpassword?scope=oneiconn&locale=MX`, formData, {
+  const response = await OnboardingApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/setpassword?scope=oneiconn&locale=MX`, formData, {
     headers: {
       Accept: 'application/json'
     }
@@ -92,8 +95,9 @@ async function createPassword(newPassword: string, accesskey: string, email: str
   return data;
 }
 
+// TODO: relocate this headers to api-config file.
 async function createUser(email: string, name: string | null = null): Promise<any> {
-  const response = await UsersApi.getInstance().postRequest(
+  const response = await OnboardingApi.getInstance().postRequest(
     `/license-manager/users`,
     { email, name },
     { headers: { Accept: 'application/json', 'content-type': 'application/json' } }
@@ -111,7 +115,7 @@ async function createUser(email: string, name: string | null = null): Promise<an
  * @param email
  */
 async function validateUser(uidOrEmail: string): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(`/users/validateUser/${uidOrEmail}`);
+  const response = await OnboardingApi.getInstance().getRequest(`/users/validateUser/${uidOrEmail}`);
   if (response === undefined) return Promise.reject(new Error(`validateUser:/users/validateUser/${uidOrEmail}`));
   const { data } = response;
   return data;
@@ -142,9 +146,7 @@ async function otpValidate(email?: string, code?: string): Promise<any> {
 }
 
 /**
- * (DEPRECATED)
- * TODO: Remove this function, currently isn't used.
- * Function to register user. (signup)
+ * Function to register user after vtex register. (signup)
  * @param user
  * @returns
  */
@@ -152,19 +154,7 @@ async function register(user: AuthDataInterface): Promise<any> {
   const response = await UsersApi.getInstance().postRequest('/users/register', user);
   if (response === undefined) return Promise.reject(new Error('register:/users/register'));
   const { data } = response;
-  return data.resp;
-}
-
-/**
- * Function to register with firebase. (signup)
- * @param user
- * @returns
- */
-async function registerWithFirebase(user: AuthDataInterface): Promise<any> {
-  const response = await UsersApi.getInstance().postRequest('/users/registerWithFireBase', user);
-  if (response === undefined) return Promise.reject(new Error('registerWithFirebase:/users/registerWithFireBase'));
-  const { data } = response;
-  return data.resp;
+  return data;
 }
 
 /**
@@ -173,7 +163,7 @@ async function registerWithFirebase(user: AuthDataInterface): Promise<any> {
  * @returns
  */
 async function getUser(user: AuthDataInterface): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(`/users/getUser/${user.user_id}`);
+  const response = await OnboardingApi.getInstance().getRequest(`/users/getUser/${user.userId}`);
   if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
   const { data } = response;
   return data.resp;
@@ -185,12 +175,10 @@ async function getUser(user: AuthDataInterface): Promise<any> {
  * @returns
  */
 async function getProfile(email: string): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(
-    `/dataentities/CL/search?email=${email}&_fields=id,email,firstName,lastName,document,documentType,homePhone,isCorporate,corporateDocument,tradeName,stateRegistration,isNewsletterOptIn,localeDefault,approved`,
-    {
-      baseUrl: 'https://api.vtex.com/iconn/'
-    } as AxiosRequestConfig
-  );
+  // TODO: relocate the baseUrl constant to api-config or .env file
+  const response = await OnboardingApi.getInstance().getRequest(`/dataentities/CL/search?email=${email}&_fields=_all`, {
+    baseUrl: 'https://api.vtex.com/iconn/'
+  } as AxiosRequestConfig);
 
   if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
 
@@ -204,8 +192,8 @@ async function getProfile(email: string): Promise<any> {
  * @returns
  */
 async function putUser(user: AuthDataInterface): Promise<any> {
-  const { user_id } = user;
-  const response = await UsersApi.getInstance().putRequest(`/users/putUser/${user_id}`, user);
+  const { userId } = user;
+  const response = await OnboardingApi.getInstance().putRequest(`/users/putUser/${userId}`, user);
   if (response === undefined) return Promise.reject(new Error('putUser:/users/putUser'));
   const { data } = response;
   return data;
@@ -217,8 +205,8 @@ async function putUser(user: AuthDataInterface): Promise<any> {
  * @returns
  */
 async function updateUserPassword(user: AuthDataInterface): Promise<any> {
-  const { user_id } = user;
-  const response = await UsersApi.getInstance().putRequest(`/users/updateUserPassword/${user_id}`, user);
+  const { userId } = user;
+  const response = await OnboardingApi.getInstance().putRequest(`/users/updateUserPassword/${userId}`, user);
   if (response === undefined) return Promise.reject(new Error('updateUserPassword:/users/updateUserPassword'));
   const { data } = response;
   return data;
@@ -230,14 +218,14 @@ async function updateUserPassword(user: AuthDataInterface): Promise<any> {
  * @returns
  */
 async function sendEmailtoRecoverPassword(user: AuthDataInterface): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(`/users/sendEmailForPasswordRecovery/${user.email}`);
+  const response = await OnboardingApi.getInstance().getRequest(`/users/sendEmailForPasswordRecovery/${user.email}`);
   if (response === undefined) return Promise.reject(new Error('sendEmailtoRecoverPassword:users/sendEmailForPasswordRecovery'));
   const { data } = response;
   return data;
 }
 
 async function getLoginProviders(): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(
+  const response = await OnboardingApi.getInstance().getRequest(
     `/vtexid/pub/authentication/start?callbackUrl=oneiconn.vtexcommercestable.com.br/api/vtexid/pub/authentication/finish&scope=oneiconn&locale=MX&accountName=oneiconn&returnUrl=/&appStart=true`
   );
   const { data } = response;
@@ -249,12 +237,12 @@ async function getLoginProviders(): Promise<any> {
  * @param authCookie
  * @param accountAuthCookie
  */
- async function loginWhitSocialNetwork(authCookie: AuthCookie, accountAuthCookie: AuthCookie): Promise<any> {
+async function loginWhitSocialNetwork(authCookie: AuthCookie, accountAuthCookie: AuthCookie): Promise<any> {
   HttpClient.authCookie = authCookie;
   HttpClient.accountAuthCookie = accountAuthCookie;
 
-  console.log("HttpClient.authCookie:",HttpClient.authCookie);
-  console.log("HttpClient.accountAuthCookie:",HttpClient.accountAuthCookie);
+  console.log('HttpClient.authCookie:', HttpClient.authCookie);
+  console.log('HttpClient.accountAuthCookie:', HttpClient.accountAuthCookie);
 }
 
 /**
@@ -262,19 +250,20 @@ async function getLoginProviders(): Promise<any> {
  * @param user
  * @returns
  */
- async function valideteUserSocial(): Promise<any> {
+async function valideteUserSocial(): Promise<any> {
   const response = await AuthUserSocial.getInstance().getRequest(`/vtexid/pub/authenticated/user`);
   if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
   const { data } = response;
   return data;
- }
+}
+
 /**
  * Function to get User by Id.
  * @param user
  * @returns
  */
- async function getUserById(user_id: string): Promise<any> {
-  const response = await UsersApi.getInstance().getRequest(`/users/getUser/${user_id}`);
+async function getUserById(user_id: string): Promise<any> {
+  const response = await OnboardingApi.getInstance().getRequest(`/users/getUser/${user_id}`);
   if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
   const { data } = response;
   return data.resp;
@@ -288,7 +277,6 @@ export const authServices = {
   preSignUp,
   otpValidate,
   register,
-  registerWithFirebase,
   getUser,
   putUser,
   sendEmailtoRecoverPassword,

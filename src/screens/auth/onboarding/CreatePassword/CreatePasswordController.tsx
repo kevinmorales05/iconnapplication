@@ -5,16 +5,29 @@ import { AxiosError } from 'axios';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useAlert, useLoading } from 'context';
 import { AuthStackParams } from 'navigation/types';
-import { RootState, setAccountAuthCookie, setAuthCookie, setAuthInitialState, setIsLogged, setUserId, useAppDispatch, useAppSelector, UserVtex } from 'rtk';
+import {
+  AuthDataInterface,
+  registerThunk,
+  RootState,
+  setAccountAuthCookie,
+  setAuthCookie,
+  setAuthInitialState,
+  setIsLogged,
+  setUserId,
+  useAppDispatch,
+  useAppSelector
+} from 'rtk';
 import { authServices } from 'services';
 import CreatePasswordScreen from './CreatePasswordScreen';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
+import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 
 const CreatePasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
+  const { getUser } = useOnboarding();
 
   const route = useRoute<RouteProp<AuthStackParams, 'CreatePassword'>>();
 
@@ -29,17 +42,15 @@ const CreatePasswordController: React.FC = () => {
   const loader = useLoading();
   const alert = useAlert();
 
-  const returnToSend = async (fields: FieldValues) => {
-    const { password, code } = fields;
+  const returnToSend = () => {
     dispatch(setAuthInitialState());
-    console.log('PLATANO', password, code);
     goBack();
   };
 
   const onSubmit = async (fields: FieldValues) => {
     const { password, code } = fields;
-    const user: UserVtex = {
-      email: email as string,
+    const user: AuthDataInterface = {
+      email: email,
       firstName: '',
       lastName: '',
       homePhone: ''
@@ -54,15 +65,27 @@ const CreatePasswordController: React.FC = () => {
           user.email as string,
           authenticationToken
         );
-        console.log('GORILA', userId, authStatus);
-        console.log('PLATANO', password, code);
-        if (authStatus === 'Success') {
+        // TODO: very important!! check with Alex Almanza, why in some cases the fields are null! :/
+        // Meanwhile it is better to validate them:
+        if (userId !== null && authCookie !== null && accountAuthCookie !== null && authStatus === 'Success') {
           const response = await authServices.newUser(user);
-          dispatch(setAuthCookie(authCookie));
-          dispatch(setAccountAuthCookie(accountAuthCookie));
-          dispatch(setUserId({ user_id: userId }));
-          dispatch(setIsLogged({ isLogged: true }));
-          console.log('MUNCHO', response);
+          if (response) {
+            // We save the vtex user in DB.
+            const registerInDBResponse = await dispatch(
+              registerThunk({
+                user_id: userId,
+                email: email
+              })
+            ).unwrap();
+
+            if (registerInDBResponse && registerInDBResponse.responseCode === 200) {
+              getUser(email!);
+              dispatch(setAuthCookie(authCookie));
+              dispatch(setAccountAuthCookie(accountAuthCookie));
+              dispatch(setUserId({ userId: userId }));
+              dispatch(setIsLogged({ isLogged: true }));
+            }
+          }
         } else {
           alert.show(
             {

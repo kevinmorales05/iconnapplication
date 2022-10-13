@@ -1,14 +1,13 @@
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import React from 'react';
-import { RootState, setAccountId, setAppInitialState, setAuthEmail, setAuthInitialState, setBirthday, setGender, setGuestInitialState, setId, setInvoicingInitialState, setUserId, setVtexInitialState, useAppDispatch, useAppSelector, UserVtex } from 'rtk';
+import { setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState, useAppDispatch } from 'rtk';
 import { authServices } from 'services';
 import { version as app_version } from './../../../../package.json';
 import MyAccountScreen from './MyAccountScreen';
 
 const MyAccountController: React.FC = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
-  const { userVtex } = useAppSelector((state: RootState) => state.auth);
 
   // removing navigation header in this screen.
   React.useLayoutEffect(() => {
@@ -42,7 +41,6 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
     } catch (error) {
       console.log('LOGOUT ERROR', error);
     } finally {
-      dispatch(setVtexInitialState());
       dispatch(setAppInitialState());
       dispatch(setAuthInitialState());
       dispatch(setGuestInitialState());

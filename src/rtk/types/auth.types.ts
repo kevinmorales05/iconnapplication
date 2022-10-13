@@ -1,60 +1,37 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 
-export interface UserVtex {
-  email: string;
-  firstName?: string;
-  lastName?: string;
+export interface AuthDataInterface {
+  accountAuthCookie?: AuthCookie;
+  accountId?: string; // added from UserVtex
+  addresses?: Address[];
+  authCookie?: AuthCookie;
+  birthDate?: string | null; // added from UserVtex. birthDate should be used only for requests that require it.
+  birthday?: string;
   document?: string;
   documentType?: string;
-  homePhone?: string;
-  birthDate?: string | null;
-  gender?: string | number;
-  profilePicture?: string;
-  accountId?: string;
-  id?: string;
-  userId?: string;
-}
-
-export interface UserInterface {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  document: string;
-  documentType: any;
-  homePhone: string;
-  isCorporate: boolean;
-  corporateDocument: any;
-  tradeName: any;
-  stateRegistration: any;
-  isNewsletterOptIn: boolean;
-  localeDefault: string;
-  approved: any;
-}
-
-export interface AuthDataInterface {
-  user_id?: string;
   email?: string;
-  name?: string;
-  lastName?: string;
-  secondLastName?: string;
-  pass?: string;
-  secretKey?: string;
-  termsAndConditions?: boolean;
-  isLogged?: boolean;
-  sign_app_modes_id?: number;
-  photo?: string;
   emailVerified?: boolean;
-  telephone?: string;
-  birthday?: string;
+  firstName?: string; // added from UserVtex, firstName should be used only for requests that require it.
   gender_id?: number;
   gender?: string | number;
-  password?: string;
+  homePhone?: string; // added from UserVtex. homePhone should be used only for requests that require it.
+  id?: string; // added from UserVtex
+  isLogged?: boolean;
+  lastName?: string;
+  name?: string;
   new_password?: string;
-  addresses?: Address[];
+  pass?: string;
+  password?: string;
+  photo?: string;
+  profilePicture?: string; // added from UserVtex. profilePicture should be used only for requests that require it.
+  secondLastName?: string;
+  secretKey?: string;
   seenCarousel?: boolean;
-  authCookie?: AuthCookie;
-  accountAuthCookie?: AuthCookie;
+  sign_app_modes_id?: number;
+  telephone?: string;
+  termsAndConditions?: boolean;
+  user_id?: string; // added from UserVtex. user_id should be used only for requests that require it.
+  userId?: string; // added from UserVtex (MAIN).
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';

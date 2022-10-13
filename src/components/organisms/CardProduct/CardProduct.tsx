@@ -10,6 +10,8 @@ import { Container, CustomText } from 'components/atoms';
 import { moderateScale } from 'utils/scaleMetrics';
 import { Touchable } from 'components';
 import { useNavigation } from '@react-navigation/native';
+import { setDetailSelected } from 'rtk/slices/cartSlice';
+import { useAppDispatch } from 'rtk';
 interface CardProductProps {
   price: number;
   name: string;
@@ -44,11 +46,13 @@ const CardProduct: React.FC<CardProductProps> = ({
   notNeedMarginLeft
 }: CardProductProps) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const dispatch = useAppDispatch();
 
   return (
     <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? 0 : 8) }]}>
       <Container style={styles.subContainer}>
         <Touchable onPress={() => {
+          dispatch(setDetailSelected(productId));
           navigate('ProductDetail', { productIdentifier: productId });
         }}>
           <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>

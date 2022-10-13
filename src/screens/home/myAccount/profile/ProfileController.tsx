@@ -1,66 +1,37 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import ProfileScreen from './ProfileScreen';
 import { useLoading } from 'context';
-import { getUserAddressesThunk, RootState, setAccountId, setAuthEmail, setId, setLastName, setName, setUserId, useAppSelector } from 'rtk';
-import { authServices, vtexUserServices } from 'services';
-import { AuthDataInterface, UserVtex } from 'rtk/types/auth.types';
+import { RootState, setLastName, setName, useAppSelector } from 'rtk';
+import { vtexUserServices } from 'services';
+import { AuthDataInterface } from 'rtk/types/auth.types';
 import { useToast } from 'context';
 import { GENDERS } from 'assets/files';
 import { formatDate } from 'utils/functions';
-
-import { setBirthday, setFullName, setGender, setTelephone, useAppDispatch } from 'rtk';
+import { setBirthday, setGender, setTelephone, useAppDispatch } from 'rtk';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 
 const ProfileController: React.FC = () => {
   const loader = useLoading();
-  const { userVtex } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const toast = useToast();
   const dispatch = useAppDispatch();
-  const { email } = userVtex;
+  const { email } = user;
+  const { getUser } = useOnboarding();
   const newDate = (date: string) => {
     let formatDay = new Date(date);
     let help: string = formatDate(formatDay).toString();
     return help;
   };
 
-  const getUser = useCallback(async () => {
-    try {
-      const { data } = await vtexUserServices.getUserByEmail(email);
-      const dataVtex: UserVtex = {
-        homePhone: data[0].homePhone,
-        email: data[0].email,
-        gender: data[0].gender,
-        firstName: data[0].firstName,
-        lastName: data[0].lastName,
-        birthDate: data[0].birthDate,
-        profilePicture: data[0].profilePicture,
-        accountId: data[0].accountId,
-        id: data[0].id,
-        userId: data[0].userId
-      };
-      dispatch(setAuthEmail({ email: dataVtex.email }));
-      dispatch(setTelephone({ telephone: dataVtex.homePhone }));
-      dispatch(setGender({ gender: dataVtex.gender }));
-      dispatch(setName({ name: dataVtex.firstName }));
-      dispatch(setLastName({ lastName: dataVtex.lastName }));
-      dispatch(setUserId({ user_id: dataVtex.userId }));
-      dispatch(setId({ id: dataVtex.id, email: email }));
-      dispatch(setBirthday({ birthday: dataVtex.birthDate }));
-      dispatch(setAccountId({ accountId: dataVtex.accountId, email: email }));
-      console.log('TOMATE', JSON.stringify(data[0], null, 3));
-      console.log('PLATANOS', JSON.stringify(dataVtex, null, 3));
-    } catch (error) {
-      console.log('error', error);
-    }
-  }, []);
-
   const update = async () => {
     loader.show();
-    const dataVtex: UserVtex = {
+    // TODO: be careful with this dataVtex, why do we need this?
+    const dataVtex: AuthDataInterface = {
       firstName: 'Valerie',
       lastName: 'Namuche',
       email: email
@@ -68,7 +39,7 @@ const ProfileController: React.FC = () => {
     try {
       const updated = await vtexUserServices.putUserByEmail(dataVtex);
       console.log('WAHAHA', updated);
-      getUser();
+      getUser(email!);
       /*       const delay = ms => new Promise(res => setTimeout(res, ms));
       await delay(1000); */
       loader.hide();
@@ -78,7 +49,7 @@ const ProfileController: React.FC = () => {
     }
   };
   useEffect(() => {
-    getUser();
+    getUser(email!);
   }, [update]);
 
   const goToChange = () => {
@@ -91,17 +62,17 @@ const ProfileController: React.FC = () => {
     userPhone = '+' + userFields.countryCode + userFields.telephone;
     console.log('GOMA', userPhone);
 
-    const updatedUser: UserVtex = {
-      homePhone: userFields.telephone == '' || userFields.telephone == null ? null : userPhone,
+    const updatedUser: AuthDataInterface = {
+      homePhone: userFields.telephone == '' || userFields.telephone == null ? undefined : userPhone,
       firstName: userFields.name ? userFields.name : null,
       lastName: userFields.lastName ? userFields.lastName : null,
       gender: userFields.gender == '' ? null : userFields.gender,
       email: email,
       birthDate: userFields.birthday == undefined ? null : newDate(userFields.birthday)
     };
-    console.log("this is the date ", updatedUser.birthDate)
+    console.log('this is the date ', updatedUser.birthDate);
     //prevents unhandled email update
-    const { id } = userVtex;
+    const { id } = user;
     userFields.id = id;
     const gender = GENDERS.find(gender => {
       return gender.name === userFields.gender;
@@ -110,6 +81,7 @@ const ProfileController: React.FC = () => {
     loader.show();
     try {
       await vtexUserServices.putUserByEmail(updatedUser);
+      // TODO: Is necessary validate the response after update user. We cannot dispatch change on the user state without validate the response.
       if (userFields.telephone != '') {
         dispatch(setTelephone({ telephone: userFields.telephone }));
       }

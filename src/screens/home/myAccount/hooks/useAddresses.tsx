@@ -21,7 +21,7 @@ import {
 } from 'rtk/thunks/vtex-addresses.thunks';
 
 export const useAddresses = () => {
-  const { loading, user, userVtex } = useAppSelector((state: RootState) => state.auth);
+  const { loading, user } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
   const alert = useAlert();
   const loader = useLoading();
@@ -42,8 +42,8 @@ export const useAddresses = () => {
   }, [loading]);
 
   const fetchAddresses = useCallback(async () => {
-    if(userVtex.id){
-      await dispatch(getUserAddressesThunk(userVtex.id!));
+    if (user.id) {
+      await dispatch(getUserAddressesThunk(user.id!));
     }
   }, []);
 
@@ -65,8 +65,8 @@ export const useAddresses = () => {
    * This validation is important specifically when the default address is removed, this way the user will never be left without a default address.
    */
   useEffect(() => {
-    const isThereAnyDefault = user.addresses.filter(x => x.isDefault === true);
-    if (isThereAnyDefault.length === 0 && user.addresses.length > 0) dispatch(setAddressDefault(0));
+    const isThereAnyDefault = user.addresses!.filter(x => x.isDefault === true);
+    if (isThereAnyDefault.length === 0 && user.addresses!.length > 0) dispatch(setAddressDefault(0));
   }, [user.addresses]);
 
   const editAddress: any = (address: Address, position: number) => {
@@ -105,7 +105,7 @@ export const useAddresses = () => {
       } else {
         toast.show({ message: `Ocurrió un error inesperado.`, type: 'warning' });
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.show({ message: error, type: 'error' });
     }
   };
@@ -179,7 +179,7 @@ export const useAddresses = () => {
       street: addressTosubmit.street,
       neighborhood: addressTosubmit.neighborhood,
       reference: addressTosubmit.reference,
-      userId: user.user_id
+      userId: user.userId
     };
 
     try {
@@ -205,7 +205,7 @@ export const useAddresses = () => {
           toast.show({ message: `Ocurrió un error inesperado al actualizar la dirección.`, type: 'warning' });
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.show({ message: error, type: 'error' });
     }
   }

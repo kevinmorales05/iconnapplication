@@ -52,7 +52,7 @@ const TermsAndCondController: React.FC = () => {
       if (authStatus === 'Success') {
         dispatch(setAuthCookie(authCookie));
         dispatch(setAccountAuthCookie(accountAuthCookie));
-        dispatch(setUserId({ user_id: userId }));
+        dispatch(setUserId({ userId: userId }));
         dispatch(setIsLogged({ isLogged: true }));
       } else {
         alert.show(

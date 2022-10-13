@@ -12,6 +12,7 @@ import { QuantityProduct } from 'components/molecules/QuantityProduct';
 import { vtexProductsServices } from 'services';
 import { RootState, useAppSelector } from 'rtk';
 import { useShoppingCart } from '../../home/hooks/useShoppingCart';
+import { setDetailSelected } from 'rtk/slices/cartSlice';
 
 interface Props {
   itemId: string;
@@ -40,10 +41,12 @@ interface Props {
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [cartItemQuantity, setCartItemQuantity] = useState(0);
   const [productRating, setProductRating] = useState(Object);
-  const { cart } = useAppSelector((state: RootState) => state.cart);
   const [productToUpdate, setProductToUpdate] = useState(Object);
+  const { detailSelected, cart } = useAppSelector((state: RootState) => state.cart);
+  itemId = detailSelected;
 
   const fetchData = useCallback(async () => {
+    console.log('itemmmm:::'+itemId);
     const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/"
     await getSkuFilesById(itemId).then(async responseSku => {
       let skuForImages = [];
@@ -81,7 +84,7 @@ interface Props {
     }).catch((error) => console.log(error));
 
     setCartItemQuantity(isProductIdInShoppingCart(itemId));
-  }, [cart]);
+  }, [cart, detailSelected]);
 
   const getComplementaryProducts = useCallback(async () => {
     vtexProductsServices.getProductsByCollectionId("143").then(responseCollection => {
@@ -115,7 +118,8 @@ interface Props {
 
   useEffect(() => {
     fetchData();
-  }, [cart, complementaryProducts, itemId]);
+    setProductToUpdate(itemId);
+  }, [cart, complementaryProducts, itemId, productToUpdate, detailSelected]);
   
   useEffect(() => {
     getComplementaryProducts();

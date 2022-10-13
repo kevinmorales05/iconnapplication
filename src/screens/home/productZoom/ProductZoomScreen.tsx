@@ -19,7 +19,6 @@ interface Props {
 
 
 import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
-import { registerWithFirebaseThunk } from '../../../rtk/thunks/auth.thunks';
 import { WidthType } from '../../../components/types/width-type';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';

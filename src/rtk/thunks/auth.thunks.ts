@@ -19,15 +19,10 @@ export const validateOtpThunk = createAsyncThunk('auth/validateOtpThunk', async 
 });
 
 /**
- * (DEPRECATED)
- * TODO: Remove this registerThunk (Validate with Albert or Kevin), currently isn't used.
+ * Register user after vtex register.
  */
 export const registerThunk = createAsyncThunk('auth/registerThunk', async (payload: AuthDataInterface) => {
   return await authServices.register(payload);
-});
-
-export const registerWithFirebaseThunk = createAsyncThunk('auth/registerWithFirebaseThunk', async (payload: AuthDataInterface) => {
-  return await authServices.registerWithFirebase(payload);
 });
 
 export const getUserThunk = createAsyncThunk('auth/getUser', async (payload: AuthDataInterface) => {

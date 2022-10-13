@@ -9,7 +9,7 @@ import { getShoppingCart, emptyShoppingCar, updateShoppingCart, clearShoppingCar
 import IconO from 'react-native-vector-icons/FontAwesome5';
 import { ConnectionItem } from 'components/organisms/ConnectionItem';
 import { useAlert, useLoading, useToast } from 'context';
-import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
+import { updateShoppingCartItems, setDetailSelected } from 'rtk/slices/cartSlice';
 
 interface Props {
   routes: any;
@@ -190,8 +190,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   const showAlert = () => {
     alert.show(
       {
-        title: 'Eliminar articulos no disponibles',
-        message: 'Los articulos ya no apareceran en tu canasta y podras continuar con tu compra',
+        title: 'Eliminar artículos no disponibles',
+        message: 'Los artículos ya no aparecerán en tu canasta y podrás continuar con tu compra.',
         acceptTitle: 'Eliminar',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
@@ -470,6 +470,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         <Container>
           <Touchable
             onPress={() => {
+              dispatch(setDetailSelected(value.id));
               navigate('ProductDetail', { productIdentifier: value.id });
             }}
           >
@@ -481,6 +482,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             <Container style={{ width: '70%' }}>
               <Touchable
                 onPress={() => {
+                  dispatch(setDetailSelected(value.id));
                   navigate('ProductDetail', { productIdentifier: value.id });
                 }}
               >

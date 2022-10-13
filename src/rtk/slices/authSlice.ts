@@ -5,7 +5,6 @@ import {
   preSignUpThunk,
   registerThunk,
   signUpUserWithEmailAndPasswordThunk,
-  registerWithFirebaseThunk,
   validateOtpThunk,
   validateUserThunk,
   signInWithEmailAndPasswordThunk,
@@ -13,37 +12,38 @@ import {
   sendEmailToRecoverPasswordThunk
 } from '../thunks/auth.thunks';
 import { startAuthenticationThunk } from '../thunks/vtex-auth.thunks';
-import { Address, AddressWithPositionInterface, AuthCookie, AuthDataInterface, UserVtex } from '../types';
+import { Address, AddressWithPositionInterface, AuthCookie, AuthDataInterface } from '../types';
 
 const initialState: AuthDataInterface = {
-  user_id: '',
-  email: '',
-  name: '',
-  lastName: '',
-  secondLastName: '',
-  pass: '',
-  secretKey: '',
-  termsAndConditions: false,
-  isLogged: false,
-  sign_app_modes_id: undefined,
+  accountAuthCookie: { Name: '', Value: '' },
+  accountId: '',
   addresses: [],
-  seenCarousel: false,
   authCookie: { Name: '', Value: '' },
-  accountAuthCookie: { Name: '', Value: '' }
-};
-
-const vtexInitialState: UserVtex = {
-  email: '',
-  firstName: '',
-  lastName: '',
+  birthDate: '',
+  birthday: '',
   document: '',
   documentType: '',
-  homePhone: '',
-  birthDate: '',
+  email: '',
+  emailVerified: undefined,
+  firstName: '',
+  gender_id: undefined,
   gender: '',
-  profilePicture: '',
-  accountId: '',
+  homePhone: '',
   id: '',
+  isLogged: false,
+  lastName: '',
+  name: '',
+  new_password: '',
+  pass: '',
+  password: '',
+  photo: '',
+  profilePicture: '',
+  secondLastName: '',
+  secretKey: '',
+  seenCarousel: false,
+  sign_app_modes_id: undefined,
+  telephone: '',
+  termsAndConditions: false,
   userId: ''
 };
 
@@ -51,21 +51,15 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: initialState,
-    loading: false,
-    userVtex: vtexInitialState
+    loading: false
   },
   reducers: {
     setAuthInitialState(state) {
       state.user = { ...initialState };
       state.loading = false;
     },
-    setVtexInitialState(state) {
-      state.userVtex = { ...vtexInitialState };
-      state.loading = false;
-    },
     setAuthEmail(state, action: PayloadAction<AuthDataInterface>) {
       state.user.email = action.payload.email;
-      state.userVtex.email = action.payload.email as string;
     },
     setSignMode(state, action: PayloadAction<AuthDataInterface>) {
       state.user.sign_app_modes_id = action.payload.sign_app_modes_id;
@@ -79,48 +73,41 @@ const authSlice = createSlice({
     setFullName(state, action: PayloadAction<AuthDataInterface>) {
       state.user.name = action.payload.name;
       state.user.lastName = action.payload.lastName;
-      state.userVtex.firstName = action.payload.name as string;
-      state.userVtex.lastName = action.payload.lastName as string;
     },
     setName(state, action: PayloadAction<AuthDataInterface>) {
-      state.userVtex.firstName = action.payload.name;
+      state.user.name = action.payload.name;
     },
     setLastName(state, action: PayloadAction<AuthDataInterface>) {
-      state.userVtex.lastName = action.payload.lastName;
+      state.user.lastName = action.payload.lastName;
     },
     setPhoto(state, action: PayloadAction<AuthDataInterface>) {
       state.user.photo = action.payload.photo;
-      state.userVtex.profilePicture = action.payload.photo;
     },
     setEmailVerified(state, action: PayloadAction<AuthDataInterface>) {
       state.user.emailVerified = action.payload.emailVerified;
     },
     setTelephone(state, action: PayloadAction<AuthDataInterface>) {
       state.user.telephone = action.payload.telephone;
-      state.userVtex.homePhone = action.payload.telephone;
     },
     setBirthday(state, action: PayloadAction<AuthDataInterface>) {
       state.user.birthday = action.payload.birthday;
-      state.userVtex.birthDate = action.payload.birthday;
     },
     setGender(state, action: PayloadAction<AuthDataInterface>) {
       state.user.gender = action.payload.gender;
-      state.userVtex.gender = action.payload.gender;
     },
     setTermsAndCond(state, action: PayloadAction<AuthDataInterface>) {
       state.user.termsAndConditions = action.payload.termsAndConditions;
     },
     setUserId(state, action: PayloadAction<AuthDataInterface>) {
-      // TODO (IMPORTANT!!!): REVERT THIS HARDCODED USER ID:
-      //state.user.user_id = 'da5550d6-2a38-11ed-835d-129d14bde747';
-      state.user.user_id = action.payload.user_id;
-      state.userVtex.userId = action.payload.user_id;
+      // TODO (IMPORTANT!!!): REVERT THIS HARDCODED USER ID (Alex's user in dev):
+      //state.user.userId = 'da5550d6-2a38-11ed-835d-129d14bde747';
+      state.user.userId = action.payload.userId;
     },
-    setId(state, action: PayloadAction<UserVtex>) {
-      state.userVtex.id = action.payload.id;
+    setId(state, action: PayloadAction<AuthDataInterface>) {
+      state.user.id = action.payload.id;
     },
-    setAccountId(state, action: PayloadAction<UserVtex>) {
-      state.userVtex.accountId = action.payload.accountId;
+    setAccountId(state, action: PayloadAction<AuthDataInterface>) {
+      state.user.accountId = action.payload.accountId;
     },
     setIsLogged(state, action: PayloadAction<AuthDataInterface>) {
       state.user.isLogged = action.payload.isLogged;
@@ -145,7 +132,6 @@ const authSlice = createSlice({
       state.user.seenCarousel = action.payload;
     },
     setAuthCookie(state, action: PayloadAction<AuthCookie>) {
-      console.log({setAuthCookie: action.payload})
       state.user.authCookie = action.payload;
     },
     setAccountAuthCookie(state, action: PayloadAction<AuthCookie>) {
@@ -205,15 +191,6 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(validateUserThunk.rejected, state => {
-      state.loading = false;
-    });
-    builder.addCase(registerWithFirebaseThunk.pending, state => {
-      state.loading = true;
-    });
-    builder.addCase(registerWithFirebaseThunk.fulfilled, state => {
-      state.loading = false;
-    });
-    builder.addCase(registerWithFirebaseThunk.rejected, state => {
       state.loading = false;
     });
     builder.addCase(signInWithEmailAndPasswordThunk.pending, state => {
@@ -281,34 +258,33 @@ const authSlice = createSlice({
     });
   }
 });
-// TODO: validate if it is possible to reduce extra reducers.
+
 export const {
-  setAccountId,
-  setId,
-  setAuthInitialState,
-  setName,
-  setLastName,
-  setVtexInitialState,
-  setAuthEmail,
-  setSignMode,
-  setSecretKey,
-  setPassword,
-  setFullName,
-  setPhoto,
-  setEmailVerified,
-  setTelephone,
-  setBirthday,
-  setGender,
-  setTermsAndCond,
-  setUserId,
-  setIsLogged,
-  setAddressesList,
   addAddressToList,
   deleteAddressFromList,
   replaceAddressFromList,
+  setAccountAuthCookie,
+  setAccountId,
   setAddressDefault,
-  setSeenCarousel,
+  setAddressesList,
   setAuthCookie,
-  setAccountAuthCookie
+  setAuthEmail,
+  setAuthInitialState,
+  setBirthday,
+  setEmailVerified,
+  setFullName,
+  setGender,
+  setId,
+  setIsLogged,
+  setLastName,
+  setName,
+  setPassword,
+  setPhoto,
+  setSecretKey,
+  setSeenCarousel,
+  setSignMode,
+  setTelephone,
+  setTermsAndCond,
+  setUserId
 } = authSlice.actions;
 export default authSlice.reducer;

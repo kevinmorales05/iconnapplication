@@ -27,7 +27,7 @@ const ChangedPasswordController: React.FC = () => {
       if (response.authStatus == 'Success') {
         dispatch(setAuthCookie(response.authCookie));
         dispatch(setAccountAuthCookie(response.accountAuthCookie));
-        dispatch(setUserId({ user_id: response.userId }));
+        dispatch(setUserId({ userId: response.userId }));
         dispatch(setIsLogged({ isLogged: true }));
       } else {
         alert.show({ title: 'Lo sentimos', message: 'No pudimos ingresar a tu cuenta en este momento. Por favor intenta más tarde.' });

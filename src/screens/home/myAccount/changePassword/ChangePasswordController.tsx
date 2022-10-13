@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useAlert, useLoading } from 'context';
 import { AuthStackParams } from 'navigation/types';
-import { RootState, setAuthInitialState, setIsLogged, setUserId, useAppDispatch, useAppSelector, UserVtex } from 'rtk';
+import { RootState, setAuthInitialState, setIsLogged, setUserId, useAppDispatch, useAppSelector, AuthDataInterface } from 'rtk';
 import { authServices } from 'services';
 import ChangePasswordScreen from './ChangePasswordScreen';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
@@ -24,37 +24,32 @@ const ChangePasswordController: React.FC = () => {
 
   const { setError } = methods;
 
-
   const loader = useLoading();
   const alert = useAlert();
 
   const returnToSend = async (fields: FieldValues) => {
     const { password, code } = fields;
     dispatch(setAuthInitialState());
-    console.log('PLATANO', password, code);
     goBack();
-  }
+  };
 
   const onSubmit = async (fields: FieldValues) => {
     const { password, code } = fields;
-    const user : UserVtex = {
-      email: email as string,
+    const user: AuthDataInterface = {
+      email: email,
       firstName: '',
       lastName: '',
-      homePhone: '',
+      homePhone: ''
     };
 
     loader.show();
     try {
       if (variant === 'register') {
-          const { userId, authStatus } = await authServices.createPassword(password, code, user.email as string, authenticationToken);
-          console.log('GORILA', userId, authStatus);
-          console.log('PLATANO', password, code);
-          if (authStatus === 'Success') {
-            const response = await authServices.newUser(user);
-            dispatch(setUserId({ user_id: userId }));
-            dispatch(setIsLogged({ isLogged: true }));
-            console.log('MUNCHO', response)
+        const { userId, authStatus } = await authServices.createPassword(password, code, user.email as string, authenticationToken);
+        if (authStatus === 'Success') {
+          const response = await authServices.newUser(user);
+          dispatch(setUserId({ userId: userId }));
+          dispatch(setIsLogged({ isLogged: true }));
         } else {
           alert.show(
             {

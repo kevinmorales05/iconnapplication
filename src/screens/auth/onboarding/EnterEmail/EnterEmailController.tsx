@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import EnterEmailScreen from './EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
-import { useAlert, useLoading, useToast } from 'context';
-import { RootState, useAppDispatch, useAppSelector, UserInterface, UserVtex } from 'rtk';
-import { setAuthEmail, setUserId } from 'rtk/slices/authSlice';
+import { useLoading, useToast } from 'context';
+import { AuthDataInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { setAuthEmail, setId, setUserId } from 'rtk/slices/authSlice';
 import { authServices } from 'services';
 
 const EnterEmailController: React.FC = () => {
@@ -14,7 +14,6 @@ const EnterEmailController: React.FC = () => {
   const loader = useLoading();
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((state: RootState) => state.auth);
-  const alert = useAlert();
   const toast = useToast();
 
   useEffect(() => {
@@ -23,29 +22,24 @@ const EnterEmailController: React.FC = () => {
     }
   }, [loading]);
 
-  const showAlert = () => {};
-
   const createSession = async (email: string) => {
     // check if user is already registered
     try {
       const profiles = await authServices.getProfile(email);
-
-      console.log('profiles:', profiles);
-
-      const current: UserInterface | undefined = profiles.find((profile: UserInterface) => {
+      const current: AuthDataInterface | undefined = profiles.find((profile: AuthDataInterface) => {
         return profile.email === email;
       });
 
       if (!current) {
-        // start onboarding
+        // start onboarding; for completely new users
         try {
           loader.show();
-            const { authenticationToken } = await authServices.startAuthentication(email);
-            dispatch(setAuthEmail({ email }));
-            await authServices.sendAccessKey(email, authenticationToken);
-            navigate('CreatePassword', { authenticationToken, variant: 'register' });
-            loader.hide();
-            return;
+          const { authenticationToken } = await authServices.startAuthentication(email);
+          dispatch(setAuthEmail({ email }));
+          await authServices.sendAccessKey(email, authenticationToken);
+          navigate('CreatePassword', { authenticationToken, variant: 'register' });
+          loader.hide();
+          return;
         } catch (error) {
           toast.show({
             message: 'El correo no pudo ser enviado,\n intenta más tarde',
@@ -56,7 +50,8 @@ const EnterEmailController: React.FC = () => {
           return;
         }
       } else {
-        setUserId({ user_id: current.id });
+        dispatch(setUserId({ userId: current.userId }));
+        dispatch(setId({ id: current.id }));
         // login
         try {
           await authServices.startAuthentication(email);

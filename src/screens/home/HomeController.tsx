@@ -7,9 +7,6 @@ import {
   RootState,
   useAppSelector,
   useAppDispatch,
-  setAppInitialState,
-  setAuthInitialState,
-  setGuestInitialState,
   Address,
   setAddressDefault,
   setSeenCarousel,
@@ -21,17 +18,7 @@ import {
   ProductRaitingResponseInterface,
   ProductInterface,
   ProductResponseInterface,
-  ExistingProductInCartInterface,
-  UserVtex,
-  setAuthEmail,
-  setAccountId,
-  setBirthday,
-  setGender,
-  setId,
-  setLastName,
-  setName,
-  setTelephone,
-  setUserId
+  ExistingProductInCartInterface
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -40,7 +27,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
-import { setInvoicingInitialState } from 'rtk/slices/invoicingSlice';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useLoading, useToast } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
@@ -49,7 +35,6 @@ import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
-import { vtexUserServices } from 'services';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -166,8 +151,7 @@ class CustomCarousel extends Component<Props, State> {
 }
 
 const HomeController: React.FC = () => {
-  const { user, userVtex } = useAppSelector((state: RootState) => state.auth);
-  const {email} = userVtex;
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
@@ -187,35 +171,6 @@ const HomeController: React.FC = () => {
   const [showShippingDropDown, setShowShippingDropDown] = useState(false);
   const toast = useToast();
 
-  const getUser = useCallback(async () => {
-    const { data } = await vtexUserServices.getUserByEmail(email);
-    const dataVtex : UserVtex = {
-      homePhone: data[0].homePhone,
-      email: data[0].email,
-      gender: data[0].gender,
-      firstName: data[0].firstName,
-      lastName: data[0].lastName,
-      birthDate: data[0].birthDate,
-      profilePicture: data[0].profilePicture,
-      accountId: data[0].accountId,
-      id: data[0].id,
-      userId: data[0].userId, 
-    }
-    dispatch(setAuthEmail({email: dataVtex.email}));
-    dispatch(setTelephone({telephone: dataVtex.homePhone}));
-    dispatch(setGender({gender: dataVtex.gender}));
-    dispatch(setName({name: dataVtex.firstName}));
-    dispatch(setLastName({lastName: dataVtex.lastName}));
-    dispatch(setUserId({user_id: dataVtex.userId }));
-    dispatch(setId({id: dataVtex.id, email: email }));
-    dispatch(setBirthday({birthday: dataVtex.birthDate}));
-    dispatch(setAccountId({accountId: dataVtex.accountId, email: email}));
-
-
-    console.log('TOMATE HOME', JSON.stringify(data[0], null, 3) );
-    console.log('PLATANOS HOME', JSON.stringify(dataVtex, null, 3) );
-  }, []);
-
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
   }, [invoicingLoading]);
@@ -223,19 +178,6 @@ const HomeController: React.FC = () => {
   useEffect(() => {
     if (authLoading === false) loader.hide();
   }, [authLoading]);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
-
-  const logOutApp = async () => {
-    dispatch(setAppInitialState());
-    dispatch(setAuthInitialState());
-    dispatch(setGuestInitialState());
-    dispatch(setInvoicingInitialState());
-  };
-
-  
 
   const goToInvoice = () => {
     isGuest ? navigate('InviteSignUp') : navigate('Invoice');
@@ -254,14 +196,13 @@ const HomeController: React.FC = () => {
    */
   const fetchAddresses = useCallback(async () => {
     loader.show();
-    if(userVtex.id){
-      await dispatch(getUserAddressesThunk(userVtex.id!));
+    if (user.id) {
+      await dispatch(getUserAddressesThunk(user.id!));
     }
   }, []);
 
   /**
-   * We get the user addresses just if there isn`t any address.
-   * TODO: if you need reload addresses on each load of the home screen, please remove the "if" sentence.
+   * Get the user addresses.
    */
   useEffect(() => {
     fetchAddresses();
@@ -276,14 +217,14 @@ const HomeController: React.FC = () => {
    */
   const fetchInvoicingProfileList = useCallback(async () => {
     loader.show();
-    await dispatch(getInvoicingProfileListThunk(user.user_id!));
+    await dispatch(getInvoicingProfileListThunk(user.userId!));
   }, []);
 
   /**
    * We get the invoicing profile list just if there isn`t any profile.
    */
   useEffect(() => {
-    if (user.user_id && invoicingProfileList.length === 0) fetchInvoicingProfileList();
+    if (user.userId && invoicingProfileList.length === 0) fetchInvoicingProfileList();
   }, [fetchInvoicingProfileList]);
 
   /**
@@ -338,7 +279,7 @@ const HomeController: React.FC = () => {
   };
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
-    if(CarouselItem.navigateTo){
+    if (CarouselItem.navigateTo) {
       navigate(CarouselItem.navigateTo);
     }
     console.log('El item seleccionado en carousel es ===> ', CarouselItem);
@@ -383,10 +324,10 @@ const HomeController: React.FC = () => {
   const { updateShoppingCartProduct, migrateCartToAnotherBranch } = useShoppingCart();
 
   const fetchData = useCallback(async () => {
-    const { user_id, name } = user;
+    const { userId, name } = user;
 
-    if (user_id == cart.userProfileId) {
-      console.log('es igual al del usuario guardado', { cart });
+    if (userId == cart.userProfileId) {
+      console.log('es igual al del usuario guardado');
       getShoppingCart(cart.orderFormId)
         .then(oldCart => {
           getShoppingCart(cart.orderFormId)
@@ -618,10 +559,6 @@ const HomeController: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover'
-  },
   modalBackground: {
     justifyContent: 'space-evenly',
     backgroundColor: 'white',

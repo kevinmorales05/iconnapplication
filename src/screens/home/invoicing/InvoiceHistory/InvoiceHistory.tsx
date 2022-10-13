@@ -336,7 +336,7 @@ const InvoiceScreen: React.FC = () => {
 
   useEffect(() => {
     setQuery(current => {
-      return { ...current, userId: user.user_id } as BodyParams;
+      return { ...current, userId: user.userId } as BodyParams;
     });
   }, [user]);
 
