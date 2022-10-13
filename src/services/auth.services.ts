@@ -176,12 +176,9 @@ async function getUser(user: AuthDataInterface): Promise<any> {
  */
 async function getProfile(email: string): Promise<any> {
   // TODO: relocate the baseUrl constant to api-config or .env file
-  const response = await OnboardingApi.getInstance().getRequest(
-    `/dataentities/CL/search?email=${email}&_fields=id,email,firstName,lastName,document,documentType,homePhone,isCorporate,corporateDocument,tradeName,stateRegistration,isNewsletterOptIn,localeDefault,approved`,
-    {
-      baseUrl: 'https://api.vtex.com/iconn/'
-    } as AxiosRequestConfig
-  );
+  const response = await OnboardingApi.getInstance().getRequest(`/dataentities/CL/search?email=${email}&_fields=_all`, {
+    baseUrl: 'https://api.vtex.com/iconn/'
+  } as AxiosRequestConfig);
 
   if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
 

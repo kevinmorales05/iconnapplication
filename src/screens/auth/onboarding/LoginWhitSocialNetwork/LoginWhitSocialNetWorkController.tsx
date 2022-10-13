@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import { moderateScale } from 'utils/scaleMetrics';
@@ -8,33 +8,18 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { Platform } from 'react-native';
 import CookieManager from '@react-native-cookies/cookies';
-import { authServices, vtexUserServices } from 'services';
-import {
-  AuthCookie,
-  setAccountAuthCookie,
-  setAccountId,
-  setAuthCookie,
-  setAuthEmail,
-  setBirthday,
-  setGender,
-  setId,
-  setIsLogged,
-  setLastName,
-  setName,
-  setTelephone,
-  setUserId,
-  useAppDispatch,
-  AuthDataInterface
-} from 'rtk';
+import { authServices } from 'services';
+import { AuthCookie, setAccountAuthCookie, setAuthCookie, setIsLogged, useAppDispatch } from 'rtk';
 import { useLoading } from 'context';
 import LoginWhitSocialNetworkScreen from './LoginWhitSocialNetwork';
+import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 
 const LoginWhitSocialNetworkController: React.FC = () => {
   const { goBack } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const route = useRoute<RouteProp<AuthStackParams, 'LoginWhitSocialNetwork'>>();
   const dispatch = useAppDispatch();
   const loader = useLoading();
-
+  const { getUser } = useOnboarding();
   const { authenticationToken, providerLogin } = route.params;
 
   const navChange = async (e: WebViewNavigation) => {
@@ -86,31 +71,6 @@ const LoginWhitSocialNetworkController: React.FC = () => {
       }
     }
   };
-
-  const getUser = useCallback(async (email: string) => {
-    const { data } = await vtexUserServices.getUserByEmail(email);
-    const dataVtex: AuthDataInterface = {
-      telephone: data[0].homePhone,
-      email: data[0].email,
-      gender: data[0].gender,
-      name: data[0].firstName,
-      lastName: data[0].lastName,
-      birthday: data[0].birthDate,
-      photo: data[0].profilePicture,
-      accountId: data[0].accountId,
-      id: data[0].id,
-      userId: data[0].userId
-    };
-    dispatch(setAuthEmail({ email: dataVtex.email }));
-    dispatch(setTelephone({ telephone: dataVtex.telephone }));
-    dispatch(setGender({ gender: dataVtex.gender }));
-    dispatch(setName({ name: dataVtex.name }));
-    dispatch(setLastName({ lastName: dataVtex.lastName }));
-    dispatch(setUserId({ userId: dataVtex.userId }));
-    dispatch(setId({ id: dataVtex.id }));
-    dispatch(setBirthday({ birthday: dataVtex.birthday }));
-    dispatch(setAccountId({ accountId: dataVtex.accountId }));
-  }, []);
 
   return (
     <SafeArea

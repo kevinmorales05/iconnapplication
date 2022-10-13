@@ -20,12 +20,14 @@ import {
 import { authServices } from 'services';
 import CreatePasswordScreen from './CreatePasswordScreen';
 import { FieldValues, FormProvider, useForm } from 'react-hook-form';
+import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 
 const CreatePasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
+  const { getUser } = useOnboarding();
 
   const route = useRoute<RouteProp<AuthStackParams, 'CreatePassword'>>();
 
@@ -77,6 +79,7 @@ const CreatePasswordController: React.FC = () => {
             ).unwrap();
 
             if (registerInDBResponse && registerInDBResponse.responseCode === 200) {
+              getUser(email!);
               dispatch(setAuthCookie(authCookie));
               dispatch(setAccountAuthCookie(accountAuthCookie));
               dispatch(setUserId({ userId: userId }));

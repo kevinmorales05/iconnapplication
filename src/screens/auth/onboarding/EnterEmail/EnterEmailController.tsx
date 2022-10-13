@@ -5,8 +5,8 @@ import { AuthStackParams } from 'navigation/types';
 import EnterEmailScreen from './EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useLoading, useToast } from 'context';
-import { RootState, useAppDispatch, useAppSelector, UserInterface } from 'rtk';
-import { setAuthEmail, setUserId } from 'rtk/slices/authSlice';
+import { AuthDataInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import { setAuthEmail, setId, setUserId } from 'rtk/slices/authSlice';
 import { authServices } from 'services';
 
 const EnterEmailController: React.FC = () => {
@@ -26,7 +26,7 @@ const EnterEmailController: React.FC = () => {
     // check if user is already registered
     try {
       const profiles = await authServices.getProfile(email);
-      const current: UserInterface | undefined = profiles.find((profile: UserInterface) => {
+      const current: AuthDataInterface | undefined = profiles.find((profile: AuthDataInterface) => {
         return profile.email === email;
       });
 
@@ -50,8 +50,8 @@ const EnterEmailController: React.FC = () => {
           return;
         }
       } else {
-        // This is the place where the vtex responds as "id" instead of "userId".
-        dispatch(setUserId({ userId: current.id }));
+        dispatch(setUserId({ userId: current.userId }));
+        dispatch(setId({ id: current.id }));
         // login
         try {
           await authServices.startAuthentication(email);

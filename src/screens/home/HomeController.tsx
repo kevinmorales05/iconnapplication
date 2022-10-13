@@ -7,9 +7,6 @@ import {
   RootState,
   useAppSelector,
   useAppDispatch,
-  setAppInitialState,
-  setAuthInitialState,
-  setGuestInitialState,
   Address,
   setAddressDefault,
   setSeenCarousel,
@@ -21,17 +18,7 @@ import {
   ProductRaitingResponseInterface,
   ProductInterface,
   ProductResponseInterface,
-  ExistingProductInCartInterface,
-  AuthDataInterface,
-  setAuthEmail,
-  setAccountId,
-  setBirthday,
-  setGender,
-  setId,
-  setLastName,
-  setName,
-  setTelephone,
-  setUserId
+  ExistingProductInCartInterface
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
@@ -40,7 +27,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
-import { setInvoicingInitialState } from 'rtk/slices/invoicingSlice';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useLoading } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
@@ -49,7 +35,6 @@ import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
-import { vtexUserServices } from 'services';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -167,7 +152,6 @@ class CustomCarousel extends Component<Props, State> {
 
 const HomeController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { email } = user;
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
@@ -184,31 +168,6 @@ const HomeController: React.FC = () => {
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
   const [showShippingDropDown, setShowShippingDropDown] = useState(false);
 
-  const getUser = useCallback(async () => {
-    const { data } = await vtexUserServices.getUserByEmail(email!);
-    const dataVtex: AuthDataInterface = {
-      telephone: data[0].homePhone,
-      email: data[0].email,
-      gender: data[0].gender,
-      name: data[0].firstName,
-      lastName: data[0].lastName,
-      birthday: data[0].birthDate,
-      photo: data[0].profilePicture,
-      accountId: data[0].accountId,
-      id: data[0].id,
-      userId: data[0].userId
-    };
-    dispatch(setAuthEmail({ email: dataVtex.email }));
-    dispatch(setTelephone({ telephone: dataVtex.homePhone }));
-    dispatch(setGender({ gender: dataVtex.gender }));
-    dispatch(setName({ name: dataVtex.name }));
-    dispatch(setLastName({ lastName: dataVtex.lastName }));
-    dispatch(setUserId({ userId: dataVtex.userId }));
-    dispatch(setId({ id: dataVtex.id }));
-    dispatch(setBirthday({ birthday: dataVtex.birthday }));
-    dispatch(setAccountId({ accountId: dataVtex.accountId }));
-  }, []);
-
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
   }, [invoicingLoading]);
@@ -216,10 +175,6 @@ const HomeController: React.FC = () => {
   useEffect(() => {
     if (authLoading === false) loader.hide();
   }, [authLoading]);
-
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
 
   const goToInvoice = () => {
     isGuest ? navigate('InviteSignUp') : navigate('Invoice');

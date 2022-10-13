@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import ProfileScreen from './ProfileScreen';
 import { useLoading } from 'context';
-import { RootState, setAccountId, setAuthEmail, setId, setLastName, setName, setUserId, useAppSelector } from 'rtk';
+import { RootState, setLastName, setName, useAppSelector } from 'rtk';
 import { vtexUserServices } from 'services';
 import { AuthDataInterface } from 'rtk/types/auth.types';
 import { useToast } from 'context';
@@ -12,6 +12,7 @@ import { setBirthday, setGender, setTelephone, useAppDispatch } from 'rtk';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 
 const ProfileController: React.FC = () => {
   const loader = useLoading();
@@ -20,40 +21,12 @@ const ProfileController: React.FC = () => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const { email } = user;
+  const { getUser } = useOnboarding();
   const newDate = (date: string) => {
     let formatDay = new Date(date);
     let help: string = formatDate(formatDay).toString();
     return help;
   };
-
-  const getUser = useCallback(async () => {
-    try {
-      const { data } = await vtexUserServices.getUserByEmail(email!);
-      const dataVtex: AuthDataInterface = {
-        telephone: data[0].homePhone,
-        email: data[0].email,
-        gender: data[0].gender,
-        name: data[0].firstName,
-        lastName: data[0].lastName,
-        birthday: data[0].birthDate,
-        photo: data[0].profilePicture,
-        accountId: data[0].accountId,
-        id: data[0].id,
-        userId: data[0].userId
-      };
-      dispatch(setAuthEmail({ email: dataVtex.email }));
-      dispatch(setTelephone({ telephone: dataVtex.telephone }));
-      dispatch(setGender({ gender: dataVtex.gender }));
-      dispatch(setName({ name: dataVtex.name }));
-      dispatch(setLastName({ lastName: dataVtex.lastName }));
-      dispatch(setUserId({ userId: dataVtex.userId }));
-      dispatch(setId({ id: dataVtex.id }));
-      dispatch(setBirthday({ birthday: dataVtex.birthday }));
-      dispatch(setAccountId({ accountId: dataVtex.accountId }));
-    } catch (error) {
-      console.log('error', error);
-    }
-  }, []);
 
   const update = async () => {
     loader.show();
@@ -66,7 +39,7 @@ const ProfileController: React.FC = () => {
     try {
       const updated = await vtexUserServices.putUserByEmail(dataVtex);
       console.log('WAHAHA', updated);
-      getUser();
+      getUser(email!);
       /*       const delay = ms => new Promise(res => setTimeout(res, ms));
       await delay(1000); */
       loader.hide();
@@ -76,7 +49,7 @@ const ProfileController: React.FC = () => {
     }
   };
   useEffect(() => {
-    getUser();
+    getUser(email!);
   }, [update]);
 
   const goToChange = () => {
