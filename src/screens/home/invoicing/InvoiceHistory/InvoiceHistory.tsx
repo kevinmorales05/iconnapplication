@@ -332,7 +332,8 @@ const InvoiceScreen: React.FC = () => {
   const [date, setDate] = useState<Period | null>(null);
   const [visible, setVisible] = useState(false);
 
-  const [query, setQuery] = useState<BodyParams>({ userId: testUserId });
+  // const [query, setQuery] = useState<BodyParams>({ userId: testUserId });
+  const [query, setQuery] = useState<BodyParams>();
 
   useEffect(() => {
     setQuery(current => {
