@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, TextInput } from 'react-native';
+import { Image, ScrollView, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Input, TextContainer, Button, Container } from 'components';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import { ActionButton, Input, TextContainer, Button, Container } from 'components';
 import theme from 'components/theme/theme';
 import { FieldValues, RegisterOptions, SubmitHandler, useFormContext } from 'react-hook-form';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ICONN_EMAIL } from 'assets/images';
 
 interface Props {
   onSubmit: (data: FieldValues) => void;
@@ -13,7 +15,7 @@ interface Props {
   email: string;
 }
 
-const ChangePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigationTitle, email }) => {
+const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigationTitle, email }) => {
   const insets = useSafeAreaInsets();
 
   const {
@@ -23,7 +25,6 @@ const ChangePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
     register
   } = useFormContext();
 
-  const oldPasswordRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
 
   useEffect(() => {
@@ -134,24 +135,41 @@ const ChangePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
     >
-      <TextContainer typography="h2" text={`Por tu seguridad, ingresa tu contraseña`} fontSize={14} marginTop={0}></TextContainer>
+      <TextContainer typography="h2" fontBold text={`Crea tu contraseña`} fontSize={24} marginTop={hasNavigationTitle ? 0 : 30}></TextContainer>
+      <TextContainer typography="h2" text={`Ingresa el código de 6 dígitos que enviamos a:`} marginTop={9} fontSize={17}></TextContainer>
+      <Container row style={{ alignItems: 'center', marginTop: 12 }}>
+        <Image style={{ height: 24, width: 24, marginRight: 8 }} source={ICONN_EMAIL} resizeMode="center" />
+        <TextContainer typography="h4" fontBold text={email} textColor={theme.brandColor.iconn_green_original}></TextContainer>
+      </Container>
 
-      <TextContainer typography="h6" fontBold text={`Contraseña actual`} marginTop={35} />
+      <TextContainer typography="h6" fontBold text={`Código de verificación`} marginTop={35} />
       <Input
-        {...register('oldPassword')}
-        name="oldPassword"
+        {...register('code')}
+        name="code"
+        
         control={control}
-        autoComplete="password"
         autoCorrect={false}
-        passwordField
-        placeholder={`Ingresa tu contraseña actual`}
+        placeholder={`6 dígitos`}
         blurOnSubmit
-        ref={oldPasswordRef}
-        showPasswordEnable
+        onChangeText={() => {}}
         maxLength={30}
-        rules={passRule}
+        error={errors.code?.message}
+        rules={{
+          required: {
+            value: true,
+            message: `Campo requerido.`
+          },
+          minLength: {
+            value: 6,
+            message: `Mínimo 6 valores`
+          },
+          maxLength: {
+            value: 6,
+            message: `Máximo 6 valores`
+          }
+        }}
       />
-      <TextContainer typography="h6" fontBold text={`Nueva contraseña`} marginTop={24} />
+      <TextContainer typography="h6" fontBold text={`Crear contraseña`} marginTop={24} />
       <Input
         {...register('password')}
         name="password"
@@ -159,7 +177,7 @@ const ChangePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
         autoComplete="password"
         autoCorrect={false}
         passwordField
-        placeholder={`Ingresa tu contraseña nueva`}
+        placeholder={`Ingresa tu contraseña`}
         blurOnSubmit
         error={passwordError}
         ref={passwordRef}
@@ -187,11 +205,25 @@ const ChangePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
           <TextContainer text="Contiene un número" typography="h5" marginLeft={10} />
         </Container>
       </Container>
-      <Button length="long" round disabled={!isValid} onPress={handleSubmit(submit)} fontSize="h4" fontBold style={{ marginTop: '30%' }}>
-        Guardar
-      </Button>
+
+      <Container flex row crossAlignment="end" space="between">
+        <ActionButton size="large" onPress={goBack} color="iconn_med_grey" icon={<AntDesign name="arrowleft" size={24} color={theme.fontColor.dark} />} />
+
+        <Button
+          length="short"
+          round
+          disabled={!isValid}
+          onPress={handleSubmit(submit)}
+          fontSize="h4"
+          fontBold
+          style={{ marginTop: 8 }}
+          rightIcon={<AntDesign name="arrowright" size={24} color="white" />}
+        >
+          Siguiente
+        </Button>
+      </Container>
     </ScrollView>
   );
 };
 
-export default ChangePasswordScreen;
+export default CreatePasswordScreen;

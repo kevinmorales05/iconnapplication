@@ -102,7 +102,27 @@ const CreatePasswordController: React.FC = () => {
       }
 
       if (variant === 'recoverPassword') {
-        navigate('ChangedPassword', { authenticationToken, password });
+        const { authStatus } = await authServices.createPassword(
+          password,
+          code,
+          user.email as string,
+          authenticationToken
+        );
+        if(authStatus === 'Success' ) {
+          navigate('ChangedPassword', { authenticationToken, password });
+        } else {
+          alert.show(
+            {
+              title: 'Lo sentimos',
+              message: 'No pudimos cambiar tu contraseña. Intenta más tarde.',
+              acceptTitle: 'Entendido',
+              async onAccept() {
+                alert.hide();
+              }
+            },
+            'error'
+          );
+        }
       }
     } catch (error) {
       console.log(error);

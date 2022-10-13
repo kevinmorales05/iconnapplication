@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import ProfileScreen from './ProfileScreen';
-import { useLoading } from 'context';
 import { RootState, setLastName, setName, useAppSelector } from 'rtk';
-import { vtexUserServices } from 'services';
+import { useLoading, useAlert } from 'context';
+import { authServices, vtexUserServices } from 'services';
 import { AuthDataInterface } from 'rtk/types/auth.types';
 import { useToast } from 'context';
 import { GENDERS } from 'assets/files';
@@ -13,11 +13,14 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
+import { HttpClient } from '../../../../http/http-client';
 
 const ProfileController: React.FC = () => {
   const loader = useLoading();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const authToken = HttpClient.accessToken;
+  const alert = useAlert();
   const toast = useToast();
   const dispatch = useAppDispatch();
   const { email } = user;
@@ -28,40 +31,39 @@ const ProfileController: React.FC = () => {
     return help;
   };
 
-  const update = async () => {
-    loader.show();
-    // TODO: be careful with this dataVtex, why do we need this?
-    const dataVtex: AuthDataInterface = {
-      firstName: 'Valerie',
-      lastName: 'Namuche',
-      email: email
-    };
-    try {
-      const updated = await vtexUserServices.putUserByEmail(dataVtex);
-      console.log('WAHAHA', updated);
-      getUser(email!);
-      /*       const delay = ms => new Promise(res => setTimeout(res, ms));
-      await delay(1000); */
-      loader.hide();
-    } catch (error) {
-      console.log('ERROR', error);
-      loader.hide();
-    }
-  };
   useEffect(() => {
     getUser(email!);
-  }, [update]);
-
-  const goToChange = () => {
-    navigate('ChangePassword');
+  }, []);
+  
+  const goToChange = async () => {
+    try {
+      const response = await authServices.sendAccessKey(email as string, authToken as string);
+      console.log('SE MANDO ACCESS KEY', response);
+      if (response.authStatus == 'InvalidToken') {
+        alert.show({ title: 'Ocurrió un error inesperado :(' }, 'error');
+      } else {
+        toast.show({
+          message: 'Correo enviado exitosamente.',
+          type: 'success'
+        });
+        navigate('ChangePassword', {authenticationToken: authToken as string, variant: 'recoverPassword'});
+      }
+    } catch (error) {
+      console.log('ERROR', error);
+      toast.show({
+        message: 'El correo no pudo ser enviado,\n intenta más tarde',
+        type: 'error'
+      });
+    }
   };
-
+  
+  
   const onSubmit = async (userFields: any) => {
     console.log('FOCA', userFields);
     let userPhone: string;
     userPhone = '+' + userFields.countryCode + userFields.telephone;
     console.log('GOMA', userPhone);
-
+    
     const updatedUser: AuthDataInterface = {
       homePhone: userFields.telephone == '' || userFields.telephone == null ? undefined : userPhone,
       firstName: userFields.name ? userFields.name : null,
@@ -84,6 +86,7 @@ const ProfileController: React.FC = () => {
       // TODO: Is necessary validate the response after update user. We cannot dispatch change on the user state without validate the response.
       if (userFields.telephone != '') {
         dispatch(setTelephone({ telephone: userFields.telephone }));
+        console.log('TELEFONO', updatedUser.homePhone);
       }
       if (userFields.gender != '') {
         dispatch(setGender({ gender: userFields.gender }));
@@ -93,9 +96,12 @@ const ProfileController: React.FC = () => {
       }
       if (userFields.name) {
         dispatch(setName({ name: userFields.name }));
+        console.log('NOMBRE', updatedUser.firstName);
+        
       }
       if (userFields.lastName) {
         dispatch(setLastName({ lastName: userFields.lastName }));
+        console.log('APELLIDO', updatedUser.lastName);
       }
       toast.show({
         message: 'Datos guardados exitosamente.',
@@ -110,7 +116,8 @@ const ProfileController: React.FC = () => {
       loader.hide();
     }
   };
-
+  
+  
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
       <ProfileScreen onLogout={() => {}} onSubmit={onSubmit} goToChangePwd={goToChange} />
