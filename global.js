@@ -15,8 +15,8 @@
  * }}
  */
 let global;
-global.recommended_products = '141';
-global.other_products = '142';
+global.recommended_products = '145';
+global.other_products = '145';
 global.showLogs__api_docs_no_api_prefix = true;
 global.showLogs__api_docs = true;
 global.showLogs__api_invoicing = true;

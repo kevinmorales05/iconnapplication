@@ -8,12 +8,14 @@ import { RootState, setAccountAuthCookie, setAuthCookie, setIsLogged, setUserId,
 import { authServices } from 'services';
 import ChangedPasswordScreen from './ChangedPasswordScreen';
 import { useAlert } from 'context';
+import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 
 const ChangedPasswordController: React.FC = () => {
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
+  const { getUser } = useOnboarding();
 
   const alert = useAlert();
 
@@ -28,6 +30,7 @@ const ChangedPasswordController: React.FC = () => {
         dispatch(setAuthCookie(response.authCookie));
         dispatch(setAccountAuthCookie(response.accountAuthCookie));
         dispatch(setUserId({ userId: response.userId }));
+        getUser(email as string, true);
         dispatch(setIsLogged({ isLogged: true }));
       } else {
         alert.show({ title: 'Lo sentimos', message: 'No pudimos ingresar a tu cuenta en este momento. Por favor intenta más tarde.' });

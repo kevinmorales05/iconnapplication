@@ -10,6 +10,7 @@ import { GENDERS } from 'assets/files';
 import { RootState, useAppSelector } from 'rtk';
 import moment from 'moment';
 import { mobilePhoneRule, alphabetRule } from 'utils/rules';
+import { formatDate } from 'utils/functions';
 
 type Props = {
   onSubmit: (data: FieldValues) => void;
@@ -47,7 +48,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
     setValue('telephone', telephone);
     setValue('email', email);
     setValue('gender', gender);
-    setValue('birthday', birthday);
+    setValue('birthday', formatDate(moment(birthday).toDate()));
   };
 
   useEffect(() => {
@@ -186,7 +187,11 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           name="gender"
           control={control}
           options={GENDERS.map(item => item.name)}
-          onSelect={value => setValue('gender', value)}
+          onSelect={value => {
+            setValue('gender', value);
+            register('gender');
+            trigger('gender');
+          }}
           androidMode="dialog"
           placeholder="Selecciona"
         />

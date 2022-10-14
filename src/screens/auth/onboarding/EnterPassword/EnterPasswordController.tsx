@@ -6,6 +6,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
 import { useLoading, useAlert } from 'context';
 import { HttpClient } from '../../../../http/http-client';
+import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 
 import { RootState, setIsLogged, useAppDispatch, useAppSelector, setAuthCookie, setAccountAuthCookie } from 'rtk';
 
@@ -20,6 +21,7 @@ const EnterPasswordController: React.FC = () => {
   const alert = useAlert();
   const [accountError, setAccountError] = useState('');
   const authToken = HttpClient.accessToken;
+  const {getUser} = useOnboarding();
 
   useEffect(() => {
     if (loading === false) {
@@ -38,6 +40,7 @@ const EnterPasswordController: React.FC = () => {
         dispatch(setAuthCookie(response.authCookie));
         dispatch(setAccountAuthCookie(response.accountAuthCookie));
         dispatch(setIsLogged({ isLogged: true }));
+        getUser(email as string, true);
       } else if (response.authStatus == 'WrongCredentials') {
         setAccountError('Contraseña incorrecta');
       } else {

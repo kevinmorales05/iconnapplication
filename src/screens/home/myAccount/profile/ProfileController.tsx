@@ -11,6 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { HttpClient } from '../../../../http/http-client';
+import moment from 'moment';
+import { formatDate } from 'utils/functions';
 
 const ProfileController: React.FC = () => {
   const loader = useLoading();
@@ -45,20 +47,22 @@ const ProfileController: React.FC = () => {
 
   const onSubmit = async (userFields: any) => {
     loader.show();
+    const dateMomentObject = moment(userFields.birthday, 'DD/MM/YYYY');
+    const dateObject = dateMomentObject.toDate();
     const updatedUser: AuthDataInterface = {
       homePhone: userFields.telephone,
       firstName: userFields.name,
       lastName: userFields.lastName,
       gender: userFields.gender,
       email: email,
-      birthDate: userFields.birthday ? userFields.birthday : null
+      birthDate: userFields.birthday ? formatDate(dateObject, "yyyy'-'MM'-'dd'T'HH':'mm':'ss") : null
     };
     try {
       const resp = await vtexUserServices.putUserByEmail(updatedUser);
       if (resp && resp.DocumentId) {
         dispatch(setTelephone({ telephone: userFields.telephone }));
         dispatch(setGender({ gender: userFields.gender }));
-        dispatch(setBirthday({ birthday: userFields.birthday }));
+        dispatch(setBirthday({ birthday: formatDate(dateObject, "yyyy'-'MM'-'dd'T'HH':'mm':'ss") }));
         dispatch(setName({ name: userFields.name }));
         dispatch(setLastName({ lastName: userFields.lastName }));
         toast.show({
