@@ -186,13 +186,13 @@ interface Props {
               showAdditionalInfo ?
                 <Container style={{ marginTop: 10 }}>
                   <Container>
-                    <TextContainer text="Descripciòn del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold ></TextContainer>
+                    <TextContainer text="Descripción del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold ></TextContainer>
                     <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
                       {productDetail.Description}
                     </Text>
                   </Container>
                   <Container style={{ marginTop: 20 }}>
-                    <TextContainer text="Especificaciòn del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold ></TextContainer>
+                    <TextContainer text="Especificación del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold ></TextContainer>
                     <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
                       {productDetail.Title}
                     </Text>

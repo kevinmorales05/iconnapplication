@@ -57,7 +57,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
     mode: 'onChange'
   });
 
-  const { name: nameField, lastName: lastNameField } = watch();
+  const { name: nameField, lastName: lastNameField, telephone: telephoneField, gender:genderField, birthday:birthdayField} = watch();
 
   useEffect(() => {
     if (nameField && lastNameField) {
@@ -149,6 +149,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
 
   const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields);
+    setDisabled(true);
   };
 
   const updateCode = (newCode: string) => {
@@ -172,7 +173,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
       showsVerticalScrollIndicator={false}
     >
       <Container>
-        <TextContainer typography="h6" fontBold text={`Nombres`} marginTop={0} />
+        <TextContainer typography="h6" fontBold text={`Nombre (s)`} marginTop={0} />
 
         <Input
           {...register('name')}
@@ -186,7 +187,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           maxLength={30}
         />
 
-        <TextContainer typography="h6" fontBold text={`Apellidos`} marginTop={21} />
+        <TextContainer typography="h6" fontBold text={`Apellido (s)`} marginTop={21} />
 
         <Input
           {...register('lastName')}
@@ -264,6 +265,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
 
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
+          locale={'es-LA'}
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
@@ -272,7 +274,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
 
         <DatePicker name="birthday" control={control} onPressDatePickerIcon={showDatePicker} error={errors.birthday?.message} />
 
-        <TextContainer typography="h6" fontBold text={`Genero`} marginTop={21} />
+        <TextContainer typography="h6" fontBold text={`Género`} marginTop={21} />
 
         <Select
           name="gender"
@@ -281,6 +283,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           onSelect={value => setValue('gender', value)}
           androidMode="dialog"
           placeholder={gender == null ? 'Selecciona' : gender == 'Femenino' ? 'Femenino' : 'Masculino'}
+          placeholderTextColor={theme.fontColor.dark}
           error={errors.gender?.message}
         />
         <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">

@@ -369,7 +369,7 @@ const CategoryProductsScreen: React.FC = () => {
               <Container width={'100%'}>
                 <Container style={{ marginTop: moderateScale(15) }}>
                   <CustomText
-                    text={`${productsRender.length} producto${productsRender.length > 1 ? 's' : ''} encontrado`}
+                    text={`${productsRender.length} producto${productsRender.length > 1 ? 's' : ''} encontrado${productsRender.length > 1 ? 's' : ''}`}
                     textColor={theme.fontColor.placeholder}
                     fontSize={theme.fontSize.h6}
                   />

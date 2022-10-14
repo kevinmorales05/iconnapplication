@@ -44,7 +44,7 @@ const ReviewPercentage: React.FC<Props> = ({
 
 return(
 <Container backgroundColor={theme.brandColor.iconn_white}>
-            <Container style={{marginTop:24, marginHorizontal:16}}>
+            <Container style={{marginTop:24}}>
             <TextContainer text={`Calificaciones de clientes`} fontBold fontSize={theme.fontSize.h4} lineHeight={theme.fontSize.h2}/>
             <Container row style={{marginTop:16}}>
               <Container style={{marginTop:-10, marginLeft:-2}}>

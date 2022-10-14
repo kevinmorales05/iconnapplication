@@ -16,6 +16,7 @@ import { CustomText } from '../CustomText';
 export interface Props {
   label?: string;
   placeholder?: string;
+  placeholderTextColor?:string;
   placeholderBold?: string;
   autoCapitalize?: TextInputProps['autoCapitalize'];
   autoComplete?: TextInputProps['autoComplete'];
@@ -55,6 +56,7 @@ const Input = forwardRef(
     {
       label = '',
       placeholder = '',
+      placeholderTextColor = '',
       placeholderBold = '',
       autoCapitalize = 'none',
       autoComplete = 'off',
@@ -96,7 +98,7 @@ const Input = forwardRef(
 
     const textInputProps: TextInputProps = {
       placeholder,
-      placeholderTextColor: theme.brandColor.iconn_med_grey,
+      placeholderTextColor: `${placeholderTextColor ? placeholderTextColor : theme.brandColor.iconn_med_grey}`,
       autoCapitalize,
       autoComplete,
       autoCorrect,

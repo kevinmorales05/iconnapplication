@@ -13,6 +13,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 interface Props {
   label?: string;
   placeholder?: string;
+  placeholderTextColor?: string;
   error?: any;
   options: Array<any>;
   optionsIdField?: string;
@@ -31,6 +32,7 @@ interface Props {
 const Select: React.FC<Props> = ({
   label,
   placeholder = '',
+  placeholderTextColor = '',
   error = '',
   options,
   optionsIdField = '',
@@ -73,7 +75,6 @@ const Select: React.FC<Props> = ({
           style={[StyleSheet.absoluteFill, { opacity: 0 }]}
           mode={androidMode}
         >
-          <Picker.Item label={label} value="" color='lightgrey' />
           {options.map((element) => 
             optionsIdField !== '' ?
             (
@@ -85,6 +86,7 @@ const Select: React.FC<Props> = ({
         )}
         <Input
           placeholder={placeholder}
+          placeholderTextColor={placeholderTextColor}
           error={error}
           autoCapitalize="sentences"
           marginTop={marginTop}

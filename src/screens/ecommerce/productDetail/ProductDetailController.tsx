@@ -84,13 +84,13 @@ const ProductDetailController: React.FC<Props> = () => {
       setTotalCount(totalCount => ((totalCount + 1)));
       // loader.hide();
       toast.show({
-        message:'Calificación publicada exitosamente.',
+        message:'Calificación publicada\n exitosamente.',
         type: 'success'
       });
     }catch (error) {
       console.log(error);
       toast.show({
-        message: 'No fue posible publicar tu calificación. Intenta más tarde.',
+        message: 'No fue posible publicar tu\n calificación. Intenta más tarde.',
         type: 'error'
       });
     }
