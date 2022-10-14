@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SafeArea } from 'components/atoms/SafeArea';
 import ProfileScreen from './ProfileScreen';
 import { RootState, setLastName, setName, useAppSelector } from 'rtk';
@@ -6,13 +6,10 @@ import { useLoading, useAlert } from 'context';
 import { authServices, vtexUserServices } from 'services';
 import { AuthDataInterface } from 'rtk/types/auth.types';
 import { useToast } from 'context';
-import { GENDERS } from 'assets/files';
-import { formatDate } from 'utils/functions';
 import { setBirthday, setGender, setTelephone, useAppDispatch } from 'rtk';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 import { HttpClient } from '../../../../http/http-client';
 
 const ProfileController: React.FC = () => {
@@ -24,21 +21,10 @@ const ProfileController: React.FC = () => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const { email } = user;
-  const { getUser } = useOnboarding();
-  const newDate = (date: string) => {
-    let formatDay = new Date(date);
-    let help: string = formatDate(formatDay).toString();
-    return help;
-  };
 
-  useEffect(() => {
-    getUser(email!);
-  }, []);
-  
-  const goToChange = async () => {
+  const goToChangePassword = async () => {
     try {
       const response = await authServices.sendAccessKey(email as string, authToken as string);
-      console.log('SE MANDO ACCESS KEY', response);
       if (response.authStatus == 'InvalidToken') {
         alert.show({ title: 'Ocurrió un error inesperado :(' }, 'error');
       } else {
@@ -46,7 +32,7 @@ const ProfileController: React.FC = () => {
           message: 'Correo enviado exitosamente.',
           type: 'success'
         });
-        navigate('ChangePassword', {authenticationToken: authToken as string, variant: 'recoverPassword'});
+        navigate('ChangePassword', { authenticationToken: authToken as string, variant: 'recoverPassword' });
       }
     } catch (error) {
       console.log('ERROR', error);
@@ -56,57 +42,30 @@ const ProfileController: React.FC = () => {
       });
     }
   };
-  
-  
+
   const onSubmit = async (userFields: any) => {
-    console.log('FOCA', userFields);
-    let userPhone: string;
-    userPhone = '+' + userFields.countryCode + userFields.telephone;
-    console.log('GOMA', userPhone);
-    
-    const updatedUser: AuthDataInterface = {
-      homePhone: userFields.telephone == '' || userFields.telephone == null ? undefined : userPhone,
-      firstName: userFields.name ? userFields.name : null,
-      lastName: userFields.lastName ? userFields.lastName : null,
-      gender: userFields.gender == '' ? null : userFields.gender,
-      email: email,
-      birthDate: userFields.birthday == undefined ? null : newDate(userFields.birthday)
-    };
-    console.log('this is the date ', updatedUser.birthDate);
-    //prevents unhandled email update
-    const { id } = user;
-    userFields.id = id;
-    const gender = GENDERS.find(gender => {
-      return gender.name === userFields.gender;
-    });
-    userFields.gender = gender?.id as number;
     loader.show();
+    const updatedUser: AuthDataInterface = {
+      homePhone: userFields.telephone,
+      firstName: userFields.name,
+      lastName: userFields.lastName,
+      gender: userFields.gender,
+      email: email,
+      birthDate: userFields.birthday ? userFields.birthday : null
+    };
     try {
-      await vtexUserServices.putUserByEmail(updatedUser);
-      // TODO: Is necessary validate the response after update user. We cannot dispatch change on the user state without validate the response.
-      if (userFields.telephone != '') {
+      const resp = await vtexUserServices.putUserByEmail(updatedUser);
+      if (resp && resp.DocumentId) {
         dispatch(setTelephone({ telephone: userFields.telephone }));
-        console.log('TELEFONO', updatedUser.homePhone);
-      }
-      if (userFields.gender != '') {
         dispatch(setGender({ gender: userFields.gender }));
-      }
-      if (userFields.birthday != '') {
         dispatch(setBirthday({ birthday: userFields.birthday }));
-      }
-      if (userFields.name) {
         dispatch(setName({ name: userFields.name }));
-        console.log('NOMBRE', updatedUser.firstName);
-        
-      }
-      if (userFields.lastName) {
         dispatch(setLastName({ lastName: userFields.lastName }));
-        console.log('APELLIDO', updatedUser.lastName);
+        toast.show({
+          message: 'Datos guardados exitosamente.',
+          type: 'success'
+        });
       }
-      toast.show({
-        message: 'Datos guardados exitosamente.',
-        type: 'success'
-      });
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
@@ -116,11 +75,10 @@ const ProfileController: React.FC = () => {
       loader.hide();
     }
   };
-  
-  
+
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <ProfileScreen onLogout={() => {}} onSubmit={onSubmit} goToChangePwd={goToChange} />
+      <ProfileScreen onLogout={() => {}} onSubmit={onSubmit} goToChangePwd={goToChangePassword} />
     </SafeArea>
   );
 };

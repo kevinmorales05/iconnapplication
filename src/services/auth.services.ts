@@ -82,7 +82,7 @@ async function createPassword(newPassword: string, accesskey: string, email: str
   formData.append('newPassword', newPassword);
   formData.append('accesskey', accesskey);
   formData.append('email', email);
-  formData.append('authenticationToken create: ', authenticationToken);
+  formData.append('authenticationToken', authenticationToken);
 
   const response = await OnboardingApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/setpassword?scope=oneiconn&locale=MX`, formData, {
     headers: {

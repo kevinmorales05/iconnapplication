@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { HttpClient } from './http-client';
-import { VTEXApiConfig, VTEXApiUserConfig } from './vtex-api-config';
+import { VTEXApiUserConfig} from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
 import { DeviceEventEmitter } from 'react-native';
 

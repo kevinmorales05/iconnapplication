@@ -100,9 +100,9 @@ export const alphabetRule = (required: boolean): RegisterOptions => ({
   }
 });
 
-export const mobilePhoneRule: RegisterOptions = {
+export const mobilePhoneRule = (required: boolean) : RegisterOptions =>  ({
   required: {
-    value: true,
+    value: required,
     message: `Campo requerido.`
   },
   validate: (value: string) => {
@@ -111,9 +111,8 @@ export const mobilePhoneRule: RegisterOptions = {
     }
 
     return true;
-  },
-  minLength: 1
-};
+  }
+});
 
 export const rfcRule: RegisterOptions = {
   required: {

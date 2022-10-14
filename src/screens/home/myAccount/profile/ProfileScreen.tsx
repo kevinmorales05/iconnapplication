@@ -1,4 +1,4 @@
-import { Button, Container, CustomText, DatePicker, Input, Select, TextContainer, SafeArea, CountryCodeSelect } from 'components';
+import { Button, Container, CustomText, DatePicker, Input, Select, TextContainer } from 'components';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -8,10 +8,8 @@ import theme from 'components/theme/theme';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { GENDERS } from 'assets/files';
 import { RootState, useAppSelector } from 'rtk';
-import * as PhotosPicker from '../../../../components/organisms/PhotosPicker/PhotosPicker';
 import moment from 'moment';
-import countries from 'assets/files/countries.json';
-import { formatDate } from 'utils/functions';
+import { mobilePhoneRule, alphabetRule } from 'utils/rules';
 
 type Props = {
   onSubmit: (data: FieldValues) => void;
@@ -22,116 +20,49 @@ type Props = {
   goToChangePwd: () => void;
 };
 
-// TODO: please remove unused code.
 const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const { email, firstName, homePhone, gender, birthDate, lastName } = user;
+  const { email, name, telephone, gender, birthday, lastName } = user;
   const insets = useSafeAreaInsets();
-  const [visible, setVisible] = useState(false);
-  const [code, setCode] = useState<string>();
-  const [flag, setFlag] = useState<string>();
-  const [mobilePhone, setMobilePhone] = useState<string>();
-  const [disabled, setDisabled] = useState(false);
-  const newDate = (date: string) => {
-    let formatDay = new Date(date);
-    let help: string = formatDate(formatDay).toString();
-    return help;
-  };
-
-  // storage bucket folder
-  const bucketPath = `userPhotos/${user.accountId}/profile/`;
-
-  const { currentPhoto, launch } = PhotosPicker.usePhotosPicker(1, bucketPath, () => {
-    setVisible(false);
-  });
 
   const {
     control,
-    formState: { errors },
+    formState: { errors, isValid },
     register,
     handleSubmit,
-    watch,
     setValue,
+    unregister,
     trigger
   } = useForm({
     mode: 'onChange'
   });
 
-  const { name: nameField, lastName: lastNameField, telephone: telephoneField, gender:genderField, birthday:birthdayField} = watch();
-
-  useEffect(() => {
-    if (nameField && lastNameField) {
-      setDisabled(false);
-    } else {
-      setDisabled(true);
-    }
-  }, [nameField, lastNameField]);
-
   const nameRef = useRef<TextInput>(null);
   const surnameRef = useRef<TextInput>(null);
-  const emailRef = useRef<TextInput>(null);
-  const passwordRef = useRef<TextInput>(null);
   const phoneRef = useRef<TextInput>(null);
-  const codeRef = useRef<TextInput>(null);
 
-  const getCountryCode = () => {
-    console.log({ mobilePhone });
-    const countryC: any = countries.find(i => {
-      const prefix = mobilePhone?.substring(i.code.length, 0);
-      if (prefix === i.code) {
-        setCode(prefix);
-        setFlag(i.flag);
-        const numberPhone = homePhone?.slice(prefix.length + 1);
-        console.log('PHONENUMBER', numberPhone);
-        setValue('telephone', numberPhone);
-        return i;
-      }
-      //console.log('PREFIX', code)
-    });
-    console.log('country code', countryC);
-    setValue('countryCode', countryC);
-    setValue('countryFlag', countryC);
+  const populateForm = () => {
+    setValue('name', name);
+    setValue('lastName', lastName);
+    setValue('telephone', telephone);
+    setValue('email', email);
+    setValue('gender', gender);
+    setValue('birthday', birthday);
   };
 
-  /* useEffect(() => {
-    setValue('countryFlag', paymentMethod ? PAYMENT_METHODS.find(i => i.id === paymentMethod)?.name : '');
-  }, [PaymentMethod]); */
-
   useEffect(() => {
-    setValue('name', firstName);
-    setValue('lastName', lastName);
-    setValue('countryCode', code);
-    setValue('countryFlag', flag);
-    if (homePhone) {
-      const justPhone = homePhone.replace('+', '');
-      //setMobilePhone(justPhone);
-      setMobilePhone(justPhone);
-    } else {
-      setValue('telephone', '');
-    }
-    setValue('email', email);
-
-    if (gender) {
-      const previusGender = GENDERS.find(element => {
-        return gender === element.id;
-      });
-      setValue('gender', previusGender?.name);
-    }
-
-    if (birthDate) {
-      setValue('birthday', newDate(birthDate));
-    }
-
+    populateForm();
     if (nameRef.current) {
       nameRef.current.focus();
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
-    getCountryCode();
-  }, [mobilePhone]);
+    if (user) {
+      populateForm();
+    }
+  }, []);
 
-  console.log('CODEP', code);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -149,15 +80,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
 
   const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields);
-    setDisabled(true);
-  };
-
-  const updateCode = (newCode: string) => {
-    const newNew = newCode.split(' ', 3);
-    setValue('countryCode', newNew[2]);
-    setValue('countryFlag', newNew[0]);
-    setCode(newNew[2]);
-    setFlag(newNew[0]);
   };
 
   return (
@@ -177,14 +99,17 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
 
         <Input
           {...register('name')}
-          name="name"
           ref={nameRef}
           control={control}
           autoCorrect
           autoCapitalize="words"
           keyboardType="default"
-          onChangeText={nameValue => setValue('name', nameValue)}
+          placeholder="Nombre"
           maxLength={30}
+          blurOnSubmit={true}
+          rules={alphabetRule(true)}
+          error={errors.name?.message}
+          onSubmitEditing={() => surnameRef.current?.focus()}
         />
 
         <TextContainer typography="h6" fontBold text={`Apellido (s)`} marginTop={21} />
@@ -196,21 +121,16 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           autoCorrect
           autoCapitalize="words"
           keyboardType="default"
-          placeholder={lastName}
+          placeholder="Apellidos"
           maxLength={30}
+          rules={alphabetRule(true)}
+          blurOnSubmit={true}
+          onSubmitEditing={() => phoneRef.current?.focus()}
+          error={errors.lastName?.message}
         />
 
         <TextContainer typography="h6" fontBold text={`Correo electrónico`} marginTop={21} />
-        <Input
-          {...register('email')}
-          editable={false}
-          control={control}
-          autoCorrect
-          autoCapitalize="words"
-          keyboardType="default"
-          placeholder={email}
-          maxLength={30}
-        />
+        <Input {...register('email')} editable={false} control={control} autoCorrect autoCapitalize="words" keyboardType="default" />
 
         <TextContainer typography="h6" fontBold text={`Contraseña`} marginTop={21} />
 
@@ -227,39 +147,25 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
         </Container>
 
         <TextContainer typography="h6" fontBold text={`Celular`} marginTop={24} />
-        {/*  <Select
+        <Input
           name="telephone"
+          ref={phoneRef}
           control={control}
-          options={countries.map (item => item.flag + item.code)}
-          onSelect={value => setValue('telephone', value)}
-          androidMode="dialog"
-          label={countries[135].code}
-          placeholder={'10 dígitos'+ countries[133].flag}
-        /> */}
-        <Container row style={{ justifyContent: 'space-around', paddingHorizontal: 35 }}>
-          <CountryCodeSelect
-            name="countryFlag"
-            control={control}
-            options={countries.map(item => item.flag + ' ' + item.name + ' ' + item.code)}
-            onSelect={value => {
-              updateCode(value);
-            }}
-            androidMode="dialog"
-            placeholder={flag}
-          />
-          <Input
-            {...register('telephone')}
-            ref={phoneRef}
-            control={control}
-            keyboardType="number-pad"
-            placeholder={'10 digitos'}
-            placeholderBold={code}
-            blurOnSubmit={true}
-            error={errors.telephone?.message}
-            maxLength={10}
-            phone
-          />
-        </Container>
+          keyboardType="number-pad"
+          placeholder={'10 digitos'}
+          blurOnSubmit={true}
+          error={errors.telephone?.message}
+          maxLength={10}
+          onFocus={t => {
+            register('telephone', mobilePhoneRule(false));
+            trigger('telephone');
+          }}
+          onChangeText={t => {
+            if (t.length === 0) {
+              unregister('telephone');
+            }
+          }}
+        />
 
         <TextContainer typography="h6" fontBold text={`Fecha de nacimiento`} marginTop={21} />
 
@@ -282,25 +188,9 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           options={GENDERS.map(item => item.name)}
           onSelect={value => setValue('gender', value)}
           androidMode="dialog"
-          placeholder={gender == null ? 'Selecciona' : gender == 'Femenino' ? 'Femenino' : 'Masculino'}
-          placeholderTextColor={theme.fontColor.dark}
-          error={errors.gender?.message}
+          placeholder="Selecciona"
         />
-        <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-          <PhotosPicker.PickerMode
-            visible={visible}
-            handleCamera={() => {
-              launch(PhotosPicker.PhotosPickerMode.CAMERA);
-            }}
-            handleGallery={() => {
-              launch(PhotosPicker.PhotosPickerMode.LIBRARY);
-            }}
-            onPressOut={() => {
-              setVisible(false);
-            }}
-          />
-        </SafeArea>
-        <Button length="long" round disabled={disabled} onPress={handleSubmit(submit)} fontSize="h4" fontBold marginTop={32}>
+        <Button length="long" disabled={!isValid} round onPress={handleSubmit(submit)} fontSize="h4" fontBold marginTop={32}>
           Guardar
         </Button>
       </Container>

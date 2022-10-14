@@ -7,7 +7,7 @@ export type HomeStackParams = {
   AddRFC: undefined;
   AddTicketPetro: { ticket?: any; position?: number };
   AddTicketSeven: { ticket?: any; position?: number };
-  ChangePassword: undefined;
+  ChangePassword: { authenticationToken: string; variant?: 'register' | 'recoverPassword' };
   ChangedPassword: undefined;
   Checkout: undefined;
   CodeReader: undefined;
