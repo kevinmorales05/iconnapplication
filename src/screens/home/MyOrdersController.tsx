@@ -5,20 +5,19 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
-import { OrderInterface, RootState, setIsGuest, useAppDispatch, useAppSelector } from 'rtk';
+import { OrderInterface, RootState, useAppSelector } from 'rtk';
 import theme from 'components/theme/theme';
 import { vtexordersServices } from 'services/vtexorder.services';
-import { vtexsingleOrdersServices } from 'services';
 
 
 
 const MyOrdersController: React.FC = () => {
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [lista, setLista] = useState<OrderInterface[]>([
-]);
+  const [lista, setLista] = useState<OrderInterface[]>([]);
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const {email} = user;
 const getOrders = useCallback(async () => {
-  const {list : data} = await vtexordersServices.getOrdersListByUserEmail('mario.lopez@ntt-dev.com', 1,3);
-  console.log("ESTA ES LA DATA", JSON.stringify(data, null, 3));
+  const {list : data} = await vtexordersServices.getOrdersListByUserEmail(email as string, 1,3);
   let orderArray : OrderInterface[] = data.map((order: OrderInterface) => {
     return {
     orderId: order.orderId,
@@ -29,7 +28,6 @@ const getOrders = useCallback(async () => {
     totalItems: order.totalItems,
     }
   })
-  //console.log('Order ARRAY', orderArray);
   console.log('PRUEBA', orderArray[1].deliveryChannel);
   setLista(orderArray);
 }, []);
