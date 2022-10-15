@@ -9,7 +9,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { Platform } from 'react-native';
 import CookieManager from '@react-native-cookies/cookies';
 import { authServices } from 'services';
-import { AuthCookie, setAccountAuthCookie, setAuthCookie, setIsLogged, useAppDispatch } from 'rtk';
+import { AuthCookie, setAccountAuthCookie, setAuthCookie, setAuthEmail, setIsLogged, useAppDispatch } from 'rtk';
 import { useLoading } from 'context';
 import LoginWhitSocialNetworkScreen from './LoginWhitSocialNetwork';
 import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
@@ -19,7 +19,7 @@ const LoginWhitSocialNetworkController: React.FC = () => {
   const route = useRoute<RouteProp<AuthStackParams, 'LoginWhitSocialNetwork'>>();
   const dispatch = useAppDispatch();
   const loader = useLoading();
-  const { getUser } = useOnboarding();
+  const { getUserSocial } = useOnboarding();
   const { authenticationToken, providerLogin } = route.params;
 
   const navChange = async (e: WebViewNavigation) => {
@@ -41,9 +41,10 @@ const LoginWhitSocialNetworkController: React.FC = () => {
           dispatch(setAuthCookie(authCookie));
           dispatch(setAccountAuthCookie(accountCookie));
           const userData = await authServices.valideteUserSocial();
-          getUser(userData.user);
+          getUserSocial(userData);
+          dispatch(setAuthEmail({email: userData.user}));
           loader.hide();
-          CookieManager.clearAll(true);
+          CookieManager.clearAll(true); 
           dispatch(setIsLogged({ isLogged: true }));
         }
       } else {
@@ -62,7 +63,8 @@ const LoginWhitSocialNetworkController: React.FC = () => {
             dispatch(setAuthCookie(authCookie));
             dispatch(setAccountAuthCookie(accountCookie));
             const userData = await authServices.valideteUserSocial();
-            getUser(userData.user);
+            getUserSocial(userData);
+            dispatch(setAuthEmail({email: userData.user}));
             loader.hide();
             CookieManager.clearAll(true);
             dispatch(setIsLogged({ isLogged: true }));

@@ -136,36 +136,6 @@ export const useAddresses = () => {
    * @param addressTosubmit
    */
   const onSubmit = async (addressTosubmit: Address) => {
-    if(addressTosubmit.postalCode !== '66230'){
-      onPressCloseModalScreen();
-      alert.show(
-        {
-          title: 'Entrega a domicilio no disponible.',
-          message: 'Lo sentimos, por ahora no hay ninguna tienda disponible para envío a domicilio en tu zona, intenta con una nuevo C.P.',
-          acceptTitle: 'Agregar otra',
-          cancelTitle: 'Omitir',
-          cancelOutline: 'iconn_med_grey',
-          cancelTextColor: 'iconn_accent_secondary',
-          onCancel() {
-            alert.hide();
-            onSubmitSuccess(addressTosubmit)
-          },
-          onAccept() {
-            onPressAddNewAddress()
-            alert.hide();
-          }
-        },
-        'error',
-        true,
-        true,
-        true
-      );
-    }else{
-      onSubmitSuccess(addressTosubmit)
-    }
-  }
-
-  const onSubmitSuccess = async (addressTosubmit: Address) => {
     onPressCloseModalScreen();
     loader.show();
 

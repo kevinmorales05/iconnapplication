@@ -12,3 +12,4 @@ export * from './vtex-api-auth';
 export * from './vtex-api-onboarding';
 export * from './vtex-api-reviews';
 export * from './vtex-api-users';
+export * from './vtex-api-pickUpPoints';

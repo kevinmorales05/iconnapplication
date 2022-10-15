@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
 import { ICONN_POSTAL_CODE_HEADER_ICON, ICONN_PIN_LOCATION } from 'assets/images';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useLoading, useAlert } from 'context';
+import { useLoading, useAlert, useToast } from 'context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
@@ -18,6 +18,7 @@ import { sortByDistance } from 'utils/geolocation';
 
 import appConfig from '../../../../app.json';
 import { moderateScale } from 'utils/scaleMetrics';
+import { vtexPickUpPoints } from 'services';
 
 const PostalCodeScreen = () => {
   const {
@@ -28,11 +29,12 @@ const PostalCodeScreen = () => {
   } = useForm({
     mode: 'onChange'
   });
+  const toast = useToast();
   const loader = useLoading();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [position, setPosition] = useState<null | Geolocation.GeoPosition>(null);
   const dispatch = useAppDispatch();
   const alert = useAlert();
+  const [ postalCode, setPostalCode ] = useState<string>('')
 
   // Redirect to home if permissions are granted
   useEffect(() => {
@@ -47,7 +49,7 @@ const PostalCodeScreen = () => {
 
       Geolocation.getCurrentPosition(
         position => {
-          setPosition(position);
+          getPickUpPointsByAddress(position);
         },
         error => {
           loader.hide();
@@ -69,22 +71,64 @@ const PostalCodeScreen = () => {
     })();
   }, []);
 
-  useEffect(() => {
-    if (position) {
-      const sorted = sortByDistance([position.coords.longitude, position.coords.latitude], sellers);
-      dispatch(setDefaultSeller({ defaultSeller: sorted[0] }));
-      loader.hide();
-      navigate('Home');
+  // useEffect(() => {
+  //   if (position) {
+  //     const sorted = sortByDistance([position.coords.longitude, position.coords.latitude], sellers);
+  //     dispatch(setDefaultSeller({ defaultSeller: sorted[0] }));
+  //     loader.hide();
+  //     navigate('Home');
+  //   }
+  // }, [position]);
+
+  const getPickUpPoints = async (cp: string) => {
+    const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
+    let item;
+    if(pickUp.items.length){
+      sellers.forEach((seller)=>{
+        const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+        if(store.distance < 8){
+          return item = seller;
+        }
+      })
+      if(item){
+        dispatch(setDefaultSeller({ defaultSeller: item }));
+        loader.show('', 'ecommerce');
+        navigate('Home');
+        return;
+      }
     }
-  }, [position]);
-
-  const onSubmit = async () => {
-    loader.show('', 'ecommerce');
-    dispatch(setDefaultSeller({ defaultSeller: sellers[1] }));
-    navigate('Home');
-
+    toast.show({
+      message: 'No se encontraron tiendas cercanas',
+      type: 'error'
+    });
     loader.hide();
-  };
+  }
+
+  const getPickUpPointsByAddress = async (position: Geolocation.GeoPosition) => {
+    if(position){
+      const pickUp = await vtexPickUpPoints.getPickUpPointsByAddress(position?.coords.longitude, position?.coords.latitude);
+      let item;
+      if(pickUp.items.length){
+        sellers.forEach((seller)=>{
+          const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+          if(store.distance < 8){
+            return item = seller;
+          }
+        })
+        if(item){
+          dispatch(setDefaultSeller({ defaultSeller: item }));
+          loader.show('', 'ecommerce');
+          navigate('Home');
+          return;
+        }
+      }
+    }
+    toast.show({
+      message: 'No se encontraron tiendas cercanas',
+      type: 'error'
+    });
+    loader.hide();
+  }
 
   const hasPermissionIOS = async () => {
     const openSetting = () => {
@@ -174,7 +218,7 @@ const PostalCodeScreen = () => {
     Geolocation.getCurrentPosition(
       position => {
         loader.hide();
-        setPosition(position);
+        getPickUpPointsByAddress(position)
       },
       error => {
         loader.hide();
@@ -198,7 +242,6 @@ const PostalCodeScreen = () => {
           },
           'warning'
         );
-        setPosition(null);
       },
       {
         accuracy: {
@@ -249,13 +292,13 @@ const PostalCodeScreen = () => {
                   const current = Number(item['Código postal']);
                   return current === input;
                 });
-                if (found) {
-                  dispatch(setDefaultSeller({ defaultSeller: found }));
-                }
-                if (!found) {
-                  return 'Código Postal no encontrado';
-                  //return true;
-                }
+                // if (found) {
+                //   dispatch(setDefaultSeller({ defaultSeller: found }));
+                // }
+                // if (!found) {
+                //   return 'Código Postal no encontrado';
+                //   //return true;
+                // }
               }
 
               return true;
@@ -271,6 +314,9 @@ const PostalCodeScreen = () => {
           maxLength={5}
           marginTop={4}
           numeric
+          onChangeText={(text)=>{
+            setPostalCode(text);
+          }}
         />
       </Container>
       <Button
@@ -281,7 +327,9 @@ const PostalCodeScreen = () => {
         fontBold
         fontSize="h4"
         leftIcon={<AntDesign name="search1" size={22} color={theme.brandColor.iconn_white} />}
-        onPress={handleSubmit(onSubmit)}
+        onPress={()=>{
+          getPickUpPoints(postalCode);
+        }}
       >
         Buscar
       </Button>
@@ -294,8 +342,7 @@ const PostalCodeScreen = () => {
         </Container>
       </Touchable>
       <Touchable onPress={()=>{
-        
-        onSubmit()
+        getPickUpPoints('66230')
       }}>
         <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: moderateScale(200) }}>
           <CustomText text={'En otro momento'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />

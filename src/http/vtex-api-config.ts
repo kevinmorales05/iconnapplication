@@ -16,6 +16,7 @@ const VTEX_DOCS = 'https://oneiconn.myvtex.com/api';
 const VTEX_DOCS_NO_API_PREFIX = 'https://oneiconn.myvtex.com';
 const API_VTEX_SEARCH_PRODUCTS = 'http://oneiconn.vtexcommercestable.com.br/buscaautocomplete?productNameContains=';
 const VTEX_REVIEWS_RATINGS = 'https://oneiconn.myvtex.com/reviews-and-ratings/api/';
+const API_VTEX_PICKUP = 'https://oneiconn.myvtex.com/api/checkout/pub';
 
 const getApiUrl = (type: string) => {
   switch (type) {
@@ -47,6 +48,8 @@ const getApiUrl = (type: string) => {
       return VTEX_REVIEWS_RATINGS;
     case 'authUserSocial':
         return VTEX_DOCS;
+    case 'pickUpPoints':
+        return API_VTEX_PICKUP; 
     default:
       break;
   }

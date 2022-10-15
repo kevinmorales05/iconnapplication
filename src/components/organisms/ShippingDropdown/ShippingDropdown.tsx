@@ -1,5 +1,5 @@
 import { CustomText } from 'components/atoms';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, StyleSheet, ViewStyle } from 'react-native';
 import { ImageSource } from 'react-native-vector-icons/Icon';
 import theme from 'components/theme/theme';
@@ -12,6 +12,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import Entypo from 'react-native-vector-icons/Entypo';
+import { vtexPickUpPoints } from 'services';
+import { useAlert } from 'context';
 
 interface Props {
   onPressAddAddress: () => void;
@@ -52,7 +54,7 @@ const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPress
         />
       </Container>
       {mode !== ShippingMode.PICKUP && (
-        <DefaultAddress onPressAddAddress={onPressAddAddress} address={address} onPressShowAddressesModal={onPressShowAddressesModal} />
+        <DefaultAddress mode={mode} onPressAddAddress={onPressAddAddress} address={address} onPressShowAddressesModal={onPressShowAddressesModal} />
       )}
       <DefaultSeller
         onPress={() => {
@@ -107,18 +109,70 @@ const DefaultSeller = ({ onPress }: { onPress: () => void }) => {
 
 interface DefaultItemProps extends Partial<Props> {}
 
-const DefaultAddress: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal }) => {
+const DefaultAddress: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, mode }) => {
   return address ? (
     <Touchable onPress={onPressShowAddressesModal!}>
-      <DefaultItem address={address} onPressAddAddress={onPressAddAddress} onPressShowAddressesModal={onPressShowAddressesModal} />
+      <DefaultItem address={address} onPressAddAddress={onPressAddAddress} mode={mode} onPressShowAddressesModal={onPressShowAddressesModal} />
     </Touchable>
   ) : (
-    <DefaultItem address={address} onPressAddAddress={onPressAddAddress} onPressShowAddressesModal={onPressShowAddressesModal} />
+    <DefaultItem address={address} onPressAddAddress={onPressAddAddress} mode={mode} onPressShowAddressesModal={onPressShowAddressesModal} />
   );
 };
 
-const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal }) => {
+const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, mode }) => {
   const { card } = styles;
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
+  const [ near, setNear ] = useState<boolean>(false)
+  const alert = useAlert();
+
+  useEffect(()=>{
+    if(address?.postalCode){
+      getPickUpPoints(address?.postalCode).then((isNear)=>{
+        setNear(isNear);
+        if(!isNear && mode === ShippingMode.DELIVERY){
+          alert.show(
+            {
+              title: 'Entrega a domicilio no disponible.',
+              message: 'Lo sentimos, por ahora no hay ninguna tienda disponible para envío a domicilio en tu zona, intenta con una nuevo C.P.',
+              acceptTitle: 'Agregar otra',
+              cancelTitle: 'Omitir',
+              cancelOutline: 'iconn_med_grey',
+              cancelTextColor: 'iconn_accent_secondary',
+              onCancel() {
+                alert.hide();
+              },
+              onAccept() {
+                alert.hide();
+                onPressShowAddressesModal()
+              }
+            },
+            'error',
+            true,
+            true,
+            true
+          );
+        }
+      })
+    }
+  },[address, mode])
+  
+  const getPickUpPoints = async (cp: string) => {
+    console.log({getPickUpPoints: cp})
+    const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
+    console.log({getPickUpPoints: pickUp})
+    let isNear = false;
+    if(pickUp.items.length){
+      pickUp.items.forEach((store)=>{
+        if(store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`){
+          if(store.distance < 5){
+            isNear = true;
+          }
+        }
+      })
+    }
+    return isNear;
+  }
+
   return (
     <Container style={[card, { marginTop: 24 }]}>
       <Container width={address ? '90%' : '100%'}>
@@ -139,7 +193,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
               />
             </Container>
             {address && 
-              address.postalCode === '66230' ? (
+              near ? (
                   <Container row center>
                     <Ionicons name="md-checkmark-sharp" size={24} color={theme.brandColor.iconn_green_original} />
                     <CustomText text="Entrega a domicilio" />
