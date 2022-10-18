@@ -35,6 +35,7 @@ import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
+import { vtexProductsServices } from 'services';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -375,16 +376,32 @@ const HomeController: React.FC = () => {
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
 
-  async function getPrices(collectionId: string) {
+  async function getProductsInfo(
+    existingProductsInCart: ExistingProductInCartInterface[],
+    collectionId: string
+  ){
     const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
-    const withPrice = await Promise.all(arr!.map(product => getPriceByProductId(product.ProductId)));
-    return withPrice;
-  }
-
-  async function getRatings(collectionId: string) {
-    const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
-    const withRating = await Promise.all(arr!.map(product => getRatingByProductId(product.ProductId)));
-    return withRating;
+    const homeProductsArr: ProductInterface[] | undefined = [];
+    for( const product of arr ) {
+      const price = await getPriceByProductId(product.ProductId);
+      const raiting = await getRatingByProductId(product.ProductId)
+      console.log({priceGetProducts: price})
+      if(price && raiting){
+        const newProduct: ProductInterface = {
+          productId: product.ProductId,
+          name: product.ProductName,
+          image: { uri: product.SkuImageUrl },
+          price: price.basePrice,
+          oldPrice: price.basePrice,
+          porcentDiscount: 0,
+          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.ProductId.toString())?.quantity : 0,
+          ratingValue: raiting.average
+        };
+        homeProductsArr.push(newProduct)
+      }
+    }
+    if (collectionId === global.recommended_products) setHomeProducts(homeProductsArr);
+    if (collectionId === global.other_products) setHomeOtherProducts(homeProductsArr);
   }
 
   const getExistingProductsInCart = () => {
@@ -401,49 +418,18 @@ const HomeController: React.FC = () => {
     }
   };
 
-  const refillProductsWithPrice = (
-    prices: ProductPriceResponseInterface[],
-    ratings: ProductRaitingResponseInterface[],
-    existingProductsInCart: ExistingProductInCartInterface[],
-    collectionId: string
-  ) => {
-    const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
-    const homeProductsArr: ProductInterface[] | undefined = arr?.map((p, idx) => {
-      const newProduct: ProductInterface = {
-        productId: p.ProductId,
-        name: p.ProductName,
-        image: { uri: p.SkuImageUrl },
-        price: prices.find(price => price.itemId === p.ProductId.toString())?.basePrice,
-        oldPrice: prices.find(price => price.itemId === p.ProductId.toString())?.basePrice,
-        porcentDiscount: 0,
-        quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.ProductId.toString())?.quantity : 0,
-        ratingValue: ratings[idx].average
-      };
-      return newProduct;
-    });
-    if (collectionId === global.recommended_products) setHomeProducts(homeProductsArr);
-    if (collectionId === global.other_products) setHomeOtherProducts(homeProductsArr);
-  };
 
   useEffect(() => {
     if (products?.length! > 0) {
-      getPrices(global.recommended_products).then(prices => {
-        getRatings(global.recommended_products).then(ratings => {
-          const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-          refillProductsWithPrice(prices, ratings, existingProducts, global.recommended_products);
-        });
-      });
+      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      getProductsInfo(existingProducts, global.recommended_products)
     }
   }, [products]);
 
   useEffect(() => {
     if (otherProducts?.length! > 0) {
-      getPrices(global.other_products).then(prices => {
-        getRatings(global.other_products).then(ratings => {
-          const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-          refillProductsWithPrice(prices, ratings, existingProducts, global.other_products);
-        });
-      });
+      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      getProductsInfo(existingProducts, global.recommended_products)
     }
   }, [otherProducts]);
 

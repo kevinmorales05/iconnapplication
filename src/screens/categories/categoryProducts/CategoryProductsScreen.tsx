@@ -25,6 +25,7 @@ import { FilterItemTypeProps } from 'components/types/FilterITem';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { moderateScale } from 'utils/scaleMetrics';
+import { useLoading } from 'context';
 
 const ordenBy: FilterItemTypeProps[] = [
   {
@@ -61,6 +62,7 @@ const filters: AccordeonItemTypeProps[] = [
 const CategoryProductsScreen: React.FC = () => {
   const { setOptions, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const route = useRoute<RouteProp<HomeStackParams, 'CategoryProducts'>>();
+  const loader = useLoading();
 
   const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
@@ -109,16 +111,12 @@ const CategoryProductsScreen: React.FC = () => {
 
   useEffect(() => {
     productsEffect();
-  }, [filterSelect, idCategorySelected, route.params]);
+  }, [idCategorySelected,route.params]);
 
   useEffect(() => {
     if (products?.length! > 0) {
-      getPrices().then(prices => {
-        getRatings().then(ratings => {
-          const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-          refillProductsWithPrice(prices, ratings, existingProducts);
-        });
-      });
+      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      refillProductsWithPrice(existingProducts);
     }
   }, [products, cart]);
 
@@ -136,22 +134,27 @@ const CategoryProductsScreen: React.FC = () => {
     }
   };
 
-  const refillProductsWithPrice = (
-    prices: ProductPriceResponseInterface[],
-    ratings: ProductRaitingResponseInterface[],
-    existingProductsInCart: ExistingProductInCartInterface[]
-  ) => {
+  async function refillProductsWithPrice(
+    existingProductsInCart: ExistingProductInCartInterface[],
+  ){
     let productsTem: ProductInterface[] = [];
     productsTem = products.concat(productsTem);
-    productsTem.forEach((p, idx) => {
-      p.oldPrice = prices.find(price => price.itemId === p.productId.toString())?.basePrice;
-      p.price = prices.find(price => price.itemId === p.productId.toString())?.basePrice;
-      p.ratingValue = ratings[idx].average;
-      p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
-    });
-    setProductsRender(productsTem);
+    let productsToRender: ProductInterface[] = [];
+    productsToRender = productsRender.concat(productsToRender)
+    for( const p of productsTem ) {
+      const price = await getPriceByProductId(p.productId);
+      const raiting = await getRatingByProductId(p.productId)
+      if(price && raiting){
+        p.oldPrice =  price?.basePrice;
+        p.price = price?.basePrice;
+        p.ratingValue = raiting.average;
+        p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
+        productsToRender.push(p)
+      }
+    }
+    setProductsRender(productsToRender);
     setRefreshing(false);
-  };
+  }
 
   const getPriceByProductId = async (productId: string) => {
     return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
@@ -161,26 +164,12 @@ const CategoryProductsScreen: React.FC = () => {
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
 
-  async function getPrices() {
-    const withPrice = await Promise.all(products!.map(product => getPriceByProductId(product.productId)));
-    return withPrice;
-  }
-
-  async function getRatings() {
-    const withRating = await Promise.all(products!.map(product => getRatingByProductId(product.productId)));
-    return withRating;
-  }
-
   const productsEffect = async () => {
     setProducts([]);
     const productsRequest: any[] = await getProducts(1);
     if (productsRequest.length) {
-      const brandsRequest = {};
       const productsTem: ProductInterface[] = productsRequest.map(product => {
-        brandsRequest[product.brand] = '';
         return {
-          ratingValue: 0,
-          price: 14,
           name: product.productTitle,
           image: { uri: product.items[0]?.images[0].imageUrl! },
           quantity: 0,
@@ -188,7 +177,7 @@ const CategoryProductsScreen: React.FC = () => {
         };
       });
       setProducts(productsTem);
-      setSelectBrand(Object.getOwnPropertyNames(brandsRequest));
+      // setSelectBrand(Object.getOwnPropertyNames(brandsRequest));
     } else {
       setProducts([]);
       setProductsRender([]);
@@ -197,12 +186,10 @@ const CategoryProductsScreen: React.FC = () => {
 
   const loadMoreProducts = async () => {
     const productsRequest: any[] = await getProducts(itemToLoad + 10);
-    const brandsRequest = {};
+    // const brandsRequest = {};
     let productsTem: ProductInterface[] = productsRequest.map(product => {
-      brandsRequest[product.brand] = '';
+      // brandsRequest[product.brand] = '';
       return {
-        ratingValue: 0,
-        price: 14,
         name: product.productTitle,
         image: { uri: product.items[0]?.images[0].imageUrl! },
         quantity: 0,
@@ -212,7 +199,7 @@ const CategoryProductsScreen: React.FC = () => {
     productsTem = products.concat(productsTem);
     setProducts(productsTem);
     setItemToLoad(itemToLoad + 10);
-    setSelectBrand(Object.getOwnPropertyNames(brandsRequest));
+    // setSelectBrand(Object.getOwnPropertyNames(brandsRequest));
   };
 
   console.log({ selectBrand });
@@ -378,7 +365,7 @@ const CategoryProductsScreen: React.FC = () => {
                   <FlatList
                     data={productsRender}
                     renderItem={_renderItem}
-                    onEndReachedThreshold={0.2}
+                    onEndReachedThreshold={0.1}
                     onEndReached={loadMoreItem}
                     refreshing={refreshing}
                     onRefresh={() => _onRefresh()}
