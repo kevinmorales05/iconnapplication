@@ -10,7 +10,7 @@ export interface EnterModalInterface {
 }
 
 interface EnterModalContextInterface {
-  show: (data: EnterModalInterface) => void;
+  show: (data?: EnterModalInterface) => void;
   hide: () => void;
 }
 
@@ -26,7 +26,7 @@ export const EnterModalContextProvider = ({ children }: Props) => {
   const [enterModalState, setEnterModalState] = useState<EnterModalInterface>(initialState);
   const { getProvidersLoginEffect, providersAuth, authToken } = useOnboarding();
 
-  const show = async (data: EnterModalInterface) => {
+  const show = async (data: EnterModalInterface = { secondaryMessage: 'Vive la experiencia completa en la aplicación' }) => {
     setEnterModalState({ visible: true, secondaryMessage: data.secondaryMessage });
   };
 

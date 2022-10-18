@@ -28,7 +28,7 @@ import { HomeStackParams } from 'navigation/types';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
-import { useLoading, useToast } from 'context';
+import { useEnterModal, useLoading, useToast } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
@@ -152,7 +152,7 @@ class CustomCarousel extends Component<Props, State> {
 }
 
 const HomeController: React.FC = () => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user, isGuest } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { cart } = useAppSelector((state: RootState) => state.cart);
@@ -169,6 +169,7 @@ const HomeController: React.FC = () => {
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
   const [showShippingDropDown, setShowShippingDropDown] = useState(false);
   const toast = useToast();
+  const enter = useEnterModal();
 
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
@@ -266,10 +267,19 @@ const HomeController: React.FC = () => {
   };
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
+    console.log('El item seleccionado en carousel es ===> ', CarouselItem);
+    if (isGuest && CarouselItem.id !== '0') {
+      enter.show();
+      return;
+    }
     if (CarouselItem.navigateTo) {
       navigate(CarouselItem.navigateTo);
+      return;
     }
-    console.log('El item seleccionado en carousel es ===> ', CarouselItem);
+    if (CarouselItem.id === '0') {
+      navigate('CategoriesScreen');
+      return;
+    }
   };
 
   const [homeItems, setHomeItems] = useState<CarouselItem[] | null>(null);
@@ -372,17 +382,14 @@ const HomeController: React.FC = () => {
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
 
-  async function getProductsInfo(
-    existingProductsInCart: ExistingProductInCartInterface[],
-    collectionId: string
-  ){
+  async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[], collectionId: string) {
     const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
     const homeProductsArr: ProductInterface[] | undefined = [];
-    for( const product of arr ) {
+    for (const product of arr) {
       const price = await getPriceByProductId(product.ProductId);
-      const raiting = await getRatingByProductId(product.ProductId)
-      console.log({priceGetProducts: price})
-      if(price && raiting){
+      const raiting = await getRatingByProductId(product.ProductId);
+      console.log({ priceGetProducts: price });
+      if (price && raiting) {
         const newProduct: ProductInterface = {
           productId: product.ProductId,
           name: product.ProductName,
@@ -393,7 +400,7 @@ const HomeController: React.FC = () => {
           quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.ProductId.toString())?.quantity : 0,
           ratingValue: raiting.average
         };
-        homeProductsArr.push(newProduct)
+        homeProductsArr.push(newProduct);
       }
     }
     if (collectionId === global.recommended_products) setHomeProducts(homeProductsArr);
@@ -414,18 +421,17 @@ const HomeController: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
     if (products?.length! > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-      getProductsInfo(existingProducts, global.recommended_products)
+      getProductsInfo(existingProducts, global.recommended_products);
     }
   }, [products]);
 
   useEffect(() => {
     if (otherProducts?.length! > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-      getProductsInfo(existingProducts, global.recommended_products)
+      getProductsInfo(existingProducts, global.recommended_products);
     }
   }, [otherProducts]);
 
