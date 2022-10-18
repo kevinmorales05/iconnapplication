@@ -8,6 +8,8 @@ import { ActionButton } from '../../../components/atoms';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { vtexDocsServices } from 'services';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { RootState,useAppSelector } from 'rtk';
+import { authServices } from 'services';
 
 interface Props {
   onPressClose: () => void;
@@ -15,15 +17,27 @@ interface Props {
 }
 
 const AdultAgeVerificationScreen: React.FC<Props> = ({ visible, onPressClose }) => {
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const insets = useSafeAreaInsets();
   const updateUserAgeStatus = (async (adultStatus) => {
-    await vtexDocsServices.updateDocByDocIDForAgeStatus('CL', '1f15b210-4bf8-11ed-83ab-125ddee16d89', { isAdult: adultStatus })
-      .then(async updatedDoc => {
-        console.log(updatedDoc);
-        if (!adultStatus) {
-          Linking.openURL('https://www.alcoholinformate.org.mx/');
+    console.log(adultStatus);
+    if (user.userId) {
+      console.log('user.userId:::',user.userId);
+      let id = ''+user.userId;
+      await authServices.getProfile(user.email).then(async profileReceived => {
+        if(profileReceived){
+          if(profileReceived.length>0){
+            await vtexDocsServices.updateDocByDocIDForAgeStatus('CL', profileReceived[0].id, { isAdult: adultStatus })
+            .then(async updatedDoc => {
+              console.log(updatedDoc);
+              if (!adultStatus) {
+                Linking.openURL('https://www.alcoholinformate.org.mx/');
+              }
+            }).catch((error) => console.log(error))
+          }
         }
-      }).catch((error) => console.log(error))
+      });
+    }
   });
 
   const { containerStyle } = styles;
