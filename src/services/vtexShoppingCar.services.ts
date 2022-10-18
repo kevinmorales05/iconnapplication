@@ -1,4 +1,5 @@
 import { ShoppingCar } from '../http/api-shoppingCar';
+import { ShoppingCarCreation } from '../http/api-shoppingCarCreation';
 import moment from 'moment';
 import { ClientProfileDataInterface } from 'rtk';
 
@@ -6,8 +7,7 @@ import { ClientProfileDataInterface } from 'rtk';
  * Function to create a shoppingCart
  */
 async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
-  console.log('***************************************');
-  const response = await ShoppingCar.getInstance().getRequest(``);
+  const response = await ShoppingCarCreation.getInstance().getRequest(`/orderForm`);
   if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
   const { data } = response;
   return data;

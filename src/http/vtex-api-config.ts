@@ -6,6 +6,7 @@ const API_VTEX_ORDERS = 'https://oneiconn.myvtex.com/api/oms/pvt/orders';
 const API_VTEX_ORDER = 'https://oneiconn.myvtex.com/api/orders/pvt';
 const API_VTEX_USER = 'https://api.vtex.com/oneiconn';
 const API_VTEX_SHOPPINGCAR = 'https://oneiconn.myvtex.com/api/checkout/pub/orderForm';
+const API_VTEX_SHOPPINGCAR_CREATION = 'https://oneiconn.myvtex.com/api/checkout/pub';
 const API_VTEX_PRODUCTS = 'https://oneiconn.myvtex.com/api/catalog_system/pvt/products';
 const API_VTEX_PRODUCT = 'https://oneiconn.myvtex.com/api/catalog/pvt';
 const API_VTEX_SUGGESTED_PRODUCTS = 'https://api.vtex.com/oneiconn/suggestions';
@@ -28,6 +29,8 @@ const getApiUrl = (type: string) => {
       return VTEX_DOCS;
     case 'shoppingCar':
       return API_VTEX_SHOPPINGCAR;
+    case 'shoppingCarCreation':
+      return API_VTEX_SHOPPINGCAR_CREATION;
     case 'docs':
       return VTEX_DOCS;
     case 'products':

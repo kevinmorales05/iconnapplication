@@ -14,8 +14,7 @@ import { RootState, useAppSelector } from 'rtk';
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
 export const TabNavigator = () => {
-  const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
-  const { isGuest } = guestLogged;
+  const { isGuest } = useAppSelector((state: RootState) => state.auth);
 
   return (
     <Tab.Navigator
@@ -75,7 +74,7 @@ export const TabNavigator = () => {
         component={isGuest ? InviteSignUpController : MyAccountController}
         options={{
           unmountOnBlur: true,
-          headerShown: true,
+          headerShown: isGuest ? false : true,
           title: 'Mi Cuenta',
           tabBarIcon: ({ focused }) => {
             return (

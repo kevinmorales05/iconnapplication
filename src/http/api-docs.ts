@@ -104,7 +104,7 @@ export class DocsApi extends HttpClient {
     return this.instance.delete(path, payload);
   }
   async patchRequest(path: string, payload?: any) {
-    return this.instance.get(path, payload);
+    return this.instance.patch(path, payload);
   }
 
   private handlerError = (err: Error | AxiosError) => {

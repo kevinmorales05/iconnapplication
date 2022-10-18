@@ -1,6 +1,17 @@
 import { useAlert } from 'context';
-import { useCallback } from 'react';
-import { AuthDataInterface, setBirthday, setGender, setId, setLastName, setName, setTelephone, useAppDispatch } from 'rtk';
+import { useCallback, useState } from 'react';
+import {
+  AuthDataInterface,
+  AuthProviderInterface,
+  getLoginProvidersThunk,
+  setBirthday,
+  setGender,
+  setId,
+  setLastName,
+  setName,
+  setTelephone,
+  useAppDispatch
+} from 'rtk';
 import { authServices, vtexUserServices } from 'services';
 
 interface props {
@@ -12,6 +23,8 @@ interface props {
 export const useOnboarding = () => {
   const dispatch = useAppDispatch();
   const alert = useAlert();
+  const [providersAuth, setProvidersAuth] = useState<AuthProviderInterface[]>([]);
+  const [authToken, setAuthToken] = useState<string>('');
 
   /**
    * Get de user information and populate redux with it.
@@ -39,9 +52,9 @@ export const useOnboarding = () => {
   /**
    * Get de user information and populate redux with it.
    */
-   const getUserSocial = useCallback(async (user: props) => {
+  const getUserSocial = useCallback(async (user: props) => {
     const { data } = await vtexUserServices.getUserByEmail(user.user);
-    if(data.length){
+    if (data.length) {
       const dataVtex: AuthDataInterface = {
         id: data[0].id,
         name: data[0].firstName,
@@ -56,7 +69,7 @@ export const useOnboarding = () => {
       dispatch(setBirthday({ birthday: dataVtex.birthday }));
       dispatch(setName({ name: dataVtex.name }));
       dispatch(setLastName({ lastName: dataVtex.lastName }));
-    }else{
+    } else {
       const userNew: AuthDataInterface = {
         email: user.user,
         firstName: '',
@@ -64,12 +77,12 @@ export const useOnboarding = () => {
         homePhone: '',
         userId: user.userId
       };
-      console.log({userNew})
+      console.log({ userNew });
       const response = await authServices.newUser(userNew);
       if (response) {
-        console.log({newUser: response})
-        getUser(user.user, true)
-      }else{
+        console.log({ newUser: response });
+        getUser(user.user, true);
+      } else {
         alert.show(
           {
             title: 'Lo sentimos',
@@ -85,8 +98,23 @@ export const useOnboarding = () => {
     }
   }, []);
 
+  const getProvidersLogin = async () => {
+    return await dispatch(getLoginProvidersThunk()).unwrap();
+  };
+
+  const getProvidersLoginEffect = async () => {
+    const providersRequest = await getProvidersLogin();
+    if (providersRequest?.oauthProviders) {
+      setProvidersAuth(providersRequest?.oauthProviders);
+      setAuthToken(providersRequest?.authenticationToken);
+    }
+  };
+
   return {
     getUser,
-    getUserSocial
+    getUserSocial,
+    getProvidersLoginEffect,
+    providersAuth,
+    authToken
   };
 };

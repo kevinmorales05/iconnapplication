@@ -1,7 +1,9 @@
 import { Button, Container, CustomText, DatePicker, Input, Select, TextContainer } from 'components';
 import React, { useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle } from 'react-native';
+import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle, Image, Platform } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { ICONN_DELETE_SHOPPING_CART_ITEM } from 'assets/images';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import theme from 'components/theme/theme';
@@ -11,6 +13,8 @@ import { RootState, useAppSelector } from 'rtk';
 import moment from 'moment';
 import { mobilePhoneRule, alphabetRule } from 'utils/rules';
 import { formatDate } from 'utils/functions';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from '../../../../navigation/types';
 
 type Props = {
   onSubmit: (data: FieldValues) => void;
@@ -22,6 +26,7 @@ type Props = {
 };
 
 const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email, name, telephone, gender, birthday, lastName } = user;
   const insets = useSafeAreaInsets();
@@ -198,6 +203,23 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
         <Button length="long" disabled={!isValid} round onPress={handleSubmit(submit)} fontSize="h4" fontBold marginTop={32}>
           Guardar
         </Button>
+        {Platform.OS === 'ios' ? <Button
+          length="long"
+          fontColor='dark'
+          fontSize="h5"
+          round
+          fontBold
+          leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} />}
+          borderColor='iconn_grey'
+          style={{ marginTop:15,marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
+          onPress={() => {
+            navigate('DeleteAccount');
+          }}
+        >
+          Eliminar cuenta
+        </Button>:
+          <></>
+        }
       </Container>
     </ScrollView>
   );

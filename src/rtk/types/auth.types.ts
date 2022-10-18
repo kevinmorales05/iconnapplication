@@ -111,3 +111,9 @@ export interface ClientProfileDataWithOrderFormInterface {
   orderFormId: string;
   clientProfileData: ClientProfileDataInterface;
 }
+
+export interface AuthProviderInterface {
+  providerName: string;
+  className: string;
+  expectedContext: [];
+}

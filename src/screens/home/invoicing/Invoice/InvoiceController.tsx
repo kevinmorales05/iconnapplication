@@ -7,7 +7,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import theme from 'components/theme/theme';
 import { resendVerificationEmailThunk } from 'rtk/thunks/invoicing.thunks';
-import { useAlert, useLoading } from 'context';
+import { useAlert, useLoading, useToast } from 'context';
 
 const InvoiceController: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -16,6 +16,7 @@ const InvoiceController: React.FC = () => {
   const { loading } = useAppSelector((state: RootState) => state.invoicing);
   const alert = useAlert();
   const loader = useLoading();
+  const toast = useToast();
   const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
 
   useEffect(() => {
@@ -70,6 +71,11 @@ const InvoiceController: React.FC = () => {
       const response = await dispatch(resendVerificationEmailThunk(defaultProfile?.email as string)).unwrap();
       if (response.responseCode === 200) {
         showAlert();
+      } else {
+        toast.show({
+          message: 'No se pudo enviar el\n correo electrónico.',
+          type: 'error'
+        });
       }
     } catch (error) {
       console.warn(error);

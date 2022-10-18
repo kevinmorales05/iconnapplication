@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, ImageBackground, Dimensions, Image, ImageSourcePropType } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, ImageBackground, Image, ImageSourcePropType } from 'react-native';
 import theme from 'components/theme/theme';
 import { Button, FavoriteButton } from 'components/molecules';
 import { ICONN_REVERSE_BASKET } from 'assets/images';
@@ -11,7 +11,9 @@ import { moderateScale } from 'utils/scaleMetrics';
 import { Touchable } from 'components';
 import { useNavigation } from '@react-navigation/native';
 import { setDetailSelected } from 'rtk/slices/cartSlice';
-import { useAppDispatch } from 'rtk';
+import { useAppDispatch, useAppSelector, RootState } from 'rtk';
+import { getProductDetailById } from 'services/vtexProduct.services';
+import { vtexUserServices } from 'services';
 interface CardProductProps {
   price: number;
   name: string;
@@ -27,6 +29,7 @@ interface CardProductProps {
   porcentDiscount?: number;
   notNeedMarginLeft?: boolean;
   isFavorite?: boolean;
+  onPressOut: () => void;
 }
 
 const CardProduct: React.FC<CardProductProps> = ({
@@ -43,8 +46,42 @@ const CardProduct: React.FC<CardProductProps> = ({
   onPressDeleteCart,
   onPressAddQuantity,
   onPressDecreaseQuantity,
-  notNeedMarginLeft
+  notNeedMarginLeft,
+  onPressOut
 }: CardProductProps) => {
+
+  const [categoryId, setCategoryId] = useState(Object);
+  const { user } = useAppSelector((state: RootState) => state.auth);
+
+  const validateCategoryForAddItem = () => {
+    getProductDetailById(productId).then(productDetail => {
+      if (productDetail.DepartmentId == 167) {
+        if (user.email) {
+          console.log('user.email: ',user.email);
+          vtexUserServices.getUserByEmail(user.email).then( userResponse => {
+            let isAdult = false;
+            if (userResponse) {
+              const { data } = userResponse;
+              if (data) {
+                if (data.length > 0) {
+                  isAdult = data[0].isAdult;
+                  if (isAdult) {
+                    onPressAddCart();
+                  } else {
+                    onPressOut();
+                  }
+                }
+              }
+            }
+          })
+        }
+
+      } else {
+        onPressAddCart();
+      }
+    })
+  };
+
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const dispatch = useAppDispatch();
 
@@ -89,7 +126,7 @@ const CardProduct: React.FC<CardProductProps> = ({
             color="iconn_green_original"
             round
             size={'xxxsmall'}
-            onPress={onPressAddCart}
+            onPress={() => {validateCategoryForAddItem()}}
             fontSize="h4"
             fontBold
             style={styles.buttonAddProduct}

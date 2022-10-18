@@ -23,10 +23,14 @@ import { ProductsByCategoryFilter } from 'rtk/types/category.types';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { moderateScale } from 'utils/scaleMetrics';
+import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
+import { getProductDetailById } from 'services/vtexProduct.services';
+import { vtexUserServices } from 'services';
 
 const SearchProductResult: React.FC = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'SearchProductsResults'>>();
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
@@ -34,6 +38,39 @@ const SearchProductResult: React.FC = () => {
 
   const { products, textSearch } = route.params;
   const [productsRender, setProductsRender] = useState<ProductInterface[]>([]);
+  const [visible, setVisible] = useState<boolean>(false);
+
+  const onPressOut = () => {
+    setVisible(!visible);
+  };
+
+  const validateCategoryForAddItem = (itemId: string) => {
+    console.log('validate itemId:::', itemId);
+    getProductDetailById(itemId).then(productDetail => {
+      if (productDetail.DepartmentId == 167) {
+        if (user.email) {
+          vtexUserServices.getUserByEmail(user.email).then(userResponse => {
+            let isAdult = false;
+            if (userResponse) {
+              const { data } = userResponse;
+              if (data) {
+                if (data.length > 0) {
+                  isAdult = data[0].isAdult;
+                  if (isAdult) {
+                    updateShoppingCartProduct!('create', itemId);
+                  } else {
+                    onPressOut();
+                  }
+                }
+              }
+            }
+          })
+        }
+      } else {
+        updateShoppingCartProduct!('create', ItemId);
+      }
+    })
+  };
 
   useEffect(() => {
     if (products?.length! > 0) {
@@ -44,7 +81,7 @@ const SearchProductResult: React.FC = () => {
         });
       });
     }
-  }, [products, cart]);
+  }, [products, cart, visible]);
 
   const getExistingProductsInCart = () => {
     const { items } = cart;
@@ -108,9 +145,7 @@ const SearchProductResult: React.FC = () => {
         quantity={item.quantity}
         productId={item.productId}
         oldPrice={item.oldPrice}
-        onPressAddCart={() => {
-          updateShoppingCartProduct!('create', item.productId);
-        }}
+        onPressAddCart={() => {validateCategoryForAddItem(item.productId)}}
         onPressAddQuantity={() => {
           updateShoppingCartProduct!('add', item.productId);
         }}
@@ -208,6 +243,8 @@ const SearchProductResult: React.FC = () => {
             </Container>
           )}
         </Container>
+        <AdultAgeVerificationScreen onPressClose={onPressOut}
+            visible={visible} />
       </Container>
     </SafeArea>
   );

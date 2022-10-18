@@ -4,7 +4,7 @@ import { DocsNoPrefixApi, DocsApi, DocsPriceApi } from 'apis';
  * Function to get products by collection id.
  */
 async function getProductsByCollectionId(collection: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(`/catalog/pvt/collection/${collection}/products?Active=true&Visible=true`);
+  const response = await DocsApi.getInstance().getRequest(`/catalog/pvt/collection/${collection}/products?Active=true&Visible=true&page=1&pageSize=20`);
   const { data } = response;
   return data;
 }

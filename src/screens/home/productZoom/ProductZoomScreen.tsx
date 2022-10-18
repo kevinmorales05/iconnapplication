@@ -18,7 +18,7 @@ interface Props {
 }
 
 
-import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, InvoicingProfileInterface } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, setAppInitialState, setAuthInitialState, InvoicingProfileInterface } from 'rtk';
 import { WidthType } from '../../../components/types/width-type';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';

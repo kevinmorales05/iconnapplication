@@ -1,7 +1,6 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authReducer from '../slices/authSlice';
 import appReducer from '../slices/appSlice';
-import guestReducer from '../slices/guestSlice';
 import cartReducer from '../slices/cartSlice';
 import sellerReducer from '../slices/sellerSlice';
 import invoicingReducer from '../slices/invoicingSlice';
@@ -12,7 +11,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const reducers = combineReducers({
   auth: authReducer,
   app: appReducer,
-  guest: guestReducer,
   invoicing: invoicingReducer,
   cart: cartReducer,
   seller: sellerReducer

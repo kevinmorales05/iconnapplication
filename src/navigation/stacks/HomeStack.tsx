@@ -23,6 +23,7 @@ import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicin
 import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
 import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
 import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
+import AdultAgeVerificationController from 'screens/home/adultAgeVerification/AdultAgeVerificationController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
 import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
 import { BasketCounter, EcommerceHeader } from 'components';
@@ -46,6 +47,7 @@ import ContactInformationController from 'screens/home/shoppingCart/ContactInfor
 import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
 import FavoriteScreen from 'screens/home/favoriteScreen/FavoriteScreen';
 import ChangePasswordController from 'screens/home/myAccount/changePassword/ChangePasswordController';
+import DeleteAccountController from 'screens/home/myAccount/deleteAccount/DeleteAccountController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -124,6 +126,7 @@ const HomeStack: React.FC = () => {
         component={ShopCartController}
       />
       <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />
+      <Stack.Screen name="DeleteAccount" options={{ title: 'Eliminar cuenta' }} component={DeleteAccountController} />
       <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
       <Stack.Screen name='ChangePassword' options={{title: 'Editar contraseña'}} component={ChangePasswordController}/>

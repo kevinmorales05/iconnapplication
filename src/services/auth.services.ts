@@ -187,6 +187,46 @@ async function getProfile(email: string): Promise<any> {
 }
 
 /**
+ * Function to get document client by userID
+ * @param userId
+ * @returns
+ */
+ async function getDocumentClient(userId: string): Promise<any> {
+  // TODO: relocate the baseUrl constant to api-config or .env file
+  const response = await OnboardingApi.getInstance().getRequest(`/dataentities/CL/search?&_where=userId=${userId}&_fields=_all`);
+  if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to get document AD addresses
+ * @param userId
+ * @returns
+ */
+ async function getDocumentAddresses(userId: string): Promise<any> {
+  // TODO: relocate the baseUrl constant to api-config or .env file
+  const response = await OnboardingApi.getInstance().getRequest(`/dataentities/AD/search?&_where=userId=${userId}&_fields=_all`);
+  if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to delete address document
+ * @param entityName
+ * @param id
+ * @returns
+ */
+ async function deleteDocumentById(entityName: string ,id: string): Promise<any> {
+  // TODO: relocate the baseUrl constant to api-config or .env file
+  const response = await OnboardingApi.getInstance().getRequest(`/dataentities/${entityName}/documents/${id}`);
+  if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
+  const { data } = response;
+  return data;
+}
+
+/**
  * Function to update current User.
  * @param user
  * @returns
@@ -283,6 +323,9 @@ export const authServices = {
   updateUserPassword,
   startAuthentication,
   getProfile,
+  getDocumentClient,
+  getDocumentAddresses,
+  deleteDocumentById,
   createUser,
   createPassword,
   newUser,

@@ -1,5 +1,5 @@
 import { CrudType } from 'components/types/crud-type';
-import { useAlert, useLoading, useToast } from 'context';
+import { useAlert, useEnterModal, useLoading, useToast } from 'context';
 import { useCallback, useEffect, useState } from 'react';
 import {
   addAddressToList,
@@ -21,11 +21,12 @@ import {
 } from 'rtk/thunks/vtex-addresses.thunks';
 
 export const useAddresses = () => {
-  const { loading, user } = useAppSelector((state: RootState) => state.auth);
+  const { loading, user, isGuest } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
   const alert = useAlert();
   const loader = useLoading();
   const toast = useToast();
+  const enter = useEnterModal();
   const [address, setAddress] = useState<Address | null>();
   const [mode, setMode] = useState<CrudType | null>(null);
   const [addressModalScreenVisible, setAddressModalScreenVisible] = useState(false);
@@ -80,6 +81,11 @@ export const useAddresses = () => {
   };
 
   const onPressAddNewAddress = () => {
+    if (isGuest) {
+      enter.show({secondaryMessage: `Para poder agregar direcciones te invitamos a\ncrear una cuenta.`})
+      return;
+    }
+
     setPostalCodeInfo(null);
     setAddress(null);
     setPosition(null);
