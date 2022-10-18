@@ -51,12 +51,14 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: initialState,
-    loading: false
+    loading: false,
+    isGuest: false
   },
   reducers: {
     setAuthInitialState(state) {
       state.user = { ...initialState };
       state.loading = false;
+      state.isGuest = false;
     },
     setAuthEmail(state, action: PayloadAction<AuthDataInterface>) {
       state.user.email = action.payload.email;
@@ -136,6 +138,9 @@ const authSlice = createSlice({
     },
     setAccountAuthCookie(state, action: PayloadAction<AuthCookie>) {
       state.user.accountAuthCookie = action.payload;
+    },
+    setIsGuest(state, action: PayloadAction<boolean>) {
+      state.isGuest = action.payload;
     }
   },
   extraReducers: builder => {
@@ -285,6 +290,7 @@ export const {
   setSignMode,
   setTelephone,
   setTermsAndCond,
-  setUserId
+  setUserId,
+  setIsGuest
 } = authSlice.actions;
 export default authSlice.reducer;

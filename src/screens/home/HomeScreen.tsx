@@ -6,17 +6,12 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { Address, CarouselItem, RootState, useAppSelector, ProductInterface } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
-import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
-import { useForm } from 'react-hook-form';
+import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
 
 interface Props {
-  onPressShopCart: () => void;
-  onPressInvoice: () => void;
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
-  onPressProducts: () => void;
-  name?: string;
   defaultAddress: Address;
   showShippingDropDown?: boolean;
   principalItems: CarouselItem[];
@@ -31,14 +26,10 @@ interface Props {
 }
 
 const HomeScreen: React.FC<Props> = ({
-  onPressShopCart,
-  onPressInvoice,
   onPressSearch,
   onPressShowAddressesModal,
   onPressAddNewAddress,
-  name,
   defaultAddress,
-  onPressProducts,
   showShippingDropDown,
   principalItems,
   homeOptions,
@@ -52,13 +43,6 @@ const HomeScreen: React.FC<Props> = ({
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
-  const {
-    control,
-    register,
-    formState: { errors }
-  } = useForm({
-    mode: 'onChange'
-  });
 
   const onPressOut = () => {
     setVisible(!visible);
@@ -69,7 +53,6 @@ const HomeScreen: React.FC<Props> = ({
   }, [showShippingDropDown]);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const [mode, setMode] = useState<null | ShippingMode>(null);
-
 
   return (
     <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%', backgroundColor: theme.brandColor.iconn_white }}>
@@ -122,66 +105,48 @@ const HomeScreen: React.FC<Props> = ({
 
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
         <Container style={{ marginHorizontal: 16, marginTop: 10 }}>
-          <SearchBar
-            isButton
-            onPressSearch={onPressSearch}
-            onChangeTextSearch={()=>{}}
-            placeHolderText={"Busca en 7-Eleven"}
-          />
+          <SearchBar isButton onPressSearch={onPressSearch} onChangeTextSearch={() => {}} placeHolderText={'Busca en 7-Eleven'} />
         </Container>
 
         <Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut}/>
+            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut}/>
+            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut}/>
+            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text="Recomendados para ti" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut}/>
+            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut} />
           </Container>
           <Container style={{ marginTop: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
-            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut}/>
+            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel products={homeOtherProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut}/>
+            <AnimatedCarousel
+              products={homeOtherProducts}
+              onPressItem={onPressCarouselItem}
+              onPressProduct={updateShoppingCartProduct}
+              onPressOut={onPressOut}
+            />
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
             <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
         </Container>
-        <AdultAgeVerificationScreen onPressClose={onPressOut}
-        visible={visible} />
-        {/* <Container flex style={{ paddingHorizontal: 16 }}>
-          <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-            Facturación
-          </Button>
-          <Button round onPress={onPressShowAddressesModal} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-            Modal con direcciones
-          </Button>
-          <Button round onPress={onPressAddNewAddress} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-            Boton para agregar nueva direccion
-          </Button>
-          <Button round onPress={onPressShopCart} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-            Carrito de compras
-          </Button>
-          <Button round onPress={onPressProducts} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
-            Pedidos
-          </Button>
-        </Container> */}
+        <AdultAgeVerificationScreen onPressClose={onPressOut} visible={visible} />
       </ScrollView>
       {toggle && <View style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)', width: '100%', height: '100%', zIndex: 1, position: 'absolute', top: 35 }} />}
       {toggle && (

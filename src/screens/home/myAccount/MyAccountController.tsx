@@ -1,7 +1,7 @@
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import React from 'react';
-import { setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState, useAppDispatch } from 'rtk';
+import { setAppInitialState, setAuthInitialState, setInvoicingInitialState, useAppDispatch } from 'rtk';
 import { authServices } from 'services';
 import { version as app_version } from './../../../../package.json';
 import MyAccountScreen from './MyAccountScreen';
@@ -43,7 +43,6 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
     } finally {
       dispatch(setAppInitialState());
       dispatch(setAuthInitialState());
-      dispatch(setGuestInitialState());
       dispatch(setInvoicingInitialState());
     }
   };

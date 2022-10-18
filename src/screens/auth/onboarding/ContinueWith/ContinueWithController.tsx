@@ -24,7 +24,7 @@ const ContinueWithController: React.FC = () => {
   };
 
   const onContinueAsGuest = () => {
-    dispatch(setIsGuest({ isGuest: true }));
+    dispatch(setIsGuest(true));
   };
 
   useEffect(() => {

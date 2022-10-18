@@ -154,10 +154,8 @@ const HomeController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
-  const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
-  const { isGuest } = guestLogged;
   const { isLogged } = userLogged;
   const modVis = isLogged && !userLogged.seenCarousel ? true : false;
   const [modVisibility, setModVisibility] = useState(modVis);
@@ -179,14 +177,6 @@ const HomeController: React.FC = () => {
     if (authLoading === false) loader.hide();
   }, [authLoading]);
 
-  const goToInvoice = () => {
-    isGuest ? navigate('InviteSignUp') : navigate('Invoice');
-  };
-
-  const goToShopCart = () => {
-    navigate('ShopCart');
-  };
-
   const onPressSearch = () => {
     navigate('SearchProducts');
   };
@@ -207,10 +197,6 @@ const HomeController: React.FC = () => {
   useEffect(() => {
     fetchAddresses();
   }, [fetchAddresses]);
-
-  const goToOrders = () => {
-    isGuest ? navigate('InviteSignUp') : navigate('MyOrders');
-  };
 
   /**
    * Load Invocing Profile List and store it in the redux store.
@@ -341,7 +327,7 @@ const HomeController: React.FC = () => {
       console.log('NO es igual');
       await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         dispatch(setOrderFormId(newCart));
-        console.log({newCart})
+        console.log({ newCart });
         console.log('orderFormId ::: ', newCart.orderFormId);
         getShoppingCart(newCart.orderFormId)
           .then(response => {
@@ -357,10 +343,20 @@ const HomeController: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if(paySuccess){
+    if (paySuccess) {
       toast.show({
         message: (
-          <Text>Pedido creado con exito. Para ver el pedido ir al apartado <Text style={{textDecorationLine: "underline", textDecorationColor: theme.brandColor.iconn_white}} onPress={()=>{ navigate('MyOrders') }}>Pedidos</Text> </Text>
+          <Text>
+            Pedido creado con exito. Para ver el pedido ir al apartado{' '}
+            <Text
+              style={{ textDecorationLine: 'underline', textDecorationColor: theme.brandColor.iconn_white }}
+              onPress={() => {
+                navigate('MyOrders');
+              }}
+            >
+              Pedidos
+            </Text>{' '}
+          </Text>
         ),
         type: 'success'
       });
@@ -463,10 +459,10 @@ const HomeController: React.FC = () => {
     }
   }, [defaultSeller]);
 
-  const onSubmitAddress = (address: Address) =>{
-    setShowShippingDropDown(false)
-    onSubmit(address)
-  }
+  const onSubmitAddress = (address: Address) => {
+    setShowShippingDropDown(false);
+    onSubmit(address);
+  };
 
   return (
     <SafeArea
@@ -477,14 +473,10 @@ const HomeController: React.FC = () => {
       barStyle="dark"
     >
       <HomeScreen
-        name={user.name}
-        onPressInvoice={goToInvoice}
         onPressAddNewAddress={onPressAddNewAddress}
         onPressShowAddressesModal={() => setAddressModalSelectionVisible(true)}
-        onPressShopCart={goToShopCart}
         onPressSearch={onPressSearch}
         defaultAddress={defaultAddress!}
-        onPressProducts={goToOrders}
         showShippingDropDown={showShippingDropDown}
         principalItems={principal!}
         homeOptions={homeOptions!}

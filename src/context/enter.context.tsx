@@ -38,7 +38,7 @@ export const EnterModalContextProvider = ({ children }: Props) => {
 
   const onPressSocialButton = (socialMedia: string) => {
     setEnterModalState(initialState);
-    store.dispatch(setIsGuest({ isGuest: false }));
+    store.dispatch(setIsGuest(false));
     setTimeout(() => {
       RootNavigation.navigate('LoginWhitSocialNetwork' as never, { authenticationToken: authToken, providerLogin: socialMedia } as never);
     }, 300);
@@ -46,7 +46,7 @@ export const EnterModalContextProvider = ({ children }: Props) => {
 
   const onContinueWithEmail = () => {
     setEnterModalState(initialState);
-    store.dispatch(setIsGuest({ isGuest: false }));
+    store.dispatch(setIsGuest(false));
     setTimeout(() => {
       RootNavigation.navigate('EnterEmail' as never, undefined as never);
     }, 300);

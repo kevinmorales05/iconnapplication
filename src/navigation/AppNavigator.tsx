@@ -24,10 +24,8 @@ const AppNavigator: any = () => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const { error, internetReachability } = useAppSelector((state: RootState) => state.app);
-  const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
+  const { user: userLogged, isGuest } = useAppSelector((state: RootState) => state.auth);
   const { isLogged } = userLogged;
-  const { guest: guestLogged } = useAppSelector((state: RootState) => state.guest);
-  const { isGuest } = guestLogged;
 
   const onAuthStateChanged = (user: any) => {
     auth().currentUser?.reload(); // refresh user after backend sets emailVerified as true.

@@ -1,6 +1,6 @@
 import { Button, TextContainer } from '../../molecules';
 import React, { useCallback, useEffect, useRef, useState, useLayoutEffect } from 'react';
-import { ScrollView, TextInput, StyleSheet, View, BackHandler } from 'react-native';
+import { ScrollView, TextInput, StyleSheet, View } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
 import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
@@ -39,8 +39,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   });
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [disabled, setDisabled] = useState(false);
-  const { guest } = useAppSelector((state: RootState) => state.guest);
-  const { isGuest } = guest;
+  const { isGuest } = useAppSelector((state: RootState) => state.auth);
 
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams, 'CreateTaxProfile'>>();
   const alert = useAlert();
