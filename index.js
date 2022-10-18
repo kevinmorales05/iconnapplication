@@ -11,7 +11,7 @@ import './global.js';
 Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
 
-LogBox.ignoreAllLogs();
+// LogBox.ignoreAllLogs();
 
 AppRegistry.registerComponent(appName, () => App);
 
