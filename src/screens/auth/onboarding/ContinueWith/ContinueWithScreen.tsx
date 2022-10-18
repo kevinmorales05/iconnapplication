@@ -11,11 +11,11 @@ import { AuthProviderInterface } from 'rtk';
 interface Props {
   onPressSocialButton: (type: string) => void;
   onPressEmail: () => void;
-  onPressOthers: () => void;
+  onPressContinueAsGuest: () => void;
   providers: AuthProviderInterface[];
 }
 
-const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail, onPressOthers, providers }) => {
+const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail, onPressContinueAsGuest, providers }) => {
   const insets = useSafeAreaInsets();
 
   const renderButtons = () => {
@@ -92,7 +92,7 @@ const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail
             text="Entrar como invitado"
             typography="h4"
             fontBold
-            onPress={onPressOthers}
+            onPress={onPressContinueAsGuest}
             marginTop={8}
           />
         </Container>

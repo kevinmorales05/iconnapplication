@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import NavContainer from 'navigation/NavContainer';
 import { store } from 'rtk';
-import { AlertContextProvider, LoadingContextProvider, ToastContextProvider } from 'context';
+import { AlertContextProvider, EnterModalContextProvider, LoadingContextProvider, ToastContextProvider } from 'context';
 import { Toast } from 'context';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -15,9 +15,11 @@ const App: React.FC = () => (
       <ToastContextProvider>
         <Toast />
         <LoadingContextProvider>
-          <AlertContextProvider>
-            <NavContainer />
-          </AlertContextProvider>
+          <EnterModalContextProvider>
+            <AlertContextProvider>
+              <NavContainer />
+            </AlertContextProvider>
+          </EnterModalContextProvider>
         </LoadingContextProvider>
       </ToastContextProvider>
     </PersistGate>

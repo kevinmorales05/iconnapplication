@@ -75,7 +75,7 @@ export const TabNavigator = () => {
         component={isGuest ? InviteSignUpController : MyAccountController}
         options={{
           unmountOnBlur: true,
-          headerShown: true,
+          headerShown: isGuest ? false : true,
           title: 'Mi Cuenta',
           tabBarIcon: ({ focused }) => {
             return (
