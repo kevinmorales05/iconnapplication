@@ -71,6 +71,15 @@ async function updateDocByDocID(dataentity: string, docId: string, doc: any): Pr
 }
 
 /**
+ * Function to update one doc.
+ */
+ async function updateDocByDocIDForAgeStatus(dataentity: string, docId: string, doc: any): Promise<any> {
+  const response = await DocsApi.getInstance().patchRequest(`dataentities/${dataentity}/documents/${docId}`, doc);
+  const { data } = response;
+  return data;
+}
+
+/**
  * Function to get full Address by postalCode.
  * Also get the neighborhood array.
  * @param postalCode
@@ -88,6 +97,7 @@ export const vtexDocsServices = {
   getDocByEmail,
   deleteDocByDocID,
   updateDocByDocID,
+  updateDocByDocIDForAgeStatus,
   getDocByDocID,
   getAddressByPostalCode
 };

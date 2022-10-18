@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Image, View, StyleSheet, ScrollView } from 'react-native';
 import theme from 'components/theme/theme';
-import { CustomText, Button, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, Input, SearchBar } from 'components';
+import { CustomText, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, SearchBar } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Address, CarouselItem, RootState, useAppSelector, ProductInterface } from 'rtk';
-import { ICONN_STO, ICONN_SCOOT, ICONN_HOME_SEARCH } from 'assets/images';
+import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
+import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { useForm } from 'react-hook-form';
-import { openField } from 'utils/rules';
 import { CounterType } from 'components/types/counter-type';
 
 interface Props {
@@ -51,7 +51,7 @@ const HomeScreen: React.FC<Props> = ({
   updateShoppingCartProduct
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
-
+  const [visible, setVisible] = useState<boolean>(false);
   const {
     control,
     register,
@@ -59,6 +59,10 @@ const HomeScreen: React.FC<Props> = ({
   } = useForm({
     mode: 'onChange'
   });
+
+  const onPressOut = () => {
+    setVisible(!visible);
+  };
 
   useEffect(() => {
     setToggle(showShippingDropDown);
@@ -128,38 +132,39 @@ const HomeScreen: React.FC<Props> = ({
 
         <Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} />
+            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut}/>
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} />
+            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut}/>
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} />
+            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut}/>
           </Container>
           <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text="Recomendados para ti" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} />
+            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut}/>
           </Container>
           <Container style={{ marginTop: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
-            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} />
+            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut}/>
           </Container>
           <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => {}} />
             </Container>
-            <AnimatedCarousel products={homeOtherProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} />
+            <AnimatedCarousel products={homeOtherProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut}/>
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
-            <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} />
+            <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
         </Container>
-
+        <AdultAgeVerificationScreen onPressClose={onPressOut}
+        visible={visible} />
         {/* <Container flex style={{ paddingHorizontal: 16 }}>
           <Button round onPress={onPressInvoice} fontSize="h4" fontBold style={{ marginTop: 8 }} outline>
             Facturación

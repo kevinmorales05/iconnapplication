@@ -35,7 +35,7 @@ interface State {
   carouselItems: ItemProps[];
 }
 
-const ShopCartController: React.FC = () => {
+const ProductoZoomController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged } = useAppSelector((state: RootState) => state.auth);
   const {guest : guestLogged} = useAppSelector((state: RootState) => state.guest);
@@ -105,4 +105,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default ShopCartController;
+export default ProductoZoomController;

@@ -5,6 +5,7 @@ import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { ICONN_BASKET } from 'assets/images';
 import { ImagesCarusel} from 'components/molecules/ImagesCarusel';
+import { FavoriteButton } from 'components/molecules';
 import { CardProduct} from 'components/organisms/CardProduct';
 import { Rating } from 'components/molecules/Rating';
 import { getProductDetailById,getSkuFilesById } from 'services/vtexProduct.services';
@@ -12,7 +13,7 @@ import { QuantityProduct } from 'components/molecules/QuantityProduct';
 import { vtexProductsServices } from 'services';
 import { RootState, useAppSelector } from 'rtk';
 import { useShoppingCart } from '../../home/hooks/useShoppingCart';
-import { setDetailSelected } from 'rtk/slices/cartSlice';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
   itemId: string;
@@ -144,18 +145,23 @@ interface Props {
               generalPointsColor={theme.brandColor.iconn_grey}></ImagesCarusel>
             </Container>
           </Container>
-              <Container row style={{marginTop:16}}>
-              <Rating ratingValue={productRating.average}/><TouchableText
-                  marginLeft={8}
-                  underline
-                  textColor={theme.brandColor.iconn_accent_principal}
-                  text={productRating.totalCount+" Calificaciones"}
-                  typography="h4"
-                  fontBold
-                  onPress={()=>{}}
-                  marginTop={8}
-                />
-              </Container>
+          <Container row space='between' style={{ marginTop: 16, width:'100%'}}>
+            <Container row>
+              <Rating ratingValue={productRating.average} /><TouchableText
+                marginLeft={8}
+                underline
+                textColor={theme.brandColor.iconn_accent_principal}
+                text={productRating.totalCount + " Calificaciones"}
+                typography="h4"
+                fontBold
+                onPress={() => { }}
+                marginTop={8}
+              />
+            </Container>
+            <Container>
+              <FavoriteButton sizeIcon={moderateScale(24)} isFavorite onPressItem={() => { }} />
+            </Container>
+          </Container>
 
               <Container style={{marginTop:16}}>
               <TextContainer fontBold fontSize={theme.fontSize.h2} text={productDetail.Name}/>
