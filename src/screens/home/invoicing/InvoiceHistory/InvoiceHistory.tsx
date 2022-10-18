@@ -27,12 +27,18 @@ interface EstablishmentResult {
   establishment_id: number;
   description: string;
 }
+
+interface InvoicingProfile {
+  invoicing_profile_id: number;
+  rfc: string;
+}
 export interface Result {
   rfc?: string;
   invoice_uuid: string;
   emission_date: string;
   total: string;
   Establishment: EstablishmentResult;
+  Invoicing_Profile: InvoicingProfile;
 }
 
 interface FilterChipProps {
@@ -101,11 +107,11 @@ export const InvoiceItem = ({
         <Image source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
       </View>
       <View>
-        <CustomText text={invoice.rfc ?? 'RAPA880105P33'} fontBold />
+        <CustomText text={invoice.Invoicing_Profile.rfc} fontBold />
       </View>
       <View style={{ flexDirection: 'row' }}>
         <CustomText text="Total: " />
-        <CustomText text={invoice.total} textColor={theme.fontColor.light_green} fontBold />
+        <CustomText text={invoice.total.match(/^-?\d+(?:\.\d{0,2})?/)[0]} textColor={theme.fontColor.light_green} fontBold />
       </View>
       {helpPointer && (
         <View style={{ position: 'absolute', right: 20, top: 60 }}>
@@ -556,13 +562,13 @@ const InvoiceScreen: React.FC = () => {
                 </View>
               </ScrollView>
             </View>
-            <ScrollView contentContainerStyle={{flexGrow: 1, height: '100%'}}>
-            <Results
-              results={results}
-              handleSend={(invoice: Result) => {
-                setSelected(invoice);
-              }}
-            />
+            <ScrollView contentContainerStyle={{ flexGrow: 1, height: '100%' }}>
+              <Results
+                results={results}
+                handleSend={(invoice: Result) => {
+                  setSelected(invoice);
+                }}
+              />
             </ScrollView>
           </>
         )}
