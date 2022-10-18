@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import { RootState, useAppSelector, useAppDispatch, ClientProfileDataInterface } from 'rtk';
 import ShopCartScreen from './ShopCartScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useNavigation, useNavigationState, useRoute } from '@react-navigation/native';
+import { useNavigation, useNavigationState } from '@react-navigation/native';
 import { saveClientProfileDataThunk } from 'rtk/thunks/vtex-shoppingCart.thunks';
 import { useLoading, useToast } from 'context';
 
 const ShopCartController: React.FC = () => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  const routes  = useNavigationState(state => state.routes)
+  const { user, isGuest } = useAppSelector((state: RootState) => state.auth);
+  const routes = useNavigationState(state => state.routes);
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const loader = useLoading();
   const toast = useToast();
@@ -20,6 +20,11 @@ const ShopCartController: React.FC = () => {
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   const goToCheckout = async () => {
+    if (isGuest) {
+      navigate('Checkout');
+      return;
+    }
+
     loader.show();
 
     const clientProfileDataPayload: ClientProfileDataInterface = {
