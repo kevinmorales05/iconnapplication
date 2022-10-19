@@ -52,6 +52,10 @@ interface State {
   carouselItems: ItemProps[];
 }
 
+interface PropsController {
+  paySuccess: boolean
+}
+
 class CustomCarousel extends Component<Props, State> {
   ref = React.createRef<Props>();
   state = {
@@ -151,7 +155,7 @@ class CustomCarousel extends Component<Props, State> {
   }
 }
 
-const HomeController: React.FC = () => {
+const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { user, isGuest } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
@@ -162,8 +166,6 @@ const HomeController: React.FC = () => {
   const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
-  const { paySuccess } = route.params;
   const loader = useLoading();
   const [addressModalSelectionVisible, setAddressModalSelectionVisible] = useState(false);
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
@@ -352,13 +354,13 @@ const HomeController: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (paySuccess) {
+    if (paySuccess && !isGuest) {
       toast.show({
         message: (
           <Text>
-            Pedido creado con exito. Para ver el pedido ir al apartado{' '}
+            {`Más detalles del pedido en: Cuenta -> `}
             <Text
-              style={{ textDecorationLine: 'underline', textDecorationColor: theme.brandColor.iconn_white }}
+              style={{ fontWeight: 'bold' }}
               onPress={() => {
                 navigate('MyOrders');
               }}
@@ -367,7 +369,12 @@ const HomeController: React.FC = () => {
             </Text>{' '}
           </Text>
         ),
-        type: 'success'
+        type: 'limited'
+      });
+    }else if(paySuccess && isGuest){
+      toast.show({
+        message: 'Más detalles sobre el pedido en tu correo electrónico',
+        type: 'limited'
       });
     }
   }, [paySuccess]);
