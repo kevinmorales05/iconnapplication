@@ -11,6 +11,7 @@ const API_VTEX_PRODUCTS = 'https://oneiconn.myvtex.com/api/catalog_system/pvt/pr
 const API_VTEX_PRODUCT = 'https://oneiconn.myvtex.com/api/catalog/pvt';
 const API_VTEX_SUGGESTED_PRODUCTS = 'https://api.vtex.com/oneiconn/suggestions';
 const API_VTEX_PRICE = 'https://oneiconn.myvtex.com/api/pricing/prices';
+const API_VTEX_PROMOTIONS = 'https://oneiconn.myvtex.com/api/rnb/pvt';
 const VTEX_APPKEY = 'vtexappkey-oneiconn-PSWGUP';
 const VTEX_APPTOKEN = 'SOLVDAEGJAIWHXZATCDTDGNYKYYKKEUKEQNGWBAKCTJNLTMKIXFQMCASWIQTZEPZZVUWNCFZYXPPAUVSQNRFTWYBRIFRJKBIFSQBJVWBAGOKVBQAYAMKPOOUFGEJTJYV';
 const VTEX_DOCS = 'https://oneiconn.myvtex.com/api';
@@ -37,6 +38,8 @@ const getApiUrl = (type: string) => {
       return API_VTEX_PRODUCTS;
     case 'product':
       return API_VTEX_PRODUCT;
+    case 'promotions':
+      return API_VTEX_PROMOTIONS;
     case 'suggestedProducts':
       return API_VTEX_SUGGESTED_PRODUCTS;
     case 'productPrice':

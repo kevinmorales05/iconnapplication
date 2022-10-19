@@ -9,6 +9,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
+import PromotionsController from 'screens/home/promotions/PromotionsController';
 import { RootState, useAppSelector } from 'rtk';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
@@ -49,10 +50,10 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         name="PromosScreen"
-        component={InviteSignUpController}
+        component={PromotionsController}
         options={{
           headerShown: false,
-          title: 'Promos',
+          title: 'Promociones',
           tabBarIcon: ({ focused }) => {
             return <MaterialCommunityIcons name="sale" size={24} color={focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder} />;
           }

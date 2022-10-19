@@ -8,6 +8,7 @@ import EditEmailOtpController from 'screens/auth/onboarding/EditEmailOtp/EditEma
 import EditPasswordController from 'screens/auth/onboarding/EditPassword/EditPasswordController';
 import ProfileController from 'screens/home/myAccount/profile/ProfileController';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
+import PromotionsController from 'screens/home/promotions/PromotionsController';
 import AddRFCController from 'screens/home/myAccount/manageTaxInfo/AddRFC/AddRFCController';
 import TaxInfoController from 'screens/home/myAccount/manageTaxInfo/TaxInfo/TaxInfoController';
 import InvoiceController from 'screens/home/invoicing/Invoice/InvoiceController';
@@ -127,6 +128,7 @@ const HomeStack: React.FC = () => {
       />
       <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />
       <Stack.Screen name="DeleteAccount" options={{ title: 'Eliminar cuenta' }} component={DeleteAccountController} />
+      <Stack.Screen name="Promotions" options={{ title: 'Promociones' }} component={PromotionsController} />
       <Stack.Screen name="PostalCode" options={{ title: '' }} component={PostalCodeController} />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
       <Stack.Screen name='ChangePassword' options={{title: 'Editar contraseña'}} component={ChangePasswordController}/>
