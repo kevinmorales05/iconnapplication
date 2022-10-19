@@ -82,7 +82,7 @@ export const useAddresses = () => {
 
   const onPressAddNewAddress = () => {
     if (isGuest) {
-      enter.show({secondaryMessage: `Para poder agregar direcciones te invitamos a\ncrear una cuenta.`})
+      enter.show({secondaryMessage: `Guarda tus direcciones de envío para hacer\npedidos más rápido, o continúa tu compra\ncomo invitado desde la canasta..`})
       return;
     }
 

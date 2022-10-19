@@ -162,8 +162,8 @@ const HomeController: React.FC = () => {
   const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const route = useRoute<RouteProp<HomeStackParams, 'CategoryProducts'>>();
-  const { paySuccess } = route;
+  const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
+  const { paySuccess } = route.params;
   const loader = useLoading();
   const [addressModalSelectionVisible, setAddressModalSelectionVisible] = useState(false);
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
@@ -323,7 +323,7 @@ const HomeController: React.FC = () => {
   const fetchData = useCallback(async () => {
     const { userId, name } = user;
 
-    if (userId == cart.userProfileId) {
+    if (userId === cart.userProfileId) {
       console.log('es igual al del usuario guardado');
       getShoppingCart(cart.orderFormId)
         .then(oldCart => {
@@ -338,8 +338,6 @@ const HomeController: React.FC = () => {
       console.log('NO es igual');
       await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         dispatch(setOrderFormId(newCart));
-        console.log({ newCart });
-        console.log('orderFormId ::: ', newCart.orderFormId);
         getShoppingCart(newCart.orderFormId)
           .then(response => {
             dispatch(updateShoppingCartItems(response));
