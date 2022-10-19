@@ -9,7 +9,7 @@ import { Container } from '../Container';
 import { TextContainer } from '../../molecules/TextContainer';
 import { ActionButton } from '../ActionButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ICONN_EYE_ON, ICONN_EYE_OFF } from 'assets/images';
+import { ICONN_EYE_ON, ICONN_EYE_OFF, ICONN_CALENDAR } from 'assets/images';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { CustomText } from '../CustomText';
 
@@ -98,7 +98,7 @@ const Input = forwardRef(
 
     const textInputProps: TextInputProps = {
       placeholder,
-      placeholderTextColor: `${placeholderTextColor ? placeholderTextColor : theme.brandColor.iconn_med_grey}`,
+      placeholderTextColor: `${placeholderTextColor ? placeholderTextColor : theme.fontColor.placeholder}`,
       autoCapitalize,
       autoComplete,
       autoCorrect,
@@ -132,7 +132,7 @@ const Input = forwardRef(
       selection: !editable ? { start: 0, end: 0 } : undefined
     };
 
-    const borderColor = error ? theme.brandColor.iconn_error : (focused && theme.brandColor.iconn_accent_principal) || theme.brandColor.iconn_med_grey;
+    const borderColor = error ? theme.brandColor.iconn_error : (focused && theme.fontColor.dark) || theme.brandColor.iconn_med_grey;
 
     return (
       <Container testID={testID} style={{ marginTop }}>
@@ -145,7 +145,7 @@ const Input = forwardRef(
             style={{
               ...inputContainerStyle,
               borderColor,
-              backgroundColor: !editable ? theme.brandColor.iconn_light_grey : undefined,
+              backgroundColor: !editable ? theme.brandColor.iconn_warm_grey : undefined,
               width: sufixOutIcon ? '91%' : '100%'
             }}
           >
@@ -203,7 +203,7 @@ const Input = forwardRef(
                 size="xsmall"
                 color=""
                 onPress={onPressDatePickerIcon!}
-                icon={<AntDesign name="calendar" size={24} color={theme.fontColor.grey} />}
+                icon={ <Image source={ICONN_CALENDAR} style={{tintColor:`${theme.fontColor.grey}`, height:24, width:24}} />}
               />
             )}
           </Container>

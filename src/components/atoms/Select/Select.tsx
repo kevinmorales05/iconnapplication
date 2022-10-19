@@ -105,7 +105,7 @@ const Select: React.FC<Props> = ({
             paddingHorizontal: 16
           }}
         >
-          <Octicons name="chevron-down" size={24} color={theme.brandColor.iconn_grey} />
+          <Octicons name="chevron-down" size={24} color={theme.fontColor.placeholder} />
         </Container>
       </Touchable>
 

@@ -5,7 +5,7 @@ import { CustomModal, Container, Input, Select, CustomText, ActionButton } from 
 import { Button, TextContainer } from '../../molecules';
 import { ICONN_ADDRESS_FIND } from 'assets/images';
 import { FieldValues, useForm } from 'react-hook-form';
-import { numericWithSpecificLenght, openField, alphaNumericWithSpacesAndDot, alphaNumericWithoutSpaces } from 'utils/rules';
+import { numericWithSpecificLenght, openField, alphaNumericWithSpacesAndDot, alphaNumericWithoutSpaces, NRalphaNumericWithSpacesAndDot } from 'utils/rules';
 import { Address, PostalCodeInfo } from 'rtk';
 import { CrudType } from '../../types/crud-type';
 import theme from 'components/theme/theme';
@@ -133,18 +133,16 @@ const AddressModalScreen: React.FC<Props> = ({
         >
           <Container row space="between" style={{ marginTop: 16, marginBottom: 16 }}>
             <Container />
-            <Container>
-              <CustomText textColor={theme.brandColor.iconn_dark_grey} text={title} typography="h3" fontBold />
-            </Container>
-            <Container>
+            <Container flex>
+              <CustomText alignSelf='center' textColor={theme.brandColor.iconn_dark_grey} text={title} typography="h3" fontBold />
               <ActionButton
-                style={{ marginTop: -6, shadowColor: 'none' }}
+                style={{ position:'absolute', right:0, top:-2, shadowColor: 'none' }}
                 icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
                 size="xxsmall"
                 onPress={onPressClose}
                 color="iconn_med_grey"
                 circle
-              />
+                />
             </Container>
           </Container>
           <ScrollView
@@ -178,13 +176,13 @@ const AddressModalScreen: React.FC<Props> = ({
                   </Container>
                   <Container style={{ width: '48%' }}>
                     <Button
-                      icon={<Image source={ICONN_ADDRESS_FIND} resizeMode="cover" style={{ width: 28, height: 28 }} />}
+                      icon={<Image source={ICONN_ADDRESS_FIND} resizeMode="cover" style={{ width: 28, height: 28, tintColor:'#333333' }} />}
                       round
                       fontBold
                       fontSize="h4"
                       onPress={() => onPressFindPostalCodeInfo(getValues('postalCode'))}
-                      color="iconn_med_grey"
-                      fontColor="dark"
+                      color="iconn_light_grey"
+                      fontColor='dark'
                       disabled={!!errors.postalCode?.message || getValues('postalCode')?.length === 0 || (mode === 'update' && postalCodeChanged === false)}
                       style={errors.postalCode?.message || postalCodeError ? { marginBottom: 8 } : {}}
                     >
@@ -227,7 +225,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   editable={false}
                 />
 
-                <TextContainer typography="h5" fontBold text={`Colonia`} marginTop={21} />
+                <TextContainer typography="h6" fontBold text={`Colonia`} marginTop={21} />
                 <Select
                   name="neighborhood"
                   control={control}
@@ -273,7 +271,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   boldLabel
                   maxLength={50}
                   onSubmitEditing={() => tagRef.current?.focus()}
-                  rules={alphaNumericWithSpacesAndDot(3)}
+                  rules={NRalphaNumericWithSpacesAndDot(3)}
                   error={errors.reference?.message}
                 />
 

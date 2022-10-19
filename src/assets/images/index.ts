@@ -58,7 +58,7 @@ import ICONN_WARNING_MARK from './iconn-warning-mark.webp';
 import ICONN_ERROR_CROSS from './iconn-error-cross.webp';
 import ICONN_HOME_OPTION_SEVEN from './iconn-home-option-seven.png';
 import ICONN_HOME_OPTION_PETRO from './iconn-home-option-petro.png';
-import ICONN_HOME_OPTION_HEART from './iconn-home-option-heart.png';
+import ICONN_HOME_OPTION_HEART from './iconn-home-option-heart.webp';
 import ICONN_HOME_OPTION_ACUMMULATE from './iconn-home-option-acummulate.png';
 import ICONN_HOME_OPTION_WALLET from './iconn-home-option-wallet.png';
 import ICONN_HOME_OPTION_ORDERS from './iconn-home-option-orders.png';
@@ -66,6 +66,12 @@ import ICONN_CHECK_PWD from './iconn-check-pwd.webp';
 import ICONN_HOME_SEARCH from './iconn-home-search-icon.png';
 import ICONN_STAR from './star.webp';
 import ICONN_FULL_EXPERIENCE from './iconn-invite-full-experience.webp';
+import TAB_CAT from './tab_cat.webp';
+import TAB_HOME from './tab_home.webp';
+import TAB_PIN_LOCATION from './tab_pin_location.webp';
+import TAB_PROMOS from './tab_promos.webp';
+import TAB_USER_PROFILE from './tab_user_profile.webp';
+import ICONN_CALENDAR from './iconn-calendar-schedule.webp';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -135,5 +141,11 @@ export {
   ICONN_CHECK_PWD,
   ICONN_HOME_SEARCH,
   ICONN_STAR,
+  TAB_CAT,
+  TAB_HOME,
+  TAB_PIN_LOCATION,
+  TAB_PROMOS,
+  TAB_USER_PROFILE,
+  ICONN_CALENDAR,
   ICONN_FULL_EXPERIENCE
 };

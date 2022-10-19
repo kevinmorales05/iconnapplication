@@ -102,7 +102,7 @@ const CardProduct: React.FC<CardProductProps> = ({
                 </Container>
               )}
               <Container flex width={"100%"} style={{ justifyContent: "center", alignItems: "flex-end" }}>
-                <FavoriteButton sizeIcon={moderateScale(24)} isFavorite onPressItem={() => { }} />
+                <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFavorite ? isFavorite : false} onPressItem={() => { }} />
               </Container>
             </Container>
           </ImageBackground>
@@ -111,7 +111,7 @@ const CardProduct: React.FC<CardProductProps> = ({
           <CustomText fontSize={theme.fontSize.h5} text={`${name}`} numberOfLines={3} />
         </Container>
         <Rating ratingValue={ratingValue} />
-        <PriceWithDiscount price={price} oldPrice={oldPrice} />
+        <PriceWithDiscount price={price.toFixed(2)} oldPrice={oldPrice} />
       </Container>
       <Container style={styles.containerButton}>
         {quantity ? (

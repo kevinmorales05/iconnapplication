@@ -139,7 +139,7 @@ export const numericWithSpecificLenght = (lenght: number): RegisterOptions => ({
   },
   minLength: {
     value: lenght,
-    message: `Longitud invalida.`
+    message: `Longitud inválida.`
   },
   validate: (value: string) => {
     if (!value.match(/\d/)) return false;
@@ -157,7 +157,7 @@ export const date: RegisterOptions = {
   },
   minLength: {
     value: 10,
-    message: `Longitud invalida.`
+    message: `Longitud inválida.`
   },
   validate: (value: string) => {
     if (
@@ -181,11 +181,11 @@ export const alphaNumeric = (lenght: number): RegisterOptions => ({
   },
   minLength: {
     value: lenght,
-    message: `Longitud invalida.`
+    message: `Longitud inválida.`
   },
   validate: (value: string) => {
     if (!value.match(/[A-Za-z0-9]/) || value.match(/\s/)) {
-      return 'Formato invalido.';
+      return 'Formato inválido.';
     }
     return true;
   }
@@ -201,7 +201,7 @@ export const openField = (lenght: number): RegisterOptions => ({
   },
   minLength: {
     value: lenght,
-    message: `Longitud invalida.`
+    message: `Longitud inválida.`
   }
 });
 
@@ -215,7 +215,7 @@ export const emailsList = (lenght: number): RegisterOptions => ({
   },
   minLength: {
     value: lenght,
-    message: `Longitud invalida.`
+    message: `Longitud inválida.`
   },
   validate: (value: string) => {
     if (!value.match(/^([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4},?)+$/)) {
@@ -232,13 +232,11 @@ export const alphaNumericWithSpacesAndDot = (lenght: number): RegisterOptions =>
   },
   minLength: {
     value: lenght,
-    message: `Longitud invalida.`
+    message: `Longitud inválida.`
   },
-  validate: (value: string) => {
-    if (!value.match(/^[A-Za-z0-9 .]*[A-Za-z0-9][A-Za-z0-9 .]*$/)) {
-      return false;
-    }
-    return true;
+  pattern:{
+    value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]+(\s*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]*)*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1# .\s-]+$/,
+    message: `Caracter no válido.`
   }
 });
 
@@ -249,12 +247,21 @@ export const alphaNumericWithoutSpaces = (lenght: number): RegisterOptions => ({
   },
   minLength: {
     value: lenght,
-    message: `Longitud invalida.`
+    message: `Longitud inválida.`
   },
-  validate: (value: string) => {
-    if (!value.match(/^[A-Za-z0-9]*[A-Za-z0-9][A-Za-z0-9]*$/)) {
-      return false;
-    }
-    return true;
+  pattern:{
+    value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1]*$/,
+    message: `Caracter no válido.`
+  }
+});
+
+export const NRalphaNumericWithSpacesAndDot = (lenght: number): RegisterOptions => ({
+  minLength: {
+    value: lenght,
+    message: `Longitud inválida.`
+  },
+  pattern:{
+    value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]+(\s*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]*)*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1# .\s-]+$/,
+    message: `Caracter no válido.`
   }
 });

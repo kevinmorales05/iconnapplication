@@ -383,11 +383,11 @@ const CategoryProductsScreen: React.FC = () => {
                 <Container width={'80%'} height={'40%'} center style={{ justifyContent: 'flex-end' }}>
                   <SearchLoupeDeleteSvg size={moderateScale(50)} />
                   <Container style={{ marginTop: moderateScale(13) }}>
-                    <CustomText text="No hay coincidencias" fontWeight="900" fontSize={theme.fontSize.h4} />
+                    <CustomText text="Sin productos" fontWeight="900" fontSize={theme.fontSize.h4} />
                   </Container>
                   <Container style={{ marginTop: moderateScale(13) }}>
                     <CustomText
-                      text="No se encontraron productos que coincidan con los filtros seleccionados."
+                      text="Por el momento no hay ningún producto disponible para esta categoría."
                       fontSize={theme.fontSize.h6}
                       fontWeight={'500'}
                       textAlign={'center'}

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { ScrollView, TextInput } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, TextInput, Keyboard } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ActionButton, Input, TextContainer, Button, Container } from 'components';
@@ -42,6 +42,9 @@ const EnterEmailScreen: React.FC<Props> = ({
   };
 
   return (
+    <KeyboardAvoidingView
+    style={{flex:1}}
+    behavior={Platform.OS === "ios" ? "padding" : null}>
     <ScrollView
       bounces={false}
       style={{ flex: 1 }}
@@ -74,6 +77,7 @@ const EnterEmailScreen: React.FC<Props> = ({
         error={errors.email?.message}
         marginTop={36}
         ref={emailRef}
+        onSubmitEditing={Keyboard.dismiss}
       />
       <Container flex row crossAlignment="end" space="between">
         <ActionButton
@@ -103,6 +107,7 @@ const EnterEmailScreen: React.FC<Props> = ({
         </Button>
       </Container>
     </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
