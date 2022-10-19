@@ -34,7 +34,7 @@ const InvoiceGeneratedPetroController: React.FC<any> = ({ route }) => {
     }
   }, [loading]);
 
-  const goToHome = () => navigate('Home');
+  const goToHome = () => navigate('Home', { paySuccess: false });;
   const goToNewInvoice = () => navigate('AddTicketPetro', { ticket: undefined, position: undefined });
   const goToViewerPDF = () => navigate('ViewInvoiceGeneratedPetro', { invoiceGenerated: route.params ? route.params.invoiceGenerated : undefined });
   const onPressOut = () => setResendInvoiceVisible(false);

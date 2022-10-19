@@ -192,7 +192,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
                 text={address ? `${address?.street}, ${address?.neighborhood}, ${address?.city}, ${address?.state}` : '64680, Monterrey, N.L.'}
               />
             </Container>
-            {address && 
+            {address ?
               near ? (
                   <Container row center>
                     <Ionicons name="md-checkmark-sharp" size={24} color={theme.brandColor.iconn_green_original} />
@@ -206,7 +206,9 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
                     <CustomText text="Entrega a domicilio no disponible." textColor={theme.brandColor.iconn_error}/>
                   </Container>
                 )
-          }
+              :
+                  null
+            }
           </Container>
         </Container>
         {!address && (

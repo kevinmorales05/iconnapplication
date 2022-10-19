@@ -93,7 +93,7 @@ const PostalCodeScreen = () => {
       if(item){
         dispatch(setDefaultSeller({ defaultSeller: item }));
         loader.show('', 'ecommerce');
-        navigate('Home');
+        navigate('Home', { paySuccess: false });
         return;
       }
     }
@@ -118,7 +118,7 @@ const PostalCodeScreen = () => {
         if(item){
           dispatch(setDefaultSeller({ defaultSeller: item }));
           loader.show('', 'ecommerce');
-          navigate('Home');
+          navigate('Home', { paySuccess: false });
           return;
         }
       }

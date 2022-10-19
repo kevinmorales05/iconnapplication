@@ -34,7 +34,7 @@ const InvoiceGeneratedSevenController: React.FC<any> = ({ route }) => {
     }
   }, [loading]);
 
-  const goToHome = () => navigate('Home');
+  const goToHome = () => navigate('Home', { paySuccess: false });;
   const goToNewInvoice = () => navigate('AddTicketSeven', { ticket: undefined, position: undefined });
   const goToViewerPDF = () => navigate('ViewInvoiceGeneratedSeven', { invoiceGenerated: route.params ? route.params.invoiceGenerated : undefined });
   const onPressOut = () => setResendInvoiceVisible(false);

@@ -54,7 +54,7 @@ const HomeStack: React.FC = () => {
   const Stack = createNativeStackNavigator<HomeStackParams>();
 
   const closeShoppingCart = () => {
-    navigate('Home');
+    navigate('Home', { paySuccess: false });
   };
 
   return (
@@ -66,6 +66,7 @@ const HomeStack: React.FC = () => {
           headerRight: () => <BasketCounter />
         }}
         name="Home"
+        initialParams={{ paySuccess: false }}
         component={TabNavigator}
       />
       <Stack.Screen name="MyAccount" component={MyAccountController} />
