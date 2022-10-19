@@ -335,7 +335,7 @@ const PostalCodeScreen = () => {
       </Button>
       <Touchable onPress={handleGeolocation}>
         <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 25 }}>
-          <Image source={ICONN_PIN_LOCATION} />
+          <Image source={ICONN_PIN_LOCATION} style={{height:24, width:24}}/>
           <Container style={{ marginLeft: 10 }}>
             <CustomText text={'Usar mi ubicación actual'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
           </Container>

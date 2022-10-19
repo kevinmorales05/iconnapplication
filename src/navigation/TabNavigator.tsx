@@ -1,16 +1,16 @@
 import React from 'react';
+import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import theme from 'components/theme/theme';
 import HomeController from 'screens/home/HomeController';
 import CategoriesController from 'screens/categories/CategoriesController';
 import { HomeStackParams, HomeTabScreens } from './types';
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
-import Entypo from 'react-native-vector-icons/Entypo';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Octicons from 'react-native-vector-icons/Octicons';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
+import PromotionsController from 'screens/home/promotions/PromotionsController';
 import { RootState, useAppSelector } from 'rtk';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { TAB_CAT, TAB_HOME, TAB_PIN_LOCATION, TAB_PROMOS, TAB_USER_PROFILE } from 'assets/images';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -32,7 +32,7 @@ export const TabNavigator = () => {
           headerShown: false,
           title: 'Inicio',
           tabBarIcon: ({ focused }) => {
-            return <Entypo name="home" size={24} color={focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder} />;
+            return <Image source={TAB_HOME} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
           }
         }}
         name="HomeScreen"
@@ -45,18 +45,18 @@ export const TabNavigator = () => {
           headerShown: false,
           title: 'Categorías',
           tabBarIcon: ({ focused }) => {
-            return <Octicons name="apps" size={24} color={focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder} />;
+            return <Image source={TAB_CAT} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
           }
         }}
       />
       <Tab.Screen
         name="PromosScreen"
-        component={InviteSignUpController}
+        component={PromotionsController}
         options={{
           headerShown: false,
-          title: 'Promos',
+          title: 'Promociones',
           tabBarIcon: ({ focused }) => {
-            return <MaterialCommunityIcons name="sale" size={24} color={focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder} />;
+            return <Image source={TAB_PROMOS} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
           }
         }}
       />
@@ -67,7 +67,7 @@ export const TabNavigator = () => {
           headerShown: false,
           title: 'Sucursales',
           tabBarIcon: ({ focused }) => {
-            return <Entypo name="location" size={24} color={focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder} />;
+            return <Image source={TAB_PIN_LOCATION} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
           }
         }}
       />
@@ -79,13 +79,7 @@ export const TabNavigator = () => {
           headerShown: isGuest ? false : true,
           title: 'Mi Cuenta',
           tabBarIcon: ({ focused }) => {
-            return (
-              <MaterialCommunityIcons
-                name="account-circle-outline"
-                size={24}
-                color={focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}
-              />
-            );
+            return <Image source={TAB_USER_PROFILE} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
           }
         }}
       />

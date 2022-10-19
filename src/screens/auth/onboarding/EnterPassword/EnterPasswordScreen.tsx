@@ -1,4 +1,4 @@
-import { Image, ScrollView, TextInput } from 'react-native';
+import { Image, Keyboard, ScrollView, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ActionButton, Input, TextContainer, TouchableText, Button, Container } from 'components';
@@ -72,6 +72,7 @@ const EnterPasswordScreen: React.FC<Props> = ({ accountError, onSubmit, goBack, 
           ref={passwordRef}
           showPasswordEnable
           rules={passwordMinimumRule}
+          onSubmitEditing={Keyboard.dismiss}
         />
         <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
           <TouchableText

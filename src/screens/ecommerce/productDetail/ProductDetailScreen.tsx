@@ -14,6 +14,8 @@ import { vtexProductsServices } from 'services';
 import { RootState, useAppSelector } from 'rtk';
 import { useShoppingCart } from '../../home/hooks/useShoppingCart';
 import { moderateScale } from 'utils/scaleMetrics';
+import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
+import { vtexUserServices } from 'services';
 
 interface Props {
   itemId: string;
@@ -43,7 +45,9 @@ interface Props {
   const [cartItemQuantity, setCartItemQuantity] = useState(0);
   const [productRating, setProductRating] = useState(Object);
   const [productToUpdate, setProductToUpdate] = useState(Object);
+  const [visible, setVisible] = useState<boolean>(false);
   const { detailSelected, cart } = useAppSelector((state: RootState) => state.cart);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   itemId = detailSelected;
 
   const fetchData = useCallback(async () => {
@@ -88,7 +92,7 @@ interface Props {
   }, [cart, detailSelected]);
 
   const getComplementaryProducts = useCallback(async () => {
-    vtexProductsServices.getProductsByCollectionId("143").then(responseCollection => {
+    vtexProductsServices.getProductsByCollectionId("145").then(responseCollection => {
       const { Data } = responseCollection;
       let complementaryList = [];
       if (Data) {
@@ -106,6 +110,34 @@ interface Props {
     }).catch((error) => console.log(error));
   }, [itemId]);
 
+  const validateCategoryForAddItem = (itemId: string) => {
+    console.log('validate itemId:::'+itemId+ 'userId'+user.userId);
+    getProductDetailById(itemId).then(productDetail => {
+      if (productDetail.DepartmentId == 167) {
+        if (user.email) {
+          vtexUserServices.getUserByEmail(user.email).then(userResponse => {
+            let isAdult = false;
+            if (userResponse) {
+              const { data } = userResponse;
+              if (data) {
+                if (data.length > 0) {
+                  isAdult = data[0].isAdult;
+                  if (isAdult) {
+                    updateShoppingCartProduct('create', itemId);
+                  } else {
+                    onPressOut();
+                  }
+                }
+              }
+            }
+          })
+        }
+      } else {
+        updateShoppingCartProduct('create', itemId);
+      }
+    })
+  };
+
   const isProductIdInShoppingCart = (productId) => {
     const { items } = cart;
     let quantityItem = 0;
@@ -116,6 +148,10 @@ interface Props {
     });
     return quantityItem;
   }
+
+  const onPressOut = () => {
+    setVisible(!visible);
+  };
 
   useEffect(() => {
     fetchData();
@@ -294,13 +330,15 @@ interface Props {
                       fontBold
                       fontSize="h4"
                       onPress={() => {
-                        updateShoppingCartProduct('create', itemId);
+                        validateCategoryForAddItem(itemId);
                       }}
                       >
                       Agregar a canasta
                     </Button>
           }
           </Container>
+          <AdultAgeVerificationScreen onPressClose={onPressOut}
+        visible={visible} />
     </ScrollView>
   );
 };

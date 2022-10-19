@@ -11,7 +11,7 @@ const InviteSignUpController: React.FC = () => {
   const enterModal = useEnterModal();
 
   const onSubmit = () => {
-    enterModal.show({ secondaryMessage: 'Vive la experiencia completa en la aplicación' });
+    enterModal.show();
   };
 
   return (

@@ -7,6 +7,7 @@
  * showLogs__api_invoicing: string;
  * showLogs__api_order: string;
  * showLogs__api_orders: string;
+ * showLogs__api_promotions: string;
  * showLogs__api_otps: string;
  * showLogs__api_product: string;
  * showLogs__api_shoppingCart: string;
@@ -22,6 +23,7 @@ global.showLogs__api_docs = true;
 global.showLogs__api_invoicing = true;
 global.showLogs__api_order = true;
 global.showLogs__api_orders = true;
+global.showLogs__api_promotions = true;
 global.showLogs__api_otps = true;
 global.showLogs__api_product = true;
 global.showLogs__api_shoppingCart = true;

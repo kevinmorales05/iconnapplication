@@ -394,14 +394,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           <></>
         )}
         <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
-          <TextContainer
-            textColor={theme.brandColor.iconn_grey}
-            text="Artículos sujetos a disponibilidad en tienda. Los precios publicados pueden ser distintos a los señalizados en las tiendas."
-            fontSize={12}
-            marginTop={24}
-            textAlign="justify"
-            marginBottom={8}
-          ></TextContainer>
           <Container
             style={{
               borderStartWidth: 0,
@@ -417,16 +409,25 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             }}
           >
             <Button
-              transparent
-              fontSize="h6"
+              fontSize="h4"
+              fontBold
+              outline
+              round
+              color='black'
               length="long"
-              leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} />}
-              color="iconn_grey"
-              onPress={emptyShoppingCart}
-            >
+              style={{borderColor:`${theme.brandColor.iconn_med_grey}`}}
+              leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{tintColor:'red', height:20, width:20}} />}
+              onPress={emptyShoppingCart}>
               Vaciar canasta
             </Button>
           </Container>
+          <TextContainer
+            textColor={theme.fontColor.placeholder}
+            text="Artículos sujetos a disponibilidad en tienda. Los precios publicados pueden ser distintos a los señalizados en las tiendas. El precio de envío será calculado antes de finalizar tu compra."
+            fontSize={12}
+            marginTop={24}
+            textAlign="justify"
+            marginBottom={8}/>
           <CustomText text=""></CustomText>
         </Container>
       </Container>
@@ -677,7 +678,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   return (
     <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', padding: 0 }}>
       {inter ? (
-        <>{cartBody}</>
+        <>{fullCart}</>
       ) : (
         <>
           <Container flex backgroundColor={theme.brandColor.iconn_background} style={{ width: '100%' }}>

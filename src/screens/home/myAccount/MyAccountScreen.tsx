@@ -25,7 +25,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
       <Container style={{ marginHorizontal: 8 }}>
         <NavigationMenuItem
-          text="Mi Perfil"
+          text="Perfil"
           disable={false}
           icon={<MaterialCommunityIcons name="account-circle-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
           onPressNavigateTo={() => {
@@ -41,7 +41,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           }}
         />
         <NavigationMenuItem
-          text="Mis pedidos"
+          text="Pedidos"
           disable={false}
           icon={<Octicons name="list-unordered" size={24} color={theme.brandColor.iconn_dark_grey} />}
           onPressNavigateTo={() => {
@@ -49,7 +49,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           }}
         />
         <NavigationMenuItem
-          text="Mis favoritos"
+          text="Favoritos"
           disable={false}
           icon={<MaterialCommunityIcons name="heart-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
           onPressNavigateTo={() => {
@@ -77,11 +77,11 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         />
 
         <NavigationMenuItem
-          text="Mi cuponera"
+          text="Cuponera"
           disable={false}
           icon={<Entypo name="ticket" size={24} color={theme.brandColor.iconn_dark_grey} />}
           onPressNavigateTo={() => {
-            console.log('Mi Cuponera...');
+            console.log('Cuponera...');
           }}
         />
 

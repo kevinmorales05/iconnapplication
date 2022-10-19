@@ -18,7 +18,7 @@ const shoppingCartSlice = createSlice({
   },
   reducers: {
     setShoppingCartInitialState(state) {
-      state.cart = initialStateShoppingCart;
+      state.cart = { ...initialStateShoppingCart };
     },
     setOrderFormId(state, action: PayloadAction<any>) {
       state.cart.orderFormId = action.payload.orderFormId;

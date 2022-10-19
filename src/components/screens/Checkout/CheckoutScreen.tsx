@@ -1,5 +1,5 @@
 import React from 'react';
-import { AuthDataInterface } from 'rtk';
+import { AuthDataInterface, setShoppingCartInitialState, useAppDispatch } from 'rtk';
 import { WebView, WebViewNavigation } from 'react-native-webview';
 import { useToast } from 'context';
 import { PartialState, StackNavigationState } from '@react-navigation/native';
@@ -13,20 +13,22 @@ interface Props {
   orderFormId: string;
 }
 
-const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset,user, orderFormId }) => {
+const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderFormId }) => {
   const toast = useToast();
+  const dispatch = useAppDispatch();
 
   function onMessage(data: any) {
     toast.show({ message: `${data.nativeEvent.data}`, type: 'success' });
   }
 
   const onNavigationStateChange = (navState: WebViewNavigation) => {
-    const urlParams = navState.url.split("https://nttdev--oneiconn.myvtex.com/_v/segment/admin-login/v1/login?")[1]?.split("=%")
-    if(urlParams){
-      if(urlParams[0] === "returnUrl"){
+    const urlParams = navState.url.split('https://nttdev--oneiconn.myvtex.com/_v/segment/admin-login/v1/login?')[1]?.split('=%');
+    if (urlParams) {
+      if (urlParams[0] === 'returnUrl') {
+        dispatch(setShoppingCartInitialState());
         reset({
           index: 0,
-          routes: [{ name: 'Home', params:{ paySuccess: true }}],
+          routes: [{ name: 'Home', params: { paySuccess: true } }]
         });
       }
     }
