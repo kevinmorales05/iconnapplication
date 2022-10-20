@@ -12,7 +12,7 @@ import {
   sendEmailToRecoverPasswordThunk
 } from '../thunks/auth.thunks';
 import { startAuthenticationThunk } from '../thunks/vtex-auth.thunks';
-import { Address, AddressWithPositionInterface, AuthCookie, AuthDataInterface } from '../types';
+import { Address, AddressWithPositionInterface, AuthCookie, AuthDataInterface, ItemsFavoritesInterface } from '../types';
 
 const initialState: AuthDataInterface = {
   accountAuthCookie: { Name: '', Value: '' },
@@ -47,18 +47,34 @@ const initialState: AuthDataInterface = {
   userId: ''
 };
 
+const favsInitialState: ItemsFavoritesInterface[] = [];
+const favsIdInitialState: string = '';
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: initialState,
     loading: false,
+    favs: favsInitialState, 
+    favsId: favsIdInitialState,
     isGuest: false
   },
   reducers: {
     setAuthInitialState(state) {
       state.user = { ...initialState };
       state.loading = false;
+      state.favs = { ...favsInitialState };
+      state.favsId = '';
       state.isGuest = false;
+    },
+    setFavId(state, action: PayloadAction<string>) {
+      state.favsId = action.payload;
+    },
+    setFav(state, action: PayloadAction<ItemsFavoritesInterface[]>) {
+      state.favs = action.payload;
+    },
+    addFav(state, action: PayloadAction<ItemsFavoritesInterface>) {
+      state.favs.push(action.payload);
     },
     setAuthEmail(state, action: PayloadAction<AuthDataInterface>) {
       state.user.email = action.payload.email;
@@ -265,6 +281,9 @@ const authSlice = createSlice({
 });
 
 export const {
+  setFavId,
+  setFav,
+  addFav,
   addAddressToList,
   deleteAddressFromList,
   replaceAddressFromList,

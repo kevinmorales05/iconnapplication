@@ -11,11 +11,12 @@ import { Rating } from 'components/molecules/Rating';
 import { getProductDetailById,getSkuFilesById } from 'services/vtexProduct.services';
 import { QuantityProduct } from 'components/molecules/QuantityProduct';
 import { vtexProductsServices } from 'services';
-import { RootState, useAppSelector } from 'rtk';
+import { addFav, FavoritesResponseInterface, ItemsFavoritesInterface, ListItemsWrapperInterface, NewFavoritesResponseInterface, RootState, setFav, UpdateType, useAppDispatch, useAppSelector } from 'rtk';
 import { useShoppingCart } from '../../home/hooks/useShoppingCart';
 import { moderateScale } from 'utils/scaleMetrics';
 import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { vtexUserServices } from 'services';
+import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 
 interface Props {
   itemId: string;
@@ -47,7 +48,12 @@ interface Props {
   const [productToUpdate, setProductToUpdate] = useState(Object);
   const [visible, setVisible] = useState<boolean>(false);
   const { detailSelected, cart } = useAppSelector((state: RootState) => state.cart);
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  const [isFav, setIsFav] = useState<boolean>();
+  const { favs, favsId, user } = useAppSelector((state: RootState) => state.auth);
+  const { email } = user;
+  const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
+  const dispatch = useAppDispatch();
+
   itemId = detailSelected;
 
   const fetchData = useCallback(async () => {
@@ -78,6 +84,7 @@ interface Props {
     
     await getProductDetailById(itemId).then(async responseProductDetail => {
       setProductDetail(responseProductDetail);
+      console.log('DETAIL', responseProductDetail);
     }).catch((error) => console.log(error));
 
     await vtexProductsServices.getProductPriceByProductId(itemId).then(async responsePrice => {
@@ -166,6 +173,100 @@ interface Props {
     fetchReviewData();
   }, [itemId]);
 
+  const getIsFavorite = () => {
+    if (favs.length !== undefined) {
+      console.log('FAVSFAVS', favs);
+      favs.map(fav => {
+        if (itemId == fav.Id) {
+          setIsFav(true);
+          console.log('IS FAVORITE', itemId, fav.Id);
+        } else {
+          console.log('NO FAVORITE', itemId, fav.Id);
+        }
+      });
+    } 
+  };
+
+  useEffect(() => {
+    getIsFavorite();
+  }, [isFav]);
+
+  const addFavorite1 = (newFav: ItemsFavoritesInterface) => {
+    console.log('INICIANDO', favs);
+    dispatch(addFav(newFav));
+    uploadVtex(favs);
+    console.log('TERMINANDO', favs);
+  };
+
+  const uploadVtex = async (favs: ItemsFavoritesInterface[]) => {
+    const response = await vtexFavoriteServices.patchFavorites(email as string, {
+      id: favsId,
+      email: email as string,
+      ListItemsWrapper: [{ ListItems: favs, IsPublic: true, Name: 'Wishlist' }]
+    });
+    console.log('Añadiendo a vtex', response, favs);
+  };
+
+  const removeFavorite = (oldFav: ItemsFavoritesInterface) => {
+    favList.map(product => {
+      if (product.Id === oldFav.Id) {
+        const newFavList = favList.filter(productf => productf.Id != oldFav.Id);
+        let listItems: ListItemsWrapperInterface = {
+          ListItems: newFavList,
+          IsPublic: true,
+          Name: 'Wishlist'
+        };
+        let tryList: FavoritesResponseInterface = {
+          id: favsId,
+          email: email as string,
+          ListItemsWrapper: [listItems]
+        };
+        console.log('REMOVIDO', newFavList);
+        console.log('REMOVIDO!', product.Id);
+        const response = updateFavorites(tryList, 'update');
+        setFavList(newFavList);
+        dispatch(setFav(newFavList));
+        return newFavList;
+      } else {
+        console.log('NO HABIA', favList);
+        return favList;
+      }
+    });
+  };
+
+  const updateFavorites = useCallback(async (updatedList: FavoritesResponseInterface | NewFavoritesResponseInterface, updateType: UpdateType) => {
+    if (updateType === 'new') {
+      const listNoId: NewFavoritesResponseInterface = {
+        email: email as string,
+        ListItemsWrapper: updatedList.ListItemsWrapper
+      };
+      const response = await vtexFavoriteServices.patchFavorites(email as string, listNoId);
+      console.log('HIGOS', response);
+    } else {
+      const response = await vtexFavoriteServices.patchFavorites(email as string, updatedList);
+      console.log('UVAS', response);
+    }
+  }, []);
+
+  const changeFavorite = () => {
+    if (isFav) {
+      const productToRemove: ItemsFavoritesInterface = {
+        Id: itemId,
+        Name: productDetail.Name
+      };
+      removeFavorite(productToRemove);
+    }
+    if (!isFav) {
+      const productToAdd: ItemsFavoritesInterface = {
+        Id: itemId,
+        Name: productDetail.Name
+      };
+      addFavorite1(productToAdd);
+    }
+    console.log('ACTUAL FAVS', favs, favsId);
+    setIsFav(!isFav);
+  };
+
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}
       contentContainerStyle={{
@@ -195,7 +296,7 @@ interface Props {
               />
             </Container>
             <Container>
-              <FavoriteButton sizeIcon={moderateScale(24)} isFavorite onPressItem={() => { }} />
+              <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
             </Container>
           </Container>
 

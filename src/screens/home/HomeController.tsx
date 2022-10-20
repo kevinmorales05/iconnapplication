@@ -36,6 +36,7 @@ import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
 import { vtexProductsServices } from 'services';
+import { useFavorites } from 'screens/auth/hooks/useFavorites';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -156,7 +157,7 @@ class CustomCarousel extends Component<Props, State> {
 }
 
 const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
-  const { user, isGuest } = useAppSelector((state: RootState) => state.auth);
+  const { user, isGuest, favs } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { cart } = useAppSelector((state: RootState) => state.cart);
@@ -172,6 +173,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [showShippingDropDown, setShowShippingDropDown] = useState(false);
   const toast = useToast();
   const enter = useEnterModal();
+  const {getFavorites} = useFavorites();
+  const {email} = user;
+ 
 
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
@@ -181,9 +185,20 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     if (authLoading === false) loader.hide();
   }, [authLoading]);
 
+  useEffect(() => {
+    getFavorites(email as string);
+  }, [])
+  
+
+
+
   const onPressSearch = () => {
     navigate('SearchProducts');
   };
+
+  const viewMoreProducts = (productsMore: any) => {
+    navigate('SeeMore', {products: productsMore});
+  }
 
   /**
    * Load User Addresses List and store it in the redux store
@@ -321,6 +336,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
   const [homeOtherProducts, setHomeOtherProducts] = useState<ProductInterface[] | null>();
   const { updateShoppingCartProduct, migrateCartToAnotherBranch } = useShoppingCart();
+
+  console.log('PRODUCTSPA', products);
 
   const fetchData = useCallback(async () => {
     const { userId, name } = user;
@@ -484,6 +501,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         homeProducts={homeProducts!}
         homeOtherProducts={homeOtherProducts!}
         updateShoppingCartProduct={updateShoppingCartProduct}
+        onPressViewMore={viewMoreProducts}
       />
       {/*       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>

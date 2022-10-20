@@ -46,9 +46,10 @@ import theme from 'components/theme/theme';
 import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalController';
 import ContactInformationController from 'screens/home/shoppingCart/ContactInformation/ContactInformationController';
 import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
-import FavoriteScreen from 'screens/home/favoriteScreen/FavoriteScreen';
+import FavoriteController from 'screens/home/favoriteScreen/FavoriteController';
 import ChangePasswordController from 'screens/home/myAccount/changePassword/ChangePasswordController';
 import DeleteAccountController from 'screens/home/myAccount/deleteAccount/DeleteAccountController';
+import SeeMoreScreen from 'screens/home/viewMore/SeeMoreScreen';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -151,6 +152,15 @@ const HomeStack: React.FC = () => {
           headerRight: () => <BasketCounter />
         }}
       />
+       <Stack.Screen
+        name="SeeMore"
+        component={SeeMoreScreen}
+        options={{
+          headerShown: true,
+          headerTitle: '',
+          headerRight: () => <BasketCounter />
+        }}
+      />
       <Stack.Screen
         options={{
           title: '',
@@ -201,7 +211,7 @@ const HomeStack: React.FC = () => {
           headerRight: () => <BasketCounter />
         }}
         name="FavoriteProducts"
-        component={FavoriteScreen}
+        component={FavoriteController}
       />
     </Stack.Navigator>
   );

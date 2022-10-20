@@ -19,6 +19,7 @@ const VTEX_DOCS_NO_API_PREFIX = 'https://oneiconn.myvtex.com';
 const API_VTEX_SEARCH_PRODUCTS = 'http://oneiconn.vtexcommercestable.com.br/buscaautocomplete?productNameContains=';
 const VTEX_REVIEWS_RATINGS = 'https://oneiconn.myvtex.com/reviews-and-ratings/api/';
 const API_VTEX_PICKUP = 'https://oneiconn.myvtex.com/api/checkout/pub';
+const API_VTEX_PATHC_FAVORITES = 'https://oneiconn.vtexcommercestable.com.br/api/dataentities';
 
 const getApiUrl = (type: string) => {
   switch (type) {
@@ -53,9 +54,11 @@ const getApiUrl = (type: string) => {
     case 'reviews':
       return VTEX_REVIEWS_RATINGS;
     case 'authUserSocial':
-        return VTEX_DOCS;
+      return VTEX_DOCS;
     case 'pickUpPoints':
-        return API_VTEX_PICKUP; 
+      return API_VTEX_PICKUP;
+    case 'favorites':
+      return API_VTEX_PATHC_FAVORITES;
     default:
       break;
   }
@@ -101,6 +104,19 @@ export const VTEXApiUserConfig = (type: string): AxiosRequestConfig => {
       'Content-Type': 'application/json',
       'X-VTEX-API-AppKey': VTEX_APPKEY,
       'X-VTEX-API-AppToken': VTEX_APPTOKEN
+    }
+  };
+};
+export const VTEXApiFavConfig = (type: string): AxiosRequestConfig => {
+  const { authCookie, accountAuthCookie } = store.getState().auth.user;
+  return {
+    baseURL: getApiUrl(type),
+    headers: {
+      Accept: '*/*',
+      'Content-Type': 'application/json',
+      'X-VTEX-API-AppKey': VTEX_APPKEY,
+      'X-VTEX-API-AppToken': VTEX_APPTOKEN,
+      Cookie: authCookie?.Name + '=' + authCookie?.Value + '; ' + accountAuthCookie?.Name + '=' + accountAuthCookie?.Value + ';'
     }
   };
 };

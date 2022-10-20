@@ -1,88 +1,87 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { Dimensions, StyleSheet, FlatList, View } from 'react-native';
 import {
   ExistingProductInCartInterface,
-  FavoritesResponseInterface,
   getProductPriceByProductIdThunk,
   getProductRatingByProductIdThunk,
-  getProductsByCategoryAndFiltersItemsThunk,
-  ItemsFavoritesInterface,
-  ListItemsWrapperInterface,
-  NewFavoritesResponseInterface,
   ProductInterface,
   ProductPriceResponseInterface,
   ProductRaitingResponseInterface,
   ProductResponseInterface,
+  ProductSearchItemInterface,
   RootState,
-  setFav,
-  setFavId,
-  TabItem,
-  updateType,
+  SearchItemInterface,
+  searchProductsThunk,
   useAppDispatch,
   useAppSelector
 } from 'rtk';
-import { AccordionFilter, Button, CardProduct, Container, CustomText, SafeArea, SearchBar, TabAnimatable } from 'components';
-import { DrawerLayout } from 'react-native-gesture-handler';
+import { Button, CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
 import theme from 'components/theme/theme';
-import { ProductsByCategoryFilter } from 'rtk/types/category.types';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { moderateScale } from 'utils/scaleMetrics';
-import { vtexFavoriteServices } from 'services/vtex-favorite-services';
+import { useLoading } from 'context';
 
-let productsRender: ProductResponseInterface[] = [
-  {
-    ProductId: '100004574',
-    SkuId: '100004574',
-    SubCollectionId: '12',
-    Position: '2',
-    ProductName: 'PEÑAFIEL TORONJADA LIGHT PET 600 ML',
-    SkuImageUrl: 'https://oneiconn.vteximg.com.br/arquivos/ids/159012'
-  }
-];
-const productAdd: ProductResponseInterface = {
-  ProductId: '100004630',
-  SkuId: '100004630',
-  SubCollectionId: '12',
-  Position: '1',
-  ProductName: 'PECHUGA BALANCE SAN RAFAEL 250GR',
-  SkuImageUrl: 'https://oneiconn.vteximg.com.br/arquivos/ids/159012'
-};
-const prodAdd: ProductResponseInterface = {
-  ProductId: '100004574',
-  SkuId: '100004574',
-  SubCollectionId: '12',
-  Position: '2',
-  ProductName: 'PEÑAFIEL TORONJADA LIGHT PET 600 ML',
-  SkuImageUrl: 'https://oneiconn.vteximg.com.br/arquivos/ids/159012'
-};
-interface Props {
-  completeList: ProductInterface[];
-}
 
-const FavoriteScreen: React.FC<Props>= ({completeList}) => {
+const SeeMoreScreen: React.FC = () => {
+  const { setOptions, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const route = useRoute<RouteProp<HomeStackParams, 'SeeMore'>>();
+
+  const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
-  const { favs, user, favsId } = useAppSelector((state: RootState) => state.auth);
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { products } = route.params;
+  const loader = useLoading();
+  const [results, setResults] = useState<SearchItemInterface[]>([]);
+  const [search, setSearch] = useState<string>('');
 
-
-  const onPressSearch = () => {
-    navigate('SearchProducts');
+  const onChangeText = async (text: string) => {
+    if (text.length > 2) {
+      const searchResults = await searchProducts(text);
+      if (searchResults.itemsReturned) {
+        setResults(searchResults.itemsReturned);
+      }
+    } else if (search.length > text.length) {
+      setResults([]);
+    }
+    console.log('DK', results);
+    setSearch(text);
+  };
+  const searchProducts = async (filter: string) => {
+    return await dispatch(searchProductsThunk(filter)).unwrap();
   };
 
+  const onEndEditing = () => {
+    if (results[0]?.name) {
+      let productsFound: ProductSearchItemInterface[] = [];
+      results.forEach(result => {
+        if (!result.criteria) {
+          productsFound = productsFound.concat(result.items);
+          console.log('CRITERIA', result.criteria);
+        }
+      });
+      navigate('SearchProductsResults', { products: productsFound, textSearch: results[0].name.replace(/[^a-zA-Z0-9 ]/g, '') });
+    }
+  };
+
+  
+
+  console.log('PRODUCTS SEE', products);
+
+
   const _renderItem = ({ item }) => {
+    console.log('PRODUCT ID', item);
     return (
       <CardProduct
         key={item.productId}
         ratingValue={item.ratingValue}
         price={item.price}
-        porcentDiscount={item.porcentDiscount === 0 ? null : item.porcentDiscount}
+        porcentDiscount={item.porcentDiscount == 0 ? null : item.porcentDiscount}
         name={item.name}
-        image={{uri: item.image}}
+        image={item.image}
         quantity={item.quantity}
         productId={item.productId}
         oldPrice={item.oldPrice}
@@ -99,13 +98,9 @@ const FavoriteScreen: React.FC<Props>= ({completeList}) => {
           updateShoppingCartProduct!('substract', item.productId);
         }}
         notNeedMarginLeft
-        onPressOut={function (): void {
-          throw new Error('Function not implemented.');
-        }}
       />
     );
   };
-
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -116,21 +111,21 @@ const FavoriteScreen: React.FC<Props>= ({completeList}) => {
     >
       <Container row space="between" width={'100%'} style={{ flexWrap: 'wrap' }}>
         <Container style={styles.containerHeader}>
-          <SearchBar isButton onPressSearch={onPressSearch} onChangeTextSearch={() => {}} />
+          <SearchBar onPressSearch={() => {}} onChangeTextSearch={onChangeText} onEndWriting={onEndEditing} />
         </Container>
         <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
-          {favs.length ? (
+          {products.length ? (
             <Container width={'100%'}>
               <Container style={{ marginTop: moderateScale(15) }}>
                 <CustomText
-                  text={`${favs.length} producto${favs.length > 1 ? 's' : ''} encontrado`}
+                  text={`${products.length} producto${products.length > 1 ? 's' : ''} encontrado`}
                   textColor={theme.fontColor.placeholder}
                   fontSize={theme.fontSize.h6}
                 />
               </Container>
               <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
                 <FlatList
-                  data={completeList}
+                  data={products}
                   renderItem={_renderItem}
                   onEndReachedThreshold={0.2}
                   contentContainerStyle={{
@@ -181,7 +176,7 @@ const FavoriteScreen: React.FC<Props>= ({completeList}) => {
   );
 };
 
-export default FavoriteScreen;
+export default SeeMoreScreen;
 
 const styles = StyleSheet.create({
   containerHeader: {

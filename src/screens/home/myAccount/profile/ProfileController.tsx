@@ -23,6 +23,7 @@ const ProfileController: React.FC = () => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const { email } = user;
+  console.log('TOKEN!', authToken);
 
   const goToChangePassword = async () => {
     try {

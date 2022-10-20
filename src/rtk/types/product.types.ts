@@ -37,3 +37,27 @@ export interface ExistingProductInCartInterface {
   itemId: string;
   quantity?: number;
 }
+
+export interface FavoritesResponseInterface {
+  id: string;
+  email: string;
+  ListItemsWrapper: ListItemsWrapperInterface[];
+}
+
+export interface NewFavoritesResponseInterface {
+  email: string;
+  ListItemsWrapper: ListItemsWrapperInterface[];
+}
+
+export interface ListItemsWrapperInterface {
+  ListItems: ItemsFavoritesInterface[],
+  IsPublic: boolean,
+  Name: string,
+}
+
+export interface ItemsFavoritesInterface {
+  Id: string,
+  Name: string,
+}
+
+export type UpdateType = 'new' | 'update';
