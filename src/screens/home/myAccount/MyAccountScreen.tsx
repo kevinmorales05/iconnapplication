@@ -69,7 +69,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           disable={false}
           icon={<HeartSvgOutline size={moderateScale(24)} color={theme.brandColor.iconn_dark_grey}/>}
           onPressNavigateTo={() => {
-            console.log('Favoritos...');
+            navigate('FavoriteProducts');
           }}
         />
 

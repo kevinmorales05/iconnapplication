@@ -339,8 +339,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { updateShoppingCartProduct, migrateCartToAnotherBranch } = useShoppingCart();
   const [productPromotions, setProductPromotions] = useState<Object>();
 
-  console.log('PRODUCTSPA', products);
-
   const fetchData = useCallback(async () => {
     const { userId, name } = user;
 

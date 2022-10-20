@@ -38,36 +38,9 @@ const SeeMoreScreen: React.FC = () => {
   const [results, setResults] = useState<SearchItemInterface[]>([]);
   const [search, setSearch] = useState<string>('');
 
-  const onChangeText = async (text: string) => {
-    if (text.length > 2) {
-      const searchResults = await searchProducts(text);
-      if (searchResults.itemsReturned) {
-        setResults(searchResults.itemsReturned);
-      }
-    } else if (search.length > text.length) {
-      setResults([]);
-    }
-    console.log('DK', results);
-    setSearch(text);
+  const onPressSearch = () => {
+    navigate('SearchProducts');
   };
-  const searchProducts = async (filter: string) => {
-    return await dispatch(searchProductsThunk(filter)).unwrap();
-  };
-
-  const onEndEditing = () => {
-    if (results[0]?.name) {
-      let productsFound: ProductSearchItemInterface[] = [];
-      results.forEach(result => {
-        if (!result.criteria) {
-          productsFound = productsFound.concat(result.items);
-          console.log('CRITERIA', result.criteria);
-        }
-      });
-      navigate('SearchProductsResults', { products: productsFound, textSearch: results[0].name.replace(/[^a-zA-Z0-9 ]/g, '') });
-    }
-  };
-
-  
 
   console.log('PRODUCTS SEE', products);
 
@@ -111,7 +84,7 @@ const SeeMoreScreen: React.FC = () => {
     >
       <Container row space="between" width={'100%'} style={{ flexWrap: 'wrap' }}>
         <Container style={styles.containerHeader}>
-          <SearchBar onPressSearch={() => {}} onChangeTextSearch={onChangeText} onEndWriting={onEndEditing} />
+          <SearchBar isButton onPressSearch={onPressSearch} onChangeTextSearch={() => {}}/>
         </Container>
         <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
           {products.length ? (
