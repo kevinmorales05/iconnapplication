@@ -23,7 +23,8 @@ interface Props {
   homeProducts: ProductInterface[];
   homeOtherProducts: ProductInterface[];
   updateShoppingCartProduct: (type: CounterType, productId: string) => void;
-  onPressViewMore: (products: any) => void; 
+  onPressViewMore: (products: any) => void;
+  productPromotions: Map<string,Object>;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -41,7 +42,8 @@ const HomeScreen: React.FC<Props> = ({
   homeProducts,
   homeOtherProducts,
   updateShoppingCartProduct, 
-  onPressViewMore
+  onPressViewMore,
+  productPromotions
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
@@ -112,24 +114,24 @@ const HomeScreen: React.FC<Props> = ({
 
         <Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
           </Container>
           <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text="Recomendados para ti" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => onPressViewMore(homeProducts) } />
             </Container>
-            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut} />
+            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut} productPromotions={productPromotions}/>
           </Container>
           <Container style={{ marginTop: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
-            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
           </Container>
           <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
@@ -141,11 +143,12 @@ const HomeScreen: React.FC<Props> = ({
               onPressItem={onPressCarouselItem}
               onPressProduct={updateShoppingCartProduct}
               onPressOut={onPressOut}
+              productPromotions={productPromotions}
             />
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
-            <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+            <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
           </Container>
         </Container>
         <AdultAgeVerificationScreen onPressClose={onPressOut} visible={visible} />

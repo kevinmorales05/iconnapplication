@@ -11,9 +11,10 @@ interface Props {
   onPressItem: (item: CarouselItem) => void;
   onPressProduct?: (type: CounterType, productId: string) => void;
   onPressOut: () => void;
+  productPromotions: Map<string,Object>;
 }
 
-const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut }) => {
+const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut, productPromotions }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -30,7 +31,7 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
       {products && products.length > 0 ? (
         <FlatList
           data={products}
-          renderItem={({ item, index }) => <AnimatedItem product={item} position={index} onPressItem={onPressItem} onPressProduct={onPressProduct} onPressOut={onPressOut} />}
+          renderItem={({ item, index }) => <AnimatedItem product={item} position={index} onPressItem={onPressItem} onPressProduct={onPressProduct} onPressOut={onPressOut} productPromotions={productPromotions} />}
           horizontal
           bounces={products?.length > 1 ? true : false}
           keyExtractor={item => item.productId}
@@ -43,7 +44,7 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
       ) : items && items.length > 0 ? (
         <FlatList
           data={items}
-          renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={onPressItem} onPressOut={onPressOut} />}
+          renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={onPressItem} onPressOut={onPressOut} productPromotions={productPromotions} />}
           horizontal
           bounces={items!.length > 1 ? true : false}
           keyExtractor={item => item.id}

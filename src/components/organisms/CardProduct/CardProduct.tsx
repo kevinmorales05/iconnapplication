@@ -46,6 +46,7 @@ interface CardProductProps {
   notNeedMarginLeft?: boolean;
   isFavorite?: boolean;
   onPressOut: () => void;
+  productPromotions: Map<string,Object>;
 }
 
 const CardProduct: React.FC<CardProductProps> = ({
@@ -63,9 +64,9 @@ const CardProduct: React.FC<CardProductProps> = ({
   onPressAddQuantity,
   onPressDecreaseQuantity,
   notNeedMarginLeft,
-  onPressOut
+  onPressOut,
+  productPromotions
 }: CardProductProps) => {
-  const [categoryId, setCategoryId] = useState(Object);
 
   const validateCategoryForAddItem = () => {
     getProductDetailById(productId).then(productDetail => {
@@ -117,6 +118,9 @@ const CardProduct: React.FC<CardProductProps> = ({
   useEffect(() => {
     getIsFavorite();
   }, [isFav]);
+
+  useEffect(() => {
+  }, [productPromotions]);
 
   /* const addFavorite = (newFav: ItemsFavoritesInterface) => {
     console.log('NFL', typeof favs);
@@ -245,18 +249,30 @@ const CardProduct: React.FC<CardProductProps> = ({
       <Container style={styles.subContainer}>
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
           <Container row width={'100%'} space="between">
-            {porcentDiscount && (
               <Container flex width={'100%'}>
-                <Container style={styles.containerPorcentDiscount}>
-                  <CustomText
-                    fontSize={theme.fontSize.h6}
-                    textColor={theme.brandColor.iconn_green_original}
-                    fontWeight={'bold'}
-                    text={`-${porcentDiscount}%`}
-                  />
-                </Container>
+              {
+                productPromotions != undefined && productPromotions.has('' + productId) ?
+                  (productPromotions.get('' + productId).promotionType == 'buyAndWin' || productPromotions.get('' + productId).promotionType == 'forThePriceOf' || productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ?
+                    (
+                      (
+                        <Container style={styles.containerPorcentDiscount}>
+                          <CustomText
+                            fontSize={theme.fontSize.h6}
+                            textColor={theme.brandColor.iconn_green_original}
+                            fontWeight={'bold'}
+                            text={(productPromotions != undefined && productPromotions.has('' + productId)) ?
+                              ((productPromotions.get('' + productId).promotionType == 'buyAndWin' || productPromotions.get('' + productId).promotionType == 'forThePriceOf') ?
+                                productPromotions.get('' + productId).promotionName : ((productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ? ('-' + productPromotions.get('' + productId).percentualDiscountValue + '%') : ''))
+                              : ''}
+                          />
+                        </Container>
+                      )
+                    ) : <></>
+
+                  :
+                <></>
+              }
               </Container>
-            )}
             <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
               <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
             </Container>
@@ -267,14 +283,14 @@ const CardProduct: React.FC<CardProductProps> = ({
             onPress={() => {
               dispatch(setDetailSelected(productId));
               console.log('DETAILID', productId);
-              navigate('ProductDetail', { productIdentifier: productId });
+              navigate('ProductDetail', { productIdentifier: productId, productPromotions: productPromotions });
             }}
           >
             <Container style={styles.containerTitle}>
               <CustomText fontSize={theme.fontSize.h5} text={`${name}`} numberOfLines={3} />
             </Container>
             <Rating ratingValue={ratingValue} />
-            <PriceWithDiscount price={price.toFixed(2)} oldPrice={oldPrice} />
+            <PriceWithDiscount price={price.toFixed(2)} oldPrice={oldPrice} productPromotions={productPromotions} productId={productId} />
           </Touchable>
         </Container>
       </Container>

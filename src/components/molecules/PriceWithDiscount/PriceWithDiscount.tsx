@@ -1,26 +1,74 @@
 import React from 'react';
 import { Container } from '../../atoms/Container';
 import { CustomText } from 'components/atoms';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import theme from '../../theme/theme';
 import { moderateScale } from 'utils/scaleMetrics';
 
 interface PriceWithDiscountProps {
   price: number;
   oldPrice?: number;
+  productPromotions: Object;
+  productId: string;
 }
 
-const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice }: PriceWithDiscountProps) => {
+const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice, productPromotions, productId }: PriceWithDiscountProps) => {
   return (
     <Container>
-      <Container style={styles.container}>
-        <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
-        {oldPrice && oldPrice != price && (
-          <Container style={styles.containerText}>
-            <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice}`} />
-            <Container style={styles.containerLine} />
-          </Container>
-        )}
+      <Container row style={styles.container}>
+        {
+          (productPromotions != undefined && productPromotions.has('' + productId)) ?
+            (
+              (productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ?
+                (
+                  <Container style={{marginRight:15}}>
+                  <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={(productPromotions != undefined && productPromotions.has('' + productId)) ?
+                    ((productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ? ( '$'+ (price - ( (parseInt(price) * productPromotions.get('' + productId).percentualDiscountValue) / 100 ) ) ) : '') : ''} />
+                    </Container>
+                ) :
+                <></>
+            )
+            :
+            <></>
+        }
+        
+        {
+          (productPromotions != undefined && productPromotions.has('' + productId)) ?
+            (
+              (productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ?
+                (
+                  <Text
+                    style={{
+                      fontWeight: 'bold',
+                      textDecorationLine: 'line-through',
+                      color: theme.brandColor.iconn_grey,
+                      fontSize: theme.fontSize.h6
+                    }}
+                  >
+                    {`$${price}`}
+                  </Text>
+                ) :
+                <>
+                  <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
+                  {oldPrice && oldPrice != price && (
+                    <Container style={styles.containerText}>
+                      <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice}`} />
+                      <Container style={styles.containerLine} />
+                    </Container>
+                  )}
+                </>
+            )
+            :
+            <>
+              <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
+              {oldPrice && oldPrice != price && (
+                <Container style={styles.containerText}>
+                  <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice}`} />
+                  <Container style={styles.containerLine} />
+                </Container>
+              )}
+            </>
+        }
       </Container>
     </Container>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { ScrollView, Image, Text } from 'react-native';
+import { StyleSheet, ScrollView, Image, Text } from 'react-native';
 import { CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage } from 'components';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -34,9 +34,10 @@ interface Props {
    average?:number;
    isReviewed?:boolean;
    prodId?:number;
+   productPromotions: Map<string, Object>;
  }
  
- const ProductDetailScreen: React.FC<Props> = ({itemId, fetchReviewData, showModal, star1, star2, star3, star4, star5, totalCount, average, isReviewed, prodId}) => {
+ const ProductDetailScreen: React.FC<Props> = ({itemId, fetchReviewData, showModal, star1, star2, star3, star4, star5, totalCount, average, isReviewed, prodId, productPromotions}) => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const [productPrice, setProductPrice] = useState(0);
   const [productDetail, setProductDetail] = useState(Object);
@@ -302,10 +303,70 @@ interface Props {
 
               <Container style={{marginTop:16}}>
               <TextContainer fontBold fontSize={theme.fontSize.h2} text={productDetail.Name}/>
-              <TextContainer marginTop={8} fontBold fontSize={theme.fontSize.h1} text={'$'+ (productPrice!=undefined && productPrice.basePrice?productPrice.basePrice:0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}/>
-              <TextContainer marginVertical={16} fontSize={theme.fontSize.h5} text={productDetail.DescriptionShort}/>
-              </Container>
-
+              <Container row>
+              <TextContainer marginTop={8} marginRight={20} fontBold fontSize={theme.fontSize.h1} text={(productPromotions != undefined && productPromotions.has('' + itemId)) ?
+                (
+                  (productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular') ?
+                    '$' + ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
+                      (
+                        (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
+                          productPromotions.get('' + itemId).percentualDiscountValue
+                        ) / 100
+                      )
+                    ) : ''
+                )
+                : ''}></TextContainer>
+              {
+                (productPromotions != undefined && productPromotions.has('' + itemId)) ?
+                  (
+                    (productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular') ?
+                    <Text
+                    style={{
+                      fontWeight: 'bold',
+                      textDecorationLine: 'line-through',
+                      color: theme.brandColor.iconn_grey,
+                      fontSize: theme.fontSize.h3,
+                      marginTop:11
+                    }}
+                  >
+                    {'$'+ (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) }
+                  </Text>
+                      :  <TextContainer marginTop={8} fontBold fontSize={theme.fontSize.h1} text={'$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} />
+                  )
+                  :  <TextContainer marginTop={8} fontBold fontSize={theme.fontSize.h1} text={'$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} />
+              }
+            </Container>
+            {
+              (productPromotions != undefined && productPromotions.has('' + itemId)) ?
+                (
+                  (productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular') ?
+                    (
+                      <Container style={styles.containerPorcentDiscount}>
+                        <CustomText
+                          fontSize={theme.fontSize.h6}
+                          textColor={theme.brandColor.iconn_green_original}
+                          fontWeight={'bold'}
+                          text={'ahorra $' + (
+                            (productPromotions != undefined && productPromotions.has('' + itemId)) ?
+                              (
+                                (productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular') ?
+                                  (
+                                    (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
+                                      productPromotions.get('' + itemId).percentualDiscountValue
+                                    ) / 100
+                                  ) : ''
+                              )
+                              : '')}
+                        />
+                      </Container>
+                    ) :
+                    <></>
+                )
+                :
+                <></>
+            }
+            <TextContainer marginVertical={16} fontSize={theme.fontSize.h5} text={productDetail.DescriptionShort} />
+          </Container>
             </Container>
 
         
@@ -379,6 +440,7 @@ interface Props {
                             complementaryProducts[index].quantity = complementaryProducts[index].quantity - 1;
                             updateShoppingCartProduct('substract', prod.productId);
                           }}
+                          productPromotions={productPromotions}
                         />
                       )
                     }
@@ -445,3 +507,61 @@ interface Props {
 };
 
 export default ProductDetailScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    width: moderateScale(160),
+    minHeight: moderateScale(254),
+    backgroundColor: theme.brandColor.iconn_white,
+    marginTop: moderateScale(16),
+    borderRadius: moderateScale(10),
+    padding: moderateScale(8)
+  },
+  subContainer: {
+    flex: 1,
+    width: '100%'
+  },
+  containerImage: {
+    width: '100%',
+    height: moderateScale(90),
+    alignItems: 'flex-end'
+  },
+  containerPorcentDiscount: {
+    width: moderateScale(84),
+    height: moderateScale(23),
+    borderRadius: moderateScale(12),
+    backgroundColor: theme.brandColor.iconn_green_discount,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  containerTitle: {
+    width: '100%',
+    minHeight: moderateScale(45),
+    marginTop: moderateScale(10)
+  },
+  containerRating: {
+    width: '100%',
+    flexDirection: 'row',
+    marginTop: moderateScale(9),
+    alignItems: 'center'
+  },
+  containerPrice: {
+    width: '100%',
+    flexDirection: 'row',
+    marginTop: moderateScale(15),
+    alignItems: 'center'
+  },
+  image: {
+    width: moderateScale(20),
+    height: moderateScale(20),
+    resizeMode: 'contain'
+  },
+  containerButton: {
+    flex: 0.25,
+    width: '100%',
+    justifyContent: 'flex-end'
+  },
+  buttonAddProduct: {
+    borderRadius: moderateScale(10)
+  }
+});
