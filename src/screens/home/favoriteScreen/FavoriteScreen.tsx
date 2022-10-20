@@ -20,7 +20,6 @@ import {
   setFav,
   setFavId,
   TabItem,
-  updateType,
   useAppDispatch,
   useAppSelector
 } from 'rtk';
