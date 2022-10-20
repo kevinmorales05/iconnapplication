@@ -106,12 +106,14 @@ const CardProduct: React.FC<CardProductProps> = ({
   let newFavList: ItemsFavoritesInterface[] = [];
 
   const getIsFavorite = () => {
-    if (favs.length !== undefined) {
-      favs.map(fav => {
-        if (productId == fav.Id) {
-          setIsFav(true);
-        }
-      });
+    if(favs){
+      if(favs.length) {
+        favs.map(fav => {
+          if (productId == fav.Id) {
+            setIsFav(true);
+          }
+        });
+      }
     }
   };
 

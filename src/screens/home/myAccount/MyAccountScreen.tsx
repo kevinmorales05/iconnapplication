@@ -13,6 +13,22 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Feather from 'react-native-vector-icons/Feather';
 
+//import icons
+import ProfileSvg from 'components/svgComponents/ProfileSvg/ProfileSvg';
+import { PinMapSvg } from 'components/svgComponents/PinMapSvg';
+import { moderateScale } from 'utils/scaleMetrics';
+import { HeartSvgOutline } from 'components/svgComponents';
+import { ReceiptSvg } from 'components/svgComponents/ReceiptSvg';
+import { DiscountSvg } from 'components/svgComponents/DiscountSvg';
+import { CoffeSvg } from 'components/svgComponents/CoffeSvg';
+import { PlacesSvg } from 'components/svgComponents/PlacesSvg';
+import { WalletSvg } from 'components/svgComponents/WalletSvg';
+import { TargetSvg } from 'components/svgComponents/TargetSvg';
+import { DocumentCashSvg } from 'components/svgComponents/DocumentCashSvg';
+import { InfoSvg } from 'components/svgComponents/InfoSvg';
+import { HelpSupportSvg } from 'components/svgComponents/HelpSupportSvg';
+import { LogOutSvg } from 'components/svgComponents/LogOutSvg';
+
 interface HomeScreenProps {
   logOut: () => void;
   app_version: string;
@@ -27,7 +43,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Perfil"
           disable={false}
-          icon={<MaterialCommunityIcons name="account-circle-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<ProfileSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             navigate('Profile');
           }}
@@ -35,7 +51,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Direcciones"
           disable={false}
-          icon={<Ionicons name="location-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<PinMapSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             navigate('Address');
           }}
@@ -43,7 +59,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Pedidos"
           disable={false}
-          icon={<Octicons name="list-unordered" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<ReceiptSvg size={moderateScale(24)}/>}
           onPressNavigateTo={() => {
             navigate('MyOrders');
           }}
@@ -51,7 +67,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Favoritos"
           disable={false}
-          icon={<MaterialCommunityIcons name="heart-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<HeartSvgOutline size={moderateScale(24)} color={theme.brandColor.iconn_dark_grey}/>}
           onPressNavigateTo={() => {
             console.log('Favoritos...');
           }}
@@ -70,7 +86,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Promociones"
           disable={false}
-          icon={<MaterialCommunityIcons name="sale" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<DiscountSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             console.log('Promociones...');
           }}
@@ -79,7 +95,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Cuponera"
           disable={false}
-          icon={<Entypo name="ticket" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<CoffeSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             console.log('Cuponera...');
           }}
@@ -98,7 +114,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Sucursales"
           disable={false}
-          icon={<Entypo name="location" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<PlacesSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             console.log('Sucursales...');
           }}
@@ -106,7 +122,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Wallet"
           disable={false}
-          icon={<Ionicons name="wallet-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<WalletSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             console.log('Wallet...');
           }}
@@ -114,7 +130,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Datos fiscales"
           disable={false}
-          icon={<AntDesign name="idcard" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<DocumentCashSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             navigate('TaxInfo');
           }}
@@ -122,7 +138,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Facturación"
           disable={false}
-          icon={<FontAwesome5 name="file-invoice-dollar" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<TargetSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             navigate('Invoice');
           }}
@@ -141,7 +157,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Quiénes somos"
           disable={false}
-          icon={<Ionicons name="md-information-circle-outline" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<InfoSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             navigate('AboutUs');
           }}
@@ -149,7 +165,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Centro de ayuda"
           disable={false}
-          icon={<Feather name="life-buoy" size={24} color={theme.brandColor.iconn_dark_grey} />}
+          icon={<HelpSupportSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             console.log('Centro de ayuda...');
           }}
@@ -165,7 +181,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           fontSize="h4"
           color="iconn_dark_grey"
           onPress={logOut}
-          icon={<MaterialCommunityIcons name="location-exit" size={24} color={theme.brandColor.iconn_red_original} />}
+          icon={<LogOutSvg size={moderateScale(24)} />}
         >
           Cerrar sesión
         </Button>
