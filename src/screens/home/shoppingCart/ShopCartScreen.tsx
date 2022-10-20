@@ -21,6 +21,7 @@ import { RootState, useAppSelector, useAppDispatch } from 'rtk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { HomeStackParams } from '../../../navigation/types';
+import { moderateScale } from 'utils/scaleMetrics';
 
 const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, routes }) => {
   const insets = useSafeAreaInsets();
@@ -396,8 +397,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         <Container center style={{marginTop:16, backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
           <Container
             style={{
-              width: 350,
-              height: 50
+              width: moderateScale(340)
             }}
           >
             <Button
@@ -406,8 +406,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               outline
               round
               color='black'
-              length="long"
-              style={{borderColor:`${theme.brandColor.iconn_med_grey}`}}
+              // length="long"
+              style={{borderColor:`${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1}}
               leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{tintColor:'red', height:20, width:20}} />}
               onPress={emptyShoppingCart}>
               Vaciar canasta

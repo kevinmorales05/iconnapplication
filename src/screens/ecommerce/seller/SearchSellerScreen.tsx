@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Image, ScrollView, TextInput, StyleSheet, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking } from 'react-native';
+import { Image, ScrollView, TextInput, StyleSheet, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, Dimensions } from 'react-native';
 import { CustomText, Touchable, Container } from 'components';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
 import { ICONN_PIN_LOCATION } from 'assets/images';
-import items from 'assets/files/sellers.json';
+import sellers from 'assets/files/sellers.json';
 import { SellerInterface, setDefaultSeller, useAppDispatch, useAppSelector, RootState } from 'rtk';
 import { hasNearbySellers, sortByDistance } from 'utils/geolocation';
 import { useLoading, useAlert, useToast } from 'context';
 import Geolocation from 'react-native-geolocation-service';
 import appConfig from '../../../../app.json';
+import { PlacesSvg } from 'components/svgComponents/PlacesSvg';
+import { moderateScale } from 'utils/scaleMetrics';
+import { vtexPickUpPoints } from 'services';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 const SearchSellerScreen = () => {
   const [value, onChangeText] = useState('');
   const [current, setCurrent] = useState<SellerInterface | null>(null);
-  const [sellers, setSellers] = useState<SellerInterface[]>([]);
+  const [sellersToRender, setSellers] = useState<SellerInterface[]>([]);
 
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
 
@@ -30,10 +34,6 @@ const SearchSellerScreen = () => {
     if (value) {
     }
   }, [value]);
-
-  useEffect(() => {
-    if (!sellers) return;
-  }, [sellers]);
 
   useEffect(() => {
     if (current) {
@@ -163,76 +163,71 @@ const SearchSellerScreen = () => {
     return false;
   };
 
+  const getPickUpPoints = async (cp: string) => {
+    const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
+    const temSellers: SellerInterface[] = [];
+    if(pickUp.items.length){
+      sellers.forEach((seller)=>{
+        console.log({temSellers:pickUp.items})
+        const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+        if(store.distance < 8){
+          temSellers.push(seller);
+        }
+      })
+    }
+    if(temSellers.length){
+      setSellers(temSellers)
+      return;
+    }
+    toast.show({
+      message: 'No se encontraron tiendas cercanas',
+      type: 'error'
+    });
+    setSellers([])
+    loader.hide();
+  }
+
+  const getPickUpPointsByAddress = async (position: Geolocation.GeoPosition) => {
+    if(position){
+        const pickUp = await vtexPickUpPoints.getPickUpPointsByAddress(position?.coords.longitude, position?.coords.latitude);
+        const temSellers: SellerInterface[] = [];
+        if(pickUp.items.length){
+        sellers.forEach((seller)=>{
+          console.log({temSellers:pickUp.items})
+          const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+          if(store.distance < 8){
+            temSellers.push(seller);
+          }
+        })
+      }
+      if(temSellers.length){
+        setSellers(temSellers)
+        return;
+      }
+    }
+    toast.show({
+      message: 'No se encontraron tiendas cercanas',
+      type: 'error'
+    });
+    setSellers([])
+    loader.hide();
+  }
+
   return (
     <Container flex style={{ backgroundColor: theme.brandColor.iconn_grey_background }}>
       <Container style={styles.content}>
-        <AntDesign style={{ padding: 5 }} name="search1" size={24} color={theme.brandColor.iconn_green_original} />
+        <AntDesign style={{ paddingHorizontal: 5 }} name="search1" size={24} color={theme.brandColor.iconn_green_original} />
         <TextInput
-          multiline
-          onChangeText={text => {
-            if (text.length > 5) return;
-            if (text) {
-              let isNum = /^\d+$/.test(text);
-              if (!isNum) return;
-            }
-            onChangeText(text.toLowerCase());
-            if (text) {
-              if (text.length === 5) {
-                const found = items.filter(item => {
-                  const code = Number(item['Código postal']);
-
-                  return code === Number(text);
-                });
-                if (found.length > 0) {
-                  Geolocation.getCurrentPosition(
-                    position => {
-                      const pos = [Number(position.coords.longitude), Number(position.coords.latitude)];
-
-                      const sorted = sortByDistance(pos, found);
-                      const has = hasNearbySellers(pos, sorted);
-                      if (!has) {
-                        alert.show(
-                          {
-                            title: 'No hay tiendas cerca',
-                            message: 'Lo sentimos, intenta buscar en otra ubicación o elige “Para llevar” y encuentra tiendas donde puedes recoger tu pedido.',
-                            acceptTitle: 'Entendido',
-                            async onAccept() {
-                              alert.hide();
-                            }
-                          },
-                          'warning'
-                        );
-                      }
-
-                      setSellers(sorted);
-                    },
-                    error => {
-                      setSellers(found);
-                    },
-                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-                  );
-                } else {
-                  alert.show(
-                    {
-                      title: 'Ubicación no encontrada',
-                      message: 'No pudimos encontrar la ubicación, revisa la dirección e intenta de nuevo.',
-                      acceptTitle: 'Entendido',
-                      cancelOutline: 'iconn_light_grey',
-                      cancelTextColor: 'iconn_dark_grey',
-                      async onAccept() {
-                        alert.hide();
-                      }
-                    },
-                    'error'
-                  );
-
-                  setSellers([]);
-                }
-              }
-            }
+          placeholderTextColor={theme.fontColor.placeholder}
+          placeholder={'Ingresa Código Postal'}
+          onChangeText={(text)=>{
+            onChangeText(text);
+          }}
+          onEndEditing={()=>{
+            getPickUpPoints(value);
           }}
           value={value}
-          style={{ marginLeft: 10, flex: 1 }}
+          style={{ marginLeft: 10, flex: 1, paddingVertical: 5, color: theme.fontColor.dark }}
         />
       </Container>
       <Touchable
@@ -247,10 +242,7 @@ const SearchSellerScreen = () => {
           Geolocation.getCurrentPosition(
             position => {
               loader.hide();
-
-              const pos = [Number(position.coords.longitude), Number(position.coords.latitude)];
-              const sorted = sortByDistance(pos, items);
-              setSellers(sorted);
+              getPickUpPointsByAddress(position);
             },
             error => {
               loader.hide();
@@ -272,15 +264,15 @@ const SearchSellerScreen = () => {
         }}
       >
         <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 10 }}>
-          <Image source={ICONN_PIN_LOCATION} />
+          <PlacesSvg size={moderateScale(24)} color={theme.brandColor.iconn_accent_principal} />
           <Container style={{ marginLeft: 10 }}>
             <CustomText text={'Usar mi ubicación actual'} fontSize={15} fontBold underline textColor={theme.brandColor.iconn_green_original} />
           </Container>
         </Container>
       </Touchable>
-      <Container flex={1}>
+      <Container width={'100%'} height={Dimensions.get('window').height * 0.60}>
         <ScrollView>
-          {sellers.slice(0, 5).map((seller, index) => {
+          {sellersToRender.slice(0, 5).map((seller, index) => {
             return (
               <SellerItem
                 key={index}
@@ -293,6 +285,17 @@ const SearchSellerScreen = () => {
             );
           })}
         </ScrollView>
+      </Container>
+      <Container width={'100%'} style={{alignItems: 'center'}}>
+        <Container style={styles.containerInfo}>
+          <Octicons name="info" size={theme.iconSize.large} color={theme.brandColor.iconn_accent_secondary}/>
+          <Container style={{marginLeft: moderateScale(10)}}>
+            <CustomText
+              text={'Por el momento solo podrás disfrutar de dos tiendas.'}
+              fontSize={theme.fontSize.h6}
+            />
+          </Container>
+        </Container>
       </Container>
     </Container>
   );
@@ -309,7 +312,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderColor: '#dadadb',
     alignContent: 'center',
-    minHeight: 50
+    minHeight: 50,
+    alignItems: 'center'
   },
   sellerItem: {
     borderWidth: 2,
@@ -330,7 +334,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  circle: { height: 16, width: 16, backgroundColor: theme.brandColor.iconn_green_original, borderRadius: 20 }
+  circle: { height: 16, width: 16, backgroundColor: theme.brandColor.iconn_green_original, borderRadius: 20 },
+  containerInfo: {
+    width: moderateScale(319),
+    height: moderateScale(55),
+    borderRadius: moderateScale(8),
+    backgroundColor: theme.brandColor.yellow_container,
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderColor: theme.brandColor.iconn_warning,
+    marginTop: moderateScale(40),
+    paddingLeft: moderateScale(15),
+    paddingRight: moderateScale(40),
+    flexDirection: 'row',
+    alignItems:'center'
+  }
 });
 
 export default SearchSellerScreen;

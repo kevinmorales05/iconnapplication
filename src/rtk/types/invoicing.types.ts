@@ -172,3 +172,8 @@ export interface InvoicingForwardInvoiceRequestInterface {
   uuid: string;
   emails: string[];
 }
+
+export interface InvoicingResendEmailRequestInterface {
+  email: string;
+  invoicingProfileId: number;
+}
