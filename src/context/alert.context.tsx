@@ -29,7 +29,7 @@ const initialState: AlertInterface = { visible: false, data: { title: '', messag
 export const AlertContextProvider = ({ children }: Props) => {
   const [alertState, setAlertState] = useState<AlertInterface>(initialState);
 
-  const show = async (data: AlertDataInterface, type: modalType = 'warning', dismissible: boolean = true, isHorizontal: boolean = false, isAddressModal: boolean = false) => {
+  const show = async (data: AlertDataInterface, type: modalType = 'warning', dismissible: boolean = true, isHorizontal: boolean = true, isAddressModal: boolean = false) => {
     setAlertState({ visible: true, data, type, dismissible, isHorizontal, isAddressModal});
   };
 

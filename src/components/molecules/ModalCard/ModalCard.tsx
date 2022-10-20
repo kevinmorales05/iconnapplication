@@ -42,7 +42,7 @@ const ModalCard: React.FC<Props> = ({
             {
               type !== 'deleteCart' && 
                 <Container style={{backgroundColor: 'transparent', borderTopLeftRadius: 16, borderTopRightRadius: 16}}>
-                  <Image
+                  {/* <Image
                     source={type === 'warning' ? ICONN_WARNING_MARK : type === 'error' ? ICONN_ERROR_CROSS : ICONN_SUCCESS}
                     style={{ alignSelf: 'center', marginTop: "15%", height: 56, top: 16 }}
                     resizeMode="contain"
@@ -56,7 +56,7 @@ const ModalCard: React.FC<Props> = ({
                       color='iconn_med_grey'
                       circle
                     />                
-                  </Container>              
+                  </Container>  */}             
                 </Container>
             }
             {children}

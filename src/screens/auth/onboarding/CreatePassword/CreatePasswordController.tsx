@@ -43,7 +43,7 @@ const CreatePasswordController: React.FC = () => {
   const alert = useAlert();
 
   const returnToSend = () => {
-    dispatch(setAuthInitialState());
+    // dispatch(setAuthInitialState());
     goBack();
   };
 

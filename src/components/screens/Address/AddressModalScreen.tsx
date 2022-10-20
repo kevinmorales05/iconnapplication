@@ -176,13 +176,13 @@ const AddressModalScreen: React.FC<Props> = ({
                   </Container>
                   <Container style={{ width: '48%' }}>
                     <Button
-                      icon={<Image source={ICONN_ADDRESS_FIND} resizeMode="cover" style={{ width: 28, height: 28, tintColor: '#333333' }} />}
+                      icon={<Image source={ICONN_ADDRESS_FIND} resizeMode="cover" style={{ width: 28, height: 28, tintColor:'white' }} />}
                       round
+                      size={'large'}
                       fontBold
                       fontSize="h4"
                       onPress={() => onPressFindPostalCodeInfo(getValues('postalCode'))}
-                      color="iconn_light_grey"
-                      fontColor="dark"
+                      color="iconn_green_original"
                       disabled={!!errors.postalCode?.message || getValues('postalCode')?.length === 0 || (mode === 'update' && postalCodeChanged === false)}
                       style={errors.postalCode?.message || postalCodeError ? { marginBottom: 8 } : {}}
                     >
