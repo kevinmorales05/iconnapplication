@@ -72,7 +72,7 @@ const HomeStack: React.FC = () => {
         component={TabNavigator}
       />
       <Stack.Screen name="MyAccount" component={MyAccountController} />
-      <Stack.Screen name="Profile" options={{ title: 'Mi Perfil' }} component={ProfileController} />
+      <Stack.Screen name="Profile" options={{ title: 'Perfil' }} component={ProfileController} />
       <Stack.Screen name="EditEmail" options={{ title: 'Editar Correo' }} component={EditEmailController} />
       <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={EditEmailOtpController} />
       <Stack.Screen name="EditPassword" component={EditPasswordController} />
@@ -134,7 +134,7 @@ const HomeStack: React.FC = () => {
       <Stack.Screen
         options={{
           headerShown: true,
-          title: 'Mis Pedidos',
+          title: 'Pedidos',
           headerTitleStyle: {
             fontWeight: 'bold'
           },
