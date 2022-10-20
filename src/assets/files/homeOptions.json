@@ -58,6 +58,7 @@
     "navigationType": "external",
     "promotion_name": "Compra una herradura y llevate 4 Tecate",
     "promotion_type": "homeOptions",
+    "navigateTo": "MyOrders",
     "status": "active"
   }
 ]

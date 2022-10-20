@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import EnterPasswordScreen from './EnterPasswordScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useNavigation } from '@react-navigation/native';
@@ -8,9 +8,10 @@ import { useLoading, useAlert } from 'context';
 import { HttpClient } from '../../../../http/http-client';
 import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 
-import { RootState, setIsLogged, useAppDispatch, useAppSelector, setAuthCookie, setAccountAuthCookie } from 'rtk';
+import { RootState, setIsLogged, useAppDispatch, useAppSelector, setAuthCookie, setAccountAuthCookie, setFavId, setFav } from 'rtk';
 
 import { authServices } from 'services';
+import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 
 const EnterPasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -22,6 +23,16 @@ const EnterPasswordController: React.FC = () => {
   const [accountError, setAccountError] = useState('');
   const authToken = HttpClient.accessToken;
   const {getUser} = useOnboarding();
+
+  const getFavorites = useCallback(async () => {
+    const response = await vtexFavoriteServices.getFavoritesByUserEmail(email as string);
+    const list = response[0].ListItemsWrapper[0].ListItems;
+    console.log('PRUEBA', list);
+    console.log('PRUEBA2', response[0].id);
+    console.log('PRUEBA4', response);
+    dispatch(setFav(list));
+    dispatch(setFavId(response[0].id));
+  }, []);
 
   useEffect(() => {
     if (loading === false) {
@@ -41,6 +52,7 @@ const EnterPasswordController: React.FC = () => {
         dispatch(setAccountAuthCookie(response.accountAuthCookie));
         dispatch(setIsLogged({ isLogged: true }));
         getUser(email as string, true);
+        getFavorites();
       } else if (response.authStatus == 'WrongCredentials') {
         setAccountError('Contraseña incorrecta');
       } else {

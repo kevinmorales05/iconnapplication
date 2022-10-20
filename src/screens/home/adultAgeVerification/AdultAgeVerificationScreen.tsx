@@ -82,7 +82,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ visible, onPressClose }) 
             showsVerticalScrollIndicator={false}
           >
             <Container flex>
-              <Container>
+              <Container center>
                 <Container space="between" style={{ width: '95%' }}>
                   <Container>
                     <TextContainer

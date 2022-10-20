@@ -265,14 +265,15 @@ const PostalCodeScreen = () => {
 
   return (
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-      <Container style={{ margin: 20 }}>
-        <Container style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
-          <Image source={ICONN_POSTAL_CODE_HEADER_ICON} />
-          <Container style={{ width: '60%', marginLeft: 10 }}>
+      <Container style={{ marginHorizontal: 16 }}>
+        <Container style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+          <Image source={ICONN_POSTAL_CODE_HEADER_ICON} style={{width:40, height:40, marginTop:2}} />
+          <Container style={{ width: '60%', marginLeft:8}}>
             <CustomText text={'Compártenos tu código postal'} fontSize={20} fontBold />
           </Container>
         </Container>
-        <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={21} />
+        <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={40}/>
+        <Container style={{marginBottom:24}}>
         <Input
           {...register('postalCode')}
           rules={{
@@ -320,21 +321,20 @@ const PostalCodeScreen = () => {
         />
       </Container>
       <Button
-        style={{ marginHorizontal: 10 }}
         disabled={!isValid}
-        length="long"
         round
         fontBold
-        fontSize="h4"
-        leftIcon={<AntDesign name="search1" size={22} color={theme.brandColor.iconn_white} />}
+        fontSize="h3"
+        leftIcon={<AntDesign name="search1" size={22} color={theme.brandColor.iconn_white} style={{position:'absolute', left:24}} />}
         onPress={()=>{
           getPickUpPoints(postalCode);
         }}
       >
         Buscar
       </Button>
+      </Container>
       <Touchable onPress={handleGeolocation}>
-        <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 25 }}>
+        <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 44 }}>
           <Image source={ICONN_PIN_LOCATION} style={{height:24, width:24}}/>
           <Container style={{ marginLeft: 10 }}>
             <CustomText text={'Usar mi ubicación actual'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />

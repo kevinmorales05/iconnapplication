@@ -9,6 +9,7 @@ import { useLoading, useToast } from 'context';
 
 interface Props {
   productIdentifier?: string;
+  productPromotions: Map<string, Object>;
 }
 
 const ProductDetailController: React.FC<Props> = () => {
@@ -28,6 +29,7 @@ const ProductDetailController: React.FC<Props> = () => {
   const [buttonReviewed, setButtonReviewed] = useState(false);
   const [ratingValue, setRatingValue] = useState(3);
   const productIdentifier = params.productIdentifier;
+  const promotions = params.productPromotions;
   const prodId = parseInt(productIdentifier);
   const loader = useLoading();
   const toast = useToast();
@@ -114,7 +116,7 @@ const ProductDetailController: React.FC<Props> = () => {
     <SafeArea topSafeArea={false} bottomSafeArea barStyle="dark">
       <ProductDetailScreen itemId={productIdentifier} fetchReviewData={fetchReviewData} 
       star1={countUno} star2={countDos} star3={countTres} star4={countFour} star5={countFive} 
-      totalCount={totalCount} average={average} modalShow={modal} showModal={showModal} isReviewed={buttonReviewed} />
+      totalCount={totalCount} average={average} modalShow={modal} showModal={showModal} isReviewed={buttonReviewed} productPromotions={promotions} />
       
         <ReviewModal
           visible={modal}

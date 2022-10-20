@@ -26,10 +26,11 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
   } = useFormContext();
 
   const passwordRef = useRef<TextInput>(null);
+  const codeRef = useRef<TextInput>(null);
 
   useEffect(() => {
-    if (passwordRef.current) {
-      passwordRef.current.focus();
+    if (codeRef.current) {
+      codeRef.current.focus();
     }
   }, []);
 
@@ -152,6 +153,8 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
         blurOnSubmit
         onChangeText={() => {}}
         maxLength={30}
+        keyboardType="numeric"
+        ref={codeRef}
         error={errors.code?.message}
         rules={{
           required: {
@@ -179,7 +182,6 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
         placeholder={`Ingresa tu contraseña`}
         blurOnSubmit
         error={passwordError}
-        ref={passwordRef}
         showPasswordEnable
         onChangeText={validatePassword}
         maxLength={30}

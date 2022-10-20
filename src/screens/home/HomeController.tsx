@@ -36,6 +36,8 @@ import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
 import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
 import { vtexProductsServices } from 'services';
+import { useFavorites } from 'screens/auth/hooks/useFavorites';
+import { vtexPromotionsServices } from 'services/vtexPromotions.services';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -156,7 +158,7 @@ class CustomCarousel extends Component<Props, State> {
 }
 
 const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
-  const { user, isGuest } = useAppSelector((state: RootState) => state.auth);
+  const { user, isGuest, favs } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { cart } = useAppSelector((state: RootState) => state.cart);
@@ -172,6 +174,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [showShippingDropDown, setShowShippingDropDown] = useState(false);
   const toast = useToast();
   const enter = useEnterModal();
+  const {getFavorites} = useFavorites();
+  const {email} = user;
+ 
 
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
@@ -181,9 +186,20 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     if (authLoading === false) loader.hide();
   }, [authLoading]);
 
+  useEffect(() => {
+    getFavorites(email as string);
+  }, [])
+  
+
+
+
   const onPressSearch = () => {
     navigate('SearchProducts');
   };
+
+  const viewMoreProducts = (productsMore: any) => {
+    navigate('SeeMore', {products: productsMore});
+  }
 
   /**
    * Load User Addresses List and store it in the redux store
@@ -321,6 +337,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
   const [homeOtherProducts, setHomeOtherProducts] = useState<ProductInterface[] | null>();
   const { updateShoppingCartProduct, migrateCartToAnotherBranch } = useShoppingCart();
+  const [productPromotions, setProductPromotions] = useState<Object>();
+
+  console.log('PRODUCTSPA', products);
 
   const fetchData = useCallback(async () => {
     const { userId, name } = user;
@@ -386,6 +405,48 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const getRatingByProductId = async (productId: string) => {
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
+
+  const fetchPromotionData = useCallback(async () => {
+    console.log('fetchPromotionData...');
+    let productVsPromotions = new Map();
+    await vtexPromotionsServices.getAllPromotions().then(promotionsResponse => {
+      if (promotionsResponse) {
+        const { items } = promotionsResponse;
+        console.log('tams items: ' + items.length);
+        if (items.length > 0) {
+          items.map((item) => {
+            if (item.isActive) {
+              console.log('::::', item.idCalculatorConfiguration);
+              vtexPromotionsServices.getPromotionById(item.idCalculatorConfiguration).then(promotionResponse => {/*
+                if(promotionResponse){
+                  if(promotionResponse.skusGift){
+                    const { gifts } = promotionResponse.skusGift;
+                    console.log(item.idCalculatorConfiguration+' longitud:   '+gifts.length);
+                    if(gifts){
+                      if(gifts.length>0){
+                      gifts.map((gift) => {
+                        productVsPromotions.set(gift.id,{productId: gift.id, name: gift.name, quantity: gift.quantity, promotionType: promotionResponse.type, promotionName: promotionResponse.name, percentualDiscountValue: promotionResponse.percentualDiscountValue});
+                      });
+                      }
+                    }
+                  }
+                }*/
+                productVsPromotions.set("100004574", {name: "PEÑAFIEL TORONJADA LIGHT PET 600 ML", percentualDiscountValue: 10, productId: "100004574", promotionName: "2 x 1 QA visible 1", promotionType: "regular", quantity: 1});
+                productVsPromotions.set("100004548", {name: "CHOCO KRISPIS BOLSA 90GR", percentualDiscountValue: 20, productId: "100004548", promotionName: "Más por menos", promotionType: "forThePriceOf", quantity: 1});
+                productVsPromotions.set("100004655", {name: "JAMAIC CON JUGO BONAFONT 1 LT)", percentualDiscountValue: 3, productId: "100004655", promotionName: "Recoger en tienda", promotionType: "regular", quantity: 1});
+                productVsPromotions.set("100005835", {name: "CANADA DRY GINGER ALE PET 1 LT", percentualDiscountValue: 5, productId: "100005835", promotionName: "Promo 1 QA.", promotionType: "campaign", quantity: 1});
+                setProductPromotions(productVsPromotions);
+              }).catch(error => console.log(error));
+            }
+          });
+        }
+      }
+    }).catch(error => console.log(error));
+  }, []);
+
+  useEffect(() => {
+    fetchPromotionData();
+  }, []);
 
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[], collectionId: string) {
     const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
@@ -484,6 +545,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         homeProducts={homeProducts!}
         homeOtherProducts={homeOtherProducts!}
         updateShoppingCartProduct={updateShoppingCartProduct}
+        onPressViewMore={viewMoreProducts}
+        productPromotions = {productPromotions}
       />
       {/*       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>

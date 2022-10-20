@@ -393,7 +393,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         ) : (
           <></>
         )}
-        <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
+        <Container center style={{marginTop:16, backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
           <Container
             style={{
               borderStartWidth: 0,
@@ -678,7 +678,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   return (
     <Container flex crossCenter style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', padding: 0 }}>
       {inter ? (
-        <>{fullCart}</>
+        <>{cartBody}</>
       ) : (
         <>
           <Container flex backgroundColor={theme.brandColor.iconn_background} style={{ width: '100%' }}>

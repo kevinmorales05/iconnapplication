@@ -29,7 +29,7 @@ const ChangePasswordController: React.FC = () => {
 
   const { setError } = methods;
 
-  const { authenticationToken, variant } = route.params;
+  const { authenticationToken } = route.params;
 
   const loader = useLoading();
   const alert = useAlert();
