@@ -121,22 +121,21 @@ export const useAddresses = () => {
       {
         title: 'Eliminar Dirección',
         message: '¿Estás seguro que quieres eliminar esta dirección de tu cuenta?',
-        acceptTitle: 'Eliminar',
-        cancelTitle: 'Cancelar',
+        acceptTitle: 'Cancelar',
+        cancelTitle: 'Eliminar',
         cancelOutline: 'iconn_error',
         cancelTextColor: 'iconn_error',
         onCancel() {
           alert.hide();
+          deleteAdress(address, position);
         },
         onAccept() {
           alert.hide();
-          deleteAdress(address, position);
         }
       },
       'error'
     );
   };
-
 
   /**
    * Function to save and update a user address.
