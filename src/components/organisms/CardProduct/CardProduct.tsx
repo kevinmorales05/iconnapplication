@@ -355,14 +355,9 @@ const styles = StyleSheet.create({
   },
   containerTitle: {
     width: '100%',
-    minHeight: moderateScale(45),
-    marginTop: moderateScale(10)
-  },
-  containerRating: {
-    width: '100%',
-    flexDirection: 'row',
-    marginTop: moderateScale(9),
-    alignItems: 'center'
+    height: moderateScale(50),
+    marginTop: moderateScale(10),
+    overflow: 'hidden'
   },
   containerPrice: {
     width: '100%',

@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   containerRating: {
     width: '100%',
     flexDirection: 'row',
-    marginTop: moderateScale(9),
+    marginTop: moderateScale(5),
     alignItems: 'center'
   },
   containerText: {
