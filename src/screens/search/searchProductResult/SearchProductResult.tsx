@@ -11,6 +11,7 @@ import {
   ProductInterface,
   ProductPriceResponseInterface,
   ProductRaitingResponseInterface,
+  ProductSearchItemInterface,
   RootState,
   TabItem,
   useAppDispatch,
@@ -74,12 +75,8 @@ const SearchProductResult: React.FC = () => {
 
   useEffect(() => {
     if (products?.length! > 0) {
-      getPrices().then(prices => {
-        getRatings().then(ratings => {
-          const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-          refillProductsWithPrice(prices, ratings, existingProducts);
-        });
-      });
+      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      refillProductsWithPrice(existingProducts);
     }
   }, [products, cart, visible]);
 
@@ -97,23 +94,31 @@ const SearchProductResult: React.FC = () => {
     }
   };
 
-  const refillProductsWithPrice = (
-    prices: ProductPriceResponseInterface[],
-    ratings: ProductRaitingResponseInterface[],
-    existingProductsInCart: ExistingProductInCartInterface[]
-  ) => {
-    let productsTem: ProductInterface[] = [];
-    productsTem = products.map((product, idx) => ({
-      ratingValue: ratings[idx].average,
-      price: prices.find(price => price.itemId === product.productId.toString())?.basePrice,
-      oldPrice: prices.find(price => price.itemId === product.productId.toString())?.basePrice,
-      name: product.nameComplete,
-      image: { uri: product.imageUrl },
-      quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.productId.toString())?.quantity : 0,
-      productId: product.productId
-    }));
-    setProductsRender(productsTem);
-  };
+  async function refillProductsWithPrice(
+    existingProductsInCart: ExistingProductInCartInterface[],
+  ){
+    let productsToRender: ProductInterface[] = [];
+    let productsTem: ProductSearchItemInterface[] = [];
+    productsTem = products.concat(productsTem)
+    for( const p of products ) {
+      const price = await getPriceByProductId(p.productId);
+      const raiting = await getRatingByProductId(p.productId)
+      if(price && raiting){
+        productsToRender.push({
+          ratingValue: raiting.average,
+          price: price?.basePrice,
+          oldPrice: price?.basePrice,
+          name: p.nameComplete,
+          image: { uri: p.imageUrl },
+          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0,
+          productId: p.productId
+        })
+      }
+      console.log({productsToRender})
+    }
+    console.log({productsToRender})
+    setProductsRender(productsToRender);
+  }
 
   const getPriceByProductId = async (productId: string) => {
     return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
