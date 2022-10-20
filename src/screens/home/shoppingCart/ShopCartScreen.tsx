@@ -649,6 +649,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           fontBold
         ></CustomText>
       </Container>
+      <Container row space="between" style={{ marginTop: 4, width: '90%' }}>
+        <TextContainer marginLeft={7.5} text="Gastos de envío:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+        <TextContainer marginLeft={7.5} text="Por calcular" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+      </Container>
       <Container center>
         <Button
           length="long"
@@ -656,7 +660,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           round
           fontBold
           onPress={onPressCheckout}
-          style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
+          style={{ marginBottom: 8, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
         >
           Continuar
         </Button>

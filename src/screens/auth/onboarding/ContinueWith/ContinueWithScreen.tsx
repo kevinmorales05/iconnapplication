@@ -35,7 +35,7 @@ const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail
               style={{ marginTop: 8 }}
               icon={<FontAwesome5 name="google" size={24} color="white" />}
             >
-              Continúa con Google
+              Ingresa con Google
             </Button>
           );
         } else if (provider.providerName === 'Facebook') {
@@ -52,7 +52,7 @@ const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail
               style={{ marginTop: 8 }}
               icon={<FontAwesome5 name="facebook" size={24} color="white" />}
             >
-              Continúa con Facebook
+              Ingresa con Facebook
             </Button>
           );
         } else {
@@ -83,13 +83,13 @@ const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail
       <Container flex alignment="end">
         {renderButtons()}
         <Button round onPress={onPressEmail} fontSize="h4" fontBold style={{ marginTop: 8 }} icon={<Fontisto name="email" size={24} color="white" />}>
-          Continúa con tu correo
+          Ingresa con tu correo
         </Button>
         <Container row crossCenter style={{ marginTop: 16, marginBottom: 16 }}>
           <TouchableText
             underline
             textColor={theme.brandColor.iconn_white}
-            text="Entrar como invitado"
+            text="Ingresar como invitado"
             typography="h4"
             fontBold
             onPress={onPressContinueAsGuest}

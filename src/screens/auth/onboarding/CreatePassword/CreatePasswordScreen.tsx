@@ -190,20 +190,20 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
 
       <Container>
         <Container flex row center style={{ marginTop: 34 }}>
-          <Ionicons name={val1Item} size={24} color={val1Color} />
-          <TextContainer text="Mínimo 8 caracteres" typography="h5" marginLeft={10} />
-        </Container>
-        <Container flex row center style={{ marginTop: 10 }}>
           <Ionicons name={val2Item} size={24} color={val2Color} />
-          <TextContainer text="Contiene una letra mayúscula" typography="h5" marginLeft={10} />
+          <TextContainer text="Una letra mayúscula" typography="h5" marginLeft={10} />
         </Container>
         <Container flex row center style={{ marginTop: 10 }}>
           <Ionicons name={val3Item} size={24} color={val3Color} />
-          <TextContainer text="Contiene una letra minúscula" typography="h5" marginLeft={10} />
+          <TextContainer text="Una letra minúscula" typography="h5" marginLeft={10} />
         </Container>
         <Container flex row center style={{ marginTop: 10 }}>
           <Ionicons name={val4Item} size={24} color={val4Color} />
-          <TextContainer text="Contiene un número" typography="h5" marginLeft={10} />
+          <TextContainer text="Un número" typography="h5" marginLeft={10} />
+        </Container>
+        <Container flex row center style={{ marginTop: 10 }}>
+          <Ionicons name={val1Item} size={24} color={val1Color} />
+          <TextContainer text="Al menos 8 caracteres" typography="h5" marginLeft={10} />
         </Container>
       </Container>
 

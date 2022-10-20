@@ -77,7 +77,7 @@ export const TabNavigator = () => {
         options={{
           unmountOnBlur: true,
           headerShown: isGuest ? false : true,
-          title: 'Mi Cuenta',
+          title: 'Cuenta',
           tabBarIcon: ({ focused }) => {
             return <Image source={TAB_USER_PROFILE} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
           }
