@@ -134,15 +134,15 @@ const AddressModalScreen: React.FC<Props> = ({
           <Container row space="between" style={{ marginTop: 16, marginBottom: 16 }}>
             <Container />
             <Container flex>
-              <CustomText alignSelf='center' textColor={theme.brandColor.iconn_dark_grey} text={title} typography="h3" fontBold />
+              <CustomText alignSelf="center" textColor={theme.brandColor.iconn_dark_grey} text={title} typography="h3" fontBold />
               <ActionButton
-                style={{ position:'absolute', right:0, top:-2, shadowColor: 'none' }}
+                style={{ position: 'absolute', right: 0, top: -2, shadowColor: 'none' }}
                 icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
                 size="xxsmall"
                 onPress={onPressClose}
                 color="iconn_med_grey"
                 circle
-                />
+              />
             </Container>
           </Container>
           <ScrollView
@@ -176,13 +176,13 @@ const AddressModalScreen: React.FC<Props> = ({
                   </Container>
                   <Container style={{ width: '48%' }}>
                     <Button
-                      icon={<Image source={ICONN_ADDRESS_FIND} resizeMode="cover" style={{ width: 28, height: 28, tintColor:'#333333' }} />}
+                      icon={<Image source={ICONN_ADDRESS_FIND} resizeMode="cover" style={{ width: 28, height: 28, tintColor: '#333333' }} />}
                       round
                       fontBold
                       fontSize="h4"
                       onPress={() => onPressFindPostalCodeInfo(getValues('postalCode'))}
                       color="iconn_light_grey"
-                      fontColor='dark'
+                      fontColor="dark"
                       disabled={!!errors.postalCode?.message || getValues('postalCode')?.length === 0 || (mode === 'update' && postalCodeChanged === false)}
                       style={errors.postalCode?.message || postalCodeError ? { marginBottom: 8 } : {}}
                     >
@@ -253,7 +253,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   boldLabel
                   maxLength={50}
                   onSubmitEditing={() => referenceRef.current?.focus()}
-                  rules={alphaNumericWithSpacesAndDot(3)}
+                  rules={openField(3)}
                   error={errors.street?.message}
                 />
 
@@ -271,7 +271,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   boldLabel
                   maxLength={50}
                   onSubmitEditing={() => tagRef.current?.focus()}
-                  rules={NRalphaNumericWithSpacesAndDot(3)}
+                  rules={openField(3)}
                   error={errors.reference?.message}
                 />
 
@@ -288,7 +288,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   label="Etiqueta"
                   boldLabel
                   maxLength={20}
-                  rules={alphaNumericWithoutSpaces(3)}
+                  rules={openField(3)}
                   error={errors.tag?.message}
                 />
               </Container>
