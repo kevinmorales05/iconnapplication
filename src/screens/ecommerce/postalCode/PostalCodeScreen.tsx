@@ -36,40 +36,42 @@ const PostalCodeScreen = () => {
   const alert = useAlert();
   const [ postalCode, setPostalCode ] = useState<string>('')
 
-  // Redirect to home if permissions are granted
-  useEffect(() => {
-    (async () => {
-      loader.show('', 'ecommerce');
-      const hasPermission = await hasLocationPermission();
+  //useEffect to get geopoint of user before render
 
-      if (!hasPermission) {
-        loader.hide();
-        return;
-      }
+  // // Redirect to home if permissions are granted
+  // useEffect(() => {
+  //   (async () => {
+  //     loader.show('', 'ecommerce');
+  //     const hasPermission = await hasLocationPermission();
 
-      Geolocation.getCurrentPosition(
-        position => {
-          getPickUpPointsByAddress(position);
-        },
-        error => {
-          loader.hide();
-        },
-        {
-          accuracy: {
-            android: 'high',
-            ios: 'best'
-          },
-          enableHighAccuracy: true,
-          timeout: 15000,
-          maximumAge: 10000,
-          distanceFilter: 0,
-          forceRequestLocation: true,
-          forceLocationManager: true,
-          showLocationDialog: true
-        }
-      );
-    })();
-  }, []);
+  //     if (!hasPermission) {
+  //       loader.hide();
+  //       return;
+  //     }
+
+  //     Geolocation.getCurrentPosition(
+  //       position => {
+  //         getPickUpPointsByAddress(position);
+  //       },
+  //       error => {
+  //         loader.hide();
+  //       },
+  //       {
+  //         accuracy: {
+  //           android: 'high',
+  //           ios: 'best'
+  //         },
+  //         enableHighAccuracy: true,
+  //         timeout: 15000,
+  //         maximumAge: 10000,
+  //         distanceFilter: 0,
+  //         forceRequestLocation: true,
+  //         forceLocationManager: true,
+  //         showLocationDialog: true
+  //       }
+  //     );
+  //   })();
+  // }, []);
 
   // useEffect(() => {
   //   if (position) {
