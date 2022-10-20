@@ -5,6 +5,7 @@ import {
   InvoicingGetInvoicePDFRequestInterface,
   InvoicingPetroTicketRequestInterface,
   InvoicingProfileInterface,
+  InvoicingResendEmailRequestInterface,
   InvoicingSevenTicketRequestInterface
 } from '../types';
 import { invoicingServices } from 'services';
@@ -28,9 +29,12 @@ export const getInvoicingProfileListThunk = createAsyncThunk('invoicing/getInvoi
   thunk.dispatch(setInvoicingProfilesList(arr));
 });
 
-export const resendVerificationEmailThunk = createAsyncThunk('invoicing/resendVerificationEmailThunk', async (email: string) => {
-  return await invoicingServices.resendVerificationEmail(email);
-});
+export const resendVerificationEmailThunk = createAsyncThunk(
+  'invoicing/resendVerificationEmailThunk',
+  async (payload: InvoicingResendEmailRequestInterface) => {
+    return await invoicingServices.resendVerificationEmail(payload);
+  }
+);
 
 export const getTicketThunk = createAsyncThunk(
   'invoicing/getTicketThunk',

@@ -5,6 +5,7 @@ import {
   InvoicingGetInvoicePDFRequestInterface,
   InvoicingPetroTicketRequestInterface,
   InvoicingProfileInterface,
+  InvoicingResendEmailRequestInterface,
   InvoicingSevenTicketRequestInterface
 } from 'rtk/types/invoicing.types';
 /**
@@ -88,9 +89,14 @@ async function updateInvoicingProfile(invoicingProfile: InvoicingProfileInterfac
 /**
  * Function to resend verification email
  */
-async function resendVerificationEmail(email: string): Promise<any> {
-  const response = await InvoicingApi.getInstance().getRequest(`/invoicing/mail/sendEmailForVerification/${email}`);
-  if (response === undefined) return Promise.reject(new Error(`resendVerificationEmail:/invoicing/mail/sendEmailForVerification/${email}`));
+async function resendVerificationEmail(invoicingResendEmail: InvoicingResendEmailRequestInterface): Promise<any> {
+  const response = await InvoicingApi.getInstance().getRequest(
+    `/invoicing/mail/sendEmailForVerification/${invoicingResendEmail.email}/${invoicingResendEmail.invoicingProfileId}`
+  );
+  if (response === undefined)
+    return Promise.reject(
+      new Error(`resendVerificationEmail:/invoicing/mail/sendEmailForVerification/${invoicingResendEmail.email}/${invoicingResendEmail.invoicingProfileId}`)
+    );
   const { data } = response;
   return data;
 }

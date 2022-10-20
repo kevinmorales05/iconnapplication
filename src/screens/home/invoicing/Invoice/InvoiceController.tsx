@@ -68,7 +68,9 @@ const InvoiceController: React.FC = () => {
   const resendEmail = async () => {
     loader.show();
     try {
-      const response = await dispatch(resendVerificationEmailThunk(defaultProfile?.email as string)).unwrap();
+      const response = await dispatch(
+        resendVerificationEmailThunk({ email: defaultProfile?.email!, invoicingProfileId: defaultProfile?.invoicing_profile_id! })
+      ).unwrap();
       if (response.responseCode === 200) {
         showAlert();
       } else {
