@@ -396,14 +396,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         <Container center style={{marginTop:16, backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
           <Container
             style={{
-              borderStartWidth: 0,
-              borderLeftColor: theme.brandColor.iconn_med_grey,
-              borderEndWidth: 0,
-              borderRightColor: theme.brandColor.iconn_med_grey,
-              borderTopWidth: 1,
-              borderTopColor: theme.brandColor.iconn_med_grey,
-              borderBottomWidth: 1,
-              borderBottomColor: theme.brandColor.iconn_med_grey,
               width: 350,
               height: 50
             }}
