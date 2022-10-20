@@ -155,7 +155,7 @@ export const useAddresses = () => {
       street: addressTosubmit.street,
       neighborhood: addressTosubmit.neighborhood,
       reference: addressTosubmit.reference,
-      userId: user.userId
+      userId: user.id
     };
 
     try {
