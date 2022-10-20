@@ -26,13 +26,16 @@ interface Props {
 
 const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPressToogle, onPressShowAddressesModal, mode, handleMode }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  console.log({defaultSeller: !address})
 
   return (
     <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: theme.brandColor.iconn_white }}>
       <Container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ShippingOption
           selected={mode === ShippingMode.DELIVERY}
+          mode={ShippingMode.DELIVERY}
           icon={ICONN_SCOOTER}
+          disable={!address}
           text={'A domicilio'}
           onPress={() => {
             handleMode(ShippingMode.DELIVERY);
@@ -42,6 +45,8 @@ const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPress
           }}
         />
         <ShippingOption
+          disable={!address}
+          mode={ShippingMode.PICKUP}
           selected={mode === ShippingMode.PICKUP}
           icon={ICONN_SEVEN_STORE}
           text={'Recoger en'}
@@ -235,11 +240,15 @@ const ShippingOption = ({
   icon,
   selected,
   onPress,
-  unmark
+  unmark,
+  disable,
+  mode
 }: {
   text: string;
   icon: ImageSource;
   selected: boolean;
+  disable: boolean;
+  mode: number;
   onPress: () => void;
   unmark: () => void;
 }) => {
@@ -259,7 +268,7 @@ const ShippingOption = ({
         </Container>
       )}
       <Container>
-        <Touchable onPress={onPress}>
+        <Touchable  disabled={(mode === ShippingMode.DELIVERY) ? disable : false} onPress={onPress}>
           <Container
             style={[
               {
@@ -274,7 +283,7 @@ const ShippingOption = ({
               selected && highlight
             ]}
           >
-            <Image source={icon} />
+            <Image source={icon} style={{tintColor: (mode === ShippingMode.DELIVERY) ? (disable ? theme.fontColor.placeholder : theme.brandColor.iconn_accent_principal) : (theme.brandColor.iconn_accent_principal)}} />
           </Container>
         </Touchable>
       </Container>

@@ -11,7 +11,7 @@ import { useLoading, useAlert, useToast } from 'context';
 import Geolocation from 'react-native-geolocation-service';
 import appConfig from '../../../../app.json';
 import { PlacesSvg } from 'components/svgComponents/PlacesSvg';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { vtexPickUpPoints } from 'services';
 import Octicons from 'react-native-vector-icons/Octicons';
 
@@ -270,7 +270,7 @@ const SearchSellerScreen = () => {
           </Container>
         </Container>
       </Touchable>
-      <Container width={'100%'} height={Dimensions.get('window').height * 0.60}>
+      <Container width={'100%'} height={verticalScale(390)}>
         <ScrollView>
           {sellersToRender.slice(0, 5).map((seller, index) => {
             return (
