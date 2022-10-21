@@ -137,7 +137,7 @@ const getExistingProductsInCart = () => {
           {productsList?.length ? (
             <Container width={'100%'}>
               <Container style={{ marginTop: moderateScale(15) }}>
-                <CustomText text={`${productsList?.length} producto${productsList?.length > 1 ? 's' : ''} encontrado`} textColor={theme.fontColor.placeholder} fontSize={theme.fontSize.h6} />
+                <CustomText text={`${productsList?.length} producto${productsList?.length > 1 ? 's' : ''} encontrado${productsList?.length > 1 ? 's' : ''}`} textColor={theme.fontColor.placeholder} fontSize={theme.fontSize.h6} />
               </Container>
               <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
                 <FlatList
