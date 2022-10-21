@@ -24,14 +24,6 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
   });
   const insets = useSafeAreaInsets();
 
-  //const [delivery, setDelivery] = useState<DeliveryChannel>();
-  const getOrderr = useCallback(async (oid: string) => {
-    const data = await vtexsingleOrdersServices.getOrderById(oid);
-    console.log('AQUI JAMON', data);
-    const orderDC: DeliveryChannel = data.shippingData.logisticsInfo[1].selectedDeliveryChannel;
-    console.log('GELATINA', orderDC, '=>', oid);
-    return orderDC;
-  }, []);
 
   return (
     <ScrollView
@@ -45,11 +37,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
         width: '100%'
       }}
     >
-      {/* {
-        (officialOrderArray.length == 0 ) ? <TextContainer text='no hay'/> : officialOrderArray.map((order) => {
-          return <TextContainer text={order.deliveryChannel }/>
-        })
-      } */}
+
       {!isOnline ? (
         <></>
       ) : officialOrderArray.length == 0 ? (
@@ -73,6 +61,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
                 status={order.status}
                 totalItems={order.totalItems}
                 totalValue={order.totalValue}
+                deliveryChannel={order.deliveryChannel}
               />
             );
           }
@@ -82,15 +71,14 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
       {!isOnline ? (
         <InfoCard text={`No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.`} />
       ) : officialOrderArray.length == 0 ? (
-        <Container >
+        <Container>
           <Container center style={{ marginTop: 164.2 }}>
             <Image source={ICONN_BASKET_SHOPPING_CART} style={{ height: 40, width: 40 }}></Image>
           </Container>
           <TextContainer marginTop={12.3} text={'No tienes pedidos'} textAlign="center" fontBold fontSize={16} />
           <TextContainer text="Aquí verás tus pedidos anteriores y pedidos en curso." textAlign="center" marginTop={11} />
-          <Button onPress={goBack} fontBold fontSize="h4" color="iconn_green_original" round marginTop={360} marginBottom={0}>
-            {' '}
-            Ver artículos{' '}
+          <Button onPress={goBack} fontBold fontSize="h4" color="iconn_green_original" round marginTop={234}>
+            Ver articulos
           </Button>
         </Container>
       ) : (
@@ -103,6 +91,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
                 totalValue={order.totalValue}
                 status={order.status}
                 orderId={order.orderId}
+                deliveryChannel={order.deliveryChannel}
               />
             );
         })

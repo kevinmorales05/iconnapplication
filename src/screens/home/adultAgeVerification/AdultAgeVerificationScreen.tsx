@@ -13,10 +13,12 @@ import { authServices } from 'services';
 
 interface Props {
   onPressClose: () => void;
-  visible: boolean
+  visible: boolean;
+  userUpdated: (productId: string, udpated: boolean) => void;
+  productId: string;
 }
 
-const AdultAgeVerificationScreen: React.FC<Props> = ({ visible, onPressClose }) => {
+const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, userUpdated, productId }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const insets = useSafeAreaInsets();
   const updateUserAgeStatus = (async (adultStatus) => {
@@ -32,6 +34,8 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ visible, onPressClose }) 
               console.log(updatedDoc);
               if (!adultStatus) {
                 Linking.openURL('https://www.alcoholinformate.org.mx/');
+              } else {
+                userUpdated(productId, true);
               }
             }).catch((error) => console.log(error))
           }
