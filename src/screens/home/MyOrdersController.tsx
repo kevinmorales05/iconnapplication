@@ -5,34 +5,64 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
-import { OrderInterface, RootState, useAppSelector } from 'rtk';
+import { OrderInterface, RootState, useAppSelector, DeliveryChannel } from 'rtk';
 import theme from 'components/theme/theme';
 import { vtexordersServices } from 'services/vtexorder.services';
+import { vtexsingleOrdersServices } from 'services';
 
 const MyOrdersController: React.FC = () => {
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [lista, setLista] = useState<OrderInterface[]>([]);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
+
+  const getOrderr = useCallback(async (oid: string) => {
+    const {shippingData} = await vtexsingleOrdersServices.getOrderById(oid);
+    const orderDC: DeliveryChannel = shippingData.logisticsInfo[0].selectedDeliveryChannel;
+    return orderDC;
+  }, []);
+
   const getOrders = useCallback(async () => {
-    const { list: data } = await vtexordersServices.getOrdersListByUserEmail(email as string, 1, 3);
-    let orderArray: OrderInterface[] = data.map((order: OrderInterface) => {
+    const { list: data } = await vtexordersServices.getOrdersListByUserEmail(email, 1, 3);
+    let orderArray: OrderInterface[] = data.map( (order: OrderInterface) => {
       return {
         orderId: order.orderId,
         creationDate: order.creationDate,
         totalValue: order.totalValue,
         status: order.status,
         orderIsComplete: order.orderIsComplete,
-        totalItems: order.totalItems
+        totalItems: order.totalItems,
       };
     });
-    console.log('PRUEBA', orderArray[1].deliveryChannel);
-    setLista(orderArray);
+    return orderArray;
   }, []);
 
+  async function AddOrderDC() {
+
+    const arr: OrderInterface[]| null | undefined = await getOrders();
+    const newOrders: OrderInterface[] | undefined = [];
+    for (const order of arr) {
+      const dc = await getOrderr(order.orderId);
+      console.log('PLS', dc, order.orderId);
+      const newOrder: OrderInterface = {
+        creationDate: order.creationDate,
+        orderId: order.orderId, 
+        orderIsComplete: order.orderIsComplete,
+        status: order.status,
+        totalItems: order.totalItems, 
+        totalValue: order.totalValue, 
+        deliveryChannel: dc,
+      } 
+      newOrders.push(newOrder);
+    }
+    setLista(newOrders);
+  }
+
   useEffect(() => {
-    getOrders();
-  }, [getOrders]);
+    AddOrderDC();
+  }, []);
+
+  
 
   return (
     <SafeArea

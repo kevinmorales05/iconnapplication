@@ -20,13 +20,8 @@ const OrderCard = (props: OrderInterface) => {
 
   const newDate = (date: string) => {
     let formatDay = new Date(date);
-    //console.log('HIPOPOTAMO', date);
-    //console.log('CABRAS', formatDay.getDate());
-    //console.log('MONOS', formatDay);
     let help: string = formatDate2(formatDay).toString();
     let halp = formatDate2(formatDay);
-    /*     console.log('MANGO', halp);
-     */ 
     help = help.replace('de', '');
     help = help.replace(' de', ',');
     return help;
@@ -34,22 +29,15 @@ const OrderCard = (props: OrderInterface) => {
   const newMoney = (amount: number) => {
     return (amount / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
   };
-  console.log('ESTE ES EL ORDER ID', orderId);
-  console.log('ESTE ES EL ORDER ID', typeof orderId);
-  const [delivery, setDelivery] = useState<DeliveryChannel>();
+
 
   const getOrderItems = useCallback(async () => {
     const itemsCart = cart.items;
     const data = await vtexsingleOrdersServices.getOrderById(orderId);
     const { items } = data;
-    console.log('PANICO', items.length);
     items.forEach(function (item) {
-      console.log('HALP', item.productId);
-      console.log('CONTADOR', JSON.stringify(itemsCart, null, 3));
       if (itemsCart.length > 0) {
         itemsCart.forEach(function (itemCart) {
-          console.log('HALP2 ORDEN', item.productId);
-          console.log('HALP2 CARRITO', itemCart.productId);
           if (item.productId == itemCart.productId) {
             updateShoppingCartProduct('add', item.productId);
           }
@@ -61,59 +49,24 @@ const OrderCard = (props: OrderInterface) => {
         updateShoppingCartProduct('create', item.productId);
       }
       
-    /*   if (itemsCart.length == 0) {
-        updateShoppingCartProduct('create', item.productId);
-        console.log('se añadio producto');
-      } else {
-        updateShoppingCartProduct('add', item.productId);
-        console.log('se aumento el producto');
-      } */
     });
     toast.show({ message: 'Se añadieron los productos al carrito', type: 'success' });
-    console.log('AQUI OTOMANOS', JSON.stringify(items, null, 3));
   }, []);
 
-  const getOrderr = useCallback(async (oid: string) => {
-    const data = await vtexsingleOrdersServices.getOrderById(oid);
-    console.log('AQUI JAMON', data);
-    const orderDC: DeliveryChannel = data.shippingData.logisticsInfo[1].selectedDeliveryChannel;
-    console.log('GELATINA', orderDC, '=>', oid);
-    setDelivery(orderDC);
-  }, []);
 
-  /* const getOrder =(oid : string) => {
-      //let shipping: DeliveryChannel;
-      vtexsingleOrdersServices.getOrderById(oid).then(response => {
-        setDelivery(response.shippingData.logisticsInfo[1].selectedDeliveryChannel);
-        //shipping = response.shippingData.logisticsInfo[1].selectedDeliveryChannel;
-        console.log('jumanji', response.shippingData.logisticsInfo[1].selectedDeliveryChannel, '=>' , oid );
-      })
-      //return shipping;
-    } */
-
-  useEffect(() => {
-    const data = async (oid: string) => {
-      const dc = await vtexsingleOrdersServices.getOrderById(oid);
-      console.log('AQUI JAMON', data);
-      const orderDC: DeliveryChannel = dc.shippingData.logisticsInfo[1].selectedDeliveryChannel;
-      console.log('GELATINA', orderDC, '=>', oid);
-      setDelivery(orderDC);
-    };
-    data(orderId);
-  }, [orderId]);
 
   return (
     <Container style={styles.backgroundCard}>
       <Container row space="around">
         <Container style={styles.iconDelivery}>
-          {delivery == 'delivery' ? (
+          {deliveryChannel == 'delivery' ? (
             <Image source={ICONN_SHOPPING_BAG} style={{ height: 24, width: 24 }} />
           ) : (
             <Image source={ICONN_STORE_MODERN} style={{ height: 24, width: 24 }} />
           )}
         </Container>
 
-        {delivery == 'delivery' ? (
+        {deliveryChannel == 'delivery' ? (
           <TextContainer text="Envío a domicilio" marginTop={16} marginLeft={8} fontBold />
         ) : (
           <TextContainer text="Pickup en tienda" fontBold marginTop={16} marginLeft={8} />
