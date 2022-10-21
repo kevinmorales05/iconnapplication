@@ -68,11 +68,13 @@ const FavoriteScreen: React.FC<Props>= ({completeList}) => {
   const { favs, user, favsId } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
+  console.log('CANASTA', completeList);
 
   const onPressSearch = () => {
     navigate('SearchProducts');
   };
 
+  
   const _renderItem = ({ item }) => {
     return (
       <CardProduct

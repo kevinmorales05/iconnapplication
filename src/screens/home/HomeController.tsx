@@ -55,7 +55,7 @@ interface State {
 }
 
 interface PropsController {
-  paySuccess: boolean
+  paySuccess: boolean;
 }
 
 class CustomCarousel extends Component<Props, State> {
@@ -174,9 +174,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [showShippingDropDown, setShowShippingDropDown] = useState(false);
   const toast = useToast();
   const enter = useEnterModal();
-  const {getFavorites} = useFavorites();
-  const {email} = user;
- 
+  const { getFavorites } = useFavorites();
+  const { email } = user;
 
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();
@@ -188,18 +187,15 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   useEffect(() => {
     getFavorites(email as string);
-  }, [])
-  
-
-
+  }, []);
 
   const onPressSearch = () => {
     navigate('SearchProducts');
   };
 
   const viewMoreProducts = (productsMore: any) => {
-    navigate('SeeMore', {products: productsMore});
-  }
+    navigate('SeeMore', { products: productsMore });
+  };
 
   /**
    * Load User Addresses List and store it in the redux store
@@ -388,7 +384,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         ),
         type: 'limited'
       });
-    }else if(paySuccess && isGuest){
+    } else if (paySuccess && isGuest) {
       toast.show({
         message: 'Más detalles sobre el pedido en tu correo electrónico',
         type: 'limited'
@@ -407,15 +403,20 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchPromotionData = useCallback(async () => {
     console.log('fetchPromotionData...');
     let productVsPromotions = new Map();
-    await vtexPromotionsServices.getAllPromotions().then(promotionsResponse => {
-      if (promotionsResponse) {
-        const { items } = promotionsResponse;
-        console.log('tams items: ' + items.length);
-        if (items.length > 0) {
-          items.map((item) => {
-            if (item.isActive) {
-              console.log('::::', item.idCalculatorConfiguration);
-              vtexPromotionsServices.getPromotionById(item.idCalculatorConfiguration).then(promotionResponse => {/*
+    await vtexPromotionsServices
+      .getAllPromotions()
+      .then(promotionsResponse => {
+        if (promotionsResponse) {
+          const { items } = promotionsResponse;
+          console.log('tams items: ' + items.length);
+          if (items.length > 0) {
+            items.map(item => {
+              if (item.isActive) {
+                console.log('::::', item.idCalculatorConfiguration);
+                vtexPromotionsServices
+                  .getPromotionById(item.idCalculatorConfiguration)
+                  .then(promotionResponse => {
+                    /*
                 if(promotionResponse){
                   if(promotionResponse.skusGift){
                     const { gifts } = promotionResponse.skusGift;
@@ -429,17 +430,47 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
                     }
                   }
                 }*/
-                productVsPromotions.set("100004574", {name: "PEÑAFIEL TORONJADA LIGHT PET 600 ML", percentualDiscountValue: 10, productId: "100004574", promotionName: "2 x 1 QA visible 1", promotionType: "regular", quantity: 1});
-                productVsPromotions.set("100004548", {name: "CHOCO KRISPIS BOLSA 90GR", percentualDiscountValue: 20, productId: "100004548", promotionName: "Más por menos", promotionType: "forThePriceOf", quantity: 1});
-                productVsPromotions.set("100004655", {name: "JAMAIC CON JUGO BONAFONT 1 LT)", percentualDiscountValue: 3, productId: "100004655", promotionName: "Recoger en tienda", promotionType: "regular", quantity: 1});
-                productVsPromotions.set("100005835", {name: "CANADA DRY GINGER ALE PET 1 LT", percentualDiscountValue: 5, productId: "100005835", promotionName: "Promo 1 QA.", promotionType: "campaign", quantity: 1});
-                setProductPromotions(productVsPromotions);
-              }).catch(error => console.log(error));
-            }
-          });
+                    productVsPromotions.set('100004574', {
+                      name: 'PEÑAFIEL TORONJADA LIGHT PET 600 ML',
+                      percentualDiscountValue: 10,
+                      productId: '100004574',
+                      promotionName: '2 x 1 QA visible 1',
+                      promotionType: 'regular',
+                      quantity: 1
+                    });
+                    productVsPromotions.set('100004548', {
+                      name: 'CHOCO KRISPIS BOLSA 90GR',
+                      percentualDiscountValue: 20,
+                      productId: '100004548',
+                      promotionName: 'Más por menos',
+                      promotionType: 'forThePriceOf',
+                      quantity: 1
+                    });
+                    productVsPromotions.set('100004655', {
+                      name: 'JAMAIC CON JUGO BONAFONT 1 LT)',
+                      percentualDiscountValue: 3,
+                      productId: '100004655',
+                      promotionName: 'Recoger en tienda',
+                      promotionType: 'regular',
+                      quantity: 1
+                    });
+                    productVsPromotions.set('100005835', {
+                      name: 'CANADA DRY GINGER ALE PET 1 LT',
+                      percentualDiscountValue: 5,
+                      productId: '100005835',
+                      promotionName: 'Promo 1 QA.',
+                      promotionType: 'campaign',
+                      quantity: 1
+                    });
+                    setProductPromotions(productVsPromotions);
+                  })
+                  .catch(error => console.log(error));
+              }
+            });
+          }
         }
-      }
-    }).catch(error => console.log(error));
+      })
+      .catch(error => console.log(error));
   }, []);
 
   useEffect(() => {
@@ -544,7 +575,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         homeOtherProducts={homeOtherProducts!}
         updateShoppingCartProduct={updateShoppingCartProduct}
         onPressViewMore={viewMoreProducts}
-        productPromotions = {productPromotions}
+        productPromotions={productPromotions}
       />
       {/*       <CustomModal visible={modVisibility}>
         <Container center style={styles.modalBackground}>

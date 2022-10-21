@@ -108,18 +108,19 @@ const CardProduct: React.FC<CardProductProps> = ({
   const getIsFavorite = () => {
     if(favs){
       if(favs.length) {
-        favs.map(fav => {
-          if (productId == fav.Id) {
-            setIsFav(true);
-          }
-        });
+        const favorite = favs.find(fav => productId == fav.Id  );
+        if (favorite) {
+          setIsFav(true);
+        } else {
+          setIsFav(false);
+        }
       }
     }
   };
 
   useEffect(() => {
     getIsFavorite();
-  }, [isFav]);
+  }, [isFav, favs]);
 
   useEffect(() => {
   }, [productPromotions]);
