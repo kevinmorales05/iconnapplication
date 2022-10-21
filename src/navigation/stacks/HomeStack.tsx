@@ -49,9 +49,9 @@ import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutContr
 import FavoriteController from 'screens/home/favoriteScreen/FavoriteController';
 import ChangePasswordController from 'screens/home/myAccount/changePassword/ChangePasswordController';
 import DeleteAccountController from 'screens/home/myAccount/deleteAccount/DeleteAccountController';
-import SeeMoreScreen from 'screens/home/viewMore/SeeMoreScreen';
+import SeeMoreScreen from 'screens/home/viewMore/OtherProductsScreen';
 import RecomendedForYouScreen from 'screens/home/viewMore/RecommededForYou';
-import OtherProductsScreen from 'screens/home/viewMore/SeeMoreScreen';
+import OtherProductsScreen from 'screens/home/viewMore/OtherProductsScreen';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();

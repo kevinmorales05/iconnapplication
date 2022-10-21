@@ -12,7 +12,7 @@ import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { ExistingProductInCartInterface, ProductInterface, ProductResponseInterface, RootState, useAppSelector } from 'rtk';
 
-function RecommededForYouScreen() {
+function OtherProductsScreen() {
   const [productsList, setProductsList] = useState<ProductInterface[]>();
   const [size, setSize] = useState();
   const { updateShoppingCartProduct } = useShoppingCart();
@@ -192,7 +192,7 @@ const getExistingProductsInCart = () => {
   );
 }
 
-export default RecommededForYouScreen;
+export default OtherProductsScreen;
 
 const styles = StyleSheet.create({
   containerHeader: {
