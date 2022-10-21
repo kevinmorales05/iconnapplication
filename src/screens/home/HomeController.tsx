@@ -26,7 +26,6 @@ import { ICONN_COFFEE } from 'assets/images';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useEnterModal, useInConstruction, useLoading, useToast } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
@@ -160,7 +159,6 @@ class CustomCarousel extends Component<Props, State> {
 const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { user, isGuest, favs } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
-  const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const { isLogged } = userLogged;
@@ -177,10 +175,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const inConstruction = useInConstruction();
   const { getFavorites } = useFavorites();
   const { email } = user;
-
-  useEffect(() => {
-    if (invoicingLoading === false) loader.hide();
-  }, [invoicingLoading]);
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -217,21 +211,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   useEffect(() => {
     fetchAddresses();
   }, [fetchAddresses]);
-
-  /**
-   * Load Invocing Profile List and store it in the redux store.
-   */
-  const fetchInvoicingProfileList = useCallback(async () => {
-    loader.show();
-    await dispatch(getInvoicingProfileListThunk(user.userId!));
-  }, []);
-
-  /**
-   * We get the invoicing profile list just if there isn`t any profile.
-   */
-  useEffect(() => {
-    if (user.userId && invoicingProfileList.length === 0) fetchInvoicingProfileList();
-  }, [fetchInvoicingProfileList]);
 
   /**
    * This hook manages every business logic for addresses feature.

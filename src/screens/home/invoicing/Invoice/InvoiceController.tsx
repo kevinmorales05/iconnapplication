@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
@@ -6,18 +6,66 @@ import InvoiceScreen from './InvoiceScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import theme from 'components/theme/theme';
-import { resendVerificationEmailThunk } from 'rtk/thunks/invoicing.thunks';
+import { getInvoicingProfileListThunk, resendVerificationEmailThunk } from 'rtk/thunks/invoicing.thunks';
 import { useAlert, useLoading, useToast } from 'context';
 
 const InvoiceController: React.FC = () => {
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { invoicingProfileList, invoicingSevenTicketList, invoicingPetroTicketList } = useAppSelector((state: RootState) => state.invoicing);
-  const { loading } = useAppSelector((state: RootState) => state.invoicing);
+  const {
+    loading: invoicingLoading,
+    invoicingProfileList,
+    invoicingSevenTicketList,
+    invoicingPetroTicketList
+  } = useAppSelector((state: RootState) => state.invoicing);
+  const [intervalId, setIntervalId] = useState<any>();
+
   const alert = useAlert();
   const loader = useLoading();
   const toast = useToast();
   const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
+
+  useEffect(() => {
+    if (invoicingLoading === false) loader.hide();
+  }, [invoicingLoading]);
+
+  /**
+   * Load Invocing Profile List and store it in the redux store.
+   */
+  const fetchInvoicingProfileList = useCallback(async () => {
+    loader.show();
+    await dispatch(getInvoicingProfileListThunk(user.userId!));
+  }, []);
+
+  /**
+   * We get the invoicing profile list just if there isn`t any profile.
+   */
+  useEffect(() => {
+    if (user.userId && invoicingProfileList.length === 0) fetchInvoicingProfileList();
+  }, [fetchInvoicingProfileList]);
+
+  // Monitors if user has verified his email from web.
+  useEffect(() => {
+    let interval = setInterval(async () => {
+      console.log('fetching profiles again...');
+      await dispatch(getInvoicingProfileListThunk(user.userId!));
+    }, 10000);
+
+    setIntervalId(interval);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Clear interval
+  useEffect(() => {
+    if (defaultProfile?.verified_mail === true) {
+      console.log('cleaning interval...', intervalId);
+      clearInterval(intervalId);
+    }
+  }, [defaultProfile]);
 
   useEffect(() => {
     setDefaultProfile(
@@ -26,12 +74,6 @@ const InvoiceController: React.FC = () => {
       }) ?? null
     );
   }, [invoicingProfileList]);
-
-  useEffect(() => {
-    if (loading === false) {
-      loader.hide();
-    }
-  }, [loading]);
 
   const onSubmit = async () => {
     if (defaultProfile) {
