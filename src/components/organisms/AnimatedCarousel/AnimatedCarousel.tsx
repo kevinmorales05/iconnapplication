@@ -40,6 +40,7 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
           onViewableItemsChanged={viewableItemsChanged}
           viewabilityConfig={viewConfig}
           ref={slidesRef}
+          showsHorizontalScrollIndicator={false}
         />
       ) : items && items.length > 0 ? (
         <FlatList
@@ -53,6 +54,7 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
           onViewableItemsChanged={viewableItemsChanged}
           viewabilityConfig={viewConfig}
           ref={slidesRef}
+          showsHorizontalScrollIndicator={false}
         />
       ) : null}
     </Container>

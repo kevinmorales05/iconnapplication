@@ -292,7 +292,9 @@ const CardProduct: React.FC<CardProductProps> = ({
               <CustomText fontSize={theme.fontSize.h5} text={`${name}`} numberOfLines={3} />
             </Container>
             <Rating ratingValue={ratingValue} />
-            <PriceWithDiscount price={price.toFixed(2)} oldPrice={oldPrice} productPromotions={productPromotions} productId={productId} />
+            <Container style={styles.containerPrice}>
+              <PriceWithDiscount price={price.toFixed(2)} oldPrice={oldPrice} productPromotions={productPromotions} productId={productId} />
+            </Container>
           </Touchable>
         </Container>
       </Container>
@@ -360,10 +362,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   containerPrice: {
-    width: '100%',
-    flexDirection: 'row',
-    marginTop: moderateScale(15),
-    alignItems: 'center'
+    marginTop:12
   },
   image: {
     width: moderateScale(20),
@@ -373,7 +372,9 @@ const styles = StyleSheet.create({
   containerButton: {
     flex: 0.25,
     width: '100%',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    marginTop:16,
+    marginBottom:8
   },
   buttonAddProduct: {
     borderRadius: moderateScale(10)
