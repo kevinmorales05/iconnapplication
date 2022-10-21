@@ -52,7 +52,7 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
           text="Contáctanos por correo electrónico"
           disable={false}
           onPressNavigateTo={() => {
-            console.log('Contáctanos por correo electrónico...');
+            navigate('ContactInformation');
           }}
         />
         <NavigationMenuItem

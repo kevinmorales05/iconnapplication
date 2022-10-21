@@ -4,3 +4,4 @@ export * from './Checkout';
 export * from './ContactInformation';
 export * from './InvoiceGenerated';
 export * from './InvoicePDFViewer';
+export * from './InConstruction';

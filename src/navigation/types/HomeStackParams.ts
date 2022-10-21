@@ -18,6 +18,7 @@ export type HomeStackParams = {
   EnterOtp: { email: string };
   Home: { paySuccess: boolean };
   HomeStack: undefined;
+  InConstruction: undefined;
   InviteSignUp: undefined;
   Invoice: undefined;
   InvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
@@ -33,7 +34,7 @@ export type HomeStackParams = {
   ProductDetail: undefined | { productIdentifier?: string };
   Profile: undefined;
   SearchSeller: undefined;
-  SeeMore: {products: any};
+  SeeMore: { products: any };
   CategoryProducts: { category: CategoryInterface; categories: CategoryInterface[] };
   SearchProducts: undefined;
   SearchProductsResults: { products: ProductSearchItemInterface[]; textSearch: string };

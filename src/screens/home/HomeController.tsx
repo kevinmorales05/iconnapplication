@@ -28,7 +28,7 @@ import { HomeStackParams } from 'navigation/types';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
-import { useEnterModal, useLoading, useToast } from 'context';
+import { useEnterModal, useInConstruction, useLoading, useToast } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
@@ -174,6 +174,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [showShippingDropDown, setShowShippingDropDown] = useState(false);
   const toast = useToast();
   const enter = useEnterModal();
+  const inConstruction = useInConstruction();
   const { getFavorites } = useFavorites();
   const { email } = user;
 
@@ -282,14 +283,25 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
     console.log('El item seleccionado en carousel es ===> ', CarouselItem);
+
+    // If is not a guest and press "Petro" or "Acumula" or "Wallet".
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4')) {
+      inConstruction.show();
+      return;
+    }
+
+    // If is a guest and press any option diferent to "Categories".
     if (isGuest && CarouselItem.id !== '0') {
       enter.show();
       return;
     }
+
     if (CarouselItem.navigateTo) {
       navigate(CarouselItem.navigateTo);
       return;
     }
+
+    // If press "Categories"
     if (CarouselItem.id === '0') {
       navigate('CategoriesScreen');
       return;

@@ -2,16 +2,9 @@ import React from 'react';
 import { ScrollView } from 'react-native';
 import { Button, NavigationMenuItem, Container, TextContainer } from 'components';
 import { useNavigation } from '@react-navigation/native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Octicons from 'react-native-vector-icons/Octicons';
-import Entypo from 'react-native-vector-icons/Entypo';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import Feather from 'react-native-vector-icons/Feather';
 
 //import icons
 import ProfileSvg from 'components/svgComponents/ProfileSvg/ProfileSvg';
@@ -28,6 +21,7 @@ import { DocumentCashSvg } from 'components/svgComponents/DocumentCashSvg';
 import { InfoSvg } from 'components/svgComponents/InfoSvg';
 import { HelpSupportSvg } from 'components/svgComponents/HelpSupportSvg';
 import { LogOutSvg } from 'components/svgComponents/LogOutSvg';
+import { useInConstruction } from 'context';
 
 interface HomeScreenProps {
   logOut: () => void;
@@ -36,6 +30,7 @@ interface HomeScreenProps {
 
 const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const inConstruction = useInConstruction();
 
   return (
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
@@ -59,7 +54,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Pedidos"
           disable={false}
-          icon={<ReceiptSvg size={moderateScale(24)}/>}
+          icon={<ReceiptSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             navigate('MyOrders');
           }}
@@ -67,7 +62,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
         <NavigationMenuItem
           text="Favoritos"
           disable={false}
-          icon={<HeartSvgOutline size={moderateScale(24)} color={theme.brandColor.iconn_dark_grey}/>}
+          icon={<HeartSvgOutline size={moderateScale(24)} color={theme.brandColor.iconn_dark_grey} />}
           onPressNavigateTo={() => {
             navigate('FavoriteProducts');
           }}
@@ -88,7 +83,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           disable={false}
           icon={<DiscountSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Promociones...');
+            console.log('Promociones en Construcción...');
+            inConstruction.show(true);
           }}
         />
 
@@ -97,7 +93,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           disable={false}
           icon={<CoffeSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Cuponera...');
+            console.log('Cuponera en construcción...');
+            inConstruction.show(true);
           }}
         />
 
@@ -116,7 +113,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           disable={false}
           icon={<PlacesSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Sucursales...');
+            console.log('Sucursales en Construcción...');
+            inConstruction.show(true);
           }}
         />
         <NavigationMenuItem
@@ -124,7 +122,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           disable={false}
           icon={<WalletSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Wallet...');
+            console.log('Wallet en Construcción...');
+            inConstruction.show(true);
           }}
         />
         <NavigationMenuItem
@@ -167,7 +166,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
           disable={false}
           icon={<HelpSupportSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Centro de ayuda...');
+            console.log('Centro de ayuda en Construcción...');
+            inConstruction.show(true);
           }}
         />
       </Container>

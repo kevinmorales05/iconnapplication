@@ -27,7 +27,7 @@ import AddressesController from 'screens/home/myAccount/addresses/AddressesContr
 import AdultAgeVerificationController from 'screens/home/adultAgeVerification/AdultAgeVerificationController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
 import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
-import { BasketCounter, EcommerceHeader } from 'components';
+import { BasketCounter, EcommerceHeader, InConstructionScreen } from 'components';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
 import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
 import MyOrdersController from 'screens/home/MyOrdersController';
@@ -61,7 +61,16 @@ const HomeStack: React.FC = () => {
   };
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: true, headerTitleStyle: {color:'black', fontWeight: 'bold'}, headerTintColor:`${theme.brandColor.iconn_accent_secondary}`, headerTitleAlign:'center'}} initialRouteName="PostalCode" id="HomeStack">
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: true,
+        headerTitleStyle: { color: 'black', fontWeight: 'bold' },
+        headerTintColor: `${theme.brandColor.iconn_accent_secondary}`,
+        headerTitleAlign: 'center'
+      }}
+      initialRouteName="PostalCode"
+      id="HomeStack"
+    >
       <Stack.Screen
         options={{
           headerTitle: '',
@@ -99,11 +108,7 @@ const HomeStack: React.FC = () => {
       <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedPetro" component={ViewInvoiceGeneratedPetroController} />
       <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedSeven" component={ViewInvoiceGeneratedSevenController} />
       <Stack.Screen options={{ headerShown: false }} name="CodeReader" component={CodeReaderController} />
-      <Stack.Screen
-        options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '' }}
-        name="Address"
-        component={AddressesController}
-      />
+      <Stack.Screen options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '' }} name="Address" component={AddressesController} />
       <Stack.Screen
         options={{
           headerShown: true,
@@ -127,9 +132,9 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />
       <Stack.Screen name="DeleteAccount" options={{ title: 'Eliminar cuenta' }} component={DeleteAccountController} />
       <Stack.Screen name="Promotions" options={{ title: 'Promociones' }} component={PromotionsController} />
-      <Stack.Screen name="PostalCode" options={{ title: '', headerShadowVisible:false}} component={PostalCodeController} />
+      <Stack.Screen name="PostalCode" options={{ title: '', headerShadowVisible: false }} component={PostalCodeController} />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
-      <Stack.Screen name='ChangePassword' options={{title: 'Editar contraseña'}} component={ChangePasswordController}/>
+      <Stack.Screen name="ChangePassword" options={{ title: 'Editar contraseña' }} component={ChangePasswordController} />
       <Stack.Screen
         options={{
           headerShown: true,
@@ -179,21 +184,13 @@ const HomeStack: React.FC = () => {
         component={SearchProductResultsScreen}
       />
       <Stack.Screen name="AboutUs" options={{ title: 'Quiénes somos', headerTintColor: theme.fontColor.dark }} component={AboutUsController} />
-      <Stack.Screen
-        name="Legal"
-        options={{ title: 'Legal', headerBackTitleVisible: false }}
-        component={LegalController}
-      />
+      <Stack.Screen name="Legal" options={{ title: 'Legal', headerBackTitleVisible: false }} component={LegalController} />
       <Stack.Screen
         name="ContactInformation"
         options={{ title: 'Información de contacto', headerBackTitleVisible: false }}
         component={ContactInformationController}
       />
-      <Stack.Screen
-        name="Checkout"
-        options={{ title: 'Confirmar pedido', headerBackTitleVisible: false }}
-        component={CheckoutController}
-      />
+      <Stack.Screen name="Checkout" options={{ title: 'Confirmar pedido', headerBackTitleVisible: false }} component={CheckoutController} />
       <Stack.Screen
         options={{
           title: 'Favoritos',
@@ -202,6 +199,7 @@ const HomeStack: React.FC = () => {
         name="FavoriteProducts"
         component={FavoriteController}
       />
+      <Stack.Screen name="InConstruction" options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} component={InConstructionScreen} />
     </Stack.Navigator>
   );
 };

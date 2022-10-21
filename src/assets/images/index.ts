@@ -72,6 +72,7 @@ import TAB_PIN_LOCATION from './tab_pin_location.webp';
 import TAB_PROMOS from './tab_promos.webp';
 import TAB_USER_PROFILE from './tab_user_profile.webp';
 import ICONN_CALENDAR from './iconn-calendar-schedule.webp';
+import ICONN_IN_CONSTRUCTION from './iconn-in-construction.webp';
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -147,5 +148,6 @@ export {
   TAB_PROMOS,
   TAB_USER_PROFILE,
   ICONN_CALENDAR,
-  ICONN_FULL_EXPERIENCE
+  ICONN_FULL_EXPERIENCE,
+  ICONN_IN_CONSTRUCTION
 };

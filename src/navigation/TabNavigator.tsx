@@ -9,8 +9,9 @@ import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import { RootState, useAppSelector } from 'rtk';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useRoute } from '@react-navigation/native';
 import { TAB_CAT, TAB_HOME, TAB_PIN_LOCATION, TAB_PROMOS, TAB_USER_PROFILE } from 'assets/images';
+import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -32,11 +33,16 @@ export const TabNavigator = () => {
           headerShown: false,
           title: 'Inicio',
           tabBarIcon: ({ focused }) => {
-            return <Image source={TAB_HOME} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
+            return (
+              <Image
+                source={TAB_HOME}
+                style={{ tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height: 24, width: 24 }}
+              />
+            );
           }
         }}
         name="HomeScreen"
-         children={()=><HomeController paySuccess={paySuccess}/>}
+        children={() => <HomeController paySuccess={paySuccess} />}
       />
       <Tab.Screen
         name="CategoriesScreen"
@@ -45,7 +51,12 @@ export const TabNavigator = () => {
           headerShown: false,
           title: 'Categorías',
           tabBarIcon: ({ focused }) => {
-            return <Image source={TAB_CAT} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
+            return (
+              <Image
+                source={TAB_CAT}
+                style={{ tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height: 24, width: 24 }}
+              />
+            );
           }
         }}
       />
@@ -56,18 +67,29 @@ export const TabNavigator = () => {
           headerShown: false,
           title: 'Promociones',
           tabBarIcon: ({ focused }) => {
-            return <Image source={TAB_PROMOS} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
+            return (
+              <Image
+                source={TAB_PROMOS}
+                style={{ tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height: 24, width: 24 }}
+              />
+            );
           }
         }}
       />
       <Tab.Screen
         name="BranchesScreen"
-        component={InviteSignUpController}
+        component={isGuest ? InviteSignUpController : InConstructionController}
         options={{
+          unmountOnBlur: true,
           headerShown: false,
           title: 'Sucursales',
           tabBarIcon: ({ focused }) => {
-            return <Image source={TAB_PIN_LOCATION} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
+            return (
+              <Image
+                source={TAB_PIN_LOCATION}
+                style={{ tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height: 24, width: 24 }}
+              />
+            );
           }
         }}
       />
@@ -79,7 +101,12 @@ export const TabNavigator = () => {
           headerShown: isGuest ? false : true,
           title: 'Cuenta',
           tabBarIcon: ({ focused }) => {
-            return <Image source={TAB_USER_PROFILE} style={{tintColor:`${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height:24, width:24}}/>
+            return (
+              <Image
+                source={TAB_USER_PROFILE}
+                style={{ tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height: 24, width: 24 }}
+              />
+            );
           }
         }}
       />
