@@ -86,7 +86,8 @@ const CategoryProductsScreen: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
 
   const onPressOut = () => {
-    setVisible(!visible);
+    const isVisible = visible;
+    setVisible(!isVisible);
   };
 
   const validateCategoryForAddItem = (itemId: string) => {
@@ -124,7 +125,7 @@ const CategoryProductsScreen: React.FC = () => {
       title: category.name
     });
     setIdCategorySelected(category.id + '');
-  }, [category, route.params, visible]);
+  }, [category, route.params]);
 
   useEffect(() => {
     console.log({ category });
