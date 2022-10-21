@@ -56,7 +56,7 @@ function RecommededForYouScreen() {
 //Function to get collection of products
   const getCollection = async () => {
     const response = await vtexProductsServices
-      .getProductsByCollectionId('147')
+      .getProductsByCollectionId('145')
       .then(res => {
         console.log('Viene de pagina de recomendaciones', res);
         const { Data, Page, Size } = res;
