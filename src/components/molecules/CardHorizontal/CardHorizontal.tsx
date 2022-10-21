@@ -4,6 +4,7 @@ import { TextContainer } from '../TextContainer';
 import { Image, ImageSourcePropType, StyleProp, ViewStyle, Dimensions } from 'react-native';
 import theme from '../../theme/theme';
 import { Touchable } from '../../atoms/Touchable';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface CardHorizontalProps {
   text: string;
@@ -11,18 +12,14 @@ interface CardHorizontalProps {
   onPress: () => void;
 }
 
-const { width } = Dimensions.get('window');
-const designWidth = 375;
-const scaleCoefficient = width / designWidth;
-const getScaledRoundedValue = (value: number) => Math.round(value * scaleCoefficient);
 
 const CardHorizontal: React.FC<CardHorizontalProps> = ({ text, image, onPress }: CardHorizontalProps) => {
   const taxInfoStyle: StyleProp<ViewStyle> = {
-    borderRadius: getScaledRoundedValue(10),
-    marginTop: getScaledRoundedValue(12),
-    height: getScaledRoundedValue(80),
+    borderRadius: moderateScale(10),
+    marginTop: moderateScale(12),
+    height: moderateScale(80),
     backgroundColor: theme.brandColor.iconn_white,
-    width: getScaledRoundedValue(165) * scaleCoefficient
+    width: moderateScale(170) 
   };
 
   return (
@@ -30,7 +27,7 @@ const CardHorizontal: React.FC<CardHorizontalProps> = ({ text, image, onPress }:
       <Touchable onPress={onPress}>
         <Container row space="between" crossCenter center style={taxInfoStyle}>
           <Container flex crossCenter height={'100%'}>
-            <Container style={{ marginLeft: getScaledRoundedValue(16), marginBottom: getScaledRoundedValue(12) }}>
+            <Container style={{ marginLeft: moderateScale(16), marginBottom: moderateScale(12) }}>
               <TextContainer text={text} typography="h5" fontBold marginTop={8} />
             </Container>
           </Container>
