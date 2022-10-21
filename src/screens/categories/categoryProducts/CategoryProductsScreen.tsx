@@ -26,6 +26,9 @@ import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { moderateScale } from 'utils/scaleMetrics';
 import { useLoading } from 'context';
+import { getProductDetailById } from 'services/vtexProduct.services';
+import { vtexUserServices } from 'services';
+import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 
 const ordenBy: FilterItemTypeProps[] = [
   {
@@ -80,6 +83,39 @@ const CategoryProductsScreen: React.FC = () => {
   const [itemToLoad, setItemToLoad] = useState<number>(1);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   // const [ selectFilters, setSelectFilters] = useState({})
+  const [visible, setVisible] = useState<boolean>(false);
+
+  const onPressOut = () => {
+    setVisible(!visible);
+  };
+
+  const validateCategoryForAddItem = (itemId: string) => {
+    console.log('validate itemId:::', itemId);
+    getProductDetailById(itemId).then(productDetail => {
+      if (productDetail.DepartmentId == 167) {
+        if (user.email) {
+          vtexUserServices.getUserByEmail(user.email).then(userResponse => {
+            let isAdult = false;
+            if (userResponse) {
+              const { data } = userResponse;
+              if (data) {
+                if (data.length > 0) {
+                  isAdult = data[0].isAdult;
+                  if (isAdult) {
+                    updateShoppingCartProduct!('create', itemId);
+                  } else {
+                    onPressOut();
+                  }
+                }
+              }
+            }
+          })
+        }
+      } else {
+        updateShoppingCartProduct!('create', ItemId);
+      }
+    })
+  };
 
   const drawerComponet = useRef<DrawerLayout>(null);
 
@@ -88,7 +124,7 @@ const CategoryProductsScreen: React.FC = () => {
       title: category.name
     });
     setIdCategorySelected(category.id + '');
-  }, [category, route.params]);
+  }, [category, route.params, visible]);
 
   useEffect(() => {
     console.log({ category });
@@ -293,9 +329,7 @@ const CategoryProductsScreen: React.FC = () => {
         quantity={item.quantity}
         productId={item.productId}
         oldPrice={item.oldPrice}
-        onPressAddCart={() => {
-          updateShoppingCartProduct!('create', item.productId);
-        }}
+        onPressAddCart={() => {validateCategoryForAddItem(item.productId)}}
         onPressAddQuantity={() => {
           updateShoppingCartProduct!('add', item.productId);
         }}
@@ -305,6 +339,7 @@ const CategoryProductsScreen: React.FC = () => {
         onPressDecreaseQuantity={() => {
           updateShoppingCartProduct!('substract', item.productId);
         }}
+        onPressOut={onPressOut}
         notNeedMarginLeft
       />
     );
@@ -414,6 +449,8 @@ const CategoryProductsScreen: React.FC = () => {
               </Container>
             )}
           </Container>
+          <AdultAgeVerificationScreen onPressClose={onPressOut}
+            visible={visible} />
         </Container>
       </DrawerLayout>
     </SafeArea>
