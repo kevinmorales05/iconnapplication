@@ -11,6 +11,7 @@ import { formatDate, formatDate2 } from 'utils/functions';
 import { updateShoppingCart } from 'services';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { useToast } from 'context';
+import { moderateScale } from 'utils/scaleMetrics';
 
 const OrderCard = (props: OrderInterface) => {
   const { updateShoppingCartProduct } = useShoppingCart();
@@ -34,6 +35,7 @@ const OrderCard = (props: OrderInterface) => {
   const getOrderItems = useCallback(async () => {
     const itemsCart = cart.items;
     const data = await vtexsingleOrdersServices.getOrderById(orderId);
+    console.log({getOrderItems: data})
     const { items } = data;
     items.forEach(function (item) {
       if (itemsCart.length > 0) {
@@ -124,10 +126,9 @@ const OrderCard = (props: OrderInterface) => {
               <TextContainer
                 text="Volver a comprar"
                 fontSize={14}
-                marginTop={1}
-                marginLeft={4}
                 textColor={theme.brandColor.iconn_green_original}
                 fontBold
+                marginLeft={moderateScale(5)}
                 underline
               />
             </Container>
@@ -139,8 +140,6 @@ const OrderCard = (props: OrderInterface) => {
                 fontSize={14}
                 textColor={theme.brandColor.iconn_green_original}
                 fontBold
-                marginTop={3}
-                marginRight={0}
                 underline
               />
               <Image source={ICONN_LEFT_ARROW} style={{ height: 24, width: 24 }} />
@@ -188,11 +187,15 @@ const styles = StyleSheet.create({
   },
   contShopAgain: {
     marginLeft: 8,
-    marginTop: 19
+    marginTop: 19,
+    justifyContent:'center',
+    alignItems:'center'
   },
   contDetails: {
     marginLeft: 8,
-    marginTop: 19
+    marginTop: 19,
+    justifyContent:'center',
+    alignItems:'center'
   }
 });
 

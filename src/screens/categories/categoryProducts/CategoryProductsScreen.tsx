@@ -79,7 +79,7 @@ const CategoryProductsScreen: React.FC = () => {
   const [products, setProducts] = useState<ProductInterface[]>([]);
   const [productsRender, setProductsRender] = useState<ProductInterface[]>([]);
   const [filterSelect, setFilterSelect] = useState<ProductsByCategoryFilter>('OrderByTopSaleDESC');
-  const [selectBrand, setSelectBrand] = useState<string[]>([]);
+  // const [selectBrand, setSelectBrand] = useState<string[]>([]);
   const [itemToLoad, setItemToLoad] = useState<number>(1);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   // const [ selectFilters, setSelectFilters] = useState({})
@@ -187,8 +187,6 @@ const CategoryProductsScreen: React.FC = () => {
         productsToRender.push(p);
       }
     }
-    console.log('productsToRender');
-    console.log(productsToRender);
     setProductsRender(productsToRender);
     setRefreshing(false);
   }
@@ -213,8 +211,8 @@ const CategoryProductsScreen: React.FC = () => {
           productId: product.productId
         };
       });
+      console.log({productsTem})
       setProducts(productsTem);
-      // setSelectBrand(Object.getOwnPropertyNames(brandsRequest));
     } else {
       setProducts([]);
       setProductsRender([]);
@@ -223,9 +221,7 @@ const CategoryProductsScreen: React.FC = () => {
 
   const loadMoreProducts = async () => {
     const productsRequest: any[] = await getProducts(itemToLoad + 10);
-    // const brandsRequest = {};
     let productsTem: ProductInterface[] = productsRequest.map(product => {
-      // brandsRequest[product.brand] = '';
       return {
         name: product.productTitle,
         image: { uri: product.items[0]?.images[0].imageUrl! },
@@ -233,13 +229,9 @@ const CategoryProductsScreen: React.FC = () => {
         productId: product.productId
       };
     });
-    productsTem = products.concat(productsTem);
     setProducts(productsTem);
     setItemToLoad(itemToLoad + 10);
-    // setSelectBrand(Object.getOwnPropertyNames(brandsRequest));
   };
-
-  console.log({ selectBrand });
 
   const getProducts = async (itemToLoad: number) => {
     return await dispatch(getProductsByCategoryAndFiltersItemsThunk({ filter: filterSelect, categoryId: idCategorySelected, itemToLoad: itemToLoad })).unwrap();
