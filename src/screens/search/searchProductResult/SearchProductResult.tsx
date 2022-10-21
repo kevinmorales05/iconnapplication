@@ -160,6 +160,7 @@ const SearchProductResult: React.FC = () => {
         onPressDecreaseQuantity={() => {
           updateShoppingCartProduct!('substract', item.productId);
         }}
+        onPressOut={onPressOut}
         notNeedMarginLeft
       />
     );

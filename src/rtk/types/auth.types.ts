@@ -5,6 +5,7 @@ export interface AuthDataInterface {
   accountId?: string; // added from UserVtex
   addresses?: Address[];
   authCookie?: AuthCookie;
+  authenticationToken?: string;
   birthDate?: string | null; // added from UserVtex. birthDate should be used only for requests that require it.
   birthday?: string;
   document?: string;

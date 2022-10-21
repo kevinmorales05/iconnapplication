@@ -6,7 +6,7 @@ import EnterEmailScreen from './EnterEmailScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useLoading, useToast } from 'context';
 import { AuthDataInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
-import { setAuthEmail, setId, setUserId } from 'rtk/slices/authSlice';
+import { setAuthEmail, setAuthenticationToken, setId, setUserId } from 'rtk/slices/authSlice';
 import { authServices } from 'services';
 
 const EnterEmailController: React.FC = () => {
@@ -36,6 +36,7 @@ const EnterEmailController: React.FC = () => {
           loader.show();
           const { authenticationToken } = await authServices.startAuthentication(email);
           dispatch(setAuthEmail({ email }));
+          dispatch(setAuthenticationToken(authenticationToken));
           await authServices.sendAccessKey(email, authenticationToken);
           navigate('CreatePassword', { authenticationToken, variant: 'register' });
           loader.hide();
@@ -54,8 +55,9 @@ const EnterEmailController: React.FC = () => {
         dispatch(setId({ id: current.id }));
         // login
         try {
-          await authServices.startAuthentication(email);
+          const { authenticationToken } = await authServices.startAuthentication(email);
           dispatch(setAuthEmail({ email }));
+          dispatch(setAuthenticationToken(authenticationToken));
           navigate('EnterPassword');
         } catch (error) {
           console.log('LOGIN ERROR', error);

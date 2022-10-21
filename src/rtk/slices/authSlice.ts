@@ -19,6 +19,7 @@ const initialState: AuthDataInterface = {
   accountId: '',
   addresses: [],
   authCookie: { Name: '', Value: '' },
+  authenticationToken: '',
   birthDate: '',
   birthday: '',
   document: '',
@@ -157,6 +158,9 @@ const authSlice = createSlice({
     },
     setIsGuest(state, action: PayloadAction<boolean>) {
       state.isGuest = action.payload;
+    }, 
+    setAuthenticationToken(state, action: PayloadAction<string>) {
+      state.user.authenticationToken = action.payload;
     }
   },
   extraReducers: builder => {
@@ -310,6 +314,7 @@ export const {
   setTelephone,
   setTermsAndCond,
   setUserId,
-  setIsGuest
+  setIsGuest,
+  setAuthenticationToken
 } = authSlice.actions;
 export default authSlice.reducer;

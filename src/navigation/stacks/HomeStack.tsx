@@ -61,7 +61,7 @@ const HomeStack: React.FC = () => {
   };
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: true, headerTitleStyle: {color:'black', fontWeight: 'bold'}, headerTintColor:`${theme.brandColor.iconn_accent_principal}`}} initialRouteName="PostalCode" id="HomeStack">
+    <Stack.Navigator screenOptions={{ headerShown: true, headerTitleStyle: {color:'black', fontWeight: 'bold'}, headerTintColor:`${theme.brandColor.iconn_accent_secondary}`, headerTitleAlign:'center'}} initialRouteName="PostalCode" id="HomeStack">
       <Stack.Screen
         options={{
           headerTitle: '',
@@ -100,7 +100,7 @@ const HomeStack: React.FC = () => {
       <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedSeven" component={ViewInvoiceGeneratedSevenController} />
       <Stack.Screen options={{ headerShown: false }} name="CodeReader" component={CodeReaderController} />
       <Stack.Screen
-        options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '', headerTintColor: 'black' }}
+        options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '' }}
         name="Address"
         component={AddressesController}
       />
@@ -119,9 +119,7 @@ const HomeStack: React.FC = () => {
             >
               <Icon name="close" size={20} />
             </Touchable>
-          ),
-
-          headerTitleAlign: 'center'
+          )
         }}
         name="ShopCart"
         component={ShopCartController}
@@ -135,11 +133,7 @@ const HomeStack: React.FC = () => {
       <Stack.Screen
         options={{
           headerShown: true,
-          title: 'Pedidos',
-          headerTitleStyle: {
-            fontWeight: 'bold'
-          },
-          headerTitleAlign: 'center'
+          title: 'Pedidos'
         }}
         name="MyOrders"
         component={MyOrdersController}
@@ -165,9 +159,6 @@ const HomeStack: React.FC = () => {
       <Stack.Screen
         options={{
           title: '',
-          headerTitleStyle: {
-            fontWeight: 'bold'
-          },
           headerRight: () => <BasketCounter />
         }}
         name="CategoryProducts"
@@ -190,25 +181,22 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="AboutUs" options={{ title: 'Quiénes somos', headerTintColor: theme.fontColor.dark }} component={AboutUsController} />
       <Stack.Screen
         name="Legal"
-        options={{ title: 'Legal', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
+        options={{ title: 'Legal', headerBackTitleVisible: false }}
         component={LegalController}
       />
       <Stack.Screen
         name="ContactInformation"
-        options={{ title: 'Información de contacto', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
+        options={{ title: 'Información de contacto', headerBackTitleVisible: false }}
         component={ContactInformationController}
       />
       <Stack.Screen
         name="Checkout"
-        options={{ title: 'Confirmar pedido', headerTintColor: theme.fontColor.dark, headerBackTitleVisible: false }}
+        options={{ title: 'Confirmar pedido', headerBackTitleVisible: false }}
         component={CheckoutController}
       />
       <Stack.Screen
         options={{
           title: 'Favoritos',
-          headerTitleStyle: {
-            fontWeight: 'bold'
-          },
           headerRight: () => <BasketCounter />
         }}
         name="FavoriteProducts"

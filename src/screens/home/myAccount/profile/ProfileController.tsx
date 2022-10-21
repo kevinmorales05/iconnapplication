@@ -10,7 +10,6 @@ import { setBirthday, setGender, setTelephone, useAppDispatch } from 'rtk';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { HttpClient } from '../../../../http/http-client';
 import moment from 'moment';
 import { formatDate } from 'utils/functions';
 
@@ -18,16 +17,15 @@ const ProfileController: React.FC = () => {
   const loader = useLoading();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const authToken = HttpClient.accessToken;
   const alert = useAlert();
   const toast = useToast();
   const dispatch = useAppDispatch();
-  const { email } = user;
-  console.log('TOKEN!', authToken);
+  const { email, authenticationToken } = user;
+  console.log('TOKEN!', authenticationToken);
 
   const goToChangePassword = async () => {
     try {
-      const response = await authServices.sendAccessKey(email as string, authToken as string);
+      const response = await authServices.sendAccessKey(email as string, authenticationToken as string);
       if (response.authStatus == 'InvalidToken') {
         alert.show({ title: 'Ocurrió un error inesperado :(' }, 'error');
       } else {
@@ -35,7 +33,7 @@ const ProfileController: React.FC = () => {
           message: 'Correo enviado exitosamente.',
           type: 'success'
         });
-        navigate('ChangePassword', { authenticationToken: authToken as string, variant: 'recoverPassword' });
+        navigate('ChangePassword', { authenticationToken: authenticationToken as string, variant: 'recoverPassword' });
       }
     } catch (error) {
       console.log('ERROR', error);

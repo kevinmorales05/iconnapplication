@@ -122,18 +122,21 @@ const HomeScreen: React.FC<Props> = ({
           <Container style={{ marginTop: 16 }}>
             <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
           </Container>
-          <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
+          <Container height={367} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text="Recomendados para tí" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => onPressViewMore(homeProducts) } />
             </Container>
+            <Container style={{position:'absolute', top:35}}>
             <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut} productPromotions={productPromotions}/>
+            </Container>
           </Container>
           <Container height={342} style={{ marginTop: 0 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => onPressViewMore(homeOtherProducts)} />
             </Container>
+            <Container style={{position:'absolute', top:35}}>
             <AnimatedCarousel
               products={homeOtherProducts}
               onPressItem={onPressCarouselItem}
@@ -141,6 +144,7 @@ const HomeScreen: React.FC<Props> = ({
               onPressOut={onPressOut}
               productPromotions={productPromotions}
             />
+            </Container>
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />

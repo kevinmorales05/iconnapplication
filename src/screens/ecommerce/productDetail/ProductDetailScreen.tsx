@@ -13,10 +13,14 @@ import { QuantityProduct } from 'components/molecules/QuantityProduct';
 import { vtexProductsServices } from 'services';
 import {
   addFav,
+  ExistingProductInCartInterface,
   FavoritesResponseInterface,
+  getProductPriceByProductIdThunk,
+  getProductRatingByProductIdThunk,
   ItemsFavoritesInterface,
   ListItemsWrapperInterface,
   NewFavoritesResponseInterface,
+  ProductInterface,
   RootState,
   setFav,
   UpdateType,
@@ -67,7 +71,7 @@ const ProductDetailScreen: React.FC<Props> = ({
   const [productPrice, setProductPrice] = useState(0);
   const [productDetail, setProductDetail] = useState(Object);
   const [skusForProductImages, setSkusForProductImages] = useState([]);
-  const [complementaryProducts, setComplementaryProducts] = useState([]);
+  const [complementaryProducts, setComplementaryProducts] = useState<ProductInterface[]>([]);
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [cartItemQuantity, setCartItemQuantity] = useState(0);
   const [productRating, setProductRating] = useState(Object);
@@ -140,36 +144,55 @@ const ProductDetailScreen: React.FC<Props> = ({
     setCartItemQuantity(isProductIdInShoppingCart(itemId));
   }, [cart, detailSelected]);
 
-  const getComplementaryProducts = useCallback(async () => {
+  const getComplementaryProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     vtexProductsServices
-      .getProductsByCollectionId('147')
+      .getProductsByCollectionId('147') 
       .then(responseCollection => {
         const { Data } = responseCollection;
         let complementaryList = [];
         if (Data) {
-          if (Data.length > 0) {
+          if (Data.length) {
             Data.map(product => {
-              vtexProductsServices
-                .getProductPriceByProductId(product.ProductId)
-                .then(async responsePrice => {
-                  if (responsePrice) {
-                    complementaryList.push({
-                      productId: product.ProductId,
-                      name: product.ProductName,
-                      image: { uri: product.SkuImageUrl },
-                      price: responsePrice.basePrice,
-                      quantity: isProductIdInShoppingCart(product.ProductId)
-                    });
-                  }
-                })
-                .catch(error => console.log(error));
-            });
+              complementaryList.push({
+                productId: product.ProductId,
+                name: product.ProductName,
+                image: { uri: product.SkuImageUrl },
+              });
+            })
+            refillProductsWithPrice(existingProductsInCart, complementaryList)
           }
         }
-        setComplementaryProducts(complementaryList);
       })
       .catch(error => console.log(error));
-  }, [itemId]);
+  };
+
+  async function refillProductsWithPrice(
+    existingProductsInCart: ExistingProductInCartInterface[],
+    products: ProductInterface[]
+  ){
+    let productsToRender: ProductInterface[] = [];
+    for( const p of products ) {
+      const price = await getPriceByProductId(p.productId);
+      const raiting = await getRatingByProductId(p.productId)
+      if(price && raiting){
+        p.oldPrice =  price?.basePrice;
+        p.price = price?.basePrice;
+        p.ratingValue = raiting.average;
+        p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
+        productsToRender.push(p)
+      }
+    }
+    console.log({productsToRender})
+    setComplementaryProducts(productsToRender);
+  }
+
+  const getPriceByProductId = async (productId: string) => {
+    return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
+  };
+
+  const getRatingByProductId = async (productId: string) => {
+    return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
+  };
 
   const onPressOut = () => {
     setVisible(!visible);
@@ -223,12 +246,27 @@ const ProductDetailScreen: React.FC<Props> = ({
   }, [cart, complementaryProducts, itemId, productToUpdate, detailSelected]);
 
   useEffect(() => {
-    getComplementaryProducts();
-  }, []);
+    const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+    getComplementaryProducts(existingProducts);
+  }, [itemId, cart]);
 
   useEffect(() => {
     fetchReviewData();
   }, [itemId]);
+
+  const getExistingProductsInCart = () => {
+    const { items } = cart;
+    if (items && items.length > 0) {
+      const existingProducts: ExistingProductInCartInterface[] = items.map((p: any) => {
+        const product: ExistingProductInCartInterface = {
+          itemId: p.productId,
+          quantity: p.quantity
+        };
+        return product;
+      });
+      return existingProducts;
+    }
+  };
 
   const getIsFavorite = () => {
     if (favs.length !== undefined) {
@@ -492,29 +530,26 @@ const ProductDetailScreen: React.FC<Props> = ({
           </Container>
           <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false}>
             <Container row style={{ height: 200, width: '100%' }}>
-              {complementaryProducts.length > 0 ? (
+              {complementaryProducts.length ? (
                 complementaryProducts.map((prod, index) => {
                   return (
                     <CardProduct
                       image={prod.image!}
                       name={prod.name!}
+                      ratingValue={prod.ratingValue!}
                       price={prod.price!}
                       productId={prod.productId}
                       quantity={prod.quantity!}
                       onPressAddCart={() => {
-                        complementaryProducts[index].quantity = 1;
                         updateShoppingCartProduct('create', prod.productId);
                       }}
                       onPressAddQuantity={() => {
-                        complementaryProducts[index].quantity = complementaryProducts[index].quantity + 1;
                         updateShoppingCartProduct('add', prod.productId);
                       }}
                       onPressDeleteCart={() => {
-                        complementaryProducts[index].quantity = 0;
                         updateShoppingCartProduct('remove', prod.productId);
                       }}
                       onPressDecreaseQuantity={() => {
-                        complementaryProducts[index].quantity = complementaryProducts[index].quantity - 1;
                         updateShoppingCartProduct('substract', prod.productId);
                       }}
                       productPromotions={productPromotions}

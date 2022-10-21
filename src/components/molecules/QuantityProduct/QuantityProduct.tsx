@@ -24,11 +24,15 @@ const QuantityProduct: React.FC<QuantityProductProps> = ({
       <Container style={styles.containerDelete}>
         {quantity === 1 ? (
           <Touchable onPress={onPressDeleteCart}>
-            <Feather name="trash-2" size={theme.iconSize.small} color={theme.brandColor.iconn_red_original} />
+            <Container style={styles.touchableContainerLeft}>
+              <Feather name="trash-2" size={theme.iconSize.small} color={theme.brandColor.iconn_red_original} />
+            </Container>
           </Touchable>
         ) : (
           <Touchable onPress={onPressDecreaseQuantity}>
-            <Feather name="minus" size={theme.iconSize.small} color={theme.brandColor.iconn_green_original} />
+            <Container style={styles.touchableContainerLeft}>
+              <Feather name="minus" size={theme.iconSize.small} color={theme.brandColor.iconn_green_original} />
+            </Container>
           </Touchable>
         )}
       </Container>
@@ -37,8 +41,10 @@ const QuantityProduct: React.FC<QuantityProductProps> = ({
       </Container>
       <Container style={styles.containerAdd}>
         <Touchable onPress={onPressAddQuantity}>
-          <Feather name="plus" size={theme.iconSize.small} color={theme.brandColor.iconn_green_original} />
-        </Touchable>
+         <Container style={styles.touchableContainerRight}>
+           <Feather name="plus" size={theme.iconSize.small} color={theme.brandColor.iconn_green_original} />
+          </Container>
+       </Touchable>
       </Container>
     </Container>
   );
@@ -71,5 +77,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
     flex: 1
+  },
+  touchableContainerLeft:{
+    width:50, 
+    height:22.5
+  },
+  touchableContainerRight:{
+    width:50,
+    height:22.5,
+    alignItems:'flex-end'
   }
 });

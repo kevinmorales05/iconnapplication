@@ -122,7 +122,7 @@ const InviteSignUpController: React.FC = () => {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       getProductsInfo(existingProducts);
     }
-  }, [favs]);
+  }, [favs, cart]);
 
   return <FavoriteScreen completeList={completeList as ProductInterface[]} />;
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Image, Keyboard, Platform, ScrollView, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CustomModal, Container, Input, Select, CustomText, ActionButton } from '../../atoms';
 import { Button, TextContainer } from '../../molecules';
@@ -168,7 +168,7 @@ const AddressModalScreen: React.FC<Props> = ({
                       boldLabel
                       maxLength={5}
                       numeric
-                      onSubmitEditing={() => streetRef.current?.focus()}
+                      onSubmitEditing={Keyboard.dismiss}
                       rules={numericWithSpecificLenght(5)}
                       error={errors.postalCode?.message || postalCodeError}
                       onChangeText={postalCodeValue => validateChangesOnPostalCode(postalCodeValue)}
