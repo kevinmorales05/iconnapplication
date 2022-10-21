@@ -220,7 +220,7 @@ async function getProfile(email: string): Promise<any> {
  */
  async function deleteDocumentById(entityName: string ,id: string): Promise<any> {
   // TODO: relocate the baseUrl constant to api-config or .env file
-  const response = await OnboardingApi.getInstance().getRequest(`/dataentities/${entityName}/documents/${id}`);
+  const response = await OnboardingApi.getInstance().delete(`/dataentities/${entityName}/documents/${id}`);
   if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
   const { data } = response;
   return data;

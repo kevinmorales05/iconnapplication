@@ -73,4 +73,8 @@ export class OnboardingApi extends HttpClient {
   async getRequest(path: string, payload?: any) {
     return this.instance.get(path, payload);
   }
+
+  async delete(path: string, payload?: any) {
+    return this.instance.delete(path, payload);
+  }
 }
