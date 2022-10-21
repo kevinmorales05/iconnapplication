@@ -107,6 +107,8 @@ const CardProduct: React.FC<CardProductProps> = ({
         } else {
           setIsFav(false);
         }
+      }else{
+        setIsFav(false);
       }
     }
   };
