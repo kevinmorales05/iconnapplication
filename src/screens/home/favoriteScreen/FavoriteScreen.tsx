@@ -62,7 +62,7 @@ interface Props {
   completeList: ProductInterface[];
 }
 
-const FavoriteScreen: React.FC<Props>= ({completeList}) => {
+const FavoriteScreen: React.FC<Props> = ({ completeList }) => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { favs, user, favsId } = useAppSelector((state: RootState) => state.auth);
@@ -74,7 +74,6 @@ const FavoriteScreen: React.FC<Props>= ({completeList}) => {
     navigate('SearchProducts');
   };
 
-  
   const _renderItem = ({ item }) => {
     return (
       <CardProduct
@@ -83,7 +82,7 @@ const FavoriteScreen: React.FC<Props>= ({completeList}) => {
         price={item.price}
         porcentDiscount={item.porcentDiscount === 0 ? null : item.porcentDiscount}
         name={item.name}
-        image={{uri: item.image}}
+        image={{ uri: item.image }}
         quantity={item.quantity}
         productId={item.productId}
         oldPrice={item.oldPrice}
@@ -124,7 +123,7 @@ const FavoriteScreen: React.FC<Props>= ({completeList}) => {
             <Container width={'100%'}>
               <Container style={{ marginTop: moderateScale(15) }}>
                 <CustomText
-                  text={`${favs.length} producto${favs.length > 1 ? 's' : ''} encontrado`}
+                  text={`${favs.length} producto${favs.length > 1 ? 's' : ''} encontrado${favs.length > 1 ? 's' : ''}`}
                   textColor={theme.fontColor.placeholder}
                   fontSize={theme.fontSize.h6}
                 />
@@ -148,32 +147,18 @@ const FavoriteScreen: React.FC<Props>= ({completeList}) => {
               <Container width={'80%'} height={'40%'} center style={{ justifyContent: 'flex-end' }}>
                 <SearchLoupeDeleteSvg size={moderateScale(50)} />
                 <Container style={{ marginTop: moderateScale(13) }}>
-                  <CustomText text="No hay coincidencias" fontWeight="900" fontSize={theme.fontSize.h4} />
+                  <CustomText text="No hay productos favoritos." fontWeight="900" fontSize={theme.fontSize.h4} />
                 </Container>
                 <Container style={{ marginTop: moderateScale(13) }}>
                   <CustomText
-                    text="No se encontraron productos que coincidan con los filtros seleccionados."
+                    text="No se encontraron productos en esta sección."
                     fontSize={theme.fontSize.h6}
                     fontWeight={'500'}
                     textAlign={'center'}
                   />
                 </Container>
               </Container>
-              <Container style={{ marginTop: moderateScale(200) }}>
-                <Button
-                  style={{ width: moderateScale(328) }}
-                  size="small"
-                  borderColor="iconn_green_original"
-                  fontSize="h3"
-                  fontBold
-                  color="iconn_green_original"
-                  round
-                  onPress={() => {}}
-                  length="short"
-                >
-                  {'Limpiar'}
-                </Button>
-              </Container>
+              <Container style={{ marginTop: moderateScale(200) }}></Container>
             </Container>
           )}
         </Container>
