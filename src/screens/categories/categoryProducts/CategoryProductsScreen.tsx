@@ -86,7 +86,11 @@ const CategoryProductsScreen: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
 
   const onPressOut = () => {
-    setVisible(!visible);
+    setVisible(false);
+  };
+
+  const onOpen = () => {
+    setVisible(true);
   };
 
   const validateCategoryForAddItem = (itemId: string) => {
@@ -104,7 +108,7 @@ const CategoryProductsScreen: React.FC = () => {
                   if (isAdult) {
                     updateShoppingCartProduct!('create', itemId);
                   } else {
-                    onPressOut();
+                    setVisible(true);
                   }
                 }
               }
