@@ -17,7 +17,7 @@ import { setDefaultSeller, useAppDispatch } from 'rtk';
 import { sortByDistance } from 'utils/geolocation';
 
 import appConfig from '../../../../app.json';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { vtexPickUpPoints } from 'services';
 
 const PostalCodeScreen = () => {
@@ -343,13 +343,13 @@ const PostalCodeScreen = () => {
           </Container>
         </Container>
       </Touchable>
-      <Touchable onPress={()=>{
-        getPickUpPoints('66230')
-      }}>
-        <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: moderateScale(200) }}>
-          <CustomText text={'En otro momento'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
-        </Container>
-      </Touchable>
+      <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: verticalScale(250) }}>
+        <Touchable onPress={()=>{
+          getPickUpPoints('66230')
+        }}>
+            <CustomText text={'En otro momento'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+        </Touchable>
+      </Container>
     </ScrollView>
   );
 };
