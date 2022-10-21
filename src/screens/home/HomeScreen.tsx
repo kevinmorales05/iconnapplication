@@ -136,6 +136,10 @@ const HomeScreen: React.FC<Props> = ({
             <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut} productPromotions={productPromotions}/>
             </Container>
           </Container>
+          <Container style={{ marginTop: 16, marginBottom: 16 }}>
+            <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
+            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
+          </Container>
           <Container height={367} style={{ marginTop: 0 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
