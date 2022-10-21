@@ -29,11 +29,18 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
     console.log('deleting user account');
     try {
       if (user.id) {
-        authServices.getDocumentClient(user.id).then(clientDocumentResponse => {
+        console.log('---------------');
+        console.log(user.id);
+        console.log(user.userId);
+        console.log('---------------');
+
+        authServices.getDocumentClient(user.userId).then(clientDocumentResponse => {
+
           if (clientDocumentResponse) {
             if (clientDocumentResponse.length > 0) {
               clientDocumentResponse.map((document) => {
                 authServices.getDocumentAddresses(document.id).then(addressDocumentResponse => {
+                  console.log(JSON.stringify(addressDocumentResponse,null,4));
                   if (addressDocumentResponse) {
                     if (addressDocumentResponse.length > 0) {
                       addressDocumentResponse.map((document) => {
@@ -43,13 +50,14 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
                     }
                   }
                 });
-
-                authServices.deleteDocumentById('CL', document.userId).then(clientDocumentDeletedResponse => {
-                  console.log(clientDocumentDeletedResponse);;
-                });
               });
+              
             }
           }
+        });
+
+        authServices.deleteDocumentById('CL', user.id).then(clientDocumentDeletedResponse => {
+          console.log(clientDocumentDeletedResponse);
         });
       }
 
@@ -162,7 +170,7 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
               marginLeft={5}
             ></TextContainer>
           </Container>
-          <Container style={{ marginTop: 190 }}>
+          <Container style={{ marginTop: 110 }}>
             <Button length="long"
               fontColor='dark'
               fontSize="h5"
@@ -170,7 +178,7 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
               fontBold
               leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} />}
               borderColor='iconn_grey'
-              style={{ marginTop: 15, marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
+              style={{ marginTop: 1, marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
               onPress={showAlert}>Eliminar cuenta</Button>
           </Container>
           <Container center style={{ marginTop: 30 }}>
