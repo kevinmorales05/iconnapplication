@@ -124,7 +124,7 @@ const CategoryProductsScreen: React.FC = () => {
       title: category.name
     });
     setIdCategorySelected(category.id + '');
-  }, [category, route.params, visible]);
+  }, [category, route.params]);
 
   useEffect(() => {
     console.log({ category });
