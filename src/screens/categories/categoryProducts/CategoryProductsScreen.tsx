@@ -86,8 +86,7 @@ const CategoryProductsScreen: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
 
   const onPressOut = () => {
-    const isVisible = visible;
-    setVisible(!isVisible);
+    setVisible(!visible);
   };
 
   const validateCategoryForAddItem = (itemId: string) => {

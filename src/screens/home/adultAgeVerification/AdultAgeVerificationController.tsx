@@ -3,12 +3,11 @@ import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import AdultAgeVerificationScreen from './AdultAgeVerificationScreen';
 
-const AdultAgeVerificationController: React.FC = () => {
-  const [helpVisible, setHelpVisible] = useState<boolean>(false);
-
-  const onPressOut = () => {
-    setHelpVisible(true);
-  };
+interface AdultAgeVerificationInterface {
+  visible: boolean,
+  onPressOut: () => void;
+}
+const AdultAgeVerificationController: React.FC<AdultAgeVerificationInterface> = ({ visible, onPressOut }: AdultAgeVerificationInterface) => {
 
   return (
     <SafeArea
@@ -19,7 +18,7 @@ const AdultAgeVerificationController: React.FC = () => {
       barStyle="dark"
     >
       <AdultAgeVerificationScreen onPressClose={onPressOut}
-        visible={helpVisible} />
+        visible={visible} />
     </SafeArea>
   );
 };
