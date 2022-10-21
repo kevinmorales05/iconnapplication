@@ -50,6 +50,7 @@ import FavoriteController from 'screens/home/favoriteScreen/FavoriteController';
 import ChangePasswordController from 'screens/home/myAccount/changePassword/ChangePasswordController';
 import DeleteAccountController from 'screens/home/myAccount/deleteAccount/DeleteAccountController';
 import SeeMoreScreen from 'screens/home/viewMore/SeeMoreScreen';
+import RecomendedForYouScreen from 'screens/home/viewMore/RecommededForYou';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -152,12 +153,12 @@ const HomeStack: React.FC = () => {
           headerRight: () => <BasketCounter />
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="SeeMore"
         component={SeeMoreScreen}
         options={{
           headerShown: true,
-          headerTitle: '',
+          headerTitle: 'Otros productos',
           headerRight: () => <BasketCounter />
         }}
       />

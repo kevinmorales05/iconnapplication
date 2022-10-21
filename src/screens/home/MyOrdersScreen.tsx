@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import { Container, InfoCard } from 'components/atoms';
 import { TextContainer, Button } from 'components/molecules';
-import {ICONN_BASKET_SHOPPING_CART} from 'assets/images';
+import { ICONN_BASKET_SHOPPING_CART } from 'assets/images';
 import { OrderCard } from 'components/molecules/OrderCard';
 import NetInfo from '@react-native-community/netinfo';
 import { vtexordersServices, vtexsingleOrdersServices } from 'services';
@@ -25,14 +25,14 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
   const insets = useSafeAreaInsets();
 
   //const [delivery, setDelivery] = useState<DeliveryChannel>();
-  const getOrderr = useCallback(async (oid : string) => {
-      const data = await vtexsingleOrdersServices.getOrderById(oid);
-      console.log("AQUI JAMON", data);
-      const orderDC : DeliveryChannel = data.shippingData.logisticsInfo[1].selectedDeliveryChannel;
-      console.log('GELATINA', orderDC, '=>', oid);
-      return orderDC;
+  const getOrderr = useCallback(async (oid: string) => {
+    const data = await vtexsingleOrdersServices.getOrderById(oid);
+    console.log('AQUI JAMON', data);
+    const orderDC: DeliveryChannel = data.shippingData.logisticsInfo[1].selectedDeliveryChannel;
+    console.log('GELATINA', orderDC, '=>', oid);
+    return orderDC;
   }, []);
-  
+
   return (
     <ScrollView
       bounces={false}
@@ -50,44 +50,63 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
           return <TextContainer text={order.deliveryChannel }/>
         })
       } */}
-        {
-          (!isOnline) ? <></> : (officialOrderArray.length == 0) ? <></> 
-          : officialOrderArray.map((order, i) => {
-            const dc = (order.orderId);
-            if (order.status == 'ready-for-handling' || order.status == 'payment-approved' || 
-            order.status == 'waiting-for-sellers-confirmation' || order.status == 'payment-pending' || 
-            order.status == 'window-to-cancel' || order.status == 'handling') {
-              console.log('MERMELADA', order.orderId)
-              return <OrderCard orderId={order.orderId} creationDate={order.creationDate} 
-              status={order.status} totalItems={order.totalItems} totalValue={order.totalValue} 
-             />
-            }
-          })
-
-        }
-        {
-            (!isOnline) ?  <></>
-            : (officialOrderArray.length == 0) ? <></> :
-            <TextContainer text='Pedidos anteriores' fontSize={16} fontBold marginTop={15.5}/>
-        }
-        {
-            (!isOnline) ? <InfoCard text={`No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.`} />
-            : (officialOrderArray.length == 0) ? <Container >
-            <Container center style={{marginTop: 164.2}}>
-                <Image source={ICONN_BASKET_SHOPPING_CART} style={{height: 40, width: 40}} >
-                </Image>
-            </Container>
-            <TextContainer marginTop={12.3} text={'No tienes pedidos'} textAlign='center' fontBold fontSize={16}/>
-            <TextContainer text='Aquí verás tus pedidos anteriores y pedidos en curso.' textAlign='center' marginTop={11}/>
-            <Button onPress={goBack} fontBold fontSize='h4' color='iconn_green_original' round marginTop={234}> Ver articulos </Button>
-            </Container>
-            : officialOrderArray.map((order, i) => {
-              if(order.status == 'canceled' || order.status == 'invoiced')
-                return <OrderCard creationDate={order.creationDate} totalItems={order.totalItems} totalValue={order.totalValue} status={order.status} orderId={order.orderId} />
-            })
-        }
-
-        
+      {!isOnline ? (
+        <></>
+      ) : officialOrderArray.length == 0 ? (
+        <></>
+      ) : (
+        officialOrderArray.map((order, i) => {
+          const dc = order.orderId;
+          if (
+            order.status == 'ready-for-handling' ||
+            order.status == 'payment-approved' ||
+            order.status == 'waiting-for-sellers-confirmation' ||
+            order.status == 'payment-pending' ||
+            order.status == 'window-to-cancel' ||
+            order.status == 'handling'
+          ) {
+            console.log('MERMELADA', order.orderId);
+            return (
+              <OrderCard
+                orderId={order.orderId}
+                creationDate={order.creationDate}
+                status={order.status}
+                totalItems={order.totalItems}
+                totalValue={order.totalValue}
+              />
+            );
+          }
+        })
+      )}
+      {!isOnline ? <></> : officialOrderArray.length == 0 ? <></> : <TextContainer text="Pedidos anteriores" fontSize={16} fontBold marginTop={15.5} />}
+      {!isOnline ? (
+        <InfoCard text={`No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.`} />
+      ) : officialOrderArray.length == 0 ? (
+        <Container >
+          <Container center style={{ marginTop: 164.2 }}>
+            <Image source={ICONN_BASKET_SHOPPING_CART} style={{ height: 40, width: 40 }}></Image>
+          </Container>
+          <TextContainer marginTop={12.3} text={'No tienes pedidos'} textAlign="center" fontBold fontSize={16} />
+          <TextContainer text="Aquí verás tus pedidos anteriores y pedidos en curso." textAlign="center" marginTop={11} />
+          <Button onPress={goBack} fontBold fontSize="h4" color="iconn_green_original" round marginTop={360} marginBottom={0}>
+            {' '}
+            Ver artículos{' '}
+          </Button>
+        </Container>
+      ) : (
+        officialOrderArray.map((order, i) => {
+          if (order.status == 'canceled' || order.status == 'invoiced')
+            return (
+              <OrderCard
+                creationDate={order.creationDate}
+                totalItems={order.totalItems}
+                totalValue={order.totalValue}
+                status={order.status}
+                orderId={order.orderId}
+              />
+            );
+        })
+      )}
     </ScrollView>
   );
 };

@@ -171,6 +171,10 @@ const ProductDetailScreen: React.FC<Props> = ({
       .catch(error => console.log(error));
   }, [itemId]);
 
+  const onPressOut = () => {
+    setVisible(!visible);
+  };
+
   const validateCategoryForAddItem = (itemId: string) => {
     console.log('validate itemId:::' + itemId + 'userId' + user.userId);
     getProductDetailById(itemId).then(productDetail => {
@@ -184,9 +188,11 @@ const ProductDetailScreen: React.FC<Props> = ({
                 if (data.length > 0) {
                   isAdult = data[0].isAdult;
                   if (isAdult) {
+                    console.log("este es el resultado validacion,", isAdult )
                     updateShoppingCartProduct('create', itemId);
                   } else {
                     onPressOut();
+                    console.log("estamos aqui")
                   }
                 }
               }
@@ -210,9 +216,6 @@ const ProductDetailScreen: React.FC<Props> = ({
     return quantityItem;
   };
 
-  const onPressOut = () => {
-    setVisible(!visible);
-  };
 
   useEffect(() => {
     fetchData();

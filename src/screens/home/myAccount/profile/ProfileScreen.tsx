@@ -209,9 +209,9 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           fontSize="h5"
           round
           fontBold
-          leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} />}
+          leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} style={{width:18, height:18, marginRight:0}} />}
           borderColor='iconn_grey'
-          style={{ marginTop:15,marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
+          style={{ marginTop:8,marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
           onPress={() => {
             navigate('DeleteAccount');
           }}

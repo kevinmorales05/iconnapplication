@@ -92,12 +92,12 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
 
   return (
     <Container center style={{ backgroundColor: theme.brandColor.iconn_white }}>
-      <Container style={{ width: '85%', height: '100%' }}>
+      <Container style={{ width: '80%', height: '100%' }}>
         <Container>
           <Container style={{ marginTop: 30 }}>
             <TextContainer
               numberOfLines={3}
-              text={'Estás intentando eliminar tu cuenta en “Nombre de la app”. Antes de continuar, considera lo siguiente:'}
+              text={'Estás intentando eliminar tu cuenta. Antes de continuar, considera lo siguiente:'}
               fontSize={14}
               marginTop={4}
             ></TextContainer>
@@ -122,7 +122,7 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
             ></TextContainer>
             <TextContainer
               numberOfLines={3}
-              text={'Perderás el historial de tus pedidos, así como cualquier artículo o servicio de la “Nombre de la app”.'}
+              text={'Perderás el historial de tus pedidos, así como cualquier artículo o servicio.'}
               fontSize={14}
               marginTop={4}
               marginLeft={5}
@@ -139,7 +139,7 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
             ></TextContainer>
             <TextContainer
               numberOfLines={3}
-              text={'Ya no podrás recuperar tu cuenta actual, para comprar otra vez en “Nombre de la app” deberás registrarte nuevamente.'}
+              text={'Ya no podrás recuperar tu cuenta actual, para comprar otra vez deberás registrarte nuevamente.'}
               fontSize={14}
               marginTop={4}
               marginLeft={5}
