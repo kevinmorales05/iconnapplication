@@ -4,7 +4,7 @@ import theme from 'components/theme/theme';
 import { Button, Rating, TextContainer } from 'components/molecules';
 import { ICONN_EMPTY_SHOPPING_CART, ICONN_LEFT_ARROW } from 'assets/images';
 import { Bar } from 'react-native-progress';
-import { Image } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 
 interface Props {
     average?: number;
@@ -42,6 +42,8 @@ const ReviewPercentage: React.FC<Props> = ({
     reviewProduct
 }) => {
 
+const arr: number[] = [1, 2, 3, 4, 5];
+
 return(
 <Container backgroundColor={theme.brandColor.iconn_white}>
             <Container style={{marginTop:24}}>
@@ -55,30 +57,55 @@ return(
               </Container>
             </Container>
               <TextContainer marginTop={8} text={`${reviews ? reviews : 0} calificaciones`} fontSize={theme.fontSize.h5}/>
-              <Container row style={{marginTop:16, justifyContent:'space-between'}}>
-              <TextContainer text='5 estrellas' fontSize={theme.fontSize.h6}/>
-              <Bar  style={{marginLeft:16}} width={220} progress={countFive ? countFive : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentCinco > 0 ? percentCinco : 0}%`} fontSize={theme.fontSize.h6}/>
+              
+              <Container  row style={styles.containerStyle}>
+              <Container style={styles.textContainer}>
+                <TextContainer text='5 estrellas' fontSize={theme.fontSize.h6}/>
               </Container>
-              <Container  row style={{marginTop:12, justifyContent:'space-between'}}>
-              <TextContainer text='4 estrellas' fontSize={theme.fontSize.h6}/>
-              <Bar  style={{marginLeft:16}} width={220} progress={countFour ? countFour : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentCuatro > 0 ? percentCuatro : 0}%`} fontSize={theme.fontSize.h6}/>
+              <Bar width={225} progress={countFive ? countFive : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
+              <Container style={styles.percentContainer}>
+                <TextContainer text={`${percentCinco > 0 ? percentCinco : 0}%`} fontSize={theme.fontSize.h6}/>
               </Container>
-              <Container  row style={{marginTop:12, justifyContent:'space-between'}}>
-              <TextContainer text='3 estrellas' fontSize={theme.fontSize.h6}/>
-              <Bar  style={{marginLeft:16}} width={220} progress={countTres ? countTres : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentTres > 0 ? percentTres : 0}%`} fontSize={theme.fontSize.h6}/>
               </Container>
-              <Container  row style={{marginTop:12, justifyContent:'space-between'}}>
-              <TextContainer text='2 estrellas' fontSize={theme.fontSize.h6}/>
-              <Bar  style={{marginLeft:16}} width={220} progress={countDos ? countDos : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentDos > 0 ? percentDos : 0}%`} fontSize={theme.fontSize.h6}/>
+
+              <Container  row style={styles.containerStyle}>
+              <Container style={styles.textContainer}>
+                <TextContainer text='4 estrellas' fontSize={theme.fontSize.h6}/>
               </Container>
-              <Container  row style={{marginTop:12, justifyContent:'space-between'}}>
-              <TextContainer text='1 estrellas' fontSize={theme.fontSize.h6}/>
-              <Bar  style={{marginLeft:16}} width={220} progress={countUno ? countUno : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
-              <TextContainer marginLeft={16} text={`${percentUno > 0 ? percentUno : 0}%`} fontSize={theme.fontSize.h6}/>
+              <Bar width={225} progress={countFour ? countFour : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
+              <Container style={styles.percentContainer}>
+                <TextContainer text={`${percentCuatro > 0 ? percentCuatro : 0}%`} fontSize={theme.fontSize.h6}/>
+              </Container>
+              </Container>
+
+              <Container  row style={styles.containerStyle}>
+              <Container style={styles.textContainer}>
+                <TextContainer text='3 estrellas' fontSize={theme.fontSize.h6}/>
+              </Container>
+              <Bar width={225} progress={countTres ? countTres : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
+              <Container style={styles.percentContainer}>
+                <TextContainer text={`${percentTres > 0 ? percentTres : 0}%`} fontSize={theme.fontSize.h6}/>
+              </Container>
+              </Container>
+              
+              <Container  row style={styles.containerStyle}>
+              <Container style={styles.textContainer}>
+                <TextContainer text='2 estrellas' fontSize={theme.fontSize.h6}/>
+              </Container>
+              <Bar width={225} progress={countDos ? countDos : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
+              <Container style={styles.percentContainer}>
+                <TextContainer text={`${percentDos > 0 ? percentDos : 0}%`} fontSize={theme.fontSize.h6}/>
+              </Container>
+              </Container>
+
+              <Container  row style={styles.containerStyle}>
+              <Container style={styles.textContainer}>
+                <TextContainer text='1 estrella' fontSize={theme.fontSize.h6}/>
+              </Container>
+              <Bar width={225} progress={countUno ? countUno : 0} height={16} color={theme.brandColor.yellow_star} borderRadius={8} borderColor={'transparent'} unfilledColor={theme.brandColor.iconn_light_grey}></Bar>
+              <Container style={styles.percentContainer}>
+                <TextContainer text={`${percentUno > 0 ? percentUno : 0}%`} fontSize={theme.fontSize.h6}/>
+              </Container>
               </Container>
               <Container style={{marginTop:24, marginBottom:58}}>
               {reviewed ? (
@@ -114,5 +141,20 @@ return(
           </Container>
   );
 };
+
+const styles = StyleSheet.create({
+  containerStyle: {
+    marginTop:16, 
+    justifyContent:'space-between',
+  },
+  percentContainer:{
+    width:32,
+    alignItems:'flex-end'
+  },
+  textContainer:{
+    width:60
+  }
+
+});
 
 export default ReviewPercentage;
