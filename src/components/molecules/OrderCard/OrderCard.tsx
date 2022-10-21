@@ -89,7 +89,7 @@ const OrderCard = (props: OrderInterface) => {
             status == 'payment-approved' ||
             status == 'ready-for-handling' ||
             status == 'window-to-cancel' ? (
-              <TextContainer text="Preparando Pedido" marginHorizontal={16} marginVertical={8} textColor={theme.fontColor.white} fontSize={12} />
+              <TextContainer text="En curso" marginHorizontal={16} marginVertical={8} textColor={theme.fontColor.white} fontSize={12} />
             ) : status == 'handling' ? (
               <TextContainer text="Pedido enviado" marginHorizontal={16} marginVertical={8} textColor={theme.fontColor.white} fontSize={12} />
             ) : status == 'invoiced' ? (
