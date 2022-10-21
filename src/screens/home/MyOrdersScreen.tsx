@@ -24,6 +24,8 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
   });
   const insets = useSafeAreaInsets();
 
+  const haveBeforeOrders = officialOrderArray.length && officialOrderArray.some((order) => order.status == 'canceled' || order.status == 'invoiced' )
+
 
   return (
     <ScrollView
@@ -67,7 +69,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
           }
         })
       )}
-      {!isOnline ? <></> : officialOrderArray.length == 0 ? <></> : <TextContainer text="Pedidos anteriores" fontSize={16} fontBold marginTop={15.5} />}
+      {!isOnline ? <></> : officialOrderArray.length == 0 ? <></> : (haveBeforeOrders ? <TextContainer text="Pedidos anteriores" fontSize={16} fontBold marginTop={15.5} /> : null)}
       {!isOnline ? (
         <InfoCard text={`No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.`} />
       ) : officialOrderArray.length == 0 ? (
