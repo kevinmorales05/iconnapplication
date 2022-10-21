@@ -28,7 +28,7 @@ import { moderateScale } from 'utils/scaleMetrics';
 import { useLoading } from 'context';
 import { getProductDetailById } from 'services/vtexProduct.services';
 import { vtexUserServices } from 'services';
-import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
+import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 
 const ordenBy: FilterItemTypeProps[] = [
   {
@@ -84,41 +84,33 @@ const CategoryProductsScreen: React.FC = () => {
   const [refreshing, setRefreshing] = useState<boolean>(false);
   // const [ selectFilters, setSelectFilters] = useState({})
   const [visible, setVisible] = useState<boolean>(false);
+  const [productId, setProductId] = useState<string>();
 
-  const onPressOut = () => {
+  const hideModalForAdult = () => {
+    console.log('hideModalForAdult...');
     setVisible(false);
   };
 
-  const onOpen = () => {
+  const showModalForAdult = () => {
+    console.log('showModalForAdult...');
     setVisible(true);
   };
 
-  const validateCategoryForAddItem = (itemId: string) => {
-    console.log('validate itemId:::', itemId);
-    getProductDetailById(itemId).then(productDetail => {
-      if (productDetail.DepartmentId == 167) {
-        if (user.email) {
-          vtexUserServices.getUserByEmail(user.email).then(userResponse => {
-            let isAdult = false;
-            if (userResponse) {
-              const { data } = userResponse;
-              if (data) {
-                if (data.length > 0) {
-                  isAdult = data[0].isAdult;
-                  if (isAdult) {
-                    updateShoppingCartProduct!('create', itemId);
-                  } else {
-                    setVisible(true);
-                  }
-                }
-              }
-            }
-          })
-        }
-      } else {
-        updateShoppingCartProduct!('create', ItemId);
-      }
-    })
+  const userUpdated = (productId: string) => {
+    updateShoppingCartProduct!('create', productId);
+    hideModalForAdult();
+  }
+
+  const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
+    console.log('isAdult', isAdult);
+    console.log('pId', productId);
+    if (isAdult) {
+      console.log('updateShoppingCartProduct');
+      updateShoppingCartProduct!('create', productId);
+    } else {
+      setProductId(productId);
+      showModalForAdult();
+    }
   };
 
   const drawerComponet = useRef<DrawerLayout>(null);
@@ -151,11 +143,14 @@ const CategoryProductsScreen: React.FC = () => {
 
   useEffect(() => {
     productsEffect();
-  }, [idCategorySelected,route.params]);
+  }, [idCategorySelected, route.params]);
 
   useEffect(() => {
+    console.log('MANZANA');
     if (products?.length! > 0) {
+      console.log('con longitud');
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      console.log('existingProducts', existingProducts);
       refillProductsWithPrice(existingProducts);
     }
   }, [products, cart]);
@@ -174,24 +169,26 @@ const CategoryProductsScreen: React.FC = () => {
     }
   };
 
-  async function refillProductsWithPrice(
-    existingProductsInCart: ExistingProductInCartInterface[],
-  ){
+  async function refillProductsWithPrice(existingProductsInCart: ExistingProductInCartInterface[]) {
     let productsTem: ProductInterface[] = [];
     productsTem = products.concat(productsTem);
+    console.log('productsX', products);
     let productsToRender: ProductInterface[] = [];
-    productsToRender = productsRender.concat(productsToRender)
-    for( const p of productsTem ) {
+    console.log('productsR', productsRender);
+    productsToRender = productsRender.concat(productsToRender);
+    for (const p of productsTem) {
       const price = await getPriceByProductId(p.productId);
-      const raiting = await getRatingByProductId(p.productId)
-      if(price && raiting){
-        p.oldPrice =  price?.basePrice;
+      const raiting = await getRatingByProductId(p.productId);
+      if (price && raiting) {
+        p.oldPrice = price?.basePrice;
         p.price = price?.basePrice;
         p.ratingValue = raiting.average;
         p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
-        productsToRender.push(p)
+        productsToRender.push(p);
       }
     }
+    console.log('productsToRender');
+    console.log(productsToRender);
     setProductsRender(productsToRender);
     setRefreshing(false);
   }
@@ -333,7 +330,7 @@ const CategoryProductsScreen: React.FC = () => {
         quantity={item.quantity}
         productId={item.productId}
         oldPrice={item.oldPrice}
-        onPressAddCart={() => {validateCategoryForAddItem(item.productId)}}
+        onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
           updateShoppingCartProduct!('add', item.productId);
         }}
@@ -343,7 +340,7 @@ const CategoryProductsScreen: React.FC = () => {
         onPressDecreaseQuantity={() => {
           updateShoppingCartProduct!('substract', item.productId);
         }}
-        onPressOut={onPressOut}
+        onPressOut={hideModalForAdult}
         notNeedMarginLeft
       />
     );
@@ -453,8 +450,7 @@ const CategoryProductsScreen: React.FC = () => {
               </Container>
             )}
           </Container>
-          <AdultAgeVerificationScreen onPressClose={onPressOut}
-            visible={visible} />
+          <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={productId!} userUpdated={userUpdated}/>
         </Container>
       </DrawerLayout>
     </SafeArea>

@@ -36,7 +36,7 @@ interface CardProductProps {
   image: ImageSourcePropType;
   quantity: number;
   productId: string;
-  onPressAddCart: () => void;
+  onPressAddCart: (isAdult?: boolean, productId?: string) => void;
   onPressDeleteCart: () => void;
   onPressAddQuantity: () => void;
   onPressDecreaseQuantity: () => void;
@@ -46,7 +46,7 @@ interface CardProductProps {
   notNeedMarginLeft?: boolean;
   isFavorite?: boolean;
   onPressOut: () => void;
-  productPromotions: Map<string,Object>;
+  productPromotions: Map<string, Object>;
 }
 
 const CardProduct: React.FC<CardProductProps> = ({
@@ -67,31 +67,24 @@ const CardProduct: React.FC<CardProductProps> = ({
   onPressOut,
   productPromotions
 }: CardProductProps) => {
-
   const validateCategoryForAddItem = () => {
     getProductDetailById(productId).then(productDetail => {
       if (productDetail.DepartmentId == 167) {
-        if (user.email) {
-          console.log('user.email: ', user.email);
-          vtexUserServices.getUserByEmail(user.email).then(userResponse => {
-            let isAdult = false;
-            if (userResponse) {
-              const { data } = userResponse;
-              if (data) {
-                if (data.length > 0) {
-                  isAdult = data[0].isAdult;
-                  if (isAdult) {
-                    onPressAddCart();
-                  } else {
-                    onPressOut();
-                  }
-                }
-              }
+        vtexUserServices.getUserByEmail(email!).then(userResponse => {
+          if (userResponse && userResponse.data) {
+            console.log('userResponse',  JSON.stringify(userResponse, null, 3));
+            const { data } = userResponse;
+            if (data[0].isAdult === true) {
+              console.log('ya es adulto');
+              onPressAddCart(true, productId);
+            } else {
+              console.log('no es adulto');
+              onPressAddCart(false, productId);
             }
-          });
-        }
+          }
+        });
       } else {
-        onPressAddCart();
+        onPressAddCart(true, productId);
       }
     });
   };
@@ -106,9 +99,9 @@ const CardProduct: React.FC<CardProductProps> = ({
   let newFavList: ItemsFavoritesInterface[] = [];
 
   const getIsFavorite = () => {
-    if(favs){
-      if(favs.length) {
-        const favorite = favs.find(fav => productId == fav.Id  );
+    if (favs) {
+      if (favs.length) {
+        const favorite = favs.find(fav => productId == fav.Id);
         if (favorite) {
           setIsFav(true);
         } else {
@@ -122,40 +115,7 @@ const CardProduct: React.FC<CardProductProps> = ({
     getIsFavorite();
   }, [isFav, favs]);
 
-  useEffect(() => {
-  }, [productPromotions]);
-
-  /* const addFavorite = (newFav: ItemsFavoritesInterface) => {
-    console.log('NFL', typeof favs);
-    console.log('FAVS', favs);
-    if (favs.length === undefined) {
-      console.log('El arreglo de redux esta vacio');
-      favs.push(newFav);
-      console.log('ARREGLO YA NO UNDEFINED', newFavList);
-      dispatch(setFav(favs));
-    } else if (favs.length === 0) {
-      favs.push(newFav);
-      console.log('NO HAY2!', favList);
-      dispatch(setFav(favs));
-    } else if (favs.length > 0) {
-      //favs.push(newFav);
-      favs.map(product => {
-        if (product.Id === newFav.Id) {
-          console.log('YA HAY', product.Id);
-          console.log('YA HAY!', newFavList);
-          setFavList(favs);
-          dispatch(setFav(favs));
-        } else {
-          console.log('AQUI', typeof newFavList);
-          favs.push(newFav);
-          console.log('NO HAY!3', favList);
-          dispatch(setFav(favs));
-        }
-        console.log('FANTA', favs);
-      });
-    }
-  };
- */
+  useEffect(() => {}, [productPromotions]);
 
   const addFavorite1 = async (newFav: ItemsFavoritesInterface) => {
     if (favsId === '') {
@@ -182,7 +142,7 @@ const CardProduct: React.FC<CardProductProps> = ({
       ListItemsWrapper: [{ ListItems: favs, IsPublic: true, Name: 'Wishlist' }]
     });
     console.log('Añadiendo a vtex', response.DocumentId, favs);
-    if(favsId === '') {
+    if (favsId === '') {
       dispatch(setFavId(response.DocumentId));
     }
   };
@@ -252,30 +212,37 @@ const CardProduct: React.FC<CardProductProps> = ({
       <Container style={styles.subContainer}>
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
           <Container row width={'100%'} space="between">
-              <Container flex width={'100%'}>
-              {
-                productPromotions != undefined && productPromotions.has('' + productId) ?
-                  (productPromotions.get('' + productId).promotionType == 'buyAndWin' || productPromotions.get('' + productId).promotionType == 'forThePriceOf' || productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ?
-                    (
-                      (
-                        <Container style={styles.containerPorcentDiscount}>
-                          <CustomText
-                            fontSize={theme.fontSize.h6}
-                            textColor={theme.brandColor.iconn_green_original}
-                            fontWeight={'bold'}
-                            text={(productPromotions != undefined && productPromotions.has('' + productId)) ?
-                              ((productPromotions.get('' + productId).promotionType == 'buyAndWin' || productPromotions.get('' + productId).promotionType == 'forThePriceOf') ?
-                                productPromotions.get('' + productId).promotionName : ((productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ? ('-' + productPromotions.get('' + productId).percentualDiscountValue + '%') : ''))
-                              : ''}
-                          />
-                        </Container>
-                      )
-                    ) : <></>
-
-                  :
+            <Container flex width={'100%'}>
+              {productPromotions != undefined && productPromotions.has('' + productId) ? (
+                productPromotions.get('' + productId).promotionType == 'buyAndWin' ||
+                productPromotions.get('' + productId).promotionType == 'forThePriceOf' ||
+                productPromotions.get('' + productId).promotionType == 'campaign' ||
+                productPromotions.get('' + productId).promotionType == 'regular' ? (
+                  <Container style={styles.containerPorcentDiscount}>
+                    <CustomText
+                      fontSize={theme.fontSize.h6}
+                      textColor={theme.brandColor.iconn_green_original}
+                      fontWeight={'bold'}
+                      text={
+                        productPromotions != undefined && productPromotions.has('' + productId)
+                          ? productPromotions.get('' + productId).promotionType == 'buyAndWin' ||
+                            productPromotions.get('' + productId).promotionType == 'forThePriceOf'
+                            ? productPromotions.get('' + productId).promotionName
+                            : productPromotions.get('' + productId).promotionType == 'campaign' ||
+                              productPromotions.get('' + productId).promotionType == 'regular'
+                            ? '-' + productPromotions.get('' + productId).percentualDiscountValue + '%'
+                            : ''
+                          : ''
+                      }
+                    />
+                  </Container>
+                ) : (
+                  <></>
+                )
+              ) : (
                 <></>
-              }
-              </Container>
+              )}
+            </Container>
             <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
               <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
             </Container>
@@ -313,6 +280,7 @@ const CardProduct: React.FC<CardProductProps> = ({
             round
             size={'xxxsmall'}
             onPress={() => {
+              console.log('ejecuta...');
               validateCategoryForAddItem();
             }}
             fontSize="h4"
@@ -363,7 +331,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   containerPrice: {
-    marginTop:12
+    marginTop: 12
   },
   image: {
     width: moderateScale(20),
@@ -374,8 +342,8 @@ const styles = StyleSheet.create({
     flex: 0.25,
     width: '100%',
     justifyContent: 'flex-end',
-    marginTop:16,
-    marginBottom:8
+    marginTop: 16,
+    marginBottom: 8
   },
   buttonAddProduct: {
     borderRadius: moderateScale(10)
