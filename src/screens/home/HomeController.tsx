@@ -194,8 +194,11 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     navigate('SearchProducts');
   };
 
-  const viewMoreProducts = (productsMore: any) => {
-    navigate('SeeMore', { products: productsMore });
+  const viewRecomendedProducts = () => {
+    navigate('RecomendedForYou');
+  };
+  const viewOtherProducts = () => {
+    navigate('OtherProducts');
   };
 
   /**
@@ -586,46 +589,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         homeProducts={homeProducts!}
         homeOtherProducts={homeOtherProducts!}
         updateShoppingCartProduct={updateShoppingCartProduct}
-        onPressViewMore={viewMoreProducts}
+        viewRecomendedProducts={viewRecomendedProducts}
+        viewOtherProducts={viewOtherProducts}
         productPromotions={productPromotions}
       />
-      {/*       <CustomModal visible={modVisibility}>
-        <Container center style={styles.modalBackground}>
-          <Pressable style={{ alignSelf: 'flex-end' }} onPress={markAsSeenCarousel}>
-            <Container circle style={styles.iconContainer}>
-              <Icon name="window-close" size={20} />
-            </Container>
-          </Pressable>
-          <Container row>
-            <TextContainer text={user.name ? `¡Hola ${user.name}!` : '¡Hola!'} typography="h3" fontBold={true} textAlign="center" marginTop={4} />
-          </Container>
-          <Container center middle flex={1}>
-            <CustomCarousel />
-          </Container>
-
-          <Container
-            style={{
-              backgroundColor: theme.brandColor.iconn_warm_grey,
-              alignSelf: 'stretch',
-              borderRadius: 16
-            }}
-          >
-            <Pressable onPress={markAsSeenCarousel}>
-              <TextContainer
-                text="Omitir"
-                typography="link"
-                fontBold={true}
-                textAlign="center"
-                textColor={theme.fontColor.link}
-                underline={true}
-                marginTop={27}
-                marginBottom={30}
-              />
-            </Pressable>
-          </Container>
-        </Container>
-      </CustomModal> */}
-
       <AddressModalSelection
         visible={addressModalSelectionVisible}
         addresses={user.addresses!}

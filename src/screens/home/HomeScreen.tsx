@@ -8,6 +8,7 @@ import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
+import { navigate } from 'navigation/RootNavigation';
 
 interface Props {
   onPressShowAddressesModal: () => void;
@@ -20,12 +21,13 @@ interface Props {
   dayPromotionItems: CarouselItem[];
   allPromotionsItems: CarouselItem[];
   onPressCarouselItem: (CarouselItem: CarouselItem) => void;
-  homeProducts: ProductInterface[];
+  homeProducts: (ProductInterface[]);
   homeOtherProducts: ProductInterface[];
   updateShoppingCartProduct: (type: CounterType, productId: string) => void;
   onPressViewMore: (products: any) => void;
   productPromotions: Map<string,Object>;
 }
+
 
 const HomeScreen: React.FC<Props> = ({
   onPressSearch,
@@ -43,7 +45,10 @@ const HomeScreen: React.FC<Props> = ({
   homeOtherProducts,
   updateShoppingCartProduct, 
   onPressViewMore,
-  productPromotions
+  productPromotions,
+  viewRecomendedProducts,
+  viewOtherProducts
+
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
@@ -125,7 +130,7 @@ const HomeScreen: React.FC<Props> = ({
           <Container height={367} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text="Recomendados para tí" fontBold typography="h4" />
-              <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => onPressViewMore(homeProducts) } />
+              <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => viewRecomendedProducts()  } />
             </Container>
             <Container style={{position:'absolute', top:35}}>
             <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut} productPromotions={productPromotions}/>
@@ -134,7 +139,7 @@ const HomeScreen: React.FC<Props> = ({
           <Container height={342} style={{ marginTop: 0 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
-              <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => onPressViewMore(homeOtherProducts)} />
+              <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => viewOtherProducts() } />
             </Container>
             <Container style={{position:'absolute', top:35}}>
             <AnimatedCarousel

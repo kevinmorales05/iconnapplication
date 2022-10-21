@@ -205,8 +205,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
         </Container>
       </Container>
 
-      <Container flex row crossAlignment="end" space="between">
-        <ActionButton size="large" onPress={goBack} color="iconn_med_grey" icon={<AntDesign name="arrowleft" size={24} color={theme.fontColor.dark} />} />
+      <Container flex row crossAlignment="end" space="between" style={{ alignItems:'flex-end' }}>
 
         <Button
           length="short"
@@ -215,8 +214,7 @@ const CreatePasswordScreen: React.FC<Props> = ({ onSubmit, goBack, hasNavigation
           onPress={handleSubmit(submit)}
           fontSize="h4"
           fontBold
-          style={{ marginTop: 8 }}
-          rightIcon={<AntDesign name="arrowright" size={24} color="white" />}
+          style={{ marginTop: 8, width:'100%', justifyContent:'center', alignSelf:'center'}}
         >
           Siguiente
         </Button>

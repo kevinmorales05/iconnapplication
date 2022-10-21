@@ -30,9 +30,11 @@ export type HomeStackParams = {
   Legal: undefined;
   MyAccount: undefined;
   MyOrders: undefined;
+  OtherProducts: undefined;
   PostalCode: undefined;
   ProductDetail: undefined | { productIdentifier?: string };
   Profile: undefined;
+  RecomendedForYou: undefined;
   SearchSeller: undefined;
   SeeMore: { products: any };
   CategoryProducts: { category: CategoryInterface; categories: CategoryInterface[] };
