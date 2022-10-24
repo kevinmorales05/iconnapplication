@@ -56,7 +56,7 @@ const EnterPasswordController: React.FC = () => {
       } else if (response.authStatus == 'WrongCredentials') {
         setAccountError('Contraseña incorrecta');
       } else {
-        alert.show({ title: 'Lo sentimos', message: 'No pudimos ingresar a tu cuenta en este momento. Por favor intenta más tarde.' });
+        alert.show({ title: 'Cuenta temporalmente bloqueada', message: 'Has excedido la cantidad de intentos permitidos, tu cuenta ha sido bloqueada durante 1 hora.' });
       }
     } catch (error) {
       console.log(error);

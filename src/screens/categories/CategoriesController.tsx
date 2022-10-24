@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { getCategoryItemsThunk, useAppDispatch } from 'rtk';
 import { CategoryInterface } from 'rtk/types/category.types';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 
 const CategoriesController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -55,7 +55,7 @@ const CategoriesController: React.FC = () => {
         <Container style={styles.containerHeader}>
           <SearchBar isButton onPressSearch={onPressSearch} onChangeTextSearch={() => {}} />
         </Container>
-        <Container style={{height: Dimensions.get("window").height * .75}}>
+        <Container style={{height: verticalScale(500)}}>
           <ScrollView
             contentContainerStyle={{paddingBottom: moderateScale(50)}}
           >
