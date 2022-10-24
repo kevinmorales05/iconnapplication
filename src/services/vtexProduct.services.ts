@@ -1,4 +1,5 @@
 import { Product } from '../http/api-product';
+import { Products } from '../http/api-products';
 import { ProductPrice } from '../http/api-productPrice';
 import { SuggestedProducts } from '../http/api-suggestedProduct';
 
@@ -38,4 +39,13 @@ async function getSuggestedProductsBySellerIdAndSellerSkuId(sellerId: string, se
   return data;
 }
 
-export { getProductDetailById, getSkuFilesById, getProductPriceById, getSuggestedProductsBySellerIdAndSellerSkuId };
+/**
+ * Function to get product specification.
+ */
+ async function getProductSpecification(productId: string): Promise<any> {
+  const response = await Products.getInstance().getRequest(`/${productId}/specification`);
+  const { data } = response;
+  return data;
+}
+
+export { getProductDetailById, getSkuFilesById, getProductPriceById, getSuggestedProductsBySellerIdAndSellerSkuId, getProductSpecification };

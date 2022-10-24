@@ -26,7 +26,6 @@ import { ICONN_COFFEE } from 'assets/images';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useEnterModal, useInConstruction, useLoading, useToast } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
@@ -38,6 +37,8 @@ import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
 import { vtexProductsServices } from 'services';
 import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import { vtexPromotionsServices } from 'services/vtexPromotions.services';
+import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
+import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -160,7 +161,6 @@ class CustomCarousel extends Component<Props, State> {
 const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { user, isGuest, favs } = useAppSelector((state: RootState) => state.auth);
   const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
-  const { loading: invoicingLoading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const { isLogged } = userLogged;
@@ -177,10 +177,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const inConstruction = useInConstruction();
   const { getFavorites } = useFavorites();
   const { email } = user;
-
-  useEffect(() => {
-    if (invoicingLoading === false) loader.hide();
-  }, [invoicingLoading]);
+  const [productsList, setProductsList] = useState([]);
+  const [productPromotion, setProductPromotion] = useState<Object>();
+  const [promotionsCategory, setPromotionsCategory] = useState<Object>();
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -217,21 +216,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   useEffect(() => {
     fetchAddresses();
   }, [fetchAddresses]);
-
-  /**
-   * Load Invocing Profile List and store it in the redux store.
-   */
-  const fetchInvoicingProfileList = useCallback(async () => {
-    loader.show();
-    await dispatch(getInvoicingProfileListThunk(user.userId!));
-  }, []);
-
-  /**
-   * We get the invoicing profile list just if there isn`t any profile.
-   */
-  useEffect(() => {
-    if (user.userId && invoicingProfileList.length === 0) fetchInvoicingProfileList();
-  }, [fetchInvoicingProfileList]);
 
   /**
    * This hook manages every business logic for addresses feature.
@@ -416,76 +400,148 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   };
 
   const fetchPromotionData = useCallback(async () => {
-    console.log('fetchPromotionData...');
+    console.log('fetchPromotions...');
+    //solo este tiene promociones con productos 34012fc8-f2d5-40ad-929e-b6c348b16791
+    //let productVsPromotions = [Object];
+    const { items } = cart;
+    let itmMapFromCart = new Map();
+    if (items != undefined) {
+      items.map((item) => {
+        itmMapFromCart.set(item.productId, { id: item.productId, quantity: item.quantity, seller: item.seller });
+      });
+    }
+
     let productVsPromotions = new Map();
-    await vtexPromotionsServices
-      .getAllPromotions()
-      .then(promotionsResponse => {
-        if (promotionsResponse) {
-          const { items } = promotionsResponse;
-          console.log('tams items: ' + items.length);
-          if (items.length > 0) {
-            items.map(item => {
-              if (item.isActive) {
-                console.log('::::', item.idCalculatorConfiguration);
-                vtexPromotionsServices
-                  .getPromotionById(item.idCalculatorConfiguration)
-                  .then(promotionResponse => {
-                    /*
-                if(promotionResponse){
-                  if(promotionResponse.skusGift){
+    vtexPromotionsServices.getAllPromotions().then(promotionsResponse => {// todas las promociones
+      //IB AQUI
+      let productList = [];
+      console.log('lllllll');
+      console.log(promotionsResponse);
+      console.log('lllllll');
+      if (promotionsResponse) {
+        const { items } = promotionsResponse;
+        console.log('tams items: ' + items.length);
+        if (items.length > 0) {
+          items.map((item, indx) => {
+            console.log('Activoooo:: ', item.isActive);
+            if (item.isActive == true) {
+              console.log('::::>', item.idCalculatorConfiguration);
+              vtexPromotionsServices.getPromotionById(item.idCalculatorConfiguration).then(promotionResponse => {// promociones por id de categoria de promocion
+                if (promotionResponse) {
+                  const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/";
+                  let productImg = '';
+                  if (promotionResponse.skusGift) {
                     const { gifts } = promotionResponse.skusGift;
-                    console.log(item.idCalculatorConfiguration+' longitud:   '+gifts.length);
-                    if(gifts){
-                      if(gifts.length>0){
-                      gifts.map((gift) => {
-                        productVsPromotions.set(gift.id,{productId: gift.id, name: gift.name, quantity: gift.quantity, promotionType: promotionResponse.type, promotionName: promotionResponse.name, percentualDiscountValue: promotionResponse.percentualDiscountValue});
-                      });
+                    console.log('(' + indx + ') item.idCalculatorConfiguration222: ' + item.idCalculatorConfiguration + ' gifts tam: ' + gifts.length);
+                    console.log(item.idCalculatorConfiguration + ' longitud:   ' + gifts.length);
+                    if (gifts) {let prodsPromotions = new Map();
+                      if (gifts.length > 0) {
+                        let products = [];
+                        console.log('****************************************222');
+                        gifts.map((gift, index) => {
+                          console.log('indexxxxx:' + index);
+                          
+                          prodsPromotions.set(gift.id, { productId: gift.id, name: gift.name, quantity: gift.quantity, promotionType: promotionResponse.type, promotionName: promotionResponse.name, percentualDiscountValue: promotionResponse.percentualDiscountValue });
+                          //console.log('indeyyyyy:' + index);
+                          console.log('indeyyyyy:' + index);
+/*
+                          console.log('..........');
+                          console.log({ productId: gift.id, name: gift.name, quantity: gift.quantity, promotionType: promotionResponse.type, promotionName: promotionResponse.name, percentualDiscountValue: promotionResponse.percentualDiscountValue });
+                          console.log('..........');
+
+                            productList.push({
+                              rating: 10, price: 10, PriceWithDiscount: 1,
+                              name: 'xxx', url: 'productImg',
+                              quantity: 10, productId: '10', oldPrice: '10'
+                            });*/
+                          console.log('gift.id: ',gift.id);
+                          getProductDetailById(gift.id)
+                            .then(responseProductDetail => {
+                              console.log('productDetailEndpoint222:::',gift.id);
+                              console.log(JSON.stringify(responseProductDetail));
+                              console.log('productDetailEndpoint222:::');
+                              if (responseProductDetail) {
+                                vtexProductsServices
+                                  .getProductPriceByProductId(gift.id)
+                                  .then(async responsePrice => {
+                                    console.log('priceEndpoint222:::',gift.id);
+                                    console.log(JSON.stringify(responsePrice, null, 4));
+                                    console.log('priceEndpoint222:::',gift.id);
+                                    if (responsePrice) {
+                                      vtexProductsServices
+                                      .getProductRatingByProductId(gift.id)
+                                      .then(async responseRating => {
+                                        if(responseRating){
+                                          console.log('rating222...');
+                                          console.log(JSON.stringify(responseRating,null, 4));
+                                          console.log('rating222...');
+                                          products.push({
+                                            rating: responseRating.average, price: responsePrice.basePrice, PriceWithDiscount: 1,
+                                            name: responseProductDetail.Name, url: 'productImg',
+                                            quantity: ( itmMapFromCart.has(gift.id) ? itmMapFromCart.get(gift.id).quantity:0 ), productId: responseProductDetail.Id, oldPrice: '10'
+                                          });
+                                          console.log('despues1');
+                                        }
+                                      })
+                                      .catch(error => console.log(error));
+                                    }else{
+                                      console.log('sin precios ini');
+                                      products.push({
+                                        rating: 0, price: 1000, PriceWithDiscount: 1,
+                                        name: 'prueba', url: 'productImg',
+                                        quantity: 9, productId: '9', oldPrice: '10'
+                                      });
+                                      console.log('sin precios fin');
+                                    }
+                                  })
+                                  .catch(error => console.log(error));
+                              }
+                            })
+                            .catch(error => console.log(error));
+                            //productVsPromotions = prodsPromotions;
+                        });
+                        productList.concat(products);
+                        console.log('hhhhh0001');
+                        console.log(productList);
+                        dispatch(setProductVsPromotions(prodsPromotions));
+                        dispatch(setPromotions(productList))
+                        console.log('hhhhh111');
+                        console.log(prodsPromotions);
+                        console.log('hhhhh22');
+                        console.log(productList);
+                        console.log('hhhhh33');
+                        console.log('****************************************2222');
+
                       }
                     }
                   }
-                }*/
-                    productVsPromotions.set('100004574', {
-                      name: 'PEÑAFIEL TORONJADA LIGHT PET 600 ML',
-                      percentualDiscountValue: 10,
-                      productId: '100004574',
-                      promotionName: '2 x 1 QA visible 1',
-                      promotionType: 'regular',
-                      quantity: 1
-                    });
-                    productVsPromotions.set('100004548', {
-                      name: 'CHOCO KRISPIS BOLSA 90GR',
-                      percentualDiscountValue: 20,
-                      productId: '100004548',
-                      promotionName: 'Más por menos',
-                      promotionType: 'forThePriceOf',
-                      quantity: 1
-                    });
-                    productVsPromotions.set('100004655', {
-                      name: 'JAMAIC CON JUGO BONAFONT 1 LT)',
-                      percentualDiscountValue: 3,
-                      productId: '100004655',
-                      promotionName: 'Recoger en tienda',
-                      promotionType: 'regular',
-                      quantity: 1
-                    });
-                    productVsPromotions.set('100005835', {
-                      name: 'CANADA DRY GINGER ALE PET 1 LT',
-                      percentualDiscountValue: 5,
-                      productId: '100005835',
-                      promotionName: 'Promo 1 QA.',
-                      promotionType: 'campaign',
-                      quantity: 1
-                    });
-                    setProductPromotions(productVsPromotions);
-                  })
-                  .catch(error => console.log(error));
-              }
-            });
-          }
+                }
+                console.log('pomossss');
+                console.log(productVsPromotions);
+                console.log('pomossss');
+              }).catch(error => console.log(error));
+            }
+          });
         }
-      })
-      .catch(error => console.log(error));
+      }
+
+      console.log('kkk');
+      console.log(JSON.stringify(items, null, 4));
+      console.log('kkk');
+    }).catch(error => console.log(error));
+
+console.log('pomitos');
+console.log(productVsPromotions);
+console.log('pomitos');
+    
+    let categories = [];
+    categories.push({ id: "0", name: 'Todo' });
+    categories.push({ id: "1", name: 'Botanas' });
+    categories.push({ id: "2", name: 'Dulces' });
+    categories.push({ id: "3", name: 'Bebidas' });
+    categories.push({ id: "4", name: 'Cervezas' });
+    setPromotionsCategory(categories);
+  
   }, []);
 
   useEffect(() => {
