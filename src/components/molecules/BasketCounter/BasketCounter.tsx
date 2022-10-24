@@ -20,6 +20,7 @@ const BasketCounter = () => {
     if (messages) {
       if (messages.length > 0) {
         messages.map(value => {
+          // TODO: relocate message type to .ENV
           if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
             withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
           }
