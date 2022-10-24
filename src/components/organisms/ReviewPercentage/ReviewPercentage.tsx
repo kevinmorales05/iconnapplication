@@ -42,8 +42,6 @@ const ReviewPercentage: React.FC<Props> = ({
     reviewProduct
 }) => {
 
-const arr: number[] = [1, 2, 3, 4, 5];
-
 return(
 <Container backgroundColor={theme.brandColor.iconn_white}>
             <Container style={{marginTop:24}}>

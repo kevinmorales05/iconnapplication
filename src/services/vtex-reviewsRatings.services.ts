@@ -13,7 +13,7 @@ import { Reviews } from '../http/vtex-api-reviews';
   }
 
   async function getReviewList(id:number, from?:number, to?:number): Promise<any> {
-    const response = await Reviews.getInstance().getRequest(`reviews?from=${from ? from : 0}&to=${to ? to : 50}&product_id=${id}`);
+    const response = await Reviews.getInstance().getRequest(`reviews?from=${from ? from : 0}&to=${to ? to : 0}&product_id=${id}`);
     if (response === undefined) return Promise.reject(new Error('error'));
   
     console.log("Respuesta review list");
