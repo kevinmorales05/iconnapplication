@@ -11,7 +11,7 @@ import { moderateScale } from 'utils/scaleMetrics';
 import { Touchable } from 'components';
 import { useNavigation } from '@react-navigation/native';
 import { setDetailSelected } from 'rtk/slices/cartSlice';
-import { getProductDetailById } from 'services/vtexProduct.services';
+import { getProductDetailById, getProductSpecification } from 'services/vtexProduct.services';
 import { vtexUserServices } from 'services';
 import {
   addFav,
@@ -68,11 +68,20 @@ const CardProduct: React.FC<CardProductProps> = ({
   productPromotions
 }: CardProductProps) => {
   const validateCategoryForAddItem = () => {
+    let isAdultInProductSpecification = false
     getProductDetailById(productId).then(productDetail => {
-      if (productDetail.DepartmentId == 167) {
+      getProductSpecification(productId).then(producSpecificationResponse => {
+        if (producSpecificationResponse.length > 0) {
+          const { Value } = producSpecificationResponse[0];
+          if (Value.length > 0) {
+            isAdultInProductSpecification = (Value[0] == 'Sí');
+          }
+        }
+      });
+      if (isAdultInProductSpecification) {
         vtexUserServices.getUserByEmail(email!).then(userResponse => {
           if (userResponse && userResponse.data) {
-            console.log('userResponse',  JSON.stringify(userResponse, null, 3));
+            console.log('userResponse', JSON.stringify(userResponse, null, 3));
             const { data } = userResponse;
             if (data[0].isAdult === true) {
               console.log('ya es adulto');
