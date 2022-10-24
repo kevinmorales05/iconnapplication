@@ -33,7 +33,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, us
             .then(async updatedDoc => {
               console.log(updatedDoc);
               if (!adultStatus) {
-                Linking.openURL('https://www.alcoholinformate.org.mx/');
+                Linking.openURL(global.age_verification_url);
               } else {
                 userUpdated(productId, true);
               }
