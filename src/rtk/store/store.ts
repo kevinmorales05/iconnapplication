@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authReducer from '../slices/authSlice';
 import appReducer from '../slices/appSlice';
 import cartReducer from '../slices/cartSlice';
+import promotionsReducer from '../slices/promotionsSlice';
 import sellerReducer from '../slices/sellerSlice';
 import invoicingReducer from '../slices/invoicingSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   app: appReducer,
   invoicing: invoicingReducer,
   cart: cartReducer,
+  promotion: promotionsReducer,
   seller: sellerReducer
 });
 

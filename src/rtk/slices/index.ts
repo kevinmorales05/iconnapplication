@@ -4,3 +4,4 @@ export * from './invoicingSlice';
 export * from './sellerSlice';
 export * from './reviewSlice';
 export * from './cartSlice';
+export * from './promotionsSlice';
