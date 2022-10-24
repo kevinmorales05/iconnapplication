@@ -189,14 +189,18 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
             <Container row flex={1}>
               <CustomText numberOfLines={1} fontSize={16} text={address ? address.addressName! : 'Agrega una dirección de entrega'} fontBold />
             </Container>
+            {address ?
             <Container style={{ flexDirection: 'row', width: '95%', marginVertical: 5 }}>
               <CustomText
                 numberOfLines={2}
                 lineHeight={22}
                 fontSize={16}
-                text={address ? `${address?.street}, ${address?.neighborhood}, ${address?.city}, ${address?.state}` : '64680, Monterrey, N.L.'}
+                text={`${address?.street}, ${address?.neighborhood}, ${address?.city}, ${address?.state}`}
               />
             </Container>
+            :
+            <></>
+            }
             {address ?
               near ? (
                   <Container row center>
