@@ -5,6 +5,7 @@ import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
 import { DeviceEventEmitter } from 'react-native';
 import { store } from 'rtk';
 
+// TODO: relocate this urls to .ENV
 const VTEX_BRANCH_PREFIX = 'https://oneiconntienda';
 const VTEX_BRANCH_SUFIX = '.myvtex.com/api';
 

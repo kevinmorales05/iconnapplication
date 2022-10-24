@@ -21,6 +21,7 @@ const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderF
     toast.show({ message: `${data.nativeEvent.data}`, type: 'success' });
   }
 
+  // TODO: relocate url to .ENV
   const onNavigationStateChange = (navState: WebViewNavigation) => {
     const urlParams = navState.url.split('https://nttdev--oneiconn.myvtex.com/_v/segment/admin-login/v1/login?')[1]?.split('=%');
     if (urlParams) {
@@ -34,6 +35,7 @@ const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderF
     }
   };
 
+  // TODO: relocate url to .ENV
   return (
     <WebView
       onNavigationStateChange={onNavigationStateChange.bind(this)}

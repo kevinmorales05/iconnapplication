@@ -21,6 +21,7 @@ const CategoriesController: React.FC = () => {
     }
   }, [categories]);
 
+  // TODO: relocate this url to .ENV
   const categoriesEffect = async () => {
     const categoriesRequest = await getCategoryItems();
     categoriesRequest.forEach((c: CategoryInterface) => {

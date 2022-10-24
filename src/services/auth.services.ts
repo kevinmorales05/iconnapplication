@@ -272,6 +272,7 @@ async function getLoginProviders(): Promise<any> {
   return data;
 }
 
+// TODO: is used this function?
 /**
  * Function saveAuthCookies whit socialNetwork
  * @param authCookie

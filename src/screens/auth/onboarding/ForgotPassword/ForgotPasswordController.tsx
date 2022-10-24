@@ -44,6 +44,7 @@ const ForgotPasswordController: React.FC = () => {
     }
   };
 
+  // TODO: remove this unused function.
   const onSubmit = async () => {
     loader.show();
     const { payload: sendEmailResponse } = await dispatch(sendEmailToRecoverPasswordThunk({ email }));

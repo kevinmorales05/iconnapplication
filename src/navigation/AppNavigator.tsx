@@ -27,6 +27,7 @@ const AppNavigator: any = () => {
   const { user: userLogged, isGuest } = useAppSelector((state: RootState) => state.auth);
   const { isLogged } = userLogged;
 
+  // TODO: remove this function, it was used when app used firebase auth, no currently.
   const onAuthStateChanged = (user: any) => {
     auth().currentUser?.reload(); // refresh user after backend sets emailVerified as true.
   };
