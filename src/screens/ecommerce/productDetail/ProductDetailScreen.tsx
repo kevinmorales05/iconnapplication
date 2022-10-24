@@ -146,7 +146,7 @@ const ProductDetailScreen: React.FC<Props> = ({
 
   const getComplementaryProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     vtexProductsServices
-      .getProductsByCollectionId('147') 
+      .getProductsByCollectionId(global.complementry_products) 
       .then(responseCollection => {
         const { Data } = responseCollection;
         let complementaryList = [];
