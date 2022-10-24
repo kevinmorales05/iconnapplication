@@ -10,8 +10,6 @@ import {
   getProductRatingByProductIdThunk,
   getProductsByCategoryAndFiltersItemsThunk,
   ProductInterface,
-  ProductPriceResponseInterface,
-  ProductRaitingResponseInterface,
   RootState,
   TabItem,
   useAppDispatch,
@@ -26,8 +24,6 @@ import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { moderateScale } from 'utils/scaleMetrics';
 import { useLoading } from 'context';
-import { getProductDetailById } from 'services/vtexProduct.services';
-import { vtexUserServices } from 'services';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 
 const ordenBy: FilterItemTypeProps[] = [

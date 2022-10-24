@@ -24,6 +24,7 @@ const CategoriesController: React.FC = () => {
   const categoriesEffect = async () => {
     const categoriesRequest = await getCategoryItems();
     categoriesRequest.forEach((c: CategoryInterface) => {
+      // TODO: link para traer las imagenes
       c.image = `https://oneiconn.vtexassets.com/arquivos/${c.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, '_')}.png`;
     });
     console.log({ categoriesRequest });

@@ -345,6 +345,7 @@ const PostalCodeScreen = () => {
       </Touchable>
       <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: verticalScale(250) }}>
         <Touchable onPress={()=>{
+          // TODO: se harcodeo cp para motivos de softlunch
           getPickUpPoints('66230')
         }}>
             <CustomText text={'En otro momento'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
