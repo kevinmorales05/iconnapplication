@@ -44,6 +44,7 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
                   if (addressDocumentResponse) {
                     if (addressDocumentResponse.length > 0) {
                       addressDocumentResponse.map((document) => {
+                        // TODO: relocate entity name to .ENV
                         authServices.deleteDocumentById('AD', document.id).then(addressDocumentDeletedResponse => {
                         });
                       });
@@ -56,6 +57,7 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
           }
         });
 
+        // TODO: relocate entity name to .ENV
         authServices.deleteDocumentById('CL', user.id).then(clientDocumentDeletedResponse => {
           console.log(clientDocumentDeletedResponse);
         });

@@ -61,6 +61,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         let withoutStockM = new Map();
         if (messages.length > 0) {
           messages.map(value => {
+            // TODO: relocate message type to .ENV
             if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
               withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
             }
@@ -124,10 +125,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             if (tam > 0) {
               let unAvailableItemsNumber = 0;
               messages.map(value => {
+                // TODO: relocate message type to .ENV
                 if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
                   withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
                   unAvailableItemsNumber++;
                 }
+                // TODO: relocate message type to .ENV
                 if (value.code == 'itemQuantityNotAvailable') {
                   hasAvailableMessage = true;
                 }

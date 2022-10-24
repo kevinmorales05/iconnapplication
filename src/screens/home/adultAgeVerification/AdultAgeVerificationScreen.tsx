@@ -29,6 +29,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, us
       await authServices.getProfile(user.email).then(async profileReceived => {
         if(profileReceived){
           if(profileReceived.length>0){
+            // TODO: relocate entity name to .ENV
             await vtexDocsServices.updateDocByDocIDForAgeStatus('CL', profileReceived[0].id, { isAdult: adultStatus })
             .then(async updatedDoc => {
               console.log(updatedDoc);
