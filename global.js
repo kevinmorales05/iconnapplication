@@ -7,6 +7,7 @@
  * showLogs__api_invoicing: string;
  * showLogs__api_order: string;
  * showLogs__api_orders: string;
+ * showLogs__api_products: string;
  * showLogs__api_promotions: string;
  * showLogs__api_otps: string;
  * showLogs__api_product: string;
