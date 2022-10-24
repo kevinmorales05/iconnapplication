@@ -146,12 +146,17 @@ const CategoryProductsScreen: React.FC = () => {
   }, [idCategorySelected, route.params]);
 
   useEffect(() => {
-    console.log('MANZANA');
     if (products?.length! > 0) {
-      console.log('con longitud');
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-      console.log('existingProducts', existingProducts);
       refillProductsWithPrice(existingProducts);
+    }
+  }, [products]);
+
+  useEffect(() => {
+    console.log('useEffectCategory')
+    if (products?.length! > 0) {
+      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      updateQuantityProducts(existingProducts);
     }
   }, [products, cart]);
 
@@ -169,12 +174,21 @@ const CategoryProductsScreen: React.FC = () => {
     }
   };
 
+  async function updateQuantityProducts(existingProductsInCart: ExistingProductInCartInterface[]) {
+    let productsToRender: ProductInterface[] = [];
+    productsToRender = productsRender.concat(productsToRender);
+    for (const p of productsToRender) {
+      const price = await getPriceByProductId(p.productId);
+      p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
+    }
+    setProductsRender(productsToRender);
+    setRefreshing(false);
+  }
+
   async function refillProductsWithPrice(existingProductsInCart: ExistingProductInCartInterface[]) {
     let productsTem: ProductInterface[] = [];
     productsTem = products.concat(productsTem);
-    console.log('productsX', products);
     let productsToRender: ProductInterface[] = [];
-    console.log('productsR', productsRender);
     productsToRender = productsRender.concat(productsToRender);
     for (const p of productsTem) {
       const price = await getPriceByProductId(p.productId);
@@ -201,6 +215,7 @@ const CategoryProductsScreen: React.FC = () => {
 
   const productsEffect = async () => {
     setProducts([]);
+    setProductsRender([]);
     const productsRequest: any[] = await getProducts(1);
     if (productsRequest.length) {
       const productsTem: ProductInterface[] = productsRequest.map(product => {

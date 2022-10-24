@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { Button, NavigationMenuItem, Container, TextContainer } from 'components';
+import { Button, NavigationMenuItem, Container, TextContainer, Touchable } from 'components';
 import { useNavigation } from '@react-navigation/native';
 import theme from 'components/theme/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -25,10 +25,11 @@ import { useInConstruction } from 'context';
 
 interface HomeScreenProps {
   logOut: () => void;
+  onPressVersion: () => void;
   app_version: string;
 }
 
-const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => {
+const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, app_version }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const inConstruction = useInConstruction();
 
@@ -188,7 +189,11 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, app_version }) => 
       </Container>
 
       <Container width={'100%'} height={32} center crossCenter backgroundColor={theme.brandColor.iconn_background}>
-        <TextContainer text={app_version} textAlign="center" textColor={theme.fontColor.placeholder} />
+        <Touchable onPress={()=>{
+          onPressVersion()
+        }}>
+          <TextContainer text={app_version} textAlign="center" textColor={theme.fontColor.placeholder} />
+        </Touchable>
       </Container>
     </ScrollView>
   );
