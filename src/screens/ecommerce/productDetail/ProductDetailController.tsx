@@ -27,6 +27,7 @@ const ProductDetailController: React.FC<Props> = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [modal, setModal] = useState(false);
   const [buttonReviewed, setButtonReviewed] = useState(false);
+  //Default rating value
   const [ratingValue, setRatingValue] = useState(3);
   const productIdentifier = params.productIdentifier;
   const promotions = params.productPromotions;
