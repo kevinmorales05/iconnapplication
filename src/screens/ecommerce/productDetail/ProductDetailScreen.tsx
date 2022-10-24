@@ -23,6 +23,7 @@ import {
   ProductInterface,
   RootState,
   setFav,
+  setFavId,
   UpdateType,
   useAppDispatch,
   useAppSelector
@@ -98,24 +99,7 @@ const ProductDetailScreen: React.FC<Props> = ({
             responseSku.map(sku => {
               skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
             });
-            const imgsForTest = [
-              { isMain: true, label: '', name: '01-coca', skuId: 456, url: 'https://oneiconn.vtexassets.com/arquivos/ids/155405-456-', valueX: 0 },
-              { isMain: false, label: '', name: '02-bonafont', skuId: 457, url: 'https://oneiconn.vtexassets.com/arquivos/ids/155406-457-', valueX: 240 },
-              { isMain: false, label: '', name: '04-gatorade', skuId: 458, url: 'https://oneiconn.vtexassets.com/arquivos/ids/155407-458-', valueX: 480 },
-              { isMain: false, label: '', name: '05-Cafe-Ole', skuId: 459, url: 'https://oneiconn.vtexassets.com/arquivos/ids/155408-459-', valueX: 720 },
-              {
-                isMain: false,
-                label: '',
-                name: '06-Chips-Jalapenos',
-                skuId: 460,
-                url: 'https://oneiconn.vtexassets.com/arquivos/ids/155410-461-',
-                valueX: 960
-              },
-              { isMain: false, label: '', name: '07-cacahuates', skuId: 461, url: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-', valueX: 1200 },
-              { isMain: false, label: '', name: '09-Palomitas', skuId: 462, url: 'https://oneiconn.vtexassets.com/arquivos/ids/155412-463-', valueX: 1440 },
-              { isMain: false, label: '', name: '08-Paketazo', skuId: 462, url: 'https://oneiconn.vtexassets.com/arquivos/ids/155413-464-', valueX: 1680 }
-            ];
-            setSkusForProductImages(/*imgsForTest*/ skuForImages);
+            setSkusForProductImages(skuForImages);
           }
         }
       })
@@ -271,28 +255,40 @@ const ProductDetailScreen: React.FC<Props> = ({
   };
 
   const getIsFavorite = () => {
-    if (favs.length !== undefined) {
-      console.log('FAVSFAVS', favs);
-      favs.map(fav => {
-        if (itemId == fav.Id) {
+    if (favs) {
+      if (favs.length) {
+        const favorite = favs.find(fav => itemId == fav.Id);
+        if (favorite) {
           setIsFav(true);
-          console.log('IS FAVORITE', itemId, fav.Id);
         } else {
-          console.log('NO FAVORITE', itemId, fav.Id);
+          setIsFav(false);
         }
-      });
+      }else{
+        setIsFav(false);
+      }
     }
   };
 
   useEffect(() => {
     getIsFavorite();
-  }, [isFav]);
+  }, [isFav, favs]);
 
-  const addFavorite1 = (newFav: ItemsFavoritesInterface) => {
-    console.log('INICIANDO', favs);
-    dispatch(addFav(newFav));
-    uploadVtex(favs);
-    console.log('TERMINANDO', favs);
+  const addFavorite1 = async (newFav: ItemsFavoritesInterface) => {
+    if (favsId === '') {
+      console.log('no hay favsid');
+      const adding: ItemsFavoritesInterface[] = [];
+      adding.push(newFav);
+      dispatch(setFav(adding));
+      uploadVtex(adding);
+    } else {
+      let copyFavs = favs;
+      dispatch(addFav(newFav));
+      console.log('INICIANDO', copyFavs);
+      let copycopy = copyFavs.concat(newFav);
+      console.log('ANTES VTEX', copycopy);
+      const response = await uploadVtex(copycopy);
+      console.log('TERMINANDO', copycopy, response);
+    }
   };
 
   const uploadVtex = async (favs: ItemsFavoritesInterface[]) => {
@@ -302,6 +298,9 @@ const ProductDetailScreen: React.FC<Props> = ({
       ListItemsWrapper: [{ ListItems: favs, IsPublic: true, Name: 'Wishlist' }]
     });
     console.log('Añadiendo a vtex', response, favs);
+    if (favsId === '') {
+      dispatch(setFavId(response.DocumentId));
+    }
   };
 
   const removeFavorite = (oldFav: ItemsFavoritesInterface) => {
@@ -318,14 +317,11 @@ const ProductDetailScreen: React.FC<Props> = ({
           email: email as string,
           ListItemsWrapper: [listItems]
         };
-        console.log('REMOVIDO', newFavList);
-        console.log('REMOVIDO!', product.Id);
         const response = updateFavorites(tryList, 'update');
         setFavList(newFavList);
         dispatch(setFav(newFavList));
         return newFavList;
       } else {
-        console.log('NO HABIA', favList);
         return favList;
       }
     });
@@ -338,10 +334,8 @@ const ProductDetailScreen: React.FC<Props> = ({
         ListItemsWrapper: updatedList.ListItemsWrapper
       };
       const response = await vtexFavoriteServices.patchFavorites(email as string, listNoId);
-      console.log('HIGOS', response);
     } else {
       const response = await vtexFavoriteServices.patchFavorites(email as string, updatedList);
-      console.log('UVAS', response);
     }
   }, []);
 
