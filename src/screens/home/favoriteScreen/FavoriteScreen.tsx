@@ -32,6 +32,7 @@ import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { moderateScale } from 'utils/scaleMetrics';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 
+// TODO: relocate this urls to .ENV
 let productsRender: ProductResponseInterface[] = [
   {
     ProductId: '100004574',

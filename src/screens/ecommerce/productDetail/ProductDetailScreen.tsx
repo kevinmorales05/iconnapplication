@@ -86,6 +86,7 @@ const ProductDetailScreen: React.FC<Props> = ({
 
   itemId = detailSelected;
 
+  // TODO: relocate all this urls to .ENV
   const fetchData = useCallback(async () => {
     console.log('itemmmm:::' + itemId);
     const imgRoot = 'https://oneiconn.vtexassets.com/arquivos/ids/';
@@ -144,6 +145,7 @@ const ProductDetailScreen: React.FC<Props> = ({
     setCartItemQuantity(isProductIdInShoppingCart(itemId));
   }, [cart, detailSelected]);
 
+  // TODO: change the 147 by .ENV
   const getComplementaryProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     vtexProductsServices
       .getProductsByCollectionId(global.complementry_products) 

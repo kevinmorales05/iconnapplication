@@ -50,6 +50,7 @@ const InviteSignUpController: React.FC = () => {
     getFavorites();
   }, []);
 
+  // TODO: relocate this url to .ENV
   const getPicture = async (productId: string) => {
     const imgRoot = 'https://oneiconn.vtexassets.com/arquivos/ids/';
     let pics = []; 

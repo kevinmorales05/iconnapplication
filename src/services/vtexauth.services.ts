@@ -2,6 +2,7 @@ import { VTEXApiConfig } from '../http/vtex-api-config';
 import { Auth } from '../http/vtex-api-auth';
 import { HttpClient } from '../http/http-client';
 
+// TODO: relocate this url to .ENV
 const API_VTEX_AUTH = 'https://oneiconn.myvtex.com/api/vtexid/pub/authentication/';
 
  async function startAuthentication(email:string): Promise<any> {
@@ -12,6 +13,7 @@ const API_VTEX_AUTH = 'https://oneiconn.myvtex.com/api/vtexid/pub/authentication
     
     let access_token = await data.authenticationToken;
 
+    // TODO: check if this is useful or works.
     HttpClient.accessToken = access_token;
 
     return data;

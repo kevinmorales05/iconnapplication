@@ -4,7 +4,7 @@ import React from 'react';
 import AboutUsScreen from './AboutUsScreen';
 import { Linking } from 'react-native';
 
-
+// TODO: relocate this urls to .ENV
 const AboutUsController: React.FC = () => {
   const onPressSevenFacebook = () => {
     Linking.openURL('https://www.facebook.com/7ElevenMexico');

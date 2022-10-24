@@ -56,6 +56,8 @@ function RecommededForYouScreen() {
       />
     );
   };
+
+// TODO: change the 145 by .ENV
 //Function to get collection of products
 const getCollection = async () => {
     let dataList: ProductResponseInterface[] = [];

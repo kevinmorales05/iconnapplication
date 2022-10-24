@@ -37,6 +37,7 @@ const LoginWhitSocialNetworkScreen: React.FC<Props> = ({providerLogin, authentic
           <Feather name="arrow-left" size={theme.iconSize.medium} color={theme.brandColor.iconn_accent_secondary} />
         </Container>
       </Touchable>
+      {/* TODO: relocate this url to .ENV, Check if there is a productive environment. */}
       <WebView
         style={{flex:1}}
         source={{
