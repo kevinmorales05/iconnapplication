@@ -80,7 +80,7 @@ const EnterModal: React.FC<EnterModalDataInterface> = ({ visible, secondaryMessa
           <Container>
             <Container row>
               <Container width={'95%'} center>
-                <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Ingresar a Sevenly" typography="h3" fontBold />
+                <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Ingresar a la app" typography="h3" fontBold />
                 <TextContainer marginTop={16} textColor={theme.brandColor.iconn_dark_grey} text={secondaryMessage} typography="h5" />
               </Container>
               <Container width={'5%'} center crossAlignment="end">

@@ -30,7 +30,7 @@ const InviteSignUpScreen: React.FC<Props> = ({ onSubmit, goBack }) => {
       <TextContainer text={`Vive la experiencia completa en la \naplicación`} typography="h5" textAlign="center"/>
       <Container center>
         <Button onPress={onSubmit} round fontBold length="short" width="xxlarge" marginTop={22}>
-          Ingresar a Sevenly
+          Ingresar a la app
         </Button>
       </Container>
     </ScrollView>
