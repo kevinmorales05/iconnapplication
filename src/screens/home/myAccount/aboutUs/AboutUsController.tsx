@@ -35,9 +35,14 @@ const AboutUsController: React.FC = () => {
     console.log('onPressPetroPlay...');
   };
   const onPressPetroInstagram = () => {
-    Linking.openURL('https://www.instagram.com/explore/locations/1018904360/petro-7/');
+    Linking.openURL('https://www.instagram.com/petroseven/');
     console.log('onPressPetroInstagram...');
   };
+  const openPage = (page: string) => {
+    Linking.openURL(page);
+    console.log('Opening.. ', page);
+  };
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -55,6 +60,7 @@ const AboutUsController: React.FC = () => {
         onPressPetroTwitter={onPressPetroTwitter}
         onPressPetroPlay={onPressPetroPlay}
         onPressPetroInstagram={onPressPetroInstagram}
+        openPage={openPage}
       />
     </SafeArea>
   );

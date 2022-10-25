@@ -8,6 +8,7 @@ import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import theme from 'components/theme/theme';
 import Feather from 'react-native-vector-icons/Feather';
 
+
 interface AboutUsScreenProps {
   onPressSevenFacebook: () => void;
   onPressSevenTwitter: () => void;
@@ -17,6 +18,7 @@ interface AboutUsScreenProps {
   onPressPetroTwitter: () => void;
   onPressPetroPlay: () => void;
   onPressPetroInstagram: () => void;
+  openPage: (page: string) => void;
 }
 
 const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
@@ -27,9 +29,11 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
   onPressPetroFacebook,
   onPressPetroTwitter,
   onPressPetroPlay,
-  onPressPetroInstagram
+  onPressPetroInstagram,
+  openPage
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
 
   return (
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
@@ -60,6 +64,7 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
           disable={false}
           onPressNavigateTo={() => {
             console.log('7-Eleven.com.mx...');
+            openPage('https://www.7-eleven.com.mx/');
           }}
         />
 
@@ -68,6 +73,7 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
           disable={false}
           onPressNavigateTo={() => {
             console.log('Petro-7.com.mx...');
+            openPage('https://www.petro-7.com.mx/');
           }}
         />
         <Container row crossCenter style={{ marginTop: 38 }}>
