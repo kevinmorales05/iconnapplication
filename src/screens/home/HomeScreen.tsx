@@ -129,7 +129,7 @@ const HomeScreen: React.FC<Props> = ({
           </Container>
           <Container height={367} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
-              <TextContainer text="Recomendados para tí" fontBold typography="h4" />
+              <TextContainer text="Recomendados para ti" fontBold typography="h4" />
               <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => viewRecomendedProducts()  } />
             </Container>
             <Container style={{position:'absolute', top:35}}>

@@ -23,7 +23,7 @@ const MyOrdersController: React.FC = () => {
   }, []);
 
   const getOrders = useCallback(async () => {
-    const { list: data } = await vtexordersServices.getOrdersListByUserEmail(email, 1, 3);
+    const { list: data } = await vtexordersServices.getOrdersListByUserEmail(email as string, 1, 3);
     let orderArray: OrderInterface[] = data.map( (order: OrderInterface) => {
       return {
         orderId: order.orderId,
@@ -43,7 +43,6 @@ const MyOrdersController: React.FC = () => {
     const newOrders: OrderInterface[] | undefined = [];
     for (const order of arr) {
       const dc = await getOrderr(order.orderId);
-      console.log('PLS', dc, order.orderId);
       const newOrder: OrderInterface = {
         creationDate: order.creationDate,
         orderId: order.orderId, 

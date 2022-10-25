@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, ScrollView, Image, Text } from 'react-native';
+import { StyleSheet, ScrollView, Image, Text, Dimensions } from 'react-native';
 import { CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage } from 'components';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -33,6 +33,8 @@ import { moderateScale } from 'utils/scaleMetrics';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
+
+const CONTAINER_HEIGHT = Dimensions.get('window').height + 70;
 
 interface Props {
   itemId: string;
@@ -133,7 +135,7 @@ const ProductDetailScreen: React.FC<Props> = ({
   // TODO: change the 147 by .ENV
   const getComplementaryProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     vtexProductsServices
-      .getProductsByCollectionId(global.complementry_products) 
+      .getProductsByCollectionId(global.complementry_products)
       .then(responseCollection => {
         const { Data } = responseCollection;
         let complementaryList = [];
@@ -143,33 +145,30 @@ const ProductDetailScreen: React.FC<Props> = ({
               complementaryList.push({
                 productId: product.ProductId,
                 name: product.ProductName,
-                image: { uri: product.SkuImageUrl },
+                image: { uri: product.SkuImageUrl }
               });
-            })
-            refillProductsWithPrice(existingProductsInCart, complementaryList)
+            });
+            refillProductsWithPrice(existingProductsInCart, complementaryList);
           }
         }
       })
       .catch(error => console.log(error));
   };
 
-  async function refillProductsWithPrice(
-    existingProductsInCart: ExistingProductInCartInterface[],
-    products: ProductInterface[]
-  ){
+  async function refillProductsWithPrice(existingProductsInCart: ExistingProductInCartInterface[], products: ProductInterface[]) {
     let productsToRender: ProductInterface[] = [];
-    for( const p of products ) {
+    for (const p of products) {
       const price = await getPriceByProductId(p.productId);
-      const raiting = await getRatingByProductId(p.productId)
-      if(price && raiting){
-        p.oldPrice =  price?.basePrice;
+      const raiting = await getRatingByProductId(p.productId);
+      if (price && raiting) {
+        p.oldPrice = price?.basePrice;
         p.price = price?.basePrice;
         p.ratingValue = raiting.average;
         p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
-        productsToRender.push(p)
+        productsToRender.push(p);
       }
     }
-    console.log({productsToRender})
+    console.log({ productsToRender });
     setComplementaryProducts(productsToRender);
   }
 
@@ -261,7 +260,6 @@ const ProductDetailScreen: React.FC<Props> = ({
     return quantityItem;
   };
 
-
   useEffect(() => {
     fetchData();
     setProductToUpdate(itemId);
@@ -299,7 +297,7 @@ const ProductDetailScreen: React.FC<Props> = ({
         } else {
           setIsFav(false);
         }
-      }else{
+      } else {
         setIsFav(false);
       }
     }
@@ -395,17 +393,18 @@ const ProductDetailScreen: React.FC<Props> = ({
   };
 
   return (
-    <ScrollView
-      bounces={false}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        flexGrow: 1
-      }}
-    >
-      <Container style={{ flex: 1, marginTop: 20, backgroundColor: theme.brandColor.iconn_background }}>
-        <Container backgroundColor="white">
-          <Container>
+    <>
+      <ScrollView
+        bounces={false}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+          width: '100%'
+        }}
+      >
+        <Container style={{ backgroundColor: theme.brandColor.white, width: '100%' }}>
+          <Container backgroundColor="white">
             <Container>
               <ImagesCarusel
                 imagesList={skusForProductImages}
@@ -414,59 +413,68 @@ const ProductDetailScreen: React.FC<Props> = ({
                 generalPointsColor={theme.brandColor.iconn_grey}
               ></ImagesCarusel>
             </Container>
-          </Container>
-          <Container row space="between" style={{ marginTop: 16, width: '100%' }}>
-            <Container row>
-              <Rating ratingValue={productRating.average} />
-              <TouchableText
-                marginLeft={8}
-                underline
-                textColor={theme.brandColor.iconn_accent_principal}
-                text={productRating.totalCount + ' Calificaciones'}
-                typography="h4"
-                fontBold
-                onPress={() => {}}
-                marginTop={8}
-              />
+            <Container row space="between" style={{ marginTop: 16, width: '100%', paddingHorizontal: 10 }}>
+              <Container row>
+                <Rating ratingValue={productRating.average} />
+                <TouchableText
+                  marginLeft={8}
+                  underline
+                  textColor={theme.brandColor.iconn_accent_principal}
+                  text={productRating.totalCount + ' Calificaciones'}
+                  typography="h4"
+                  fontBold
+                  onPress={() => {}}
+                  marginTop={8}
+                />
+              </Container>
+              <Container>
+                <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+              </Container>
             </Container>
-            <Container>
-              <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
-            </Container>
-          </Container>
 
-          <Container style={{ marginTop: 16 }}>
-            <TextContainer fontBold fontSize={theme.fontSize.h2} text={productDetail.Name} />
-            <Container row>
-              <TextContainer
-                marginTop={8}
-                marginRight={20}
-                fontBold
-                fontSize={theme.fontSize.h1}
-                text={
-                  productPromotions != undefined && productPromotions.has('' + itemId)
-                    ? productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular'
-                      ? '$' +
-                        ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
-                          (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
-                            productPromotions.get('' + itemId).percentualDiscountValue) /
-                            100)
+            <Container style={{ marginTop: 16, paddingHorizontal: 10 }}>
+              <TextContainer fontBold fontSize={theme.fontSize.h2} text={productDetail.Name} />
+              <Container row>
+                <TextContainer
+                  marginTop={8}
+                  marginRight={0}
+                  fontBold
+                  fontSize={theme.fontSize.h1}
+                  text={
+                    productPromotions != undefined && productPromotions.has('' + itemId)
+                      ? productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular'
+                        ? '$' +
+                          ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
+                            (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
+                              productPromotions.get('' + itemId).percentualDiscountValue) /
+                              100)
+                        : ''
                       : ''
-                    : ''
-                }
-              ></TextContainer>
-              {productPromotions != undefined && productPromotions.has('' + itemId) ? (
-                productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular' ? (
-                  <Text
-                    style={{
-                      fontWeight: 'bold',
-                      textDecorationLine: 'line-through',
-                      color: theme.brandColor.iconn_grey,
-                      fontSize: theme.fontSize.h3,
-                      marginTop: 11
-                    }}
-                  >
-                    {'$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0)}
-                  </Text>
+                  }
+                ></TextContainer>
+                {productPromotions != undefined && productPromotions.has('' + itemId) ? (
+                  productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular' ? (
+                    <Text
+                      style={{
+                        fontWeight: 'bold',
+                        textDecorationLine: 'line-through',
+                        color: theme.brandColor.iconn_grey,
+                        fontSize: theme.fontSize.h3,
+                        marginTop: 11
+                      }}
+                    >
+                      {'$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0)}
+                    </Text>
+                  ) : (
+                    <TextContainer
+                      marginTop={8}
+                      fontBold
+                      fontSize={theme.fontSize.h1}
+                      text={
+                        '$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                      }
+                    />
+                  )
                 ) : (
                   <TextContainer
                     marginTop={8}
@@ -476,143 +484,141 @@ const ProductDetailScreen: React.FC<Props> = ({
                       '$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
                     }
                   />
+                )}
+              </Container>
+              {productPromotions != undefined && productPromotions.has('' + itemId) ? (
+                productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular' ? (
+                  <Container style={styles.containerPorcentDiscount}>
+                    <CustomText
+                      fontSize={theme.fontSize.h6}
+                      textColor={theme.brandColor.iconn_green_original}
+                      fontWeight={'bold'}
+                      text={
+                        'ahorra $' +
+                        (productPromotions != undefined && productPromotions.has('' + itemId)
+                          ? productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular'
+                            ? (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
+                                productPromotions.get('' + itemId).percentualDiscountValue) /
+                              100
+                            : ''
+                          : '')
+                      }
+                    />
+                  </Container>
+                ) : (
+                  <></>
                 )
               ) : (
-                <TextContainer
-                  marginTop={8}
-                  fontBold
-                  fontSize={theme.fontSize.h1}
-                  text={'$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
-                />
-              )}
-            </Container>
-            {productPromotions != undefined && productPromotions.has('' + itemId) ? (
-              productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular' ? (
-                <Container style={styles.containerPorcentDiscount}>
-                  <CustomText
-                    fontSize={theme.fontSize.h6}
-                    textColor={theme.brandColor.iconn_green_original}
-                    fontWeight={'bold'}
-                    text={
-                      'ahorra $' +
-                      (productPromotions != undefined && productPromotions.has('' + itemId)
-                        ? productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular'
-                          ? (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
-                              productPromotions.get('' + itemId).percentualDiscountValue) /
-                            100
-                          : ''
-                        : '')
-                    }
-                  />
-                </Container>
-              ) : (
                 <></>
-              )
+              )}
+              <TextContainer marginVertical={16} fontSize={theme.fontSize.h5} text={productDetail.DescriptionShort} />
+            </Container>
+          </Container>
+
+          <Container
+            style={{
+              paddingTop: 0,
+              paddingVertical: 10,
+              paddingHorizontal: 5,
+              display: 'flex',
+              justifyContent: 'space-between',
+              borderBottomWidth: 1,
+              borderBottomColor: theme.brandColor.iconn_light_grey,
+              borderTopWidth: 1,
+              borderTopColor: theme.brandColor.iconn_light_grey,
+              backgroundColor: 'white'
+            }}
+          >
+            <Touchable
+              marginTop={16}
+              onPress={() => {
+                setShowAdditionalInfo(!showAdditionalInfo);
+              }}
+            >
+              <Container row space="between" style={{ paddingHorizontal: 10 }}>
+                <CustomText text={'INFORMACIÓN ADICIONAL'} fontBold textColor={theme.brandColor.iconn_green_original} />
+                <Icon name={showAdditionalInfo ? 'up' : 'down'} size={18} color={theme.brandColor.iconn_green_original} />
+              </Container>
+            </Touchable>
+            {showAdditionalInfo ? (
+              <Container style={{ marginTop: 10, paddingHorizontal: 10 }}>
+                <Container>
+                  <TextContainer text="Descripción del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
+                  <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
+                    {productDetail.Description}
+                  </Text>
+                </Container>
+                <Container style={{ marginTop: 20 }}>
+                  <TextContainer text="Especificación del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
+                  <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
+                    {productDetail.Title}
+                  </Text>
+                </Container>
+              </Container>
             ) : (
               <></>
             )}
-            <TextContainer marginVertical={16} fontSize={theme.fontSize.h5} text={productDetail.DescriptionShort} />
+          </Container>
+
+          <Container style={{ paddingVertical: 10 }} backgroundColor={theme.brandColor.iconn_background}>
+            <TextContainer text={`¿Un último antojo?`} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
+            <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false}>
+              <Container row style={{ width: '100%', marginBottom: 20, paddingLeft: 5, paddingRight: 30 }}>
+                {complementaryProducts.length ? (
+                  complementaryProducts.map((prod, index) => {
+                    return (
+                      <CardProduct
+                        image={prod.image!}
+                        name={prod.name!}
+                        ratingValue={prod.ratingValue!}
+                        price={prod.price!}
+                        productId={prod.productId}
+                        quantity={prod.quantity!}
+                        onPressAddCart={() => {
+                          updateShoppingCartProduct('create', prod.productId);
+                        }}
+                        onPressAddQuantity={() => {
+                          updateShoppingCartProduct('add', prod.productId);
+                        }}
+                        onPressDeleteCart={() => {
+                          updateShoppingCartProduct('remove', prod.productId);
+                        }}
+                        onPressDecreaseQuantity={() => {
+                          updateShoppingCartProduct('substract', prod.productId);
+                        }}
+                        productPromotions={productPromotions}
+                      />
+                    );
+                  })
+                ) : (
+                  <></>
+                )}
+              </Container>
+            </ScrollView>
+          </Container>
+
+          <Container style={{ paddingHorizontal: 20 }}>
+            <ReviewPercentage
+              average={average}
+              reviews={totalCount}
+              countUno={star1 / totalCount}
+              countDos={star2 / totalCount}
+              countTres={star3 / totalCount}
+              countFour={star4 / totalCount}
+              countFive={star5 / totalCount}
+              percentUno={((star1 / totalCount) * 100).toFixed(0)}
+              percentDos={((star2 / totalCount) * 100).toFixed(0)}
+              percentTres={((star3 / totalCount) * 100).toFixed(0)}
+              percentCuatro={((star4 / totalCount) * 100).toFixed(0)}
+              percentCinco={((star5 / totalCount) * 100).toFixed(0)}
+              reviewed={isReviewed}
+              reviewProduct={showModal}
+            />
           </Container>
         </Container>
-
-        <Container
-          style={{
-            paddingVertical: 10,
-            display: 'flex',
-            justifyContent: 'space-between',
-            borderBottomWidth: 1,
-            borderBottomColor: theme.brandColor.iconn_light_grey,
-            backgroundColor: 'white'
-          }}
-        >
-          <Touchable
-            marginTop={16}
-            onPress={() => {
-              setShowAdditionalInfo(!showAdditionalInfo);
-            }}
-          >
-            <Container row space="between" style={{ paddingHorizontal: 16, width: '100%' }}>
-              <CustomText text={'INFORMACIÓN ADICIONAL'} fontBold textColor={theme.brandColor.iconn_green_original} />
-              <Icon name={showAdditionalInfo ? 'up' : 'down'} size={18} color={theme.brandColor.iconn_green_original} />
-            </Container>
-          </Touchable>
-          {showAdditionalInfo ? (
-            <Container style={{ marginTop: 10 }}>
-              <Container>
-                <TextContainer text="Descripción del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
-                <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
-                  {productDetail.Description}
-                </Text>
-              </Container>
-              <Container style={{ marginTop: 20 }}>
-                <TextContainer text="Especificación del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
-                <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
-                  {productDetail.Title}
-                </Text>
-              </Container>
-            </Container>
-          ) : (
-            <></>
-          )}
-        </Container>
-
-        <Container height={342} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
-          <Container row space="between" style={{ margin: 16 }}>
-            <TextContainer text={`¿Un último antojo?`} fontBold typography="h4" />
-          </Container>
-          <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false}>
-            <Container row style={{ height: 200, width: '100%' }}>
-              {complementaryProducts.length ? (
-                complementaryProducts.map((prod, index) => {
-                  return (
-                    <CardProduct
-                      image={prod.image!}
-                      name={prod.name!}
-                      ratingValue={prod.ratingValue!}
-                      price={prod.price!}
-                      productId={prod.productId}
-                      quantity={prod.quantity!}
-                      onPressAddCart={validateCategoryForAddItem}
-                      onPressAddQuantity={() => {
-                        updateShoppingCartProduct('add', prod.productId);
-                      }}
-                      onPressDeleteCart={() => {
-                        updateShoppingCartProduct('remove', prod.productId);
-                      }}
-                      onPressDecreaseQuantity={() => {
-                        updateShoppingCartProduct('substract', prod.productId);
-                      }}
-                      onPressOut={hideModalForAdult}
-                      productPromotions={productPromotions}
-                    />
-                  );
-                })
-              ) : (
-                <></>
-              )}
-            </Container>
-          </ScrollView>
-        </Container>
-
-        <ReviewPercentage
-          average={average}
-          reviews={totalCount}
-          countUno={star1 / totalCount}
-          countDos={star2 / totalCount}
-          countTres={star3 / totalCount}
-          countFour={star4 / totalCount}
-          countFive={star5 / totalCount}
-          percentUno={((star1 / totalCount) * 100).toFixed(0)}
-          percentDos={((star2 / totalCount) * 100).toFixed(0)}
-          percentTres={((star3 / totalCount) * 100).toFixed(0)}
-          percentCuatro={((star4 / totalCount) * 100).toFixed(0)}
-          percentCinco={((star5 / totalCount) * 100).toFixed(0)}
-          reviewed={isReviewed}
-          reviewProduct={showModal}
-        />
-      </Container>
-
-      <Container style={{ marginBottom: 16 }}>
+        <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={itemId} userUpdated={userUpdated}/>
+      </ScrollView>
+      <Container style={{ marginBottom: 20, paddingHorizontal: 16, paddingTop: 10 }}>
         {cartItemQuantity > 0 ? (
           <QuantityProduct
             quantity={cartItemQuantity}
@@ -644,8 +650,7 @@ const ProductDetailScreen: React.FC<Props> = ({
           </Button>
         )}
       </Container>
-      <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={itemId} userUpdated={userUpdated}/>
-    </ScrollView>
+    </>
   );
 };
 
@@ -702,7 +707,9 @@ const styles = StyleSheet.create({
   containerButton: {
     flex: 0.25,
     width: '100%',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    backgroundColor: theme.brandColor.iconn_white,
+    paddingTop: 10
   },
   buttonAddProduct: {
     borderRadius: moderateScale(10)

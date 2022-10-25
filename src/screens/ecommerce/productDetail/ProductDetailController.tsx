@@ -6,6 +6,8 @@ import { HomeStackParams } from 'navigation/types';
 import { vtexReviewsRatings } from 'services';
 import { ReviewModal } from 'components';
 import { useLoading, useToast } from 'context';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import theme from 'components/theme/theme';
 
 interface Props {
   productIdentifier?: string;
@@ -114,7 +116,7 @@ const ProductDetailController: React.FC<Props> = () => {
   }, [productIdentifier])
 
   return (
-    <SafeArea topSafeArea={false} bottomSafeArea barStyle="dark">
+    <SafeAreaView  style={{ backgroundColor: theme.brandColor.iconn_white, paddingBottom: 70 }} >
       <ProductDetailScreen itemId={productIdentifier} fetchReviewData={fetchReviewData} 
       star1={countUno} star2={countDos} star3={countTres} star4={countFour} star5={countFive} 
       totalCount={totalCount} average={average} modalShow={modal} showModal={showModal} isReviewed={buttonReviewed} productPromotions={promotions} />
@@ -126,7 +128,7 @@ const ProductDetailController: React.FC<Props> = () => {
           ratingCompleted={ratingCompleted}
           />
 
-    </SafeArea>
+    </SafeAreaView>
   );
 };
 

@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   containerPrice: {
-    marginTop: 12
+    marginTop: 12, 
   },
   image: {
     width: moderateScale(20),
@@ -352,10 +352,10 @@ const styles = StyleSheet.create({
     flex: 0.25,
     width: '100%',
     justifyContent: 'flex-end',
-    marginTop: 16,
-    marginBottom: 8
+    marginTop: 20,
+    marginBottom: 10
   },
   buttonAddProduct: {
-    borderRadius: moderateScale(10)
+    borderRadius: moderateScale(10), 
   }
 });
