@@ -19,7 +19,7 @@ const CardHorizontal: React.FC<CardHorizontalProps> = ({ text, image, onPress }:
     marginTop: moderateScale(12),
     height: moderateScale(80),
     backgroundColor: theme.brandColor.iconn_white,
-    width: moderateScale(170) 
+    width: moderateScale(160) 
   };
 
   return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, SafeArea, CardHorizontal, SearchBar } from 'components';
+import { Container, SafeArea, CardHorizontal, SearchBar, Touchable, CustomText, BasketCounter } from 'components';
 import { Dimensions, ScrollView, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
 import { useNavigation } from '@react-navigation/native';
@@ -8,11 +8,37 @@ import { HomeStackParams } from 'navigation/types';
 import { getCategoryItemsThunk, useAppDispatch } from 'rtk';
 import { CategoryInterface } from 'rtk/types/category.types';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
+import Feather from 'react-native-vector-icons/Feather';
 
-const CategoriesController: React.FC = () => {
+const CategoriesController: React.FC = ({ navigation, route }: any) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const dispatch = useAppDispatch();
+
+  React.useLayoutEffect(() => {
+    console.log({routeEffect: route.name})
+    if (!navigation || !route) return;
+
+    // Get stack parent by id
+    const homeStack = navigation.getParent('HomeStack');
+
+    if (homeStack) {
+      // Make sure the route name is "CategoriesScreen" before turn header off
+      if (route.name === 'CategoriesScreen') {
+        homeStack.setOptions({
+          headerShown: false
+        });
+      }
+    }
+    // Turn header back on when unmount
+    return homeStack
+      ? () => {
+          homeStack.setOptions({
+            headerShown: true
+          });
+        }
+      : undefined;
+  }, [navigation, route]);
 
   useEffect(() => {
     if (!categories?.length) {
@@ -45,17 +71,30 @@ const CategoriesController: React.FC = () => {
 
   return (
     <SafeArea
-      childrenContainerStyle={{ paddingHorizontal: moderateScale(0) }}
+      childrenContainerStyle={{ paddingHorizontal: moderateScale(0), paddingTop: theme.paddingHeader }}
       topSafeArea={false}
       bottomSafeArea={false}
-      backgroundColor={theme.brandColor.iconn_light_grey}
+      backgroundColor={theme.brandColor.iconn_white}
       barStyle="dark"
     >
       <Container>
+        <Container row style={styles.containerHeaderBar}>
+          <Container style={{ justifyContent: 'center' }} flex={0.12}/>
+          <Container flex={0.67} style={{ justifyContent: 'center', alignItems: 'center', paddingLeft: moderateScale(50) }}> 
+            <CustomText
+              text='Categorías'
+              fontBold
+              fontSize={theme.fontSize.h3}
+            />
+          </Container>
+          <Container width={'100%'} flex={0.23} style={{ paddingLeft: moderateScale(10), height: moderateScale(25),  justifyContent: 'center' }}>
+            <BasketCounter />
+          </Container>
+        </Container>
         <Container style={styles.containerHeader}>
           <SearchBar isButton onPressSearch={onPressSearch} onChangeTextSearch={() => {}} />
         </Container>
-        <Container style={{height: verticalScale(500)}}>
+        <Container style={{height: verticalScale(520), backgroundColor: theme.brandColor.iconn_light_grey}}>
           <ScrollView
             contentContainerStyle={{paddingBottom: moderateScale(50)}}
           >
@@ -100,5 +139,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: moderateScale(20)
+  },
+  containerHeaderBar: {
+    width: '100%',
+    paddingHorizontal: moderateScale(16),
+    paddingBottom: moderateScale(11),
+    borderBottomWidth: 1,
+    borderBottomColor: theme.brandColor.iconn_med_grey
   }
 });

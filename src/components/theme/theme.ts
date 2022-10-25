@@ -195,7 +195,7 @@ const theme: themeType = {
     yellow_star: '#f5d736',
     yellow_container: 'rgba(243, 206, 79, 0.18)'
   },
-  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(10) : moderateScale(40)
+  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(5) : moderateScale(40)
 
 };
 

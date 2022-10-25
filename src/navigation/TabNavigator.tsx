@@ -48,6 +48,7 @@ export const TabNavigator = () => {
         name="CategoriesScreen"
         component={CategoriesController}
         options={{
+          unmountOnBlur: true,
           headerShown: false,
           title: 'Categorías',
           tabBarIcon: ({ focused }) => {

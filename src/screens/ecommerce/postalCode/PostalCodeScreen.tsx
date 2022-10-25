@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, StyleSheet } from 'react-native';
+import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, StyleSheet, Keyboard } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
 import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
@@ -320,6 +320,7 @@ const PostalCodeScreen = () => {
           onChangeText={(text)=>{
             setPostalCode(text);
           }}
+          onSubmitEditing={Keyboard.dismiss}
         />
       </Container>
       <Button
@@ -343,7 +344,7 @@ const PostalCodeScreen = () => {
           </Container>
         </Container>
       </Touchable>
-      <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: verticalScale(250) }}>
+      <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: verticalScale(220) }}>
         <Touchable onPress={()=>{
           // TODO: se harcodeo cp para motivos de softlunch
           getPickUpPoints('66230')
