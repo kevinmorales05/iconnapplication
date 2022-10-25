@@ -5,19 +5,19 @@ import { TextContainer } from '../TextContainer';
 import { Image, StyleSheet } from 'react-native';
 import { ICONN_SHOPPING_BAG, ICONN_STORE_MODERN, ICONN_ITEM_REFRESH, ICONN_LEFT_ARROW } from 'assets/images';
 import Icon from 'react-native-vector-icons/Entypo';
-import { DeliveryChannel, OrderInterface, RootState, useAppSelector } from 'rtk';
+import { DeliveryChannel, messageType, OrderInterface, RootState, useAppSelector } from 'rtk';
 import { vtexsingleOrdersServices } from 'services/vtexsingleorder.services';
 import { formatDate, formatDate2 } from 'utils/functions';
 import { updateShoppingCart } from 'services';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
-import { useToast } from 'context';
+import { useLoading, useToast } from 'context';
 import { moderateScale } from 'utils/scaleMetrics';
-
+ 
 const OrderCard = (props: OrderInterface) => {
   const { updateShoppingCartProduct } = useShoppingCart();
-  const { status, creationDate, orderId, totalItems, totalValue, deliveryChannel } = props;
+  const { status, creationDate, orderId, totalItems, totalValue, deliveryChannel, navigate} = props;
   const { cart } = useAppSelector((state: RootState) => state.cart);
-  const toast = useToast();
+  const loader = useLoading();
 
   const newDate = (date: string) => {
     let formatDay = new Date(date);
@@ -37,22 +37,37 @@ const OrderCard = (props: OrderInterface) => {
     const data = await vtexsingleOrdersServices.getOrderById(orderId);
     console.log({getOrderItems: data})
     const { items } = data;
-    items.forEach(function (item) {
+    let isAdd = false;
+    let isCreate = false;
+    items.forEach(async function (item) {
       if (itemsCart.length > 0) {
-        itemsCart.forEach(function (itemCart) {
+        itemsCart.forEach(async function (itemCart) {
           if (item.productId == itemCart.productId) {
-            updateShoppingCartProduct('add', item.productId);
+            await updateShoppingCartProduct('add', item.productId);
+            isAdd = true
           }
           else {
-            updateShoppingCartProduct('create', item.productId);
+            await updateShoppingCartProduct('create', item.productId);
+            isCreate = true
           }
         })
       } else {
-        updateShoppingCartProduct('create', item.productId);
+        await updateShoppingCartProduct('create', item.productId);
+        isCreate = true
       }
       
     });
-    toast.show({ message: 'Se añadieron los productos al carrito', type: 'success' });
+    const messType: messageType = isAdd && !isCreate ? 'add' : (!isAdd && isCreate ? 'create' : 'create');
+    loader.show();
+    setTimeout(()=>{
+      navigate('ShopCart', {
+        messageType: messType,
+        countProducts: items.length,
+        cartItems: itemsCart.length
+      })
+      loader.hide();
+    }, 3000)
+    // toast.show({ message: 'Se añadieron los productos al carrito', type: 'success' });
   }, []);
 
 

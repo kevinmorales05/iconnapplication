@@ -17,3 +17,5 @@ export interface cartItemInterface {
 export interface cartItemsRequestInterface {
   orderItems: cartItemInterface[];
 }
+
+export type messageType = 'error' | 'add' | 'create' | 'someError';

@@ -128,6 +128,7 @@ const HomeStack: React.FC = () => {
           )
         }}
         name="ShopCart"
+        initialParams={{ messageType: '', countProducts: 0, cartItems: 0 }}
         component={ShopCartController}
       />
       <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />

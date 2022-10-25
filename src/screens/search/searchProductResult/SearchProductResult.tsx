@@ -27,11 +27,13 @@ import { moderateScale } from 'utils/scaleMetrics';
 import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { getProductDetailById } from 'services/vtexProduct.services';
 import { vtexUserServices } from 'services';
+import { useLoading } from 'context';
 
 const SearchProductResult: React.FC = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'SearchProductsResults'>>();
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const loader = useLoading();
 
   const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
@@ -93,6 +95,7 @@ const SearchProductResult: React.FC = () => {
   async function refillProductsWithPrice(
     existingProductsInCart: ExistingProductInCartInterface[],
   ){
+    loader.show();
     let productsToRender: ProductInterface[] = [];
     let productsTem: ProductSearchItemInterface[] = [];
     productsTem = products.concat(productsTem)
@@ -114,6 +117,7 @@ const SearchProductResult: React.FC = () => {
     }
     console.log({productsToRender})
     setProductsRender(productsToRender);
+    loader.hide();
   }
 
   const getPriceByProductId = async (productId: string) => {

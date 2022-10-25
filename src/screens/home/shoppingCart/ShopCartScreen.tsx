@@ -15,15 +15,18 @@ interface Props {
   routes: any;
   onPressSeeMore: () => void;
   onPressCheckout: () => void;
+  messageType: messageType | undefined;
+  countProducts: number;
+  cartItems: number
 }
 
-import { RootState, useAppSelector, useAppDispatch } from 'rtk';
+import { RootState, useAppSelector, useAppDispatch, messageType } from 'rtk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { HomeStackParams } from '../../../navigation/types';
 import { moderateScale } from 'utils/scaleMetrics';
 
-const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, routes }) => {
+const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, routes, messageType, countProducts, cartItems }) => {
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const loader = useLoading();
@@ -56,6 +59,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         });
         setRequestList(orderItems);
         setMessages(messages);
+        console.log({messagesCar: messages})
         setTotalizers(totalizers[0]);
         setOrderFormId(cart.orderFormId);
         let withoutStockM = new Map();
@@ -89,6 +93,67 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
       })
       .catch(error => console.log(error));
   }, []);
+
+  useEffect(() => {
+    if(routes.length){
+      if(routes[routes.length-1].name === 'ShopCart'){
+        fetchData();
+        console.log({routes})
+      }
+    }
+  }, [routes]);
+
+  useEffect(() => {
+    if(messageType){
+      if(messages){
+        if(messages.some((mess)=> mess.status === 'error')){
+          if(cart.items.length === cartItems + countProducts){
+            switch(messageType){
+              case 'add':
+                toast.show({
+                  message: 'Se actualizó el artículo en la canasta.',
+                  type: 'success'
+                });
+                break;
+              case 'create':
+                toast.show({
+                  message: 'Se añadieron los productos al carrito.',
+                  type: 'success'
+                });
+                break;
+            }
+          }else{
+            if(cart.items.length === cartItems){
+              toast.show({
+                message: 'No está disponible ningún artículo de tu pedido anterior.',
+                type: 'error'
+              });
+            }else{
+              toast.show({
+                message: 'Algunos artículos no estaban disponibles en esta tienda',
+                type: 'limited'
+              });
+            }
+          }
+        }
+      }else{
+        switch(messageType){
+          case 'add':
+            toast.show({
+              message: 'Se actualizó el artículo en la canasta.',
+              type: 'success'
+            });
+            break;
+          case 'create':
+            toast.show({
+              message: 'Se añadieron los productos al carrito.',
+              type: 'success'
+            });
+            break;
+        }
+      }
+    }
+  }, [messageType, messages]);
 
   useEffect(() => {
     if(routes.length){

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { Dimensions, StyleSheet, FlatList, View } from 'react-native';
+import { Dimensions, StyleSheet, FlatList, View, ActivityIndicator } from 'react-native';
 import { AccordeonItemTypeProps } from 'components/types/Accordion';
 import {
   ExistingProductInCartInterface,
@@ -22,7 +22,7 @@ import { ProductsByCategoryFilter } from 'rtk/types/category.types';
 import { FilterItemTypeProps } from 'components/types/FilterITem';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { useLoading } from 'context';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 
@@ -81,6 +81,7 @@ const CategoryProductsScreen: React.FC = () => {
   // const [ selectFilters, setSelectFilters] = useState({})
   const [visible, setVisible] = useState<boolean>(false);
   const [productId, setProductId] = useState<string>();
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   const hideModalForAdult = () => {
     console.log('hideModalForAdult...');
@@ -199,6 +200,8 @@ const CategoryProductsScreen: React.FC = () => {
     }
     setProductsRender(productsToRender);
     setRefreshing(false);
+    setLoading(false);
+    loader.hide();
   }
 
   const getPriceByProductId = async (productId: string) => {
@@ -210,6 +213,7 @@ const CategoryProductsScreen: React.FC = () => {
   };
 
   const productsEffect = async () => {
+    loader.show();
     setProducts([]);
     setProductsRender([]);
     const productsRequest: any[] = await getProducts(1);
@@ -226,11 +230,13 @@ const CategoryProductsScreen: React.FC = () => {
       setProducts(productsTem);
     } else {
       setProducts([]);
+      loader.hide();
       setProductsRender([]);
     }
   };
 
   const loadMoreProducts = async () => {
+    setLoading(true)
     const productsRequest: any[] = await getProducts(itemToLoad + 10);
     let productsTem: ProductInterface[] = productsRequest.map(product => {
       return {
@@ -240,6 +246,9 @@ const CategoryProductsScreen: React.FC = () => {
         productId: product.productId
       };
     });
+    if(!productsRequest.length){
+      setLoading(false)
+    }
     setProducts(productsTem);
     setItemToLoad(itemToLoad + 10);
   };
@@ -404,7 +413,7 @@ const CategoryProductsScreen: React.FC = () => {
                   <FlatList
                     data={productsRender}
                     renderItem={_renderItem}
-                    onEndReachedThreshold={0.1}
+                    onEndReachedThreshold={0.25}
                     onEndReached={loadMoreItem}
                     refreshing={refreshing}
                     onRefresh={() => _onRefresh()}
@@ -415,6 +424,12 @@ const CategoryProductsScreen: React.FC = () => {
                       paddingBottom: moderateScale(50)
                     }}
                   />
+                  {
+                    isLoading &&
+                      <Container style={{ paddingBottom: theme.bottomStickyViewBottomPadding + verticalScale(5), paddingTop: verticalScale(5)}}>
+                        <ActivityIndicator size="small" color={theme.brandColor.iconn_accent_principal} />
+                      </Container>
+                  }
                 </Container>
               </Container>
             ) : (

@@ -5,7 +5,7 @@ import { RootState, useAppSelector, useAppDispatch, ClientProfileDataInterface }
 import ShopCartScreen from './ShopCartScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useNavigation, useNavigationState } from '@react-navigation/native';
+import { RouteProp, useNavigation, useNavigationState, useRoute } from '@react-navigation/native';
 import { saveClientProfileDataThunk } from 'rtk/thunks/vtex-shoppingCart.thunks';
 import { useLoading, useToast } from 'context';
 
@@ -18,6 +18,8 @@ const ShopCartController: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const route = useRoute<RouteProp<HomeStackParams, 'ShopCart'>>();
+  const { messageType, countProducts, cartItems } = route.params;
 
   const goToCheckout = async () => {
     if (isGuest) {
@@ -62,7 +64,7 @@ const ShopCartController: React.FC = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <ShopCartScreen routes={routes} onPressCheckout={goToCheckout} onPressSeeMore={() => goBack()} />
+      <ShopCartScreen messageType={messageType} countProducts={countProducts} cartItems={cartItems} routes={routes} onPressCheckout={goToCheckout} onPressSeeMore={() => goBack()} />
     </SafeArea>
   );
 };

@@ -9,13 +9,15 @@ import { OrderCard } from 'components/molecules/OrderCard';
 import NetInfo from '@react-native-community/netinfo';
 import { vtexordersServices, vtexsingleOrdersServices } from 'services';
 import { DeliveryChannel, OrderInterface } from 'rtk';
+import { HomeStackParams } from 'navigation/types';
 
 interface Props {
   goBack: () => void;
+  navigate: (screen: any, params: any)=> void;
   officialOrderArray: Array<OrderInterface>;
 }
 
-const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
+const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate }) => {
   const [isOnline, setIsOnline] = useState(false);
   NetInfo.fetch().then(state => {
     if (state.isInternetReachable) {
@@ -64,6 +66,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
                 totalItems={order.totalItems}
                 totalValue={order.totalValue}
                 deliveryChannel={order.deliveryChannel}
+                navigate={navigate}
               />
             );
           }
@@ -94,6 +97,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray }) => {
                 status={order.status}
                 orderId={order.orderId}
                 deliveryChannel={order.deliveryChannel}
+                navigate={navigate}
               />
             );
         })

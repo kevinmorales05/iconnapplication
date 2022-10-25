@@ -9,12 +9,14 @@ import { OrderInterface, RootState, useAppSelector, DeliveryChannel } from 'rtk'
 import theme from 'components/theme/theme';
 import { vtexordersServices } from 'services/vtexorder.services';
 import { vtexsingleOrdersServices } from 'services';
+import { useLoading } from 'context';
 
 const MyOrdersController: React.FC = () => {
-  const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [lista, setLista] = useState<OrderInterface[]>([]);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
+  const loader = useLoading();
 
   const getOrderr = useCallback(async (oid: string) => {
     const {shippingData} = await vtexsingleOrdersServices.getOrderById(oid);
@@ -38,7 +40,7 @@ const MyOrdersController: React.FC = () => {
   }, []);
 
   async function AddOrderDC() {
-
+    loader.show();
     const arr: OrderInterface[]| null | undefined = await getOrders();
     const newOrders: OrderInterface[] | undefined = [];
     for (const order of arr) {
@@ -55,6 +57,7 @@ const MyOrdersController: React.FC = () => {
       newOrders.push(newOrder);
     }
     setLista(newOrders);
+    loader.hide();
   }
 
   useEffect(() => {
@@ -72,7 +75,7 @@ const MyOrdersController: React.FC = () => {
       barStyle="dark"
       css={styles.backgroundImage}
     >
-      <MyOrdersScreen goBack={goBack} officialOrderArray={lista} />
+      <MyOrdersScreen goBack={goBack} navigate={navigate} officialOrderArray={lista} />
     </SafeArea>
   );
 };

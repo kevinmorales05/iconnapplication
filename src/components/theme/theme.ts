@@ -1,6 +1,11 @@
+import { Platform } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { themeType } from '../types/theme';
+
+const isIphone = Platform.OS === 'ios';
+const isIphoneWithNotch = isIphone && DeviceInfo.hasNotch();
 
 const theme: themeType = {
   fontSize: {
@@ -195,7 +200,8 @@ const theme: themeType = {
     yellow_star: '#f5d736',
     yellow_container: 'rgba(243, 206, 79, 0.18)'
   },
-  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(5) : moderateScale(40)
+  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(5) : moderateScale(40),
+  bottomStickyViewBottomPadding: isIphoneWithNotch ? Math.round(verticalScale(10)) : 0
 
 };
 
