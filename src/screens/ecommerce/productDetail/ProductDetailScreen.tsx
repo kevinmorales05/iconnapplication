@@ -574,9 +574,9 @@ const ProductDetailScreen: React.FC<Props> = ({
                         price={prod.price!}
                         productId={prod.productId}
                         quantity={prod.quantity!}
-                        onPressAddCart={() => {
-                          updateShoppingCartProduct('create', prod.productId);
-                        }}
+                        onPressAddCart={
+                          validateCategoryForAddItem
+                        }
                         onPressAddQuantity={() => {
                           updateShoppingCartProduct('add', prod.productId);
                         }}
@@ -587,6 +587,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                           updateShoppingCartProduct('substract', prod.productId);
                         }}
                         productPromotions={productPromotions}
+                        onPressOut={hideModalForAdult}
                       />
                     );
                   })
@@ -618,24 +619,26 @@ const ProductDetailScreen: React.FC<Props> = ({
         </Container>
         <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={itemId} userUpdated={userUpdated}/>
       </ScrollView>
-      <Container style={{ marginBottom: 20, paddingHorizontal: 16, paddingTop: 10 }}>
+      <Container style={{ marginBottom: 20, paddingHorizontal: 16, paddingTop: 10, height: '15%' }}>
         {cartItemQuantity > 0 ? (
-          <QuantityProduct
-            quantity={cartItemQuantity}
-            onPressAddQuantity={() => {
-              let currentQuantity = cartItemQuantity + 1;
-              setCartItemQuantity(currentQuantity);
-              updateShoppingCartProduct('add', itemId);
-            }}
-            onPressDeleteCart={() => {
-              updateShoppingCartProduct('remove', itemId);
-            }}
-            onPressDecreaseQuantity={() => {
-              let currentQuantity = cartItemQuantity - 1;
-              setCartItemQuantity(currentQuantity);
-              updateShoppingCartProduct('substract', itemId);
-            }}
-          />
+          <Container style={{height: 30}} >
+            <QuantityProduct
+              quantity={cartItemQuantity}
+              onPressAddQuantity={() => {
+                let currentQuantity = cartItemQuantity + 1;
+                setCartItemQuantity(currentQuantity);
+                updateShoppingCartProduct('add', itemId);
+              }}
+              onPressDeleteCart={() => {
+                updateShoppingCartProduct('remove', itemId);
+              }}
+              onPressDecreaseQuantity={() => {
+                let currentQuantity = cartItemQuantity - 1;
+                setCartItemQuantity(currentQuantity);
+                updateShoppingCartProduct('substract', itemId);
+              }}
+            />
+          </Container>
         ) : (
           <Button
             icon={<Image source={ICONN_BASKET} tintColor="white" resizeMode="cover" style={{ width: 28, height: 28 }} />}

@@ -279,7 +279,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     }
   }
 
-  const Counter: React.RF = ({ orderFormId, item, itemIndex }) => {
+  const Counter: React.FC = ({ orderFormId, item, itemIndex }) => {
     const decreaseItem = () => {
       console.log('***decrease item***');
       try {
@@ -400,7 +400,9 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         <Container center style={{marginTop:16, backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
           <Container
             style={{
-              width: moderateScale(340)
+              width: moderateScale(340), 
+              justifyContent: 'center', 
+              paddingHorizontal: '0.5%'
             }}
           >
             <Button
@@ -409,8 +411,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               outline
               round
               color='black'
-              // length="long"
-              style={{borderColor:`${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1}}
+              length="long"
+              style={{borderColor:`${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%'}}
               leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{tintColor:'red', height:20, width:20}} />}
               onPress={emptyShoppingCart}>
               Vaciar canasta
@@ -463,14 +465,14 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           paddingBottom: 10
         }}
       >
-        <Container>
+        <Container style={{paddingHorizontal: 10}} >
           <Touchable
             onPress={() => {
               dispatch(setDetailSelected(value.id));
               navigate('ProductDetail', { productIdentifier: value.id });
             }}
           >
-            <Image source={{ uri: value.imageUrl }} style={{ marginTop: 10, width: 90, height: 88 }} />
+            <Image source={{ uri: value.imageUrl }} style={{ marginTop: 10, width: 80, height: 88 }} />
           </Touchable>
         </Container>
         <Container space="between" style={{ marginTop: 10, width: '100%', height: 58 }}>
@@ -643,27 +645,29 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   );
 
   const fullCartFooter = (
-    <Container space="evenly" style={{ paddingLeft: 10, width: '100%', height: '20%', backgroundColor: theme.fontColor.white }}>
-      <Container row space="between" style={{ marginTop: 8, width: '90%' }}>
-        <TextContainer marginLeft={7.5} text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+    <Container space="evenly" style={{ width: '100%', height: '25%', backgroundColor: theme.fontColor.white }}>
+      <Container center style={{paddingHorizontal: 0}} >
+      <Container row space="between" style={{ width: '90%' }}>
+        <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
         <CustomText
           text={'$' + (totalizers != undefined ? subTotalCalculated / 100 : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'}
           fontSize={18}
           fontBold
         ></CustomText>
       </Container>
-      <Container row space="between" style={{ marginTop: 4, width: '90%' }}>
-        <TextContainer marginLeft={7.5} text="Gastos de envío:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
-        <TextContainer marginLeft={7.5} text="Por calcular" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+      <Container row space="between" style={{ marginTop: 10, width: '90%' }}>
+        <TextContainer text="Gastos de envío:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+        <TextContainer marginBottom={10} text="Por calcular" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
       </Container>
-      <Container center>
+      </Container>
+      <Container center style={{paddingHorizontal: 15}}>
         <Button
           length="long"
           fontSize="h5"
           round
           fontBold
           onPress={onPressCheckout}
-          style={{ marginBottom: 8, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
+          style={{ marginBottom: 8, width: '100%', backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 12 }}
         >
           Continuar
         </Button>
