@@ -2,7 +2,7 @@ import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import React, { useEffect, useState, version } from 'react';
 import { Alert } from 'react-native';
-import { RootState, setAppInitialState, setAuthInitialState, setInvoicingInitialState, setShoppingCartInitialState, useAppDispatch, useAppSelector } from 'rtk';
+import { RootState, setAppInitialState, setAuthInitialState, setInvoicingInitialState, setShoppingCartInitialState, useAppDispatch, useAppSelector, setPromotionsInitialState } from 'rtk';
 import { authServices } from 'services';
 import { version as app_version } from './../../../../package.json';
 import MyAccountScreen from './MyAccountScreen';
@@ -74,6 +74,7 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
       dispatch(setInvoicingInitialState());
       dispatch(setShoppingCartInitialState());
       dispatch(setInvoicingInitialState());
+      dispatch(setPromotionsInitialState());
     }
   };
 

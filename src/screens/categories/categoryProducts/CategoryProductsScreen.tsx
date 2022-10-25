@@ -92,7 +92,7 @@ const CategoryProductsScreen: React.FC = () => {
     setVisible(true);
   };
 
-  const userUpdated = (productId: string) => {
+  const userUpdated = (productId: string, isAdult: boolean) => {
     updateShoppingCartProduct!('create', productId);
     hideModalForAdult();
   }
