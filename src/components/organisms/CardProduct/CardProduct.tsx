@@ -69,33 +69,32 @@ const CardProduct: React.FC<CardProductProps> = ({
 }: CardProductProps) => {
   const validateCategoryForAddItem = () => {
     let isAdultInProductSpecification = false
-    getProductDetailById(productId).then(productDetail => {
       getProductSpecification(productId).then(producSpecificationResponse => {
+        console.log(producSpecificationResponse);
         if (producSpecificationResponse.length > 0) {
           const { Value } = producSpecificationResponse[0];
           if (Value.length > 0) {
             isAdultInProductSpecification = (Value[0] == 'Sí');
           }
+
+          if (isAdultInProductSpecification) {
+            vtexUserServices.getUserByEmail(email!).then(userResponse => {
+              if (userResponse && userResponse.data) {
+                const { data } = userResponse;
+                if (data[0].isAdult === true) {
+                  onPressAddCart(true, productId);
+                } else {
+                  onPressAddCart(false, productId);
+                }
+              }
+            });
+          } else {
+            onPressAddCart(true, productId);
+          }
+        }else {
+          onPressAddCart(true, productId);
         }
       });
-      if (isAdultInProductSpecification) {
-        vtexUserServices.getUserByEmail(email!).then(userResponse => {
-          if (userResponse && userResponse.data) {
-            console.log('userResponse', JSON.stringify(userResponse, null, 3));
-            const { data } = userResponse;
-            if (data[0].isAdult === true) {
-              console.log('ya es adulto');
-              onPressAddCart(true, productId);
-            } else {
-              console.log('no es adulto');
-              onPressAddCart(false, productId);
-            }
-          }
-        });
-      } else {
-        onPressAddCart(true, productId);
-      }
-    });
   };
 
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();

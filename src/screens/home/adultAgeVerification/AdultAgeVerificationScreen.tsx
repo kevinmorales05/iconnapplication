@@ -14,11 +14,12 @@ import { authServices } from 'services';
 interface Props {
   onPressClose: () => void;
   visible: boolean;
-  userUpdated: (productId: string, udpated: boolean) => void;
   productId: string;
+  userUpdated: (productId: string, udpated: boolean) => void;
 }
 
-const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, userUpdated, productId }) => {
+const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, productId, userUpdated }) => {
+  console.log('productId . . . . ',productId);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const insets = useSafeAreaInsets();
   const updateUserAgeStatus = (async (adultStatus) => {
@@ -36,7 +37,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, us
               if (!adultStatus) {
                 Linking.openURL(global.age_verification_url);
               } else {
-                userUpdated(productId, true);
+                userUpdated(productId,true);
               }
             }).catch((error) => console.log(error))
           }

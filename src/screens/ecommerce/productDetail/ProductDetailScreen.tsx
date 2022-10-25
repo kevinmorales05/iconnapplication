@@ -8,7 +8,7 @@ import { ImagesCarusel } from 'components/molecules/ImagesCarusel';
 import { FavoriteButton } from 'components/molecules';
 import { CardProduct } from 'components/organisms/CardProduct';
 import { Rating } from 'components/molecules/Rating';
-import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
+import { getProductDetailById, getSkuFilesById, getProductSpecification } from 'services/vtexProduct.services';
 import { QuantityProduct } from 'components/molecules/QuantityProduct';
 import { vtexProductsServices } from 'services';
 import {
@@ -83,6 +83,7 @@ const ProductDetailScreen: React.FC<Props> = ({
   const { favs, favsId, user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
   const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
+  const [productId, setProductId] = useState<string>();
   const dispatch = useAppDispatch();
 
   itemId = detailSelected;
@@ -180,45 +181,80 @@ const ProductDetailScreen: React.FC<Props> = ({
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
 
-  const onPressOut = () => {
-    setVisible(!visible);
+  const hideModalForAdult = () => {
+    console.log('hideModalForAdult...');
+    setVisible(false);
   };
 
-  const validateCategoryForAddItem = (itemId: string) => {
-    console.log('validate itemId:::' + itemId + 'userId' + user.userId);
-    getProductDetailById(itemId).then(productDetail => {
-      if (productDetail.DepartmentId == 167) {
-        if (user.email) {
-          vtexUserServices.getUserByEmail(user.email).then(userResponse => {
-            let isAdult = false;
-            if (userResponse) {
+  const showModalForAdult = () => {
+    console.log('showModalForAdult...');
+    setVisible(true);
+  };
+
+  const userUpdated = (productId: string) => {
+    updateShoppingCartProduct!('create', productId);
+    hideModalForAdult();
+  }
+
+  const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
+    console.log('isAdult...');
+    console.log(isAdult);
+    console.log('isAdult...');
+    console.log('pId', productId);
+    if (isAdult) {
+      console.log('updateShoppingCartProduct');
+      updateShoppingCartProduct!('create', productId);
+    } else {
+      setProductId(productId);
+      showModalForAdult();
+    }
+  };
+
+  const validateAgeForAddItem = (itemId: string) => {
+    console.log('validate itemId:::'+itemId+ 'userId'+user.userId);
+    let isAdultInProductSpecification = false
+    getProductSpecification(itemId).then(producSpecificationResponse => {
+      console.log(producSpecificationResponse);
+      if (producSpecificationResponse.length > 0) {
+        console.log('tiene mas de uno');
+        const { Value } = producSpecificationResponse[0];
+        if (Value.length > 0) {
+          isAdultInProductSpecification = (Value[0] == 'Sí');
+          console.log('value validation: '+(Value[0] == 'Sí'));
+        }
+        if (isAdultInProductSpecification) {
+          console.log('555:::');
+          vtexUserServices.getUserByEmail(email!).then(userResponse => {
+            console.log('depues de userbyemail');
+            if (userResponse && userResponse.data) {
+              console.log('en validacion de datos');
+              console.log('userResponse', JSON.stringify(userResponse, null, 3));
               const { data } = userResponse;
-              if (data) {
-                if (data.length > 0) {
-                  isAdult = data[0].isAdult;
-                  if (isAdult) {
-                    console.log("este es el resultado validacion,", isAdult )
-                    updateShoppingCartProduct('create', itemId);
-                  } else {
-                    onPressOut();
-                    console.log("estamos aqui")
-                  }
-                }
+              if (data[0].isAdult === true) {
+                console.log('ya es adulto');
+                updateShoppingCartProduct('create', itemId);
+              } else {
+                console.log('no es adulto');
+                showModalForAdult();
               }
             }
           });
+        } else {
+          console.log('directo a agregar');
+          updateShoppingCartProduct('create', itemId);
         }
-      } else {
+      }else {
+        console.log('directo a agregar');
         updateShoppingCartProduct('create', itemId);
       }
-    });
+    })
   };
 
-  const isProductIdInShoppingCart = productId => {
+  const isProductIdInShoppingCart = productIde => {
     const { items } = cart;
     let quantityItem = 0;
     items.map(itm => {
-      if (itm.productId == productId) {
+      if (itm.productId == productIde) {
         quantityItem = itm.quantity;
       }
     });
@@ -536,9 +572,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                       price={prod.price!}
                       productId={prod.productId}
                       quantity={prod.quantity!}
-                      onPressAddCart={() => {
-                        updateShoppingCartProduct('create', prod.productId);
-                      }}
+                      onPressAddCart={validateCategoryForAddItem}
                       onPressAddQuantity={() => {
                         updateShoppingCartProduct('add', prod.productId);
                       }}
@@ -548,6 +582,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                       onPressDecreaseQuantity={() => {
                         updateShoppingCartProduct('substract', prod.productId);
                       }}
+                      onPressOut={hideModalForAdult}
                       productPromotions={productPromotions}
                     />
                   );
@@ -602,14 +637,14 @@ const ProductDetailScreen: React.FC<Props> = ({
             fontBold
             fontSize="h4"
             onPress={() => {
-              validateCategoryForAddItem(itemId);
+              validateAgeForAddItem(itemId);
             }}
           >
             Agregar a canasta
           </Button>
         )}
       </Container>
-      <AdultAgeVerificationScreen onPressClose={onPressOut} visible={visible} />
+      <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={itemId} userUpdated={userUpdated}/>
     </ScrollView>
   );
 };
