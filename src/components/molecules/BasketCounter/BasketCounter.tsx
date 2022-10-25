@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ICONN_BASKET, ICONN_REVERSE_BASKET } from 'assets/images';
 import { Container, CustomText, Touchable } from 'components';
 import theme from 'components/theme/theme';
@@ -8,6 +8,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../navigation/types';
 import { RootState, useAppSelector } from 'rtk';
 import { moderateScale } from 'utils/scaleMetrics';
+import { BasketSvg } from 'components/svgComponents';
 
 const BasketCounter = () => {
   const { cart } = useAppSelector((state: RootState) => state.cart);
@@ -74,7 +75,7 @@ const BasketCounter = () => {
         {counter > 0 ? (
           <>
             <Container>
-              <Image style={styles.image} source={ICONN_REVERSE_BASKET} />
+              <BasketSvg size={moderateScale(24)} color={theme.brandColor.iconn_white}/>
             </Container>
             <Container style={{ marginHorizontal: 2, marginTop: 2 }}>
               <CustomText fontSize={17} alignSelf="center" textColor={theme.brandColor.iconn_white} text={String(counter)} fontBold />
@@ -83,7 +84,7 @@ const BasketCounter = () => {
         ) : (
           <>
             <Container center style={{ alignItems: 'flex-end' }} width={'100%'}>
-              <Image style={styles.image} source={ICONN_BASKET} />
+              <BasketSvg size={moderateScale(24)} color={theme.brandColor.iconn_accent_principal}/>
             </Container>
           </>
         )}
@@ -95,11 +96,6 @@ const BasketCounter = () => {
 export default BasketCounter;
 
 const styles = StyleSheet.create({
-  image: {
-    width: moderateScale(25),
-    height: moderateScale(25),
-    resizeMode: 'contain'
-  },
   highlight: {
     backgroundColor: theme.brandColor.iconn_green_original
   }

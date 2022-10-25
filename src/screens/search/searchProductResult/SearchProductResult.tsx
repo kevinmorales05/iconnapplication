@@ -181,10 +181,10 @@ const SearchProductResult: React.FC = () => {
               <Feather name="arrow-left" size={theme.iconSize.medium} color={theme.brandColor.iconn_accent_secondary} />
             </Touchable>
           </Container>
-          <Container flex={0.67}>
+          <Container flex={0.73}>
             <SearchBar isButton onPressSearch={onPressBack} onChangeTextSearch={() => {}} textSearch={textSearch} />
           </Container>
-          <Container width={'100%'} flex={0.23} style={{ paddingLeft: moderateScale(10), height: moderateScale(25) }}>
+          <Container width={'100%'} flex={0.16} style={{ paddingLeft: moderateScale(10), height: moderateScale(25) }}>
             <BasketCounter />
           </Container>
         </Container>
