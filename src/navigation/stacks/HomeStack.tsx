@@ -148,8 +148,8 @@ const HomeStack: React.FC = () => {
         name="ProductDetail"
         component={ProductDetailController}
         options={{
-          headerShown: true,
           headerTitle: '',
+          headerBackTitleVisible: false,
           headerRight: () => <BasketCounter />
         }}
       />
