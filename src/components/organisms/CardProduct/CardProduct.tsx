@@ -104,7 +104,6 @@ const CardProduct: React.FC<CardProductProps> = ({
   const { email } = user;
   const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
 
-  let newFavList: ItemsFavoritesInterface[] = [];
 
   const getIsFavorite = () => {
     if (favs) {
