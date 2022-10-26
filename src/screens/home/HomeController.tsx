@@ -323,29 +323,73 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     return allPromotions;
   }
 
-  const giftsPromotionsByCalculatorId =  (idCalculatorConfiguration: string) => {
-    let giftsList = []; 
-       vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(async promotionResponse => {
+  const giftsPromotionsByCalculatorId = async (idCalculatorConfiguration: string) => {
+    let giftsList = [];
+    //let prodsIds = '';
+       await vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(async promotionResponse => {
       if (promotionResponse) {
         let testproductVsPromotions = new Map();
         const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/";
         if (promotionResponse.skusGift) {
           const { gifts } = promotionResponse.skusGift;
           if(gifts.length>0){
-          gifts.map((gift) => {
-            console.log('vvvvvv');
-            console.log(gift);
-            console.log('vvvvvv');
-            giftsList.push(gift.id);
+          gifts.map((gift, index) => {
+            giftsList.push({gift: gift.id, name: promotionResponse.name, type:promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue});
+            //prodsIds = prodsIds+(index!=0?',':'')+(gift.id);
           });
           console.log('returnssss');
-          console.log(giftsList.id);
+          console.log(giftsList);
           console.log('returnssss');
           }    
         }
       }
     });
+    //return prodsIds;
     return giftsList;
+  };
+
+  const getProductPriceById = async (productId: string) => {
+    let price = 0;
+    await vtexProductsServices.getProductPriceByProductId(productId).then(async responsePrice => {
+      console.log('price');
+      console.log(responsePrice);
+      console.log('price');
+      if (responsePrice) {
+        price = responsePrice.basePrice;
+      }
+    }).catch((error) => console.log(error));
+    return price
+  };
+
+  const getProductRatingById = async (productId: string) => {
+    let rating = 0;
+    await vtexProductsServices.getProductRatingByProductId(productId).then(async responseRating => {
+      console.log('nnnn');
+      console.log(responseRating);
+      console.log('nnnn');
+      rating = 0;
+    }).catch((error) => console.log(error));
+    return rating;
+  };
+
+  const getPictureByProductId = async (productId: string) => {
+    const imgRoot = 'https://oneiconn.vtexassets.com/arquivos/ids/';
+    let pics = ''; 
+    await getSkuFilesById(productId)
+      .then(async responseSku => {
+        let skuForImages = [];
+        if (responseSku) {
+          if (responseSku.length > 0) {
+            pics = imgRoot+responseSku[0].ArchiveId+'-' + responseSku[0].Id + '-';
+            /*
+            responseSku.map(sku => {
+              skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
+            });
+            console.log( 'ESTO ES', skuForImages);*/
+          }
+        }
+      })
+    return pics;
   };
 
   const fetchPromotionData = useCallback(async () => {
@@ -357,26 +401,64 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         itmMapFromCart.set(item.productId, { id: item.productId, quantity: item.quantity, seller: item.seller });
       });
     }
-    let testtt = [];
-    let testProd = [];
 
     let allPromotions = await getAllPromotions();
-    console.log('allll');
-    console.log(allPromotions);
-    console.log('allll');
 
-    let promoCat = [Object];
-    console.log('iii');
-    allPromotions.map((prom, index) => {
-      promoCat[index] = giftsPromotionsByCalculatorId(prom.idCalculatorConfiguration);
-    });
-    console.log('iii');
+    let productsBuilded = [];
+    let productPromosMap = new Map();
+    let testP = [];
+    for (let i = 0; i < allPromotions.length; i++) {
+      testP[i] = await giftsPromotionsByCalculatorId(allPromotions[i].idCalculatorConfiguration);
+      console.log('ddddd');
+      console.log(testP[i]);
+      console.log('ddddd');
+      if (testP[i].length>0) {
+        /*let gits = testP[i];
+        console.log('gits))',gits);*/
 
-    console.log('rrrrr');
-    console.log(promoCat);
-    console.log('rrrrr');
+/*        let promoName = testP[i].name;
+        console.log('promoName))',promoName);
+        let promoType = testP[i].type;
+        console.log('promoType))',promoType);
+        let percentualDiscountValue = testP[i].percentualDiscountValue;
+        console.log('percentualDiscountValue))', percentualDiscountValue);
+        console.log('eeeeee');
+        console.log(testP[i]);
+        console.log('eeeeee');*/
+        for (let j = 0; j < testP[i].length; j++) {
+          console.log('id a buscar productIds[j]' + testP[i][j].gift);
+          let price = await getProductPriceById(testP[i][j].gift);
+          let rating = await getProductRatingById(testP[i][j].gift);
+          let image = await getPictureByProductId(testP[i][j].gift);
+          console.log('price :' + price + ' for ' + testP[i][j].gift);
+          await getProductDetailById(testP[i][j].gift).then(responseProductDetail => {
+            console.log('tttttttt');
+            console.log(responseProductDetail);
+            if (responseProductDetail) {
+              console.log(testP[i].gift);
+              productPromosMap.set(testP[i][j].gift, {
+                name: responseProductDetail.Name, percentualDiscountValue: testP[i][j].percentualDiscountValue,
+                productId: testP[i][j].gift, promotionName: testP[i][j].name, promotionType: testP[i][j].type, quantity: 1
+              });
+              productsBuilded.push({
+                priceWithDiscount: 1, name: responseProductDetail.Name, oldPrice: "10", price: price, productId: testP[i][j].gift,
+                quantity: 0, rating: rating, image: image
+              });
+            }
+            console.log('tttttttt');
+          }).catch(error => console.log(error));
+        }
+      }
+    }
+
+    console.log('fffff');
+    console.log(productsBuilded);
+    console.log(productPromosMap);
+    console.log('fffff');
+
     
         //solo para probar
+        /*
         var productList = [];
         productList.push({priceWithDiscount: 1, name: "COCA COLA REFR PET NR 300ML", oldPrice: "10", price: 40, productId: '100004817', 
         quantity: 0, rating: 0, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
@@ -393,11 +475,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         productList.push({priceWithDiscount: 1, name: "SSABRITAS CHICHA DE CERDO 70 G", oldPrice: "10", price: 23, productId: '100020280', 
         quantity: 0, rating: 2, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
         productList.push({priceWithDiscount: 1, name: "BOCANEGRA-PILSNER-BOTELLA-NR-PIEZA-355-ML", oldPrice: "10", price: 28, productId: '100004402', 
-        quantity: 0, rating: 2, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
+        quantity: 0, rating: 2, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});*/
         
         console.log('hhhhh0001');
         //let prodsPromotions = new Map();100004402
         //solo para probar
+        /*
         var productVsPromotions = new Map();
         productVsPromotions.set('100004817',{name: 'COCA COLA REFR PET NR 300ML (100004817)', percentualDiscountValue: 2, 
         productId: '100004817', promotionName: '2 x 1 QA visible 1', promotionType: 'buyAndWin', quantity: 1});
@@ -414,12 +497,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         productVsPromotions.set('100020280',{name: 'SABRITAS CHICHA DE CERDO 70 G', percentualDiscountValue: 10, 
         productId: '100020280', promotionName: '2 x 1 QA visible 1', promotionType: 'buyAndWin', quantity: 1});
         productVsPromotions.set('100004402',{name: 'BOCANEGRA-PILSNER-BOTELLA-NR-PIEZA-355-ML', percentualDiscountValue: 10, 
-        productId: '100004402', promotionName: '2 x 1 QA visible 1', promotionType: 'buyAndWin', quantity: 1});
+        productId: '100004402', promotionName: '2 x 1 QA visible 1', promotionType: 'buyAndWin', quantity: 1});*/
 
-        console.log(productVsPromotions);
-        console.log(productList);
-        dispatch(setProductVsPromotions(productVsPromotions));
-        dispatch(setPromotions(productList))
+        console.log(productPromosMap);
+        console.log(productsBuilded);
+        dispatch(setProductVsPromotions(productPromosMap));
+        dispatch(setPromotions(productsBuilded))
         console.log('hhhhh111');
         console.log('hhhhh22');
 
