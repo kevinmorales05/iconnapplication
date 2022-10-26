@@ -338,9 +338,10 @@ const ProductDetailScreen: React.FC<Props> = ({
   };
 
   const removeFavorite = (oldFav: ItemsFavoritesInterface) => {
-    favList.map(product => {
-      if (product.Id === oldFav.Id) {
-        const newFavList = favList.filter(productf => productf.Id != oldFav.Id);
+    let copyFavs = favs;
+    copyFavs.map(product => {
+      if (product.Id == oldFav.Id) {
+        const newFavList = copyFavs.filter(productf => productf.Id != oldFav.Id);
         let listItems: ListItemsWrapperInterface = {
           ListItems: newFavList,
           IsPublic: true,
@@ -351,12 +352,9 @@ const ProductDetailScreen: React.FC<Props> = ({
           email: email as string,
           ListItemsWrapper: [listItems]
         };
-        const response = updateFavorites(tryList, 'update');
+        const response = uploadVtex(newFavList);
         setFavList(newFavList);
         dispatch(setFav(newFavList));
-        return newFavList;
-      } else {
-        return favList;
       }
     });
   };
@@ -380,6 +378,7 @@ const ProductDetailScreen: React.FC<Props> = ({
         Name: productDetail.Name
       };
       removeFavorite(productToRemove);
+      setIsFav(!isFav);
     }
     if (!isFav) {
       const productToAdd: ItemsFavoritesInterface = {
@@ -387,9 +386,9 @@ const ProductDetailScreen: React.FC<Props> = ({
         Name: productDetail.Name
       };
       addFavorite1(productToAdd);
+      setIsFav(!isFav);
     }
     console.log('ACTUAL FAVS', favs, favsId);
-    setIsFav(!isFav);
   };
 
   return (

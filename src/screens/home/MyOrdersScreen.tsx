@@ -26,8 +26,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate 
   });
   const insets = useSafeAreaInsets();
 
-  const haveBeforeOrders = officialOrderArray.length && officialOrderArray.some((order) => order.status == 'canceled' || order.status == 'invoiced' )
-
+  const haveBeforeOrders = officialOrderArray.length && officialOrderArray.some(order => order.status == 'canceled' || order.status == 'invoiced');
 
   return (
     <ScrollView
@@ -41,7 +40,6 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate 
         width: '100%'
       }}
     >
-
       {!isOnline ? (
         <></>
       ) : officialOrderArray.length == 0 ? (
@@ -72,7 +70,13 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate 
           }
         })
       )}
-      {!isOnline ? <></> : officialOrderArray.length == 0 ? <></> : (haveBeforeOrders ? <TextContainer text="Pedidos anteriores" fontSize={16} fontBold marginTop={15.5} /> : null)}
+      {!isOnline ? (
+        <></>
+      ) : officialOrderArray.length == 0 ? (
+        <></>
+      ) : haveBeforeOrders ? (
+        <TextContainer text="Pedidos anteriores" fontSize={16} fontBold marginTop={15.5} />
+      ) : null}
       {!isOnline ? (
         <InfoCard text={`No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.`} />
       ) : officialOrderArray.length == 0 ? (
@@ -82,8 +86,8 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate 
           </Container>
           <TextContainer marginTop={12.3} text={'No tienes pedidos'} textAlign="center" fontBold fontSize={16} />
           <TextContainer text="Aquí verás tus pedidos anteriores y pedidos en curso." textAlign="center" marginTop={11} />
-          <Button onPress={goBack} fontBold fontSize="h4" color="iconn_green_original" round marginTop={234}>
-            Ver articulos
+          <Button onPress={goBack} fontBold fontSize="h4" color="iconn_green_original" round marginTop={300}>
+            Ver artículos
           </Button>
         </Container>
       ) : (
