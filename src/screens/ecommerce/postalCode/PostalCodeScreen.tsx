@@ -19,6 +19,7 @@ import { sortByDistance } from 'utils/geolocation';
 import appConfig from '../../../../app.json';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { vtexPickUpPoints } from 'services';
+import config from 'react-native-config';
 
 const PostalCodeScreen = () => {
   const {
@@ -34,7 +35,8 @@ const PostalCodeScreen = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const dispatch = useAppDispatch();
   const alert = useAlert();
-  const [ postalCode, setPostalCode ] = useState<string>('')
+  const [postalCode, setPostalCode] = useState<string>('');
+  const { POSTAL_CODE_DEFAULT } = config;
 
   //useEffect to get geopoint of user before render
 
@@ -85,14 +87,14 @@ const PostalCodeScreen = () => {
   const getPickUpPoints = async (cp: string) => {
     const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
     let item;
-    if(pickUp.items.length){
-      sellers.forEach((seller)=>{
-        const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-        if(store.distance < 8){
-          return item = seller;
+    if (pickUp.items.length) {
+      sellers.forEach(seller => {
+        const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+        if (store.distance < 8) {
+          return (item = seller);
         }
-      })
-      if(item){
+      });
+      if (item) {
         dispatch(setDefaultSeller({ defaultSeller: item }));
         loader.show('', 'ecommerce');
         navigate('Home', { paySuccess: false });
@@ -104,20 +106,20 @@ const PostalCodeScreen = () => {
       type: 'error'
     });
     loader.hide();
-  }
+  };
 
   const getPickUpPointsByAddress = async (position: Geolocation.GeoPosition) => {
-    if(position){
+    if (position) {
       const pickUp = await vtexPickUpPoints.getPickUpPointsByAddress(position?.coords.longitude, position?.coords.latitude);
       let item;
-      if(pickUp.items.length){
-        sellers.forEach((seller)=>{
-          const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-          if(store.distance < 8){
-            return item = seller;
+      if (pickUp.items.length) {
+        sellers.forEach(seller => {
+          const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+          if (store.distance < 8) {
+            return (item = seller);
           }
-        })
-        if(item){
+        });
+        if (item) {
           dispatch(setDefaultSeller({ defaultSeller: item }));
           loader.show('', 'ecommerce');
           navigate('Home', { paySuccess: false });
@@ -130,7 +132,7 @@ const PostalCodeScreen = () => {
       type: 'error'
     });
     loader.hide();
-  }
+  };
 
   const hasPermissionIOS = async () => {
     const openSetting = () => {
@@ -220,7 +222,7 @@ const PostalCodeScreen = () => {
     Geolocation.getCurrentPosition(
       position => {
         loader.hide();
-        getPickUpPointsByAddress(position)
+        getPickUpPointsByAddress(position);
       },
       error => {
         loader.hide();
@@ -269,87 +271,88 @@ const PostalCodeScreen = () => {
     <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
       <Container style={{ marginHorizontal: 16 }}>
         <Container style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
-          <Image source={ICONN_POSTAL_CODE_HEADER_ICON} style={{width:40, height:40, marginTop:2}} />
-          <Container style={{ width: '60%', marginLeft:8}}>
+          <Image source={ICONN_POSTAL_CODE_HEADER_ICON} style={{ width: 40, height: 40, marginTop: 2 }} />
+          <Container style={{ width: '60%', marginLeft: 8 }}>
             <CustomText text={'Compártenos tu código postal'} fontSize={20} fontBold />
           </Container>
         </Container>
-        <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={40}/>
-        <Container style={{marginBottom:24}}>
-        <Input
-          {...register('postalCode')}
-          rules={{
-            required: {
-              value: true,
-              message: `Campo requerido.`
-            },
-            minLength: {
-              value: 5,
-              message: `Mínimo 5 valores`
-            },
-            validate: (value: string) => {
-              if (value.length === 5) {
-                const input = Number(value);
+        <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={40} />
+        <Container style={{ marginBottom: 24 }}>
+          <Input
+            {...register('postalCode')}
+            rules={{
+              required: {
+                value: true,
+                message: `Campo requerido.`
+              },
+              minLength: {
+                value: 5,
+                message: `Mínimo 5 valores`
+              },
+              validate: (value: string) => {
+                if (value.length === 5) {
+                  const input = Number(value);
 
-                const found = sellers.find(item => {
-                  const current = Number(item['Código postal']);
-                  return current === input;
-                });
-                // if (found) {
-                //   dispatch(setDefaultSeller({ defaultSeller: found }));
-                // }
-                // if (!found) {
-                //   return 'Código Postal no encontrado';
-                //   //return true;
-                // }
+                  const found = sellers.find(item => {
+                    const current = Number(item['Código postal']);
+                    return current === input;
+                  });
+                  // if (found) {
+                  //   dispatch(setDefaultSeller({ defaultSeller: found }));
+                  // }
+                  // if (!found) {
+                  //   return 'Código Postal no encontrado';
+                  //   //return true;
+                  // }
+                }
+
+                return true;
               }
-
-              return true;
-            }
+            }}
+            name="postalCode"
+            control={control}
+            autoCorrect={false}
+            keyboardType="numeric"
+            placeholder={`C.P`}
+            blurOnSubmit={false}
+            error={errors.postalCode?.message}
+            maxLength={5}
+            marginTop={4}
+            numeric
+            onChangeText={text => {
+              setPostalCode(text);
+            }}
+            onSubmitEditing={Keyboard.dismiss}
+          />
+        </Container>
+        <Button
+          disabled={!isValid}
+          round
+          fontBold
+          fontSize="h3"
+          leftIcon={<AntDesign name="search1" size={22} color={theme.brandColor.iconn_white} style={{ position: 'absolute', left: 24 }} />}
+          onPress={() => {
+            getPickUpPoints(postalCode);
           }}
-          name="postalCode"
-          control={control}
-          autoCorrect={false}
-          keyboardType="numeric"
-          placeholder={`C.P`}
-          blurOnSubmit={false}
-          error={errors.postalCode?.message}
-          maxLength={5}
-          marginTop={4}
-          numeric
-          onChangeText={(text)=>{
-            setPostalCode(text);
-          }}
-          onSubmitEditing={Keyboard.dismiss}
-        />
-      </Container>
-      <Button
-        disabled={!isValid}
-        round
-        fontBold
-        fontSize="h3"
-        leftIcon={<AntDesign name="search1" size={22} color={theme.brandColor.iconn_white} style={{position:'absolute', left:24}} />}
-        onPress={()=>{
-          getPickUpPoints(postalCode);
-        }}
-      >
-        Buscar
-      </Button>
+        >
+          Buscar
+        </Button>
       </Container>
       <Touchable onPress={handleGeolocation}>
         <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 44 }}>
-          <Image source={ICONN_PIN_LOCATION} style={{height:24, width:24}}/>
+          <Image source={ICONN_PIN_LOCATION} style={{ height: 24, width: 24 }} />
           <Container style={{ marginLeft: 10 }}>
             <CustomText text={'Usar mi ubicación actual'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
           </Container>
         </Container>
       </Touchable>
       <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: verticalScale(220) }}>
-        <Touchable onPress={()=>{
-          // TODO: se harcodeo cp para motivos de softlunch
-          getPickUpPoints('66230')
-        }}>
-            <CustomText text={'En otro momento'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+        <Touchable
+          onPress={() => {
+            getPickUpPoints(POSTAL_CODE_DEFAULT!);
+          }}
+        >
+          <CustomText text={'En otro momento'} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
         </Touchable>
       </Container>
     </ScrollView>
@@ -364,13 +367,13 @@ const styles = StyleSheet.create({
     height: moderateScale(55),
     borderRadius: moderateScale(8),
     backgroundColor: theme.brandColor.yellow_container,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: 1,
     borderColor: theme.brandColor.iconn_warning,
     marginHorizontal: moderateScale(12),
     marginTop: moderateScale(40),
     paddingHorizontal: moderateScale(15),
     flexDirection: 'row',
-    alignItems:'center'
+    alignItems: 'center'
   }
-})
+});

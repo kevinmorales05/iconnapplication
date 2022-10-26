@@ -6,6 +6,10 @@ import { AlertContextProvider, EnterModalContextProvider, InConstructionContextP
 import { Toast } from 'context';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
+import Config from 'react-native-config';
+
+// TODO: remove this:
+console.log('Environment variables:', JSON.stringify(Config, null, 3));
 
 let persistor = persistStore(store);
 

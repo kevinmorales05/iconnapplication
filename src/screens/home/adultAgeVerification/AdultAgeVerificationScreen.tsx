@@ -10,6 +10,7 @@ import { vtexDocsServices } from 'services';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { RootState,useAppSelector } from 'rtk';
 import { authServices } from 'services';
+import Config from 'react-native-config';
 
 interface Props {
   onPressClose: () => void;
@@ -19,6 +20,7 @@ interface Props {
 }
 
 const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, productId, userUpdated }) => {
+  const { AGE_VERIFICATION_URL } = Config;
   console.log('productId . . . . ',productId);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const insets = useSafeAreaInsets();
@@ -35,7 +37,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
             .then(async updatedDoc => {
               console.log(updatedDoc);
               if (!adultStatus) {
-                Linking.openURL(global.age_verification_url);
+                Linking.openURL(AGE_VERIFICATION_URL!);
               } else {
                 userUpdated(productId,true);
               }

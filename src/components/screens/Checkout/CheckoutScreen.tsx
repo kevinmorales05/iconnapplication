@@ -4,6 +4,7 @@ import { WebView, WebViewNavigation } from 'react-native-webview';
 import { useToast } from 'context';
 import { PartialState, StackNavigationState } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
+import config from 'react-native-config';
 
 interface Props {
   onSubmit: (fields: any) => void;
@@ -16,7 +17,8 @@ interface Props {
 const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderFormId }) => {
   const toast = useToast();
   const dispatch = useAppDispatch();
-  const [ isPaySuccess, setPaySuccess ] = useState<boolean>(false);
+  const [isPaySuccess, setPaySuccess] = useState<boolean>(false);
+  const { CHECKOUT_URL_RETURNED, CHECKOUT_WEBVIEW } = config;
 
   function onMessage(data: any) {
     toast.show({ message: `${data.nativeEvent.data}`, type: 'success' });
@@ -25,8 +27,8 @@ const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderF
   // TODO: relocate url to .ENV
   const onNavigationStateChange = (navState: WebViewNavigation) => {
     const paramsQuery = navState.url.split('/');
-    setPaySuccess(paramsQuery.some((item) => item === 'congrats') && paramsQuery.some((item) => item === 'approved'))
-    const urlParams = navState.url.split('https://nttdev--oneiconn.myvtex.com/_v/segment/admin-login/v1/login?')[1]?.split('=%2F%3F');
+    setPaySuccess(paramsQuery.some(item => item === 'congrats') && paramsQuery.some(item => item === 'approved'));
+    const urlParams = navState.url.split(CHECKOUT_URL_RETURNED!)[1]?.split('=%2F%3F');
     if (urlParams) {
       if (urlParams[0] === 'returnUrl') {
         dispatch(setShoppingCartInitialState());
@@ -41,11 +43,7 @@ const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderF
 
   // TODO: relocate url to .ENV
   return (
-    <WebView
-      onNavigationStateChange={onNavigationStateChange.bind(this)}
-      source={{ uri: `https://nttdev--oneiconn.myvtex.com/checkout/?orderFormId=${orderFormId}#/cart` }}
-      bounces={false}
-    />
+    <WebView onNavigationStateChange={onNavigationStateChange.bind(this)} source={{ uri: `${CHECKOUT_WEBVIEW!}${orderFormId}#/cart` }} bounces={false} />
     //     <WebView
     //         scalesPageToFit={false}
     //         mixedContentMode="compatibility"
@@ -93,4 +91,4 @@ const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderF
 
 export default CheckoutScreen;
 
-// 
+//

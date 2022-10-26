@@ -40,6 +40,7 @@ import { vtexPromotionsServices } from 'services/vtexPromotions.services';
 import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
 import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
 import { LengthType } from '../../components/types/length-type';
+import Config from 'react-native-config';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -84,6 +85,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [productsList, setProductsList] = useState([]);
   const [productPromotion, setProductPromotion] = useState<Map<string,Object>>();
   const [promotionsCategory, setPromotionsCategory] = useState<Object>();
+  const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -380,8 +382,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   };
 
   const getPictureByProductId = async (productId: string) => {
-    const imgRoot = 'https://oneiconn.vtexassets.com/arquivos/ids/';
-    let pics = global.default_image_url;
+    const imgRoot = PRODUCT_DETAIL_ASSETS;
+    let pics = DEFAULT_IMAGE_URL;
     try {
       await getSkuFilesById(productId)
         .then(async responseSku => {
@@ -465,7 +467,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   }, []);*/
 
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[], collectionId: string) {
-    const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
+    const arr: ProductResponseInterface[] | null | undefined = collectionId === RECOMMENDED_PRODUCTS ? products : otherProducts;
     const homeProductsArr: ProductInterface[] | undefined = [];
     for (const product of arr) {
       const price = await getPriceByProductId(product.ProductId);
@@ -485,8 +487,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         homeProductsArr.push(newProduct);
       }
     }
-    if (collectionId === global.recommended_products) setHomeProducts(homeProductsArr);
-    if (collectionId === global.other_products) setHomeOtherProducts(homeProductsArr);
+    if (collectionId === RECOMMENDED_PRODUCTS) setHomeProducts(homeProductsArr);
+    if (collectionId === OTHER_PRODUCTS) setHomeOtherProducts(homeProductsArr);
   }
 
   const getExistingProductsInCart = () => {
@@ -506,14 +508,14 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   useEffect(() => {
     if (products?.length! > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-      getProductsInfo(existingProducts, global.recommended_products);
+      getProductsInfo(existingProducts, RECOMMENDED_PRODUCTS!);
     }
   }, [products]);
 
   useEffect(() => {
     if (otherProducts?.length! > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-      getProductsInfo(existingProducts, global.recommended_products);
+      getProductsInfo(existingProducts, RECOMMENDED_PRODUCTS!);
     }
   }, [otherProducts]);
 
@@ -522,8 +524,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    * Also load home products again if user changes the default seller.
    */
   useEffect(() => {
-    fetchProducts(global.recommended_products);
-    fetchProducts(global.other_products);
+    fetchProducts(RECOMMENDED_PRODUCTS!);
+    fetchProducts(OTHER_PRODUCTS!);
   }, [cart, defaultSeller]);
 
   useEffect(() => {

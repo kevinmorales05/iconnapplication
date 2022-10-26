@@ -20,6 +20,7 @@ import {
 } from 'rtk';
 import { useShoppingCart } from '../hooks/useShoppingCart';
 import { getSkuFilesById } from 'services/vtexProduct.services';
+import Config from 'react-native-config';
 
 const InviteSignUpController: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -30,7 +31,7 @@ const InviteSignUpController: React.FC = () => {
   const { email } = user;
   const [completeList, setCompleteList] = useState<ProductInterface[] | null>();
   const [skusForProductImages, setSkusForProductImages] = useState([]);
-
+  const { FAVORITE_ASSETS } = Config;
 
   const getFavorites = useCallback(async () => {
     const response = await vtexFavoriteServices.getFavoritesByUserEmail(email as string);
@@ -50,23 +51,21 @@ const InviteSignUpController: React.FC = () => {
     getFavorites();
   }, []);
 
-  // TODO: relocate this url to .ENV
   const getPicture = async (productId: string) => {
-    const imgRoot = 'https://oneiconn.vtexassets.com/arquivos/ids/';
-    let pics = []; 
-    await getSkuFilesById(productId)
-      .then(async responseSku => {
-        let skuForImages = [];
-        if (responseSku) {
-          if (responseSku.length > 0) {
-            responseSku.map(sku => {
-              skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
-            });
-            console.log( 'ESTO ES', skuForImages);
-          }
-          pics = skuForImages ;
+    const imgRoot = FAVORITE_ASSETS;
+    let pics = [];
+    await getSkuFilesById(productId).then(async responseSku => {
+      let skuForImages = [];
+      if (responseSku) {
+        if (responseSku.length > 0) {
+          responseSku.map(sku => {
+            skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
+          });
+          console.log('ESTO ES', skuForImages);
         }
-      })
+        pics = skuForImages;
+      }
+    });
     return pics;
   };
 
@@ -86,8 +85,8 @@ const InviteSignUpController: React.FC = () => {
       const price = await getPriceByProductId(product.Id);
       const raiting = await getRatingByProductId(product.Id);
       const pic = await getPicture(product.Id);
-    console.log('PICTURE', pic);
-      if (price && raiting ) {
+      console.log('PICTURE', pic);
+      if (price && raiting) {
         const newProduct: ProductInterface = {
           productId: product.Id,
           name: product.Name,

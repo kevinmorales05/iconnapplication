@@ -33,7 +33,7 @@ import { moderateScale } from 'utils/scaleMetrics';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
-
+import Config from 'react-native-config';
 
 interface Props {
   itemId: string;
@@ -87,13 +87,13 @@ const ProductDetailScreen: React.FC<Props> = ({
   const [productId, setProductId] = useState<string>();
   const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
   const dispatch = useAppDispatch();
+  const { PRODUCT_DETAIL_ASSETS, COMPLEMENTRY_PRODUCTS } = Config;
 
   itemId = detailSelected;
 
-  // TODO: relocate all this urls to .ENV
   const fetchData = useCallback(async () => {
     console.log('itemmmm:::' + itemId);
-    const imgRoot = 'https://oneiconn.vtexassets.com/arquivos/ids/';
+    const imgRoot = PRODUCT_DETAIL_ASSETS;
     await getSkuFilesById(itemId)
       .then(async responseSku => {
         let skuForImages = [];
@@ -132,10 +132,9 @@ const ProductDetailScreen: React.FC<Props> = ({
     setCartItemQuantity(isProductIdInShoppingCart(itemId));
   }, [cart, detailSelected]);
 
-  // TODO: change the 147 by .ENV
   const getComplementaryProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     vtexProductsServices
-      .getProductsByCollectionId(global.complementry_products)
+      .getProductsByCollectionId(COMPLEMENTRY_PRODUCTS!)
       .then(responseCollection => {
         const { Data } = responseCollection;
         let complementaryList = [];

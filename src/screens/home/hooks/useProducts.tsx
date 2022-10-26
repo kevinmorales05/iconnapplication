@@ -1,8 +1,10 @@
 import { useLoading } from 'context';
 import { useCallback, useEffect, useState } from 'react';
 import { getProductsByCollectionIdThunk, ProductResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import Config from 'react-native-config';
 
 export const useProducts = () => {
+  const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS } = Config;
   const { loading } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
   const loader = useLoading();
@@ -29,8 +31,8 @@ export const useProducts = () => {
       })
     );
 
-    if (collectionId === global.recommended_products) setProducts(productsArr);
-    if (collectionId === global.other_products) setOtherProducts(productsArr);
+    if (collectionId === RECOMMENDED_PRODUCTS) setProducts(productsArr);
+    if (collectionId === OTHER_PRODUCTS) setOtherProducts(productsArr);
   }, []);
 
   return {
