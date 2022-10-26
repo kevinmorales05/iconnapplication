@@ -302,9 +302,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
 
-  const getAllPromotion = async () => {
+  const getAllPromotions = async () => {
     let allPromotions = [];
-    vtexPromotionsServices.getAllPromotions().then(promotionsResponse => {
+    await vtexPromotionsServices.getAllPromotions().then(async promotionsResponse => {
       console.log('lllllll');
       console.log(promotionsResponse);
       console.log('lllllll');
@@ -312,29 +312,36 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         const { items } = promotionsResponse;
         items.map((it, index) => {
           if (it.isActive == true) {
+            console.log('activooo:');
+            console.log(it);
+            console.log('activooo:');
             allPromotions.push(it);
           }
         });
       }
     });
-    console.log('aaaaa');
-    console.log(allPromotions);
-    console.log('aaaaa');
     return allPromotions;
   }
 
-  const giftsPromotionsByCalculatorId = async (idCalculatorConfiguration: string) => {
+  const giftsPromotionsByCalculatorId =  (idCalculatorConfiguration: string) => {
     let giftsList = []; 
-    await vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(promotionResponse => {
-        
+       vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(async promotionResponse => {
       if (promotionResponse) {
         let testproductVsPromotions = new Map();
         const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/";
         if (promotionResponse.skusGift) {
           const { gifts } = promotionResponse.skusGift;
+          if(gifts.length>0){
           gifts.map((gift) => {
-            giftsList.push(gift);
+            console.log('vvvvvv');
+            console.log(gift);
+            console.log('vvvvvv');
+            giftsList.push(gift.id);
           });
+          console.log('returnssss');
+          console.log(giftsList.id);
+          console.log('returnssss');
+          }    
         }
       }
     });
@@ -353,10 +360,69 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     let testtt = [];
     let testProd = [];
 
-    let allPromotions = getAllPromotion();
+    let allPromotions = await getAllPromotions();
     console.log('allll');
     console.log(allPromotions);
     console.log('allll');
+
+    let promoCat = [Object];
+    console.log('iii');
+    allPromotions.map((prom, index) => {
+      promoCat[index] = giftsPromotionsByCalculatorId(prom.idCalculatorConfiguration);
+    });
+    console.log('iii');
+
+    console.log('rrrrr');
+    console.log(promoCat);
+    console.log('rrrrr');
+    
+        //solo para probar
+        var productList = [];
+        productList.push({priceWithDiscount: 1, name: "COCA COLA REFR PET NR 300ML", oldPrice: "10", price: 40, productId: '100004817', 
+        quantity: 0, rating: 0, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
+        productList.push({priceWithDiscount: 1, name: "COCA COLA REG 8PK 235ML", oldPrice: "10", price: 10, productId: '100111608', 
+        quantity: 0, rating: 0, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
+        productList.push({priceWithDiscount: 1, name: "SABRITAS CREMA Y ESPECIAS FAMILIA 160 G", oldPrice: "10", price: 10, productId: '100018610', 
+        quantity: 0, rating: 0, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
+        productList.push({priceWithDiscount: 1, name: "SABRITAS LIMON 170GR", oldPrice: "10", price: 10, productId: '100018611', 
+        quantity: 0, rating: 2, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
+        productList.push({priceWithDiscount: 1, name: "SABRITAS KACANG BLAZIN CHEESE 74 G", oldPrice: "10", price: 10, productId: '100019329', 
+        quantity: 0, rating: 2, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
+        productList.push({priceWithDiscount: 1, name: "SABRITAS RECETA CRUJIENTE CLASICAS 49 G", oldPrice: "10", price: 34, productId: '100019362', 
+        quantity: 0, rating: 2, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
+        productList.push({priceWithDiscount: 1, name: "SSABRITAS CHICHA DE CERDO 70 G", oldPrice: "10", price: 23, productId: '100020280', 
+        quantity: 0, rating: 2, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
+        productList.push({priceWithDiscount: 1, name: "BOCANEGRA-PILSNER-BOTELLA-NR-PIEZA-355-ML", oldPrice: "10", price: 28, productId: '100004402', 
+        quantity: 0, rating: 2, image: 'https://oneiconn.vtexassets.com/arquivos/ids/155411-462-200'});
+        
+        console.log('hhhhh0001');
+        //let prodsPromotions = new Map();100004402
+        //solo para probar
+        var productVsPromotions = new Map();
+        productVsPromotions.set('100004817',{name: 'COCA COLA REFR PET NR 300ML (100004817)', percentualDiscountValue: 2, 
+        productId: '100004817', promotionName: '2 x 1 QA visible 1', promotionType: 'buyAndWin', quantity: 1});
+        productVsPromotions.set('100111608',{name: 'COCA COLA REG 8PK 235ML (100111608)', percentualDiscountValue: 8, 
+        productId: '100111608', promotionName: 'Recoger en tiend', promotionType: 'regular', quantity: 1});
+        productVsPromotions.set('100018610',{name: 'SABRITAS CREMA Y ESPECIAS FAMILIA 160 G', percentualDiscountValue: 5, 
+        productId: '100018610', promotionName: '10% Descuento', promotionType: 'regular', quantity: 1});
+        productVsPromotions.set('100018611',{name: 'SABRITAS LIMON 170GR', percentualDiscountValue: 15, 
+        productId: '100018611', promotionName: 'DescuentoCP032', promotionType: 'regular', quantity: 1});
+        productVsPromotions.set('100019329',{name: 'SABRITAS KACANG BLAZIN CHEESE 74 G', percentualDiscountValue: 20, 
+        productId: '100019329', promotionName: 'Promo 1 QA.', promotionType: 'campaign', quantity: 1});
+        productVsPromotions.set('100019362',{name: 'SABRITAS KACANG BLAZIN CHEESE 74 G', percentualDiscountValue: 10, 
+        productId: '100019362', promotionName: '2 x 1 QA visible 1', promotionType: 'regular', quantity: 1});
+        productVsPromotions.set('100020280',{name: 'SABRITAS CHICHA DE CERDO 70 G', percentualDiscountValue: 10, 
+        productId: '100020280', promotionName: '2 x 1 QA visible 1', promotionType: 'buyAndWin', quantity: 1});
+        productVsPromotions.set('100004402',{name: 'BOCANEGRA-PILSNER-BOTELLA-NR-PIEZA-355-ML', percentualDiscountValue: 10, 
+        productId: '100004402', promotionName: '2 x 1 QA visible 1', promotionType: 'buyAndWin', quantity: 1});
+
+        console.log(productVsPromotions);
+        console.log(productList);
+        dispatch(setProductVsPromotions(productVsPromotions));
+        dispatch(setPromotions(productList))
+        console.log('hhhhh111');
+        console.log('hhhhh22');
+
 
     let categories = [];
     categories.push({ id: "0", name: 'Todo' });
