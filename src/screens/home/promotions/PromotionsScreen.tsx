@@ -59,6 +59,14 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose, productsList, promoti
       });
     }
     setCartItems(itmMapFromCart);
+
+    let prodLst = productsList;
+    if (prodLst.length > 0) {
+      prodLst.map((prd) => {
+        productsList.quantity = ((cartItems != undefined && cartItems.has(prd.productId)) ? cartItems.get(prd.productId).quantity : 0);
+      });
+    }
+    setProductPromotionList(productsList);
   }, []);
 
   useEffect(() => {
@@ -74,7 +82,7 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose, productsList, promoti
         porcentDiscount={item.porcentDiscount}
         name={item.name}
         image={{ uri: item.image }}
-        quantity={ (cartItems!=undefined && cartItems.has(item.productId)) ?cartItems.get(item.productId).quantity:0}
+        quantity={ item.quantity }
         productId={item.productId}
         oldPrice={item.oldPrice}
         onPressAddCart={() => {
@@ -104,11 +112,11 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose, productsList, promoti
         </Container>
       </Container>
       <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
-        {productsList != undefined && productsList.length > 0 ?
+        {productPromotionList != undefined && productPromotionList.length > 0 ?
           (
             <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
               <FlatList
-                data={productsList}
+                data={productPromotionList}
                 renderItem={_renderItem}
                 onEndReachedThreshold={0.1}
                 onEndReached={loadMoreItem}
