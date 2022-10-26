@@ -85,6 +85,7 @@ const ProductDetailScreen: React.FC<Props> = ({
   const { email } = user;
   const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
   const [productId, setProductId] = useState<string>();
+  const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
   const dispatch = useAppDispatch();
 
   itemId = detailSelected;
@@ -441,19 +442,19 @@ const ProductDetailScreen: React.FC<Props> = ({
                   fontBold
                   fontSize={theme.fontSize.h1}
                   text={
-                    productPromotions != undefined && productPromotions.has('' + itemId)
-                      ? productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular'
+                    productVsPromotion != undefined && productVsPromotion.has('' + itemId)
+                      ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                         ? '$' +
                           ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
                             (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
-                              productPromotions.get('' + itemId).percentualDiscountValue) /
+                            productVsPromotion.get('' + itemId).percentualDiscountValue) /
                               100)
                         : ''
                       : ''
                   }
                 ></TextContainer>
-                {productPromotions != undefined && productPromotions.has('' + itemId) ? (
-                  productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular' ? (
+                {productVsPromotion != undefined && productVsPromotion.has('' + itemId) ? (
+                  productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
                     <Text
                       style={{
                         fontWeight: 'bold',
@@ -486,8 +487,8 @@ const ProductDetailScreen: React.FC<Props> = ({
                   />
                 )}
               </Container>
-              {productPromotions != undefined && productPromotions.has('' + itemId) ? (
-                productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular' ? (
+              {productVsPromotion != undefined && productVsPromotion.has('' + itemId) ? (
+                productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
                   <Container style={styles.containerPorcentDiscount}>
                     <CustomText
                       fontSize={theme.fontSize.h6}
@@ -495,10 +496,10 @@ const ProductDetailScreen: React.FC<Props> = ({
                       fontWeight={'bold'}
                       text={
                         'ahorra $' +
-                        (productPromotions != undefined && productPromotions.has('' + itemId)
-                          ? productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular'
+                        (productVsPromotion != undefined && productVsPromotion.has('' + itemId)
+                          ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                             ? (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
-                                productPromotions.get('' + itemId).percentualDiscountValue) /
+                            productVsPromotion.get('' + itemId).percentualDiscountValue) /
                               100
                             : ''
                           : '')
