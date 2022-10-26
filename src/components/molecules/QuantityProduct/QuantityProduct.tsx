@@ -61,7 +61,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: theme.brandColor.iconn_med_grey,
-    borderWidth: moderateScale(1)
+    borderWidth: moderateScale(1), 
+    flex: 1
   },
   containerDelete: {
     justifyContent: 'center',
@@ -79,12 +80,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   touchableContainerLeft:{
-    width:50, 
-    height:22.5
   },
   touchableContainerRight:{
-    width:50,
-    height:22.5,
-    alignItems:'flex-end'
+    alignItems:'flex-end',
   }
 });

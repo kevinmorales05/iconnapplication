@@ -34,7 +34,6 @@ import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultA
 import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 
-const CONTAINER_HEIGHT = Dimensions.get('window').height + 70;
 
 interface Props {
   itemId: string;
@@ -620,7 +619,7 @@ const ProductDetailScreen: React.FC<Props> = ({
       </ScrollView>
       <Container style={{ marginBottom: 20, paddingHorizontal: 16, paddingTop: 10, height: '15%' }}>
         {cartItemQuantity > 0 ? (
-          <Container style={{height: 30}} >
+          <Container style={{height: 50, alignItems:'stretch' }} >
             <QuantityProduct
               quantity={cartItemQuantity}
               onPressAddQuantity={() => {
