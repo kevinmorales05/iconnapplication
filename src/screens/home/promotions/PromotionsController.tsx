@@ -41,8 +41,10 @@ const PromotionsController: React.FC = () => {
       });
 
 
+      console.log('promotionsssss...',promotions.length);
       let prodList = promotions;
       let prodListWithQuantities = [];
+      if(prodList.length>0){
       prodList.map((prod) => {
         const prodObj = {
           priceWithDiscount: prod.priceWithDiscount, name: prod.name, oldPrice: prod.oldPrice, price: prod.price,
@@ -51,6 +53,7 @@ const PromotionsController: React.FC = () => {
         }
         prodListWithQuantities.push(prodObj);
       });
+      }
 
       setProductFromPromotion(prodListWithQuantities);
       setCartItems(itmMapFromCart);

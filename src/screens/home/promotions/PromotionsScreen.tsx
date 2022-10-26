@@ -63,7 +63,7 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose, productsList, promoti
 
   useEffect(() => {
     fetchData();
-  }, [productsList, cart]);
+  }, [cart, productsList]);
 
   const _renderItem = ({ item }) => {
     return (
