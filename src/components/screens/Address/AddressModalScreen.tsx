@@ -153,7 +153,7 @@ const AddressModalScreen: React.FC<Props> = ({
           >
             <Container flex>
               <Container>
-                <Container row crossAlignment="end" space="between">
+                <Container row style={Platform.OS === 'android' ? {justifyContent:'space-between'} : {alignItems: 'flex-end', justifyContent:'space-between'}}>
                   <Container style={{ width: '48%' }}>
                     <Input
                       {...register('postalCode')}
@@ -174,7 +174,7 @@ const AddressModalScreen: React.FC<Props> = ({
                       onChangeText={postalCodeValue => validateChangesOnPostalCode(postalCodeValue)}
                     />
                   </Container>
-                  <Container style={{ width: '48%' }}>
+                  <Container style={Platform.OS === 'android' ? { width: '48%', position:'relative', top:32 } : { width: '48%' }}>
                     <Button
                       icon={<Image source={ICONN_ADDRESS_FIND} resizeMode="cover" style={{ width: 28, height: 28, tintColor:'white' }} />}
                       round
