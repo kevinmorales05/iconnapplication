@@ -403,7 +403,7 @@ const ProductDetailScreen: React.FC<Props> = ({
       >
         <Container style={{ backgroundColor: theme.brandColor.white, width: '100%' }}>
           <Container backgroundColor="white">
-            <Container>
+            <Container style={{alignItems:'center', justifyContent:'center'}}>
               <ImagesCarusel
                 imagesList={skusForProductImages}
                 imageSize={240}
@@ -414,6 +414,7 @@ const ProductDetailScreen: React.FC<Props> = ({
             <Container row space="between" style={{ marginTop: 16, width: '100%', paddingHorizontal: 10 }}>
               <Container row>
                 <Rating ratingValue={productRating.average} />
+                <Container style={{marginTop:-3.5, marginLeft:2}}>
                 <TouchableText
                   marginLeft={8}
                   underline
@@ -423,7 +424,8 @@ const ProductDetailScreen: React.FC<Props> = ({
                   fontBold
                   onPress={() => {}}
                   marginTop={8}
-                />
+                  />
+                </Container>
               </Container>
               <Container>
                 <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />

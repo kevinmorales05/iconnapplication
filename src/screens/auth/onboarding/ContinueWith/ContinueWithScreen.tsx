@@ -89,7 +89,7 @@ const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail
           <TouchableText
             underline
             textColor={theme.brandColor.iconn_white}
-            text="Ingresar como invitado"
+            text="Ingresa como invitado"
             typography="h4"
             fontBold
             onPress={onPressContinueAsGuest}
