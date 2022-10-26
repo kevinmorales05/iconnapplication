@@ -455,17 +455,19 @@ const ProductDetailScreen: React.FC<Props> = ({
                 ></TextContainer>
                 {productVsPromotion != undefined && productVsPromotion.has('' + itemId) ? (
                   productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
-                    <Text
-                      style={{
-                        fontWeight: 'bold',
-                        textDecorationLine: 'line-through',
-                        color: theme.brandColor.iconn_grey,
-                        fontSize: theme.fontSize.h3,
-                        marginTop: 11
-                      }}
-                    >
-                      {'$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0)}
-                    </Text>
+                    <Container style={{marginLeft: 15, marginTop:1}}>
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          textDecorationLine: 'line-through',
+                          color: theme.brandColor.iconn_grey,
+                          fontSize: theme.fontSize.h3,
+                          marginTop: 11
+                        }}
+                      >
+                        {'$' + ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'))}
+                      </Text>
+                    </Container>
                   ) : (
                     <TextContainer
                       marginTop={8}
@@ -684,7 +686,8 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(12),
     backgroundColor: theme.brandColor.iconn_green_discount,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop:10
   },
   containerTitle: {
     width: '100%',

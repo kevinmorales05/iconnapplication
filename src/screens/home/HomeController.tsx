@@ -384,7 +384,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         .then(async responseSku => {
           if (responseSku) {
             if (responseSku.length > 0) {
-              pics = imgRoot + responseSku[0].ArchiveId + '-' + responseSku[0].Id + '-';
+              pics = imgRoot + responseSku[0].ArchiveId + '-' + responseSku[0].Id + '-'+'300';
             }
           }
         })
