@@ -306,16 +306,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const getAllPromotions = async () => {
     let allPromotions = [];
     await vtexPromotionsServices.getAllPromotions().then(async promotionsResponse => {
-      console.log('lllllll');
-      console.log(promotionsResponse);
-      console.log('lllllll');
       if (promotionsResponse) {
         const { items } = promotionsResponse;
         items.map((it, index) => {
           if (it.isActive == true) {
-            console.log('activooo:');
-            console.log(it);
-            console.log('activooo:');
             allPromotions.push(it);
           }
         });
@@ -326,33 +320,29 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const giftsPromotionsByCalculatorId = async (idCalculatorConfiguration: string) => {
     let giftsList = [];
-       await vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(async promotionResponse => {
-        console.log('ooooooooooooooooo');
-        console.log(promotionResponse);
-        console.log('ooooooooooooooooo');
+    await vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(async promotionResponse => {
       if (promotionResponse) {
-        const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/";
-        if (promotionResponse.type == 'regular' || promotionResponse.type == 'campaign') {
-            const {skus} = promotionResponse;
-            if(skus.length>0){
-              skus.map((skus) => {
-              giftsList.push({gift: skus.id, name: promotionResponse.name, type:promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue});
-            });
+        if (promotionResponse.isActive) {
+          const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/";
+          if (promotionResponse.type == 'regular' || promotionResponse.type == 'campaign') {
+            const { skus } = promotionResponse;
+            if (skus.length > 0) {
+              skus.map((skus,index) => {
+                giftsList.push({ gift: skus.id, name: promotionResponse.name, type: promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue });
+              });
             }
-          //skus
-        } else if (promotionResponse.type == 'buyAndWin' || promotionResponse.type == 'forThePriceOf') {
-          if (promotionResponse.listSku1BuyTogether) {
-            const {listSku1BuyTogether} = promotionResponse;
-            if(listSku1BuyTogether.length>0){
-              listSku1BuyTogether.map((listSku) => {
-              giftsList.push({gift: listSku.id, name: promotionResponse.name, type:promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue});
-            });
+            //skus
+          } else if (promotionResponse.type == 'buyAndWin' || promotionResponse.type == 'forThePriceOf') {
+            if (promotionResponse.listSku1BuyTogether) {
+              const { listSku1BuyTogether } = promotionResponse;
+              if (listSku1BuyTogether.length > 0) {
+                listSku1BuyTogether.map((listSku, index) => {
+                  giftsList.push({ gift: listSku.id, name: promotionResponse.name, type: promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue });
+                });
+              }
             }
           }
         }
-        console.log('returnssss');
-        console.log(giftsList);
-        console.log('returnssss')
       }
     });
     return giftsList;
@@ -360,35 +350,47 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const getProductPriceById = async (productId: string) => {
     let price = 0;
-    await vtexProductsServices.getProductPriceByProductId(productId).then(async responsePrice => {
-      if (responsePrice) {
-        price = responsePrice.basePrice;
-      }
-    }).catch((error) => console.log(error));
+    try {
+      await vtexProductsServices.getProductPriceByProductId(productId).then(async responsePrice => {
+        if (responsePrice) {
+          price = responsePrice.basePrice;
+        }
+      }).catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
+    }
     return price
   };
 
   const getProductRatingById = async (productId: string) => {
     let rating = 0;
-    await vtexProductsServices.getProductRatingByProductId(productId).then(async responseRating => {
-      if(responseRating){
-        rating = responseRating.average;
-      }
-    }).catch((error) => console.log(error));
+    try {
+      await vtexProductsServices.getProductRatingByProductId(productId).then(async responseRating => {
+        if (responseRating) {
+          rating = responseRating.average;
+        }
+      }).catch((error) => console.log(error));
+    } catch (error) {
+      console.log(error);
+    }
     return rating;
   };
 
   const getPictureByProductId = async (productId: string) => {
     const imgRoot = 'https://oneiconn.vtexassets.com/arquivos/ids/';
-    let pics = ''; 
-    await getSkuFilesById(productId)
-      .then(async responseSku => {
-        if (responseSku) {
-          if (responseSku.length > 0) {
-            pics = imgRoot+responseSku[0].ArchiveId+'-' + responseSku[0].Id + '-';
+    let pics = '';
+    try {
+      await getSkuFilesById(productId)
+        .then(async responseSku => {
+          if (responseSku) {
+            if (responseSku.length > 0) {
+              pics = imgRoot + responseSku[0].ArchiveId + '-' + responseSku[0].Id + '-';
+            }
           }
-        }
-      })
+        })
+    } catch (error) {
+      console.log(error);
+    }
     return pics;
   };
 
@@ -412,11 +414,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       testP[i] = await giftsPromotionsByCalculatorId(allPromotions[i].idCalculatorConfiguration);
       if (testP[i].length>0) {
         for (let j = 0; j < testP[i].length; j++) {
-          console.log('id a buscar productIds[j]' + testP[i][j].gift);
           let price = await getProductPriceById(testP[i][j].gift);
           let rating = await getProductRatingById(testP[i][j].gift);
           let image = await getPictureByProductId(testP[i][j].gift);
-          console.log('price :' + price + ' for ' + testP[i][j].gift);
           await getProductDetailById(testP[i][j].gift).then(responseProductDetail => {
             if (responseProductDetail) {
               productPromosMap.set(testP[i][j].gift, {
