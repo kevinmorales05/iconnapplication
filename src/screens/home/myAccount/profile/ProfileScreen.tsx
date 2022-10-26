@@ -30,6 +30,8 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { email, name, telephone, gender, birthday, lastName } = user;
   const insets = useSafeAreaInsets();
+  const actualDate = new Date();
+  console.log('FECHA', actualDate);
 
   const {
     control,
@@ -182,6 +184,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
           textColor={theme.brandColor.iconn_accent_principal}
+          maximumDate={actualDate}
         />
 
         <DatePicker name="birthday" control={control} onPressDatePickerIcon={showDatePicker} error={errors.birthday?.message} />
