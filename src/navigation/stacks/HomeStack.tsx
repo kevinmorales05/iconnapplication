@@ -159,7 +159,7 @@ const HomeStack: React.FC = () => {
         component={RecomendedForYouScreen}
         options={{
           headerShown: true,
-          headerTitle: 'Recomendados para tí',
+          headerTitle: 'Recomendados para ti',
           headerRight: () => <BasketCounter />
         }}
       />

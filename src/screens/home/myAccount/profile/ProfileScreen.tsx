@@ -101,7 +101,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
       showsVerticalScrollIndicator={false}
     >
       <Container>
-        <TextContainer typography="h6" fontBold text={`Nombre (s)`} marginTop={0} />
+        <TextContainer typography="h6" fontBold text={`Nombre(s)`} marginTop={0} />
 
         <Input
           {...register('name')}
@@ -118,7 +118,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           onSubmitEditing={() => surnameRef.current?.focus()}
         />
 
-        <TextContainer typography="h6" fontBold text={`Apellido (s)`} marginTop={21} />
+        <TextContainer typography="h6" fontBold text={`Apellido(s)`} marginTop={21} />
 
         <Input
           {...register('lastName')}
