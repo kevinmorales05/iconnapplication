@@ -81,7 +81,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { getFavorites } = useFavorites();
   const { email } = user;
   const [productsList, setProductsList] = useState([]);
-  const [productPromotion, setProductPromotion] = useState<Object>();
+  const [productPromotion, setProductPromotion] = useState<Map<string,Object>>();
   const [promotionsCategory, setPromotionsCategory] = useState<Object>();
 
   useEffect(() => {
@@ -302,10 +302,47 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
 
+  const getAllPromotion = async () => {
+    let allPromotions = [];
+    vtexPromotionsServices.getAllPromotions().then(promotionsResponse => {
+      console.log('lllllll');
+      console.log(promotionsResponse);
+      console.log('lllllll');
+      if (promotionsResponse) {
+        const { items } = promotionsResponse;
+        items.map((it, index) => {
+          if (it.isActive == true) {
+            allPromotions.push(it);
+          }
+        });
+      }
+    });
+    console.log('aaaaa');
+    console.log(allPromotions);
+    console.log('aaaaa');
+    return allPromotions;
+  }
+
+  const giftsPromotionsByCalculatorId = async (idCalculatorConfiguration: string) => {
+    let giftsList = []; 
+    await vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(promotionResponse => {
+        
+      if (promotionResponse) {
+        let testproductVsPromotions = new Map();
+        const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/";
+        if (promotionResponse.skusGift) {
+          const { gifts } = promotionResponse.skusGift;
+          gifts.map((gift) => {
+            giftsList.push(gift);
+          });
+        }
+      }
+    });
+    return giftsList;
+  };
+
   const fetchPromotionData = useCallback(async () => {
     console.log('fetchPromotions...');
-    //solo este tiene promociones con productos 34012fc8-f2d5-40ad-929e-b6c348b16791
-    //let productVsPromotions = [Object];
     const { items } = cart;
     let itmMapFromCart = new Map();
     if (items != undefined) {
@@ -313,130 +350,14 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         itmMapFromCart.set(item.productId, { id: item.productId, quantity: item.quantity, seller: item.seller });
       });
     }
+    let testtt = [];
+    let testProd = [];
 
-    let productVsPromotions = new Map();
-    vtexPromotionsServices.getAllPromotions().then(promotionsResponse => {// todas las promociones
-      //IB AQUI
-      let productList = [];
-      console.log('lllllll');
-      console.log(promotionsResponse);
-      console.log('lllllll');
-      if (promotionsResponse) {
-        const { items } = promotionsResponse;
-        console.log('tams items: ' + items.length);
-        if (items.length > 0) {
-          items.map((item, indx) => {
-            console.log('Activoooo:: ', item.isActive);
-            if (item.isActive == true) {
-              console.log('::::>', item.idCalculatorConfiguration);
-              vtexPromotionsServices.getPromotionById(item.idCalculatorConfiguration).then(promotionResponse => {// promociones por id de categoria de promocion
-                if (promotionResponse) {
-                  const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/";
-                  let productImg = '';
-                  if (promotionResponse.skusGift) {
-                    const { gifts } = promotionResponse.skusGift;
-                    console.log('(' + indx + ') item.idCalculatorConfiguration222: ' + item.idCalculatorConfiguration + ' gifts tam: ' + gifts.length);
-                    console.log(item.idCalculatorConfiguration + ' longitud:   ' + gifts.length);
-                    if (gifts) {let prodsPromotions = new Map();
-                      if (gifts.length > 0) {
-                        let products = [];
-                        console.log('****************************************222');
-                        gifts.map((gift, index) => {
-                          console.log('indexxxxx:' + index);
-                          
-                          prodsPromotions.set(gift.id, { productId: gift.id, name: gift.name, quantity: gift.quantity, promotionType: promotionResponse.type, promotionName: promotionResponse.name, percentualDiscountValue: promotionResponse.percentualDiscountValue });
-                          //console.log('indeyyyyy:' + index);
-                          console.log('indeyyyyy:' + index);
-/*
-                          console.log('..........');
-                          console.log({ productId: gift.id, name: gift.name, quantity: gift.quantity, promotionType: promotionResponse.type, promotionName: promotionResponse.name, percentualDiscountValue: promotionResponse.percentualDiscountValue });
-                          console.log('..........');
+    let allPromotions = getAllPromotion();
+    console.log('allll');
+    console.log(allPromotions);
+    console.log('allll');
 
-                            productList.push({
-                              rating: 10, price: 10, PriceWithDiscount: 1,
-                              name: 'xxx', url: 'productImg',
-                              quantity: 10, productId: '10', oldPrice: '10'
-                            });*/
-                          console.log('gift.id: ',gift.id);
-                          getProductDetailById(gift.id)
-                            .then(responseProductDetail => {
-                              console.log('productDetailEndpoint222:::',gift.id);
-                              console.log(JSON.stringify(responseProductDetail));
-                              console.log('productDetailEndpoint222:::');
-                              if (responseProductDetail) {
-                                vtexProductsServices
-                                  .getProductPriceByProductId(gift.id)
-                                  .then(async responsePrice => {
-                                    console.log('priceEndpoint222:::',gift.id);
-                                    console.log(JSON.stringify(responsePrice, null, 4));
-                                    console.log('priceEndpoint222:::',gift.id);
-                                    if (responsePrice) {
-                                      vtexProductsServices
-                                      .getProductRatingByProductId(gift.id)
-                                      .then(async responseRating => {
-                                        if(responseRating){
-                                          console.log('rating222...');
-                                          console.log(JSON.stringify(responseRating,null, 4));
-                                          console.log('rating222...');
-                                          products.push({
-                                            rating: responseRating.average, price: responsePrice.basePrice, PriceWithDiscount: 1,
-                                            name: responseProductDetail.Name, url: 'productImg',
-                                            quantity: ( itmMapFromCart.has(gift.id) ? itmMapFromCart.get(gift.id).quantity:0 ), productId: responseProductDetail.Id, oldPrice: '10'
-                                          });
-                                          console.log('despues1');
-                                        }
-                                      })
-                                      .catch(error => console.log(error));
-                                    }else{
-                                      console.log('sin precios ini');
-                                      products.push({
-                                        rating: 0, price: 1000, PriceWithDiscount: 1,
-                                        name: 'prueba', url: 'productImg',
-                                        quantity: 9, productId: '9', oldPrice: '10'
-                                      });
-                                      console.log('sin precios fin');
-                                    }
-                                  })
-                                  .catch(error => console.log(error));
-                              }
-                            })
-                            .catch(error => console.log(error));
-                            //productVsPromotions = prodsPromotions;
-                        });
-                        productList.concat(products);
-                        console.log('hhhhh0001');
-                        console.log(productList);
-                        dispatch(setProductVsPromotions(prodsPromotions));
-                        dispatch(setPromotions(productList))
-                        console.log('hhhhh111');
-                        console.log(prodsPromotions);
-                        console.log('hhhhh22');
-                        console.log(productList);
-                        console.log('hhhhh33');
-                        console.log('****************************************2222');
-
-                      }
-                    }
-                  }
-                }
-                console.log('pomossss');
-                console.log(productVsPromotions);
-                console.log('pomossss');
-              }).catch(error => console.log(error));
-            }
-          });
-        }
-      }
-
-      console.log('kkk');
-      console.log(JSON.stringify(items, null, 4));
-      console.log('kkk');
-    }).catch(error => console.log(error));
-
-console.log('pomitos');
-console.log(productVsPromotions);
-console.log('pomitos');
-    
     let categories = [];
     categories.push({ id: "0", name: 'Todo' });
     categories.push({ id: "1", name: 'Botanas' });

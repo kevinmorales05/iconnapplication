@@ -46,6 +46,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   const [withoutStockMap, setWithoutStockMap] = useState(undefined);
   const [requestList, setRequestList] = useState([]);
   const [subTotalCalculated, setSubTotalCalculated] = useState(0);
+  const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
 
   const fetchData = useCallback(async () => {
     console.log('fetchData...');
@@ -80,8 +81,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               value.hasErrorMessage = true;
               value.errorMessage = withoutStockM.get(index);
             } else {
-              console.log(value.priceDefinition.total);
-              calculated = calculated + value.priceDefinition.total;
+              console.log('real Value: ' + value.priceDefinition.total);
+              calculated = calculated + ((productVsPromotion != undefined && productVsPromotion.has('' + value.id)) ?
+                ((value.priceDefinition.total / 100) - (((productVsPromotion.get('' + value.id).percentualDiscountValue) * (value.priceDefinition.total / 100)) / 100)) :
+                (value.priceDefinition.total / 100));
               value.hasErrorMessage = false;
               value.errorMessage = '';
             }
@@ -559,21 +562,39 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 <></>
               ) : (
                 <TextContainer
-                  text={'$' + (value.priceDefinition.total / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                  text={'$' + ( (productVsPromotion != undefined && productVsPromotion.has('' + value.id))? ((value.price / 100) - ((productVsPromotion.get('' + value.id).percentualDiscountValue * (value.price / 100)) / 100)) :(value.priceDefinition.total / 100) )
+                  .toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                   fontBold
                   marginLeft={10}
                 ></TextContainer>
               )}
             </Container>
           </Container>
-          <Container style={{ marginTop: 2 }}>
-            <TextContainer
-              numberOfLines={1}
-              text={'$' + (value.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'}
-              textColor="grey"
-              fontSize={12}
-              marginTop={4}
-            ></TextContainer>
+          <Container row style={{ marginTop: 2 }}>
+            <Container>
+            <Text
+              style={{
+                textDecorationLine: (productVsPromotion != undefined && productVsPromotion.has('' + value.id))?'line-through':'none',
+                color: theme.brandColor.iconn_grey,
+                fontSize: theme.fontSize.h6,
+                marginTop: 3
+              }}
+            >
+              {'$' + (value.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ( (productVsPromotion != undefined && productVsPromotion.has('' + value.id)) ?'':' c/u')}
+            </Text>
+            </Container>
+            {productVsPromotion != undefined && productVsPromotion.has('' + value.id) ?
+              <Container style={{ marginLeft:10 }}>
+                <TextContainer
+                  numberOfLines={1}
+                  text={'$' + ((value.price / 100) - ((productVsPromotion.get('' + value.id).percentualDiscountValue * (value.price / 100)) / 100))
+                    .toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'}
+                  textColor="grey"
+                  fontSize={12}
+                  marginTop={4}
+                ></TextContainer>
+              </Container> : <></>
+            }
           </Container>
           <Container row crossCenter space="between" style={{ width: '73%', marginTop: 4 }}>
             <Button
@@ -715,7 +736,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
       <Container row space="between" style={{ width: '90%' }}>
         <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
         <CustomText
-          text={'$' + (totalizers != undefined ? subTotalCalculated / 100 : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'}
+          text={'$' + (totalizers != undefined ? subTotalCalculated : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'}
           fontSize={18}
           fontBold
         ></CustomText>
