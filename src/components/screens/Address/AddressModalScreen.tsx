@@ -5,7 +5,7 @@ import { CustomModal, Container, Input, Select, CustomText, ActionButton } from 
 import { Button, TextContainer } from '../../molecules';
 import { ICONN_ADDRESS_FIND } from 'assets/images';
 import { FieldValues, useForm } from 'react-hook-form';
-import { numericWithSpecificLenght, openField, alphaNumericWithSpacesAndDot, alphaNumericWithoutSpaces, NRalphaNumericWithSpacesAndDot } from 'utils/rules';
+import { numericWithSpecificLenght, openField, alphaNumericWithSpacesAndDot, alphaNumericWithoutSpaces, NRalphaNumericWithSpacesAndDot, openFieldNotRequire } from 'utils/rules';
 import { Address, PostalCodeInfo } from 'rtk';
 import { CrudType } from '../../types/crud-type';
 import theme from 'components/theme/theme';
@@ -271,7 +271,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   boldLabel
                   maxLength={50}
                   onSubmitEditing={() => tagRef.current?.focus()}
-                  rules={openField(3)}
+                  rules={openFieldNotRequire(3)}
                   error={errors.reference?.message}
                 />
 
