@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView, Image, Text, Dimensions } from 'react-native';
 import { CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage } from 'components';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
-import { ICONN_BASKET } from 'assets/images';
+import { ICONN_REVERSE_BASKET } from 'assets/images';
 import { ImagesCarusel } from 'components/molecules/ImagesCarusel';
 import { FavoriteButton } from 'components/molecules';
 import { CardProduct } from 'components/organisms/CardProduct';
@@ -641,7 +641,7 @@ const ProductDetailScreen: React.FC<Props> = ({
           </Container>
         ) : (
           <Button
-            icon={<Image source={ICONN_BASKET} tintColor="white" resizeMode="cover" style={{ width: 28, height: 28 }} />}
+            icon={<Image source={ICONN_REVERSE_BASKET}  resizeMode="cover" style={{ width: 28, height: 28 }} />}
             round
             fontBold
             fontSize="h4"

@@ -39,6 +39,7 @@ import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import { vtexPromotionsServices } from 'services/vtexPromotions.services';
 import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
 import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
+import { LengthType } from '../../components/types/length-type';
 
 const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
 const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
@@ -325,35 +326,41 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const giftsPromotionsByCalculatorId = async (idCalculatorConfiguration: string) => {
     let giftsList = [];
-    //let prodsIds = '';
        await vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(async promotionResponse => {
+        console.log('ooooooooooooooooo');
+        console.log(promotionResponse);
+        console.log('ooooooooooooooooo');
       if (promotionResponse) {
-        let testproductVsPromotions = new Map();
         const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/";
-        if (promotionResponse.skusGift) {
-          const { gifts } = promotionResponse.skusGift;
-          if(gifts.length>0){
-          gifts.map((gift, index) => {
-            giftsList.push({gift: gift.id, name: promotionResponse.name, type:promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue});
-            //prodsIds = prodsIds+(index!=0?',':'')+(gift.id);
-          });
-          console.log('returnssss');
-          console.log(giftsList);
-          console.log('returnssss');
-          }    
+        if (promotionResponse.type == 'regular' || promotionResponse.type == 'campaign') {
+            const {skus} = promotionResponse;
+            if(skus.length>0){
+              skus.map((skus) => {
+              giftsList.push({gift: skus.id, name: promotionResponse.name, type:promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue});
+            });
+            }
+          //skus
+        } else if (promotionResponse.type == 'buyAndWin' || promotionResponse.type == 'forThePriceOf') {
+          if (promotionResponse.listSku1BuyTogether) {
+            const {listSku1BuyTogether} = promotionResponse;
+            if(listSku1BuyTogether.length>0){
+              listSku1BuyTogether.map((listSku) => {
+              giftsList.push({gift: listSku.id, name: promotionResponse.name, type:promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue});
+            });
+            }
+          }
         }
+        console.log('returnssss');
+        console.log(giftsList);
+        console.log('returnssss')
       }
     });
-    //return prodsIds;
     return giftsList;
   };
 
   const getProductPriceById = async (productId: string) => {
     let price = 0;
     await vtexProductsServices.getProductPriceByProductId(productId).then(async responsePrice => {
-      console.log('price');
-      console.log(responsePrice);
-      console.log('price');
       if (responsePrice) {
         price = responsePrice.basePrice;
       }
@@ -364,10 +371,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const getProductRatingById = async (productId: string) => {
     let rating = 0;
     await vtexProductsServices.getProductRatingByProductId(productId).then(async responseRating => {
-      console.log('nnnn');
-      console.log(responseRating);
-      console.log('nnnn');
-      rating = 0;
+      if(responseRating){
+        rating = responseRating.average;
+      }
     }).catch((error) => console.log(error));
     return rating;
   };
@@ -377,15 +383,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     let pics = ''; 
     await getSkuFilesById(productId)
       .then(async responseSku => {
-        let skuForImages = [];
         if (responseSku) {
           if (responseSku.length > 0) {
             pics = imgRoot+responseSku[0].ArchiveId+'-' + responseSku[0].Id + '-';
-            /*
-            responseSku.map(sku => {
-              skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
-            });
-            console.log( 'ESTO ES', skuForImages);*/
           }
         }
       })
@@ -407,11 +407,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     let productsBuilded = [];
     let productPromosMap = new Map();
     let testP = [];
+    try {
     for (let i = 0; i < allPromotions.length; i++) {
       testP[i] = await giftsPromotionsByCalculatorId(allPromotions[i].idCalculatorConfiguration);
-      console.log('ddddd');
-      console.log(testP[i]);
-      console.log('ddddd');
       if (testP[i].length>0) {
         for (let j = 0; j < testP[i].length; j++) {
           console.log('id a buscar productIds[j]' + testP[i][j].gift);
@@ -420,24 +418,23 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
           let image = await getPictureByProductId(testP[i][j].gift);
           console.log('price :' + price + ' for ' + testP[i][j].gift);
           await getProductDetailById(testP[i][j].gift).then(responseProductDetail => {
-            console.log('tttttttt');
-            console.log(responseProductDetail);
             if (responseProductDetail) {
-              console.log(testP[i].gift);
               productPromosMap.set(testP[i][j].gift, {
                 name: responseProductDetail.Name, percentualDiscountValue: testP[i][j].percentualDiscountValue,
                 productId: testP[i][j].gift, promotionName: testP[i][j].name, promotionType: testP[i][j].type, quantity: 1
               });
               productsBuilded.push({
-                priceWithDiscount: 1, name: responseProductDetail.Name, oldPrice: "10", price: price, productId: testP[i][j].gift,
+                priceWithDiscount: 1, name: responseProductDetail.Name, price: price, productId: testP[i][j].gift,
                 quantity: 0, rating: rating, image: image
               });
             }
-            console.log('tttttttt');
           }).catch(error => console.log(error));
         }
       }
     }
+  } catch (error) {
+    console.log(error);  
+  }
 
     console.log('fffff');
     console.log(productsBuilded);
