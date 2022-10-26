@@ -10,29 +10,33 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../navigation/types';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { RootState, TabItem, useAppSelector } from 'rtk';
-import { getProductDetailById,getSkuFilesById } from 'services/vtexProduct.services';
+import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
+import { ICONN_BACKGROUND_IMAGE } from 'assets/images';
 
 interface Props {
   onPressClose: () => void;
   productsList: [];
   promotionsCategory: [];
-  productPromotions: [];
+  productPromotions: Map<string, Object>;
 }
 
 const PromotionsScreen: React.FC<Props> = ({ onPressClose, productsList, promotionsCategory, productPromotions }) => {
 
   const { updateShoppingCartProduct } = useShoppingCart();
   const [itemList, setItemList] = useState([]);
+  const { cart } = useAppSelector((state: RootState) => state.cart);
+  const [productPromotionList, setProductPromotionList] = useState([]);
+  const [cartItems, setCartItems] = useState<Map<string,Object>>();
 
   const onPressBack = () => {
-   // navigate('SearchProducts');
+    // navigate('SearchProducts');
   };
 
   const onPressTab = (cateogry: TabItem) => {
-/*    if (cateogry.id) {
-      console.log('[onPressTab]', cateogry);
-      setIdCategorySelected(cateogry.id);
-    }*/
+    /*    if (cateogry.id) {
+          console.log('[onPressTab]', cateogry);
+          setIdCategorySelected(cateogry.id);
+        }*/
   };
 
   const loadMoreItem = async () => {
@@ -40,14 +44,34 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose, productsList, promoti
   };
 
   const _onRefresh = () => {
-//    console.log('_onRefresh');
-//    setRefreshing(true);
-//    productsEffect();
+    //    console.log('_onRefresh');
+    //    setRefreshing(true);
+    //    productsEffect();
   };
 
-  useEffect(() => {
-    setItemList(productsList);
+  const fetchData = useCallback(() => {
+    const { items } = cart;
+    let itmMapFromCart = new Map();
+    if (items != undefined) {
+      console.log('tam items...',items.length);
+      items.map((item) => {
+        itmMapFromCart.set(item.productId, { id: item.productId, quantity: item.quantity, seller: item.seller });
+      });
+    }
+    setCartItems(itmMapFromCart);
+
+    let prodLst = productsList;
+    if (prodLst.length > 0) {
+      prodLst.map((prd) => {
+        productsList.quantity = ((cartItems != undefined && cartItems.has(prd.productId)) ? cartItems.get(prd.productId).quantity : 0);
+      });
+    }
+    setProductPromotionList(productsList);
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [cart, productsList]);
 
   const _renderItem = ({ item }) => {
     return (
@@ -57,8 +81,8 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose, productsList, promoti
         price={item.price}
         porcentDiscount={item.porcentDiscount}
         name={item.name}
-        image={item.image}
-        quantity={item.quantity}
+        image={{ uri: item.image }}
+        quantity={ item.quantity }
         productId={item.productId}
         oldPrice={item.oldPrice}
         onPressAddCart={() => {
@@ -83,48 +107,48 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose, productsList, promoti
     <Container row space="between" width={'100%'} style={{ flexWrap: 'wrap' }}>
       <Container style={styles.containerHeader}>
         <SearchBar isButton onPressSearch={onPressBack} onChangeTextSearch={() => { }} />
-      <Container style={{ marginTop: moderateScale(10) }}>
-        <TabAnimatable items={promotionsCategory} onPressItem={onPressTab} />
-      </Container>
+        <Container style={{ marginTop: moderateScale(10) }}>
+          <TabAnimatable items={promotionsCategory} onPressItem={onPressTab} />
+        </Container>
       </Container>
       <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
-      { itemList!=undefined && itemList.length>0 ?
-      (
-      <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
-                  <FlatList
-                    data={itemList}
-                    renderItem={_renderItem}
-                    onEndReachedThreshold={0.1}
-                    onEndReached={loadMoreItem}
-                    refreshing={false}
-                    onRefresh={() => _onRefresh()}
-                    contentContainerStyle={{
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      justifyContent: 'space-between',
-                      paddingBottom: moderateScale(50)
-                    }}
-                  />
-                </Container>):
-                (
-                  <Container width={'100%'} height={'100%'} center>
-                  <Container width={'80%'} height={'40%'} center style={{ justifyContent: 'flex-end' }}>
-                    <SearchLoupeDeleteSvg size={moderateScale(50)} />
-                    <Container style={{ marginTop: moderateScale(13) }}>
-                      <CustomText text="Sin productos" fontWeight="900" fontSize={theme.fontSize.h4} />
-                    </Container>
-                    <Container style={{ marginTop: moderateScale(13) }}>
-                      <CustomText
-                        text="Por el momento no hay ningún producto en promoción"
-                        fontSize={theme.fontSize.h6}
-                        fontWeight={'500'}
-                        textAlign={'center'}
-                      />
-                    </Container>
-                  </Container>
+        {productPromotionList != undefined && productPromotionList.length > 0 ?
+          (
+            <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
+              <FlatList
+                data={productPromotionList}
+                renderItem={_renderItem}
+                onEndReachedThreshold={0.1}
+                onEndReached={loadMoreItem}
+                refreshing={false}
+                onRefresh={() => _onRefresh()}
+                contentContainerStyle={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-between',
+                  paddingBottom: moderateScale(50)
+                }}
+              />
+            </Container>) :
+          (
+            <Container width={'100%'} height={'100%'} center>
+              <Container width={'80%'} height={'40%'} center style={{ justifyContent: 'flex-end' }}>
+                <SearchLoupeDeleteSvg size={moderateScale(50)} />
+                <Container style={{ marginTop: moderateScale(13) }}>
+                  <CustomText text="Sin productos" fontWeight="900" fontSize={theme.fontSize.h4} />
                 </Container>
-                )
-          }
+                <Container style={{ marginTop: moderateScale(13) }}>
+                  <CustomText
+                    text="Por el momento no hay ningún producto en promoción"
+                    fontSize={theme.fontSize.h6}
+                    fontWeight={'500'}
+                    textAlign={'center'}
+                  />
+                </Container>
+              </Container>
+            </Container>
+          )
+        }
       </Container>
     </Container>
 

@@ -64,7 +64,7 @@ const ShopCartController: React.FC = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <ShopCartScreen messageType={messageType} countProducts={countProducts} cartItems={cartItems} routes={routes} onPressCheckout={goToCheckout} onPressSeeMore={() => goBack()} />
+      <ShopCartScreen messageType={messageType} countProducts={countProducts} cartItems={cartItems} routes={routes} onPressCheckout={goToCheckout} onPressSeeMore={() => navigate('Home',{ screen: 'CategoriesScreen' })} />
     </SafeArea>
   );
 };

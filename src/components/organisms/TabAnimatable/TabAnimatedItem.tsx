@@ -15,6 +15,7 @@ interface Props {
 const TabAnimatedItem: React.FC<Props> = ({ data, position, isSelected, onPressItem }) => {
   return (
     <Touchable
+      opacityEffect={true}
       onPress={() => {
         onPressItem(data);
       }}

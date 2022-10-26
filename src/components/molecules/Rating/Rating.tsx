@@ -13,7 +13,7 @@ interface RatingProps {
 }
 
 const Rating: React.FC<RatingProps> = ({ ratingValue, ratingComponent, starSize }: RatingProps) => {
-  const rating = ratingValue ? ratingValue : 5;
+  const rating = ratingValue ? ratingValue : 0;
   const arr: number[] = [1, 2, 3, 4, 5];
   const ratingToFill = Number.parseInt(rating + '');
 

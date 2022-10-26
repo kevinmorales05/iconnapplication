@@ -24,7 +24,7 @@ const CardHorizontal: React.FC<CardHorizontalProps> = ({ text, image, onPress }:
 
   return (
     <>
-      <Touchable onPress={onPress}>
+      <Touchable opacityEffect={true} onPress={onPress}>
         <Container row space="between" crossCenter center style={taxInfoStyle}>
           <Container flex crossCenter height={'100%'}>
             <Container style={{ marginLeft: moderateScale(16), marginBottom: moderateScale(12) }}>

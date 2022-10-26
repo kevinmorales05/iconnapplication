@@ -1,22 +1,33 @@
 import React from 'react';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
-import { useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState } from 'rtk';
+import { useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState, useAppSelector, RootState } from 'rtk';
 import DeleteAccountScreen from './DeleteAccountScreen';
-import { authServices } from 'services';
+import { authServices, vtexDocsServices } from 'services';
 
 const DeleteAccountController: React.FC = () => {
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+
   const logOut = async () => {
-    try {
-      await authServices.logOutUser();
-    } catch (error) {
-      console.log('LOGOUT ERROR', error);
-    } finally {
-      dispatch(setAppInitialState());
-      dispatch(setAuthInitialState());
-      dispatch(setGuestInitialState());
-      dispatch(setInvoicingInitialState());
+    const dataUser = {
+      email: user.email,
+      name: user.name,
+      userId: user.userId,
+      clientId: `CL-${user.id}`
+    }
+    const response = await vtexDocsServices.createDoc('CD', dataUser);
+    if(!!response.DocumentId){
+      try {
+        await authServices.logOutUser();
+      } catch (error) {
+        console.log('LOGOUT ERROR', error);
+      } finally {
+        dispatch(setAppInitialState());
+        dispatch(setAuthInitialState());
+        dispatch(setGuestInitialState());
+        dispatch(setInvoicingInitialState());
+      }
     }
   };
 

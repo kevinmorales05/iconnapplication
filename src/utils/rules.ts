@@ -206,6 +206,16 @@ export const openField = (lenght: number): RegisterOptions => ({
 });
 
 /**
+ * Function to validate an open field with minimum lenght and no white spaces.
+ */
+ export const openFieldNotRequire = (lenght: number): RegisterOptions => ({
+  minLength: {
+    value: lenght,
+    message: `Longitud inválida.`
+  }
+});
+
+/**
  * Function to validate a field with emails list.
  */
 export const emailsList = (lenght: number): RegisterOptions => ({

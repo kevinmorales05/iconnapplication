@@ -67,6 +67,8 @@ const CardProduct: React.FC<CardProductProps> = ({
   onPressOut,
   productPromotions
 }: CardProductProps) => {
+  const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
+
   const validateCategoryForAddItem = () => {
     let isAdultInProductSpecification = false
       getProductSpecification(productId).then(producSpecificationResponse => {
@@ -222,24 +224,25 @@ const CardProduct: React.FC<CardProductProps> = ({
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
           <Container row width={'100%'} space="between">
             <Container flex width={'100%'}>
-              {productPromotions != undefined && productPromotions.has('' + productId) ? (
-                productPromotions.get('' + productId).promotionType == 'buyAndWin' ||
-                productPromotions.get('' + productId).promotionType == 'forThePriceOf' ||
-                productPromotions.get('' + productId).promotionType == 'campaign' ||
-                productPromotions.get('' + productId).promotionType == 'regular' ? (
-                  <Container style={styles.containerPorcentDiscount}>
+              {!!productVsPromotion && productVsPromotion.has('' + productId) ? (
+                productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
+                productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ||
+                productVsPromotion.get('' + productId).promotionType == 'campaign' ||
+                productVsPromotion.get('' + productId).promotionType == 'regular' ? (
+                  <Container style={productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
+                  productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ?styles.containerPromotionName: styles.containerPorcentDiscount}>
                     <CustomText
                       fontSize={theme.fontSize.h6}
                       textColor={theme.brandColor.iconn_green_original}
                       fontWeight={'bold'}
                       text={
-                        productPromotions != undefined && productPromotions.has('' + productId)
-                          ? productPromotions.get('' + productId).promotionType == 'buyAndWin' ||
-                            productPromotions.get('' + productId).promotionType == 'forThePriceOf'
-                            ? productPromotions.get('' + productId).promotionName
-                            : productPromotions.get('' + productId).promotionType == 'campaign' ||
-                              productPromotions.get('' + productId).promotionType == 'regular'
-                            ? '-' + productPromotions.get('' + productId).percentualDiscountValue + '%'
+                        !!productVsPromotion && productVsPromotion.has('' + productId)
+                          ? productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
+                          productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
+                            ? productVsPromotion.get('' + productId).promotionName
+                            : productVsPromotion.get('' + productId).promotionType == 'campaign' ||
+                            productVsPromotion.get('' + productId).promotionType == 'regular'
+                            ? '-' + productVsPromotion.get('' + productId).percentualDiscountValue + '%'
                             : ''
                           : ''
                       }
@@ -262,7 +265,7 @@ const CardProduct: React.FC<CardProductProps> = ({
             onPress={() => {
               dispatch(setDetailSelected(productId));
               console.log('DETAILID', productId);
-              navigate('ProductDetail', { productIdentifier: productId, productPromotions: productPromotions });
+              navigate('ProductDetail', { productIdentifier: productId, productPromotions: productVsPromotion });
             }}
           >
             <Container style={styles.containerTitle}>
@@ -270,7 +273,7 @@ const CardProduct: React.FC<CardProductProps> = ({
             </Container>
             <Rating ratingValue={ratingValue} />
             <Container style={styles.containerPrice}>
-              <PriceWithDiscount price={price.toFixed(2)} oldPrice={oldPrice} productPromotions={productPromotions} productId={productId} />
+              <PriceWithDiscount price={price.toFixed(2)} oldPrice={oldPrice} productPromotions={productVsPromotion} productId={productId} />
             </Container>
           </Touchable>
         </Container>
@@ -327,6 +330,14 @@ const styles = StyleSheet.create({
   },
   containerPorcentDiscount: {
     width: moderateScale(44),
+    height: moderateScale(23),
+    borderRadius: moderateScale(12),
+    backgroundColor: theme.brandColor.iconn_green_discount,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  containerPromotionName: {
+    width: moderateScale(104),
     height: moderateScale(23),
     borderRadius: moderateScale(12),
     backgroundColor: theme.brandColor.iconn_green_discount,
