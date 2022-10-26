@@ -1,32 +1,25 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { Dimensions, StyleSheet, FlatList, View } from 'react-native';
+import { Dimensions, StyleSheet, FlatList } from 'react-native';
 import {
   ExistingProductInCartInterface,
   getProductPriceByProductIdThunk,
   getProductRatingByProductIdThunk,
-  getProductsByCategoryAndFiltersItemsThunk,
   ProductInterface,
-  ProductPriceResponseInterface,
-  ProductRaitingResponseInterface,
   ProductSearchItemInterface,
   RootState,
-  TabItem,
   useAppDispatch,
   useAppSelector
 } from 'rtk';
-import { BasketCounter, Button, CardProduct, Container, CustomText, SafeArea, SearchBar, TabAnimatable, Touchable } from 'components';
+import { BasketCounter, Button, CardProduct, Container, CustomText, SafeArea, SearchBar, Touchable } from 'components';
 import Feather from 'react-native-vector-icons/Feather';
 import theme from 'components/theme/theme';
-import { ProductsByCategoryFilter } from 'rtk/types/category.types';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
-import { getProductDetailById } from 'services/vtexProduct.services';
-import { vtexUserServices } from 'services';
 import { useLoading } from 'context';
 
 const SearchProductResult: React.FC = () => {
@@ -202,7 +195,7 @@ const SearchProductResult: React.FC = () => {
                   fontSize={theme.fontSize.h6}
                 />
               </Container>
-              <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
+              <Container height={verticalScale(575)} width={'100%'}>
                 <FlatList
                   data={productsRender}
                   renderItem={_renderItem}

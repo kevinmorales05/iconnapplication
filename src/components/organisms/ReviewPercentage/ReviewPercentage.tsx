@@ -48,7 +48,7 @@ return(
             <TextContainer text={`Calificaciones de clientes`} fontBold fontSize={theme.fontSize.h4} lineHeight={theme.fontSize.h2}/>
             <Container row style={{marginTop:16}}>
               <Container style={{marginTop:-10, marginLeft:-2}}>
-                <Rating ratingValue={average ? average : 1} starSize={theme.iconSize.small} ratingComponent/>
+                <Rating ratingValue={average ? average : 0} starSize={theme.iconSize.small} ratingComponent/>
               </Container>
               <Container style={{marginLeft:8}} crossCenter>
               <TextContainer text={`${average ? average : 0} de 5`} fontBold fontSize={theme.fontSize.h5}/>
