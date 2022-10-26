@@ -4,7 +4,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 platform :ios, '11.0'
 install! 'cocoapods', :deterministic_uuids => false
 
-target 'iconn' do
+abstract_target 'iconnCommonPods' do
   config = use_native_modules!
 
   # Flags change depending on the env values.
@@ -22,6 +22,15 @@ target 'iconn' do
   target 'iconnTests' do
     inherit! :complete
     # Pods for testing
+  end
+
+  target 'iconnDev' do
+  end
+
+  target 'iconnStg' do
+  end
+
+  target 'iconn' do
   end
 
   # Enables Flipper.
