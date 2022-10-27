@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, ImageBackground, Dimensions, Image, ImageSourcePropType } from 'react-native';
+import { StyleSheet, ImageBackground, Image, ImageSourcePropType } from 'react-native';
 import theme from 'components/theme/theme';
 import { Button, FavoriteButton } from 'components/molecules';
 import { ICONN_REVERSE_BASKET } from 'assets/images';
@@ -241,6 +241,7 @@ const CardProduct: React.FC<CardProductProps> = ({
                       fontSize={theme.fontSize.h6}
                       textColor={theme.brandColor.iconn_green_original}
                       fontWeight={'bold'}
+                      numberOfLines={1}
                       text={
                         !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId)
                           ? productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||

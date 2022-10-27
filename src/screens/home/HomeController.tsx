@@ -420,7 +420,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
           let price = await getProductPriceById(testP[i][j].gift);
           let rating = await getProductRatingById(testP[i][j].gift);
           let image = await getPictureByProductId(testP[i][j].gift);
-          if(price && rating && image){
+          if(price && image){
             await getProductDetailById(testP[i][j].gift).then(responseProductDetail => {
               if (responseProductDetail) {
                 productPromosMap.set(testP[i][j].gift, {
