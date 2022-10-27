@@ -4,7 +4,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useEnterModal } from 'context';
+import { useEnterModal, useLoading } from 'context';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 import {
   ExistingProductInCartInterface,
@@ -32,10 +32,15 @@ const InviteSignUpController: React.FC = () => {
   const [completeList, setCompleteList] = useState<ProductInterface[] | null>();
   const [skusForProductImages, setSkusForProductImages] = useState([]);
   const { FAVORITE_ASSETS } = Config;
+  const loader = useLoading();
 
   const getFavorites = useCallback(async () => {
+    loader.show();
     const response = await vtexFavoriteServices.getFavoritesByUserEmail(email as string);
     const list = response[0].ListItemsWrapper[0].ListItems;
+    if(!list.length){
+      loader.hide();
+    }
     setFavList(list);
     console.log('PRUEBA', list);
     console.log('PRUEBA2', favsId);
@@ -101,6 +106,7 @@ const InviteSignUpController: React.FC = () => {
       }
     }
     setCompleteList(favProductsArr);
+    loader.hide();
   }
 
   const getExistingProductsInCart = () => {

@@ -12,6 +12,7 @@ import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { ExistingProductInCartInterface, ProductInterface, ProductResponseInterface, RootState, useAppSelector } from 'rtk';
 import Config from 'react-native-config';
+import { useLoading } from 'context';
 
 function RecommededForYouScreen() {
   const [productsList, setProductsList] = useState<ProductInterface[]>();
@@ -19,9 +20,10 @@ function RecommededForYouScreen() {
   const { updateShoppingCartProduct } = useShoppingCart();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const loader = useLoading();
 
 
-  const onPressSearch = () => {
+  const onPressSearch = () => { 
     navigate('SearchProducts');
   };
 
@@ -79,6 +81,7 @@ const getCollection = async () => {
   };
 
 const getInfoProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) =>{
+  loader.show();
   const copyArray = await getCollection();
   const completeArray: ProductInterface[] = [];
   for (const item of copyArray) {
@@ -101,6 +104,7 @@ const getInfoProducts = async (existingProductsInCart: ExistingProductInCartInte
   console.log('this is the product list ', completeArray);
 
   setProductsList(completeArray);
+  loader.hide();
   //return completeArray;
   
 }
