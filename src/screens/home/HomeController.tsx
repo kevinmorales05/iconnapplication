@@ -422,18 +422,20 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
           let price = await getProductPriceById(testP[i][j].gift);
           let rating = await getProductRatingById(testP[i][j].gift);
           let image = await getPictureByProductId(testP[i][j].gift);
-          await getProductDetailById(testP[i][j].gift).then(responseProductDetail => {
-            if (responseProductDetail) {
-              productPromosMap.set(testP[i][j].gift, {
-                name: responseProductDetail.Name, percentualDiscountValue: testP[i][j].percentualDiscountValue,
-                productId: testP[i][j].gift, promotionName: testP[i][j].name, promotionType: testP[i][j].type, quantity: 1
-              });
-              productsBuilded.push({
-                priceWithDiscount: 1, name: responseProductDetail.Name, price: price, productId: testP[i][j].gift,
-                quantity: 0, rating: rating, image: image
-              });
-            }
-          }).catch(error => console.log(error));
+          if(price && rating && image){
+            await getProductDetailById(testP[i][j].gift).then(responseProductDetail => {
+              if (responseProductDetail) {
+                productPromosMap.set(testP[i][j].gift, {
+                  name: responseProductDetail.Name, percentualDiscountValue: testP[i][j].percentualDiscountValue,
+                  productId: testP[i][j].gift, promotionName: testP[i][j].name, promotionType: testP[i][j].type, quantity: 1
+                });
+                productsBuilded.push({
+                  priceWithDiscount: 1, name: responseProductDetail.Name, price: price, productId: testP[i][j].gift,
+                  quantity: 0, rating: rating, image: image
+                });
+              }
+            }).catch(error => console.log(error));
+          }
         }
       }
     }

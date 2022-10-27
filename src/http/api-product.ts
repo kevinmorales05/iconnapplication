@@ -80,9 +80,16 @@ export class Product extends HttpClient {
   private handlerError = (err: Error | AxiosError) => {
     if (axios.isAxiosError(err)) {
       let problem: GeneralApiProblem;
+      const urlErr = err.request?.responseURL;
       problem = getGeneralApiProblem(err.response._response || err.response.status);
       console.error('GLOBAL EXCEPCIÓN ===> ', problem);
-      if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
+      console.log({errorAxios: err})
+      // url.includes('pricing/prices')
+      if(urlErr){
+        if(!urlErr.includes('stockkeepingunit') && err.request?.status != 404){
+          if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
+        }
+      }
     } else {
       DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');
     }

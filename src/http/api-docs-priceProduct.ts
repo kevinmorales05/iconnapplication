@@ -74,7 +74,7 @@ export class DocsPriceApi extends HttpClient {
         if (global.showLogs__api_docs) {
           console.log('INTERCEPTOR Response Error ===> \n\n', JSON.stringify(error, null, 3));
         }
-        // this.handlerError(error);
+        this.handlerError(error);
         return error;
       }
     );
@@ -121,5 +121,18 @@ export class DocsPriceApi extends HttpClient {
       return branchConfig;
     }
     return null;
+  };
+
+  private handlerError = (err: Error | AxiosError) => {
+    if (axios.isAxiosError(err)) {
+      let problem: GeneralApiProblem;
+      problem = getGeneralApiProblem(err.response._response || err.response.status);
+      console.error('GLOBAL EXCEPCIÓN ===> ', problem);
+      if(err.request?.status != 404){
+        if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
+      }
+    } else {
+      DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');
+    }
   };
 }
