@@ -441,13 +441,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     console.log(error);  
   }
 
-    console.log('fffff');
-    console.log(productsBuilded);
-    console.log(productPromosMap);
-    console.log('fffff');
-
-        console.log(productPromosMap);
-        console.log(productsBuilded);
         dispatch(setProductVsPromotions(productPromosMap));
         dispatch(setPromotions(productsBuilded))
 
