@@ -24,6 +24,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
   console.log('productId . . . . ',productId);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const insets = useSafeAreaInsets();
+
   const updateUserAgeStatus = (async (adultStatus) => {
     console.log(adultStatus);
     if (user.userId) {
@@ -38,6 +39,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
               console.log(updatedDoc);
               if (!adultStatus) {
                 Linking.openURL(AGE_VERIFICATION_URL!);
+                onPressClose();
               } else {
                 userUpdated(productId,true);
               }
