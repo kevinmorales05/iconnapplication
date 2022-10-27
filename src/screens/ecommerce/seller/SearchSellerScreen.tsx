@@ -8,7 +8,7 @@ import sellers from 'assets/files/sellers.json';
 import { SellerInterface, setDefaultSeller, useAppDispatch, useAppSelector, RootState } from 'rtk';
 import { hasNearbySellers, sortByDistance } from 'utils/geolocation';
 import { useLoading, useAlert, useToast } from 'context';
-import Geolocation from 'react-native-geolocation-service';
+import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
 import appConfig from '../../../../app.json';
 import { PlacesSvg } from 'components/svgComponents/PlacesSvg';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
@@ -19,8 +19,7 @@ const SearchSellerScreen = () => {
   const [value, onChangeText] = useState('');
   const [current, setCurrent] = useState<SellerInterface | null>(null);
   const [sellersToRender, setSellers] = useState<SellerInterface[]>([]);
-
-  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const dispatch = useAppDispatch();
 
@@ -163,6 +162,15 @@ const SearchSellerScreen = () => {
     return false;
   };
 
+  useEffect(()=>{
+    if(user.cp){
+      getPickUpPoints(user.cp)
+      onChangeText(user.cp)
+    }else if(user.geopoint){
+      getPickUpPointsByAddress(user.geopoint)
+    }
+  }, [ user ])
+
   const getPickUpPoints = async (cp: string) => {
     const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
     const temSellers: SellerInterface[] = [];
@@ -187,9 +195,10 @@ const SearchSellerScreen = () => {
     loader.hide();
   }
 
-  const getPickUpPointsByAddress = async (position: Geolocation.GeoPosition) => {
+  const getPickUpPointsByAddress = async (position: GeoCoordinates) => {
     if(position){
-        const pickUp = await vtexPickUpPoints.getPickUpPointsByAddress(position?.coords.longitude, position?.coords.latitude);
+        onChangeText('')
+        const pickUp = await vtexPickUpPoints.getPickUpPointsByAddress(position.longitude, position.latitude);
         const temSellers: SellerInterface[] = [];
         if(pickUp.items.length){
         sellers.forEach((seller)=>{
@@ -244,7 +253,7 @@ const SearchSellerScreen = () => {
           Geolocation.getCurrentPosition(
             position => {
               loader.hide();
-              getPickUpPointsByAddress(position);
+              getPickUpPointsByAddress(position.coords);
             },
             error => {
               loader.hide();

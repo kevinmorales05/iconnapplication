@@ -13,7 +13,7 @@ import Geolocation from 'react-native-geolocation-service';
 import sellers from 'assets/files/sellers.json';
 import Octicons from 'react-native-vector-icons/Octicons';
 
-import { setDefaultSeller, useAppDispatch } from 'rtk';
+import { setDefaultSeller, setUserCP, setUserGeoPoint, useAppDispatch } from 'rtk';
 import { sortByDistance } from 'utils/geolocation';
 
 import appConfig from '../../../../app.json';
@@ -98,6 +98,7 @@ const PostalCodeScreen = () => {
         dispatch(setDefaultSeller({ defaultSeller: item }));
         loader.show('', 'ecommerce');
         navigate('Home', { paySuccess: false });
+        dispatch(setUserCP({cp: cp}))
         return;
       }
     }
@@ -123,6 +124,7 @@ const PostalCodeScreen = () => {
           dispatch(setDefaultSeller({ defaultSeller: item }));
           loader.show('', 'ecommerce');
           navigate('Home', { paySuccess: false });
+          dispatch(setUserGeoPoint({geopoint: position.coords}))
           return;
         }
       }
