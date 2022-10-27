@@ -82,9 +82,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const inConstruction = useInConstruction();
   const { getFavorites } = useFavorites();
   const { email } = user;
-  const [productsList, setProductsList] = useState([]);
   const [productPromotion, setProductPromotion] = useState<Map<string,Object>>();
-  const [promotionsCategory, setPromotionsCategory] = useState<Object>();
   const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
 
   useEffect(() => {
@@ -444,16 +442,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   }
 
         dispatch(setProductVsPromotions(productPromosMap));
-        dispatch(setPromotions(productsBuilded))
-
-    let categories = [];
-    categories.push({ id: "0", name: 'Todo' });
-    categories.push({ id: "1", name: 'Botanas' });
-    categories.push({ id: "2", name: 'Dulces' });
-    categories.push({ id: "3", name: 'Bebidas' });
-    categories.push({ id: "4", name: 'Cervezas' });
-    setPromotionsCategory(categories);
-  
+        dispatch(setPromotions(productsBuilded))  
   }, []);
 
   /*
