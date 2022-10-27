@@ -445,10 +445,10 @@ const ProductDetailScreen: React.FC<Props> = ({
                     productVsPromotion != undefined && productVsPromotion.has('' + itemId)
                       ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                         ? '$' +
-                          ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
+                          ( ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
                             (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
                             productVsPromotion.get('' + itemId).percentualDiscountValue) /
-                              100)
+                              100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'))
                         : ''
                       : ''
                   }
@@ -500,9 +500,9 @@ const ProductDetailScreen: React.FC<Props> = ({
                         'ahorra $' +
                         (productVsPromotion != undefined && productVsPromotion.has('' + itemId)
                           ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
-                            ? (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
+                            ? ((parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
                             productVsPromotion.get('' + itemId).percentualDiscountValue) /
-                              100
+                              100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
                             : ''
                           : '')
                       }
