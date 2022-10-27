@@ -20,6 +20,7 @@ const SearchSellerScreen = () => {
   const [current, setCurrent] = useState<SellerInterface | null>(null);
   const [sellersToRender, setSellers] = useState<SellerInterface[]>([]);
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
 
   const dispatch = useAppDispatch();
 
@@ -30,9 +31,8 @@ const SearchSellerScreen = () => {
   const toast = useToast();
 
   useEffect(() => {
-    if (value) {
-    }
-  }, [value]);
+    setCurrent(defaultSeller);
+  }, [defaultSeller]);
 
   useEffect(() => {
     if (current) {
