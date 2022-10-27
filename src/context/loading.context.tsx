@@ -3,6 +3,7 @@ import { LoadingInterface } from 'components/organisms/Loading';
 import { StyleSheet, View, Image } from 'react-native';
 import { ICONN_LOADER_ECOMMERCE } from 'assets/images';
 import { CustomText } from 'components';
+import LottieView from 'lottie-react-native'
 
 interface Props {
   children: ReactNode;
@@ -33,7 +34,11 @@ export const LoadingContextProvider = ({ children }: Props) => {
       {children}
       {loadingState.visible && (
         <View style={styles.container}>
-          <Image source={ICONN_LOADER_ECOMMERCE} />
+          <LottieView
+        source={require('../assets/images/iconn-loader-ecommerce.json')}
+        autoPlay
+        loop
+      />
           {loadingState.variant === 'ecommerce' && (
             <View
               style={{

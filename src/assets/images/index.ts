@@ -51,7 +51,6 @@ import ICONN_STORE_MODERN from './iconn-store-modern.webp';
 import ICONN_LEFT_ARROW from './iconn-left-arrow.webp';
 import ICONN_ITEM_REFRESH from './iconn-item-refresh.webp';
 import ICONN_NO_CONNECTION_2 from './iconn-no-connection-2.webp';
-import ICONN_LOADER_ECOMMERCE from './iconn-loader-ecommerce.gif';
 import ICONN_SCOOT from './iconn-scoot.webp';
 import ICONN_STO from './iconn-sto.webp';
 import ICONN_WARNING_MARK from './iconn-warning-mark.webp';
@@ -128,7 +127,6 @@ export {
   ICONN_LEFT_ARROW,
   ICONN_ITEM_REFRESH,
   ICONN_NO_CONNECTION_2,
-  ICONN_LOADER_ECOMMERCE,
   ICONN_SCOOT,
   ICONN_STO,
   ICONN_WARNING_MARK,
