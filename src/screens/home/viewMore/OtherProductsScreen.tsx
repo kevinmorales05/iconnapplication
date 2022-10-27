@@ -11,6 +11,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { ExistingProductInCartInterface, ProductInterface, ProductResponseInterface, RootState, useAppSelector } from 'rtk';
+import Config from 'react-native-config';
 
 function OtherProductsScreen() {
   const [productsList, setProductsList] = useState<ProductInterface[]>();
@@ -57,12 +58,12 @@ function OtherProductsScreen() {
     );
   };
 
-// TODO: change the 145 by .ENV
 //Function to get collection of products
 const getCollection = async () => {
+  const { OTHER_PRODUCTS } = Config;
     let dataList: ProductResponseInterface[] = [];
     const response = await vtexProductsServices
-      .getProductsByCollectionId('145')
+      .getProductsByCollectionId(OTHER_PRODUCTS!)
       .then(res => {
         console.log('Viene de pagina de recomendaciones', res);
         const { Data, Page, Size } = res;

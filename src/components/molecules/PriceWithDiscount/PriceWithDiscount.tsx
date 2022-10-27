@@ -13,16 +13,17 @@ interface PriceWithDiscountProps {
 }
 
 const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice, productPromotions, productId }: PriceWithDiscountProps) => {
+  console.log(productPromotions)
   return (
     <Container>
       <Container row style={styles.container}>
         {
-          (productPromotions != undefined && productPromotions.has('' + productId)) ?
+          (!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId)) ?
             (
               (productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ?
                 (
                   <Container style={{marginRight:15}}>
-                  <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={(productPromotions != undefined && productPromotions.has('' + productId)) ?
+                  <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={(!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId)) ?
                     ((productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ? ( '$'+ (price - ( (parseInt(price) * productPromotions.get('' + productId).percentualDiscountValue) / 100 ) ) ) : '') : ''} />
                     </Container>
                 ) :
@@ -33,7 +34,7 @@ const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice, 
         }
         
         {
-          (productPromotions != undefined && productPromotions.has('' + productId)) ?
+          (!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId)) ?
             (
               (productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ?
                 (

@@ -3,44 +3,45 @@ import theme from 'components/theme/theme';
 import React from 'react';
 import AboutUsScreen from './AboutUsScreen';
 import { Linking } from 'react-native';
+import Config from 'react-native-config';
 
-// TODO: relocate this urls to .ENV
 const AboutUsController: React.FC = () => {
+  const {
+    ABOUTUS_SEVEN_FACEBOOK,
+    ABOUTUS_SEVEN_TWITTER,
+    ABOUTUS_SEVEN_YOUTUBE,
+    ABOUTUS_SEVEN_INSTAGRAM,
+    ABOUTUS_PETRO_FACEBOOK,
+    ABOUTUS_PETRO_TWITTER,
+    ABOUTUS_PETRO_YOUTUBE,
+    ABOUTUS_PETRO_INSTAGRAM
+  } = Config;
   const onPressSevenFacebook = () => {
-    Linking.openURL('https://www.facebook.com/7ElevenMexico');
-    console.log('onPressSevenFacebook...');
+    Linking.openURL(ABOUTUS_SEVEN_FACEBOOK!);
   };
   const onPressSevenTwitter = () => {
-    Linking.openURL('https://twitter.com/7ElevenMexico');
-    console.log('onPressSevenTwitter...');
+    Linking.openURL(ABOUTUS_SEVEN_TWITTER!);
   };
   const onPressSevenPlay = () => {
-    Linking.openURL('https://www.youtube.com/user/7ElevenMexico');
-    console.log('onPressSevenPlay...');
+    Linking.openURL(ABOUTUS_SEVEN_YOUTUBE!);
   };
   const onPressSevenInstagram = () => {
-    Linking.openURL('https://www.instagram.com/seven_eleven_mexico/');
-    console.log('onPressSevenInstagram...');
+    Linking.openURL(ABOUTUS_SEVEN_INSTAGRAM!);
   };
   const onPressPetroFacebook = () => {
-    Linking.openURL('https://www.facebook.com/Petro7Gas');
-    console.log('onPressPetroFacebook...');
+    Linking.openURL(ABOUTUS_PETRO_FACEBOOK!);
   };
   const onPressPetroTwitter = () => {
-    Linking.openURL('https://twitter.com/Petro7Gas');
-    console.log('onPressPetroTwitter...');
+    Linking.openURL(ABOUTUS_PETRO_TWITTER!);
   };
   const onPressPetroPlay = () => {
-    Linking.openURL('https://www.youtube.com/user/Petro7Gas');
-    console.log('onPressPetroPlay...');
+    Linking.openURL(ABOUTUS_PETRO_YOUTUBE!);
   };
   const onPressPetroInstagram = () => {
-    Linking.openURL('https://www.instagram.com/petroseven/');
-    console.log('onPressPetroInstagram...');
+    Linking.openURL(ABOUTUS_PETRO_INSTAGRAM!);
   };
   const openPage = (page: string) => {
     Linking.openURL(page);
-    console.log('Opening.. ', page);
   };
 
   return (

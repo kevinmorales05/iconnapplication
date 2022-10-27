@@ -5,6 +5,7 @@ import { OnboardingApi } from '../http/vtex-api-onboarding';
 import { AuthUserSocial } from '../http/api-authUserSocial';
 import { UsersApi } from '../http/api-users';
 import { HttpClient } from '../http/http-client';
+import Config from 'react-native-config';
 
 // TODO: relocate the headers to api-config file.
 async function newUser(userEmail: AuthDataInterface): Promise<any> {
@@ -45,10 +46,8 @@ async function logOutUser(): Promise<any> {
   return data;
 }
 
-// TODO: relocate this constant to api-config file or to .env
-const API_VTEX_AUTH = 'https://oneiconn.myvtex.com/api/vtexid/pub/authentication/';
-
 async function startAuthentication(email: string): Promise<any> {
+  const { API_VTEX_AUTH } = Config;
   const response = await OnboardingApi.getInstance().getRequest(
     `/vtexid/pub/authentication/start?callbackUrl=${API_VTEX_AUTH}/vtexid/pub/authentication/finish&scope=oneiconn&user=${email}&locale=MX&accountName=oneiconn&returnUrl=/&appStart=true`
   );
@@ -175,9 +174,9 @@ async function getUser(user: AuthDataInterface): Promise<any> {
  * @returns
  */
 async function getProfile(email: string): Promise<any> {
-  // TODO: relocate the baseUrl constant to api-config or .env file
+  const { baseUrl } = Config;
   const response = await OnboardingApi.getInstance().getRequest(`/dataentities/CL/search?email=${email}&_fields=_all`, {
-    baseUrl: 'https://api.vtex.com/iconn/'
+    baseUrl: baseUrl
   } as AxiosRequestConfig);
 
   if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
@@ -192,7 +191,6 @@ async function getProfile(email: string): Promise<any> {
  * @returns
  */
  async function getDocumentClient(userId: string): Promise<any> {
-  // TODO: relocate the baseUrl constant to api-config or .env file
   const response = await OnboardingApi.getInstance().getRequest(`/dataentities/CL/search?&_where=userId=${userId}&_fields=_all`);
   if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
   const { data } = response;
@@ -205,7 +203,6 @@ async function getProfile(email: string): Promise<any> {
  * @returns
  */
  async function getDocumentAddresses(userId: string): Promise<any> {
-  // TODO: relocate the baseUrl constant to api-config or .env file
   const response = await OnboardingApi.getInstance().getRequest(`/dataentities/AD/search?&_where=userId=${userId}&_fields=_all`);
   if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
   const { data } = response;
@@ -219,7 +216,6 @@ async function getProfile(email: string): Promise<any> {
  * @returns
  */
  async function deleteDocumentById(entityName: string ,id: string): Promise<any> {
-  // TODO: relocate the baseUrl constant to api-config or .env file
   const response = await OnboardingApi.getInstance().delete(`/dataentities/${entityName}/documents/${id}`);
   if (response === undefined) return Promise.reject(new Error(`checkout/pub/profiles`));
   const { data } = response;

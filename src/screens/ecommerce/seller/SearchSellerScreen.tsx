@@ -220,6 +220,7 @@ const SearchSellerScreen = () => {
         <TextInput
           placeholderTextColor={theme.fontColor.placeholder}
           placeholder={'Ingresa Código Postal'}
+          keyboardType={'number-pad'}
           onChangeText={(text)=>{
             onChangeText(text);
           }}
@@ -227,6 +228,7 @@ const SearchSellerScreen = () => {
             getPickUpPoints(value);
           }}
           value={value}
+
           style={{ marginLeft: 10, flex: 1, paddingVertical: 5, color: theme.fontColor.dark }}
         />
       </Container>

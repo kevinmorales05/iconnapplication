@@ -7,7 +7,7 @@ import { HomeStackParams } from 'navigation/types';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import theme from 'components/theme/theme';
 import Feather from 'react-native-vector-icons/Feather';
-
+import Config from 'react-native-config';
 
 interface AboutUsScreenProps {
   onPressSevenFacebook: () => void;
@@ -33,7 +33,7 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
   openPage
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-
+  const { ABOUTUS_PETRO_WEB, ABOUTUS_SEVEN_WEB } = Config;
 
   return (
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
@@ -63,8 +63,7 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
           text="7-Eleven.com.mx"
           disable={false}
           onPressNavigateTo={() => {
-            console.log('7-Eleven.com.mx...');
-            openPage('https://www.7-eleven.com.mx/');
+            openPage(ABOUTUS_SEVEN_WEB!);
           }}
         />
 
@@ -72,8 +71,7 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
           text="Petro-7.com.mx"
           disable={false}
           onPressNavigateTo={() => {
-            console.log('Petro-7.com.mx...');
-            openPage('https://www.petro-7.com.mx/');
+            openPage(ABOUTUS_PETRO_WEB!);
           }}
         />
         <Container row crossCenter style={{ marginTop: 38 }}>
