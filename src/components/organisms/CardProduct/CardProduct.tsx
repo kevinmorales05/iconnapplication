@@ -123,7 +123,7 @@ const CardProduct: React.FC<CardProductProps> = ({
   };
 
   const splitText = (text) => {
-    return ( text.length>18?( (text.slice(0,15))+'.'):text );
+    return ( text.length>18?( (text.slice(0,15))+'..'):text );
   };
 
   useEffect(() => {
@@ -228,7 +228,7 @@ const CardProduct: React.FC<CardProductProps> = ({
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
           <Container row width={'100%'} space="between">
             <Container flex width={'100%'}>
-              {!!productVsPromotion && productVsPromotion.has('' + productId) ? (
+              {productVsPromotion != undefined && productVsPromotion.has('' + productId) ? (
                 productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
                 productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ||
                 productVsPromotion.get('' + productId).promotionType == 'campaign' ||
@@ -240,7 +240,7 @@ const CardProduct: React.FC<CardProductProps> = ({
                       textColor={theme.brandColor.iconn_green_original}
                       fontWeight={'bold'}
                       text={
-                        !!productVsPromotion && productVsPromotion.has('' + productId)
+                        productVsPromotion != undefined && productVsPromotion.has('' + productId)
                           ? productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
                           productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
                             ? (splitText(productVsPromotion.get('' + productId).promotionName))

@@ -219,6 +219,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    * We get the full home items.
    */
   useEffect(() => {
+    fetchPromotionData();
     fetchHomeItems();
   }, [fetchHomeItems]);
 
@@ -458,9 +459,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   
   }, []);
 
+  /*
   useEffect(() => {
     fetchPromotionData();
-  }, []);
+  }, []);*/
 
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[], collectionId: string) {
     const arr: ProductResponseInterface[] | null | undefined = collectionId === global.recommended_products ? products : otherProducts;
