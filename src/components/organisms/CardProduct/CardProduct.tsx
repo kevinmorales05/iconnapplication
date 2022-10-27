@@ -222,13 +222,15 @@ const CardProduct: React.FC<CardProductProps> = ({
     setIsFav(!isFav);
   };
 
+  console.log({productVsPromotion});
+
   return (
     <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? 0 : 8) }]}>
       <Container style={styles.subContainer}>
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
           <Container row width={'100%'} space="between">
             <Container flex width={'100%'}>
-              {productVsPromotion != undefined && productVsPromotion.has('' + productId) ? (
+              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId) ? (
                 productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
                 productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ||
                 productVsPromotion.get('' + productId).promotionType == 'campaign' ||
@@ -240,7 +242,7 @@ const CardProduct: React.FC<CardProductProps> = ({
                       textColor={theme.brandColor.iconn_green_original}
                       fontWeight={'bold'}
                       text={
-                        productVsPromotion != undefined && productVsPromotion.has('' + productId)
+                        !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId)
                           ? productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
                           productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
                             ? (splitText(productVsPromotion.get('' + productId).promotionName))
