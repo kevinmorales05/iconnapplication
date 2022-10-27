@@ -35,10 +35,11 @@ export const LoadingContextProvider = ({ children }: Props) => {
       {loadingState.visible && (
         <View style={styles.container}>
           <LottieView
-        source={require('../assets/images/iconn-loader-ecommerce.json')}
-        autoPlay
-        loop
-      />
+              style={{width:250, height:250}}
+              source={require('../assets/images/iconn-loader-ecommerce.json')}
+              autoPlay
+              loop
+          />
           {loadingState.variant === 'ecommerce' && (
             <View
               style={{
@@ -58,6 +59,7 @@ export const LoadingContextProvider = ({ children }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
+
     position: 'absolute',
     left: 0,
     right: 0,
