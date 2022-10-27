@@ -66,6 +66,7 @@ export const TabNavigator = () => {
         component={PromotionsController}
         options={{
           headerShown: false,
+          unmountOnBlur: true,
           title: 'Promociones',
           tabBarIcon: ({ focused }) => {
             return (

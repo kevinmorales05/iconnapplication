@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
+import { useLoading } from 'context';
 
 interface Props {
   onPressClose: () => void;
@@ -29,6 +30,7 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const [productId, setProductId] = useState<string>();
   const dispatch = useAppDispatch();
+  const loader = useLoading();
 
 
   const hideModalForAdult = () => {
@@ -89,6 +91,7 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
   };
 
   const fetchData = useCallback(() => {
+    loader.show();
     const { items } = cart;
     let itmMapFromCart = new Map();
     if (items != undefined) {
@@ -124,6 +127,7 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
     categories.push({ id: "3", name: 'Bebidas' });
     categories.push({ id: "4", name: 'Cervezas' });
     setPromotionsCategory(categories);
+    loader.hide();
   }, [productFromPromotion]);
 
 
@@ -161,7 +165,7 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
   };
 
   return (
-    <Container row space="between" width={'100%'} style={{ flexWrap: 'wrap' }}>
+    <Container row space="between" width={'100%'} style={{ flexWrap: 'wrap', backgroundColor: theme.brandColor.iconn_background }}>
       <Container style={styles.containerHeader}>
         <SearchBar isButton onPressSearch={onPressBack} onChangeTextSearch={() => { }} />
         <Container style={{ marginTop: moderateScale(10) }}>
