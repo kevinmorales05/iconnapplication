@@ -86,7 +86,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate 
           </Container>
           <TextContainer marginTop={12.3} text={'No tienes pedidos'} textAlign="center" fontBold fontSize={16} />
           <TextContainer text="Aquí verás tus pedidos anteriores y pedidos en curso." textAlign="center" marginTop={11} />
-          <Button onPress={goBack} fontBold fontSize="h4" color="iconn_green_original" round marginTop={300}>
+          <Button onPress={() => navigate('Home',{ screen: 'CategoriesScreen' })} fontBold fontSize="h4" color="iconn_green_original" round marginTop={300}>
             Ver artículos
           </Button>
         </Container>
