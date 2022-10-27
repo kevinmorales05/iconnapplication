@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, ScrollView, Image, Text, Dimensions } from 'react-native';
-import { CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage } from 'components';
+import { CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage, CardProductSkeleton } from 'components';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { ICONN_REVERSE_BASKET } from 'assets/images';
@@ -566,7 +566,16 @@ const ProductDetailScreen: React.FC<Props> = ({
             <TextContainer text={`¿Un último antojo?`} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
             <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false}>
               <Container row style={{ width: '100%', marginBottom: 20, paddingLeft: 5, paddingRight: 30 }}>
-                {complementaryProducts.length ? (
+                { complementaryProducts.length === 0 ? (
+                  <>
+                    <Container flex row style={{ marginLeft: 8 }}>
+                      <CardProductSkeleton />
+                      <CardProductSkeleton />
+                      <CardProductSkeleton />
+                    </Container>
+                  </>
+                ) :
+                complementaryProducts.length ? (
                   complementaryProducts.map((prod, index) => {
                     return (
                       <CardProduct

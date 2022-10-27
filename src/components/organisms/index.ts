@@ -3,6 +3,7 @@ export * from './AddressModalSelection';
 export * from './Alert';
 export * from './AnimatedCarousel';
 export * from './CardProduct';
+export * from './CardProductSkeleton';
 export * from './EnterModal';
 export * from './FilterContainer';
 export * from './InvoicingHelper';
