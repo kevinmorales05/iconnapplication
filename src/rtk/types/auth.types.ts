@@ -1,4 +1,5 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { GeoCoordinates } from 'react-native-geolocation-service';
 
 export interface AuthDataInterface {
   accountAuthCookie?: AuthCookie;
@@ -32,7 +33,9 @@ export interface AuthDataInterface {
   telephone?: string;
   termsAndConditions?: boolean;
   user_id?: string; // added from UserVtex. user_id should be used only for requests that require it.
-  userId?: string; // added from UserVtex (MAIN).
+  userId?: string; // added from UserVtex (MAIN)
+  cp?: string; // cp user add in postalCodeScreen
+  geopoint?: GeoCoordinates; // geopoint user add in postalCodeScreen
 }
 
 export type SocialNetworkType = 'google' | 'apple' | 'facebook';

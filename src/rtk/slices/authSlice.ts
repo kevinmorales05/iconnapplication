@@ -45,7 +45,9 @@ const initialState: AuthDataInterface = {
   sign_app_modes_id: undefined,
   telephone: '',
   termsAndConditions: false,
-  userId: ''
+  userId: '',
+  cp: '',
+  geopoint: undefined
 };
 
 const favsInitialState: ItemsFavoritesInterface[] = [];
@@ -161,7 +163,13 @@ const authSlice = createSlice({
     }, 
     setAuthenticationToken(state, action: PayloadAction<string>) {
       state.user.authenticationToken = action.payload;
-    }
+    },
+    setUserCP(state, action: PayloadAction<AuthDataInterface>) {
+      state.user.cp = action.payload.cp;
+    },
+    setUserGeoPoint(state, action: PayloadAction<AuthDataInterface>) {
+      state.user.geopoint = action.payload.geopoint;
+    },
   },
   extraReducers: builder => {
     builder.addCase(preSignUpThunk.pending, state => {
@@ -315,6 +323,8 @@ export const {
   setTermsAndCond,
   setUserId,
   setIsGuest,
-  setAuthenticationToken
+  setAuthenticationToken,
+  setUserCP,
+  setUserGeoPoint
 } = authSlice.actions;
 export default authSlice.reducer;
