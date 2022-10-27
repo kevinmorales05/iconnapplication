@@ -1,10 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
+import config from 'react-native-config';
 
-// TODO: comnplete the rest of configuration, bearer token, auth headers, environment with react-native-config...
-const API_URL_USERS = 'https://api-users-dev.apps-backend.iconn.com.mx';
-const API_URL_OTPS = 'https://api-otps-dev.apps-backend.iconn.com.mx';
-const API_URL_INVOICING = 'https://api-invoicing-dev.apps-backend.iconn.com.mx';
-const API_AUTHORIZATION = 'PhMMVFxFPNwk6sloACc5';
+const { API_URL_USERS, API_URL_OTPS, API_URL_INVOICING, API_AUTHORIZATION } = config;
 
 const getApiUrl = (type: string) => {
   switch (type) {
@@ -31,7 +28,7 @@ export const ApiConfig = (type: string): AxiosRequestConfig => {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: API_AUTHORIZATION
+      Authorization: API_AUTHORIZATION!
     }
   };
 };

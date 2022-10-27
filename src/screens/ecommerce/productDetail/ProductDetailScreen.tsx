@@ -33,7 +33,7 @@ import { moderateScale } from 'utils/scaleMetrics';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
-
+import Config from 'react-native-config';
 
 interface Props {
   itemId: string;
@@ -85,14 +85,15 @@ const ProductDetailScreen: React.FC<Props> = ({
   const { email } = user;
   const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
   const [productId, setProductId] = useState<string>();
+  const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
   const dispatch = useAppDispatch();
+  const { PRODUCT_DETAIL_ASSETS, COMPLEMENTRY_PRODUCTS } = Config;
 
   itemId = detailSelected;
 
-  // TODO: relocate all this urls to .ENV
   const fetchData = useCallback(async () => {
     console.log('itemmmm:::' + itemId);
-    const imgRoot = 'https://oneiconn.vtexassets.com/arquivos/ids/';
+    const imgRoot = PRODUCT_DETAIL_ASSETS;
     await getSkuFilesById(itemId)
       .then(async responseSku => {
         let skuForImages = [];
@@ -131,10 +132,9 @@ const ProductDetailScreen: React.FC<Props> = ({
     setCartItemQuantity(isProductIdInShoppingCart(itemId));
   }, [cart, detailSelected]);
 
-  // TODO: change the 147 by .ENV
   const getComplementaryProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     vtexProductsServices
-      .getProductsByCollectionId(global.complementry_products)
+      .getProductsByCollectionId(COMPLEMENTRY_PRODUCTS!)
       .then(responseCollection => {
         const { Data } = responseCollection;
         let complementaryList = [];
@@ -441,30 +441,32 @@ const ProductDetailScreen: React.FC<Props> = ({
                   fontBold
                   fontSize={theme.fontSize.h1}
                   text={
-                    productPromotions != undefined && productPromotions.has('' + itemId)
-                      ? productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular'
+                    productVsPromotion != undefined && productVsPromotion.has('' + itemId)
+                      ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                         ? '$' +
-                          ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
+                          ( ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
                             (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
-                              productPromotions.get('' + itemId).percentualDiscountValue) /
-                              100)
+                            productVsPromotion.get('' + itemId).percentualDiscountValue) /
+                              100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'))
                         : ''
                       : ''
                   }
                 ></TextContainer>
-                {productPromotions != undefined && productPromotions.has('' + itemId) ? (
-                  productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular' ? (
-                    <Text
-                      style={{
-                        fontWeight: 'bold',
-                        textDecorationLine: 'line-through',
-                        color: theme.brandColor.iconn_grey,
-                        fontSize: theme.fontSize.h3,
-                        marginTop: 11
-                      }}
-                    >
-                      {'$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0)}
-                    </Text>
+                {productVsPromotion != undefined && productVsPromotion.has('' + itemId) ? (
+                  productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
+                    <Container style={{marginLeft: 15, marginTop:1}}>
+                      <Text
+                        style={{
+                          fontWeight: 'bold',
+                          textDecorationLine: 'line-through',
+                          color: theme.brandColor.iconn_grey,
+                          fontSize: theme.fontSize.h3,
+                          marginTop: 11
+                        }}
+                      >
+                        {'$' + ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'))}
+                      </Text>
+                    </Container>
                   ) : (
                     <TextContainer
                       marginTop={8}
@@ -486,8 +488,8 @@ const ProductDetailScreen: React.FC<Props> = ({
                   />
                 )}
               </Container>
-              {productPromotions != undefined && productPromotions.has('' + itemId) ? (
-                productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular' ? (
+              {productVsPromotion != undefined && productVsPromotion.has('' + itemId) ? (
+                productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
                   <Container style={styles.containerPorcentDiscount}>
                     <CustomText
                       fontSize={theme.fontSize.h6}
@@ -495,11 +497,11 @@ const ProductDetailScreen: React.FC<Props> = ({
                       fontWeight={'bold'}
                       text={
                         'ahorra $' +
-                        (productPromotions != undefined && productPromotions.has('' + itemId)
-                          ? productPromotions.get('' + itemId).promotionType == 'campaign' || productPromotions.get('' + itemId).promotionType == 'regular'
-                            ? (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
-                                productPromotions.get('' + itemId).percentualDiscountValue) /
-                              100
+                        (productVsPromotion != undefined && productVsPromotion.has('' + itemId)
+                          ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
+                            ? ((parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
+                            productVsPromotion.get('' + itemId).percentualDiscountValue) /
+                              100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
                             : ''
                           : '')
                       }
@@ -683,7 +685,8 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(12),
     backgroundColor: theme.brandColor.iconn_green_discount,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginTop:10
   },
   containerTitle: {
     width: '100%',

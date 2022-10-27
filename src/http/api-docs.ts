@@ -4,10 +4,9 @@ import { VTEXApiConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
 import { DeviceEventEmitter } from 'react-native';
 import { store } from 'rtk';
+import config from 'react-native-config';
 
-// TODO: relocate this urls to .ENV
-const VTEX_BRANCH_PREFIX = 'https://oneiconntienda';
-const VTEX_BRANCH_SUFIX = '.myvtex.com/api';
+const { VTEX_BRANCH_PREFIX, VTEX_BRANCH_SUFIX } = config;
 
 export class DocsApi extends HttpClient {
   static classInstance?: DocsApi;
