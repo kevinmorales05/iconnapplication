@@ -24,9 +24,10 @@ const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderF
 
   // TODO: relocate url to .ENV
   const onNavigationStateChange = (navState: WebViewNavigation) => {
+    console.log({urlPay: navState.url})
     const paramsQuery = navState.url.split('/');
     setPaySuccess(paramsQuery.some((item) => item === 'congrats') && paramsQuery.some((item) => item === 'approved'))
-    const urlParams = navState.url.split('https://nttdev--oneiconn.myvtex.com/_v/segment/admin-login/v1/login?')[1]?.split('=%2F%3F');
+    const urlParams = navState.url.split('https://nttdev--oneiconn.myvtex.com/_v/segment/admin-login/v1/login?')[1]?.split('=%2Fcheckout%2');
     if (urlParams) {
       if (urlParams[0] === 'returnUrl') {
         dispatch(setShoppingCartInitialState());
