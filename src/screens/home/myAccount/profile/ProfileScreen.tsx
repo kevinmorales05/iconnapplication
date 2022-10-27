@@ -1,4 +1,4 @@
-import { Button, Container, CustomText, DatePicker, Input, Select, TextContainer } from 'components';
+import { Button, Container, CustomText, DatePicker, Input, Select, TextContainer, Touchable } from 'components';
 import React, { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleProp, TextInput, TouchableOpacity, ViewStyle, Image, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -179,15 +179,16 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
 
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
-          locale={'es-LA'}
+          locale="es"
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
           textColor={theme.brandColor.iconn_accent_principal}
           maximumDate={actualDate}
         />
-
-        <DatePicker name="birthday" control={control} onPressDatePickerIcon={showDatePicker} error={errors.birthday?.message} />
+        <Touchable onPress={showDatePicker} >
+        <DatePicker name="birthday" control={control} error={errors.birthday?.message} />
+        </Touchable>
 
         <TextContainer typography="h6" fontBold text={`Género`} marginTop={21} />
 
