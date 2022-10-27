@@ -6,8 +6,11 @@ import { moderateScale } from 'utils/scaleMetrics';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { RootState, TabItem, useAppSelector, useAppDispatch } from 'rtk';
-import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
-
+import { setPromotions } from 'rtk/slices/promotionsSlice';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
+import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 
 interface Props {
   onPressClose: () => void;
@@ -15,17 +18,48 @@ interface Props {
 
 const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
 
+  const { setOptions, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const [productFromPromotion, setProductFromPromotion] = useState([]);
   const { promotions } = useAppSelector((state: RootState) => state.promotion);
   const [promotionsCategory, setPromotionsCategory] = useState<Object>();
   const [itemsQuantities, setItemsQuantities] = useState(Object);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [productId, setProductId] = useState<string>();
   const dispatch = useAppDispatch();
 
 
+  const hideModalForAdult = () => {
+    console.log('hideModalForAdult...');
+    setVisible(false);
+  };
+
+  const showModalForAdult = () => {
+    console.log('showModalForAdult...');
+    setVisible(true);
+  };
+
+  const userUpdated = (productId: string, isAdult: boolean) => {
+    updateShoppingCartProduct!('create', productId);
+    hideModalForAdult();
+  }
+
+  const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
+    console.log('isAdult', isAdult);
+    console.log('pId', productId);
+    if (isAdult) {
+      console.log('updateShoppingCartProduct');
+      updateShoppingCartProduct!('create', productId);
+    } else {
+      setProductId(productId);
+      showModalForAdult();
+    }
+  };
+
   const onPressBack = () => {
-    // navigate('SearchProducts');
+     navigate('SearchProducts');
   };
 
   const onPressTab = (cateogry: TabItem) => {
@@ -40,9 +74,8 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
   };
 
   const _onRefresh = () => {
-    //    console.log('_onRefresh');
-    //    setRefreshing(true);
-    //    productsEffect();
+    console.log('_onRefresh');
+    setRefreshing(true);
   };
 
   const updatePromotions = async (productId: string) => {
@@ -65,6 +98,8 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
       });
     }
     setItemsQuantities(itmMapFromCart);
+
+    
 
     console.log('promotionsssss...', promotions.length);
     let prodList = promotions;
@@ -109,20 +144,14 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
         quantity={item.quantity}
         productId={item.productId}
         oldPrice={item.oldPrice}
-        onPressAddCart={() => {
-          updatePromotions(item.productId);
-          updateShoppingCartProduct!('create', item.productId);
-        }}
+        onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
-          updatePromotions(item.productId);
           updateShoppingCartProduct!('add', item.productId);
         }}
         onPressDeleteCart={() => {
-          updatePromotions(item.productId);
           updateShoppingCartProduct!('remove', item.productId);
         }}
         onPressDecreaseQuantity={() => {
-          updatePromotions(item.productId);
           updateShoppingCartProduct!('substract', item.productId);
         }}
         notNeedMarginLeft
@@ -178,6 +207,7 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
           )
         }
       </Container>
+      <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={productId!} userUpdated={userUpdated}/>
     </Container>
 
   );
