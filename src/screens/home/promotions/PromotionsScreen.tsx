@@ -5,7 +5,7 @@ import { CustomText, Container, SearchBar, TabAnimatable, CardProduct } from 'co
 import { moderateScale } from 'utils/scaleMetrics';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
-import { RootState, TabItem, useAppSelector, useAppDispatch } from 'rtk';
+import { RootState, TabItem, useAppSelector, useAppDispatch, ExistingProductInCartInterface } from 'rtk';
 import { setPromotions } from 'rtk/slices/promotionsSlice';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -88,28 +88,19 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
     dispatch(setPromotions(toUpdate));
   };
 
-  const fetchData = useCallback(() => {
+  const fetchData = (existingProductsInCart: ExistingProductInCartInterface[]) => {
     loader.show();
-    const { items } = cart;
-    let itmMapFromCart = new Map();
-    if (items != undefined) {
-      console.log('tam items...', items.length);
-      items.map((item) => {
-        itmMapFromCart.set(item.productId, { id: item.productId, quantity: item.quantity, seller: item.seller });
-      });
-    }
-    setItemsQuantities(itmMapFromCart);
-
-    
-
-    console.log('promotionsssss...', promotions.length);
     let prodList = promotions;
     let prodListWithQuantities = [];
     if (prodList.length > 0) {
       prodList.map((prod) => {
         const prodObj = {
-          priceWithDiscount: prod.priceWithDiscount, name: prod.name, oldPrice: prod.oldPrice, price: prod.price,
-          productId: prod.productId, quantity: (itmMapFromCart.has(prod.productId) ? itmMapFromCart.get(prod.productId).quantity : 0),
+          priceWithDiscount: prod.priceWithDiscount,
+          name: prod.name, 
+          oldPrice: prod.oldPrice, 
+          price: prod.price,
+          productId: prod.productId,
+          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === prod.productId.toString())?.quantity : 0,
           rating: prod.rating, image: prod.image
         }
         prodListWithQuantities.push(prodObj);
@@ -117,21 +108,27 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
 
       setProductFromPromotion(prodListWithQuantities);
     }
-
-    let categories = [];
-    categories.push({ id: "0", name: 'Todo' });
-    categories.push({ id: "1", name: 'Botanas' });
-    categories.push({ id: "2", name: 'Dulces' });
-    categories.push({ id: "3", name: 'Bebidas' });
-    categories.push({ id: "4", name: 'Cervezas' });
-    setPromotionsCategory(categories);
     loader.hide();
-  }, [productFromPromotion]);
+  };
 
 
+  const getExistingProductsInCart = () => {
+    const { items } = cart;
+    if (items && items.length > 0) {
+      const existingProducts: ExistingProductInCartInterface[] = items.map((p: any) => {
+        const product: ExistingProductInCartInterface = {
+          itemId: p.productId,
+          quantity: p.quantity
+        };
+        return product;
+      });
+      return existingProducts;
+    }
+  };
 
   useEffect(() => {
-    fetchData();
+    const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+    fetchData(existingProducts);
   }, [cart, promotions]);
 
   const _renderItem = ({ item }) => {
