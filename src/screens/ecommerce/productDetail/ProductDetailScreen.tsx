@@ -441,7 +441,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                   fontBold
                   fontSize={theme.fontSize.h1}
                   text={
-                    productVsPromotion != undefined && productVsPromotion.has('' + itemId)
+                    !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                       ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                         ? '$' +
                           ( ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
@@ -452,7 +452,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                       : ''
                   }
                 ></TextContainer>
-                {productVsPromotion != undefined && productVsPromotion.has('' + itemId) ? (
+                {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
                   productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
                     <Container style={{marginLeft: 15, marginTop:1}}>
                       <Text
@@ -488,7 +488,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                   />
                 )}
               </Container>
-              {productVsPromotion != undefined && productVsPromotion.has('' + itemId) ? (
+              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
                 productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
                   <Container style={styles.containerPorcentDiscount}>
                     <CustomText
@@ -497,7 +497,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                       fontWeight={'bold'}
                       text={
                         'ahorra $' +
-                        (productVsPromotion != undefined && productVsPromotion.has('' + itemId)
+                        (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                           ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                             ? ((parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
                             productVsPromotion.get('' + itemId).percentualDiscountValue) /
