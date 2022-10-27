@@ -84,8 +84,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<DiscountSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Promociones en Construcción...');
-            inConstruction.show(true);
+            navigate('Promotions');
           }}
         />
 
