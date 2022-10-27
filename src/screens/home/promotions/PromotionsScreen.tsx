@@ -63,10 +63,8 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
   };
 
   const onPressTab = (cateogry: TabItem) => {
-    /*    if (cateogry.id) {
-          console.log('[onPressTab]', cateogry);
-          setIdCategorySelected(cateogry.id);
-        }*/
+    console.log('seleccionada');
+    console.log(cateogry);
   };
 
   const loadMoreItem = async () => {
@@ -165,7 +163,6 @@ const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
       <Container style={styles.containerHeader}>
         <SearchBar isButton onPressSearch={onPressBack} onChangeTextSearch={() => { }} />
         <Container style={{ marginTop: moderateScale(10) }}>
-          <TabAnimatable items={promotionsCategory} onPressItem={onPressTab} />
         </Container>
       </Container>
       <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
