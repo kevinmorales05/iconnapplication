@@ -320,31 +320,33 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const giftsPromotionsByCalculatorId = async (idCalculatorConfiguration: string) => {
     let giftsList = [];
-    await vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(async promotionResponse => {
-      if (promotionResponse) {
-        if (promotionResponse.isActive) {
-          const imgRoot = "https://oneiconn.vtexassets.com/arquivos/ids/";
-          if (promotionResponse.type == 'regular' || promotionResponse.type == 'campaign') {
-            const { skus } = promotionResponse;
-            if (skus.length > 0) {
-              skus.map((skus,index) => {
-                giftsList.push({ gift: skus.id, name: promotionResponse.name, type: promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue });
-              });
-            }
-            //skus
-          } else if (promotionResponse.type == 'buyAndWin' || promotionResponse.type == 'forThePriceOf') {
-            if (promotionResponse.listSku1BuyTogether) {
-              const { listSku1BuyTogether } = promotionResponse;
-              if (listSku1BuyTogether.length > 0) {
-                listSku1BuyTogether.map((listSku, index) => {
-                  giftsList.push({ gift: listSku.id, name: promotionResponse.name, type: promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue });
+    try {
+      await vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(async promotionResponse => {
+        if (promotionResponse) {
+          if (promotionResponse.isActive) {
+            if (promotionResponse.type == 'regular' || promotionResponse.type == 'campaign') {
+              const { skus } = promotionResponse;
+              if (skus.length > 0) {
+                skus.map((skus, index) => {
+                  giftsList.push({ gift: skus.id, name: promotionResponse.name, type: promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue });
                 });
+              }
+            } else if (promotionResponse.type == 'buyAndWin' || promotionResponse.type == 'forThePriceOf') {
+              if (promotionResponse.listSku1BuyTogether) {
+                const { listSku1BuyTogether } = promotionResponse;
+                if (listSku1BuyTogether.length > 0) {
+                  listSku1BuyTogether.map((listSku, index) => {
+                    giftsList.push({ gift: listSku.id, name: promotionResponse.name, type: promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue });
+                  });
+                }
               }
             }
           }
         }
-      }
-    });
+      });
+    } catch (error) {
+      console.log(error);
+    }
     return giftsList;
   };
 
@@ -378,7 +380,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const getPictureByProductId = async (productId: string) => {
     const imgRoot = 'https://oneiconn.vtexassets.com/arquivos/ids/';
-    let pics = '';
+    let pics = global.default_image_url;
     try {
       await getSkuFilesById(productId)
         .then(async responseSku => {

@@ -122,6 +122,10 @@ const CardProduct: React.FC<CardProductProps> = ({
     }
   };
 
+  const splitText = (text) => {
+    return ( text.length>18?( (text.slice(0,15))+'.'):text );
+  };
+
   useEffect(() => {
     getIsFavorite();
   }, [isFav, favs]);
@@ -239,7 +243,7 @@ const CardProduct: React.FC<CardProductProps> = ({
                         !!productVsPromotion && productVsPromotion.has('' + productId)
                           ? productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
                           productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
-                            ? productVsPromotion.get('' + productId).promotionName
+                            ? (splitText(productVsPromotion.get('' + productId).promotionName))
                             : productVsPromotion.get('' + productId).promotionType == 'campaign' ||
                             productVsPromotion.get('' + productId).promotionType == 'regular'
                             ? '-' + productVsPromotion.get('' + productId).percentualDiscountValue + '%'
@@ -337,7 +341,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   containerPromotionName: {
-    width: moderateScale(104),
+    width: moderateScale(103),
     height: moderateScale(23),
     borderRadius: moderateScale(12),
     backgroundColor: theme.brandColor.iconn_green_discount,

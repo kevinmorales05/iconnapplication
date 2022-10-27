@@ -4,6 +4,7 @@
  * other_products: string;
  * complementry_products: string;
  * age_verification_url: string;
+ * default_image_url: string;
  * showLogs__api_docs_no_api_prefix: string;
  * showLogs__api_docs: string;
  * showLogs__api_invoicing: string;
@@ -23,6 +24,7 @@ global.recommended_products = '145';
 global.other_products = '145';
 global.complementry_products = '147';
 global.age_verification_url = 'https://www.alcoholinformate.org.mx/';
+global.default_image_url = 'https://oneiconn.vtexassets.com/arquivos/ids/155537-507-300;'
 global.showLogs__api_docs_no_api_prefix = true;
 global.showLogs__api_docs = true;
 global.showLogs__api_invoicing = true;
