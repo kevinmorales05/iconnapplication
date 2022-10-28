@@ -222,6 +222,18 @@ const SearchSellerScreen = () => {
     loader.hide();
   }
 
+  const onChanged = (text) => {
+    let newText = '';
+    let numbers = '0123456789';
+
+    for (var i=0; i < text.length; i++) {
+        if(numbers.indexOf(text[i]) > -1 ) {
+            newText = newText + text[i];
+        }
+    }
+    onChangeText(newText);
+}
+
   return (
     <Container flex style={{ backgroundColor: theme.brandColor.iconn_grey_background }}>
       <Container style={styles.content}>
@@ -229,9 +241,9 @@ const SearchSellerScreen = () => {
         <TextInput
           placeholderTextColor={theme.fontColor.placeholder}
           placeholder={'Ingresa Código Postal'}
-          keyboardType={'number-pad'}
+          keyboardType={'numeric'}
           onChangeText={(text)=>{
-            onChangeText(text);
+            onChanged(text);
           }}
           onEndEditing={()=>{
             getPickUpPoints(value);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, ScrollView, Image, Text, Dimensions } from 'react-native';
-import { CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage } from 'components';
+import { CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage, CardProductSkeleton } from 'components';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { ICONN_REVERSE_BASKET } from 'assets/images';
@@ -427,9 +427,19 @@ const ProductDetailScreen: React.FC<Props> = ({
                   />
                 </Container>
               </Container>
-              <Container>
-                <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
-              </Container>
+              {
+                !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
+                  ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ||
+                    productVsPromotion.get('' + itemId).promotionType == 'buyAndWin' || productVsPromotion.get('' + itemId).promotionType == 'forThePriceOf'
+                    ? <></> : 
+                    <Container>
+                      <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+                    </Container>
+                  :
+                  <Container>
+                    <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+                  </Container>
+              }
             </Container>
 
             <Container style={{ marginTop: 16, paddingHorizontal: 10 }}>
@@ -441,7 +451,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                   fontBold
                   fontSize={theme.fontSize.h1}
                   text={
-                    productVsPromotion != undefined && productVsPromotion.has('' + itemId)
+                    !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                       ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                         ? '$' +
                           ( ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
@@ -452,7 +462,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                       : ''
                   }
                 ></TextContainer>
-                {productVsPromotion != undefined && productVsPromotion.has('' + itemId) ? (
+                {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
                   productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
                     <Container style={{marginLeft: 15, marginTop:1}}>
                       <Text
@@ -488,7 +498,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                   />
                 )}
               </Container>
-              {productVsPromotion != undefined && productVsPromotion.has('' + itemId) ? (
+              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
                 productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
                   <Container style={styles.containerPorcentDiscount}>
                     <CustomText
@@ -497,7 +507,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                       fontWeight={'bold'}
                       text={
                         'ahorra $' +
-                        (productVsPromotion != undefined && productVsPromotion.has('' + itemId)
+                        (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                           ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                             ? ((parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
                             productVsPromotion.get('' + itemId).percentualDiscountValue) /
@@ -566,7 +576,16 @@ const ProductDetailScreen: React.FC<Props> = ({
             <TextContainer text={`¿Un último antojo?`} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
             <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false}>
               <Container row style={{ width: '100%', marginBottom: 20, paddingLeft: 5, paddingRight: 30 }}>
-                {complementaryProducts.length ? (
+                { complementaryProducts.length === 0 ? (
+                  <>
+                    <Container flex row style={{ marginLeft: 8 }}>
+                      <CardProductSkeleton />
+                      <CardProductSkeleton />
+                      <CardProductSkeleton />
+                    </Container>
+                  </>
+                ) :
+                complementaryProducts.length ? (
                   complementaryProducts.map((prod, index) => {
                     return (
                       <CardProduct

@@ -74,7 +74,7 @@ const OrderCard = (props: OrderInterface) => {
 
   return (
     <Container style={styles.backgroundCard}>
-      <Container row space="around">
+      <Container row>
         <Container style={styles.iconDelivery}>
           {deliveryChannel == 'delivery' ? (
             <Image source={ICONN_SHOPPING_BAG} style={{ height: 24, width: 24 }} />
@@ -106,7 +106,7 @@ const OrderCard = (props: OrderInterface) => {
             status == 'payment-approved' ||
             status == 'ready-for-handling' ||
             status == 'window-to-cancel' ? (
-              <TextContainer text="En curso" marginHorizontal={16} marginVertical={8} textColor={theme.fontColor.white} fontSize={12} />
+              <TextContainer text="En curso" marginHorizontal={16} marginVertical={8} textColor={theme.fontColor.white} fontSize={12} textAlign='center' />
             ) : status == 'handling' ? (
               <TextContainer text="Pedido enviado" marginHorizontal={16} marginVertical={8} textColor={theme.fontColor.white} fontSize={12} />
             ) : status == 'invoiced' ? (
@@ -189,9 +189,9 @@ const styles = StyleSheet.create({
   contInTransit: {
     backgroundColor: theme.brandColor.iconn_green_original,
     borderRadius: 12,
-    marginRight: 4,
-    marginLeft: 30,
-    marginTop: 4
+    marginTop: 4,
+    position: 'absolute',
+    right: 10
   },
   contDelivered: {
     backgroundColor: theme.brandColor.iconn_med_grey,

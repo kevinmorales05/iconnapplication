@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Image, View, StyleSheet, ScrollView } from 'react-native';
 import theme from 'components/theme/theme';
-import { CustomText, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, SearchBar } from 'components';
+import { CustomText, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, SearchBar, CardProductSkeleton } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Address, CarouselItem, RootState, useAppSelector, ProductInterface } from 'rtk';
 import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
-import { navigate } from 'navigation/RootNavigation';
 
 interface Props {
   onPressShowAddressesModal: () => void;
@@ -21,13 +20,12 @@ interface Props {
   dayPromotionItems: CarouselItem[];
   allPromotionsItems: CarouselItem[];
   onPressCarouselItem: (CarouselItem: CarouselItem) => void;
-  homeProducts: (ProductInterface[]);
+  homeProducts: ProductInterface[];
   homeOtherProducts: ProductInterface[];
   updateShoppingCartProduct: (type: CounterType, productId: string) => void;
   onPressViewMore: (products: any) => void;
-  productPromotions: Map<string,Object>;
+  productPromotions: Map<string, Object>;
 }
-
 
 const HomeScreen: React.FC<Props> = ({
   onPressSearch,
@@ -43,12 +41,11 @@ const HomeScreen: React.FC<Props> = ({
   onPressCarouselItem,
   homeProducts,
   homeOtherProducts,
-  updateShoppingCartProduct, 
+  updateShoppingCartProduct,
   onPressViewMore,
   productPromotions,
   viewRecomendedProducts,
   viewOtherProducts
-
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
@@ -119,45 +116,85 @@ const HomeScreen: React.FC<Props> = ({
 
         <Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
+            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
+            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
+            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
           </Container>
           <Container height={367} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text="Recomendados para ti" fontBold typography="h4" />
-              <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => viewRecomendedProducts()  } />
+              <TouchableText
+                underline
+                textColor={theme.brandColor.iconn_accent_principal}
+                text="Ver todo"
+                typography="h5"
+                fontBold
+                onPress={() => viewRecomendedProducts()}
+              />
             </Container>
-            <Container style={{position:'absolute', top:35}}>
-            <AnimatedCarousel products={homeProducts} onPressItem={onPressCarouselItem} onPressProduct={updateShoppingCartProduct} onPressOut={onPressOut} productPromotions={productPromotions}/>
+            <Container style={{ position: 'absolute', top: 35 }}>
+              {!homeProducts ? (
+                <>
+                  <Container flex row style={{ marginLeft: 8 }}>
+                    <CardProductSkeleton />
+                    <CardProductSkeleton />
+                    <CardProductSkeleton />
+                  </Container>
+                </>
+              ) : (
+                <AnimatedCarousel
+                  products={homeProducts}
+                  onPressItem={onPressCarouselItem}
+                  onPressProduct={updateShoppingCartProduct}
+                  onPressOut={onPressOut}
+                  productPromotions={productPromotions}
+                />
+              )}
             </Container>
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
-            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
+            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
           </Container>
           <Container height={367} style={{ marginTop: 0 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
               <TextContainer text={`Otros productos`} fontBold typography="h4" />
-              <TouchableText underline textColor={theme.brandColor.iconn_accent_principal} text="Ver todo" typography="h5" fontBold onPress={() => viewOtherProducts() } />
+              <TouchableText
+                underline
+                textColor={theme.brandColor.iconn_accent_principal}
+                text="Ver todo"
+                typography="h5"
+                fontBold
+                onPress={() => viewOtherProducts()}
+              />
             </Container>
-            <Container style={{position:'absolute', top:35}}>
-            <AnimatedCarousel
-              products={homeOtherProducts}
-              onPressItem={onPressCarouselItem}
-              onPressProduct={updateShoppingCartProduct}
-              onPressOut={onPressOut}
-              productPromotions={productPromotions}
-            />
+            <Container style={{ position: 'absolute', top: 35 }}>
+              {!homeOtherProducts ? (
+                <>
+                  <Container flex row style={{ marginLeft: 8 }}>
+                    <CardProductSkeleton />
+                    <CardProductSkeleton />
+                    <CardProductSkeleton />
+                  </Container>
+                </>
+              ) : (
+                <AnimatedCarousel
+                  products={homeOtherProducts}
+                  onPressItem={onPressCarouselItem}
+                  onPressProduct={updateShoppingCartProduct}
+                  onPressOut={onPressOut}
+                  productPromotions={productPromotions}
+                />
+              )}
             </Container>
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
-            <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions}/>
+            <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
           </Container>
         </Container>
         <AdultAgeVerificationScreen onPressClose={onPressOut} visible={visible} />
