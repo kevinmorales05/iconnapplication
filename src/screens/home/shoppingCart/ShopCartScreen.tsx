@@ -82,7 +82,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               value.errorMessage = withoutStockM.get(index);
             } else {
               let priceDefinition = (value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0)
-              calculated = calculated + ((productVsPromotion != undefined && productVsPromotion.has('' + value.id))&& (productVsPromotion.get('' + value.id).promotionType == 'regular' || productVsPromotion.get('' + value.id).promotionType == 'campaign') ?
+              calculated = calculated + ((!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id))&& (productVsPromotion.get('' + value.id).promotionType == 'regular' || productVsPromotion.get('' + value.id).promotionType == 'campaign') ?
                 ((priceDefinition / 100) - (((productVsPromotion.get('' + value.id).percentualDiscountValue) * (priceDefinition / 100)) / 100)) :
                 (priceDefinition / 100));
               value.hasErrorMessage = false;
@@ -217,7 +217,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               } else {
                 let priceDefinition = (value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0)
                 console.log('real Value: ' + priceDefinition);
-                calculated = calculated + ((productVsPromotion != undefined && productVsPromotion.has('' + value.id))&& (productVsPromotion.get('' + value.id).promotionType == 'regular' || productVsPromotion.get('' + value.id).promotionType == 'campaign') ?
+                calculated = calculated + ((!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id))&& (productVsPromotion.get('' + value.id).promotionType == 'regular' || productVsPromotion.get('' + value.id).promotionType == 'campaign') ?
                 ((priceDefinition / 100) - (((productVsPromotion.get('' + value.id).percentualDiscountValue) * (priceDefinition / 100)) / 100)) :
                 (priceDefinition / 100));
                 value.hasErrorMessage = false;
@@ -577,28 +577,36 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           </Container>
           <Container row style={{ marginTop: 2 }}>
             <Container>
-            <Text
-              style={{
-                textDecorationLine: (productVsPromotion != undefined && productVsPromotion.has('' + value.id))?'line-through':'none',
-                color: theme.brandColor.iconn_grey,
-                fontSize: theme.fontSize.h6,
-                marginTop: 3
-              }}
-            >
-              {'$' + (value.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ( (productVsPromotion != undefined && productVsPromotion.has('' + value.id)) ?'':' c/u')}
-            </Text>
+              <Text
+                style={{
+                  textDecorationLine: (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id)) ?
+                    ((productVsPromotion.get('' + value.id).promotionType == 'campaign' || productVsPromotion.get('' + value.id).promotionType == 'regular') ? 'line-through' : 'none') : 'none',
+                  color: theme.brandColor.iconn_grey,
+                  fontSize: theme.fontSize.h6,
+                  marginTop: 3
+                }}
+              >
+                {'$' + (value.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ((!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id)) ?
+                ((productVsPromotion.get('' + value.id).promotionType == 'campaign' || productVsPromotion.get('' + value.id).promotionType == 'regular')?'':' c/u' ) : ' c/u')}
+              </Text>
             </Container>
-            {productVsPromotion != undefined && productVsPromotion.has('' + value.id) ?
-              <Container style={{ marginLeft:10 }}>
-                <TextContainer
-                  numberOfLines={1}
-                  text={'$' + ((value.price / 100) - ((productVsPromotion.get('' + value.id).percentualDiscountValue * (value.price / 100)) / 100))
-                    .toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'}
-                  textColor="grey"
-                  fontSize={12}
-                  marginTop={4}
-                ></TextContainer>
-              </Container> : <></>
+            {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id) ?
+              (
+                productVsPromotion.get('' + value.id).promotionType == 'campaign' || productVsPromotion.get('' + value.id).promotionType == 'regular' ?
+                  (
+                    <Container style={{ marginLeft: 10 }}>
+                      <TextContainer
+                        numberOfLines={1}
+                        text={'$' + ((value.price / 100) - ((productVsPromotion.get('' + value.id).percentualDiscountValue * (value.price / 100)) / 100))
+                          .toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'}
+                        textColor="grey"
+                        fontSize={12}
+                        marginTop={4}
+                      ></TextContainer>
+                    </Container>
+                  ) : <></>
+              ) :
+              <></>
             }
           </Container>
           <Container row crossCenter space="between" style={{ width: '73%', marginTop: 4 }}>

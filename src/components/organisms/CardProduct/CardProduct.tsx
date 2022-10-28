@@ -222,8 +222,6 @@ const CardProduct: React.FC<CardProductProps> = ({
     setIsFav(!isFav);
   };
 
-  console.log({productVsPromotion});
-
   return (
     <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? 0 : 8) }]}>
       <Container style={styles.subContainer}>

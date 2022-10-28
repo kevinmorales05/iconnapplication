@@ -81,7 +81,7 @@ const PromotionsController: React.FC = ({ navigation, route }: any) => {
             <BasketCounter />
           </Container>
         </Container>
-      <PromotionsScreen onPressClose={onPressOut}/>
+      <PromotionsScreen/>
     </SafeArea>
   );
 };

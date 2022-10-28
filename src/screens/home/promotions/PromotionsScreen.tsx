@@ -14,10 +14,9 @@ import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultA
 import { useLoading } from 'context';
 
 interface Props {
-  onPressClose: () => void;
 }
 
-const PromotionsScreen: React.FC<Props> = ({ onPressClose }) => {
+const PromotionsScreen: React.FC<Props> = ({}) => {
 
   const { setOptions, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { updateShoppingCartProduct } = useShoppingCart();
