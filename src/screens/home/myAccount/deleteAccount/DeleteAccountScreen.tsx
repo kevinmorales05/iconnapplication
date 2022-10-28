@@ -7,6 +7,7 @@ import { Image } from 'react-native';
 import { useAlert, useToast } from 'context';
 import { authServices } from 'services';
 
+
 interface Props {
   onPressClose: () => void;
   visible: boolean
@@ -80,8 +81,8 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
   const showAlert = () => {
     alert.show(
       {
-        title: 'Eliminar tu cuenta',
-        message: 'Tu cuenta y contenido se eliminarán de forma permanente e irreversible.',
+        title: '¿Seguro que quieres eliminar tu cuenta?',
+        message: 'Dentro de 7 días tu cuenta y contenido se eliminarán de forma permanente e irreversible.',
         acceptTitle: 'Eliminar',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
@@ -107,21 +108,18 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
           <Container style={{ marginTop: 30 }}>
             <TextContainer
               numberOfLines={3}
-              text={'Estás intentando eliminar tu cuenta. Antes de continuar, considera lo siguiente:'}
+              text={'Estás intentando eliminar tu cuenta. El proceso tiene una duración de 7 días hábiles.'}
               fontSize={14}
               marginTop={4}
             ></TextContainer>
-          </Container>
-          <Container style={{ marginTop: 45 }}>
             <TextContainer
               numberOfLines={3}
-              text={'¿Qué pasa si elimino mi cuenta?'}
+              text={'Antes de continuar, considera lo siguiente:'}
               fontSize={14}
-              marginTop={4}
-              fontBold
+              marginTop={16}
             ></TextContainer>
           </Container>
-          <Container row style={{ marginTop: 35 }}>
+          <Container row style={{ marginTop: 30 }}>
             <TextContainer
               text={"⬤"}
               fontSize={12}
@@ -138,7 +136,7 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
               marginLeft={5}
             ></TextContainer>
           </Container>
-          <Container row style={{ marginTop: 40 }}>
+          <Container row style={{ marginTop: 30 }}>
             <TextContainer
               text={"⬤"}
               fontSize={12}
@@ -155,7 +153,7 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
               marginLeft={5}
             ></TextContainer>
           </Container>
-          <Container row style={{ marginTop: 40 }}>
+          <Container row style={{ marginTop: 30 }}>
             <TextContainer
               text={"⬤"}
               fontSize={12}
@@ -179,7 +177,7 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
               round
               fontBold
               leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} />}
-              borderColor='iconn_grey'
+              borderColor="iconn_med_grey"
               style={{ marginTop: 1, marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
               onPress={showAlert}>Eliminar cuenta</Button>
           </Container>
