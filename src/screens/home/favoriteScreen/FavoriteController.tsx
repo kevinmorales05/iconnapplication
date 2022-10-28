@@ -39,18 +39,22 @@ const InviteSignUpController: React.FC = () => {
     const response = await vtexFavoriteServices.getFavoritesByUserEmail(email as string);
     console.log({responsegetFavorites: response})
     if(response.length){
-      const list = response[0].ListItemsWrapper[0].ListItems;
-      if(!list.length){
+      if(response[0].ListItemsWrapper.length){
+        const list = response[0].ListItemsWrapper[0].ListItems;
+        if(!list.length){
+          loader.hide();
+        }
+        setFavList(list);
+        console.log('PRUEBA', list);
+        console.log('PRUEBA2', favsId);
+        console.log('PRUEBA3', favs);
+        console.log('PRUEBA4', response);
+        console.log('PRUEBA5', favList);
+        dispatch(setFav(favList));
+        dispatch(setFavId(response[0].id));
+      }else{
         loader.hide();
       }
-      setFavList(list);
-      console.log('PRUEBA', list);
-      console.log('PRUEBA2', favsId);
-      console.log('PRUEBA3', favs);
-      console.log('PRUEBA4', response);
-      console.log('PRUEBA5', favList);
-      dispatch(setFav(favList));
-      dispatch(setFavId(response[0].id));
     }else{
       loader.hide();
     }
@@ -74,6 +78,9 @@ const InviteSignUpController: React.FC = () => {
         }
         pics = skuForImages;
       }
+    })
+    .catch(err =>{
+      console.log(err)
     });
     return pics;
   };
@@ -94,12 +101,12 @@ const InviteSignUpController: React.FC = () => {
       const price = await getPriceByProductId(product.Id);
       const raiting = await getRatingByProductId(product.Id);
       const pic = await getPicture(product.Id);
-      console.log('PICTURE', pic);
+      console.log({foto: pic})
       if (price && raiting) {
         const newProduct: ProductInterface = {
           productId: product.Id,
           name: product.Name,
-          image: pic[0].url,
+          image: pic && pic.length ? pic[0].url : '',
           price: price.basePrice,
           oldPrice: price.basePrice,
           porcentDiscount: 0,
@@ -109,6 +116,7 @@ const InviteSignUpController: React.FC = () => {
         favProductsArr.push(newProduct);
       }
     }
+    console.log({favProductsArr});
     setCompleteList(favProductsArr);
     loader.hide();
   }
