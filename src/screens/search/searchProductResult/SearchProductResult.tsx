@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { Dimensions, StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 import {
   ExistingProductInCartInterface,
   getProductPriceByProductIdThunk,
@@ -19,13 +19,12 @@ import theme from 'components/theme/theme';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
-import AdultAgeVerificationScreen  from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
+import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { useLoading } from 'context';
 
 const SearchProductResult: React.FC = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'SearchProductsResults'>>();
-  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const loader = useLoading();
 
   const dispatch = useAppDispatch();
@@ -38,25 +37,20 @@ const SearchProductResult: React.FC = () => {
   const [productId, setProductId] = useState<string>();
 
   const hideModalForAdult = () => {
-    console.log('hideModalForAdult...');
     setVisible(false);
   };
 
   const showModalForAdult = () => {
-    console.log('showModalForAdult...');
     setVisible(true);
   };
 
   const userUpdated = (productId: string) => {
     updateShoppingCartProduct!('create', productId);
     hideModalForAdult();
-  }
+  };
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
-    console.log('isAdult', isAdult);
-    console.log('pId', productId);
     if (isAdult) {
-      console.log('updateShoppingCartProduct');
       updateShoppingCartProduct!('create', productId);
     } else {
       setProductId(productId);
@@ -85,30 +79,26 @@ const SearchProductResult: React.FC = () => {
     }
   };
 
-  async function refillProductsWithPrice(
-    existingProductsInCart: ExistingProductInCartInterface[],
-  ){
+  async function refillProductsWithPrice(existingProductsInCart: ExistingProductInCartInterface[]) {
     loader.show();
     let productsToRender: ProductInterface[] = [];
     let productsTem: ProductSearchItemInterface[] = [];
-    productsTem = products.concat(productsTem)
-    for( const p of products ) {
+    productsTem = products.concat(productsTem);
+    for (const p of products) {
       const price = await getPriceByProductId(p.productId);
-      const raiting = await getRatingByProductId(p.productId)
-      if(price && raiting){
+      const raiting = await getRatingByProductId(p.productId);
+      if (price && raiting) {
         productsToRender.push({
           ratingValue: raiting.average,
-          price: price?.basePrice,
-          oldPrice: price?.basePrice,
+          price: price?.sellingPrice,
+          oldPrice: price?.sellingPrice,
           name: p.nameComplete,
           image: { uri: p.imageUrl },
           quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0,
           productId: p.productId
-        })
+        });
       }
-      console.log({productsToRender})
     }
-    console.log({productsToRender})
     setProductsRender(productsToRender);
     loader.hide();
   }
@@ -120,16 +110,6 @@ const SearchProductResult: React.FC = () => {
   const getRatingByProductId = async (productId: string) => {
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
-
-  async function getPrices() {
-    const withPrice = await Promise.all(products!.map(product => getPriceByProductId(product.productId)));
-    return withPrice;
-  }
-
-  async function getRatings() {
-    const withRating = await Promise.all(products!.map(product => getRatingByProductId(product.productId)));
-    return withRating;
-  }
 
   const _renderItem = ({ item }) => {
     return (
@@ -242,7 +222,7 @@ const SearchProductResult: React.FC = () => {
             </Container>
           )}
         </Container>
-        <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={productId!} userUpdated={userUpdated}/>
+        <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={productId!} userUpdated={userUpdated} />
       </Container>
     </SafeArea>
   );
@@ -259,23 +239,5 @@ const styles = StyleSheet.create({
     paddingTop: theme.paddingHeader,
     backgroundColor: theme.brandColor.iconn_white,
     borderBottomColor: theme.brandColor.iconn_med_grey
-  },
-  containerButton: {
-    width: moderateScale(40),
-    height: moderateScale(36),
-    borderRadius: moderateScale(5),
-    borderColor: theme.brandColor.iconn_med_grey,
-    borderWidth: moderateScale(1),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: moderateScale(20)
-  },
-  containerBottom: {
-    shadowColor: '#171717',
-    shadowOffset: { width: 0, height: -moderateScale(3) },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    width: '100%',
-    height: Dimensions.get('window').height * 0.08
   }
 });

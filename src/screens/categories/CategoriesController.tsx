@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Container, SafeArea, CardHorizontal, SearchBar, Touchable, CustomText, BasketCounter } from 'components';
-import { Dimensions, ScrollView, StyleSheet } from 'react-native';
+import { Container, SafeArea, CardHorizontal, SearchBar, CustomText, BasketCounter } from 'components';
+import { ScrollView, StyleSheet } from 'react-native';
 import theme from 'components/theme/theme';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -8,7 +8,6 @@ import { HomeStackParams } from 'navigation/types';
 import { getCategoryItemsThunk, useAppDispatch } from 'rtk';
 import { CategoryInterface } from 'rtk/types/category.types';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
-import Feather from 'react-native-vector-icons/Feather';
 
 const CategoriesController: React.FC = ({ navigation, route }: any) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -16,7 +15,6 @@ const CategoriesController: React.FC = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
 
   React.useLayoutEffect(() => {
-    console.log({routeEffect: route.name})
     if (!navigation || !route) return;
 
     // Get stack parent by id
@@ -42,7 +40,6 @@ const CategoriesController: React.FC = ({ navigation, route }: any) => {
 
   useEffect(() => {
     if (!categories?.length) {
-      console.log('entre useEffect');
       categoriesEffect();
     }
   }, [categories]);
@@ -52,9 +49,11 @@ const CategoriesController: React.FC = ({ navigation, route }: any) => {
     const categoriesRequest = await getCategoryItems();
     categoriesRequest.forEach((c: CategoryInterface) => {
       // TODO: link para traer las imagenes
-      c.image = `https://oneiconn.vtexassets.com/arquivos/${c.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, '_')}.png`;
+      c.image = `https://oneiconn.vtexassets.com/arquivos/${c.name
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/ /g, '_')}.png`;
     });
-    console.log({ categoriesRequest });
     setCategories(categoriesRequest);
   };
   const getCategoryItems = async () => {
@@ -79,31 +78,25 @@ const CategoriesController: React.FC = ({ navigation, route }: any) => {
     >
       <Container>
         <Container row style={styles.containerHeaderBar}>
-          <Container style={{ justifyContent: 'center' }} flex={0.12}/>
-          <Container flex={0.67} style={{ justifyContent: 'center', alignItems: 'center', paddingLeft: moderateScale(50) }}> 
-            <CustomText
-              text='Categorías'
-              fontBold
-              fontSize={theme.fontSize.h3}
-            />
+          <Container style={{ justifyContent: 'center' }} flex={0.12} />
+          <Container flex={0.67} style={{ justifyContent: 'center', alignItems: 'center', paddingLeft: moderateScale(50) }}>
+            <CustomText text="Categorías" fontBold fontSize={theme.fontSize.h3} />
           </Container>
-          <Container width={'100%'} flex={0.23} style={{ paddingLeft: moderateScale(10), height: moderateScale(25),  justifyContent: 'center' }}>
+          <Container width={'100%'} flex={0.23} style={{ paddingLeft: moderateScale(10), height: moderateScale(25), justifyContent: 'center' }}>
             <BasketCounter />
           </Container>
         </Container>
         <Container style={styles.containerHeader}>
           <SearchBar isButton onPressSearch={onPressSearch} onChangeTextSearch={() => {}} />
         </Container>
-        <Container style={{height: verticalScale(520), backgroundColor: theme.brandColor.iconn_light_grey}}>
-          <ScrollView
-            contentContainerStyle={{paddingBottom: moderateScale(50)}}
-          >
+        <Container style={{ height: verticalScale(520), backgroundColor: theme.brandColor.iconn_light_grey }}>
+          <ScrollView contentContainerStyle={{ paddingBottom: moderateScale(50) }}>
             <Container space="between" row style={{ flexWrap: 'wrap', paddingHorizontal: moderateScale(10) }}>
               {categories?.length
                 ? categories.map(category => {
                     return (
                       <CardHorizontal
-                        key={category.id + ""}
+                        key={category.id + ''}
                         text={category.name}
                         image={{ uri: category.image }}
                         onPress={() => {
@@ -129,16 +122,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(10),
     paddingVertical: moderateScale(7),
     backgroundColor: theme.brandColor.iconn_white
-  },
-  containerButton: {
-    width: moderateScale(40),
-    height: moderateScale(36),
-    borderRadius: moderateScale(5),
-    borderColor: theme.brandColor.iconn_med_grey,
-    borderWidth: moderateScale(1),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: moderateScale(20)
   },
   containerHeaderBar: {
     width: '100%',

@@ -1,7 +1,6 @@
-import { AddressModalScreen, Container, CustomModal, SafeArea, TextContainer, AddressModalSelection } from 'components';
-import React, { Component, useCallback, useEffect, useState } from 'react';
-import { Dimensions, Image, ImageSourcePropType, Text, StyleSheet, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { AddressModalScreen, SafeArea, AddressModalSelection } from 'components';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Text } from 'react-native';
 import theme from 'components/theme/theme';
 import {
   RootState,
@@ -9,23 +8,18 @@ import {
   useAppDispatch,
   Address,
   setAddressDefault,
-  setSeenCarousel,
   CarouselItem,
-  ProductPriceResponseInterface,
   getHomeItemsThunk,
   getProductPriceByProductIdThunk,
   getProductRatingByProductIdThunk,
-  ProductRaitingResponseInterface,
   ProductInterface,
   ProductResponseInterface,
   ExistingProductInCartInterface
 } from 'rtk';
 import HomeScreen from './HomeScreen';
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-import { ICONN_COFFEE } from 'assets/images';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useEnterModal, useInConstruction, useLoading, useToast } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
@@ -39,38 +33,16 @@ import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import { vtexPromotionsServices } from 'services/vtexPromotions.services';
 import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
 import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
-import { LengthType } from '../../components/types/length-type';
 import Config from 'react-native-config';
-
-const CONTAINER_HEIGHT = Dimensions.get('window').height / 6 - 20;
-const CONTAINER_HEIGHTMOD = Dimensions.get('window').height / 5 + 10;
-
-interface Props {
-  carouselItems?: ItemProps;
-}
-interface ItemProps {
-  image: ImageSourcePropType;
-  text: string;
-}
-interface State {
-  activeIndex: number;
-  carouselItems: ItemProps[];
-}
-
 interface PropsController {
   paySuccess: boolean;
 }
 
-
-
 const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
-  const { user, isGuest, favs } = useAppSelector((state: RootState) => state.auth);
-  const { user: userLogged, loading: authLoading } = useAppSelector((state: RootState) => state.auth);
+  const { user, isGuest } = useAppSelector((state: RootState) => state.auth);
+  const { loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
-  const { isLogged } = userLogged;
-  const modVis = isLogged && !userLogged.seenCarousel ? true : false;
-  const [modVisibility, setModVisibility] = useState(modVis);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const loader = useLoading();
@@ -82,7 +54,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const inConstruction = useInConstruction();
   const { getFavorites } = useFavorites();
   const { email } = user;
-  const [productPromotion, setProductPromotion] = useState<Map<string,Object>>();
   const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
 
   useEffect(() => {
@@ -166,15 +137,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     );
   }, [user.addresses]);
 
-  const markAsSeenCarousel = () => {
-    setModVisibility(false);
-    setShowShippingDropDown(true);
-    dispatch(setSeenCarousel(true));
-  };
-
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
-    console.log('El item seleccionado en carousel es ===> ', CarouselItem);
-
     // If is not a guest and press "Petro" or "Acumula" or "Wallet".
     if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4')) {
       inConstruction.show();
@@ -243,7 +206,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     const { userId, name } = user;
 
     if (userId === cart.userProfileId) {
-      console.log('es igual al del usuario guardado');
       getShoppingCart(cart.orderFormId)
         .then(oldCart => {
           getShoppingCart(cart.orderFormId)
@@ -254,7 +216,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         })
         .catch(error => console.log(error));
     } else {
-      console.log('NO es igual');
       await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         dispatch(setOrderFormId(newCart));
         getShoppingCart(newCart.orderFormId)
@@ -317,7 +278,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       }
     });
     return allPromotions;
-  }
+  };
 
   const giftsPromotionsByCalculatorId = async (idCalculatorConfiguration: string) => {
     let giftsList = [];
@@ -329,7 +290,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
               const { skus } = promotionResponse;
               if (skus.length > 0) {
                 skus.map((skus, index) => {
-                  giftsList.push({ gift: skus.id, name: promotionResponse.name, type: promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue });
+                  giftsList.push({
+                    gift: skus.id,
+                    name: promotionResponse.name,
+                    type: promotionResponse.type,
+                    percentualDiscountValue: promotionResponse.percentualDiscountValue
+                  });
                 });
               }
             } else if (promotionResponse.type == 'buyAndWin' || promotionResponse.type == 'forThePriceOf') {
@@ -337,7 +303,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
                 const { listSku1BuyTogether } = promotionResponse;
                 if (listSku1BuyTogether.length > 0) {
                   listSku1BuyTogether.map((listSku, index) => {
-                    giftsList.push({ gift: listSku.id, name: promotionResponse.name, type: promotionResponse.type, percentualDiscountValue: promotionResponse.percentualDiscountValue });
+                    giftsList.push({
+                      gift: listSku.id,
+                      name: promotionResponse.name,
+                      type: promotionResponse.type,
+                      percentualDiscountValue: promotionResponse.percentualDiscountValue
+                    });
                   });
                 }
               }
@@ -351,28 +322,44 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     return giftsList;
   };
 
+  /**
+   * Returns the product price.
+   * @param productId
+   * @returns i.e: 1300
+   */
   const getProductPriceById = async (productId: string) => {
     let price = 0;
     try {
-      await vtexProductsServices.getProductPriceByProductId(productId).then(async responsePrice => {
-        if (responsePrice) {
-          price = responsePrice.basePrice;
-        }
-      }).catch((error) => console.log(error));
+      await vtexProductsServices
+        .getProductPriceByProductId(productId)
+        .then(async responsePrice => {
+          if (responsePrice) {
+            price = responsePrice.sellingPrice; // TODO: preguntar si es sellingPrice o listPrice
+          }
+        })
+        .catch(error => console.log(error));
     } catch (error) {
       console.log(error);
     }
-    return price
+    return price;
   };
 
+  /**
+   * Return the product raiting.
+   * @param productId
+   * @returns ie: 3
+   */
   const getProductRatingById = async (productId: string) => {
     let rating = 0;
     try {
-      await vtexProductsServices.getProductRatingByProductId(productId).then(async responseRating => {
-        if (responseRating) {
-          rating = responseRating.average;
-        }
-      }).catch((error) => console.log(error));
+      await vtexProductsServices
+        .getProductRatingByProductId(productId)
+        .then(async responseRating => {
+          if (responseRating) {
+            rating = responseRating.average;
+          }
+        })
+        .catch(error => console.log(error));
     } catch (error) {
       console.log(error);
     }
@@ -383,14 +370,13 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     const imgRoot = PRODUCT_DETAIL_ASSETS;
     let pics = DEFAULT_IMAGE_URL;
     try {
-      await getSkuFilesById(productId)
-        .then(async responseSku => {
-          if (responseSku) {
-            if (responseSku.length > 0) {
-              pics = imgRoot + responseSku[0].ArchiveId + '-' + responseSku[0].Id + '-'+'300';
-            }
+      await getSkuFilesById(productId).then(async responseSku => {
+        if (responseSku) {
+          if (responseSku.length > 0) {
+            pics = imgRoot + responseSku[0].ArchiveId + '-' + responseSku[0].Id + '-' + '300';
           }
-        })
+        }
+      });
     } catch (error) {
       console.log(error);
     }
@@ -398,57 +384,53 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   };
 
   const fetchPromotionData = useCallback(async () => {
-    console.log('fetchPromotions...');
-    const { items } = cart;
-    let itmMapFromCart = new Map();
-    if (items != undefined) {
-      items.map((item) => {
-        itmMapFromCart.set(item.productId, { id: item.productId, quantity: item.quantity, seller: item.seller });
-      });
-    }
-
     let allPromotions = await getAllPromotions();
-
     let productsBuilded = [];
     let productPromosMap = new Map();
     let testP = [];
     try {
-    for (let i = 0; i < allPromotions.length; i++) {
-      testP[i] = await giftsPromotionsByCalculatorId(allPromotions[i].idCalculatorConfiguration);
-      if (testP[i].length>0) {
-        for (let j = 0; j < testP[i].length; j++) {
-          let price = await getProductPriceById(testP[i][j].gift);
-          let rating = await getProductRatingById(testP[i][j].gift);
-          let image = await getPictureByProductId(testP[i][j].gift);
-          if(price && image){
-            await getProductDetailById(testP[i][j].gift).then(responseProductDetail => {
-              if (responseProductDetail) {
-                productPromosMap.set(testP[i][j].gift, {
-                  name: responseProductDetail.Name, percentualDiscountValue: testP[i][j].percentualDiscountValue,
-                  productId: testP[i][j].gift, promotionName: testP[i][j].name, promotionType: testP[i][j].type, quantity: 1
-                });
-                productsBuilded.push({
-                  priceWithDiscount: 1, name: responseProductDetail.Name, price: price, productId: testP[i][j].gift,
-                  quantity: 0, rating: rating, image: image
-                });
-              }
-            }).catch(error => console.log(error));
+      for (let i = 0; i < allPromotions.length; i++) {
+        testP[i] = await giftsPromotionsByCalculatorId(allPromotions[i].idCalculatorConfiguration);
+        if (testP[i].length > 0) {
+          for (let j = 0; j < testP[i].length; j++) {
+            let price = await getProductPriceById(testP[i][j].gift);
+            let rating = await getProductRatingById(testP[i][j].gift);
+            let image = await getPictureByProductId(testP[i][j].gift);
+            if (price && image) {
+              await getProductDetailById(testP[i][j].gift)
+                .then(responseProductDetail => {
+                  if (responseProductDetail) {
+                    productPromosMap.set(testP[i][j].gift, {
+                      name: responseProductDetail.Name,
+                      percentualDiscountValue: testP[i][j].percentualDiscountValue,
+                      productId: testP[i][j].gift,
+                      promotionName: testP[i][j].name,
+                      promotionType: testP[i][j].type,
+                      quantity: 1
+                    });
+                    productsBuilded.push({
+                      priceWithDiscount: 1,
+                      name: responseProductDetail.Name,
+                      price: price,
+                      productId: testP[i][j].gift,
+                      quantity: 0,
+                      rating: rating,
+                      image: image
+                    });
+                  }
+                })
+                .catch(error => console.log(error));
+            }
           }
         }
       }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);  
-  }
 
-        dispatch(setProductVsPromotions(productPromosMap));
-        dispatch(setPromotions(productsBuilded))  
+    dispatch(setProductVsPromotions(productPromosMap));
+    dispatch(setPromotions(productsBuilded));
   }, []);
-
-  /*
-  useEffect(() => {
-    fetchPromotionData();
-  }, []);*/
 
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[], collectionId: string) {
     const arr: ProductResponseInterface[] | null | undefined = collectionId === RECOMMENDED_PRODUCTS ? products : otherProducts;
@@ -461,8 +443,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
           productId: product.ProductId,
           name: product.ProductName,
           image: { uri: product.SkuImageUrl },
-          price: price.basePrice,
-          oldPrice: price.basePrice,
+          price: price.sellingPrice, // TODO: preguntar si es sellingPrice o listPrice
+          oldPrice: price.sellingPrice, // TODO: preguntar si es sellingPrice o listPrice
           porcentDiscount: 0,
           quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.ProductId.toString())?.quantity : 0,
           ratingValue: raiting.average
@@ -548,7 +530,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         updateShoppingCartProduct={updateShoppingCartProduct}
         viewRecomendedProducts={viewRecomendedProducts}
         viewOtherProducts={viewOtherProducts}
-        productPromotions={productPromotions}
       />
       <AddressModalSelection
         visible={addressModalSelectionVisible}
@@ -574,25 +555,5 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     </SafeArea>
   );
 };
-
-const styles = StyleSheet.create({
-  modalBackground: {
-    justifyContent: 'space-evenly',
-    backgroundColor: 'white',
-    flex: 1,
-    height: CONTAINER_HEIGHT,
-    marginVertical: CONTAINER_HEIGHT,
-    marginHorizontal: 40,
-    borderRadius: 16,
-    paddingTop: 10
-  },
-  iconContainer: {
-    backgroundColor: theme.brandColor.iconn_warm_grey,
-    alignSelf: 'flex-end',
-    marginTop: 12,
-    marginRight: 12,
-    padding: 8
-  }
-});
 
 export default HomeController;

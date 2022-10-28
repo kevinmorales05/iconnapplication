@@ -13,7 +13,7 @@ async function getProductsByCollectionId(collection: string): Promise<any> {
  * Function to get product price by product id.
  */
 async function getProductPriceByProductId(productId: string): Promise<any> {
-  const response = await DocsPriceApi.getInstance().getRequest(`/pricing/prices/${productId}`);
+  const response = await DocsPriceApi.getInstance().getRequest(`/pricing/prices/${productId}/computed/1`);
   const { data } = response;
   return data;
 }

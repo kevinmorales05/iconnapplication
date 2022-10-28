@@ -51,7 +51,6 @@ interface Props {
   average?: number;
   isReviewed?: boolean;
   prodId?: number;
-  productPromotions: Map<string, Object>;
 }
 
 const ProductDetailScreen: React.FC<Props> = ({
@@ -66,8 +65,7 @@ const ProductDetailScreen: React.FC<Props> = ({
   totalCount,
   average,
   isReviewed,
-  prodId,
-  productPromotions
+  prodId
 }) => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const [productPrice, setProductPrice] = useState(0);
@@ -92,7 +90,6 @@ const ProductDetailScreen: React.FC<Props> = ({
   itemId = detailSelected;
 
   const fetchData = useCallback(async () => {
-    console.log('itemmmm:::' + itemId);
     const imgRoot = PRODUCT_DETAIL_ASSETS;
     await getSkuFilesById(itemId)
       .then(async responseSku => {
@@ -111,7 +108,6 @@ const ProductDetailScreen: React.FC<Props> = ({
     await getProductDetailById(itemId)
       .then(async responseProductDetail => {
         setProductDetail(responseProductDetail);
-        console.log('DETAIL', responseProductDetail);
       })
       .catch(error => console.log(error));
 
@@ -160,14 +156,13 @@ const ProductDetailScreen: React.FC<Props> = ({
       const price = await getPriceByProductId(p.productId);
       const raiting = await getRatingByProductId(p.productId);
       if (price && raiting) {
-        p.oldPrice = price?.basePrice;
-        p.price = price?.basePrice;
+        p.oldPrice = price?.sellingPrice;
+        p.price = price?.sellingPrice;
         p.ratingValue = raiting.average;
         p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
         productsToRender.push(p);
       }
     }
-    console.log({ productsToRender });
     setComplementaryProducts(productsToRender);
   }
 
@@ -180,27 +175,20 @@ const ProductDetailScreen: React.FC<Props> = ({
   };
 
   const hideModalForAdult = () => {
-    console.log('hideModalForAdult...');
     setVisible(false);
   };
 
   const showModalForAdult = () => {
-    console.log('showModalForAdult...');
     setVisible(true);
   };
 
   const userUpdated = (productId: string) => {
     updateShoppingCartProduct!('create', productId);
     hideModalForAdult();
-  }
+  };
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
-    console.log('isAdult...');
-    console.log(isAdult);
-    console.log('isAdult...');
-    console.log('pId', productId);
     if (isAdult) {
-      console.log('updateShoppingCartProduct');
       updateShoppingCartProduct!('create', productId);
     } else {
       setProductId(productId);
@@ -209,43 +197,31 @@ const ProductDetailScreen: React.FC<Props> = ({
   };
 
   const validateAgeForAddItem = (itemId: string) => {
-    console.log('validate itemId:::'+itemId+ 'userId'+user.userId);
-    let isAdultInProductSpecification = false
+    let isAdultInProductSpecification = false;
     getProductSpecification(itemId).then(producSpecificationResponse => {
-      console.log(producSpecificationResponse);
       if (producSpecificationResponse.length > 0) {
-        console.log('tiene mas de uno');
         const { Value } = producSpecificationResponse[0];
         if (Value.length > 0) {
-          isAdultInProductSpecification = (Value[0] == 'Sí');
-          console.log('value validation: '+(Value[0] == 'Sí'));
+          isAdultInProductSpecification = Value[0] == 'Sí';
         }
         if (isAdultInProductSpecification) {
-          console.log('555:::');
           vtexUserServices.getUserByEmail(email!).then(userResponse => {
-            console.log('depues de userbyemail');
             if (userResponse && userResponse.data) {
-              console.log('en validacion de datos');
-              console.log('userResponse', JSON.stringify(userResponse, null, 3));
               const { data } = userResponse;
               if (data[0].isAdult === true) {
-                console.log('ya es adulto');
                 updateShoppingCartProduct('create', itemId);
               } else {
-                console.log('no es adulto');
                 showModalForAdult();
               }
             }
           });
         } else {
-          console.log('directo a agregar');
           updateShoppingCartProduct('create', itemId);
         }
-      }else {
-        console.log('directo a agregar');
+      } else {
         updateShoppingCartProduct('create', itemId);
       }
-    })
+    });
   };
 
   const isProductIdInShoppingCart = productIde => {
@@ -308,7 +284,6 @@ const ProductDetailScreen: React.FC<Props> = ({
 
   const addFavorite1 = async (newFav: ItemsFavoritesInterface) => {
     if (favsId === '') {
-      console.log('no hay favsid');
       const adding: ItemsFavoritesInterface[] = [];
       adding.push(newFav);
       dispatch(setFav(adding));
@@ -316,11 +291,8 @@ const ProductDetailScreen: React.FC<Props> = ({
     } else {
       let copyFavs = favs;
       dispatch(addFav(newFav));
-      console.log('INICIANDO', copyFavs);
       let copycopy = copyFavs.concat(newFav);
-      console.log('ANTES VTEX', copycopy);
       const response = await uploadVtex(copycopy);
-      console.log('TERMINANDO', copycopy, response);
     }
   };
 
@@ -330,7 +302,6 @@ const ProductDetailScreen: React.FC<Props> = ({
       email: email as string,
       ListItemsWrapper: [{ ListItems: favs, IsPublic: true, Name: 'Wishlist' }]
     });
-    console.log('Añadiendo a vtex', response, favs);
     if (favsId === '') {
       dispatch(setFavId(response.DocumentId));
     }
@@ -387,7 +358,6 @@ const ProductDetailScreen: React.FC<Props> = ({
       addFavorite1(productToAdd);
       setIsFav(!isFav);
     }
-    console.log('ACTUAL FAVS', favs, favsId);
   };
 
   return (
@@ -403,7 +373,7 @@ const ProductDetailScreen: React.FC<Props> = ({
       >
         <Container style={{ backgroundColor: theme.brandColor.white, width: '100%' }}>
           <Container backgroundColor="white">
-            <Container style={{alignItems:'center', justifyContent:'center'}}>
+            <Container style={{ alignItems: 'center', justifyContent: 'center' }}>
               <ImagesCarusel
                 imagesList={skusForProductImages}
                 imageSize={240}
@@ -414,32 +384,35 @@ const ProductDetailScreen: React.FC<Props> = ({
             <Container row space="between" style={{ marginTop: 16, width: '100%', paddingHorizontal: 10 }}>
               <Container row>
                 <Rating ratingValue={productRating.average} />
-                <Container style={{marginTop:-3.5, marginLeft:2}}>
-                <TouchableText
-                  marginLeft={8}
-                  underline
-                  textColor={theme.brandColor.iconn_accent_principal}
-                  text={productRating.totalCount + ' Calificaciones'}
-                  typography="h4"
-                  fontBold
-                  onPress={() => {}}
-                  marginTop={8}
+                <Container style={{ marginTop: -3.5, marginLeft: 2 }}>
+                  <TouchableText
+                    marginLeft={8}
+                    underline
+                    textColor={theme.brandColor.iconn_accent_principal}
+                    text={productRating.totalCount + ' Calificaciones'}
+                    typography="h4"
+                    fontBold
+                    onPress={() => {}}
+                    marginTop={8}
                   />
                 </Container>
               </Container>
-              {
-                !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
-                  ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ||
-                    productVsPromotion.get('' + itemId).promotionType == 'buyAndWin' || productVsPromotion.get('' + itemId).promotionType == 'forThePriceOf'
-                    ? <></> : 
-                    <Container>
-                      <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
-                    </Container>
-                  :
+              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
+                productVsPromotion.get('' + itemId).promotionType == 'campaign' ||
+                productVsPromotion.get('' + itemId).promotionType == 'regular' ||
+                productVsPromotion.get('' + itemId).promotionType == 'buyAndWin' ||
+                productVsPromotion.get('' + itemId).promotionType == 'forThePriceOf' ? (
+                  <></>
+                ) : (
                   <Container>
                     <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
                   </Container>
-              }
+                )
+              ) : (
+                <Container>
+                  <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+                </Container>
+              )}
             </Container>
 
             <Container style={{ marginTop: 16, paddingHorizontal: 10 }}>
@@ -454,17 +427,21 @@ const ProductDetailScreen: React.FC<Props> = ({
                     !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                       ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                         ? '$' +
-                          ( ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) -
-                            (parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
-                            productVsPromotion.get('' + itemId).percentualDiscountValue) /
-                              100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'))
+                          (
+                            (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) -
+                            (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
+                              productVsPromotion.get('' + itemId).percentualDiscountValue) /
+                              100
+                          )
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                         : ''
                       : ''
                   }
                 ></TextContainer>
                 {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
                   productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
-                    <Container style={{marginLeft: 15, marginTop:1}}>
+                    <Container style={{ marginLeft: 15, marginTop: 1 }}>
                       <Text
                         style={{
                           fontWeight: 'bold',
@@ -474,7 +451,10 @@ const ProductDetailScreen: React.FC<Props> = ({
                           marginTop: 11
                         }}
                       >
-                        {'$' + ((productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,'))}
+                        {'$' +
+                          (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0)
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                       </Text>
                     </Container>
                   ) : (
@@ -483,7 +463,8 @@ const ProductDetailScreen: React.FC<Props> = ({
                       fontBold
                       fontSize={theme.fontSize.h1}
                       text={
-                        '$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                        '$' +
+                        (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
                       }
                     />
                   )
@@ -493,7 +474,8 @@ const ProductDetailScreen: React.FC<Props> = ({
                     fontBold
                     fontSize={theme.fontSize.h1}
                     text={
-                      '$' + (productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                      '$' +
+                      (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
                     }
                   />
                 )}
@@ -509,9 +491,13 @@ const ProductDetailScreen: React.FC<Props> = ({
                         'ahorra $' +
                         (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                           ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
-                            ? ((parseInt(productPrice != undefined && productPrice.basePrice ? productPrice.basePrice : 0) *
-                            productVsPromotion.get('' + itemId).percentualDiscountValue) /
-                              100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                            ? (
+                                (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
+                                  productVsPromotion.get('' + itemId).percentualDiscountValue) /
+                                100
+                              )
+                                .toFixed(2)
+                                .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                             : ''
                           : '')
                       }
@@ -576,7 +562,7 @@ const ProductDetailScreen: React.FC<Props> = ({
             <TextContainer text={`¿Un último antojo?`} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
             <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false}>
               <Container row style={{ width: '100%', marginBottom: 20, paddingLeft: 5, paddingRight: 30 }}>
-                { complementaryProducts.length === 0 ? (
+                {complementaryProducts.length === 0 ? (
                   <>
                     <Container flex row style={{ marginLeft: 8 }}>
                       <CardProductSkeleton />
@@ -584,8 +570,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                       <CardProductSkeleton />
                     </Container>
                   </>
-                ) :
-                complementaryProducts.length ? (
+                ) : complementaryProducts.length ? (
                   complementaryProducts.map((prod, index) => {
                     return (
                       <CardProduct
@@ -595,9 +580,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                         price={prod.price!}
                         productId={prod.productId}
                         quantity={prod.quantity!}
-                        onPressAddCart={
-                          validateCategoryForAddItem
-                        }
+                        onPressAddCart={validateCategoryForAddItem}
                         onPressAddQuantity={() => {
                           updateShoppingCartProduct('add', prod.productId);
                         }}
@@ -607,7 +590,6 @@ const ProductDetailScreen: React.FC<Props> = ({
                         onPressDecreaseQuantity={() => {
                           updateShoppingCartProduct('substract', prod.productId);
                         }}
-                        productPromotions={productPromotions}
                         onPressOut={hideModalForAdult}
                       />
                     );
@@ -638,11 +620,11 @@ const ProductDetailScreen: React.FC<Props> = ({
             />
           </Container>
         </Container>
-        <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={itemId} userUpdated={userUpdated}/>
+        <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={itemId} userUpdated={userUpdated} />
       </ScrollView>
       <Container style={{ marginBottom: 20, paddingHorizontal: 16, paddingTop: 10, height: '15%' }}>
         {cartItemQuantity > 0 ? (
-          <Container style={{height: 50, alignItems:'stretch' }} >
+          <Container style={{ height: 50, alignItems: 'stretch' }}>
             <QuantityProduct
               quantity={cartItemQuantity}
               onPressAddQuantity={() => {
@@ -662,7 +644,7 @@ const ProductDetailScreen: React.FC<Props> = ({
           </Container>
         ) : (
           <Button
-            icon={<Image source={ICONN_REVERSE_BASKET}  resizeMode="cover" style={{ width: 28, height: 28 }} />}
+            icon={<Image source={ICONN_REVERSE_BASKET} resizeMode="cover" style={{ width: 28, height: 28 }} />}
             round
             fontBold
             fontSize="h4"
@@ -689,15 +671,6 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
     padding: moderateScale(8)
   },
-  subContainer: {
-    flex: 1,
-    width: '100%'
-  },
-  containerImage: {
-    width: '100%',
-    height: moderateScale(90),
-    alignItems: 'flex-end'
-  },
   containerPorcentDiscount: {
     width: moderateScale(84),
     height: moderateScale(23),
@@ -705,38 +678,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.brandColor.iconn_green_discount,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:10
-  },
-  containerTitle: {
-    width: '100%',
-    minHeight: moderateScale(45),
-    marginTop: moderateScale(10)
-  },
-  containerRating: {
-    width: '100%',
-    flexDirection: 'row',
-    marginTop: moderateScale(9),
-    alignItems: 'center'
-  },
-  containerPrice: {
-    width: '100%',
-    flexDirection: 'row',
-    marginTop: moderateScale(15),
-    alignItems: 'center'
+    marginTop: 10
   },
   image: {
     width: moderateScale(20),
     height: moderateScale(20),
     resizeMode: 'contain'
-  },
-  containerButton: {
-    flex: 0.25,
-    width: '100%',
-    justifyContent: 'flex-end',
-    backgroundColor: theme.brandColor.iconn_white,
-    paddingTop: 10
-  },
-  buttonAddProduct: {
-    borderRadius: moderateScale(10)
   }
 });

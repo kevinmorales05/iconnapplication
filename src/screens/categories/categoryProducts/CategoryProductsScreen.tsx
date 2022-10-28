@@ -96,7 +96,7 @@ const CategoryProductsScreen: React.FC = () => {
   const userUpdated = (productId: string, isAdult: boolean) => {
     updateShoppingCartProduct!('create', productId);
     hideModalForAdult();
-  }
+  };
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
     console.log('isAdult', isAdult);
@@ -150,7 +150,6 @@ const CategoryProductsScreen: React.FC = () => {
   }, [products]);
 
   useEffect(() => {
-    console.log('useEffectCategory')
     if (products?.length! > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       updateQuantityProducts(existingProducts);
@@ -191,8 +190,8 @@ const CategoryProductsScreen: React.FC = () => {
       const price = await getPriceByProductId(p.productId);
       const raiting = await getRatingByProductId(p.productId);
       if (price && raiting) {
-        p.oldPrice = price?.basePrice;
-        p.price = price?.basePrice;
+        p.oldPrice = price?.sellingPrice;
+        p.price = price?.sellingPrice;
         p.ratingValue = raiting.average;
         p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
         productsToRender.push(p);
@@ -226,7 +225,7 @@ const CategoryProductsScreen: React.FC = () => {
           productId: product.productId
         };
       });
-      console.log({productsTem})
+      console.log({ productsTem });
       setProducts(productsTem);
     } else {
       setProducts([]);
@@ -236,7 +235,7 @@ const CategoryProductsScreen: React.FC = () => {
   };
 
   const loadMoreProducts = async () => {
-    setLoading(true)
+    setLoading(true);
     const productsRequest: any[] = await getProducts(itemToLoad + 10);
     let productsTem: ProductInterface[] = productsRequest.map(product => {
       return {
@@ -246,8 +245,8 @@ const CategoryProductsScreen: React.FC = () => {
         productId: product.productId
       };
     });
-    if(!productsRequest.length){
-      setLoading(false)
+    if (!productsRequest.length) {
+      setLoading(false);
     }
     setProducts(productsTem);
     setItemToLoad(itemToLoad + 10);
@@ -424,12 +423,11 @@ const CategoryProductsScreen: React.FC = () => {
                       paddingBottom: moderateScale(50)
                     }}
                   />
-                  {
-                    isLoading &&
-                      <Container style={{ paddingBottom: theme.bottomStickyViewBottomPadding + verticalScale(5), paddingTop: verticalScale(5)}}>
-                        <ActivityIndicator size="small" color={theme.brandColor.iconn_accent_principal} />
-                      </Container>
-                  }
+                  {isLoading && (
+                    <Container style={{ paddingBottom: theme.bottomStickyViewBottomPadding + verticalScale(5), paddingTop: verticalScale(5) }}>
+                      <ActivityIndicator size="small" color={theme.brandColor.iconn_accent_principal} />
+                    </Container>
+                  )}
                 </Container>
               </Container>
             ) : (
@@ -468,7 +466,7 @@ const CategoryProductsScreen: React.FC = () => {
               </Container>
             )}
           </Container>
-          <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={productId!} userUpdated={userUpdated}/>
+          <AdultAgeVerificationScreen onPressClose={hideModalForAdult} visible={visible} productId={productId!} userUpdated={userUpdated} />
         </Container>
       </DrawerLayout>
     </SafeArea>

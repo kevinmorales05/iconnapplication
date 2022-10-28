@@ -1,10 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import FavoriteScreen from './FavoriteScreen';
-import { SafeArea } from 'components/atoms/SafeArea';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from 'navigation/types';
-import { useEnterModal, useLoading } from 'context';
+import { useLoading } from 'context';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 import {
   ExistingProductInCartInterface,
@@ -18,44 +14,35 @@ import {
   useAppDispatch,
   useAppSelector
 } from 'rtk';
-import { useShoppingCart } from '../hooks/useShoppingCart';
 import { getSkuFilesById } from 'services/vtexProduct.services';
 import Config from 'react-native-config';
 
 const InviteSignUpController: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { favs, user, favsId } = useAppSelector((state: RootState) => state.auth);
   const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
   const { email } = user;
   const [completeList, setCompleteList] = useState<ProductInterface[] | null>();
-  const [skusForProductImages, setSkusForProductImages] = useState([]);
   const { FAVORITE_ASSETS } = Config;
   const loader = useLoading();
 
   const getFavorites = useCallback(async () => {
     loader.show();
     const response = await vtexFavoriteServices.getFavoritesByUserEmail(email as string);
-    console.log({responsegetFavorites: response})
-    if(response.length){
-      if(response[0].ListItemsWrapper.length){
+    if (response.length) {
+      if (response[0].ListItemsWrapper.length) {
         const list = response[0].ListItemsWrapper[0].ListItems;
-        if(!list.length){
+        if (!list.length) {
           loader.hide();
         }
         setFavList(list);
-        console.log('PRUEBA', list);
-        console.log('PRUEBA2', favsId);
-        console.log('PRUEBA3', favs);
-        console.log('PRUEBA4', response);
-        console.log('PRUEBA5', favList);
         dispatch(setFav(favList));
         dispatch(setFavId(response[0].id));
-      }else{
+      } else {
         loader.hide();
       }
-    }else{
+    } else {
       loader.hide();
     }
   }, []);
@@ -67,21 +54,21 @@ const InviteSignUpController: React.FC = () => {
   const getPicture = async (productId: string) => {
     const imgRoot = FAVORITE_ASSETS;
     let pics = [];
-    await getSkuFilesById(productId).then(async responseSku => {
-      let skuForImages = [];
-      if (responseSku) {
-        if (responseSku.length > 0) {
-          responseSku.map(sku => {
-            skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
-          });
-          console.log('ESTO ES', skuForImages);
+    await getSkuFilesById(productId)
+      .then(async responseSku => {
+        let skuForImages = [];
+        if (responseSku) {
+          if (responseSku.length > 0) {
+            responseSku.map(sku => {
+              skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
+            });
+          }
+          pics = skuForImages;
         }
-        pics = skuForImages;
-      }
-    })
-    .catch(err =>{
-      console.log(err)
-    });
+      })
+      .catch(err => {
+        console.log(err);
+      });
     return pics;
   };
 
@@ -96,19 +83,17 @@ const InviteSignUpController: React.FC = () => {
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[]) {
     const arr: ItemsFavoritesInterface[] | null | undefined = favs;
     const favProductsArr: ProductInterface[] | undefined = [];
-    console.log('ARREGLOS', arr, favProductsArr);
     for (const product of arr) {
       const price = await getPriceByProductId(product.Id);
       const raiting = await getRatingByProductId(product.Id);
       const pic = await getPicture(product.Id);
-      console.log({foto: pic})
       if (price && raiting) {
         const newProduct: ProductInterface = {
           productId: product.Id,
           name: product.Name,
           image: pic && pic.length ? pic[0].url : '',
-          price: price.basePrice,
-          oldPrice: price.basePrice,
+          price: price.sellingPrice,
+          oldPrice: price.sellingPrice,
           porcentDiscount: 0,
           quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.Id.toString())?.quantity : 0,
           ratingValue: raiting.average
@@ -116,7 +101,6 @@ const InviteSignUpController: React.FC = () => {
         favProductsArr.push(newProduct);
       }
     }
-    console.log({favProductsArr});
     setCompleteList(favProductsArr);
     loader.hide();
   }
