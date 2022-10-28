@@ -38,11 +38,16 @@ const ProductDetailController: React.FC<Props> = () => {
   const toast = useToast();
 
 
-   const fetchReviewData = useCallback( async () => {
+   const fetchReviewData =async () => {
     const responseAverage = await vtexReviewsRatings.getReviewByProductID(prodId);
     const responseList = await vtexReviewsRatings.getReviewList(prodId);
     setAverage(responseAverage.average);
     setTotalCount(responseAverage.totalCount);
+    setCountUno(0);
+    setCountDos(0);
+    setCountTres(0);
+    setCountFour(0);
+    setCountFive(0);
 
     let variable = await (Object.values(responseList.data));
       variable.forEach((value, index) => {
@@ -61,7 +66,7 @@ const ProductDetailController: React.FC<Props> = () => {
                 console.log(typeof value.rating);
               }
     });
-  },[]);
+  };
 
   const ratingCompleted =(rating:number)=>{
     setRatingValue(rating);
