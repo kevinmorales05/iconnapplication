@@ -17,7 +17,7 @@ const LegalScreen: React.FC<LegalScreenProps> = ({openPage}) => {
           text="Términos y Condiciones"
           disable={false}
           onPressNavigateTo={() => {
-            openPage('https://www.7-eleven.com.mx/nuestra-empresa/aviso-de-privacidad.html');
+            openPage('https://oneiconn.myvtex.com/terminos-y-condiciones');
 
           }}
         />
@@ -25,7 +25,7 @@ const LegalScreen: React.FC<LegalScreenProps> = ({openPage}) => {
           text="Aviso de privacidad"
           disable={false}
           onPressNavigateTo={() => {
-            openPage('https://www.7-eleven.com.mx/nuestra-empresa/aviso-de-privacidad.html');
+            openPage('https://oneiconn.myvtex.com/aviso-de-privacidad');
           }}
         />
       </Container>
