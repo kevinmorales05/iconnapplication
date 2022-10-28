@@ -37,19 +37,23 @@ const InviteSignUpController: React.FC = () => {
   const getFavorites = useCallback(async () => {
     loader.show();
     const response = await vtexFavoriteServices.getFavoritesByUserEmail(email as string);
-    const list = response[0].ListItemsWrapper[0].ListItems;
-    if(!list.length){
+    console.log({responsegetFavorites: response})
+    if(response.length){
+      const list = response[0].ListItemsWrapper[0].ListItems;
+      if(!list.length){
+        loader.hide();
+      }
+      setFavList(list);
+      console.log('PRUEBA', list);
+      console.log('PRUEBA2', favsId);
+      console.log('PRUEBA3', favs);
+      console.log('PRUEBA4', response);
+      console.log('PRUEBA5', favList);
+      dispatch(setFav(favList));
+      dispatch(setFavId(response[0].id));
+    }else{
       loader.hide();
     }
-    setFavList(list);
-    console.log('PRUEBA', list);
-    console.log('PRUEBA2', favsId);
-    console.log('PRUEBA3', favs);
-    console.log('PRUEBA4', response);
-    console.log('PRUEBA5', favList);
-    dispatch(setFav(favList));
-
-    dispatch(setFavId(response[0].id));
   }, []);
 
   useEffect(() => {
