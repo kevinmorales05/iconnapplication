@@ -262,9 +262,18 @@ const CardProduct: React.FC<CardProductProps> = ({
                 <></>
               )}
             </Container>
-            <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
-              <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
-            </Container>
+            {
+              !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId)
+                ? productVsPromotion.get('' + productId).promotionType == 'campaign' || productVsPromotion.get('' + productId).promotionType == 'regular' || 
+                 productVsPromotion.get('' + productId).promotionType == 'buyAndWin' || productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
+                  ? <></> : <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
+                    <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+                  </Container>
+                :
+                <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
+                  <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+                </Container>
+            }
           </Container>
         </ImageBackground>
         <Container>

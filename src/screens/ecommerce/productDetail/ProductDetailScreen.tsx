@@ -427,9 +427,19 @@ const ProductDetailScreen: React.FC<Props> = ({
                   />
                 </Container>
               </Container>
-              <Container>
-                <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
-              </Container>
+              {
+                !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
+                  ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ||
+                    productVsPromotion.get('' + itemId).promotionType == 'buyAndWin' || productVsPromotion.get('' + itemId).promotionType == 'forThePriceOf'
+                    ? <></> : 
+                    <Container>
+                      <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+                    </Container>
+                  :
+                  <Container>
+                    <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+                  </Container>
+              }
             </Container>
 
             <Container style={{ marginTop: 16, paddingHorizontal: 10 }}>
