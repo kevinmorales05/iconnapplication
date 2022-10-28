@@ -456,7 +456,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     for (const product of arr) {
       const price = await getPriceByProductId(product.ProductId);
       const raiting = await getRatingByProductId(product.ProductId);
-      console.log({ priceGetProducts: price });
       if (price && raiting) {
         const newProduct: ProductInterface = {
           productId: product.ProductId,
@@ -499,7 +498,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   useEffect(() => {
     if (otherProducts?.length! > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-      getProductsInfo(existingProducts, RECOMMENDED_PRODUCTS!);
+      getProductsInfo(existingProducts, OTHER_PRODUCTS!);
     }
   }, [otherProducts]);
 
