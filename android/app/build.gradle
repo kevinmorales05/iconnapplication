@@ -172,8 +172,8 @@ android {
         applicationId "com.iconn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 29
-        versionName "1.9.7."
+        versionCode 30
+        versionName "1.9.8."
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
