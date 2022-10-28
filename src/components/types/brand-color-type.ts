@@ -20,4 +20,5 @@ export type BrandColorTypes =
   | 'google'
   | 'iconn_green_discount'
   | 'yellow_star'
-  | 'yellow_container';
+  | 'yellow_container'
+  | 'iconn_green_original_med';

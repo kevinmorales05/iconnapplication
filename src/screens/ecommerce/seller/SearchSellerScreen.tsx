@@ -172,27 +172,29 @@ const SearchSellerScreen = () => {
   }, [ user ])
 
   const getPickUpPoints = async (cp: string) => {
-    const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
-    const temSellers: SellerInterface[] = [];
-    if(pickUp.items.length){
-      sellers.forEach((seller)=>{
-        console.log({temSellers:pickUp.items})
-        const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-        if(store.distance < 8){
-          temSellers.push(seller);
-        }
-      })
+    if(cp.length === 5){
+      const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
+      const temSellers: SellerInterface[] = [];
+      if(pickUp.items.length){
+        sellers.forEach((seller)=>{
+          console.log({temSellers:pickUp.items})
+          const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+          if(store.distance < 8){
+            temSellers.push(seller);
+          }
+        })
+      }
+      if(temSellers.length){
+        setSellers(temSellers)
+        return;
+      }
+      toast.show({
+        message: 'No se encontraron tiendas cercanas',
+        type: 'error'
+      });
+      setSellers([])
+      loader.hide();
     }
-    if(temSellers.length){
-      setSellers(temSellers)
-      return;
-    }
-    toast.show({
-      message: 'No se encontraron tiendas cercanas',
-      type: 'error'
-    });
-    setSellers([])
-    loader.hide();
   }
 
   const getPickUpPointsByAddress = async (position: GeoCoordinates) => {

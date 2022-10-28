@@ -765,8 +765,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           fontSize="h5"
           round
           fontBold
+          disabled={!subTotalCalculated}
           onPress={onPressCheckout}
-          style={{ marginBottom: 8, width: '100%', backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 12 }}
+          borderColor={subTotalCalculated ? 'iconn_green_original' : 'iconn_green_original_med'}
+          style={{ marginBottom: 8, width: '100%', backgroundColor: subTotalCalculated ? theme.brandColor.iconn_green_original : theme.brandColor.iconn_green_original_med, height: 50, borderRadius: 12}}
         >
           Continuar
         </Button>
@@ -774,7 +776,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     </Container>
   );
 
-  const cartFooter = productList != undefined && productList.length > 0 ? fullCartFooter : emptyCartFooter;
+  const cartFooter = productList != undefined && productList.length > 0 ? fullCartFooter  : emptyCartFooter;
   const cartBody = productList != undefined && productList.length > 0 ? fullCart : emptyCart;
 
   return (

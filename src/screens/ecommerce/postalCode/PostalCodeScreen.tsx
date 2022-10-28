@@ -85,28 +85,30 @@ const PostalCodeScreen = () => {
   // }, [position]);
 
   const getPickUpPoints = async (cp: string) => {
-    const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
-    let item;
-    if (pickUp.items.length) {
-      sellers.forEach(seller => {
-        const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-        if (store.distance < 8) {
-          return (item = seller);
+    if(cp.length === 5){
+      const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
+      let item;
+      if (pickUp.items.length) {
+        sellers.forEach(seller => {
+          const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+          if (store.distance < 8) {
+            return (item = seller);
+          }
+        });
+        if (item) {
+          dispatch(setDefaultSeller({ defaultSeller: item }));
+          loader.show('', 'ecommerce');
+          navigate('Home', { paySuccess: false });
+          dispatch(setUserCP({cp: cp}))
+          return;
         }
-      });
-      if (item) {
-        dispatch(setDefaultSeller({ defaultSeller: item }));
-        loader.show('', 'ecommerce');
-        navigate('Home', { paySuccess: false });
-        dispatch(setUserCP({cp: cp}))
-        return;
       }
+      toast.show({
+        message: 'No se encontraron tiendas cercanas',
+        type: 'error'
+      });
+      loader.hide();
     }
-    toast.show({
-      message: 'No se encontraron tiendas cercanas',
-      type: 'error'
-    });
-    loader.hide();
   };
 
   const getPickUpPointsByAddress = async (position: Geolocation.GeoPosition) => {
