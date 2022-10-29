@@ -8,6 +8,7 @@ import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } 
 import theme from 'components/theme/theme';
 import { getInvoicingProfileListThunk, resendVerificationEmailThunk } from 'rtk/thunks/invoicing.thunks';
 import { useAlert, useLoading, useToast } from 'context';
+import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 
 const InvoiceController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -129,15 +130,16 @@ const InvoiceController: React.FC = () => {
   };
 
   return (
-    <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
-      <InvoiceScreen
+    <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_background}> 
+      <InConstructionController />
+      {/* <InvoiceScreen
         invoicingProfileList={invoicingProfileList}
         defaultProfile={defaultProfile!}
         onSubmit={onSubmit}
         resendEmail={resendEmail}
         goToAddTicketPetro={goToAddTicketPetro}
         goToAddTicketSeven={goToAddTicketSeven}
-      />
+      /> */}
     </SafeArea>
   );
 };

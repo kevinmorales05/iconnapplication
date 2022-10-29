@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { emailRules, alphabetRule } from 'utils/rules';
 import { useIsFocused } from '@react-navigation/native';
 import { AuthDataInterface, InvoicingSevenTicketResponseInterface } from 'rtk';
+import InConstructionController from '../InConstruction/InConstructionController';
 interface Props {
   onSubmit: (fields: any) => void;
   goBack: () => void;
@@ -149,4 +150,11 @@ const ContactInformationScreen: React.FC<Props> = ({ onSubmit, goBack, user }) =
   );
 };
 
-export default ContactInformationScreen;
+const temCons = ()=>{
+  return  <InConstructionController />
+}
+
+
+
+// export default ContactInformationScreen;
+export default temCons;
