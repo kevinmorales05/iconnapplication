@@ -130,7 +130,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
                       Confirmo que tengo 18 años o más
                     </Button>
                   </Container>
-                  <Container row space='between' style={{
+                  <Container style={{
                     borderLeftColor: '#f3d449',
                     borderRightColor: '#f3d449',
                     borderBottomColor: '#f3d449',
@@ -142,17 +142,17 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
                     borderRadius: 8,
                     paddingVertical: 15
                   }}>
-                    <Container center space='around' style={{ marginLeft: 6, width: '10%' }}>
+                    <Container row style={{ marginLeft: 7, width: '100%' }}>
+                    <Container space='around' style={{ marginLeft: 7, width: '10%' }}>
                       <Octicons name="info" size={24} color={theme.fontColor.dark} />
                     </Container>
-                    <Container center space='around' style={{ width: '90%' }}>
+                    <Container style={{ width: '87%', marginLeft:1 }}>
                       <TextContainer
                         text="Al momento de la entrega de los productos se te pedirá tu identificación oficial para corroborar tu mayoría de edad."
                         fontSize={12}
-                        textAlign="justify"
                         numberOfLines={3}
-                        marginRight={10}
                       ></TextContainer>
+                      </Container>
                     </Container>
                   </Container>
                 </Container>

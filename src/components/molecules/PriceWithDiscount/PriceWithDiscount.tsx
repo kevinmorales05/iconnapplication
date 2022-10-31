@@ -13,7 +13,6 @@ interface PriceWithDiscountProps {
 }
 
 const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice, productPromotions, productId }: PriceWithDiscountProps) => {
-  console.log(productPromotions)
   return (
     <Container>
       <Container row style={styles.container}>
