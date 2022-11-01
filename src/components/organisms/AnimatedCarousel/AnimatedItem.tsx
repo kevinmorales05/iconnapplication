@@ -20,10 +20,9 @@ interface Props {
   onPressItem: (item: CarouselItem) => void;
   onPressProduct?: (type: CounterType, productId: string) => void;
   onPressOut: () => void;
-  productPromotions: Map<string,Object>
 }
 
-const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, onPressProduct, onPressOut, productPromotions }) => {
+const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, onPressProduct, onPressOut }) => {
   const { width } = useWindowDimensions();
   const rightCardSpace = width * 0.08 * 2;
   position = position === 0 ? 16 : 8;
@@ -131,7 +130,6 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
             onPressProduct!('substract', product.productId);
           }}
           onPressOut={onPressOut}
-          productPromotions={productPromotions}
         />
       </Container>
     ) : data !== undefined && data.promotion_type === 'principal' ? (

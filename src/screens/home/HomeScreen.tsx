@@ -24,7 +24,6 @@ interface Props {
   homeOtherProducts: ProductInterface[];
   updateShoppingCartProduct: (type: CounterType, productId: string) => void;
   onPressViewMore: (products: any) => void;
-  productPromotions: Map<string, Object>;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -43,7 +42,6 @@ const HomeScreen: React.FC<Props> = ({
   homeOtherProducts,
   updateShoppingCartProduct,
   onPressViewMore,
-  productPromotions,
   viewRecomendedProducts,
   viewOtherProducts
 }) => {
@@ -116,13 +114,13 @@ const HomeScreen: React.FC<Props> = ({
 
         <Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
+            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
+            <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
+            <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container height={367} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
@@ -151,14 +149,13 @@ const HomeScreen: React.FC<Props> = ({
                   onPressItem={onPressCarouselItem}
                   onPressProduct={updateShoppingCartProduct}
                   onPressOut={onPressOut}
-                  productPromotions={productPromotions}
                 />
               )}
             </Container>
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
-            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
+            <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container height={367} style={{ marginTop: 0 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
@@ -187,14 +184,13 @@ const HomeScreen: React.FC<Props> = ({
                   onPressItem={onPressCarouselItem}
                   onPressProduct={updateShoppingCartProduct}
                   onPressOut={onPressOut}
-                  productPromotions={productPromotions}
                 />
               )}
             </Container>
           </Container>
           <Container style={{ marginTop: 16, marginBottom: 16 }}>
             <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
-            <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} productPromotions={productPromotions} />
+            <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
         </Container>
         <AdultAgeVerificationScreen onPressClose={onPressOut} visible={visible} />

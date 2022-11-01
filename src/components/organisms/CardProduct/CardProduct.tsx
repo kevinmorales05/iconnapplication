@@ -46,7 +46,6 @@ interface CardProductProps {
   notNeedMarginLeft?: boolean;
   isFavorite?: boolean;
   onPressOut: () => void;
-  productPromotions: Map<string, Object>;
 }
 
 const CardProduct: React.FC<CardProductProps> = ({
@@ -64,39 +63,38 @@ const CardProduct: React.FC<CardProductProps> = ({
   onPressAddQuantity,
   onPressDecreaseQuantity,
   notNeedMarginLeft,
-  onPressOut,
-  productPromotions
+  onPressOut
 }: CardProductProps) => {
   const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
 
   const validateCategoryForAddItem = () => {
-    let isAdultInProductSpecification = false
-      getProductSpecification(productId).then(producSpecificationResponse => {
-        console.log(producSpecificationResponse);
-        if (producSpecificationResponse.length > 0) {
-          const { Value } = producSpecificationResponse[0];
-          if (Value.length > 0) {
-            isAdultInProductSpecification = (Value[0] == 'Sí');
-          }
+    let isAdultInProductSpecification = false;
+    getProductSpecification(productId).then(producSpecificationResponse => {
+      console.log(producSpecificationResponse);
+      if (producSpecificationResponse.length > 0) {
+        const { Value } = producSpecificationResponse[0];
+        if (Value.length > 0) {
+          isAdultInProductSpecification = Value[0] == 'Sí';
+        }
 
-          if (isAdultInProductSpecification) {
-            vtexUserServices.getUserByEmail(email!).then(userResponse => {
-              if (userResponse && userResponse.data) {
-                const { data } = userResponse;
-                if (data[0].isAdult === true) {
-                  onPressAddCart(true, productId);
-                } else {
-                  onPressAddCart(false, productId);
-                }
+        if (isAdultInProductSpecification) {
+          vtexUserServices.getUserByEmail(email!).then(userResponse => {
+            if (userResponse && userResponse.data) {
+              const { data } = userResponse;
+              if (data[0].isAdult === true) {
+                onPressAddCart(true, productId);
+              } else {
+                onPressAddCart(false, productId);
               }
-            });
-          } else {
-            onPressAddCart(true, productId);
-          }
-        }else {
+            }
+          });
+        } else {
           onPressAddCart(true, productId);
         }
-      });
+      } else {
+        onPressAddCart(true, productId);
+      }
+    });
   };
 
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -105,7 +103,6 @@ const CardProduct: React.FC<CardProductProps> = ({
   const { favs, favsId, user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
   const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
-
 
   const getIsFavorite = () => {
     if (favs) {
@@ -116,21 +113,19 @@ const CardProduct: React.FC<CardProductProps> = ({
         } else {
           setIsFav(false);
         }
-      }else{
+      } else {
         setIsFav(false);
       }
     }
   };
 
-  const splitText = (text) => {
-    return ( text.length>18?( (text.slice(0,15))+'..'):text );
+  const splitText = text => {
+    return text.length > 18 ? text.slice(0, 15) + '..' : text;
   };
 
   useEffect(() => {
     getIsFavorite();
   }, [isFav, favs]);
-
-  useEffect(() => {}, [productPromotions]);
 
   const addFavorite1 = async (newFav: ItemsFavoritesInterface) => {
     if (favsId === '') {
@@ -233,8 +228,14 @@ const CardProduct: React.FC<CardProductProps> = ({
                 productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ||
                 productVsPromotion.get('' + productId).promotionType == 'campaign' ||
                 productVsPromotion.get('' + productId).promotionType == 'regular' ? (
-                  <Container style={productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
-                  productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ?styles.containerPromotionName: styles.containerPorcentDiscount}>
+                  <Container
+                    style={
+                      productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
+                      productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
+                        ? styles.containerPromotionName
+                        : styles.containerPorcentDiscount
+                    }
+                  >
                     <CustomText
                       fontSize={theme.fontSize.h6}
                       textColor={theme.brandColor.iconn_green_original}
@@ -243,10 +244,10 @@ const CardProduct: React.FC<CardProductProps> = ({
                       text={
                         !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId)
                           ? productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
-                          productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
-                            ? (splitText(productVsPromotion.get('' + productId).promotionName))
+                            productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
+                            ? splitText(productVsPromotion.get('' + productId).promotionName)
                             : productVsPromotion.get('' + productId).promotionType == 'campaign' ||
-                            productVsPromotion.get('' + productId).promotionType == 'regular'
+                              productVsPromotion.get('' + productId).promotionType == 'regular'
                             ? '-' + productVsPromotion.get('' + productId).percentualDiscountValue + '%'
                             : ''
                           : ''
@@ -260,18 +261,22 @@ const CardProduct: React.FC<CardProductProps> = ({
                 <></>
               )}
             </Container>
-            {
-              !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId)
-                ? productVsPromotion.get('' + productId).promotionType == 'campaign' || productVsPromotion.get('' + productId).promotionType == 'regular' || 
-                 productVsPromotion.get('' + productId).promotionType == 'buyAndWin' || productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
-                  ? <></> : <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
-                    <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
-                  </Container>
-                :
+            {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId) ? (
+              productVsPromotion.get('' + productId).promotionType == 'campaign' ||
+              productVsPromotion.get('' + productId).promotionType == 'regular' ||
+              productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
+              productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ? (
+                <></>
+              ) : (
                 <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
                   <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
                 </Container>
-            }
+              )
+            ) : (
+              <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
+                <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+              </Container>
+            )}
           </Container>
         </ImageBackground>
         <Container>
@@ -279,7 +284,7 @@ const CardProduct: React.FC<CardProductProps> = ({
             onPress={() => {
               dispatch(setDetailSelected(productId));
               console.log('DETAILID', productId);
-              navigate('ProductDetail', { productIdentifier: productId, productPromotions: productVsPromotion });
+              navigate('ProductDetail', { productIdentifier: productId });
             }}
           >
             <Container style={styles.containerTitle}>
@@ -365,7 +370,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden'
   },
   containerPrice: {
-    marginTop: 12, 
+    marginTop: 12
   },
   image: {
     width: moderateScale(20),
@@ -380,6 +385,6 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   buttonAddProduct: {
-    borderRadius: moderateScale(10), 
+    borderRadius: moderateScale(10)
   }
 });

@@ -16,49 +16,41 @@ const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice, 
   return (
     <Container>
       <Container row style={styles.container}>
-        {
-          (!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId)) ?
-            (
-              (productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ?
-                (
-                  <Container style={{marginRight:15}}>
-                  <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={(!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId)) ?
-                    ((productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ? ( '$'+ (price - ( (parseInt(price) * productPromotions.get('' + productId).percentualDiscountValue) / 100 ) ) ) : '') : ''} />
-                    </Container>
-                ) :
-                <></>
-            )
-            :
+        {!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId) ? (
+          productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular' ? (
+            <Container style={{ marginRight: 15 }}>
+              <CustomText
+                fontSize={theme.fontSize.h5}
+                fontWeight={'900'}
+                text={
+                  !!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId)
+                    ? productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular'
+                      ? '$' + (price - (parseInt(price) * productPromotions.get('' + productId).percentualDiscountValue) / 100)
+                      : ''
+                    : ''
+                }
+              />
+            </Container>
+          ) : (
             <></>
-        }
-        
-        {
-          (!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId)) ?
-            (
-              (productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular') ?
-                (
-                  <Text
-                    style={{
-                      fontWeight: 'bold',
-                      textDecorationLine: 'line-through',
-                      color: theme.brandColor.iconn_grey,
-                      fontSize: theme.fontSize.h6
-                    }}
-                  >
-                    {`$${price}`}
-                  </Text>
-                ) :
-                <>
-                  <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
-                  {oldPrice && oldPrice != price && (
-                    <Container style={styles.containerText}>
-                      <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice}`} />
-                      <Container style={styles.containerLine} />
-                    </Container>
-                  )}
-                </>
-            )
-            :
+          )
+        ) : (
+          <></>
+        )}
+
+        {!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId) ? (
+          productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular' ? (
+            <Text
+              style={{
+                fontWeight: 'bold',
+                textDecorationLine: 'line-through',
+                color: theme.brandColor.iconn_grey,
+                fontSize: theme.fontSize.h6
+              }}
+            >
+              {`$${price}`}
+            </Text>
+          ) : (
             <>
               <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
               {oldPrice && oldPrice != price && (
@@ -68,7 +60,18 @@ const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice, 
                 </Container>
               )}
             </>
-        }
+          )
+        ) : (
+          <>
+            <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
+            {oldPrice && oldPrice != price && (
+              <Container style={styles.containerText}>
+                <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice}`} />
+                <Container style={styles.containerLine} />
+              </Container>
+            )}
+          </>
+        )}
       </Container>
     </Container>
   );

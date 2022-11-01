@@ -1,75 +1,23 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { Dimensions, StyleSheet, FlatList, View } from 'react-native';
-import {
-  ExistingProductInCartInterface,
-  FavoritesResponseInterface,
-  getProductPriceByProductIdThunk,
-  getProductRatingByProductIdThunk,
-  getProductsByCategoryAndFiltersItemsThunk,
-  ItemsFavoritesInterface,
-  ListItemsWrapperInterface,
-  NewFavoritesResponseInterface,
-  ProductInterface,
-  ProductPriceResponseInterface,
-  ProductRaitingResponseInterface,
-  ProductResponseInterface,
-  RootState,
-  setFav,
-  setFavId,
-  TabItem,
-  useAppDispatch,
-  useAppSelector
-} from 'rtk';
-import { AccordionFilter, Button, CardProduct, Container, CustomText, SafeArea, SearchBar, TabAnimatable } from 'components';
-import { DrawerLayout } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { Dimensions, StyleSheet, FlatList } from 'react-native';
+import { ProductInterface, RootState, useAppSelector } from 'rtk';
+import { CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
 import theme from 'components/theme/theme';
-import { ProductsByCategoryFilter } from 'rtk/types/category.types';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { moderateScale } from 'utils/scaleMetrics';
-import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 
-// TODO: relocate this urls to .ENV
-let productsRender: ProductResponseInterface[] = [
-  {
-    ProductId: '100004574',
-    SkuId: '100004574',
-    SubCollectionId: '12',
-    Position: '2',
-    ProductName: 'PEÑAFIEL TORONJADA LIGHT PET 600 ML',
-    SkuImageUrl: 'https://oneiconn.vteximg.com.br/arquivos/ids/159012'
-  }
-];
-const productAdd: ProductResponseInterface = {
-  ProductId: '100004630',
-  SkuId: '100004630',
-  SubCollectionId: '12',
-  Position: '1',
-  ProductName: 'PECHUGA BALANCE SAN RAFAEL 250GR',
-  SkuImageUrl: 'https://oneiconn.vteximg.com.br/arquivos/ids/159012'
-};
-const prodAdd: ProductResponseInterface = {
-  ProductId: '100004574',
-  SkuId: '100004574',
-  SubCollectionId: '12',
-  Position: '2',
-  ProductName: 'PEÑAFIEL TORONJADA LIGHT PET 600 ML',
-  SkuImageUrl: 'https://oneiconn.vteximg.com.br/arquivos/ids/159012'
-};
 interface Props {
   completeList: ProductInterface[];
 }
 
 const FavoriteScreen: React.FC<Props> = ({ completeList }) => {
   const { updateShoppingCartProduct } = useShoppingCart();
-  const { cart } = useAppSelector((state: RootState) => state.cart);
-  const { favs, user, favsId } = useAppSelector((state: RootState) => state.auth);
+  const { favs } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-
-  console.log('CANASTA', completeList);
 
   const onPressSearch = () => {
     navigate('SearchProducts');
@@ -151,12 +99,7 @@ const FavoriteScreen: React.FC<Props> = ({ completeList }) => {
                   <CustomText text="No hay productos favoritos." fontWeight="900" fontSize={theme.fontSize.h4} />
                 </Container>
                 <Container style={{ marginTop: moderateScale(13) }}>
-                  <CustomText
-                    text="No se encontraron productos en esta sección."
-                    fontSize={theme.fontSize.h6}
-                    fontWeight={'500'}
-                    textAlign={'center'}
-                  />
+                  <CustomText text="No se encontraron productos en esta sección." fontSize={theme.fontSize.h6} fontWeight={'500'} textAlign={'center'} />
                 </Container>
               </Container>
               <Container style={{ marginTop: moderateScale(200) }}></Container>
@@ -176,23 +119,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(16),
     paddingVertical: moderateScale(7),
     backgroundColor: theme.brandColor.iconn_white
-  },
-  containerButton: {
-    width: moderateScale(40),
-    height: moderateScale(36),
-    borderRadius: moderateScale(5),
-    borderColor: theme.brandColor.iconn_med_grey,
-    borderWidth: moderateScale(1),
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: moderateScale(20)
-  },
-  containerBottom: {
-    shadowColor: '#171717',
-    shadowOffset: { width: 0, height: -moderateScale(3) },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    width: '100%',
-    height: Dimensions.get('window').height * 0.08
   }
 });

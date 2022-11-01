@@ -35,33 +35,6 @@ const DeleteAccountScreen: React.FC<Props> = ({ visible, onPressClose, logOut })
         console.log(user.userId);
         console.log('---------------');
 
-        authServices.getDocumentClient(user.userId).then(clientDocumentResponse => {
-
-          if (clientDocumentResponse) {
-            if (clientDocumentResponse.length > 0) {
-              clientDocumentResponse.map((document) => {
-                authServices.getDocumentAddresses(document.id).then(addressDocumentResponse => {
-                  console.log(JSON.stringify(addressDocumentResponse,null,4));
-                  if (addressDocumentResponse) {
-                    if (addressDocumentResponse.length > 0) {
-                      addressDocumentResponse.map((document) => {
-                        // TODO: relocate entity name to .ENV
-                        authServices.deleteDocumentById('AD', document.id).then(addressDocumentDeletedResponse => {
-                        });
-                      });
-                    }
-                  }
-                });
-              });
-              
-            }
-          }
-        });
-
-        // TODO: relocate entity name to .ENV
-        authServices.deleteDocumentById('CL', user.id).then(clientDocumentDeletedResponse => {
-          console.log(clientDocumentDeletedResponse);
-        });
       }
 
       toast.show({
