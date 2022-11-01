@@ -74,7 +74,7 @@ const OrderCard = (props: OrderInterface) => {
 
   return (
     <Container style={styles.backgroundCard}>
-      <Container row style={{justifyContent:'center', alignItems: 'center'}}>
+      <Container row style={{justifyContent:'flex-start', alignItems: 'center'}}>
         <Container style={styles.iconDelivery}>
           {deliveryChannel == 'delivery' ? (
             <Image source={ICONN_SHOPPING_BAG} style={{ height: 24, width: 24 }} />
@@ -84,9 +84,9 @@ const OrderCard = (props: OrderInterface) => {
         </Container>
 
         {deliveryChannel == 'delivery' ? (
-          <TextContainer text="Envío a domicilio" marginLeft={8} fontBold />
+          <TextContainer text="Envío a domicilio" marginLeft={8} marginTop={8} fontBold />
         ) : (
-          <TextContainer text="Pickup en tienda" fontBold marginLeft={8} />
+          <TextContainer text="Pickup en tienda" fontBold marginLeft={8} marginTop={8} />
         )}
         {
           <Container
@@ -183,19 +183,22 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
   iconDelivery: {
-    marginLeft: 8
+    marginLeft: 8,
+    marginTop: 8
   },
   contInTransit: {
     backgroundColor: theme.brandColor.iconn_green_original,
     borderRadius: 12,
     position: 'absolute',
-    right: 10
+    right: 5, 
+    top: 5
   },
   contDelivered: {
     backgroundColor: theme.brandColor.iconn_med_grey,
     borderRadius: 12,
-    marginRight: 4,
-    marginLeft: 75,
+    position: 'absolute',
+    right: 5, 
+    top: 5
   },
   contShopAgain: {
     marginLeft: 8,
