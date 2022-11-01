@@ -1,6 +1,5 @@
 import { ShoppingCar } from '../http/api-shoppingCar';
 import { ShoppingCarCreation } from '../http/api-shoppingCarCreation';
-import moment from 'moment';
 import { ClientProfileDataInterface } from 'rtk';
 
 /**
@@ -8,7 +7,7 @@ import { ClientProfileDataInterface } from 'rtk';
  */
 async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
   const response = await ShoppingCarCreation.getInstance().getRequest(`/orderForm`);
-  if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
+  if (response === undefined) return Promise.reject(new Error('getCurrentShoppingCartOrCreateNewOne'));
   const { data } = response;
   return data;
 }
@@ -18,17 +17,9 @@ async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
  * shoppingCartId is the shopping cart identifier.
  */
 async function getShoppingCart(shoppingCartId: string): Promise<any> {
-  console.log('***************************************');
   const response = await ShoppingCar.getInstance().getRequest(`${shoppingCartId}`);
-  if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
+  if (response === undefined) return Promise.reject(new Error('getShoppingCart'));
   const { data } = response;
-  console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
-  console.log('size: ', Object.values(data.items).length);
-  //console.log('text: ',data.messages[0].text);
-  //console.log('imagen: ',data.items[0].imageUrl);
-  //console.log('quantity: ',data.items[0].quantity);
-  //console.log('name: ',data.items[0].name);
-  console.log('AAAAAAAAAAAAAAAAAAAAAAAA');
   return data;
 }
 
@@ -38,9 +29,8 @@ async function getShoppingCart(shoppingCartId: string): Promise<any> {
  */
 async function emptyShoppingCar(shoppingCartId: string, doc: any): Promise<any> {
   const response = await ShoppingCar.getInstance().postRequest(`/${shoppingCartId}/items/removeAll`, doc);
-  if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
+  if (response === undefined) return Promise.reject(new Error('emptyShoppingCar'));
   const { data } = response;
-  console.log(moment().format());
   return data;
 }
 
@@ -51,9 +41,8 @@ async function emptyShoppingCar(shoppingCartId: string, doc: any): Promise<any> 
 async function updateShoppingCart(shoppingCartId: string, doc: any): Promise<any> {
   console.log('shoppingCartId:', shoppingCartId);
   const response = await ShoppingCar.getInstance().patchRequest(`/${shoppingCartId}/items`, doc);
-  if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
+  if (response === undefined) return Promise.reject(new Error('updateShoppingCart'));
   const { data } = response;
-  console.log(moment().format());
   return data;
 }
 
@@ -64,9 +53,8 @@ async function updateShoppingCart(shoppingCartId: string, doc: any): Promise<any
 async function clearShoppingCartMessages(shoppingCartId: string, doc: any): Promise<any> {
   console.log('shoppingCartId:', shoppingCartId);
   const response = await ShoppingCar.getInstance().postRequest(`/${shoppingCartId}/messages/clear`, doc);
-  if (response === undefined) return Promise.reject(new Error('getTaxRegimeList:/invoicing/taxRegime/list'));
+  if (response === undefined) return Promise.reject(new Error('clearShoppingCartMessages'));
   const { data } = response;
-  console.log(moment().format());
   return data;
 }
 

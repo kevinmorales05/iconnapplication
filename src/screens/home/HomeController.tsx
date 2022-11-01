@@ -27,7 +27,7 @@ import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
-import { updateShoppingCartItems, setOrderFormId } from 'rtk/slices/cartSlice';
+import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
 import { vtexProductsServices } from 'services';
 import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import { vtexPromotionsServices } from 'services/vtexPromotions.services';
@@ -200,29 +200,26 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
   const [homeOtherProducts, setHomeOtherProducts] = useState<ProductInterface[] | null>();
   const { updateShoppingCartProduct, migrateCartToAnotherBranch } = useShoppingCart();
-  const [productPromotions, setProductPromotions] = useState<Object>();
 
+  /**
+   * Get the current shoppingCart for the logged user, if it doesn't exist, create one.
+   */
   const fetchData = useCallback(async () => {
-    const { userId, name } = user;
+    const { userId } = user;
 
     if (userId === cart.userProfileId) {
       getShoppingCart(cart.orderFormId)
-        .then(oldCart => {
-          getShoppingCart(cart.orderFormId)
-            .then(response => {
-              dispatch(updateShoppingCartItems(response));
-            })
-            .catch(error => console.log(error));
+        .then(response => {
+          dispatch(updateShoppingCartItems(response));
         })
-        .catch(error => console.log(error));
+        .catch(error => console.error('ERROR getting the current shoppingCart', error));
     } else {
       await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
-        dispatch(setOrderFormId(newCart));
         getShoppingCart(newCart.orderFormId)
           .then(response => {
             dispatch(updateShoppingCartItems(response));
           })
-          .catch(error => console.log(error));
+          .catch(error => console.error('ERROR getting newly created shoppingCart', error));
       });
     }
   }, []);
@@ -317,7 +314,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         }
       });
     } catch (error) {
-      console.log(error);
+      console.log('FOUR', error);
     }
     return giftsList;
   };
@@ -334,12 +331,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         .getProductPriceByProductId(productId)
         .then(async responsePrice => {
           if (responsePrice) {
-            price = responsePrice.sellingPrice; // TODO: preguntar si es sellingPrice o listPrice
+            price = responsePrice.sellingPrice;
           }
         })
-        .catch(error => console.log(error));
+        .catch(error => console.log('FIVE', error));
     } catch (error) {
-      console.log(error);
+      console.log('SIX', error);
     }
     return price;
   };
@@ -359,9 +356,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
             rating = responseRating.average;
           }
         })
-        .catch(error => console.log(error));
+        .catch(error => console.log('SEVEN', error));
     } catch (error) {
-      console.log(error);
+      console.log('EIGHT', error);
     }
     return rating;
   };
@@ -378,7 +375,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         }
       });
     } catch (error) {
-      console.log(error);
+      console.warn(`ERROR in getPictureByProductId for productId: ${productId}`, error);
     }
     return pics;
   };
@@ -419,13 +416,13 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
                     });
                   }
                 })
-                .catch(error => console.log(error));
+                .catch(error => console.log('TEN', error));
             }
           }
         }
       }
     } catch (error) {
-      console.log(error);
+      console.log('ELEVEN', error);
     }
 
     dispatch(setProductVsPromotions(productPromosMap));
@@ -443,8 +440,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
           productId: product.ProductId,
           name: product.ProductName,
           image: { uri: product.SkuImageUrl },
-          price: price.sellingPrice, // TODO: preguntar si es sellingPrice o listPrice
-          oldPrice: price.sellingPrice, // TODO: preguntar si es sellingPrice o listPrice
+          price: price.sellingPrice,
+          oldPrice: price.sellingPrice,
           porcentDiscount: 0,
           quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.ProductId.toString())?.quantity : 0,
           ratingValue: raiting.average

@@ -22,7 +22,6 @@ const Rating: React.FC<RatingProps> = ({ ratingValue, ratingComponent, starSize 
       <Container style={styles.containerRating}>
         <Container row>
           {arr.map((value, idx) => {
-            // console.log(arr, 'Rating');
             return (
               <Container key={idx + ""} style={{ marginRight: moderateScale(2) }}>
                 <StarSvg size={starSize ? starSize : theme.iconSize.xsmall} color={value <= ratingToFill ? theme.brandColor.yellow_star : theme.brandColor.iconn_light_grey} />

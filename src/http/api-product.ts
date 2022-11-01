@@ -82,11 +82,9 @@ export class Product extends HttpClient {
       let problem: GeneralApiProblem;
       const urlErr = err.request?.responseURL;
       problem = getGeneralApiProblem(err.response._response || err.response.status);
-      console.error('GLOBAL EXCEPCIÓN ===> ', problem);
-      console.log({errorAxios: err})
-      // url.includes('pricing/prices')
-      if(urlErr){
-        if(!urlErr.includes('stockkeepingunit') && err.request?.status != 404){
+      if (urlErr) {
+        if (!urlErr.includes('stockkeepingunit') && err.request?.status != 404) {
+          console.error('GLOBAL EXCEPCIÓN ===> ', problem);
           if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
         }
       }

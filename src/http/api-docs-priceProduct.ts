@@ -126,9 +126,9 @@ export class DocsPriceApi extends HttpClient {
   private handlerError = (err: Error | AxiosError) => {
     if (axios.isAxiosError(err)) {
       let problem: GeneralApiProblem;
-      problem = getGeneralApiProblem(err.response._response || err.response.status);
-      console.error('GLOBAL EXCEPCIÓN ===> ', problem);
+      problem = getGeneralApiProblem(err.response._response || err.response.status);      
       if(err.request?.status != 404){
+        console.error('GLOBAL EXCEPCIÓN ===> ', problem);
         if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
       }
     } else {
