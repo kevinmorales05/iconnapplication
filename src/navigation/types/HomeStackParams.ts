@@ -45,6 +45,7 @@ export type HomeStackParams = {
   ViewInvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   FavoriteProducts: undefined;
+  InitialPage: undefined;
 };
 
 export type HomeTabScreens = {

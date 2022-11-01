@@ -52,6 +52,7 @@ import DeleteAccountController from 'screens/home/myAccount/deleteAccount/Delete
 import SeeMoreScreen from 'screens/home/viewMore/OtherProductsScreen';
 import RecomendedForYouScreen from 'screens/home/viewMore/RecommededForYou';
 import OtherProductsScreen from 'screens/home/viewMore/OtherProductsScreen';
+import InitialPage from 'screens/home/initialPage/InitPage'
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -71,9 +72,10 @@ const HomeStack: React.FC = () => {
         animation: 'slide_from_right',
         headerBackImageSource: require('../../assets/images/left_arrow.png')
       }}
-      initialRouteName="PostalCode"
+      initialRouteName="InitialPage"
       id="HomeStack"
     >
+      <Stack.Screen name="InitialPage" component={InitialPage} options={{  headerShown: false }} />
       <Stack.Screen
         options={{
           headerTitle: '',
