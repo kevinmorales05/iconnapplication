@@ -305,7 +305,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     });
     setProductList(itOld);
     setWithoutStockMap(undefined);
-    updateShoppingCartQuantityServiceCall(orderFormId, request, 'deleteUnavailable', 'Se eliminaron los articulos no disponibles de la canasta.', 0);
+    updateShoppingCartQuantityServiceCall(orderFormId, request, 'deleteUnavailable', 'Se eliminaron los artículos no disponibles de la canasta.', 0);
   };
 
   useEffect(() => {
