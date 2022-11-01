@@ -150,26 +150,26 @@ android {
     productFlavors {
         production {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId "com.iconn"
+            applicationId "com.oh4y0.iconn"
             targetSdkVersion rootProject.ext.targetSdkVersion
-            resValue "string", "build_config_package", "com.iconn"
+            resValue "string", "build_config_package", "com.oh4y0.iconn"
         }
         staging {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId "com.iconn"
+            applicationId "com.oh4y0.iconn"
             targetSdkVersion rootProject.ext.targetSdkVersion
-            resValue "string", "build_config_package", "com.iconn"
+            resValue "string", "build_config_package", "com.oh4y0.iconn"
         }
         development {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId "com.iconn"
+            applicationId "com.oh4y0.iconn"
             targetSdkVersion rootProject.ext.targetSdkVersion
-            resValue "string", "build_config_package", "com.iconn"
+            resValue "string", "build_config_package", "com.oh4y0.iconn"
         }
     }
 
     defaultConfig {
-        applicationId "com.iconn"
+        applicationId "com.oh4y0.iconn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 31

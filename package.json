@@ -1,5 +1,5 @@
 {
-  "name": "iconn",
+  "name": "oh4y0",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -17,12 +17,12 @@
     "android:staging-release": "react-native run-android --variant=stagingrelease",
     "android:prod": "react-native run-android --variant=productiondebug",
     "android:prod-release": "react-native run-android --variant=productionrelease",
-    "ios:dev": "react-native run-ios --scheme iconnDev --configuration Debug",
-    "ios:dev-release": "react-native run-ios --scheme iconnDev --configuration Release",
-    "ios:staging": "react-native run-ios --scheme iconnStg --configuration Debug",
-    "ios:staging-release": "react-native run-ios --scheme iconnStg --configuration Release",
-    "ios:prod": "react-native run-ios --scheme iconn --configuration Debug",
-    "ios:prod-release": "react-native run-ios --scheme iconn --configuration Release"
+    "ios:dev": "react-native run-ios --scheme oh4y0Dev --configuration Debug",
+    "ios:dev-release": "react-native run-ios --scheme oh4y0Dev --configuration Release",
+    "ios:staging": "react-native run-ios --scheme oh4y0Stg --configuration Debug",
+    "ios:staging-release": "react-native run-ios --scheme oh4y0Stg --configuration Release",
+    "ios:prod": "react-native run-ios --scheme oh4y0 --configuration Debug",
+    "ios:prod-release": "react-native run-ios --scheme oh4y0 --configuration Release"
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.2.1",

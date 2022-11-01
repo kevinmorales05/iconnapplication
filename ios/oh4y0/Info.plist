@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>iconn</string>
+	<string>oh4y0</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -26,10 +26,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>iconn</string>
+			<string>oh4y0</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>iconn</string>
+				<string>oh4y0</string>
 				<string>com.googleusercontent.apps.579450743521-4pe95epj9q15d1u8llo34g6j58nioioi</string>
 				<string>fb401469165374419</string>
 			</array>

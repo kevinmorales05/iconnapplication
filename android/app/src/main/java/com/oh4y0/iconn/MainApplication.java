@@ -1,4 +1,4 @@
-package com.iconn;
+package com.oh4y0.iconn;
 
 import android.app.Application;
 import android.content.Context;
@@ -9,7 +9,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.config.ReactFeatureFlags;
 import com.facebook.soloader.SoLoader;
-import com.iconn.newarchitecture.MainApplicationReactNativeHost;
+import com.oh4y0.iconn.newarchitecture.MainApplicationReactNativeHost;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import com.airbnb.android.react.lottie.LottiePackage;
@@ -77,7 +77,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.iconn.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.oh4y0.iconn.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);

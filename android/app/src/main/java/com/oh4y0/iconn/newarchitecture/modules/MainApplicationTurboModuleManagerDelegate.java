@@ -1,4 +1,4 @@
-package com.iconn.newarchitecture.modules;
+package com.oh4y0.iconn.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;
