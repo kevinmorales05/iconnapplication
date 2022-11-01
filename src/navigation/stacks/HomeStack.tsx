@@ -1,5 +1,5 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator} from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import HomeController from 'screens/home/HomeController'; /** relocated to tabNavigator */
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
@@ -67,7 +67,9 @@ const HomeStack: React.FC = () => {
         headerShown: true,
         headerTitleStyle: { color: 'black', fontWeight: 'bold' },
         headerTintColor: `${theme.brandColor.iconn_accent_secondary}`,
-        headerTitleAlign: 'center'
+        headerTitleAlign: 'center',
+        animation: 'slide_from_right',
+        headerBackImageSource: require('../../assets/images/left_arrow.png')
       }}
       initialRouteName="PostalCode"
       id="HomeStack"
@@ -76,7 +78,7 @@ const HomeStack: React.FC = () => {
         options={{
           headerTitle: '',
           headerLeft: () => <EcommerceHeader />,
-          headerRight: () => <BasketCounter />
+          headerRight: () => <BasketCounter />,
         }}
         name="Home"
         initialParams={{ paySuccess: false }}

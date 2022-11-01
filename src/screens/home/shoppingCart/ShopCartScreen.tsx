@@ -674,7 +674,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               height: 120,
               backgroundColor: theme.brandColor.iconn_white,
               borderRadius: 8,
-              paddingVertical: 15
+              paddingVertical: 15,
             }}
           >
             <Container
@@ -683,7 +683,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 borderRightColor: theme.brandColor.iconn_white,
                 borderBottomColor: theme.brandColor.iconn_white,
                 borderTopColor: theme.brandColor.iconn_white,
-                borderWidth: 7
+                borderWidth: 7,
+                alignItems: 'center',
               }}
             >
               <CustomText
@@ -691,7 +692,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 alignSelf="center"
                 text="Algunos artículos ya no están disponibles en tienda y deben ser eliminados de tu canasta para poder continuar con tu compra."
                 textAlign="justify"
-              ></CustomText>
+              />
+            </Container>
               <Button
                 fontSize="h6"
                 color="iconn_red_original"
@@ -700,11 +702,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 transparent
                 onPress={showAlert}
                 leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} />}
-                style={{ paddingTop: 8 }}
+                style={{ paddingTop: 8, marginLeft: moderateScale(17) }}
               >
                 Eliminar artículos no disponibles
               </Button>
-            </Container>
           </Container>
         ) : (
           <></>
