@@ -694,6 +694,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 textAlign="justify"
               />
             </Container>
+            <Container style={{ marginLeft: moderateScale(17) }}>
               <Button
                 fontSize="h6"
                 color="iconn_red_original"
@@ -706,6 +707,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               >
                 Eliminar artículos no disponibles
               </Button>
+              </Container>
           </Container>
         ) : (
           <></>
