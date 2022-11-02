@@ -70,7 +70,7 @@ const HomeStack: React.FC = () => {
         headerTintColor: `${theme.brandColor.iconn_accent_secondary}`,
         headerTitleAlign: 'center',
         animation: 'slide_from_right',
-        headerBackImageSource: require('../../assets/images/left_arrow.png')
+        headerBackImageSource: require('../../assets/images/back-button/left_arrow.png')
       }}
       initialRouteName="InitialPage"
       id="HomeStack"
@@ -81,6 +81,7 @@ const HomeStack: React.FC = () => {
           headerTitle: '',
           headerLeft: () => <EcommerceHeader />,
           headerRight: () => <BasketCounter />,
+          headerBackVisible: false,
         }}
         name="Home"
         initialParams={{ paySuccess: false }}
@@ -118,6 +119,7 @@ const HomeStack: React.FC = () => {
         options={{
           headerShown: true,
           title: 'Mi Canasta',
+          headerBackVisible: false,
           headerLeft: () => {
             return <></>;
           },
@@ -186,7 +188,7 @@ const HomeStack: React.FC = () => {
       />
       <Stack.Screen
         options={{
-          headerShown: false
+          headerShown: false,
         }}
         name="SearchProducts"
         component={SearchScreen}

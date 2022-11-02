@@ -36,36 +36,13 @@ const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPress
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const alert = useAlert();
 
-  // useEffect(()=>{
-  //   if(address?.postalCode){
-  //     getPickUpPoints(address?.postalCode).then((isNear)=>{
-  //       setNear(isNear);
-  //       if(!isNear ){
-  //         alert.show(
-  //           {
-  //             title: 'Entrega a domicilio no disponible.',
-  //             message: 'Lo sentimos, por ahora no hay ninguna tienda disponible para envío a domicilio en tu zona, intenta con una nuevo C.P.',
-  //             acceptTitle: 'Agregar otra',
-  //             cancelTitle: 'Omitir',
-  //             cancelOutline: 'iconn_med_grey',
-  //             cancelTextColor: 'iconn_accent_secondary',
-  //             onCancel() {
-  //               alert.hide();
-  //             },
-  //             onAccept() {
-  //               alert.hide();
-  //               onPressShowAddressesModal();  
-  //             }
-  //           },
-  //           'error',
-  //           true,
-  //           true,
-  //           true
-  //         );
-  //       }
-  //     })
-  //   }
-  // },[address])
+  useEffect(()=>{
+    if(address?.postalCode){
+      getPickUpPoints(address?.postalCode).then((isNear)=>{
+        setNear(isNear);
+      })
+    }
+  },[address])
   
   const getPickUpPoints = async (cp: string) => {
     console.log({getPickUpPoints: cp})
