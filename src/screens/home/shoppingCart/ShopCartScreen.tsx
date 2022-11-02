@@ -533,7 +533,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           height: 120,
           backgroundColor: theme.brandColor.iconn_white,
           borderRadius: 8,
-          paddingBottom: 10
+          paddingBottom: 10, 
         }}
       >
         <Container style={{paddingHorizontal: 10}} >
@@ -626,11 +626,11 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 space="around"
                 alignment="start"
                 style={{
-                  marginRight: 12,
                   backgroundColor: theme.brandColor.iconn_light_grey,
                   borderRadius: 15,
                   paddingVertical: 5,
-                  paddingHorizontal: 10
+                  paddingHorizontal: 10,
+                  marginRight: 18
                 }}
                 backgroundColor={theme.brandColor.iconn_med_grey}
               >
