@@ -38,6 +38,11 @@ const PostalCodeScreen = () => {
   const [postalCode, setPostalCode] = useState<string>('');
   const { POSTAL_CODE_DEFAULT } = config;
 
+  /*regla de negocio:
+    delivery hasta 7 km 
+    pickup hasta 20 km
+  */
+
   //useEffect to get geopoint of user before render
 
   // // Redirect to home if permissions are granted
@@ -91,7 +96,7 @@ const PostalCodeScreen = () => {
       if (pickUp.items.length) {
         sellers.forEach(seller => {
           const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-          if (store.distance < 8) {
+          if (store.distance < 20) {
             return (item = seller);
           }
         });
@@ -118,7 +123,7 @@ const PostalCodeScreen = () => {
       if (pickUp.items.length) {
         sellers.forEach(seller => {
           const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-          if (store.distance < 8) {
+          if (store.distance < 20) {
             return (item = seller);
           }
         });

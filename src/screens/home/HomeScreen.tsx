@@ -24,6 +24,7 @@ interface Props {
   homeOtherProducts: ProductInterface[];
   updateShoppingCartProduct: (type: CounterType, productId: string) => void;
   onPressViewMore: (products: any) => void;
+  isAddressModalSelectionVisible: boolean;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -43,7 +44,8 @@ const HomeScreen: React.FC<Props> = ({
   updateShoppingCartProduct,
   onPressViewMore,
   viewRecomendedProducts,
-  viewOtherProducts
+  viewOtherProducts,
+  isAddressModalSelectionVisible
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
@@ -206,6 +208,7 @@ const HomeScreen: React.FC<Props> = ({
             onPressAddAddress={onPressAddNewAddress}
             onPressShowAddressesModal={onPressShowAddressesModal}
             address={defaultAddress}
+            isAddressModalSelectionVisible={isAddressModalSelectionVisible}
             onPressToogle={() => setToggle(false)}
           />
         </View>

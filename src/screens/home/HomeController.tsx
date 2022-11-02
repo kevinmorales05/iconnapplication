@@ -530,6 +530,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         updateShoppingCartProduct={updateShoppingCartProduct}
         viewRecomendedProducts={viewRecomendedProducts}
         viewOtherProducts={viewOtherProducts}
+        isAddressModalSelectionVisible={addressModalSelectionVisible}
       />
       <AddressModalSelection
         visible={addressModalSelectionVisible}

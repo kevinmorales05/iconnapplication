@@ -15,6 +15,11 @@ import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { vtexPickUpPoints } from 'services';
 import Octicons from 'react-native-vector-icons/Octicons';
 
+/*regla de negocio:
+  delivery hasta 7 km 
+  pickup hasta 20 km
+*/
+
 const SearchSellerScreen = () => {
   const [value, onChangeText] = useState('');
   const [current, setCurrent] = useState<SellerInterface | null>(null);
@@ -179,7 +184,7 @@ const SearchSellerScreen = () => {
         sellers.forEach((seller)=>{
           console.log({temSellers:pickUp.items})
           const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-          if(store.distance < 8){
+          if(store.distance < 20){
             temSellers.push(seller);
           }
         })
@@ -206,7 +211,7 @@ const SearchSellerScreen = () => {
         sellers.forEach((seller)=>{
           console.log({temSellers:pickUp.items})
           const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-          if(store.distance < 8){
+          if(store.distance < 20){
             temSellers.push(seller);
           }
         })

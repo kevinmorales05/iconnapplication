@@ -22,44 +22,50 @@ interface Props {
   onPressToogle: () => void;
   mode: ShippingMode | null;
   handleMode: (mode: ShippingMode | null) => void;
+  isAddressModalSelectionVisible: boolean
 }
 
-const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPressToogle, onPressShowAddressesModal, mode, handleMode }) => {
+/*regla de negocio:
+  delivery hasta 7 km 
+  pickup hasta 20 km
+*/
+
+const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPressToogle, onPressShowAddressesModal, mode, handleMode, isAddressModalSelectionVisible }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [ near, setNear ] = useState<boolean>(false);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const alert = useAlert();
 
-  useEffect(()=>{
-    if(address?.postalCode){
-      getPickUpPoints(address?.postalCode).then((isNear)=>{
-        setNear(isNear);
-        if(!isNear && mode === ShippingMode.DELIVERY){
-          alert.show(
-            {
-              title: 'Entrega a domicilio no disponible.',
-              message: 'Lo sentimos, por ahora no hay ninguna tienda disponible para envío a domicilio en tu zona, intenta con una nuevo C.P.',
-              acceptTitle: 'Agregar otra',
-              cancelTitle: 'Omitir',
-              cancelOutline: 'iconn_med_grey',
-              cancelTextColor: 'iconn_accent_secondary',
-              onCancel() {
-                alert.hide();
-              },
-              onAccept() {
-                alert.hide();
-                onPressShowAddressesModal();  
-              }
-            },
-            'error',
-            true,
-            true,
-            true
-          );
-        }
-      })
-    }
-  },[address, mode])
+  // useEffect(()=>{
+  //   if(address?.postalCode){
+  //     getPickUpPoints(address?.postalCode).then((isNear)=>{
+  //       setNear(isNear);
+  //       if(!isNear ){
+  //         alert.show(
+  //           {
+  //             title: 'Entrega a domicilio no disponible.',
+  //             message: 'Lo sentimos, por ahora no hay ninguna tienda disponible para envío a domicilio en tu zona, intenta con una nuevo C.P.',
+  //             acceptTitle: 'Agregar otra',
+  //             cancelTitle: 'Omitir',
+  //             cancelOutline: 'iconn_med_grey',
+  //             cancelTextColor: 'iconn_accent_secondary',
+  //             onCancel() {
+  //               alert.hide();
+  //             },
+  //             onAccept() {
+  //               alert.hide();
+  //               onPressShowAddressesModal();  
+  //             }
+  //           },
+  //           'error',
+  //           true,
+  //           true,
+  //           true
+  //         );
+  //       }
+  //     })
+  //   }
+  // },[address])
   
   const getPickUpPoints = async (cp: string) => {
     console.log({getPickUpPoints: cp})
@@ -69,7 +75,7 @@ const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPress
     if(pickUp.items.length){
       pickUp.items.forEach((store)=>{
         if(store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`){
-          if(store.distance < 5){
+          if(store.distance < 7){
             isNear = true;
           }
         }
@@ -111,7 +117,7 @@ const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPress
         />
       </Container>
       {mode !== ShippingMode.PICKUP && (
-        <DefaultAddress mode={mode} onPressAddAddress={onPressAddAddress} address={address} onPressShowAddressesModal={onPressShowAddressesModal} />
+        <DefaultAddress mode={mode} onPressAddAddress={onPressAddAddress} address={address} onPressShowAddressesModal={onPressShowAddressesModal} isAddressModalSelectionVisible={isAddressModalSelectionVisible} />
       )}
       <DefaultSeller
         onPress={() => {
@@ -170,27 +176,28 @@ const DefaultSeller = ({ onPress }: { onPress: () => void }) => {
 
 interface DefaultItemProps extends Partial<Props> {}
 
-const DefaultAddress: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, mode }) => {
+const DefaultAddress: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, mode, isAddressModalSelectionVisible }) => {
   return address ? (
     <Touchable onPress={onPressShowAddressesModal!}>
-      <DefaultItem address={address} onPressAddAddress={onPressAddAddress} mode={mode} onPressShowAddressesModal={onPressShowAddressesModal} />
+      <DefaultItem address={address} onPressAddAddress={onPressAddAddress} mode={mode} onPressShowAddressesModal={onPressShowAddressesModal} isAddressModalSelectionVisible={isAddressModalSelectionVisible} />
     </Touchable>
   ) : (
-    <DefaultItem address={address} onPressAddAddress={onPressAddAddress} mode={mode} onPressShowAddressesModal={onPressShowAddressesModal} />
+    <DefaultItem address={address} onPressAddAddress={onPressAddAddress} mode={mode} onPressShowAddressesModal={onPressShowAddressesModal} isAddressModalSelectionVisible={isAddressModalSelectionVisible} />
   );
 };
 
-const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, mode }) => {
+const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, mode, isAddressModalSelectionVisible }) => {
   const { card } = styles;
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const [ near, setNear ] = useState<boolean>(false);
   const alert = useAlert();
 
   useEffect(()=>{
-    if(address?.postalCode){
+    if(address?.postalCode && !isAddressModalSelectionVisible){
       getPickUpPoints(address?.postalCode).then((isNear)=>{
         setNear(isNear);
-        if(!isNear && mode === ShippingMode.DELIVERY){
+        if(!isNear){
+          console.log('ShippingDropDown')
           alert.show(
             {
               title: 'Entrega a domicilio no disponible.',
@@ -215,7 +222,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
         }
       })
     }
-  },[address, mode])
+  },[address, isAddressModalSelectionVisible])
   
   const getPickUpPoints = async (cp: string) => {
     console.log({getPickUpPoints: cp})
@@ -225,7 +232,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
     if(pickUp.items.length){
       pickUp.items.forEach((store)=>{
         if(store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`){
-          if(store.distance < 5){
+          if(store.distance < 7){
             isNear = true;
           }
         }
