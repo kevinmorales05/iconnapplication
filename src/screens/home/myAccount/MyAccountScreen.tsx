@@ -131,7 +131,9 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<DocumentCashSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            navigate('TaxInfo');
+            // navigate('TaxInfo');
+            console.log('Datos fiscales en Construcción...');
+            inConstruction.show(true);
           }}
         />
         <NavigationMenuItem
@@ -139,7 +141,9 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<TargetSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            navigate('Invoice');
+            // navigate('Invoice');
+            console.log('Facturación en Construcción...');
+            inConstruction.show(true);
           }}
         />
 
@@ -188,9 +192,11 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
       </Container>
 
       <Container width={'100%'} height={32} center crossCenter backgroundColor={theme.brandColor.iconn_background}>
-        <Touchable onPress={()=>{
-          onPressVersion()
-        }}>
+        <Touchable
+          onPress={() => {
+            onPressVersion();
+          }}
+        >
           <TextContainer text={app_version} textAlign="center" textColor={theme.fontColor.placeholder} />
         </Touchable>
       </Container>

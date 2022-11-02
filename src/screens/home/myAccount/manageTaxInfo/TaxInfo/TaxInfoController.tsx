@@ -8,7 +8,6 @@ import theme from 'components/theme/theme';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { useLoading } from 'context';
-import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 
 const TaxInfoController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -40,8 +39,7 @@ const TaxInfoController: React.FC = () => {
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
-      {/* <TaxInfoScreen invoicingProfileList={invoicingProfileList} addRFC={goToAddRFC} /> */}
-      <InConstructionController />
+      <TaxInfoScreen invoicingProfileList={invoicingProfileList} addRFC={goToAddRFC} />
     </SafeArea>
   );
 };

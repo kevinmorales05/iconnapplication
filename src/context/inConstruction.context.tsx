@@ -2,6 +2,10 @@ import React, { ReactNode, useMemo } from 'react';
 import * as RootNavigation from '../navigation/RootNavigation';
 
 interface InConstructionContextInterface {
+  /**
+   * Method to define the navigation after closing the "under construction" screen.
+   * @param isSafeToClose If true, it allows to keep the user on the last screen they were on. If false, it will redirect the user to home.
+   */
   show: (isSafeToClose?: boolean) => void;
 }
 
