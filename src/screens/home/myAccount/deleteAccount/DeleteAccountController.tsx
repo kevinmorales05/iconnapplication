@@ -1,13 +1,15 @@
 import React from 'react';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
-import { useAppDispatch, setAppInitialState, setAuthInitialState, setGuestInitialState, setInvoicingInitialState, useAppSelector, RootState } from 'rtk';
+import { useAppDispatch, setAppInitialState, setAuthInitialState, setInvoicingInitialState, setShoppingCartInitialState, useAppSelector, setPromotionsInitialState, RootState } from 'rtk';
+import { emptyShoppingCar, clearShoppingCartMessages } from 'services/vtexShoppingCar.services';
 import DeleteAccountScreen from './DeleteAccountScreen';
 import { authServices, vtexDocsServices } from 'services';
 
 const DeleteAccountController: React.FC = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const { cart } = useAppSelector((state: RootState) => state.cart);
 
   const logOut = async () => {
     const dataUser = {
@@ -19,14 +21,17 @@ const DeleteAccountController: React.FC = () => {
     const response = await vtexDocsServices.createDoc('CD', dataUser);
     if(!!response.DocumentId){
       try {
+        await clearShoppingCartMessages(cart.orderFormId, {});
+        await emptyShoppingCar(cart.orderFormId, {})
         await authServices.logOutUser();
       } catch (error) {
         console.log('LOGOUT ERROR', error);
       } finally {
         dispatch(setAppInitialState());
         dispatch(setAuthInitialState());
-        dispatch(setGuestInitialState());
         dispatch(setInvoicingInitialState());
+        dispatch(setShoppingCartInitialState());
+        dispatch(setPromotionsInitialState());
       }
     }
   };
