@@ -15,9 +15,9 @@
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "E745C86829089A2D00293E31"
-                     BuildableName = "iconnStg.app"
-                     BlueprintName = "iconnStg"
-                     ReferencedContainer = "container:iconn.xcodeproj">
+                     BuildableName = "oh4y0Stg.app"
+                     BlueprintName = "oh4y0Stg"
+                     ReferencedContainer = "container:oh4y0.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E745C86829089A2D00293E31"
-               BuildableName = "iconnStg.app"
-               BlueprintName = "iconnStg"
-               ReferencedContainer = "container:iconn.xcodeproj">
+               BuildableName = "oh4y0Stg.app"
+               BlueprintName = "oh4y0Stg"
+               ReferencedContainer = "container:oh4y0.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -68,9 +68,9 @@
                   <BuildableReference
                      BuildableIdentifier = "primary"
                      BlueprintIdentifier = "E745C86829089A2D00293E31"
-                     BuildableName = "iconnStg.app"
-                     BlueprintName = "iconnStg"
-                     ReferencedContainer = "container:iconn.xcodeproj">
+                     BuildableName = "oh4y0Stg.app"
+                     BlueprintName = "oh4y0Stg"
+                     ReferencedContainer = "container:oh4y0.xcodeproj">
                   </BuildableReference>
                </EnvironmentBuildable>
             </ActionContent>
@@ -81,9 +81,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E745C86829089A2D00293E31"
-            BuildableName = "iconnStg.app"
-            BlueprintName = "iconnStg"
-            ReferencedContainer = "container:iconn.xcodeproj">
+            BuildableName = "oh4y0Stg.app"
+            BlueprintName = "oh4y0Stg"
+            ReferencedContainer = "container:oh4y0.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -98,9 +98,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E745C86829089A2D00293E31"
-            BuildableName = "iconnStg.app"
-            BlueprintName = "iconnStg"
-            ReferencedContainer = "container:iconn.xcodeproj">
+            BuildableName = "oh4y0Stg.app"
+            BlueprintName = "oh4y0Stg"
+            ReferencedContainer = "container:oh4y0.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
