@@ -13,9 +13,9 @@ async function getCategories(): Promise<any> {
 /**
  * Function to get all categories with childrens.
  */
-async function getProductsByCategoryAndFilters(filter: ProductsByCategoryFilter, categoryId: string, itemToLoad: number): Promise<any> {
+async function getProductsByCategoryAndFilters(filter: ProductsByCategoryFilter, categoryId: string, subCategory: string, itemToLoad: number): Promise<any> {
   const response = await DocsApi.getInstance().getRequest(
-    `/catalog_system/pub/products/search?_from=${itemToLoad}&_to=${itemToLoad + 9}&fq=C:/${categoryId}/&O=${filter}`
+    `/catalog_system/pub/products/search?_from=${itemToLoad}&_to=${itemToLoad + 9}&fq=C:/${categoryId}/${categoryId !== subCategory ? `${subCategory}/` : ''}&O=${filter}`
   );
   const { data } = response;
   return data;

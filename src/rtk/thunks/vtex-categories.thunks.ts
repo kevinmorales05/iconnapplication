@@ -16,7 +16,7 @@ export const getCategoryItemsThunk = createAsyncThunk('vtex/getCategoryItemsThun
  */
 export const getProductsByCategoryAndFiltersItemsThunk = createAsyncThunk(
   'vtex/getCategoryItemsThunk',
-  async (filters: { filter: ProductsByCategoryFilter; categoryId: string; itemToLoad: number }) => {
-    return await vtexCategoriesServices.getProductsByCategoryAndFilters(filters.filter, filters.categoryId, filters.itemToLoad);
+  async (filters: { filter: ProductsByCategoryFilter; categoryId: string; subCategory: string; itemToLoad: number }) => {
+    return await vtexCategoriesServices.getProductsByCategoryAndFilters(filters.filter, filters.categoryId, filters.subCategory, filters.itemToLoad);
   }
 );

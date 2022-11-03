@@ -82,6 +82,7 @@ const CategoryProductsScreen: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [productId, setProductId] = useState<string>();
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [isLoadingNewTab, setLoadingNewTab] = useState<boolean>(false);
 
   const hideModalForAdult = () => {
     console.log('hideModalForAdult...');
@@ -139,8 +140,14 @@ const CategoryProductsScreen: React.FC = () => {
   }, [category, route.params]);
 
   useEffect(() => {
+    if(!isLoading && isLoadingNewTab){
+      productsEffect();
+    }
+  }, [idCategorySelected, isLoading, isLoadingNewTab, route.params]);
+
+  useEffect(() => {
     productsEffect();
-  }, [idCategorySelected, route.params]);
+  }, []);
 
   useEffect(() => {
     if (products?.length! > 0) {
@@ -194,7 +201,6 @@ const CategoryProductsScreen: React.FC = () => {
         p.price = price?.sellingPrice;
         p.ratingValue = raiting.average;
         p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
-        p.category = idCategorySelected;
         productsToRender.push(p);
       }
     }
@@ -233,6 +239,7 @@ const CategoryProductsScreen: React.FC = () => {
       loader.hide();
       setProductsRender([]);
     }
+    setLoadingNewTab(false)
   };
 
   const loadMoreProducts = async () => {
@@ -254,12 +261,14 @@ const CategoryProductsScreen: React.FC = () => {
   };
 
   const getProducts = async (itemToLoad: number) => {
-    return await dispatch(getProductsByCategoryAndFiltersItemsThunk({ filter: filterSelect, categoryId: idCategorySelected, itemToLoad: itemToLoad })).unwrap();
+    return await dispatch(getProductsByCategoryAndFiltersItemsThunk({ filter: filterSelect, categoryId: category.id + "", subCategory: idCategorySelected ,itemToLoad: itemToLoad })).unwrap();
   };
 
   const onPressTab = (cateogry: TabItem) => {
     if (cateogry.id) {
       console.log('[onPressTab]', cateogry);
+      loader.show();
+      setLoadingNewTab(true)
       setIdCategorySelected(cateogry.id);
     }
   };
@@ -400,7 +409,7 @@ const CategoryProductsScreen: React.FC = () => {
             </Container>
           </Container>
           <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
-            {productsRender.length && productsRender.every((item) => item.category === idCategorySelected) ? (
+            {productsRender.length ? (
               <Container width={'100%'}>
                 <Container style={{ marginTop: moderateScale(15) }}>
                   <CustomText
