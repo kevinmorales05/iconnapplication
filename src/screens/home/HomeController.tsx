@@ -291,7 +291,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
                     gift: skus.id,
                     name: promotionResponse.name,
                     type: promotionResponse.type,
-                    percentualDiscountValue: promotionResponse.percentualDiscountValue
+                    percentualDiscountValue: promotionResponse.percentualDiscountValue,
+                    maximumUnitPriceDiscount: promotionResponse.maximumUnitPriceDiscount
                   });
                 });
               }
@@ -304,7 +305,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
                       gift: listSku.id,
                       name: promotionResponse.name,
                       type: promotionResponse.type,
-                      percentualDiscountValue: promotionResponse.percentualDiscountValue
+                      percentualDiscountValue: promotionResponse.percentualDiscountValue,
+                      maximumUnitPriceDiscount: promotionResponse.maximumUnitPriceDiscount
                     });
                   });
                 }
@@ -400,6 +402,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
                     productPromosMap.set(testP[i][j].gift, {
                       name: responseProductDetail.Name,
                       percentualDiscountValue: testP[i][j].percentualDiscountValue,
+                      maximumUnitPriceDiscount: testP[i][j].maximumUnitPriceDiscount,
                       productId: testP[i][j].gift,
                       promotionName: testP[i][j].name,
                       promotionType: testP[i][j].type,
