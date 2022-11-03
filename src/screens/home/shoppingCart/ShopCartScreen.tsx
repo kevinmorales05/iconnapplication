@@ -597,7 +597,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                     <Container style={{ marginLeft: 10 }}>
                       <TextContainer
                         numberOfLines={1}
-                        text={'$' + ((value.price / 100) - ((productVsPromotion.get('' + value.id).percentualDiscountValue * (value.price / 100)) / 100))
+                        text={'$' + (
+                          productVsPromotion.get('' + value.id).percentualDiscountValue > 0 ?
+                            (
+                              (value.price / 100) - ((productVsPromotion.get('' + value.id).percentualDiscountValue * (value.price / 100)) / 100)
+                            ) : productVsPromotion.get('' + value.id).maximumUnitPriceDiscount
+                        )
                           .toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'}
                         textColor="grey"
                         fontSize={12}
