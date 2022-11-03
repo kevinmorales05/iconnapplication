@@ -223,17 +223,19 @@ const CardProduct: React.FC<CardProductProps> = ({
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
           <Container row width={'100%'} space="between">
             <Container flex width={'100%'}>
-              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId) ? (
+              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId) ? 
+              (
                 productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
                 productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ||
                 productVsPromotion.get('' + productId).promotionType == 'campaign' ||
-                productVsPromotion.get('' + productId).promotionType == 'regular' ? (
+                productVsPromotion.get('' + productId).promotionType == 'regular' ? 
+                (
                   <Container
                     style={
-                      productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
-                      productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
-                        ? styles.containerPromotionName
-                        : styles.containerPorcentDiscount
+                      productVsPromotion.get('' + productId).promotionType == 'campaign' ||
+                      productVsPromotion.get('' + productId).promotionType == 'regular'
+                        ? (productVsPromotion.get('' + productId).percentualDiscountValue>0?styles.containerPorcentDiscount:styles.containerPorcentDiscountCero)
+                        : styles.containerPromotionName
                     }
                   >
                     <CustomText
@@ -359,6 +361,14 @@ const styles = StyleSheet.create({
     width: moderateScale(103),
     height: moderateScale(23),
     borderRadius: moderateScale(12),
+    backgroundColor: theme.brandColor.iconn_green_discount,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  containerPorcentDiscountCero: {
+    width: moderateScale(0),
+    height: moderateScale(0),
+    borderRadius: moderateScale(0),
     backgroundColor: theme.brandColor.iconn_green_discount,
     justifyContent: 'center',
     alignItems: 'center'

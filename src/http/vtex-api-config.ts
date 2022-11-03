@@ -3,7 +3,7 @@ import { store } from 'rtk';
 import config from 'react-native-config';
 
 const {
-  API_VTEX_ORDERS,
+  API_VTEX_BASE_URL,
   API_VTEX_ORDER,
   API_VTEX_USER,
   API_VTEX_SHOPPINGCAR,
@@ -25,8 +25,8 @@ const {
 
 const getApiUrl = (type: string) => {
   switch (type) {
-    case 'orders':
-      return API_VTEX_ORDERS;
+    case 'vtex':
+      return API_VTEX_BASE_URL;
     case 'order':
       return API_VTEX_ORDER;
     case 'auth':

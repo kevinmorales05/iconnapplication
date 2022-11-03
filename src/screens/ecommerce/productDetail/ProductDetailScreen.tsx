@@ -427,14 +427,21 @@ const ProductDetailScreen: React.FC<Props> = ({
                     !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                       ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                         ? '$' +
-                          (
-                            (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) -
-                            (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
-                              productVsPromotion.get('' + itemId).percentualDiscountValue) /
+                        (
+                          productVsPromotion.get('' + itemId).percentualDiscountValue > 0 ?
+                            (
+                              (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) -
+                              (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
+                                productVsPromotion.get('' + itemId).percentualDiscountValue) /
                               100
-                          )
-                            .toFixed(2)
-                            .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                            ) :
+                            (
+                              productVsPromotion.get('' + itemId).maximumUnitPriceDiscount != undefined ?
+                                productVsPromotion.get('' + itemId).maximumUnitPriceDiscount : 0
+                            )
+                        )
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                         : ''
                       : ''
                   }
@@ -492,10 +499,24 @@ const ProductDetailScreen: React.FC<Props> = ({
                         (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                           ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                             ? (
-                                (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
-                                  productVsPromotion.get('' + itemId).percentualDiscountValue) /
-                                100
-                              )
+                              productVsPromotion.get('' + itemId).percentualDiscountValue > 0 ?
+                                (
+                                  (
+                                    (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
+                                      productVsPromotion.get('' + itemId).percentualDiscountValue) /
+                                    100
+                                  )
+                                ) : (
+                                  (
+                                    (
+                                      parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0)
+                                    )
+                                  ) - (
+                                    productVsPromotion.get('' + itemId).maximumUnitPriceDiscount != undefined ?
+                                      productVsPromotion.get('' + itemId).maximumUnitPriceDiscount : 0
+                                  )
+                                )
+                            )
                                 .toFixed(2)
                                 .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                             : ''

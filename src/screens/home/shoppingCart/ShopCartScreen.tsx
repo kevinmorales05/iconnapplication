@@ -671,7 +671,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               marginRight: 16,
               marginTop: 9,
               marginBottom: 0,
-              height: 120,
+              height: 137,
               backgroundColor: theme.brandColor.iconn_white,
               borderRadius: 8,
               paddingVertical: 15,
@@ -683,18 +683,31 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 borderRightColor: theme.brandColor.iconn_white,
                 borderBottomColor: theme.brandColor.iconn_white,
                 borderTopColor: theme.brandColor.iconn_white,
-                borderWidth: 7,
+                borderWidth: 1,
                 alignItems: 'center',
               }}
             >
-              <CustomText
-                fontSize={13}
-                alignSelf="center"
-                text="Algunos artículos ya no están disponibles en tienda y deben ser eliminados de tu canasta para poder continuar con tu compra."
-                textAlign="justify"
-              />
+              <Container style={{ marginLeft: moderateScale(7), marginRight: moderateScale(6) }}>
+                <TextContainer
+                  numberOfLines={2}
+                  text={'No se puede continuar con tu compra por alguno de estos motivos:'}
+                  fontSize={theme.fontSize.h6}
+                  marginTop={1}
+                ></TextContainer>
+                <TextContainer
+                  numberOfLines={2}
+                  text={'● Entrega a domicilio no disponible para la dirección seleccionada.'}
+                  fontSize={theme.fontSize.h6}
+                  marginTop={6}
+                ></TextContainer>
+                <TextContainer
+                  numberOfLines={2}
+                  text={'● Algunos artículos ya no están disponibles en la tienda.'}
+                  fontSize={theme.fontSize.h6}
+                ></TextContainer>
+              </Container>
             </Container>
-            <Container style={{ marginLeft: moderateScale(17) }}>
+            <Container style={{ marginLeft: moderateScale(17), marginTop: moderateScale(10)}}>
               <Button
                 fontSize="h6"
                 color="iconn_red_original"
