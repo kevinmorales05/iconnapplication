@@ -21,7 +21,6 @@ interface Props {
 
 const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, productId, userUpdated }) => {
   const { AGE_VERIFICATION_URL } = Config;
-  console.log('productId . . . . ',productId);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const insets = useSafeAreaInsets();
 
