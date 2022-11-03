@@ -194,6 +194,7 @@ const CategoryProductsScreen: React.FC = () => {
         p.price = price?.sellingPrice;
         p.ratingValue = raiting.average;
         p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
+        p.category = idCategorySelected;
         productsToRender.push(p);
       }
     }
@@ -399,7 +400,7 @@ const CategoryProductsScreen: React.FC = () => {
             </Container>
           </Container>
           <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
-            {productsRender.length ? (
+            {productsRender.length && productsRender.every((item) => item.category === idCategorySelected) ? (
               <Container width={'100%'}>
                 <Container style={{ marginTop: moderateScale(15) }}>
                   <CustomText

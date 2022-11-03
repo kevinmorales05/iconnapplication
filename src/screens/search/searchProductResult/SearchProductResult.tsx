@@ -63,7 +63,16 @@ const SearchProductResult: React.FC = () => {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       refillProductsWithPrice(existingProducts);
     }
-  }, [products, cart, visible]);
+  }, [products, visible]);
+
+  useEffect(() => {
+    if (products?.length! > 0) {
+      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      updateQuantityProducts(existingProducts);
+    }
+  }, [cart]);
+
+
 
   const getExistingProductsInCart = () => {
     const { items } = cart;
@@ -78,6 +87,16 @@ const SearchProductResult: React.FC = () => {
       return existingProducts;
     }
   };
+
+  async function updateQuantityProducts(existingProductsInCart: ExistingProductInCartInterface[]) {
+    let productsToRender: ProductInterface[] = [];
+    productsToRender = productsRender.concat(productsToRender);
+    for (const p of productsToRender) {
+      p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
+    }
+    setProductsRender(productsToRender);
+  }
+
 
   async function refillProductsWithPrice(existingProductsInCart: ExistingProductInCartInterface[]) {
     loader.show();
