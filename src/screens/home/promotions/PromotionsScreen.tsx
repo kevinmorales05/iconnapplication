@@ -22,7 +22,7 @@ const PromotionsScreen: React.FC<Props> = ({}) => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const [productFromPromotion, setProductFromPromotion] = useState([]);
-  const { promotions } = useAppSelector((state: RootState) => state.promotion);
+  const { promotions, productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
   const [promotionsCategory, setPromotionsCategory] = useState<Object>();
   const [itemsQuantities, setItemsQuantities] = useState(Object);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -77,18 +77,16 @@ const PromotionsScreen: React.FC<Props> = ({}) => {
     setRefreshing(true);
   };
 
-  const updatePromotions = async (productId: string) => {
-    let toUpdate = productFromPromotion;
-    productFromPromotion.map((prod) => {
-      if (prod.id == productId) {
-        toUpdate.quantity = itemsQuantities.get(productId).quantity;
-      }
-    });
-    dispatch(setPromotions(toUpdate));
-  };
-
   const fetchData = (existingProductsInCart: ExistingProductInCartInterface[]) => {
-    loader.show();
+    if(!!productVsPromotion && Object.keys(productVsPromotion).length){
+      if(productVsPromotion.has('')){
+        loader.show();
+      }else {
+        loader.hide();
+      }
+    }else{loader.show();}
+
+
     let prodList = promotions;
     let prodListWithQuantities = [];
     if (prodList.length > 0) {
@@ -107,7 +105,6 @@ const PromotionsScreen: React.FC<Props> = ({}) => {
 
       setProductFromPromotion(prodListWithQuantities);
     }
-    loader.hide();
   };
 
 
