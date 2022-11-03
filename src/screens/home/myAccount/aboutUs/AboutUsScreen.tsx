@@ -42,7 +42,7 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
           text="Acerca de la APP"
           disable={false}
           onPressNavigateTo={() => {
-            console.log('Acerca de la APP...');
+            // console.log('Acerca de la APP...');
           }}
         />
         <NavigationMenuItem

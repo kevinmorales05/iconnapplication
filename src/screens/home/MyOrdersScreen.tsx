@@ -1,5 +1,5 @@
 import { Image, ScrollView } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import { Container, InfoCard } from 'components/atoms';
@@ -7,23 +7,21 @@ import { TextContainer, Button } from 'components/molecules';
 import { ICONN_BASKET_SHOPPING_CART } from 'assets/images';
 import { OrderCard } from 'components/molecules/OrderCard';
 import NetInfo from '@react-native-community/netinfo';
-import { vtexordersServices, vtexsingleOrdersServices } from 'services';
-import { DeliveryChannel, OrderInterface } from 'rtk';
-import { HomeStackParams } from 'navigation/types';
+import { OrderInterface } from 'rtk';
 
 interface Props {
-  goBack: () => void;
-  navigate: (screen: any, params: any)=> void;
+  navigate: (screen: any, params: any) => void;
   officialOrderArray: Array<OrderInterface>;
 }
 
-const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate }) => {
+const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
   const [isOnline, setIsOnline] = useState(false);
   NetInfo.fetch().then(state => {
     if (state.isInternetReachable) {
       setIsOnline(true);
     }
   });
+
   const insets = useSafeAreaInsets();
 
   const haveBeforeOrders = officialOrderArray.length && officialOrderArray.some(order => order.status == 'canceled' || order.status == 'invoiced');
@@ -45,8 +43,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate 
       ) : officialOrderArray.length == 0 ? (
         <></>
       ) : (
-        officialOrderArray.map((order, i) => {
-          const dc = order.orderId;
+        officialOrderArray.map(order => {
           if (
             order.status == 'ready-for-handling' ||
             order.status == 'payment-approved' ||
@@ -55,7 +52,6 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate 
             order.status == 'window-to-cancel' ||
             order.status == 'handling'
           ) {
-            console.log('MERMELADA', order.orderId);
             return (
               <OrderCard
                 orderId={order.orderId}
@@ -78,21 +74,21 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate 
         <TextContainer text="Pedidos anteriores" fontSize={16} fontBold marginTop={15.5} />
       ) : null}
       {!isOnline ? (
-        <InfoCard text={`No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.`} />
+        <InfoCard text={'No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.'} />
       ) : officialOrderArray.length == 0 ? (
         <Container>
           <Container center style={{ marginTop: 164.2 }}>
-            <Image source={ICONN_BASKET_SHOPPING_CART} style={{ height: 40, width: 40 }}></Image>
+            <Image source={ICONN_BASKET_SHOPPING_CART} style={{ height: 40, width: 40 }} />
           </Container>
           <TextContainer marginTop={12.3} text={'No tienes pedidos'} textAlign="center" fontBold fontSize={16} />
           <TextContainer text="Aquí verás tus pedidos anteriores y pedidos en curso." textAlign="center" marginTop={11} />
-          <Button onPress={() => navigate('Home',{ screen: 'CategoriesScreen' })} fontBold fontSize="h4" color="iconn_green_original" round marginTop={300}>
+          <Button onPress={() => navigate('Home', { screen: 'CategoriesScreen' })} fontBold fontSize="h4" color="iconn_green_original" round marginTop={300}>
             Ver artículos
           </Button>
         </Container>
       ) : (
-        officialOrderArray.map((order, i) => {
-          if (order.status == 'canceled' || order.status == 'invoiced')
+        officialOrderArray.map(order => {
+          if (order.status == 'canceled' || order.status == 'invoiced') {
             return (
               <OrderCard
                 creationDate={order.creationDate}
@@ -104,6 +100,7 @@ const MyOrdersScreen: React.FC<Props> = ({ goBack, officialOrderArray, navigate 
                 navigate={navigate}
               />
             );
+          }
         })
       )}
     </ScrollView>

@@ -24,6 +24,12 @@
     "ios:prod": "react-native run-ios --scheme oh4y0 --configuration Debug",
     "ios:prod-release": "react-native run-ios --scheme oh4y0 --configuration Release"
   },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.2.1",
     "@react-native-async-storage/async-storage": "^1.17.9",
@@ -105,8 +111,13 @@
     "babel-loader": "^8.2.5",
     "babel-plugin-module-resolver": "^4.1.0",
     "eslint": "^7.32.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-detox": "^1.0.0",
+    "husky": "^8.0.1",
     "jest": "^26.6.3",
+    "lint-staged": "^13.0.3",
     "metro-react-native-babel-preset": "^0.67.0",
+    "prettier": "^2.7.1",
     "react-dom": "17.0.2",
     "react-native-storybook-loader": "^2.0.5",
     "react-native-vector-icons": "^9.1.0",
