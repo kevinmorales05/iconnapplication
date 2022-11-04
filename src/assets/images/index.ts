@@ -72,6 +72,19 @@ import TAB_PROMOS from './tab_promos.webp';
 import TAB_USER_PROFILE from './tab_user_profile.webp';
 import ICONN_CALENDAR from './iconn-calendar-schedule.webp';
 import ICONN_IN_CONSTRUCTION from './iconn-in-construction.webp';
+import ICONN_CREDIT_CARD from './credit-card.webp';
+import ICONN_DEPOSIT from './iconn-deposit.webp';
+import ICONN_SERVICE_PAYMENT from './iconn-service-payment.webp';
+import ICONN_MOBILE_RECHARGE from './iconn-mobile-recharge.webp';
+import ICONN_QR_CODE from './qr-code.webp';
+import ICONN_PACKAGES_SEARCH from './packages-search.webp';
+import TELCEL_LOGO from './telcel_logo.png';
+import SKY_LOGO from './sky-logo.png';
+import CFE_LOGO from './cfe-logo.png';
+import ICONN_DOLLAR_CIRCLE from './dollar-circle.webp';
+import CARD_PREF from './card-pref.webp';
+import CARD_PETRO from './card-petro.webp';
+
 
 export {
   ICONN_BINOMIO_LOGOS,
@@ -147,5 +160,17 @@ export {
   TAB_USER_PROFILE,
   ICONN_CALENDAR,
   ICONN_FULL_EXPERIENCE,
-  ICONN_IN_CONSTRUCTION
+  ICONN_IN_CONSTRUCTION,
+  ICONN_CREDIT_CARD,
+  ICONN_DEPOSIT,
+  ICONN_SERVICE_PAYMENT,
+  ICONN_MOBILE_RECHARGE,
+  ICONN_QR_CODE,
+  ICONN_PACKAGES_SEARCH,
+  TELCEL_LOGO,
+  SKY_LOGO,
+  CFE_LOGO,
+  ICONN_DOLLAR_CIRCLE,
+  CARD_PREF,
+  CARD_PETRO
 };

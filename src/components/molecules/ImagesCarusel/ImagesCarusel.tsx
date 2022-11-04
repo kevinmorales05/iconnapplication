@@ -15,20 +15,23 @@ interface ImageCaruselProps {
   imageSize: number;
   selectecPointColor: string;
   generalPointsColor: string;
+  localImg?: boolean;
 }
 
-const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, selectecPointColor, generalPointsColor }) => {
+const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, selectecPointColor, generalPointsColor, localImg }) => {
   const [statusPoints, setStatusPoints] = useState([]);
   const [points, setPoints] = useState([]);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
+  console.log('STATUSPOINTS', statusPoints);
+  console.log('POINTS', points)
   const setImagePosition = selected => {
-    /*
+    
     console.log('press', selected);
     statusPoints.map((status, index) => {
       status.isMain = (selected == index);
     })
-    setStatusPoints(statusPoints);*/
+    setStatusPoints(statusPoints);
   };
 
   const changePointsColorFromScroll = ({ nativeEvent }) => {
@@ -51,27 +54,27 @@ const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, sel
   return (
     <Container >
       <View style={style.container}>
-        <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false} style={style.scroll} onScroll={(navEvent) => {
+        <ScrollView pagingEnabled horizontal scrollEventThrottle={2} showsHorizontalScrollIndicator={false} style={(localImg) ? style.localScroll : style.scroll} onScroll={(navEvent) => {
           const { nativeEvent } = navEvent;
-          //let poinLst = points;
+          let poinLst = points;
           let statusP = statusPoints;
           statusP.map((status, index) => {
             if (nativeEvent.contentOffset.x == status.valueX) {
               status.isMain = true;
-              //poinLst[index].isMain = true;
+              poinLst[index].isMain = true;
             } else {
               status.isMain = false;
-              //poinLst[index].isMain = false;
+              poinLst[index].isMain = false;
             }
           })
           setStatusPoints(statusP);
-          //setPoints(poinLst);
+          setPoints(poinLst);
         }}>
           {
             statusPoints.map((image, index) => {
               return (
                 <Touchable onPress={openImageZoom} key={'tchForImg'+index}>
-                  <Image key={'imgF'+index} source={{ uri: image.url + imageSize }} style={style.image} />
+                  <Image key={'imgF'+index} source={(localImg) ?  image.url : { uri: image.url + imageSize }} style={(localImg) ? style.localImage : style.image} />
                 </Touchable>
               )
             })
@@ -108,7 +111,9 @@ export default ImagesCarusel;
 const style = StyleSheet.create({
   container: { marginTop: 20, width, height },
   scroll: { alignSelf: 'center', width: 240, height: 180 },
+  localScroll: {alignSelf: 'center', width: 248, height: 151},
   image: { width: 240, height: 180, resizeMode: 'cover' },
+  localImage: {width: 248, height: 151},
   pagination: { flexDirection: 'row', position: 'absolute', width, height, bottom: 0, alignSelf: 'center' },
   paginTex: { fontSize: (width / 30), width, height },
   paginActiveTex: { fontSize: (width / 30), color: '#fff', margin: 3 }

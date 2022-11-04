@@ -53,6 +53,7 @@ import SeeMoreScreen from 'screens/home/viewMore/OtherProductsScreen';
 import RecomendedForYouScreen from 'screens/home/viewMore/RecommededForYou';
 import OtherProductsScreen from 'screens/home/viewMore/OtherProductsScreen';
 import InitialPage from 'screens/home/initialPage/InitPage'
+import WalletHomeController from 'screens/home/wallet/WalletHome/WalletHomeController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -150,6 +151,14 @@ const HomeStack: React.FC = () => {
         }}
         name="MyOrders"
         component={MyOrdersController}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: 'Wallet'
+        }}
+        name="WalletHome"
+        component={WalletHomeController}
       />
       <Stack.Screen
         name="ProductDetail"

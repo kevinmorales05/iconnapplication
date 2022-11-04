@@ -14,3 +14,5 @@ export * from './ReviewModal';
 export * from './ReviewPercentage';
 export * from './ShippingDropdown';
 export * from './TabAnimatable';
+export * from './AnimatedCarouselWithBorder';
+export * from './TabTwoElements'

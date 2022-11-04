@@ -138,8 +138,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   }, [user.addresses]);
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
-    // If is not a guest and press "Petro" or "Acumula" or "Wallet".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4')) {
+    // If is not a guest and press "Petro" or "Acumula".
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3')) {
       inConstruction.show();
       return;
     }

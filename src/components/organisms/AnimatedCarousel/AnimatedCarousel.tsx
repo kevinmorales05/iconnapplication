@@ -4,6 +4,8 @@ import { Container } from '../../atoms';
 import { CarouselItem, ProductInterface } from 'rtk';
 import AnimatedItem from './AnimatedItem';
 import { CounterType } from 'components/types/counter-type';
+import  Octicons  from 'react-native-vector-icons/Octicons';
+import { TextContainer } from 'components/molecules';
 
 interface Props {
   items?: CarouselItem[];
@@ -11,20 +13,22 @@ interface Props {
   onPressItem: (item: CarouselItem) => void;
   onPressProduct?: (type: CounterType, productId: string) => void;
   onPressOut: () => void;
+  cards?: boolean;
 }
 
-const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut }) => {
+const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut, cards }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
-    // console.log('visible item: ', viewableItems);
-    // setCurrentIndex(viewableItems[0].index);
+    console.log('visible item: ', viewableItems);
+    setCurrentIndex(viewableItems[0].index);
   }).current;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
+  console.log('Papas', items?.length)
   return (
     <Container flex center crossCenter>
       {products && products.length > 0 ? (
@@ -57,7 +61,38 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
           ref={slidesRef}
           showsHorizontalScrollIndicator={false}
         />
+      ) : cards ? (
+        <FlatList
+          data={items}
+          renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={()=>{}} onPressOut={()=>{}} />}
+          horizontal
+          bounces={items!.length > 1 ? true : false}
+          keyExtractor={item => item.id}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+          scrollEventThrottle={32}
+          onViewableItemsChanged={viewableItemsChanged}
+          viewabilityConfig={viewConfig}
+          ref={slidesRef}
+          showsHorizontalScrollIndicator={false}
+        />
       ) : null}
+      {
+        (cards && items?.length > 0 ) ?
+        (
+          <FlatList
+          data={items}
+          renderItem={({item, index}) => 
+            <Container style={{marginRight: 8, marginTop: 12}}>
+              {
+                (index == currentIndex) ? 
+                <Octicons size={20} name='dot-fill' color={'#008060'}/> :
+                <Octicons size={20} name='dot-fill' color={'#dadadb'}/>
+              }
+            </Container>}
+          horizontal
+          />
+        ) : null
+            } 
     </Container>
   );
 };

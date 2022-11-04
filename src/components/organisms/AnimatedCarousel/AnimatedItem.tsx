@@ -62,10 +62,20 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
     margin: 8,
     elevation: 3
   };
+  const containerCard: StyleProp<ViewStyle> = {
+    marginHorizontal: 25,
+    marginTop: 16
+  };
 
   const secondImageStyle: StyleProp<ImageStyle> = {
     borderRadius: 8,
     height: 154,
+    resizeMode: 'stretch'
+  };
+  const cardImageStyle: StyleProp<ImageStyle> = {
+    borderRadius: 8,
+    height: 164,
+    width: 261,
     resizeMode: 'stretch'
   };
 
@@ -188,7 +198,18 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
           <Image source={{ uri: data.image }} style={secondImageStyle} />
         </Container>
       </Touchable>
-    ) : data !== undefined && data.promotion_type === 'day_promotion' ? (
+    ) : data !== undefined && data.promotion_type === 'cards' ? (
+      <Touchable
+        onPress={() => {
+          onPressItem(data);
+        }}
+      >
+        <Container center style={containerCard}>
+          <Image source={data.image} style={cardImageStyle} />
+        </Container>
+      </Touchable>
+    ) 
+    : data !== undefined && data.promotion_type === 'day_promotion' ? (
       <Touchable
         onPress={() => {
           onPressItem(data);

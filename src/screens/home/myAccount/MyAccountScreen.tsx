@@ -122,8 +122,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<WalletSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Wallet en Construcción...');
-            inConstruction.show(true);
+            navigate('WalletHome')
           }}
         />
         <NavigationMenuItem

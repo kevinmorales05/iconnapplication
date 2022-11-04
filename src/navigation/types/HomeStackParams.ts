@@ -46,6 +46,7 @@ export type HomeStackParams = {
   ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   FavoriteProducts: undefined;
   InitialPage: undefined;
+  WalletHome: undefined;
 };
 
 export type HomeTabScreens = {
