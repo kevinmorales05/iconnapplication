@@ -201,7 +201,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
     ) : data !== undefined && data.promotion_type === 'cards' ? (
       <Touchable
         onPress={() => {
-          onPressItem(data);
+          () => {}
         }}
       >
         <Container center style={containerCard}>
