@@ -334,7 +334,7 @@ export default CardProduct;
 const styles = StyleSheet.create({
   container: {
     width: moderateScale(160),
-    minHeight: moderateScale(254),
+    height: moderateScale(274),
     backgroundColor: theme.brandColor.iconn_white,
     marginTop: moderateScale(16),
     borderRadius: moderateScale(10),

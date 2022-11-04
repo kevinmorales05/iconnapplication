@@ -3,13 +3,17 @@ import SkeletonContent from 'react-native-skeleton-content-nonexpo';
 import { moderateScale } from 'utils/scaleMetrics';
 import theme from 'components/theme/theme';
 
-const CardProductSkeleton = () => (
+interface CardSkeletonProps {
+  notMarinLeft: boolean;
+}
+
+const CardProductSkeleton = ({ notMarinLeft }: CardSkeletonProps) => (
   <SkeletonContent
     containerStyle={{
       width: moderateScale(160),
-      minHeight: moderateScale(254),
+      height: moderateScale(274),
       marginTop: moderateScale(16),
-      marginLeft: moderateScale(8),
+      marginLeft: moderateScale(notMarinLeft ? 0 : 8),
       borderRadius: moderateScale(10),
       padding: moderateScale(8),
       backgroundColor: theme.brandColor.iconn_white

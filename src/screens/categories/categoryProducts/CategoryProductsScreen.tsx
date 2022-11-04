@@ -15,7 +15,7 @@ import {
   useAppDispatch,
   useAppSelector
 } from 'rtk';
-import { AccordionFilter, Button, CardProduct, Container, CustomText, SafeArea, SearchBar, TabAnimatable } from 'components';
+import { AccordionFilter, Button, CardProduct, CardProductSkeleton, Container, CustomText, SafeArea, SearchBar, TabAnimatable } from 'components';
 import { DrawerLayout } from 'react-native-gesture-handler';
 import theme from 'components/theme/theme';
 import { ProductsByCategoryFilter } from 'rtk/types/category.types';
@@ -141,20 +141,22 @@ const CategoryProductsScreen: React.FC = () => {
 
   useEffect(() => {
     if(!isLoading && isLoadingNewTab){
-      productsEffect();
+      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      productsEffect(existingProducts);
     }
   }, [idCategorySelected, isLoading, isLoadingNewTab, route.params]);
 
   useEffect(() => {
-    productsEffect();
+    const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+    productsEffect(existingProducts);
   }, []);
 
-  useEffect(() => {
-    if (products?.length! > 0) {
-      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-      refillProductsWithPrice(existingProducts);
-    }
-  }, [products]);
+  // useEffect(() => {
+  //   if (products?.length! > 0) {
+  //     const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+  //     refillProductsWithPrice(existingProducts);
+  //   }
+  // }, [products]);
 
   useEffect(() => {
     if (products?.length! > 0) {
@@ -188,28 +190,6 @@ const CategoryProductsScreen: React.FC = () => {
     setRefreshing(false);
   }
 
-  async function refillProductsWithPrice(existingProductsInCart: ExistingProductInCartInterface[]) {
-    let productsTem: ProductInterface[] = [];
-    productsTem = products.concat(productsTem);
-    let productsToRender: ProductInterface[] = [];
-    productsToRender = productsRender.concat(productsToRender);
-    for (const p of productsTem) {
-      const price = await getPriceByProductId(p.productId);
-      const raiting = await getRatingByProductId(p.productId);
-      if (price && raiting) {
-        p.oldPrice = price?.sellingPrice;
-        p.price = price?.sellingPrice;
-        p.ratingValue = raiting.average;
-        p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
-        productsToRender.push(p);
-      }
-    }
-    setProductsRender(productsToRender);
-    setRefreshing(false);
-    setLoading(false);
-    loader.hide();
-  }
-
   const getPriceByProductId = async (productId: string) => {
     return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
   };
@@ -218,7 +198,7 @@ const CategoryProductsScreen: React.FC = () => {
     return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
   };
 
-  const productsEffect = async () => {
+  const productsEffect = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     loader.show();
     setProducts([]);
     setProductsRender([]);
@@ -232,8 +212,23 @@ const CategoryProductsScreen: React.FC = () => {
           productId: product.productId
         };
       });
-      console.log({ productsTem });
-      setProducts(productsTem);
+      let productsToRender: ProductInterface[] = [];
+      productsToRender = productsRender.concat(productsToRender);
+      for (const p of productsTem) {
+        const price = await getPriceByProductId(p.productId);
+        const raiting = await getRatingByProductId(p.productId);
+        if (price && raiting) {
+          p.oldPrice = price?.sellingPrice;
+          p.price = price?.sellingPrice;
+          p.ratingValue = raiting.average;
+          p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
+          productsToRender.push(p);
+        }
+      }
+      await setProductsRender(productsToRender);
+      await setItemToLoad(itemToLoad + 10);
+      loader.hide();
+      setLoading(false);
     } else {
       setProducts([]);
       loader.hide();
@@ -242,7 +237,7 @@ const CategoryProductsScreen: React.FC = () => {
     setLoadingNewTab(false)
   };
 
-  const loadMoreProducts = async () => {
+  const loadMoreProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     setLoading(true);
     const productsRequest: any[] = await getProducts(itemToLoad + 10);
     let productsTem: ProductInterface[] = productsRequest.map(product => {
@@ -255,9 +250,25 @@ const CategoryProductsScreen: React.FC = () => {
     });
     if (!productsRequest.length) {
       setLoading(false);
+    }else{
+      let productsToRender: ProductInterface[] = [];
+      productsToRender = productsRender.concat(productsToRender);
+      for (const p of productsTem) {
+        const price = await getPriceByProductId(p.productId);
+        const raiting = await getRatingByProductId(p.productId);
+        if (price && raiting) {
+          p.oldPrice = price?.sellingPrice;
+          p.price = price?.sellingPrice;
+          p.ratingValue = raiting.average;
+          p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
+          productsToRender.push(p);
+        }
+      }
+      await setProductsRender(productsToRender);
+      await setItemToLoad(itemToLoad + 10);
+      setLoading(false);
     }
-    setProducts(productsTem);
-    setItemToLoad(itemToLoad + 10);
+    // setProducts(productsTem);
   };
 
   const getProducts = async (itemToLoad: number) => {
@@ -342,7 +353,6 @@ const CategoryProductsScreen: React.FC = () => {
   const _renderItem = ({ item }) => {
     return (
       <CardProduct
-        key={item.productId}
         ratingValue={item.ratingValue}
         price={item.price}
         porcentDiscount={item.porcentDiscount}
@@ -367,14 +377,40 @@ const CategoryProductsScreen: React.FC = () => {
     );
   };
 
+  const _renderFooter = () => {
+    if(isLoading){
+      const residuoOperation = productsRender.length % 2;
+      console.log({residuoOperation})
+      if(residuoOperation === 0){
+        return(
+          <Container style={{justifyContent: 'space-between',flexDirection: 'row', width: Dimensions.get('screen').width, paddingHorizontal: moderateScale(15), left: -moderateScale(15)}}>
+            <CardProductSkeleton notMarinLeft />
+            <CardProductSkeleton notMarinLeft />
+          </Container>
+        )
+      }else{
+        return (
+          <Container row>
+            <CardProductSkeleton notMarinLeft />
+          </Container>
+        )
+      }
+    }
+    return null
+  }
+
   const loadMoreItem = async () => {
-    loadMoreProducts();
+    if(!isLoading){
+      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      loadMoreProducts(existingProducts);
+    }
   };
 
   const _onRefresh = () => {
     console.log('_onRefresh');
     setRefreshing(true);
-    productsEffect();
+    const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+    productsEffect(existingProducts);
   };
 
   return (
@@ -422,22 +458,19 @@ const CategoryProductsScreen: React.FC = () => {
                   <FlatList
                     data={productsRender}
                     renderItem={_renderItem}
-                    onEndReachedThreshold={0.25}
+                    onEndReachedThreshold={0.5}
                     onEndReached={loadMoreItem}
                     refreshing={refreshing}
                     onRefresh={() => _onRefresh()}
+                    keyExtractor={(item) => item.productId + ""}
                     contentContainerStyle={{
                       flexDirection: 'row',
                       flexWrap: 'wrap',
                       justifyContent: 'space-between',
                       paddingBottom: moderateScale(50)
                     }}
+                    ListFooterComponent={_renderFooter}
                   />
-                  {isLoading && (
-                    <Container style={{ paddingBottom: theme.bottomStickyViewBottomPadding + verticalScale(5), paddingTop: verticalScale(5) }}>
-                      <ActivityIndicator size="small" color={theme.brandColor.iconn_accent_principal} />
-                    </Container>
-                  )}
                 </Container>
               </Container>
             ) : (
