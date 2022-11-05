@@ -26,6 +26,10 @@ import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeRead
 import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
 import AdultAgeVerificationController from 'screens/home/adultAgeVerification/AdultAgeVerificationController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
+import PreferenteController from 'screens/home/pointCards/preferente/PreferenteController';
+import PreferenteHelpScreen from 'screens/home/pointCards/preferente/help/PreferenteHelpScreen';
+import PaybackController from 'screens/home/pointCards/payback/PaybackController';
+import PaybackHelpScreen from 'screens/home/pointCards/payback/help/PaybackHelpScreen';
 import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
 import { BasketCounter, EcommerceHeader, InConstructionScreen } from 'components';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
@@ -137,6 +141,82 @@ const HomeStack: React.FC = () => {
         name="ShopCart"
         initialParams={{ messageType: '', countProducts: 0, cartItems: 0 }}
         component={ShopCartController}
+      />
+      <Stack.Screen
+        name="Preferente"
+        component={PreferenteController}
+        options={{
+          headerTitle: 'ICONN Preferente',
+          headerBackTitleVisible: false,
+          headerLeft: () => {
+            return <></>;
+          },
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                navigate('PreferenteHelp');
+              }}
+            >
+              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
+            </Touchable>
+          )
+        }}
+      />
+      <Stack.Screen
+        name="Payback"
+        component={PaybackController}
+        options={{
+          headerTitle: 'Monedero PAYBACK',
+          headerBackTitleVisible: false,
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                navigate('PaybackHelp');
+              }}
+            >
+              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
+            </Touchable>
+          )
+        }}
+      />
+      <Stack.Screen
+        name="PreferenteHelp"
+        component={PreferenteHelpScreen}
+        options={{
+          headerTitle: 'ICONN Preferente',
+          headerBackTitleVisible: false,
+          headerBackVisible: false,
+          headerLeft: () => {
+            return <></>;
+          },
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                navigate('Preferente');
+              }}
+            >
+              <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />
+            </Touchable>
+          )
+        }}
+      />
+      <Stack.Screen
+        name="PaybackHelp"
+        component={PaybackHelpScreen}
+        options={{
+          headerTitle: 'Monedero PAYBACK',
+          headerBackTitleVisible: false,
+          headerBackVisible: false,
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                navigate('Payback');
+              }}
+            >
+              <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />
+            </Touchable>
+          )
+        }}
       />
       <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />
       <Stack.Screen name="DeleteAccount" options={{ title: 'Eliminar cuenta' }} component={DeleteAccountController} />

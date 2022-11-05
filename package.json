@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@invertase/react-native-apple-authentication": "^2.2.1",
+    "@kichiyaki/react-native-barcode-generator": "^0.6.7",
     "@react-native-async-storage/async-storage": "^1.17.9",
     "@react-native-community/datetimepicker": "^6.2.0",
     "@react-native-community/netinfo": "^9.3.0",
@@ -82,7 +83,7 @@
     "react-native-skeleton-content-nonexpo": "^1.0.13",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-status-bar-height": "^2.6.0",
-    "react-native-svg": "^13.2.0",
+    "react-native-svg": "^13.5.0",
     "react-native-vision-camera": "2.13.3",
     "react-native-webview": "^11.23.1",
     "react-redux": "^8.0.2",

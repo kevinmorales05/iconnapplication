@@ -19,9 +19,10 @@ import {
   CARD_PREF
 } from 'assets/images';
 import { AnimatedCarouselWithBorder } from 'components/organisms/AnimatedCarouselWithBorder';
-import { AnimatedCarousel, TabTwoElements } from 'components';
+import { AnimatedCarousel, TabTwoElements, TouchableText } from 'components';
 import { CarouselItem, TabItem } from 'rtk';
-import Entypo from 'react-native-vector-icons/Entypo'
+import Entypo from 'react-native-vector-icons/Entypo';
+import PointCardsModalController from '../../pointCards/PointCardsModalController';
 
 type ServiceType = {
   icon: any;
@@ -232,6 +233,15 @@ const WalletHomeScreen: React.FC<Props> = ({ navigate }) => {
   const savedServices = 1;
   const savedAddressee = 1;
   const savedCards = 1;
+  const [visiblePointCardModel, setVisiblePointCardModel] = useState<boolean>(false);
+
+  const hidePointCardsModal = () => {
+    setVisiblePointCardModel(false);
+  };
+
+  const showPointCardsModal = () => {
+    setVisiblePointCardModel(true);
+  };
 
   const onPressTab = (tab: TabItem) => {
     if (tab.id) {
@@ -256,7 +266,14 @@ const WalletHomeScreen: React.FC<Props> = ({ navigate }) => {
         {savedCards == 0 ? null : (
           <Container row style={{position: 'absolute', end: 10}} >
             <Entypo name='plus' style={{marginTop: 25}} color={'#008060'}/>
-            <TextContainer text="Agregar" fontBold fontSize={16} marginTop={19.5} textColor={theme.fontColor.light_green} underline />
+            <TouchableText
+              underline
+              textColor={theme.brandColor.iconn_accent_principal}
+              text="Agregar"
+              typography="h5"
+              fontBold
+              onPress={() => showPointCardsModal()}
+            />
           </Container>
         )}
       </Container>
@@ -284,6 +301,7 @@ const WalletHomeScreen: React.FC<Props> = ({ navigate }) => {
           })
         )}
       </Container>
+      <PointCardsModalController onPressClose={hidePointCardsModal} visible={visiblePointCardModel} ></PointCardsModalController>
     </ScrollView>
   );
 };
