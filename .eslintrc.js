@@ -40,7 +40,9 @@ module.exports = {
         'no-inline-styles': false
       }
     ],
-    'react-native/no-inline-styles': 0
+    'react-native/no-inline-styles': 0,
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn'
   },
 
   settings: {
