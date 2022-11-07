@@ -61,7 +61,6 @@ buck-out/
 /vendor/bundle/
 
 # Sonar
-/sonar-project.properties
 /.scannerwork/
 
 # VsCode
