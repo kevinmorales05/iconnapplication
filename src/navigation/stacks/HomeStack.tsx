@@ -40,6 +40,7 @@ import PaybackController from 'screens/home/pointCards/payback/PaybackController
 import PaybackHelpScreen from 'screens/home/pointCards/payback/help/PaybackHelpScreen';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
 import PreferenteController from 'screens/home/pointCards/preferente/PreferenteController';
+import UpdatePreferenteController from 'screens/home/pointCards/preferente/update/UpdatePreferenteController';
 import PreferenteHelpScreen from 'screens/home/pointCards/preferente/help/PreferenteHelpScreen';
 import ProductDetailController from 'screens/ecommerce/productDetail/ProductDetailController';
 import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
@@ -144,6 +145,26 @@ const HomeStack: React.FC = () => {
         component={PreferenteController}
         options={{
           headerTitle: 'ICONN Preferente',
+          headerBackTitleVisible: false,
+          headerLeft: () => {
+            return <></>;
+          },
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                navigate('PreferenteHelp');
+              }}
+            >
+              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
+            </Touchable>
+          )
+        }}
+      />
+      <Stack.Screen
+        name="UpdatePreferente"
+        component={UpdatePreferenteController}
+        options={{
+          headerTitle: 'Editar tarjeta',
           headerBackTitleVisible: false,
           headerLeft: () => {
             return <></>;

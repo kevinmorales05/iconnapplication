@@ -1,33 +1,35 @@
-import React, { useState } from 'react';
-import PreferenteScreen from './PreferenteScreen';
+import React, { useEffect } from 'react';
+import UpdatePreferenteScreen from './UpdatePreferenteScreen';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import { vtexDocsServices } from 'services';
 import { RootState, useAppSelector } from 'rtk';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { HomeStackParams } from 'navigation/types';
 import { useToast } from 'context';
 
 interface Props {
-
+  productIdentifier?: string;
+  productPromotions: Map<string, Object>;
 }
 
 const PreferenteController: React.FC<Props> = () => {
 
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const [preferenteCardToUpdate, setPreferenteCardToUpdate] = useState('');
+  const route = useRoute<RouteProp<HomeStackParams, 'UpdatePreferente'>>();
+  const { params } = route;
   const toast = useToast();
 
   const onSubmit = async (userFields: any) => {
-    let { cardNumber } = userFields
-    let preferentePointCardBody = { type: 'preferente', userId: user.userId, isActive: true, barCode: cardNumber };
+    let {cardNumberToUpdate} = userFields
+    let preferentePointCardBody = {type:'preferente', userId: user.userId, isActive:true, barCode: cardNumberToUpdate};
     try {
-      if (cardNumber.length == 18) {
-        const response = vtexDocsServices.createDoc('PC', preferentePointCardBody).then(cardSaved => {
-          if (cardSaved) {
-            setPreferenteCardToUpdate(cardSaved.DocumentId);
-          }
-        });
-      } else {
-      }
+      if(cardNumberToUpdate.length==18){
+      const response = await vtexDocsServices.updateDocByDocID('PC', params.cardIdToUpdate, preferentePointCardBody).then(cardSaved => {
+      });
+    }else {
+    }
+
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
@@ -38,9 +40,7 @@ const PreferenteController: React.FC<Props> = () => {
     }
   };
 
-  const deletePointCard = async () => {
-    vtexDocsServices.deleteDocByDocID('PC', preferenteCardToUpdate);
-  };
+  useEffect(() => { }, []);
 
   return (
     <SafeArea
@@ -50,8 +50,7 @@ const PreferenteController: React.FC<Props> = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <PreferenteScreen
-        onSubmit={onSubmit} deleteCard={deletePointCard} cardToUpdate={preferenteCardToUpdate} />
+      <UpdatePreferenteScreen onSubmit={onSubmit} preferenteCardToUpdate={params.preferenteCard} />
     </SafeArea>
   );
 };

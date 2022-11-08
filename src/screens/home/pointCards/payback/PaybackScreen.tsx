@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TextInput, Image } from 'react-native';
 import { TextContainer, Container, Button } from 'components';
 import theme from 'components/theme/theme';
@@ -6,6 +6,7 @@ import { RootState, useAppSelector } from 'rtk';
 import { ICONN_PAYBACK_MAIN } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
 import { Input } from '../../../../components/atoms';
+import InformationModalController from './information/InformationModalController';
 import { useForm } from 'react-hook-form';
 
 interface Props {
@@ -16,7 +17,8 @@ const PreferenteScreen: React.FC<Props> = ({
   itemId
 }) => {
 
-  const { detailSelected, cart } = useAppSelector((state: RootState) => state.cart);
+  const { detailSelected } = useAppSelector((state: RootState) => state.cart);
+  const [visible, setVisible] = useState<boolean>(false);
   const {
     control,
     handleSubmit,
@@ -38,12 +40,20 @@ const PreferenteScreen: React.FC<Props> = ({
 
   }, []);
 
+  const hideInformationModal = () => {
+    setVisible(false);
+  };
+
+  const showInformationModal = () => {
+    setVisible(true);
+  };
+
   return (
     <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%' }}>
       <Container center>
         <Image source={ICONN_PAYBACK_MAIN} style={{ width: moderateScale(280), height: moderateScale(138) }} />
       </Container>
-      <Container style={{ width: '90%', marginTop: 10, marginLeft:15 }}>
+      <Container style={{ width: '90%', marginTop: 10, marginLeft: 15 }}>
         <TextContainer
           marginTop={8}
           fontSize={14}
@@ -52,29 +62,31 @@ const PreferenteScreen: React.FC<Props> = ({
           }
         />
       </Container>
-      <Container style={{ marginTop: 30, marginLeft:20, height: 60 }}>
-          <TextContainer typography="h6" fontBold text={`Número de código de barras`} marginTop={24} />
-          <Input
-            name="cardNumber"
-            ref={cardNumber}
-            control={control}
-            keyboardType="number-pad"
-            placeholder={'Código numérico (18 dígitos)'}
-            blurOnSubmit={true}
-            error={errors.telephone?.message}
-            maxLength={18}
-          />
-        </Container>
+      <Container style={{ marginTop: 30, marginLeft: 20, height: 60 }}>
+        <TextContainer typography="h6" fontBold text={`Número de código de barras`} marginTop={24} />
+        <Input
+          name="cardNumber"
+          ref={cardNumber}
+          control={control}
+          keyboardType="number-pad"
+          placeholder={'Código numérico (18 dígitos)'}
+          blurOnSubmit={true}
+          error={errors.telephone?.message}
+          maxLength={18}
+        />
+      </Container>
       <Container center style={{ marginTop: 300 }}>
         <Button
           style={{ width: '90%', height: 62 }}
           round
           fontBold
           fontSize={16}
+          onPress={() => showInformationModal()}
         >
           Agregar
         </Button>
       </Container>
+      <InformationModalController onPressClose={hideInformationModal} visible={visible} />
     </Container>
 
   );

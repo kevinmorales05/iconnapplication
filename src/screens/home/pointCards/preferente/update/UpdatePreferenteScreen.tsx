@@ -1,27 +1,27 @@
-import React, { useRef, useState } from 'react';
-import { StyleSheet, TextInput, Image } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, TextInput, Dimensions, Image } from 'react-native';
 import { TextContainer, Container, Button } from 'components';
 import theme from 'components/theme/theme';
+import { RootState, useAppSelector } from 'rtk';
 import { ICONN_PREFERENTE_MAIN, CARD_PREF, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
-import { Input } from '../../../../components/atoms';
-import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
+import { Input } from '../../../../../components/atoms';
+import { useForm,FieldValues, SubmitHandler } from 'react-hook-form';
 import Barcode from '@kichiyaki/react-native-barcode-generator';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { useToast, useAlert } from 'context';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from '../../../../navigation/types';
 
 interface Props {
   onSubmit: (data: FieldValues) => void;
-  deleteCard: () => void;
-  cardToUpdate: string;
+  preferenteCardToUpdate: string;
 }
 
-const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [preferenteCard, setPreferenteCard] = useState('');
+const PreferenteScreen: React.FC<Props> = ({
+  onSubmit, preferenteCardToUpdate
+}) => {
+
+  console.log('preferenteCardToUpdate-> '+preferenteCardToUpdate);
+  const [preferenteCard, setPreferenteCard] = useState(preferenteCardToUpdate);
   const [preferenteStatus, setPreferenteStatus] = useState(0);
   const toast = useToast();
   const alert = useAlert();
@@ -33,22 +33,17 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
     reset,
     setValue,
     trigger,
-    getValues
+    getValues,
+    unregister
   } = useForm({
     mode: 'onChange'
   });
 
-  const cardNumber = useRef<TextInput>(null);
+  const cardNumberToUpdate = useRef<TextInput>(null);
 
   const editPreferenteCard = () => {
     console.log('*edit preferente card*');
-    navigate('UpdatePreferente', { cardIdToUpdate: cardToUpdate, preferenteCard: preferenteCard });
-  };
-
-  const deletePointCard = () => {
-    console.log('*delete preferente card*');
-    deleteCard();
-    navigate('WalletHome');
+    setPreferenteStatus(0);
   };
 
   const showAlert = () => {
@@ -61,7 +56,7 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
         cancelOutline: 'iconn_light_grey',
         cancelTextColor: 'iconn_dark_grey',
         onAccept() {
-          deletePointCard();
+          //deleteUnavailableItems();
           alert.hide();
         },
         onCancel() {
@@ -76,7 +71,7 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
 
   const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields);
-    setPreferenteCard(fields.cardNumber);
+    setPreferenteCard(fields.cardNumberToUpdate);
     setPreferenteStatus(1);
     toast.show({
       message: 'Cambios guardados con éxito.',
@@ -84,6 +79,10 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
     });
 
   };
+
+  useEffect(() => {
+
+  }, [preferenteCard]);
 
   const addPreferente = (
     <Container>
@@ -99,14 +98,19 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
         <Container style={{ marginTop: 30, marginLeft: 20, height: 60 }}>
           <TextContainer typography="h6" fontBold text={`Número de tarjeta`} marginTop={24} />
           <Input
-            name="cardNumber"
-            ref={cardNumber}
+            name="cardNumberToUpdate"
+            ref={cardNumberToUpdate}
             control={control}
             keyboardType="number-pad"
             placeholder={'Código numérico (18 dígitos)'}
             blurOnSubmit={true}
             error={errors.telephone?.message}
             maxLength={18}
+            defaultValue={preferenteCard}
+            editable
+            onChangeText={t => {
+                unregister('cardNumberToUpdate');
+            }}
           />
         </Container>
         <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}>
@@ -118,7 +122,7 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
             style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
             onPress={handleSubmit(submit)}
           >
-            Agregar
+            Guardar
           </Button>
         </Container>
       </Container>
@@ -139,49 +143,44 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
             `Muestra el código de barras antes de pagar`
           }
         />
-        <Container style={{ height: '100%', marginTop: 40 }}>
+        <Container style={{ width: 360, height: moderateScale(20) }}>
           <Barcode
             format="CODE128B"
             value="0000002021954Q"
-            text={'* ' + preferenteCard + ' *'}
-            height={moderateScale(70)}
-            textStyle={{ fontWeight: 'bold', color: theme.fontColor.dark }}
-            maxWidth={340}
+            text={preferenteCard}
           />
-
-          <Container center>
-            <Container style={{ width: '100%', marginTop: 120 }}>
-              <Button
-                fontSize="h4"
-                fontBold
-                outline
-                round
-                color='iconn_green_original'
-                length="long"
-                style={{ borderColor: `${theme.brandColor.iconn_green_original}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
-                leftIcon={<Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_green_original} style={{ marginRight: 5 }} />}
-                onPress={editPreferenteCard}
-              >
-                Editar
-              </Button>
-              <Button
-                fontSize="h4"
-                fontBold
-                outline
-                round
-                color='black'
-                length="long"
-                style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
-                leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
-                onPress={showAlert}
-                marginTop={20}
-              >
-                Eliminar
-              </Button>
-            </Container>
-          </Container>
         </Container>
       </Container>
+      <Container center style={{ backgroundColor: theme.brandColor.iconn_white, marginTop: 180 }}>
+          <Container style={{ width: '90%', marginTop: 4 }}>
+            <Button
+              fontSize="h4"
+              fontBold
+              outline
+              round
+              color='iconn_green_original'
+              length="long"
+              style={{ borderColor: `${theme.brandColor.iconn_green_original}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
+              leftIcon={<Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_green_original} style={{ marginRight: 5 }} />}
+              onPress={editPreferenteCard}
+            >
+              Editar
+            </Button>
+            <Button
+              fontSize="h4"
+              fontBold
+              outline
+              round
+              color='black'
+              length="long"
+              style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
+              leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
+              onPress={showAlert}
+            >
+              Eliminar
+            </Button>
+          </Container>
+        </Container>
     </Container>
   );
 
