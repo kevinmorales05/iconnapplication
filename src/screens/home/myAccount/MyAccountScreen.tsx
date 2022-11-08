@@ -93,7 +93,6 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<CoffeSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Cuponera en construcción...');
             inConstruction.show(true);
           }}
         />
@@ -113,7 +112,6 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<PlacesSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Sucursales en Construcción...');
             inConstruction.show(true);
           }}
         />
@@ -122,7 +120,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<WalletSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            navigate('WalletHome')
+            navigate('WalletStack');
           }}
         />
         <NavigationMenuItem
@@ -131,7 +129,6 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<DocumentCashSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             // navigate('TaxInfo');
-            console.log('Datos fiscales en Construcción...');
             inConstruction.show(true);
           }}
         />
@@ -141,7 +138,6 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<TargetSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             // navigate('Invoice');
-            console.log('Facturación en Construcción...');
             inConstruction.show(true);
           }}
         />
@@ -169,7 +165,6 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<HelpSupportSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            console.log('Centro de ayuda en Construcción...');
             inConstruction.show(true);
           }}
         />

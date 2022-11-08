@@ -1,63 +1,60 @@
 import React from 'react';
-import { createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
-import HomeController from 'screens/home/HomeController'; /** relocated to tabNavigator */
-import MyAccountController from 'screens/home/myAccount/MyAccountController';
+import { BasketCounter, EcommerceHeader, InConstructionScreen } from 'components';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { TabNavigator } from 'navigation/TabNavigator';
+import { Touchable } from '../../components';
+import AboutUsController from 'screens/home/myAccount/aboutUs/AboutUsController';
+import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
+import AddRFCController from 'screens/home/myAccount/manageTaxInfo/AddRFC/AddRFCController';
+import AddTicketPetroController from 'screens/home/invoicing/invoicingPetro/AddTicketPetro/AddTicketPetroController';
+import AddTicketSevenController from 'screens/home/invoicing/invoicingSeven/AddTicketSeven/AddTicketSevenController';
+import CategoryProductsScreen from 'screens/categories/categoryProducts/CategoryProductsScreen';
+import ChangedPasswordController from 'screens/auth/onboarding/ChangedPassword/ChangedPasswordController';
+import ChangePasswordController from 'screens/home/myAccount/changePassword/ChangePasswordController';
+import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
+import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
+import ContactInformationController from 'screens/home/shoppingCart/ContactInformation/ContactInformationController';
+import CreateTaxProfileController from 'screens/home/invoicing/CreateTaxProfile/CreateTaxProfileController';
+import DeleteAccountController from 'screens/home/myAccount/deleteAccount/DeleteAccountController';
 import EditEmailController from 'screens/auth/onboarding/EditEmail/EditEmailController';
 import EditEmailOtpController from 'screens/auth/onboarding/EditEmailOtp/EditEmailOtpController';
 import EditPasswordController from 'screens/auth/onboarding/EditPassword/EditPasswordController';
-import ProfileController from 'screens/home/myAccount/profile/ProfileController';
+import FavoriteController from 'screens/home/favoriteScreen/FavoriteController';
+import Icon from 'react-native-vector-icons/AntDesign';
+import InitialPage from 'screens/home/initialPage/InitPage';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
-import PromotionsScreen from 'screens/home/promotions/PromotionsScreen';
-import AddRFCController from 'screens/home/myAccount/manageTaxInfo/AddRFC/AddRFCController';
-import TaxInfoController from 'screens/home/myAccount/manageTaxInfo/TaxInfo/TaxInfoController';
 import InvoiceController from 'screens/home/invoicing/Invoice/InvoiceController';
-import CreateTaxProfileController from 'screens/home/invoicing/CreateTaxProfile/CreateTaxProfileController';
-import AddTicketPetroController from 'screens/home/invoicing/invoicingPetro/AddTicketPetro/AddTicketPetroController';
-import AddTicketSevenController from 'screens/home/invoicing/invoicingSeven/AddTicketSeven/AddTicketSevenController';
-import InvoiceTicketPetroController from 'screens/home/invoicing/invoicingPetro/InvoiceTicketPetro/InvoiceTicketPetroController';
-import InvoiceTicketSevenController from 'screens/home/invoicing/invoicingSeven/InvoiceTicketSeven/InvoiceTicketSevenController';
 import InvoiceGeneratedPetroController from 'screens/home/invoicing/invoicingPetro/InvoiceGeneratedPetro/InvoiceGeneratedPetroController';
 import InvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/InvoiceGeneratedSeven/InvoiceGeneratedSevenController';
 import InvoiceHistoryController from 'screens/home/invoicing/InvoiceHistory/InvoiceHistoryController';
-import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicingPetro/ViewInvoiceGeneratedPetro/ViewInvoiceGeneratedPetroController';
-import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
-import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
-import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
-import AdultAgeVerificationController from 'screens/home/adultAgeVerification/AdultAgeVerificationController';
-import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
-import PreferenteController from 'screens/home/pointCards/preferente/PreferenteController';
-import PreferenteHelpScreen from 'screens/home/pointCards/preferente/help/PreferenteHelpScreen';
+import InvoiceTicketPetroController from 'screens/home/invoicing/invoicingPetro/InvoiceTicketPetro/InvoiceTicketPetroController';
+import InvoiceTicketSevenController from 'screens/home/invoicing/invoicingSeven/InvoiceTicketSeven/InvoiceTicketSevenController';
+import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalController';
+import MyAccountController from 'screens/home/myAccount/MyAccountController';
+import MyOrdersController from 'screens/home/MyOrdersController';
+import OtherProductsScreen from 'screens/home/viewMore/OtherProductsScreen';
 import PaybackController from 'screens/home/pointCards/payback/PaybackController';
 import PaybackHelpScreen from 'screens/home/pointCards/payback/help/PaybackHelpScreen';
-import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
-import { BasketCounter, EcommerceHeader, InConstructionScreen } from 'components';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
-import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
-import MyOrdersController from 'screens/home/MyOrdersController';
-import Icon from 'react-native-vector-icons/AntDesign';
-import { Touchable } from '../../components';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { TabNavigator } from 'navigation/TabNavigator';
-import ChangedPasswordController from 'screens/auth/onboarding/ChangedPassword/ChangedPasswordController';
+import PreferenteController from 'screens/home/pointCards/preferente/PreferenteController';
+import PreferenteHelpScreen from 'screens/home/pointCards/preferente/help/PreferenteHelpScreen';
 import ProductDetailController from 'screens/ecommerce/productDetail/ProductDetailController';
-import CategoryProductsScreen from 'screens/categories/categoryProducts/CategoryProductsScreen';
-import SearchScreen from 'screens/search/SearchScreen';
-import SearchProductResultsScreen from 'screens/search/searchProductResult/SearchProductResult';
-import AboutUsController from 'screens/home/myAccount/aboutUs/AboutUsController';
-import theme from 'components/theme/theme';
-import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalController';
-import ContactInformationController from 'screens/home/shoppingCart/ContactInformation/ContactInformationController';
-import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
-import FavoriteController from 'screens/home/favoriteScreen/FavoriteController';
-import ChangePasswordController from 'screens/home/myAccount/changePassword/ChangePasswordController';
-import DeleteAccountController from 'screens/home/myAccount/deleteAccount/DeleteAccountController';
-import SeeMoreScreen from 'screens/home/viewMore/OtherProductsScreen';
+import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
+import ProfileController from 'screens/home/myAccount/profile/ProfileController';
+import PromotionsScreen from 'screens/home/promotions/PromotionsScreen';
 import RecomendedForYouScreen from 'screens/home/viewMore/RecommededForYou';
-import OtherProductsScreen from 'screens/home/viewMore/OtherProductsScreen';
-import InitialPage from 'screens/home/initialPage/InitPage'
-import WalletHomeController from 'screens/home/wallet/WalletHome/WalletHomeController';
+import SearchProductResultsScreen from 'screens/search/searchProductResult/SearchProductResult';
+import SearchScreen from 'screens/search/SearchScreen';
+import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
+import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
+import TaxInfoController from 'screens/home/myAccount/manageTaxInfo/TaxInfo/TaxInfoController';
+import theme from 'components/theme/theme';
+import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicingPetro/ViewInvoiceGeneratedPetro/ViewInvoiceGeneratedPetroController';
+import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
+import WalletStack from './nested/WalletStack';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -80,13 +77,13 @@ const HomeStack: React.FC = () => {
       initialRouteName="InitialPage"
       id="HomeStack"
     >
-      <Stack.Screen name="InitialPage" component={InitialPage} options={{  headerShown: false }} />
+      <Stack.Screen name="InitialPage" component={InitialPage} options={{ headerShown: false }} />
       <Stack.Screen
         options={{
           headerTitle: '',
           headerLeft: () => <EcommerceHeader />,
           headerRight: () => <BasketCounter />,
-          headerBackVisible: false,
+          headerBackVisible: false
         }}
         name="Home"
         initialParams={{ paySuccess: false }}
@@ -232,14 +229,7 @@ const HomeStack: React.FC = () => {
         name="MyOrders"
         component={MyOrdersController}
       />
-      <Stack.Screen
-        options={{
-          headerShown: true,
-          title: 'Wallet'
-        }}
-        name="WalletHome"
-        component={WalletHomeController}
-      />
+      <Stack.Screen name="WalletStack" component={WalletStack} />
       <Stack.Screen
         name="ProductDetail"
         component={ProductDetailController}
@@ -277,7 +267,7 @@ const HomeStack: React.FC = () => {
       />
       <Stack.Screen
         options={{
-          headerShown: false,
+          headerShown: false
         }}
         name="SearchProducts"
         component={SearchScreen}
