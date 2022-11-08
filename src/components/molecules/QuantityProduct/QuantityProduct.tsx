@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: theme.brandColor.iconn_med_grey,
     borderWidth: moderateScale(1), 
-    flex: 1
+    flex: 1,
   },
   containerDelete: {
     justifyContent: 'center',

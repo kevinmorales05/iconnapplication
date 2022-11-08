@@ -311,7 +311,7 @@ const CardProduct: React.FC<CardProductProps> = ({
           <Button
             color="iconn_green_original"
             round
-            size={'xxxsmall'}
+            size={'xxsmall'}
             onPress={() => {
               console.log('ejecuta...');
               validateCategoryForAddItem();
@@ -391,8 +391,7 @@ const styles = StyleSheet.create({
     flex: 0.25,
     width: '100%',
     justifyContent: 'flex-end',
-    marginTop: 20,
-    marginBottom: 10
+    marginTop: moderateScale(70),
   },
   buttonAddProduct: {
     borderRadius: moderateScale(10)
