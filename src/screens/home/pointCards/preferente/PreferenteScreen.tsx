@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Image } from 'react-native';
 import { TextContainer, Container, Button } from 'components';
 import theme from 'components/theme/theme';
@@ -23,6 +23,7 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [preferenteCard, setPreferenteCard] = useState('');
   const [preferenteStatus, setPreferenteStatus] = useState(0);
+  const [disableButton, setDisableButton] = useState(true);
   const toast = useToast();
   const alert = useAlert();
   const {
@@ -41,7 +42,7 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
   const cardNumber = useRef<TextInput>(null);
 
   const editPreferenteCard = () => {
-    console.log('*edit preferente card*');
+    console.log('*update preferente card*');
     navigate('UpdatePreferente', { cardIdToUpdate: cardToUpdate, preferenteCard: preferenteCard });
   };
 
@@ -50,6 +51,13 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
     deleteCard();
     navigate('WalletHome');
   };
+
+  const updateButtonStatus = () => {
+    setDisableButton(getValues('cardNumber')?.length!=18);
+  };
+
+  useEffect(() => {
+  }, [disableButton]);
 
   const showAlert = () => {
     alert.show(
@@ -102,14 +110,15 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
             name="cardNumber"
             ref={cardNumber}
             control={control}
-            keyboardType="number-pad"
+            keyboardType="numeric"
             placeholder={'Código numérico (18 dígitos)'}
             blurOnSubmit={true}
             error={errors.telephone?.message}
             maxLength={18}
+            onChangeText={updateButtonStatus}
           />
         </Container>
-        <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}>
+        <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200, marginLeft:30 }}>
           <Button
             length="long"
             fontSize="h5"
@@ -117,6 +126,7 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
             fontBold
             style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
             onPress={handleSubmit(submit)}
+            disabled={ disableButton }
           >
             Agregar
           </Button>
@@ -124,7 +134,6 @@ const PreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate 
       </Container>
     </Container>
   );
-
 
   const addedPreferente = (
     <Container>
