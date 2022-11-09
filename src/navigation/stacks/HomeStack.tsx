@@ -150,7 +150,7 @@ const HomeStack: React.FC = () => {
         name="MyOrders"
         component={MyOrdersController}
       />
-      <Stack.Screen name="WalletStack" component={WalletStack} />
+      <Stack.Screen options={{ headerShown: false }} name="WalletStack" component={WalletStack} />
       <Stack.Screen
         name="ProductDetail"
         component={ProductDetailController}
