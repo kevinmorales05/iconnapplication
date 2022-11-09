@@ -41,7 +41,6 @@ export type HomeStackParams = {
   SearchProducts: undefined;
   SearchProductsResults: { products: ProductSearchItemInterface[]; textSearch: string };
   ShopCart: { messageType?: messageType | string; countProducts?: number; cartItems?: number };
-  UpdatePreferente: undefined | { cardIdToUpdate?: string, preferenteCard?: string };
   TaxInfo: undefined;
   ViewInvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };

@@ -87,7 +87,7 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
                       <Container>
                         <Touchable onPress={() => {
                           showPreferenteScreen()
-                          navigate('Preferente');
+                          navigate('Preferred');
                         }}>
                           <Image source={ICONN_POINT_CARD_MODAL_PREFERENTE} resizeMode="cover" style={{ width: 108, height: 108 }} />
                           <TextContainer

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import UpdatePreferenteScreen from './UpdatePreferenteScreen';
+import UpdatePreferenteScreen from './UpdatePreferredScreen';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import { vtexDocsServices } from 'services';
@@ -9,11 +9,10 @@ import { HomeStackParams } from 'navigation/types';
 import { useToast } from 'context';
 
 interface Props {
-  productIdentifier?: string;
-  productPromotions: Map<string, Object>;
+
 }
 
-const PreferenteController: React.FC<Props> = () => {
+const UpdatePreferredController: React.FC<Props> = ({}) => {
 
   const { user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'UpdatePreferente'>>();
@@ -55,4 +54,4 @@ const PreferenteController: React.FC<Props> = () => {
   );
 };
 
-export default PreferenteController;
+export default UpdatePreferredController;

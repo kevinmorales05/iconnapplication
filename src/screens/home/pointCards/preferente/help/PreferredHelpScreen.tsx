@@ -7,15 +7,15 @@ import { ICONN_PREFERENTE_HELP } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
-  itemId: string;
+  
 }
 
-const PreferenteHelpScreen: React.FC<Props> = ({
-  itemId
+const PreferredHelpScreen: React.FC<Props> = ({
+  
 }) => {
   const { detailSelected, cart } = useAppSelector((state: RootState) => state.cart);
 
-  itemId = detailSelected;
+  
 
   useEffect(() => {
 
@@ -48,7 +48,7 @@ const PreferenteHelpScreen: React.FC<Props> = ({
   );
 };
 
-export default PreferenteHelpScreen;
+export default PreferredHelpScreen;
 
 const styles = StyleSheet.create({
   container: {

@@ -36,12 +36,7 @@ import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalControlle
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import MyOrdersController from 'screens/home/MyOrdersController';
 import OtherProductsScreen from 'screens/home/viewMore/OtherProductsScreen';
-import PaybackController from 'screens/home/pointCards/payback/PaybackController';
-import PaybackHelpScreen from 'screens/home/pointCards/payback/help/PaybackHelpScreen';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
-import PreferenteController from 'screens/home/pointCards/preferente/PreferenteController';
-import UpdatePreferenteController from 'screens/home/pointCards/preferente/update/UpdatePreferenteController';
-import PreferenteHelpScreen from 'screens/home/pointCards/preferente/help/PreferenteHelpScreen';
 import ProductDetailController from 'screens/ecommerce/productDetail/ProductDetailController';
 import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
 import ProfileController from 'screens/home/myAccount/profile/ProfileController';
@@ -140,102 +135,7 @@ const HomeStack: React.FC = () => {
         initialParams={{ messageType: '', countProducts: 0, cartItems: 0 }}
         component={ShopCartController}
       />
-      <Stack.Screen
-        name="Preferente"
-        component={PreferenteController}
-        options={{
-          headerTitle: 'ICONN Preferente',
-          headerBackTitleVisible: false,
-          headerLeft: () => {
-            return <></>;
-          },
-          headerRight: () => (
-            <Touchable
-              onPress={() => {
-                navigate('PreferenteHelp');
-              }}
-            >
-              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
-            </Touchable>
-          )
-        }}
-      />
-      <Stack.Screen
-        name="UpdatePreferente"
-        component={UpdatePreferenteController}
-        options={{
-          headerTitle: 'Editar tarjeta',
-          headerBackTitleVisible: false,
-          headerLeft: () => {
-            return <></>;
-          },
-          headerRight: () => (
-            <Touchable
-              onPress={() => {
-                navigate('PreferenteHelp');
-              }}
-            >
-              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
-            </Touchable>
-          )
-        }}
-      />
-      <Stack.Screen
-        name="Payback"
-        component={PaybackController}
-        options={{
-          headerTitle: 'Monedero PAYBACK',
-          headerBackTitleVisible: false,
-          headerRight: () => (
-            <Touchable
-              onPress={() => {
-                navigate('PaybackHelp');
-              }}
-            >
-              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
-            </Touchable>
-          )
-        }}
-      />
-      <Stack.Screen
-        name="PreferenteHelp"
-        component={PreferenteHelpScreen}
-        options={{
-          headerTitle: 'ICONN Preferente',
-          headerBackTitleVisible: false,
-          headerBackVisible: false,
-          headerLeft: () => {
-            return <></>;
-          },
-          headerRight: () => (
-            <Touchable
-              onPress={() => {
-                navigate('Preferente');
-              }}
-            >
-              <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />
-            </Touchable>
-          )
-        }}
-      />
-      <Stack.Screen
-        name="PaybackHelp"
-        component={PaybackHelpScreen}
-        options={{
-          headerTitle: 'Monedero PAYBACK',
-          headerBackTitleVisible: false,
-          headerBackVisible: false,
-          headerRight: () => (
-            <Touchable
-              onPress={() => {
-                navigate('Payback');
-              }}
-            >
-              <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />
-            </Touchable>
-          )
-        }}
-      />
+
       <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />
       <Stack.Screen name="DeleteAccount" options={{ title: 'Eliminar cuenta' }} component={DeleteAccountController} />
       <Stack.Screen name="Promotions" options={{ title: 'Promociones', headerRight: () => <BasketCounter /> }} component={PromotionsScreen} />

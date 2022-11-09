@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { StyleSheet, TextInput, Image } from 'react-native';
 import { TextContainer, Container, Button } from 'components';
 import theme from 'components/theme/theme';
-import { ICONN_PAYBACK_MAIN, CARD_PETRO, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
+import { ICONN_PREFERENTE_MAIN, CARD_PREF, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
 import { Input } from '../../../../components/atoms';
-import InformationModalController from './information/InformationModalController';
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
 import Barcode from '@kichiyaki/react-native-barcode-generator';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -21,14 +20,12 @@ interface Props {
   cardToUpdate: string;
 }
 
-const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) => {
-
+const PreferredScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [paybackCard, setPaybackCard] = useState('');
+  const [preferenteCard, setPreferenteCard] = useState('');
+  const [preferenteStatus, setPreferenteStatus] = useState(0);
   const [disableButton, setDisableButton] = useState(true);
   const toast = useToast();
-  const [visible, setVisible] = useState<boolean>(false);
-  const [paybackStatus, setPaybackStatus] = useState(0);
   const alert = useAlert();
   const {
     control,
@@ -43,22 +40,21 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
     mode: 'onChange'
   });
 
-  const barcodeNumber = useRef<TextInput>(null);
+  const cardNumber = useRef<TextInput>(null);
 
-  const editPaybackCard = () => {
-    console.log('*update payback card*');
-    navigate('UpdatePayback', { cardIdToUpdate: cardToUpdate, paybackCard: paybackCard });
+  const editPreferenteCard = () => {
+    console.log('*update preferente card*');
+    navigate('UpdatePreferred', { cardIdToUpdate: cardToUpdate, preferenteCard: preferenteCard });
   };
 
   const deletePointCard = () => {
-    console.log('*delete payback card*');
+    console.log('*delete preferente card*');
     deleteCard();
     navigate('WalletHome');
   };
 
   const updateButtonStatus = () => {
-    console.log('tammmm '+getValues('barcodeNumber')?.length);
-    setDisableButton(getValues('barcodeNumber')?.length!=13);
+    setDisableButton(getValues('cardNumber')?.length!=18);
   };
 
   useEffect(() => {
@@ -67,8 +63,8 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
   const showAlert = () => {
     alert.show(
       {
-        title: 'Eliminar Monedero PAYBACK',
-        message: `¿Estás seguro que quieres eliminar el monedero con terminación 2822?`,
+        title: 'Eliminar tarjeta ICONN Preferente',
+        message: `¿Estás seguro que quieres eliminar la tarjeta con terminación 1580?\nLa puedes volver a dar de alta en cualquier momento.`,
         acceptTitle: 'Eliminar',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
@@ -88,46 +84,43 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
   };
 
   const submit: SubmitHandler<FieldValues> = fields => {
-    console.log('campos::: '+fields);
     onSubmit(fields);
-    setPaybackCard(fields.cardNumber);
-    setPaybackStatus(1);
+    setPreferenteCard(fields.cardNumber);
+    setPreferenteStatus(1);
     toast.show({
       message: 'Cambios guardados con éxito.',
       type: 'success'
     });
+
   };
 
-  const addPayback = (
+  const addPreferente = (
     <Container>
-      <Container center>
-        <Image source={ICONN_PAYBACK_MAIN} style={{ width: moderateScale(280), height: moderateScale(138) }} />
-      </Container>
-      <Container style={{ width: '90%', marginTop: 10, marginLeft: 15 }}>
+      <Image source={ICONN_PREFERENTE_MAIN} style={{ width: '100%', height: moderateScale(193) }} />
+      <Container center style={{ width: '90%', marginTop: 10 }}>
         <TextContainer
           marginTop={8}
           fontSize={14}
           text={
-            'Ingresa el número bajo el código de barras de tu tarjeta PAYBACK.'
+            `Ingresa tu código numérico y automáticamente\nse generará tu código de barras.`
           }
         />
-      </Container>
-      <Container style={{ marginTop: 30, marginLeft: 20, height: 60 }}>
-        <TextContainer typography="h6" fontBold text={`Número de código de barras`} marginTop={24} />
-        <Input
-          name="barcodeNumber"
-          ref={barcodeNumber}
-          control={control}
-          keyboardType="numeric"
-          placeholder={'13 dígitos'}
-          blurOnSubmit={true}
-          error={errors.telephone?.message}
-          maxLength={13}
-          rules={numericWithSpecificLenght(18)}
-          onChangeText={updateButtonStatus}
-        />
-      </Container>
-      <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200, marginLeft:30 }}>
+        <Container style={{ marginTop: 30, marginLeft: 20, height: 60 }}>
+          <TextContainer typography="h6" fontBold text={`Número de tarjeta`} marginTop={24} />
+          <Input
+            name="cardNumber"
+            ref={cardNumber}
+            control={control}
+            keyboardType="numeric"
+            placeholder={'Código numérico (18 dígitos)'}
+            blurOnSubmit={true}
+            error={errors.telephone?.message}
+            maxLength={18}
+            rules={numericWithSpecificLenght(18)}
+            onChangeText={updateButtonStatus}
+          />
+        </Container>
+        <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200, marginLeft:30 }}>
           <Button
             length="long"
             fontSize="h5"
@@ -137,38 +130,38 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
             onPress={handleSubmit(submit)}
             disabled={ disableButton }
           >
-          Agregar
-        </Button>
+            Agregar
+          </Button>
+        </Container>
       </Container>
     </Container>
   );
 
-  const addedPayback = (
+  const addedPreferente = (
     <Container>
-      <Container space='around' center style={{ width: '100%', height: moderateScale(195) }}>
-        <Image source={CARD_PETRO} style={{ width: moderateScale(264), height: moderateScale(164) }} />
+      <Container center space='around' style={{ width: '100%', height: moderateScale(193), backgroundColor: theme.brandColor.iconn_background }}>
+        <Image source={CARD_PREF} style={{ width: moderateScale(261), height: moderateScale(164) }} />
       </Container>
-      <Container style={{ width: '100%', height: '100%', backgroundColor:theme.brandColor.iconn_white }}>
-      <Container center>
-      <TextContainer
-          marginTop={20}
-          marginBottom={24}
+      <Container center style={{ width: '100%', marginTop: 10, backgroundColor: theme.brandColor.iconn_white }}>
+        <TextContainer
+          marginTop={50}
           fontSize={14}
           text={
-            'Muestra el código de barras antes de pagar'
+            `Muestra el código de barras antes de pagar`
           }
         />
-        </Container>
-        <Barcode
+        <Container style={{ height: '100%', marginTop: 40 }}>
+          <Barcode
             format="CODE128B"
             value="0000002021954Q"
-            text={'1234567890987'}
-            height={moderateScale(168)}
-            textStyle={{ fontWeight: 'bold', color: theme.fontColor.dark, marginTop:-19, backgroundColor:theme.brandColor.iconn_white, fontSize:14 }}
-            maxWidth={167}
+            text={'* ' + preferenteCard + ' *'}
+            height={moderateScale(70)}
+            textStyle={{ fontWeight: 'bold', color: theme.fontColor.dark }}
+            maxWidth={340}
           />
-        <Container center>
-            <Container style={{ width: '90%', marginTop: 150 }}>
+
+          <Container center>
+            <Container style={{ width: '100%', marginTop: 120 }}>
               <Button
                 fontSize="h4"
                 fontBold
@@ -178,7 +171,7 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
                 length="long"
                 style={{ borderColor: `${theme.brandColor.iconn_green_original}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
                 leftIcon={<Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_green_original} style={{ marginRight: 5 }} />}
-                onPress={editPaybackCard}
+                onPress={editPreferenteCard}
               >
                 Editar
               </Button>
@@ -191,35 +184,33 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
                 length="long"
                 style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
                 leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
-                marginTop={20}
                 onPress={showAlert}
+                marginTop={20}
               >
                 Eliminar
               </Button>
             </Container>
           </Container>
+        </Container>
       </Container>
     </Container>
   );
 
   return (
-    <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%' }}>
+    <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', height: '100%' }}>
       {
-        paybackStatus == 0 ?
-          addPayback :
-          (paybackStatus == 1 ?
-            addedPayback :
+        preferenteStatus == 0 ?
+          addPreferente :
+          (preferenteStatus == 1 ?
+            addedPreferente :
             <></>)
-      }
-      {
-      /*<InformationModalController onPressClose={hideInformationModal} visible={visible} />*/
       }
     </Container>
 
   );
 };
 
-export default PaybackScreen;
+export default PreferredScreen;
 
 const styles = StyleSheet.create({
   container: {

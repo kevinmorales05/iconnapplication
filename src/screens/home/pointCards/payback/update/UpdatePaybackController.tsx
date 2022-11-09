@@ -1,29 +1,28 @@
 import React, { useState } from 'react';
-import PreferenteScreen from './PreferenteScreen';
-import { SafeArea } from 'components';
-import theme from 'components/theme/theme';
-import { vtexDocsServices } from 'services';
+import UpdatePaybackScreen from './UpdatePaybackScreen';
 import { RootState, useAppSelector } from 'rtk';
+import { vtexDocsServices } from 'services';
+import theme from 'components/theme/theme';
+import { SafeArea } from 'components';
 import { useToast } from 'context';
 
 interface Props {
 
 }
 
-const PreferenteController: React.FC<Props> = () => {
-
+const UpdatePaybackController: React.FC<Props> = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const [preferenteCardToUpdate, setPreferenteCardToUpdate] = useState('');
+  const [paybackCardToUpdate, setPaybackCardToUpdate] = useState('');
   const toast = useToast();
 
   const onSubmit = async (userFields: any) => {
     let { cardNumber } = userFields
-    let preferentePointCardBody = { type: 'preferente', userId: user.userId, isActive: true, barCode: cardNumber };
+    let paybackPointCardBody = { type: 'preferente', userId: user.userId, isActive: true, barCode: cardNumber };
     try {
       if (cardNumber.length == 18) {
-        const response = vtexDocsServices.createDoc('PC', preferentePointCardBody).then(cardSaved => {
+        const response = vtexDocsServices.createDoc('PC', paybackPointCardBody).then(cardSaved => {
           if (cardSaved) {
-            setPreferenteCardToUpdate(cardSaved.DocumentId);
+            setPaybackCardToUpdate(cardSaved.DocumentId);
           }
         });
       } else {
@@ -39,7 +38,7 @@ const PreferenteController: React.FC<Props> = () => {
   };
 
   const deletePointCard = async () => {
-    vtexDocsServices.deleteDocByDocID('PC', preferenteCardToUpdate);
+    vtexDocsServices.deleteDocByDocID('PC', paybackCardToUpdate);
   };
 
   return (
@@ -50,10 +49,10 @@ const PreferenteController: React.FC<Props> = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <PreferenteScreen
-        onSubmit={onSubmit} deleteCard={deletePointCard} cardToUpdate={preferenteCardToUpdate} />
+      <UpdatePaybackScreen
+        onSubmit={onSubmit} deleteCard={deletePointCard} cardToUpdate={paybackCardToUpdate} />
     </SafeArea>
   );
 };
 
-export default PreferenteController;
+export default UpdatePaybackController;

@@ -7,14 +7,11 @@ import { ICONN_PAYBACK_HELP } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
-  itemId: string;
+
 }
 
-const PaybackHelpScreen: React.FC<Props> = ({
-  itemId
-}) => {
+const PaybackHelpScreen: React.FC<Props> = () => {
   const { detailSelected, cart } = useAppSelector((state: RootState) => state.cart);
-  itemId = detailSelected;
 
   useEffect(() => {
   }, []);

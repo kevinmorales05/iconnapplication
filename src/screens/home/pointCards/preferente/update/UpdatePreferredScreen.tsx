@@ -16,7 +16,7 @@ interface Props {
   preferenteCardToUpdate: string;
 }
 
-const PreferenteScreen: React.FC<Props> = ({
+const UpdatePreferredScreen: React.FC<Props> = ({
   onSubmit, preferenteCardToUpdate
 }) => {
 
@@ -198,7 +198,7 @@ const PreferenteScreen: React.FC<Props> = ({
   );
 };
 
-export default PreferenteScreen;
+export default UpdatePreferredScreen;
 
 const styles = StyleSheet.create({
   container: {
