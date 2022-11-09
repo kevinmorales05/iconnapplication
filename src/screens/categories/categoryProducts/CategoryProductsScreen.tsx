@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { Dimensions, StyleSheet, FlatList, View, ActivityIndicator } from 'react-native';
+import { Dimensions, StyleSheet, FlatList, View } from 'react-native';
 import { AccordeonItemTypeProps } from 'components/types/Accordion';
 import {
   ExistingProductInCartInterface,
@@ -22,7 +22,7 @@ import { ProductsByCategoryFilter } from 'rtk/types/category.types';
 import { FilterItemTypeProps } from 'components/types/FilterITem';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
-import { moderateScale, verticalScale } from 'utils/scaleMetrics';
+import { moderateScale } from 'utils/scaleMetrics';
 import { useLoading } from 'context';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 
@@ -66,13 +66,11 @@ const CategoryProductsScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
-  const { user } = useAppSelector((state: RootState) => state.auth);
 
-  const { categories, category } = route.params;
+  const { category } = route.params;
 
   const [idCategorySelected, setIdCategorySelected] = useState<string>(category.id + '');
   const [categoriesBar, setCategoriesBar] = useState<TabItem[]>([]);
-  const [products, setProducts] = useState<ProductInterface[]>([]);
   const [productsRender, setProductsRender] = useState<ProductInterface[]>([]);
   const [filterSelect, setFilterSelect] = useState<ProductsByCategoryFilter>('OrderByTopSaleDESC');
   // const [selectBrand, setSelectBrand] = useState<string[]>([]);
@@ -85,25 +83,20 @@ const CategoryProductsScreen: React.FC = () => {
   const [isLoadingNewTab, setLoadingNewTab] = useState<boolean>(false);
 
   const hideModalForAdult = () => {
-    console.log('hideModalForAdult...');
     setVisible(false);
   };
 
   const showModalForAdult = () => {
-    console.log('showModalForAdult...');
     setVisible(true);
   };
 
-  const userUpdated = (productId: string, isAdult: boolean) => {
+  const userUpdated = (productId: string) => {
     updateShoppingCartProduct!('create', productId);
     hideModalForAdult();
   };
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
-    console.log('isAdult', isAdult);
-    console.log('pId', productId);
     if (isAdult) {
-      console.log('updateShoppingCartProduct');
       updateShoppingCartProduct!('create', productId);
     } else {
       setProductId(productId);
@@ -121,7 +114,6 @@ const CategoryProductsScreen: React.FC = () => {
   }, [category, route.params]);
 
   useEffect(() => {
-    console.log({ category });
     if (category.children.length) {
       const categoriesTab: TabItem[] = [
         {
@@ -140,7 +132,7 @@ const CategoryProductsScreen: React.FC = () => {
   }, [category, route.params]);
 
   useEffect(() => {
-    if(!isLoading && isLoadingNewTab){
+    if (!isLoading && isLoadingNewTab) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       productsEffect(existingProducts);
     }
@@ -151,19 +143,12 @@ const CategoryProductsScreen: React.FC = () => {
     productsEffect(existingProducts);
   }, []);
 
-  // useEffect(() => {
-  //   if (products?.length! > 0) {
-  //     const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-  //     refillProductsWithPrice(existingProducts);
-  //   }
-  // }, [products]);
-
   useEffect(() => {
-    if (products?.length! > 0) {
+    if (productsRender?.length! > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       updateQuantityProducts(existingProducts);
     }
-  }, [products, cart]);
+  }, [cart]);
 
   const getExistingProductsInCart = () => {
     const { items } = cart;
@@ -183,7 +168,6 @@ const CategoryProductsScreen: React.FC = () => {
     let productsToRender: ProductInterface[] = [];
     productsToRender = productsRender.concat(productsToRender);
     for (const p of productsToRender) {
-      const price = await getPriceByProductId(p.productId);
       p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
     }
     setProductsRender(productsToRender);
@@ -200,7 +184,6 @@ const CategoryProductsScreen: React.FC = () => {
 
   const productsEffect = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     loader.show();
-    setProducts([]);
     setProductsRender([]);
     const productsRequest: any[] = await getProducts(1);
     if (productsRequest.length) {
@@ -230,11 +213,10 @@ const CategoryProductsScreen: React.FC = () => {
       loader.hide();
       setLoading(false);
     } else {
-      setProducts([]);
       loader.hide();
       setProductsRender([]);
     }
-    setLoadingNewTab(false)
+    setLoadingNewTab(false);
   };
 
   const loadMoreProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
@@ -250,7 +232,7 @@ const CategoryProductsScreen: React.FC = () => {
     });
     if (!productsRequest.length) {
       setLoading(false);
-    }else{
+    } else {
       let productsToRender: ProductInterface[] = [];
       productsToRender = productsRender.concat(productsToRender);
       for (const p of productsTem) {
@@ -268,24 +250,24 @@ const CategoryProductsScreen: React.FC = () => {
       await setItemToLoad(itemToLoad + 10);
       setLoading(false);
     }
-    // setProducts(productsTem);
   };
 
   const getProducts = async (itemToLoad: number) => {
-    return await dispatch(getProductsByCategoryAndFiltersItemsThunk({ filter: filterSelect, categoryId: category.id + "", subCategory: idCategorySelected ,itemToLoad: itemToLoad })).unwrap();
+    return await dispatch(
+      getProductsByCategoryAndFiltersItemsThunk({ filter: filterSelect, categoryId: category.id + '', subCategory: idCategorySelected, itemToLoad: itemToLoad })
+    ).unwrap();
   };
 
   const onPressTab = (cateogry: TabItem) => {
     if (cateogry.id) {
-      console.log('[onPressTab]', cateogry);
       loader.show();
-      setLoadingNewTab(true)
+      setLoadingNewTab(true);
+      setProductsRender([]);
       setIdCategorySelected(cateogry.id);
     }
   };
 
   const onPressFilter = (filter: ProductsByCategoryFilter) => {
-    console.log({ filter });
     setFilterSelect(filter);
   };
 
@@ -378,10 +360,9 @@ const CategoryProductsScreen: React.FC = () => {
   };
 
   const _renderFooter = () => {
-    if(isLoading){
+    if (isLoading) {
       const residuoOperation = productsRender.length % 2;
-      console.log({residuoOperation})
-      if(residuoOperation === 0){
+      if (residuoOperation === 0) {
         return(
           <Container style={{justifyContent: 'space-between',flexDirection: 'row', width: Dimensions.get('screen').width, paddingHorizontal: moderateScale(15), left: -moderateScale(15)}}>
             <CardProductSkeleton notMarinLeft />
@@ -396,18 +377,17 @@ const CategoryProductsScreen: React.FC = () => {
         )
       }
     }
-    return null
-  }
+    return null;
+  };
 
   const loadMoreItem = async () => {
-    if(!isLoading){
+    if (!isLoading) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       loadMoreProducts(existingProducts);
     }
   };
 
   const _onRefresh = () => {
-    console.log('_onRefresh');
     setRefreshing(true);
     const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
     productsEffect(existingProducts);

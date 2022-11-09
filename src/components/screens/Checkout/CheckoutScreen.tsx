@@ -26,9 +26,10 @@ const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderF
 
   // TODO: relocate url to .ENV
   const onNavigationStateChange = (navState: WebViewNavigation) => {
-    console.log({urlPay: navState.url})
     const paramsQuery = navState.url.split('/');
-    setPaySuccess(paramsQuery.some(item => item === 'congrats') && paramsQuery.some(item => item === 'approved'));
+    if(!isPaySuccess){
+      setPaySuccess(paramsQuery.some(item => item === 'congrats') && paramsQuery.some(item => item === 'approved'));
+    }
     const urlParams = navState.url.split(CHECKOUT_URL_RETURNED!)[1]?.split('=%2Fcheckout%2');
     if (urlParams) {
       if (urlParams[0] === 'returnUrl') {

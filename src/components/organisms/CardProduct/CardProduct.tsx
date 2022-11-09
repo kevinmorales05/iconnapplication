@@ -7,7 +7,7 @@ import { Rating } from 'components/molecules/Rating';
 import { PriceWithDiscount } from 'components/molecules/PriceWithDiscount';
 import { QuantityProduct } from 'components/molecules/QuantityProduct';
 import { Container, CustomText } from 'components/atoms';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { Touchable } from 'components';
 import { useNavigation } from '@react-navigation/native';
 import { setDetailSelected } from 'rtk/slices/cartSlice';
@@ -311,7 +311,7 @@ const CardProduct: React.FC<CardProductProps> = ({
           <Button
             color="iconn_green_original"
             round
-            size={'xxsmall'}
+            size={'xxxsmall'}
             onPress={() => {
               console.log('ejecuta...');
               validateCategoryForAddItem();
@@ -391,9 +391,10 @@ const styles = StyleSheet.create({
     flex: 0.25,
     width: '100%',
     justifyContent: 'flex-end',
-    marginTop: moderateScale(70),
+    marginTop: moderateScale(70)
   },
   buttonAddProduct: {
-    borderRadius: moderateScale(10)
+    borderRadius: moderateScale(10),
+    height: verticalScale(40)
   }
 });

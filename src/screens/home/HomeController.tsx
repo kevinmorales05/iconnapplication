@@ -230,10 +230,11 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   useEffect(() => {
     if (paySuccess && !isGuest) {
+      fetchData();
       toast.show({
         message: (
           <Text>
-            {`Más detalles del pedido en: Cuenta -> `}
+            {`¡Muchas gracias por tu compra! Para más detalles en: Cuenta -> `}
             <Text
               style={{ fontWeight: 'bold' }}
               onPress={() => {
