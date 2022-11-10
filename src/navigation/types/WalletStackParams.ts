@@ -3,7 +3,7 @@ export type WalletStackParams = {
   ServicePaymentGeneralInfo: undefined;
   WalletHome: undefined;
   Preferred: undefined;
-  UpdatePreferred: undefined | { cardIdToUpdate?: string, preferenteCard?: string };
+  UpdatePreferred: undefined | { cardIdToUpdate?: string, preferenteCard?: string, cardId?: string };
   PreferredHelp: undefined;
   Payback: undefined;
   PaybackHelp: any;

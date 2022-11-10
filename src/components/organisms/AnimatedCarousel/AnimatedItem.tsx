@@ -12,6 +12,7 @@ import { CounterType } from 'components/types/counter-type';
 import React from 'react';
 import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle } from 'react-native';
 import { CarouselItem, ProductInterface } from 'rtk';
+import { navigate } from '../../../navigation/RootNavigation';
 
 interface Props {
   data?: CarouselItem;
@@ -202,6 +203,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
       <Touchable
         onPress={() => {
           () => {}
+          navigate(data.navigateTo, {addOrShow:1, cardNumberToShow: data.id, cardNumber: data.cardNumber});
         }}
       >
         <Container center style={containerCard}>

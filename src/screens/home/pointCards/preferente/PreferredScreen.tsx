@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { StyleSheet, TextInput, Image } from 'react-native';
 import { TextContainer, Container, Button } from 'components';
 import theme from 'components/theme/theme';
@@ -13,17 +13,25 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../navigation/types';
 import { numericWithSpecificLenght } from 'utils/rules';
+import { vtexDocsServices } from 'services';
 
 interface Props {
+  addOrShow: number;
+  cardNumberToShow: string;
   onSubmit: (data: FieldValues) => void;
   deleteCard: () => void;
   cardToUpdate: string;
+  cardId: string;
 }
 
-const PreferredScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) => {
+const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId }) => {
+  console.log('addOrShow: '+addOrShow);
+  console.log('cardNumberToShow  : : :'+cardNumberToShow);
+  console.log('cardId  : : :'+cardId);
+  console.log('cardToUpdate  : : :'+cardToUpdate);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [preferenteCard, setPreferenteCard] = useState('');
-  const [preferenteStatus, setPreferenteStatus] = useState(0);
+  const [preferenteCard, setPreferenteCard] = useState(addOrShow==1?cardNumberToShow:'000000000000000000');
+  const [preferenteStatus, setPreferenteStatus] = useState(addOrShow);
   const [disableButton, setDisableButton] = useState(true);
   const toast = useToast();
   const alert = useAlert();
@@ -44,27 +52,50 @@ const PreferredScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }
 
   const editPreferenteCard = () => {
     console.log('*update preferente card*');
-    navigate('UpdatePreferred', { cardIdToUpdate: cardToUpdate, preferenteCard: preferenteCard });
+    navigate('UpdatePreferred', { cardIdToUpdate: cardToUpdate, preferenteCard: preferenteCard, cardId: cardId });
   };
 
   const deletePointCard = () => {
     console.log('*delete preferente card*');
     deleteCard();
+    toast.show({
+      message: 'Tarjeta eliminada exitosamente.',
+      type: 'success'
+    });
     navigate('WalletHome');
   };
 
   const updateButtonStatus = () => {
     setDisableButton(getValues('cardNumber')?.length!=18);
+    setPreferenteCard(getValues('cardNumber'));
   };
 
+  const getPointCardById = useCallback(async () => {
+  //const getPointCardById = () => {
+    console.log('getting cardnumber again');
+    vtexDocsServices.getDocByDocID('PC', cardId).then(cardRetrieved => {
+      if (cardRetrieved) {
+        let { barCode } = cardRetrieved[0];
+        console.log('>>>>>>',barCode);
+        setPreferenteCard(barCode);
+      }
+    });
+  //};
+}, []);
+
   useEffect(() => {
-  }, [disableButton]);
+    console.log('====>',addOrShow);
+    if(addOrShow==1){
+      console.log('entraaaaa');
+    getPointCardById()
+  }
+  }, [disableButton, preferenteCard, cardNumberToShow]);
 
   const showAlert = () => {
     alert.show(
       {
         title: 'Eliminar tarjeta ICONN Preferente',
-        message: `¿Estás seguro que quieres eliminar la tarjeta con terminación 1580?\nLa puedes volver a dar de alta en cualquier momento.`,
+        message: `¿Estás seguro que quieres eliminar la tarjeta con terminación `+preferenteCard.slice(preferenteCard.length-4)+`?\nLa puedes volver a dar de alta en cualquier momento.`,
         acceptTitle: 'Eliminar',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
@@ -84,6 +115,7 @@ const PreferredScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }
   };
 
   const submit: SubmitHandler<FieldValues> = fields => {
+    console.log('..',fields);
     onSubmit(fields);
     setPreferenteCard(fields.cardNumber);
     setPreferenteStatus(1);
@@ -91,7 +123,6 @@ const PreferredScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }
       message: 'Cambios guardados con éxito.',
       type: 'success'
     });
-
   };
 
   const addPreferente = (
@@ -108,19 +139,21 @@ const PreferredScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }
         <Container style={{ marginTop: 30, marginLeft: 20, height: 60 }}>
           <TextContainer typography="h6" fontBold text={`Número de tarjeta`} marginTop={24} />
           <Input
+          {...register('cardNumber')}
             name="cardNumber"
             ref={cardNumber}
             control={control}
             keyboardType="numeric"
             placeholder={'Código numérico (18 dígitos)'}
             blurOnSubmit={true}
-            error={errors.telephone?.message}
+            autoCorrect
+            error={errors.cardNumber?.message}
             maxLength={18}
             rules={numericWithSpecificLenght(18)}
             onChangeText={updateButtonStatus}
           />
         </Container>
-        <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200, marginLeft:30 }}>
+        <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200, marginLeft:35 }}>
           <Button
             length="long"
             fontSize="h5"
@@ -153,7 +186,7 @@ const PreferredScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }
         <Container style={{ height: '100%', marginTop: 40 }}>
           <Barcode
             format="CODE128B"
-            value="0000002021954Q"
+            value={preferenteCard}
             text={'* ' + preferenteCard + ' *'}
             height={moderateScale(70)}
             textStyle={{ fontWeight: 'bold', color: theme.fontColor.dark }}
@@ -185,7 +218,7 @@ const PreferredScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }
                 style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
                 leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
                 onPress={showAlert}
-                marginTop={20}
+                marginTop={15}
               >
                 Eliminar
               </Button>

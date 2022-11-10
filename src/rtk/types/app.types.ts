@@ -11,6 +11,7 @@ export type NavigationType = 'internal' | 'external';
 
 export interface CarouselItem {
   id: string;
+  cardNumber: string;
   description: string;
   image: string;
   link: string;

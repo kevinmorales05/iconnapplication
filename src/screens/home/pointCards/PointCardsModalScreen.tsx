@@ -87,7 +87,7 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
                       <Container>
                         <Touchable onPress={() => {
                           showPreferenteScreen()
-                          navigate('Preferred');
+                          navigate('Preferred', { addOrShow:0, cardNumberToShow: '' });
                         }}>
                           <Image source={ICONN_POINT_CARD_MODAL_PREFERENTE} resizeMode="cover" style={{ width: 108, height: 108 }} />
                           <TextContainer
@@ -102,7 +102,7 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
                       <Container>
                         <Touchable onPress={() => {
                           showPayBackScreen()
-                          navigate('Payback');
+                          navigate('Payback', { addOrShow:0, cardNumberToShow: '' });
                         }}>
                           <Image source={ICONN_POINT_CARD_MODAL_PAYBACK} resizeMode="cover" style={{ width: 108, height: 108 }} />
                           <TextContainer

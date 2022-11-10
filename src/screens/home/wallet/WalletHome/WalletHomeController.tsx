@@ -135,14 +135,15 @@ const setRechargeQRType = async (recharges: any) => {
         for (const card of arr) {
           const newCarouselItem: CarouselItem = {
             id: card.id,
+            cardNumber: card.barCode,
             image: card.image,
             description: card.type == 'preferente' ? 'Tarjeta Preferente' : 'Tarjeta Payback',
             link: '',
-            navigationType: '',
+            navigationType: 'internal',
             promotion_name: 'principal',
             promotion_type: 'cards',
             status: card.isActive ? 'active' : 'inactive',
-            navigateTo: ''
+            navigateTo: card.type == 'preferente' ? 'Preferred' : 'Payback'
           };
           cardsCarousel.push(newCarouselItem);
         }

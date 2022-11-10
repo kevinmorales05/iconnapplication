@@ -1,27 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PreferredScreen from './PreferredScreen';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import { vtexDocsServices } from 'services';
 import { RootState, useAppSelector } from 'rtk';
 import { useToast } from 'context';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { HomeStackParams } from 'navigation/types';
 
 interface Props {
 
 }
 
 const PreferredController: React.FC<Props> = () => {
-
+  const route = useRoute<RouteProp<HomeStackParams, 'Preferred'>>();
+  const { params } = route;
+  console.log('mostrar o agregar: '+params.addOrShow);
+  console.log('id de tarjeta: '+params.cardNumberToShow);
+  console.log('cardNumber de tarjeta: '+params.cardNumber);
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const [preferenteCardToUpdate, setPreferenteCardToUpdate] = useState('');
+  const [preferenteCardToUpdate, setPreferenteCardToUpdate] = useState(params.cardNumberToShow);
+  const [preferenteCardToShow, setPreferenteCardToShow] = useState('');
+  const [cardId, setCardId] = useState(params.cardNumberToShow);
   const toast = useToast();
 
   const onSubmit = async (userFields: any) => {
     let { cardNumber } = userFields
-    let preferentePointCardBody = { type: 'preferente', userId: user.userId, isActive: true, barCode: cardNumber };
+    console.log('cardNumber ',cardNumber);
+    console.log('user.userId ',user.userId);
+    let preferentePointCardBody = { type: 'preferente', userId: user.id, isActive: true, barCode: cardNumber };
     try {
       if (cardNumber.length == 18) {
         const response = vtexDocsServices.createDoc('PC', preferentePointCardBody).then(cardSaved => {
+          console.log('.............');
+          console.log(cardSaved);
+          console.log('.............');
           if (cardSaved) {
             setPreferenteCardToUpdate(cardSaved.DocumentId);
           }
@@ -42,6 +55,10 @@ const PreferredController: React.FC<Props> = () => {
     vtexDocsServices.deleteDocByDocID('PC', preferenteCardToUpdate);
   };
 
+  useEffect(() => {
+    //setCardId(params.cardNumberToShow);
+  }, [preferenteCardToShow, params, cardId]);
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -51,7 +68,13 @@ const PreferredController: React.FC<Props> = () => {
       barStyle="dark"
     >
       <PreferredScreen
-        onSubmit={onSubmit} deleteCard={deletePointCard} cardToUpdate={preferenteCardToUpdate} />
+        addOrShow={params.addOrShow}
+        cardNumberToShow={params.cardNumber}
+        onSubmit={onSubmit}
+        deleteCard={deletePointCard}
+        cardToUpdate={preferenteCardToUpdate}
+        cardId={cardId}
+      />
     </SafeArea>
   );
 };
