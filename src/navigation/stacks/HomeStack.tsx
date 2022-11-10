@@ -34,7 +34,7 @@ import InvoiceTicketPetroController from 'screens/home/invoicing/invoicingPetro/
 import InvoiceTicketSevenController from 'screens/home/invoicing/invoicingSeven/InvoiceTicketSeven/InvoiceTicketSevenController';
 import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalController';
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
-import MyOrdersController from 'screens/home/MyOrdersController';
+import MyOrdersController from 'screens/home/myAccount/myOrders/MyOrdersController';
 import OtherProductsScreen from 'screens/home/viewMore/OtherProductsScreen';
 import PostalCodeController from 'screens/ecommerce/postalCode/PostalCodeController';
 import ProductDetailController from 'screens/ecommerce/productDetail/ProductDetailController';
