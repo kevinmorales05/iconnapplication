@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TextInput, Image } from 'react-native';
-import { TextContainer, Container, Button } from 'components';
+import { TextContainer, Container, Button, Touchable } from 'components';
 import theme from 'components/theme/theme';
-import { RootState, useAppSelector } from 'rtk';
 import { ICONN_PAYBACK_MAIN, CARD_PETRO, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
 import { Input } from '../../../../../components/atoms';
@@ -15,7 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../../navigation/types';
 import { CrudType } from '../../../../../components/types/crud-type';
-import { numericWithSpecificLenght } from 'utils/rules';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Props {
   onSubmit: (data: FieldValues) => void;
@@ -84,32 +83,35 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate
     navigate('Payback', {addOrShow:1, cardNumberToShow: cardId, cardNumber: fields.cardNumberToUpdate});
   };
 
-/*
   const hideInformationModal = () => {
     setVisible(false);
   };
 
   const showInformationModal = () => {
     setVisible(true);
-  };*/
+  };
+
+  const goToModalHelp = () => {
+    showInformationModal();
+  };
 
   const addPayback = (
     <Container>
       <Container center>
         <Image source={ICONN_PAYBACK_MAIN} style={{ width: moderateScale(280), height: moderateScale(138) }} />
       </Container>
-      <Container style={{ width: '90%', marginTop: 10, marginLeft: 15 }}>
-        <TextContainer
-          marginTop={8}
-          fontSize={14}
-          text={
-            'Ingresa el número bajo el código de barras de tu tarjeta PAYBACK.'
-          }
-        />
+      <Container center style={{ width: '90%', marginTop: moderateScale(15), marginLeft: moderateScale(10) }}>
+        <TextContainer marginTop={8} fontSize={14} text={'Ingresa el número bajo el código de barras de tu tarjeta PAYBACK.'} />
       </Container>
-      <Container style={{ marginTop: 30, marginLeft: 20, height: 60 }}>
+      <Container center row style={{ marginTop: 40, width:'80%', marginLeft:moderateScale(20) }}>
+        <TextContainer typography="h6" fontBold text={`Número de código de barras`} marginRight={8} marginTop={4} />
+        <Touchable onPress={goToModalHelp}>
+          <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
+        </Touchable>
+      </Container>
+      <Container center style={{ marginLeft: 20, height: 60, width:'80%' }}>
         <Input
-        {...register('barcodeNumber')}
+          {...register('barcodeNumber')}
           name="barcodeNumber"
           ref={barcodeNumber}
           control={control}
@@ -118,19 +120,21 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate
           placeholder={'13 dígitos'}
           blurOnSubmit={true}
           error={errors.barcodeNumber?.message}
-          label="Número de código de barras"
           boldLabel
           maxLength={13}
           onSubmitEditing={() => cardNumberToUpdate.current?.focus()}
         />
       </Container>
-      <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}>
+      <Container
+        center
+        style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}
+      >
         <Button
-            length="long"
-            fontSize="h5"
-            round
-            fontBold
-            style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
+          length="long"
+          fontSize="h5"
+          round
+          fontBold
+          style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
           onPress={handleSubmit(submit)}
         >
           Guardar
@@ -205,9 +209,7 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate
             addedPayback :
             <></>)
       }
-      {
-      /*<InformationModalController onPressClose={hideInformationModal} visible={visible} />*/
-      }
+      <InformationModalController onPressClose={hideInformationModal} visible={visible} />
     </Container>
 
   );

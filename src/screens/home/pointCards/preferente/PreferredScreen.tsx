@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { StyleSheet, TextInput, Image } from 'react-native';
-import { TextContainer, Container, Button } from 'components';
+import { TextContainer, Container, Button, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import { ICONN_PREFERENTE_MAIN, CARD_PREF, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
@@ -14,6 +14,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../navigation/types';
 import { numericWithSpecificLenght } from 'utils/rules';
 import { vtexDocsServices } from 'services';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Props {
   addOrShow: number;
@@ -125,21 +126,24 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
     });
   };
 
+  const goToHelp = () => {
+    navigate('PreferredHelp');
+  };
+
   const addPreferente = (
     <Container>
       <Image source={ICONN_PREFERENTE_MAIN} style={{ width: '100%', height: moderateScale(193) }} />
       <Container center style={{ width: '90%', marginTop: 10 }}>
-        <TextContainer
-          marginTop={8}
-          fontSize={14}
-          text={
-            `Ingresa tu código numérico y automáticamente\nse generará tu código de barras.`
-          }
-        />
-        <Container style={{ marginTop: 30, marginLeft: 20, height: 60 }}>
-          <TextContainer typography="h6" fontBold text={`Número de tarjeta`} marginTop={24} />
+        <TextContainer marginTop={8} fontSize={14} text={`Ingresa tu código numérico y automáticamente\nse generará tu código de barras.`} />
+        <Container style={{ marginTop: 54, marginLeft: 20, height: 60 }}>
+          <Container row>
+            <TextContainer typography="h6" fontBold text={`Número de tarjeta`} marginTop={4} marginRight={8}/>
+            <Touchable onPress={goToHelp}>
+              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
+            </Touchable>
+          </Container>
           <Input
-          {...register('cardNumber')}
+            {...register('cardNumber')}
             name="cardNumber"
             ref={cardNumber}
             control={control}
@@ -153,7 +157,18 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
             onChangeText={updateButtonStatus}
           />
         </Container>
-        <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200, marginLeft:35 }}>
+        <Container
+          center
+          style={{
+            backgroundColor: theme.brandColor.iconn_background,
+            paddingLeft: 0,
+            width: '100%',
+            height: '20%',
+            paddingTop: 50,
+            marginTop: 200,
+            marginLeft: 35
+          }}
+        >
           <Button
             length="long"
             fontSize="h5"
@@ -161,7 +176,7 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
             fontBold
             style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
             onPress={handleSubmit(submit)}
-            disabled={ disableButton }
+            disabled={disableButton}
           >
             Agregar
           </Button>
@@ -174,6 +189,9 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
     <Container>
       <Container center space='around' style={{ width: '100%', height: moderateScale(193), backgroundColor: theme.brandColor.iconn_background }}>
         <Image source={CARD_PREF} style={{ width: moderateScale(261), height: moderateScale(164) }} />
+        <Touchable onPress={goToHelp}>
+              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
+        </Touchable>
       </Container>
       <Container center style={{ width: '100%', marginTop: 10, backgroundColor: theme.brandColor.iconn_white }}>
         <TextContainer

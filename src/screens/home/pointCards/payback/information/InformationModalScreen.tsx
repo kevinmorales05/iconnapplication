@@ -1,34 +1,31 @@
-import React from 'react';
-import { ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import React, { useState }  from 'react';
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
-import { CustomText, Container, Touchable, TextContainer } from 'components';
+import { CustomText, Container, TextContainer, AnimatedCarousel } from 'components';
 import { CustomModal } from '../../../../../components/atoms';
 import { ActionButton } from '../../../../../components/atoms';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { ICONN_POINT_CARD_MODAL_PREFERENTE, ICONN_POINT_CARD_MODAL_PAYBACK } from 'assets/images';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { CarouselItem } from 'rtk';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
   onPressClose: () => void;
   visible: boolean;
+  cards: CarouselItem[];
 }
 
-const InformationModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
+const InformationModalScreen: React.FC<Props> = ({ onPressClose, visible, cards }) => {
+  const [visibl, setVisibl] = useState<boolean>(false);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const insets = useSafeAreaInsets();
-
-  const showPreferenteScreen = (async () => {
-    console.log('pantalla preferente');
-    onPressClose();
-  })
-
-  const showPayBackScreen = (async () => {
-    console.log('pantalla payback');
-    onPressClose();
-  })
+  
+  const onPressOut = () => {
+    setVisibl(!visible);
+  };
 
   const { containerStyle } = styles;
 
@@ -74,47 +71,15 @@ const InformationModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
             <Container flex>
               <Container center>
                 <Container space="between" style={{ width: '95%' }}>
-                  <Container center>
-                    <TextContainer
-                      text="Selecciona el tipo de tarjeta de puntos que deseas agregar:"
-                      fontSize={14}
-                      marginTop={15}
-                      marginBottom={8}
-                    ></TextContainer>
-                  </Container>
-                  <Container style={{ marginTop: 20, marginBottom: 25 }}>
-                    <Container row space='around'>
-                      <Container>
-                        <Touchable onPress={() => {
-                          showPreferenteScreen()
-                          navigate('Preferente');
-                        }}>
-                          <Image source={ICONN_POINT_CARD_MODAL_PREFERENTE} resizeMode="cover" style={{ width: 108, height: 108 }} />
-                          <TextContainer
-                            text={`ICONN \nPreferente`}
-                            fontSize={14}
-                            marginTop={20}
-                            textAlign="center"
-                            marginBottom={8}
-                          ></TextContainer>
-                        </Touchable>
-                      </Container>
-                      <Container>
-                        <Touchable onPress={() => {
-                          showPayBackScreen()
-                          navigate('Payback');
-                        }}>
-                          <Image source={ICONN_POINT_CARD_MODAL_PAYBACK} resizeMode="cover" style={{ width: 108, height: 108 }} />
-                          <TextContainer
-                            text={`Monedero \nPAYBACK`}
-                            fontSize={14}
-                            marginTop={20}
-                            textAlign="center"
-                            marginBottom={8}
-                          ></TextContainer>
-                        </Touchable>
-                      </Container>
+                  <Container style={{ marginTop: 15, marginBottom: 15 }}>
+                    <Container space='center' style={{ height:moderateScale(173), width:'100%', backgroundColor:theme.brandColor.iconn_background}}>
+                    <AnimatedCarousel cards items={cards} />
                     </Container>
+                    <TextContainer
+                      text="Recuerda que el número del monedero no es el mismo que se solicita para dar de alta tu Tarjeta de PAYBACK."
+                      fontSize={14}
+                      marginTop={35}
+                    ></TextContainer>
                     <Container>
                     </Container>
                   </Container>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TextInput, Image } from 'react-native';
-import { TextContainer, Container, Button } from 'components';
+import { TextContainer, Container, Button, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import { ICONN_PREFERENTE_MAIN, CARD_PREF, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
@@ -13,6 +13,7 @@ import { CrudType } from '../../../../../components/types/crud-type';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../../navigation/types';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Props {
   onSubmit: (data: FieldValues) => void;
@@ -95,12 +96,22 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
     }
   }, [mode]);
 
+  const goToHelp = () => {
+    navigate('PreferredHelp');
+  };
+
   const addPreferente = (
     <Container>
       <Image source={ICONN_PREFERENTE_MAIN} style={{ width: '100%', height: moderateScale(193) }} />
       <Container center style={{ width: '90%', marginTop: 10 }}>
         <TextContainer marginTop={8} fontSize={14} text={`Ingresa tu código numérico y automáticamente\nse generará tu código de barras.`} />
-        <Container style={{ marginTop: 30, marginLeft: 20, height: 80 }}>
+        <Container style={{ marginTop: 40, marginLeft: 20, height: 80 }}>
+        <Container row>
+            <TextContainer typography="h6" fontBold text={`Número de tarjeta`} marginTop={4} marginRight={8}/>
+            <Touchable onPress={goToHelp}>
+              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
+            </Touchable>
+          </Container>
           <Input
             {...register('cardNumberToUpdate')}
             name="cardNumberToUpdate"
@@ -111,7 +122,6 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
             placeholder={'Código numérico (18 dígitos)'}
             blurOnSubmit={true}
             error={errors.cardNumberToUpdate?.message}
-            label="Número de tarjeta"
             boldLabel
             maxLength={18}
             onSubmitEditing={() => cardNumberToUpdate.current?.focus()}

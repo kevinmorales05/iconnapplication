@@ -202,16 +202,17 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
     ) : data !== undefined && data.promotion_type === 'cards' ? (
       <Touchable
         onPress={() => {
-          () => {}
-          navigate(data.navigateTo, {addOrShow:1, cardNumberToShow: data.id, cardNumber: data.cardNumber});
+          () => {};
+          if (data.navigateTo?.length>0) {
+            navigate(data.navigateTo, { addOrShow: 1, cardNumberToShow: data.id, cardNumber: data.cardNumber });
+          }
         }}
       >
         <Container center style={containerCard}>
           <Image source={data.image} style={cardImageStyle} />
         </Container>
       </Touchable>
-    ) 
-    : data !== undefined && data.promotion_type === 'day_promotion' ? (
+    ) : data !== undefined && data.promotion_type === 'day_promotion' ? (
       <Touchable
         onPress={() => {
           onPressItem(data);

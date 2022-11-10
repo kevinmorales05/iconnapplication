@@ -41,15 +41,6 @@ const WalletStack: React.FC = () => {
         options={{
           headerTitle: 'ICONN Preferente',
           headerBackTitleVisible: false,
-          headerRight: () => (
-            <Touchable
-              onPress={() => {
-                navigate('PreferredHelp');
-              }}
-            >
-              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
-            </Touchable>
-          )
         }}
       />
       <Stack.Screen
@@ -58,15 +49,6 @@ const WalletStack: React.FC = () => {
         options={{
           headerTitle: 'Editar tarjeta',
           headerBackTitleVisible: false,
-          headerRight: () => (
-            <Touchable
-              onPress={() => {
-                navigate('PreferredHelp');
-              }}
-            >
-              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
-            </Touchable>
-          )
         }}
       />
       <Stack.Screen
@@ -75,15 +57,6 @@ const WalletStack: React.FC = () => {
         options={{
           headerTitle: 'Monedero PAYBACK',
           headerBackTitleVisible: false,
-          headerRight: () => (
-            <Touchable
-              onPress={() => {
-                navigate('PaybackHelp');
-              }}
-            >
-              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
-            </Touchable>
-          )
         }}
       />
       <Stack.Screen
@@ -92,15 +65,6 @@ const WalletStack: React.FC = () => {
         options={{
           headerTitle: 'Editar tarjeta',
           headerBackTitleVisible: false,
-          headerRight: () => (
-            <Touchable
-              onPress={() => {
-                navigate('PaybackHelp');
-              }}
-            >
-              <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_dark_grey} />
-            </Touchable>
-          )
         }}
       />
       <Stack.Screen

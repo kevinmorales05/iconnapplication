@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TextInput, Image } from 'react-native';
-import { TextContainer, Container, Button } from 'components';
+import { TextContainer, Container, Button, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import { ICONN_PAYBACK_MAIN, CARD_PETRO, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
@@ -15,6 +15,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../navigation/types';
 import { numericWithSpecificLenght } from 'utils/rules';
 import { vtexDocsServices } from 'services';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Props {
   addOrShow: number;
@@ -114,22 +115,37 @@ const PaybackScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit,
     });
   };
 
+  const hideInformationModal = () => {
+    setVisible(false);
+  };
+
+  const showInformationModal = () => {
+    setVisible(true);
+  };
+
+  const goToHelp = () => {
+    navigate('PaybackHelp');
+  };
+
+  const goToModalHelp = () => {
+    showInformationModal();
+  };
+
   const addPayback = (
     <Container>
       <Container center>
         <Image source={ICONN_PAYBACK_MAIN} style={{ width: moderateScale(280), height: moderateScale(138) }} />
       </Container>
-      <Container style={{ width: '90%', marginTop: 10, marginLeft: 15 }}>
-        <TextContainer
-          marginTop={8}
-          fontSize={14}
-          text={
-            'Ingresa el número bajo el código de barras de tu tarjeta PAYBACK.'
-          }
-        />
+      <Container style={{ width: '90%', marginTop: moderateScale(15), marginLeft: moderateScale(10) }}>
+        <TextContainer marginTop={8} fontSize={14} text={'Ingresa el número bajo el código de barras de tu tarjeta PAYBACK.'} />
       </Container>
-      <Container style={{ marginTop: 30, marginLeft: 20, height: 60 }}>
-        <TextContainer typography="h6" fontBold text={`Número de código de barras`} marginTop={24} />
+      <Container center row style={{ marginTop: 40, width: '80%', marginLeft: moderateScale(20) }}>
+        <TextContainer typography="h6" fontBold text={`Número de código de barras`} marginRight={8} marginTop={4} />
+        <Touchable onPress={goToModalHelp}>
+          <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
+        </Touchable>
+      </Container>
+      <Container center style={{ marginLeft: 20, height: 60, width: '90%' }}>
         <Input
           name="barcodeNumber"
           ref={barcodeNumber}
@@ -143,16 +159,19 @@ const PaybackScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit,
           onChangeText={updateButtonStatus}
         />
       </Container>
-      <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}>
-          <Button
-            length="long"
-            fontSize="h5"
-            round
-            fontBold
-            style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
-            onPress={handleSubmit(submit)}
-            disabled={ disableButton }
-          >
+      <Container
+        center
+        style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}
+      >
+        <Button
+          length="long"
+          fontSize="h5"
+          round
+          fontBold
+          style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
+          onPress={handleSubmit(submit)}
+          disabled={disableButton}
+        >
           Agregar
         </Button>
       </Container>
@@ -161,59 +180,55 @@ const PaybackScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit,
 
   const addedPayback = (
     <Container>
-      <Container space='around' center style={{ width: '100%', height: moderateScale(195) }}>
+      <Container space="evenly" center style={{ width: '100%', height: moderateScale(215) }}>
         <Image source={CARD_PETRO} style={{ width: moderateScale(264), height: moderateScale(164) }} />
+        <Touchable onPress={goToHelp}>
+          <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
+        </Touchable>
       </Container>
-      <Container style={{ width: '100%', height: '100%', backgroundColor:theme.brandColor.iconn_white }}>
-      <Container center>
-      <TextContainer
-          marginTop={20}
-          marginBottom={24}
-          fontSize={14}
-          text={
-            'Muestra el código de barras antes de pagar'
-          }
-        />
+      <Container style={{ width: '100%', height: '100%', backgroundColor: theme.brandColor.iconn_white }}>
+        <Container center>
+          <TextContainer marginTop={20} marginBottom={24} fontSize={14} text={'Muestra el código de barras antes de pagar'} />
         </Container>
         <Barcode
-            format="CODE128B"
-            value={paybackCard}
-            text={paybackCard}
-            height={moderateScale(168)}
-            textStyle={{ fontWeight: 'bold', color: theme.fontColor.dark, marginTop:-17, backgroundColor:theme.brandColor.iconn_white, fontSize:14 }}
-            maxWidth={167}
-          />
+          format="CODE128B"
+          value={paybackCard}
+          text={paybackCard}
+          height={moderateScale(168)}
+          textStyle={{ fontWeight: 'bold', color: theme.fontColor.dark, marginTop: -17, backgroundColor: theme.brandColor.iconn_white, fontSize: 14 }}
+          maxWidth={167}
+        />
         <Container center>
-            <Container style={{ width: '90%', marginTop: 90 }}>
-              <Button
-                fontSize="h4"
-                fontBold
-                outline
-                round
-                color='iconn_green_original'
-                length="long"
-                style={{ borderColor: `${theme.brandColor.iconn_green_original}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
-                leftIcon={<Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_green_original} style={{ marginRight: 5 }} />}
-                onPress={editPaybackCard}
-              >
-                Editar
-              </Button>
-              <Button
-                fontSize="h4"
-                fontBold
-                outline
-                round
-                color='black'
-                length="long"
-                style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
-                leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
-                marginTop={15}
-                onPress={showAlert}
-              >
-                Eliminar
-              </Button>
-            </Container>
+          <Container style={{ width: '90%', marginTop: 90 }}>
+            <Button
+              fontSize="h4"
+              fontBold
+              outline
+              round
+              color="iconn_green_original"
+              length="long"
+              style={{ borderColor: `${theme.brandColor.iconn_green_original}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
+              leftIcon={<Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_green_original} style={{ marginRight: 5 }} />}
+              onPress={editPaybackCard}
+            >
+              Editar
+            </Button>
+            <Button
+              fontSize="h4"
+              fontBold
+              outline
+              round
+              color="black"
+              length="long"
+              style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
+              leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
+              marginTop={15}
+              onPress={showAlert}
+            >
+              Eliminar
+            </Button>
           </Container>
+        </Container>
       </Container>
     </Container>
   );
@@ -227,9 +242,7 @@ const PaybackScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit,
             addedPayback :
             <></>)
       }
-      {
-      /*<InformationModalController onPressClose={hideInformationModal} visible={visible} />*/
-      }
+      <InformationModalController onPressClose={hideInformationModal} visible={visible} />
     </Container>
 
   );
