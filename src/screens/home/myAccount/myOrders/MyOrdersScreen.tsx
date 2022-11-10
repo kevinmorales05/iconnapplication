@@ -45,12 +45,12 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
       ) : (
         officialOrderArray.map(order => {
           if (
-            order.status == 'ready-for-handling' ||
-            order.status == 'payment-approved' ||
-            order.status == 'waiting-for-sellers-confirmation' ||
-            order.status == 'payment-pending' ||
-            order.status == 'window-to-cancel' ||
-            order.status == 'handling'
+            order.status === 'ready-for-handling' ||
+            order.status === 'payment-approved' ||
+            order.status === 'waiting-for-sellers-confirmation' ||
+            order.status === 'payment-pending' ||
+            order.status === 'window-to-cancel' ||
+            order.status === 'handling'
           ) {
             return (
               <OrderCard
@@ -88,7 +88,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
         </Container>
       ) : (
         officialOrderArray.map(order => {
-          if (order.status == 'canceled' || order.status == 'invoiced') {
+          if (order.status === 'canceled' || order.status === 'invoiced') {
             return (
               <OrderCard
                 creationDate={order.creationDate}

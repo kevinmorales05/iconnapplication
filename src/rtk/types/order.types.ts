@@ -1,22 +1,28 @@
-import { HomeStackParams } from "navigation/types";
-
 export type DeliveryChannel = 'delivery' | 'pickup-in-point';
-type OrderStatus = 'waiting-for-sellers-confirmation' | 'payment-pending' | 'payment-approved' | 'ready-for-handling' | 'handling' | 'invoiced' | 'canceled' | 'window-to-cancel';
+type OrderStatus =
+  | 'waiting-for-sellers-confirmation'
+  | 'payment-pending'
+  | 'payment-approved'
+  | 'ready-for-handling'
+  | 'handling'
+  | 'invoiced'
+  | 'canceled'
+  | 'window-to-cancel';
 export interface OrderInterface {
   deliveryChannel?: DeliveryChannel;
   status: OrderStatus;
   creationDate: string;
   orderId: string;
   totalItems: number;
-  orderIsComplete: boolean;
+  orderIsComplete?: boolean;
   totalValue: number;
-  navigate: (screen: any, params: any)=> void;
+  navigate: (screen: any, params: any) => void;
 }
 export interface OrdersListInterface {
-  list: OrderInterface[],
+  list: OrderInterface[];
 }
 
 export interface SingleOrderInterface {
-    orderId: string;
-    deliveryChannel: DeliveryChannel;
+  orderId: string;
+  deliveryChannel: DeliveryChannel;
 }

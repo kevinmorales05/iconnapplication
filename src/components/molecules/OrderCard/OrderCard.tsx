@@ -113,7 +113,7 @@ const OrderCard = (props: OrderInterface) => {
         <TextContainer text={newDate(creationDate)} marginLeft={40} marginTop={8} fontSize={14} />
         <TextContainer text={'Núm. de pedido: ' + orderId} marginLeft={40} marginTop={4} fontSize={12} />
         <Container row>
-          {totalItems == 1 ? (
+          {totalItems === 1 ? (
             <TextContainer text={totalItems + ' artículo'} marginLeft={40} marginTop={8} fontSize={12} />
           ) : (
             <TextContainer text={totalItems + ' artículos'} marginLeft={40} marginTop={8} fontSize={12} />
