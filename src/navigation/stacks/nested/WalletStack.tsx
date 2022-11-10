@@ -41,9 +41,6 @@ const WalletStack: React.FC = () => {
         options={{
           headerTitle: 'ICONN Preferente',
           headerBackTitleVisible: false,
-          headerLeft: () => {
-            return <></>;
-          },
           headerRight: () => (
             <Touchable
               onPress={() => {
@@ -61,9 +58,6 @@ const WalletStack: React.FC = () => {
         options={{
           headerTitle: 'Editar tarjeta',
           headerBackTitleVisible: false,
-          headerLeft: () => {
-            return <></>;
-          },
           headerRight: () => (
             <Touchable
               onPress={() => {
@@ -98,9 +92,6 @@ const WalletStack: React.FC = () => {
         options={{
           headerTitle: 'Editar tarjeta',
           headerBackTitleVisible: false,
-          headerLeft: () => {
-            return <></>;
-          },
           headerRight: () => (
             <Touchable
               onPress={() => {
@@ -125,7 +116,7 @@ const WalletStack: React.FC = () => {
           headerRight: () => (
             <Touchable
               onPress={() => {
-                navigate('Preferred');
+                navigate('Preferred',{addOrShow:0, cardNumberToShow: ''});
               }}
             >
               <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />
@@ -143,7 +134,7 @@ const WalletStack: React.FC = () => {
           headerRight: () => (
             <Touchable
               onPress={() => {
-                navigate('Payback');
+                navigate('Payback',{addOrShow:0, cardNumberToShow: ''});
               }}
             >
               <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />

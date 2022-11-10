@@ -14,21 +14,24 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../navigation/types';
 import { numericWithSpecificLenght } from 'utils/rules';
+import { vtexDocsServices } from 'services';
 
 interface Props {
+  addOrShow: number;
+  cardNumberToShow: string;
   onSubmit: (data: FieldValues) => void;
   deleteCard: () => void;
   cardToUpdate: string;
+  cardId: string;
 }
 
-const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) => {
-
+const PaybackScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [paybackCard, setPaybackCard] = useState('');
+  const [paybackCard, setPaybackCard] = useState('0000000000');
   const [disableButton, setDisableButton] = useState(true);
   const toast = useToast();
   const [visible, setVisible] = useState<boolean>(false);
-  const [paybackStatus, setPaybackStatus] = useState(0);
+  const [paybackStatus, setPaybackStatus] = useState(addOrShow);
   const alert = useAlert();
   const {
     control,
@@ -46,29 +49,43 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
   const barcodeNumber = useRef<TextInput>(null);
 
   const editPaybackCard = () => {
-    console.log('*update payback card*');
-    navigate('UpdatePayback', { cardIdToUpdate: cardToUpdate, paybackCard: paybackCard });
+    navigate('UpdatePayback', { cardIdToUpdate: cardToUpdate, paybackCard: paybackCard, cardId: cardId });
   };
 
   const deletePointCard = () => {
-    console.log('*delete payback card*');
     deleteCard();
+    toast.show({
+      message: 'Tarjeta eliminada exitosamente.',
+      type: 'success'
+    });
     navigate('WalletHome');
   };
 
   const updateButtonStatus = () => {
-    console.log('tammmm '+getValues('barcodeNumber')?.length);
     setDisableButton(getValues('barcodeNumber')?.length!=13);
+    setPaybackCard(getValues('barcodeNumber'));
+  };
+
+  const getPointCardById = () => {
+    vtexDocsServices.getDocByDocID('PC', cardId).then(cardRetrieved => {
+      if (cardRetrieved) {
+        let { barCode } = cardRetrieved[0];
+        setPaybackCard(barCode);
+      }
+    });
   };
 
   useEffect(() => {
-  }, [disableButton]);
+    if(addOrShow==1){
+      getPointCardById()
+    }
+  }, [paybackCard, disableButton]);
 
   const showAlert = () => {
     alert.show(
       {
         title: 'Eliminar Monedero PAYBACK',
-        message: `¿Estás seguro que quieres eliminar el monedero con terminación 2822?`,
+        message: `¿Estás seguro que quieres eliminar el monedero con terminación `+paybackCard.slice(paybackCard.length-4)+`?`,
         acceptTitle: 'Eliminar',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
@@ -88,9 +105,8 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
   };
 
   const submit: SubmitHandler<FieldValues> = fields => {
-    console.log('campos::: '+fields);
     onSubmit(fields);
-    setPaybackCard(fields.cardNumber);
+    setPaybackCard(fields.barcodeNumber);
     setPaybackStatus(1);
     toast.show({
       message: 'Cambios guardados con éxito.',
@@ -120,14 +136,14 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
           control={control}
           keyboardType="numeric"
           placeholder={'13 dígitos'}
-          blurOnSubmit={true}
-          error={errors.telephone?.message}
+          blurOnSubmit
+          error={errors.barcodeNumber?.message}
           maxLength={13}
-          rules={numericWithSpecificLenght(18)}
+          rules={numericWithSpecificLenght(13)}
           onChangeText={updateButtonStatus}
         />
       </Container>
-      <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200, marginLeft:30 }}>
+      <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}>
           <Button
             length="long"
             fontSize="h5"
@@ -161,14 +177,14 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
         </Container>
         <Barcode
             format="CODE128B"
-            value="0000002021954Q"
-            text={'1234567890987'}
+            value={paybackCard}
+            text={paybackCard}
             height={moderateScale(168)}
-            textStyle={{ fontWeight: 'bold', color: theme.fontColor.dark, marginTop:-19, backgroundColor:theme.brandColor.iconn_white, fontSize:14 }}
+            textStyle={{ fontWeight: 'bold', color: theme.fontColor.dark, marginTop:-17, backgroundColor:theme.brandColor.iconn_white, fontSize:14 }}
             maxWidth={167}
           />
         <Container center>
-            <Container style={{ width: '90%', marginTop: 150 }}>
+            <Container style={{ width: '90%', marginTop: 90 }}>
               <Button
                 fontSize="h4"
                 fontBold
@@ -191,7 +207,7 @@ const PaybackScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) 
                 length="long"
                 style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
                 leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
-                marginTop={20}
+                marginTop={15}
                 onPress={showAlert}
               >
                 Eliminar

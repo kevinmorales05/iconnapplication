@@ -14,22 +14,25 @@ import { useToast, useAlert } from 'context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../../navigation/types';
+import { CrudType } from '../../../../../components/types/crud-type';
 import { numericWithSpecificLenght } from 'utils/rules';
 
 interface Props {
   onSubmit: (data: FieldValues) => void;
-  deleteCard: () => void;
-  cardToUpdate: string;
+  paybackCardToUpdate: string;
+  mode: CrudType;
+  cardId: string;
 }
 
-const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToUpdate }) => {
+const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, mode, cardId }) => {
 
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [paybackCard, setPaybackCard] = useState('');
+  const [paybackCard, setPaybackCard] = useState(paybackCardToUpdate);
   const [disableButton, setDisableButton] = useState(true);
   const [visible, setVisible] = useState<boolean>(false);
   const [paybackStatus, setPaybackStatus] = useState(0);
   const alert = useAlert();
+  const toast = useToast();
   const {
     control,
     handleSubmit,
@@ -50,12 +53,6 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToU
     navigate('UpdatePreferente', { cardIdToUpdate: cardToUpdate, paybackCard: paybackCard });
   };
 
-  const deletePointCard = () => {
-    console.log('*delete preferente card*');
-    deleteCard();
-    navigate('WalletHome');
-  };
-
   const updateButtonStatus = () => {
     setDisableButton(getValues('cardNumber')?.length!=18);
   };
@@ -63,39 +60,28 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToU
   useEffect(() => {
   }, [disableButton]);
 
-  const showAlert = () => {
-    alert.show(
-      {
-        title: 'Eliminar Monedero PAYBACK',
-        message: `¿Estás seguro que quieres eliminar el monedero con terminación 2822?`,
-        acceptTitle: 'Eliminar',
-        cancelTitle: 'Cancelar',
-        cancelOutline: 'iconn_light_grey',
-        cancelTextColor: 'iconn_dark_grey',
-        onAccept() {
-          deletePointCard();
-          alert.hide();
-        },
-        onCancel() {
-          alert.hide('cancelar');
-        }
-      },
-      'deleteCart',
-      false,
-      true
-    );
+  const populateForUpdate = () => {
+    setValue('cardNumberToUpdate', paybackCard);
+    trigger('cardNumberToUpdate');
   };
 
+  useEffect(() => {
+    if (mode === 'create') {
+      //resetForm();
+    } else if (mode === 'update') {
+      populateForUpdate();
+    }
+  }, [mode]);
+
   const submit: SubmitHandler<FieldValues> = fields => {
-    //onSubmit(fields);
-    //setPreferenteCard(fields.cardNumber);
+    onSubmit(fields);
+    setPaybackCard(fields.barcodeNumber);
     setPaybackStatus(1);
-    /*
     toast.show({
       message: 'Cambios guardados con éxito.',
       type: 'success'
-    });*/
-
+    });
+    navigate('Payback', {addOrShow:1, cardNumberToShow: cardId, cardNumber: fields.cardNumberToUpdate});
   };
 
 /*
@@ -122,27 +108,32 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToU
         />
       </Container>
       <Container style={{ marginTop: 30, marginLeft: 20, height: 60 }}>
-        <TextContainer typography="h6" fontBold text={`Número de código de barras`} marginTop={24} />
         <Input
+        {...register('barcodeNumber')}
           name="barcodeNumber"
           ref={barcodeNumber}
           control={control}
+          autoCorrect={false}
           keyboardType="numeric"
           placeholder={'13 dígitos'}
           blurOnSubmit={true}
+          error={errors.barcodeNumber?.message}
+          label="Número de código de barras"
+          boldLabel
           maxLength={13}
-          defaultValue={'1234556'}
+          onSubmitEditing={() => cardNumberToUpdate.current?.focus()}
         />
       </Container>
-      <Container center style={{ marginTop: 200 }}>
+      <Container center style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}>
         <Button
-          style={{ width: '90%', height: 62 }}
-          round
-          fontBold
-          fontSize={16}
+            length="long"
+            fontSize="h5"
+            round
+            fontBold
+            style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
           onPress={handleSubmit(submit)}
         >
-          Agregar
+          Guardar
         </Button>
       </Container>
     </Container>
@@ -167,7 +158,7 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, deleteCard, cardToU
         <Barcode
             format="CODE128B"
             value="0000002021954Q"
-            text={'1234567890987'}
+            text={paybackCard}
             height={moderateScale(168)}
             textStyle={{ fontWeight: 'bold', color: theme.fontColor.dark, marginTop:-19, backgroundColor:theme.brandColor.iconn_white, fontSize:14 }}
             maxWidth={167}
