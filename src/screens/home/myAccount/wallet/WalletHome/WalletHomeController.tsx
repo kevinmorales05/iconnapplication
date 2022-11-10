@@ -1,26 +1,20 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import WalletHomeScreen from './WalletHomeScreen';
-import { StyleSheet } from 'react-native';
 import { vtexDocsServices } from 'services';
 import { CarouselItem, PointCard, RootState, ServiceQRType, ServiceType, useAppSelector } from 'rtk';
 import { CARD_PETRO, CARD_PREF, ICONN_DEPOSIT, ICONN_MOBILE_RECHARGE, ICONN_PACKAGES_SEARCH, ICONN_SERVICE_PAYMENT } from 'assets/images';
 import Config from 'react-native-config';
 
-
-
-
-
 const WalletHomeController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { id } = user;
-  const [cards, setCards] = useState();
-  const [cardsPics, setCardsPics] = useState<PointCard[]>();
-  const [serviceQR, setServiceQR] = useState<ServiceQRType[]>();
+  // const [cards, setCards] = useState();
+  // const [cardsPics, setCardsPics] = useState<PointCard[]>();
+  // const [serviceQR, setServiceQR] = useState<ServiceQRType[]>();
   const [serviceQRTypes, setServiceQRTypes] = useState<ServiceQRType[]>();
   const [rechargeQRTypes, setRechargeQRTypes] = useState<ServiceQRType[]>();
-  const {CATEGORIES_ASSETS} = Config;
+  const { CATEGORIES_ASSETS } = Config;
   const [cardPic, setCardPic] = useState<CarouselItem[]>();
-
 
   const servicesArr: ServiceType[] = [
     {
@@ -48,7 +42,7 @@ const WalletHomeController: React.FC = () => {
   const getCards = useCallback(async () => {
     const data = await vtexDocsServices.getAllDocByUserID('PC', id as string);
     if (data > 0) {
-      setCards(data);
+      // setCards(data);
     }
     return data;
   }, []);
@@ -56,7 +50,7 @@ const WalletHomeController: React.FC = () => {
   const getServiceQR = useCallback(async () => {
     const data = await vtexDocsServices.getAllDocByUserID('SP', id as string);
     if (data > 0) {
-      setServiceQR(data);
+      // setServiceQR(data);
     }
     return data;
   }, []);
@@ -65,18 +59,18 @@ const WalletHomeController: React.FC = () => {
     return data;
   }, []);
 
-const setServiceQRType = async (services: any) => {
+  const setServiceQRType = async (services: any) => {
     const arr = services;
     const serviceArr = [];
-    if ( arr.length > 0) {
+    if (arr.length > 0) {
       for (const service of arr) {
         let userServiceQR: ServiceQRType = {
           imageURL: CATEGORIES_ASSETS + `${service.supplierName}Logo.png`,
           supplierName: service.suppierName,
           isActive: service.isActive,
           label: service.label,
-          qrType: 'service', 
-          reference: service.reference, 
+          qrType: 'service',
+          reference: service.reference,
           type: service.type,
           userId: service.userId
         };
@@ -84,20 +78,20 @@ const setServiceQRType = async (services: any) => {
       }
     }
     setServiceQRTypes(serviceArr);
-}
+  };
 
-const setRechargeQRType = async (recharges: any) => {
+  const setRechargeQRType = async (recharges: any) => {
     const arr = recharges;
     const rechargesArr = [];
-    if ( arr.length > 0) {
+    if (arr.length > 0) {
       for (const recharge of arr) {
         let userRechargeQR: ServiceQRType = {
           imageURL: CATEGORIES_ASSETS + `${recharge.supplierName}Logo.png`,
           isActive: recharge.isActive,
           supplierName: recharge.supplierName,
           label: recharge.label,
-          qrType: 'recharge', 
-          reference: recharge.reference, 
+          qrType: 'recharge',
+          reference: recharge.reference,
           type: recharge.type,
           userId: recharge.userId
         };
@@ -105,7 +99,7 @@ const setRechargeQRType = async (recharges: any) => {
       }
     }
     setRechargeQRTypes(rechargesArr);
-}
+  };
 
   const setCardsForImages = async (cards: any) => {
     const arr = cards;
@@ -123,7 +117,7 @@ const setRechargeQRType = async (recharges: any) => {
         cardsArr.push(userCards);
       }
     }
-    setCardsPics(cardsArr);
+    // setCardsPics(cardsArr);
     return cardsArr;
   };
 
@@ -153,7 +147,9 @@ const setRechargeQRType = async (recharges: any) => {
   };
 
   useEffect(() => {
-    getCards().then(data => setCardsForImages(data)).then(cardsArr => setCardsforCarousel(cardsArr) );
+    getCards()
+      .then(data => setCardsForImages(data))
+      .then(cardsArr => setCardsforCarousel(cardsArr));
   }, [getCards]);
 
   useEffect(() => {
@@ -164,16 +160,15 @@ const setRechargeQRType = async (recharges: any) => {
     getRechargeQR().then(data => setRechargeQRType(data));
   }, [getRechargeQR]);
 
-  return <WalletHomeScreen servicesArr={servicesArr} rechargeQR={rechargeQRTypes as ServiceQRType[]} serviceQRs={serviceQRTypes as ServiceQRType[]} cards={cardPic as CarouselItem[]} navigate={() => {}} />;
+  return (
+    <WalletHomeScreen
+      servicesArr={servicesArr}
+      rechargeQR={rechargeQRTypes as ServiceQRType[]}
+      serviceQRs={serviceQRTypes as ServiceQRType[]}
+      cards={cardPic as CarouselItem[]}
+      navigate={() => {}}
+    />
+  );
 };
-
-const styles = StyleSheet.create({
-  backgroundImage: {
-    width: '100%',
-    flex: 1,
-    marginHorizontal: 0,
-    paddingHorizontal: 0
-  }
-});
 
 export default WalletHomeController;

@@ -1,5 +1,4 @@
 import React from 'react';
-// import ServicePaymentController from 'screens/home/wallet/servicePayment/ServicePayment/ServicePaymentController';
 import { BackButton } from 'components';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -11,10 +10,11 @@ import PaybackController from 'screens/home/pointCards/payback/PaybackController
 import PaybackHelpScreen from 'screens/home/pointCards/payback/help/PaybackHelpScreen';
 import PreferredController from 'screens/home/pointCards/preferente/PreferredController';
 import PreferredHelpScreen from 'screens/home/pointCards/preferente/help/PreferredHelpScreen';
+import ServicePaymentController from 'screens/home/myAccount/wallet/servicePayment/ServicePayment/ServicePaymentController';
 import theme from 'components/theme/theme';
 import UpdatePaybackController from 'screens/home/pointCards/payback/update/UpdatePaybackController';
 import UpdatePreferredController from 'screens/home/pointCards/preferente/update/UpdatePreferredController';
-import WalletHomeController from 'screens/home/wallet/WalletHome/WalletHomeController';
+import WalletHomeController from 'screens/home/myAccount/wallet/WalletHome/WalletHomeController';
 
 const WalletStack: React.FC = () => {
   const Stack = createNativeStackNavigator<WalletStackParams>();
@@ -116,7 +116,7 @@ const WalletStack: React.FC = () => {
           headerRight: () => (
             <Touchable
               onPress={() => {
-                navigate('Preferred',{addOrShow:0, cardNumberToShow: ''});
+                navigate('Preferred', { addOrShow: 0, cardNumberToShow: '' });
               }}
             >
               <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />
@@ -134,7 +134,7 @@ const WalletStack: React.FC = () => {
           headerRight: () => (
             <Touchable
               onPress={() => {
-                navigate('Payback',{addOrShow:0, cardNumberToShow: ''});
+                navigate('Payback', { addOrShow: 0, cardNumberToShow: '' });
               }}
             >
               <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />
@@ -143,7 +143,7 @@ const WalletStack: React.FC = () => {
         }}
       />
 
-      {/* <Stack.Screen options={{ title: 'Pago de Servicios' }} name="ServicePayment" component={ServicePaymentController} /> */}
+      <Stack.Screen options={{ title: 'Pago de Servicios' }} name="ServicePayment" component={ServicePaymentController} />
     </Stack.Navigator>
   );
 };
