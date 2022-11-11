@@ -15,6 +15,7 @@ import theme from 'components/theme/theme';
 import UpdatePaybackController from 'screens/home/pointCards/payback/update/UpdatePaybackController';
 import UpdatePreferredController from 'screens/home/pointCards/preferente/update/UpdatePreferredController';
 import WalletHomeController from 'screens/home/myAccount/wallet/WalletHome/WalletHomeController';
+import ServicePaymentGeneralInfoController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentGeneralInfo/ServicePaymentGeneralInfoController';
 
 const WalletStack: React.FC = () => {
   const Stack = createNativeStackNavigator<WalletStackParams>();
@@ -108,6 +109,7 @@ const WalletStack: React.FC = () => {
       />
 
       <Stack.Screen options={{ title: 'Pago de Servicios' }} name="ServicePayment" component={ServicePaymentController} />
+      <Stack.Screen options={{ headerShown: false, animation: 'none' }} name="ServicePaymentGeneralInfo" component={ServicePaymentGeneralInfoController} />
     </Stack.Navigator>
   );
 };

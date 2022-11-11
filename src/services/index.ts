@@ -7,6 +7,7 @@ export * from './vtex-pickUpPoints.services';
 export * from './vtex-products.services';
 export * from './vtex-reviewsRatings.services';
 export * from './vtex-search.services';
+export * from './vtex-services-payments.services';
 export * from './vtexauth.services';
 export * from './vtexdocs.services';
 export * from './vtexShoppingCar.services';
