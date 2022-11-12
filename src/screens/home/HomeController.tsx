@@ -14,7 +14,10 @@ import {
   getProductRatingByProductIdThunk,
   ProductInterface,
   ProductResponseInterface,
-  ExistingProductInCartInterface
+  ExistingProductInCartInterface,
+  ShippingDataAddress,
+  ShippingDataInfo,
+  ShippingData
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -26,7 +29,7 @@ import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
-import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne } from 'services/vtexShoppingCar.services';
+import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne, saveShippingData } from 'services/vtexShoppingCar.services';
 import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
 import { vtexProductsServices } from 'services';
 import { useFavorites } from 'screens/auth/hooks/useFavorites';
@@ -63,6 +66,40 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   useEffect(() => {
     getFavorites(email as string);
   }, []);
+
+  useEffect(() => {
+    if (!!cart.items && cart.items.length) {
+      // console.log({defaultAddress})
+      addDirection();
+    }
+  }, [defaultAddress, cart]);
+
+  const addDirection = async () => {
+    const selectedAddresses: ShippingDataAddress = {
+      addressType: defaultAddress?.addressType ? defaultAddress?.addressType : '',
+      receiverName: defaultAddress?.receiverName ? defaultAddress?.receiverName : '',
+      postalCode: defaultAddress?.postalCode ? defaultAddress?.postalCode : '',
+      city: defaultAddress?.city ? defaultAddress?.city : '',
+      state: defaultAddress?.state ? defaultAddress?.state : '',
+      country: 'MEX',
+      street: defaultAddress?.street ? defaultAddress?.street : '',
+      number: defaultAddress?.number ? defaultAddress?.number : '',
+      neighborhood: defaultAddress?.neighborhood ? defaultAddress?.neighborhood : '',
+      complement: defaultAddress?.complement ? defaultAddress?.complement : '',
+      reference: defaultAddress?.reference ? defaultAddress?.reference : '',
+      geoCoordinates: defaultAddress?.geoCoordinate ? defaultAddress?.geoCoordinate : []
+    };
+    const logisticsInfo: ShippingDataInfo = {
+      itemIndex: 0,
+      selectedDeliveryChannel: 'delivery', // pick-up-point
+      selectedSla: 'Mensajeros Urbanos'
+    };
+    const shippingAttachment: ShippingData = {
+      selectedAddresses: [selectedAddresses],
+      logisticsInfo: [logisticsInfo]
+    };
+    await saveShippingData(cart.orderFormId, shippingAttachment);
+  };
 
   const onPressSearch = () => {
     navigate('SearchProducts');
@@ -206,20 +243,15 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    */
   const fetchData = useCallback(async () => {
     const { userId } = user;
-
     if (userId === cart.userProfileId) {
-      getShoppingCart(cart.orderFormId)
-        .then(response => {
-          dispatch(updateShoppingCartItems(response));
-        })
-        .catch(error => console.error('ERROR getting the current shoppingCart', error));
+      getShoppingCart(cart.orderFormId).then(response => {
+        dispatch(updateShoppingCartItems(response));
+      });
     } else {
-      await getCurrentShoppingCartOrCreateNewOne().then(newCart => {
-        getShoppingCart(newCart.orderFormId)
-          .then(response => {
-            dispatch(updateShoppingCartItems(response));
-          })
-          .catch(error => console.error('ERROR getting newly created shoppingCart', error));
+      getCurrentShoppingCartOrCreateNewOne().then(newCart => {
+        getShoppingCart(newCart.orderFormId).then(response => {
+          dispatch(updateShoppingCartItems(response));
+        });
       });
     }
   }, []);
@@ -233,7 +265,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       toast.show({
         message: (
           <Text>
-            {`Más detalles del pedido en: Cuenta -> `}
+            {'Más detalles del pedido en: Cuenta -> '}
             <Text
               style={{ fontWeight: 'bold' }}
               onPress={() => {
@@ -267,7 +299,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     await vtexPromotionsServices.getAllPromotions().then(async promotionsResponse => {
       if (promotionsResponse) {
         const { items } = promotionsResponse;
-        items.map((it, index) => {
+        items.map(it => {
           if (it.isActive == true) {
             allPromotions.push(it);
           }
@@ -286,7 +318,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
             if (promotionResponse.type == 'regular' || promotionResponse.type == 'campaign') {
               const { skus } = promotionResponse;
               if (skus.length > 0) {
-                skus.map((skus, index) => {
+                skus.map(skus => {
                   giftsList.push({
                     gift: skus.id,
                     name: promotionResponse.name,
@@ -300,7 +332,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
               if (promotionResponse.listSku1BuyTogether) {
                 const { listSku1BuyTogether } = promotionResponse;
                 if (listSku1BuyTogether.length > 0) {
-                  listSku1BuyTogether.map((listSku, index) => {
+                  listSku1BuyTogether.map(listSku => {
                     giftsList.push({
                       gift: listSku.id,
                       name: promotionResponse.name,
@@ -316,7 +348,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         }
       });
     } catch (error) {
-      console.log('FOUR', error);
+      // console.log('FOUR', error);
     }
     return giftsList;
   };
@@ -329,16 +361,13 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const getProductPriceById = async (productId: string) => {
     let price = 0;
     try {
-      await vtexProductsServices
-        .getProductPriceByProductId(productId)
-        .then(async responsePrice => {
-          if (responsePrice) {
-            price = responsePrice.sellingPrice;
-          }
-        })
-        .catch(error => console.log('FIVE', error));
+      await vtexProductsServices.getProductPriceByProductId(productId).then(async responsePrice => {
+        if (responsePrice) {
+          price = responsePrice.sellingPrice;
+        }
+      });
     } catch (error) {
-      console.log('SIX', error);
+      // console.log('SIX', error);
     }
     return price;
   };
@@ -351,16 +380,13 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const getProductRatingById = async (productId: string) => {
     let rating = 0;
     try {
-      await vtexProductsServices
-        .getProductRatingByProductId(productId)
-        .then(async responseRating => {
-          if (responseRating) {
-            rating = responseRating.average;
-          }
-        })
-        .catch(error => console.log('SEVEN', error));
+      await vtexProductsServices.getProductRatingByProductId(productId).then(async responseRating => {
+        if (responseRating) {
+          rating = responseRating.average;
+        }
+      });
     } catch (error) {
-      console.log('EIGHT', error);
+      // console.log('EIGHT', error);
     }
     return rating;
   };
@@ -377,7 +403,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         }
       });
     } catch (error) {
-      console.warn(`ERROR in getPictureByProductId for productId: ${productId}`, error);
+      // console.warn(`ERROR in getPictureByProductId for productId: ${productId}`, error);
     }
     return pics;
   };
@@ -396,36 +422,34 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
             let rating = await getProductRatingById(testP[i][j].gift);
             let image = await getPictureByProductId(testP[i][j].gift);
             if (price && image) {
-              await getProductDetailById(testP[i][j].gift)
-                .then(responseProductDetail => {
-                  if (responseProductDetail) {
-                    productPromosMap.set(testP[i][j].gift, {
-                      name: responseProductDetail.Name,
-                      percentualDiscountValue: testP[i][j].percentualDiscountValue,
-                      maximumUnitPriceDiscount: testP[i][j].maximumUnitPriceDiscount,
-                      productId: testP[i][j].gift,
-                      promotionName: testP[i][j].name,
-                      promotionType: testP[i][j].type,
-                      quantity: 1
-                    });
-                    productsBuilded.push({
-                      priceWithDiscount: 1,
-                      name: responseProductDetail.Name,
-                      price: price,
-                      productId: testP[i][j].gift,
-                      quantity: 0,
-                      rating: rating,
-                      image: image
-                    });
-                  }
-                })
-                .catch(error => console.log('TEN', error));
+              await getProductDetailById(testP[i][j].gift).then(responseProductDetail => {
+                if (responseProductDetail) {
+                  productPromosMap.set(testP[i][j].gift, {
+                    name: responseProductDetail.Name,
+                    percentualDiscountValue: testP[i][j].percentualDiscountValue,
+                    maximumUnitPriceDiscount: testP[i][j].maximumUnitPriceDiscount,
+                    productId: testP[i][j].gift,
+                    promotionName: testP[i][j].name,
+                    promotionType: testP[i][j].type,
+                    quantity: 1
+                  });
+                  productsBuilded.push({
+                    priceWithDiscount: 1,
+                    name: responseProductDetail.Name,
+                    price: price,
+                    productId: testP[i][j].gift,
+                    quantity: 0,
+                    rating: rating,
+                    image: image
+                  });
+                }
+              });
             }
           }
         }
       }
     } catch (error) {
-      console.log('ELEVEN', error);
+      // console.log('ELEVEN', error);
     }
 
     dispatch(setProductVsPromotions(productPromosMap));

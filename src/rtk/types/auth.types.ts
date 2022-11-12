@@ -48,7 +48,7 @@ export interface Address {
   complement?: string;
   country?: string;
   countryfake?: string;
-  geoCoordinate?: string;
+  geoCoordinate?: number[];
   neighborhood?: string;
   number?: string;
   postalCode?: string;

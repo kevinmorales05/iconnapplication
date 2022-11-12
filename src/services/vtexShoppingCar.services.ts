@@ -1,12 +1,13 @@
 import { ShoppingCar } from '../http/api-shoppingCar';
 import { ShoppingCarCreation } from '../http/api-shoppingCarCreation';
-import { ClientProfileDataInterface } from 'rtk';
+import { ClientProfileDataInterface, ShippingData } from 'rtk';
+import { DocsApi } from 'apis';
 
 /**
  * Function to create a shoppingCart
  */
 async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
-  const response = await ShoppingCarCreation.getInstance().getRequest(`/orderForm`);
+  const response = await ShoppingCarCreation.getInstance().getRequest('/orderForm');
   if (response === undefined) return Promise.reject(new Error('getCurrentShoppingCartOrCreateNewOne'));
   const { data } = response;
   return data;
@@ -39,7 +40,6 @@ async function emptyShoppingCar(shoppingCartId: string, doc: any): Promise<any> 
  * shoppingCartId is the Cart identififer to update.
  */
 async function updateShoppingCart(shoppingCartId: string, doc: any): Promise<any> {
-  console.log('shoppingCartId:', shoppingCartId);
   const response = await ShoppingCar.getInstance().patchRequest(`/${shoppingCartId}/items`, doc);
   if (response === undefined) return Promise.reject(new Error('updateShoppingCart'));
   const { data } = response;
@@ -51,7 +51,6 @@ async function updateShoppingCart(shoppingCartId: string, doc: any): Promise<any
  * shoppingCartId is the Cart identififer to update.
  */
 async function clearShoppingCartMessages(shoppingCartId: string, doc: any): Promise<any> {
-  console.log('shoppingCartId:', shoppingCartId);
   const response = await ShoppingCar.getInstance().postRequest(`/${shoppingCartId}/messages/clear`, doc);
   if (response === undefined) return Promise.reject(new Error('clearShoppingCartMessages'));
   const { data } = response;
@@ -69,4 +68,22 @@ async function saveClientProfileData(shoppingCartId: string, clientProfileData: 
   return data;
 }
 
-export { getCurrentShoppingCartOrCreateNewOne, getShoppingCart, updateShoppingCart, emptyShoppingCar, clearShoppingCartMessages, saveClientProfileData };
+/**
+ * Function to set address in shoppingCart.
+ */
+async function saveShippingData(shoppingCartId: string, shippingData: ShippingData): Promise<any> {
+  const response = await DocsApi.getInstance().postRequest(`/checkout/pub/orderForm/${shoppingCartId}/attachments/shippingData`, shippingData);
+  if (response === undefined) return Promise.reject(new Error('saveClientProfileData:/attachments/shippingData'));
+  const { data } = response;
+  return data;
+}
+
+export {
+  getCurrentShoppingCartOrCreateNewOne,
+  getShoppingCart,
+  updateShoppingCart,
+  emptyShoppingCar,
+  clearShoppingCartMessages,
+  saveClientProfileData,
+  saveShippingData
+};

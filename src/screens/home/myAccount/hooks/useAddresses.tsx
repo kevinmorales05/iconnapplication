@@ -82,7 +82,9 @@ export const useAddresses = () => {
 
   const onPressAddNewAddress = () => {
     if (isGuest) {
-      enter.show({secondaryMessage: `Guarda tus direcciones de envío para hacer\npedidos más rápido, o continúa tu compra\ncomo invitado desde la canasta..`})
+      enter.show({
+        secondaryMessage: 'Guarda tus direcciones de envío para hacer\npedidos más rápido, o continúa tu compra\ncomo invitado desde la canasta..'
+      });
       return;
     }
 
@@ -107,9 +109,9 @@ export const useAddresses = () => {
         // TODO: WARNING: the vtex api responses with 204 (No content) when is a successful response,
         // that is a wrong definition of the response and could be a "false positive".
         dispatch(deleteAddressFromList(position));
-        toast.show({ message: `Dirección eliminada\n correctamente.`, type: 'success' });
+        toast.show({ message: 'Dirección eliminada\n correctamente.', type: 'success' });
       } else {
-        toast.show({ message: `Ocurrió un error inesperado.`, type: 'warning' });
+        toast.show({ message: 'Ocurrió un error inesperado.', type: 'warning' });
       }
     } catch (error: any) {
       toast.show({ message: error, type: 'error' });
@@ -150,7 +152,7 @@ export const useAddresses = () => {
       receiverName: `${user.name} ${user.lastName} ${user.secondLastName}`,
       city: addressTosubmit.city,
       state: addressTosubmit.state,
-      country: 'MX',
+      country: 'MEX',
       postalCode: addressTosubmit.postalCode,
       street: addressTosubmit.street,
       neighborhood: addressTosubmit.neighborhood,
@@ -166,9 +168,9 @@ export const useAddresses = () => {
           addressPayload.id = response.DocumentId;
           if (user.addresses?.length === 0) addressPayload.isDefault = true; // if is the first address in the list, it's set to true (default address).
           dispatch(addAddressToList(addressPayload));
-          toast.show({ message: `Dirección guardada\n correctamente.`, type: 'success' });
+          toast.show({ message: 'Dirección guardada\n correctamente.', type: 'success' });
         } else {
-          toast.show({ message: `Ocurrió un error inesperado al guardar la dirección.`, type: 'warning' });
+          toast.show({ message: 'Ocurrió un error inesperado al guardar la dirección.', type: 'warning' });
         }
       } else if (mode === 'update') {
         addressPayload.id = IDToUpdate!;
@@ -176,15 +178,15 @@ export const useAddresses = () => {
         if (!response) {
           addressPayload.isDefault = address?.isDefault;
           dispatch(replaceAddressFromList({ address: addressPayload, position: position! }));
-          toast.show({ message: `Dirección actualizada\n correctamente.`, type: 'success' });
+          toast.show({ message: 'Dirección actualizada\n correctamente.', type: 'success' });
         } else {
-          toast.show({ message: `Ocurrió un error inesperado al actualizar la dirección.`, type: 'warning' });
+          toast.show({ message: 'Ocurrió un error inesperado al actualizar la dirección.', type: 'warning' });
         }
       }
     } catch (error: any) {
       toast.show({ message: error, type: 'error' });
     }
-  }
+  };
 
   return {
     user,

@@ -13,7 +13,7 @@ export class DocsApi extends HttpClient {
 
   private constructor() {
     if (global.showLogs__api_docs) {
-      console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docs'), null, 3));
+      // console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docs'), null, 3));
     }
 
     super(VTEXApiConfig('docs'));
@@ -33,46 +33,46 @@ export class DocsApi extends HttpClient {
           request.headers['X-VTEX-API-AppToken'] = appToken; // creo que todo este if ya quedo... pruebalo...
         }
 
-        const { headers, baseURL, method, url, data } = request;
+        // const { headers, baseURL, method, url, data } = request;
 
         if (global.showLogs__api_docs) {
-          console.log(
-            'INTERCEPTOR - Starting Request ===> \n\n',
-            JSON.stringify(headers, null, 3),
-            '\n',
-            `baseURL: ${baseURL}`,
-            '\n',
-            `url: ${url}`,
-            '\n',
-            `method: ${method}`,
-            '\n',
-            `data: ${JSON.stringify(data, null, 3)}`
-          );
+          // console.log(
+          //   'INTERCEPTOR - Starting Request ===> \n\n',
+          //   JSON.stringify(headers, null, 3),
+          //   '\n',
+          //   `baseURL: ${baseURL}`,
+          //   '\n',
+          //   `url: ${url}`,
+          //   '\n',
+          //   `method: ${method}`,
+          //   '\n',
+          //   `data: ${JSON.stringify(data, null, 3)}`
+          // );
         }
 
         return request;
-      },
-      (error: any) => {
-        if (global.showLogs__api_docs) {
-          console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3));
-        }
       }
+      // (error: any) => {
+      //   if (global.showLogs__api_docs) {
+      //     // console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3));
+      //   }
+      // }
     );
 
     this.instance.interceptors.response.use(
       (response: any) => {
-        const { data, config } = response;
+        // const { data, config } = response;
         if (global.showLogs__api_docs) {
-          console.log(
-            `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
-            JSON.stringify(data, null, 3)
-          );
+          // console.log(
+          //   `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
+          //   JSON.stringify(data, null, 3)
+          // );
         }
         return response;
       },
       (error: any) => {
         if (global.showLogs__api_docs) {
-          console.log('INTERCEPTOR Response Error ===> \n\n', JSON.stringify(error, null, 3));
+          // console.log('INTERCEPTOR Response Error ===> \n\n', JSON.stringify(error, null, 3));
         }
         this.handlerError(error);
         return Promise.reject(error);
@@ -111,7 +111,7 @@ export class DocsApi extends HttpClient {
     if (axios.isAxiosError(err)) {
       let problem: GeneralApiProblem;
       problem = getGeneralApiProblem(err.response._response || err.response.status);
-      console.error('GLOBAL EXCEPCIÓN ===> ', problem);
+      // console.error('GLOBAL EXCEPCIÓN ===> ', problem);
       if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
     } else {
       DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');

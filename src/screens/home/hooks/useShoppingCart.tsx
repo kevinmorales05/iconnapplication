@@ -39,22 +39,21 @@ export const useShoppingCart = () => {
     let cartItemsRequest: cartItemsRequestInterface;
 
     if (type === 'create') {
-      const { defaultSeller } = store.getState().seller;
       reduxCartItems?.push({
         id: productId,
         quantity: 1,
-        seller: defaultSeller?.seller!
+        seller: '1'
       });
 
       cartItemsRequest = { orderItems: reduxCartItems! };
       return cartItemsRequest;
     } else if (type === 'add' || type === 'substract' || type === 'remove') {
-      const cartItemsUpdated: cartItemInterface[] = reduxCartItems!.map(({ id, quantity, seller }: cartItemInterface, index: number) => {
+      const cartItemsUpdated: cartItemInterface[] = reduxCartItems!.map(({ id, quantity }: cartItemInterface, index: number) => {
         if (id == productId) {
           const cartItemAdded: cartItemInterface = {
             id: id,
             quantity: type === 'add' ? quantity + 1 : type === 'substract' ? quantity - 1 : 0,
-            seller: seller,
+            seller: '1',
             index: index
           };
           return cartItemAdded;
@@ -62,7 +61,7 @@ export const useShoppingCart = () => {
           return {
             id: id,
             quantity: quantity,
-            seller: seller,
+            seller: '1',
             index: index
           };
         }
@@ -102,7 +101,7 @@ export const useShoppingCart = () => {
       const response = await updateShoppingCart(orderFormId, newCartItemsRequest);
       dispatch(updateShoppingCartItems(response));
     } else {
-      console.warn('Ups! algo pasó al vaciar el carrito');
+      // console.warn('Ups! algo pasó al vaciar el carrito');
     }
   }, []);
 

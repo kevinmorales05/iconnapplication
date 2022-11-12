@@ -1,32 +1,27 @@
 import React, { useState } from 'react';
 import { AuthDataInterface, setShoppingCartInitialState, useAppDispatch } from 'rtk';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import { useToast } from 'context';
 import { PartialState, StackNavigationState } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
 import config from 'react-native-config';
 
 interface Props {
-  onSubmit: (fields: any) => void;
-  goBack: () => void;
   reset: (param: StackNavigationState<HomeStackParams> | PartialState<StackNavigationState<HomeStackParams>>) => void;
   user?: AuthDataInterface;
   orderFormId: string;
 }
 
-const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderFormId }) => {
-  const toast = useToast();
+const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
   const dispatch = useAppDispatch();
   const [isPaySuccess, setPaySuccess] = useState<boolean>(false);
   const { CHECKOUT_URL_RETURNED, CHECKOUT_WEBVIEW } = config;
 
-  function onMessage(data: any) {
-    toast.show({ message: `${data.nativeEvent.data}`, type: 'success' });
-  }
+  // function onMessage(data: any) {
+  //   toast.show({ message: `${data.nativeEvent.data}`, type: 'success' });
+  // }
 
   // TODO: relocate url to .ENV
   const onNavigationStateChange = (navState: WebViewNavigation) => {
-    console.log({urlPay: navState.url})
     const paramsQuery = navState.url.split('/');
     setPaySuccess(paramsQuery.some(item => item === 'congrats') && paramsQuery.some(item => item === 'approved'));
     const urlParams = navState.url.split(CHECKOUT_URL_RETURNED!)[1]?.split('=%2Fcheckout%2');
@@ -44,7 +39,16 @@ const CheckoutScreen: React.FC<Props> = ({ onSubmit, goBack, reset, user, orderF
 
   // TODO: relocate url to .ENV
   return (
-    <WebView onNavigationStateChange={onNavigationStateChange.bind(this)} source={{ uri: `${CHECKOUT_WEBVIEW!}${orderFormId}#/cart` }} bounces={false} />
+    <WebView
+      onNavigationStateChange={onNavigationStateChange.bind(this)}
+      source={{
+        uri: `${CHECKOUT_WEBVIEW!}${orderFormId}#/cart`,
+        headers: {
+          Cookie: user?.authCookie?.Name + '=' + user?.authCookie?.Value + '; ' + user?.accountAuthCookie?.Name + '=' + user?.accountAuthCookie?.Value + ';'
+        }
+      }}
+      bounces={false}
+    />
     //     <WebView
     //         scalesPageToFit={false}
     //         mixedContentMode="compatibility"

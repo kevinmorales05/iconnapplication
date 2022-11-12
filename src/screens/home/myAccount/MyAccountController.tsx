@@ -1,8 +1,18 @@
+import CookieManager from '@react-native-cookies/cookies';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
-import React, { useEffect, useState, version } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert } from 'react-native';
-import { RootState, setAppInitialState, setAuthInitialState, setInvoicingInitialState, setShoppingCartInitialState, useAppDispatch, useAppSelector, setPromotionsInitialState } from 'rtk';
+import {
+  RootState,
+  setAppInitialState,
+  setAuthInitialState,
+  setInvoicingInitialState,
+  setShoppingCartInitialState,
+  useAppDispatch,
+  useAppSelector,
+  setPromotionsInitialState
+} from 'rtk';
 import { authServices } from 'services';
 import { version as app_version } from './../../../../package.json';
 import MyAccountScreen from './MyAccountScreen';
@@ -29,7 +39,6 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
       }
     }
 
-
     // Turn header back on when unmount
     return homeStack
       ? () => {
@@ -40,34 +49,34 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
       : undefined;
   }, [navigation, route]);
 
-  useEffect( () => {
-    if(countVersion === 15){
+  useEffect(() => {
+    if (countVersion === 15) {
       showVersion();
-    }else if(!countBack){
-      countBackTimer()
+    } else if (!countBack) {
+      countBackTimer();
     }
-  }, [countVersion])
+  }, [countVersion]);
 
-  const showVersion = () =>{
-    Alert.alert('Informacion', `OrderForm: ${cart.orderFormId}`)
-  }
+  const showVersion = () => {
+    Alert.alert('Informacion', `OrderForm: ${cart.orderFormId}`);
+  };
 
-  const onPressVersion = () =>{
+  const onPressVersion = () => {
     setCountVersion(countVersion + 1);
-  }
+  };
 
-  const countBackTimer = () =>{
-    setTimeout(()=>{
+  const countBackTimer = () => {
+    setTimeout(() => {
       setCountVersion(0);
       setBack(false);
-    }, 30000)
-  }
+    }, 30000);
+  };
 
   const logOut = async () => {
     try {
       await authServices.logOutUser();
     } catch (error) {
-      console.log('LOGOUT ERROR', error);
+      // console.log('LOGOUT ERROR', error);
     } finally {
       dispatch(setAppInitialState());
       dispatch(setAuthInitialState());
@@ -75,6 +84,7 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
       dispatch(setShoppingCartInitialState());
       dispatch(setInvoicingInitialState());
       dispatch(setPromotionsInitialState());
+      await CookieManager.clearAll();
     }
   };
 
