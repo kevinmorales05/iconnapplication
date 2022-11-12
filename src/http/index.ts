@@ -3,7 +3,6 @@ export * from './api-docs-no-api-prefix';
 export * from './api-docs-priceProduct';
 export * from './api-docs';
 export * from './api-invoicing';
-export * from './api-order';
 export * from './api-otps';
 export * from './api-search';
 export * from './api-shoppingCar';

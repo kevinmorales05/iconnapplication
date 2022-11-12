@@ -1,4 +1,4 @@
-import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface, messageType, ProductInterface, ProductSearchItemInterface } from 'rtk';
+import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface, messageType, ProductSearchItemInterface } from 'rtk';
 import { CategoryInterface } from 'rtk/types/category.types';
 
 export type HomeStackParams = {
@@ -40,12 +40,13 @@ export type HomeStackParams = {
   CategoryProducts: { category: CategoryInterface; categories: CategoryInterface[] };
   SearchProducts: undefined;
   SearchProductsResults: { products: ProductSearchItemInterface[]; textSearch: string };
-  ShopCart:  { messageType?: messageType | string; countProducts?: number; cartItems?: number; };
+  ShopCart: { messageType?: messageType | string; countProducts?: number; cartItems?: number };
   TaxInfo: undefined;
   ViewInvoiceGeneratedPetro: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   ViewInvoiceGeneratedSeven: { invoiceGenerated: InvoiceGeneratedResponseInterface };
   FavoriteProducts: undefined;
   InitialPage: undefined;
+  WalletStack: undefined;
 };
 
 export type HomeTabScreens = {

@@ -12,6 +12,7 @@ import { CounterType } from 'components/types/counter-type';
 import React from 'react';
 import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle } from 'react-native';
 import { CarouselItem, ProductInterface } from 'rtk';
+import { navigate } from '../../../navigation/RootNavigation';
 
 interface Props {
   data?: CarouselItem;
@@ -62,10 +63,20 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
     margin: 8,
     elevation: 3
   };
+  const containerCard: StyleProp<ViewStyle> = {
+    marginHorizontal: 25,
+    marginTop: 16
+  };
 
   const secondImageStyle: StyleProp<ImageStyle> = {
     borderRadius: 8,
     height: 154,
+    resizeMode: 'stretch'
+  };
+  const cardImageStyle: StyleProp<ImageStyle> = {
+    borderRadius: 8,
+    height: 164,
+    width: 261,
     resizeMode: 'stretch'
   };
 
@@ -186,6 +197,19 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
       >
         <Container style={containerSecond}>
           <Image source={{ uri: data.image }} style={secondImageStyle} />
+        </Container>
+      </Touchable>
+    ) : data !== undefined && data.promotion_type === 'cards' ? (
+      <Touchable
+        onPress={() => {
+          () => {};
+          if (data.navigateTo?.length>0) {
+            navigate(data.navigateTo, { addOrShow: 1, cardNumberToShow: data.id, cardNumber: data.cardNumber });
+          }
+        }}
+      >
+        <Container center style={containerCard}>
+          <Image source={data.image} style={cardImageStyle} />
         </Container>
       </Touchable>
     ) : data !== undefined && data.promotion_type === 'day_promotion' ? (

@@ -4,7 +4,7 @@ import { CustomText, Touchable } from 'components/atoms';
 import { StyleSheet, Dimensions } from 'react-native';
 import theme from '../../theme/theme';
 import Feather from 'react-native-vector-icons/Feather';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 
 interface QuantityProductProps {
   quantity: number;
@@ -62,7 +62,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderColor: theme.brandColor.iconn_med_grey,
     borderWidth: moderateScale(1), 
-    flex: 1
+    // flex: 1,
+    height: verticalScale(40)
   },
   containerDelete: {
     justifyContent: 'center',

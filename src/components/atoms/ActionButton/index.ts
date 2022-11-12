@@ -1,4 +1,3 @@
-
-import ActionButton from './ActionButton'
+import ActionButton from './ActionButton';
 
 export { ActionButton };

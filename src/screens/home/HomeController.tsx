@@ -175,7 +175,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   }, [user.addresses]);
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
-    // If is not a guest and press "Petro" or "Acumula" or "Wallet".
+    // If is not a guest and press "Petro" or "Acumula".
     if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4')) {
       inConstruction.show();
       return;
@@ -262,10 +262,11 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   useEffect(() => {
     if (paySuccess && !isGuest) {
+      fetchData();
       toast.show({
         message: (
           <Text>
-            {'Más detalles del pedido en: Cuenta -> '}
+            {`¡Muchas gracias por tu compra! Para más detalles en: Cuenta -> `}
             <Text
               style={{ fontWeight: 'bold' }}
               onPress={() => {
