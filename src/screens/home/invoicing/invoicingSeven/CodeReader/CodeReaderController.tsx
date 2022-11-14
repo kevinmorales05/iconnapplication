@@ -5,12 +5,14 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Barcode } from 'vision-camera-code-scanner';
 import QrReaderScreen from './CodeReaderScreen';
 import { HomeStackParams } from 'navigation/types';
-
-const CodeReaderController: React.FC = () => {
+interface Props {
+  navigationDestiny: string;
+}
+const CodeReaderController: React.FC = (navigationDestiny) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   const onSubmit = (code: Barcode) => {
-    navigate('AddTicketSeven', { ticket: { ticketNo: code }, position: undefined });
+    navigate(navigationDestiny, { ticket: { ticketNo: code }, position: undefined });
   };
 
   return (

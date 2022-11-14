@@ -12,6 +12,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ICONN_EYE_ON, ICONN_EYE_OFF, ICONN_CALENDAR } from 'assets/images';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { CustomText } from '../CustomText';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export interface Props {
   label?: string;
@@ -28,6 +29,8 @@ export interface Props {
   onSubmitEditing?: TextInputProps['onSubmitEditing'];
   defaultValue?: TextInputProps['value'];
   passwordField?: boolean;
+  scanIcon?: boolean,
+  onPressScan: () => void;
   showPasswordEnable?: boolean;
   error?: any;
   onFocus?: TextInputProps['onFocus'];
@@ -68,6 +71,8 @@ const Input = forwardRef(
       onSubmitEditing,
       defaultValue,
       passwordField,
+      scanIcon,
+      onPressScan,
       showPasswordEnable = true,
       error = '',
       onFocus,
@@ -198,12 +203,17 @@ const Input = forwardRef(
                 <Image source={secureTextEntry ? ICONN_EYE_ON : ICONN_EYE_OFF} style={passwordImageStyle} />
               </Touchable>
             )}
+            {scanIcon && (
+              <Touchable onPress={onPressScan}>
+                <MaterialCommunityIcons name="line-scan" size={24} color={theme.fontColor.placeholder} style={{marginRight:13}} />
+              </Touchable>
+            )}
             {datePicker && (
               <ActionButton
                 size="xsmall"
                 color=""
                 onPress={onPressDatePickerIcon!}
-                icon={ <Image source={ICONN_CALENDAR} style={{tintColor:`${theme.fontColor.grey}`, height:24, width:24}} />}
+                icon={<Image source={ICONN_CALENDAR} style={{ tintColor: `${theme.fontColor.grey}`, height: 24, width: 24 }} />}
               />
             )}
           </Container>

@@ -18,6 +18,7 @@ import { vtexDocsServices } from 'services';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Props {
+  onPressScan: () => void;
   addOrShow: number;
   cardNumberToShow: string;
   onSubmit: (data: FieldValues) => void;
@@ -26,7 +27,7 @@ interface Props {
   cardId: string;
 }
 
-const PaybackScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId }) => {
+const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [paybackCard, setPaybackCard] = useState('0000000000');
   const [disableButton, setDisableButton] = useState(true);
@@ -79,8 +80,9 @@ const PaybackScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit,
   useEffect(() => {
     if(addOrShow==1){
       getPointCardById()
+      setPaybackCard(addOrShow==1?cardNumberToShow:'0000000000000');
     }
-  }, [paybackCard, disableButton]);
+  }, [paybackCard, disableButton, cardNumberToShow]);
 
   const showAlert = () => {
     alert.show(
@@ -145,8 +147,9 @@ const PaybackScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit,
           <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
         </Touchable>
       </Container>
-      <Container center style={{ marginLeft: 20, height: 60, width: '90%' }}>
+      <Container row center style={{ marginLeft: 20, height: 60, width: '85%' }}>
         <Input
+        {...register('barcodeNumber')}
           name="barcodeNumber"
           ref={barcodeNumber}
           control={control}
@@ -157,6 +160,8 @@ const PaybackScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit,
           maxLength={13}
           rules={numericWithSpecificLenght(13)}
           onChangeText={updateButtonStatus}
+          onPressScan={onPressScan}
+          scanIcon={true}
         />
       </Container>
       <Container

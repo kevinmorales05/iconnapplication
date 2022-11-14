@@ -10,7 +10,7 @@ export type HomeStackParams = {
   ChangePassword: { authenticationToken: string; variant?: 'register' | 'recoverPassword' };
   ChangedPassword: undefined;
   Checkout: undefined;
-  CodeReader: undefined;
+  CodeReader: undefined | { navigationDestiny?: string };
   ContactInformation: undefined;
   CreateTaxProfile: undefined | InvoicingProfileInterface;
   EditEmail: undefined;

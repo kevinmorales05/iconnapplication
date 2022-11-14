@@ -204,7 +204,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
         onPress={() => {
           () => {};
           if (data.navigateTo?.length>0) {
-            navigate(data.navigateTo, { addOrShow: 1, cardNumberToShow: data.id, cardNumber: data.cardNumber });
+            navigate(data.navigateTo, { addOrShow: 1, cardId: data.id, cardNumber: data.cardNumber });
           }
         }}
       >

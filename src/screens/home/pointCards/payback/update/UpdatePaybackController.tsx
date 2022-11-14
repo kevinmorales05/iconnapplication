@@ -17,11 +17,15 @@ const UpdatePaybackController: React.FC<Props> = () => {
   const toast = useToast();
 
   const onSubmit = async (userFields: any) => {
-    let { cardNumber } = userFields;
-    let paybackPointCardBody = { type: 'payback', userId: user.userId, isActive: true, barCode: cardNumber };
+    let { barcodeNumberToUpdate } = userFields;
+    let paybackPointCardBody = { type: 'payback', userId: user.id, isActive: true, barCode: barcodeNumberToUpdate };
     try {
-      if (cardNumber.length == 18) {
-        const response = await vtexDocsServices.updateDocByDocID('PC', params.cardIdToUpdate, paybackPointCardBody).then(cardSaved => {});
+      if (barcodeNumberToUpdate.length == 13) {
+        const response = await vtexDocsServices.updateDocByDocID('PC', params.cardIdToUpdate, paybackPointCardBody).then(cardSaved => {
+          if (cardSaved) {
+
+          }
+        });
       } else {
       }
     } catch (error) {

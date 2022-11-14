@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import { CustomText, Container, Touchable, TextContainer } from 'components';
@@ -21,12 +21,10 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
   const insets = useSafeAreaInsets();
 
   const showPreferenteScreen = (async () => {
-    console.log('pantalla preferente');
     onPressClose();
   })
 
   const showPayBackScreen = (async () => {
-    console.log('pantalla payback');
     onPressClose();
   })
 
@@ -83,7 +81,7 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
                     ></TextContainer>
                   </Container>
                   <Container style={{ marginTop: 20, marginBottom: 25 }}>
-                    <Container row space='around'>
+                    <Container row space='evenly'>
                       <Container>
                         <Touchable onPress={() => {
                           showPreferenteScreen()

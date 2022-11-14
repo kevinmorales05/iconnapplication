@@ -24,7 +24,7 @@ interface Props {
 
 const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpdate, mode, cardId }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [preferenteCard, setPreferenteCard] = useState(preferenteCardToUpdate);
+  const [preferenteCardToUpdateinUpdate, setPreferenteCardToUpdateinUpdate] = useState(preferenteCardToUpdate);
   const [preferenteStatus, setPreferenteStatus] = useState(0);
   const toast = useToast();
   const alert = useAlert();
@@ -72,19 +72,19 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
 
   const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields);
-    setPreferenteCard(fields.cardNumberToUpdate);
+    setPreferenteCardToUpdateinUpdate(fields.cardNumberToUpdate);
     setPreferenteStatus(1);
     toast.show({
       message: 'Cambios guardados con éxito.',
       type: 'success'
     });
-    navigate('Preferred', { addOrShow: 1, cardNumberToShow: cardId, cardNumber: fields.cardNumberToUpdate });
+    navigate('Preferred', { addOrShow: 1, cardId: cardId, cardNumber: fields.cardNumberToUpdate });
   };
 
-  useEffect(() => {}, [preferenteCard]);
+  useEffect(() => {}, [preferenteCardToUpdateinUpdate]);
 
   const populateForUpdate = () => {
-    setValue('cardNumberToUpdate', preferenteCard);
+    setValue('cardNumberToUpdate', preferenteCardToUpdateinUpdate);
     trigger('cardNumberToUpdate');
   };
 
@@ -129,14 +129,14 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
         </Container>
         <Container
           center
-          style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}
+          style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', height: '20%', paddingTop: 50, marginTop: 200, marginLeft:38 }}
         >
           <Button
             length="long"
             fontSize="h5"
             round
             fontBold
-            style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
+            style={{ width: '95%',marginBottom: 5, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
             onPress={handleSubmit(submit)}
           >
             Guardar
@@ -154,7 +154,7 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
       <Container center style={{ width: '100%', marginTop: 10, backgroundColor: theme.brandColor.iconn_white }}>
         <TextContainer marginTop={50} fontSize={14} text={`Muestra el código de barras antes de pagar`} />
         <Container style={{ width: 360, height: moderateScale(20) }}>
-          <Barcode format="CODE128B" value="0000002021954Q" text={preferenteCard} />
+          <Barcode format="CODE128B" value={preferenteCardToUpdateinUpdate} text={preferenteCardToUpdateinUpdate} />
         </Container>
       </Container>
       <Container center style={{ backgroundColor: theme.brandColor.iconn_white, marginTop: 180 }}>

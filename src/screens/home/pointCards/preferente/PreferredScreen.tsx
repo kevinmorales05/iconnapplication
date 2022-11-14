@@ -26,12 +26,8 @@ interface Props {
 }
 
 const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId }) => {
-  console.log('addOrShow: '+addOrShow);
-  console.log('cardNumberToShow  : : :'+cardNumberToShow);
-  console.log('cardId  : : :'+cardId);
-  console.log('cardToUpdate  : : :'+cardToUpdate);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [preferenteCard, setPreferenteCard] = useState(addOrShow==1?cardNumberToShow:'000000000000000000');
+  const [preferenteCard, setPreferenteCard] = useState('000000000000000000');
   const [preferenteStatus, setPreferenteStatus] = useState(addOrShow);
   const [disableButton, setDisableButton] = useState(true);
   const toast = useToast();
@@ -52,12 +48,10 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
   const cardNumber = useRef<TextInput>(null);
 
   const editPreferenteCard = () => {
-    console.log('*update preferente card*');
     navigate('UpdatePreferred', { cardIdToUpdate: cardToUpdate, preferenteCard: preferenteCard, cardId: cardId });
   };
 
   const deletePointCard = () => {
-    console.log('*delete preferente card*');
     deleteCard();
     toast.show({
       message: 'Tarjeta eliminada exitosamente.',
@@ -71,24 +65,9 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
     setPreferenteCard(getValues('cardNumber'));
   };
 
-  const getPointCardById = useCallback(async () => {
-  //const getPointCardById = () => {
-    console.log('getting cardnumber again');
-    vtexDocsServices.getDocByDocID('PC', cardId).then(cardRetrieved => {
-      if (cardRetrieved) {
-        let { barCode } = cardRetrieved[0];
-        console.log('>>>>>>',barCode);
-        setPreferenteCard(barCode);
-      }
-    });
-  //};
-}, []);
-
   useEffect(() => {
-    console.log('====>',addOrShow);
     if(addOrShow==1){
-      console.log('entraaaaa');
-    getPointCardById()
+      setPreferenteCard(addOrShow==1?cardNumberToShow:'000000000000000000')
   }
   }, [disableButton, preferenteCard, cardNumberToShow]);
 
@@ -116,7 +95,6 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
   };
 
   const submit: SubmitHandler<FieldValues> = fields => {
-    console.log('..',fields);
     onSubmit(fields);
     setPreferenteCard(fields.cardNumber);
     setPreferenteStatus(1);

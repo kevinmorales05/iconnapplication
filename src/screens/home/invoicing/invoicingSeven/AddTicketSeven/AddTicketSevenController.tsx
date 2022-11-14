@@ -97,7 +97,7 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
   };
 
   const onPressScan = () => {
-    navigate('CodeReader');
+    navigate('CodeReader', {navigationDestiny: 'AddTicketSeven'});
   };
 
   return (

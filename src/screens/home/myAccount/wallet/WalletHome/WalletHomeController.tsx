@@ -150,7 +150,7 @@ const WalletHomeController: React.FC = () => {
     getCards()
       .then(data => setCardsForImages(data))
       .then(cardsArr => setCardsforCarousel(cardsArr));
-  }, [getCards]);
+  }, [getCards, cardPic]);
 
   useEffect(() => {
     getServiceQR().then(data => setServiceQRType(data));

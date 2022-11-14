@@ -15,26 +15,18 @@ interface Props {
 const PreferredController: React.FC<Props> = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'Preferred'>>();
   const { params } = route;
-  console.log('mostrar o agregar: '+params.addOrShow);
-  console.log('id de tarjeta: '+params.cardNumberToShow);
-  console.log('cardNumber de tarjeta: '+params.cardNumber);
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const [preferenteCardToUpdate, setPreferenteCardToUpdate] = useState(params.cardNumberToShow);
+  const [preferenteCardToUpdate, setPreferenteCardToUpdate] = useState(params.cardId);
   const [preferenteCardToShow, setPreferenteCardToShow] = useState('');
-  const [cardId, setCardId] = useState(params.cardNumberToShow);
+  const [cardId, setCardId] = useState(params.cardId);
   const toast = useToast();
 
   const onSubmit = async (userFields: any) => {
     let { cardNumber } = userFields
-    console.log('cardNumber ',cardNumber);
-    console.log('user.userId ',user.userId);
     let preferentePointCardBody = { type: 'preferente', userId: user.id, isActive: true, barCode: cardNumber };
     try {
       if (cardNumber.length == 18) {
         const response = vtexDocsServices.createDoc('PC', preferentePointCardBody).then(cardSaved => {
-          console.log('.............');
-          console.log(cardSaved);
-          console.log('.............');
           if (cardSaved) {
             setPreferenteCardToUpdate(cardSaved.DocumentId);
           }
@@ -56,7 +48,7 @@ const PreferredController: React.FC<Props> = () => {
   };
 
   useEffect(() => {
-    //setCardId(params.cardNumberToShow);
+    //setCardId(params.cardId);
   }, [preferenteCardToShow, params, cardId]);
 
   return (

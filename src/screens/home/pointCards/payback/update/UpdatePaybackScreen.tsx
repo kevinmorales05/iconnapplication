@@ -23,8 +23,7 @@ interface Props {
   cardId: string;
 }
 
-const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, mode, cardId }) => {
-
+const UpdatePaybackScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, mode, cardId }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [paybackCard, setPaybackCard] = useState(paybackCardToUpdate);
   const [disableButton, setDisableButton] = useState(true);
@@ -40,16 +39,16 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate
     reset,
     setValue,
     trigger,
-    getValues
+    getValues,
+    unregister
   } = useForm({
     mode: 'onChange'
   });
 
-  const barcodeNumber = useRef<TextInput>(null);
+  const barcodeNumberToUpdate = useRef<TextInput>(null);
 
   const editPreferenteCard = () => {
-    console.log('*update preferente card*');
-    navigate('UpdatePreferente', { cardIdToUpdate: cardToUpdate, paybackCard: paybackCard });
+    //navigate('UpdatePreferente', { cardIdToUpdate: cardToUpdate, paybackCard: paybackCard });
   };
 
   const updateButtonStatus = () => {
@@ -57,11 +56,11 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate
   };
 
   useEffect(() => {
-  }, [disableButton]);
+  }, [disableButton, paybackCard]);
 
   const populateForUpdate = () => {
-    setValue('cardNumberToUpdate', paybackCard);
-    trigger('cardNumberToUpdate');
+    setValue('barcodeNumberToUpdate', paybackCard);
+    trigger('barcodeNumberToUpdate');
   };
 
   useEffect(() => {
@@ -74,13 +73,13 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate
 
   const submit: SubmitHandler<FieldValues> = fields => {
     onSubmit(fields);
-    setPaybackCard(fields.barcodeNumber);
+    setPaybackCard(fields.barcodeNumberToUpdate);
     setPaybackStatus(1);
     toast.show({
       message: 'Cambios guardados con éxito.',
       type: 'success'
     });
-    navigate('Payback', {addOrShow:1, cardNumberToShow: cardId, cardNumber: fields.cardNumberToUpdate});
+    navigate('Payback', {addOrShow:1, cardNumberToShow: cardId, cardNumber: fields.barcodeNumberToUpdate});
   };
 
   const hideInformationModal = () => {
@@ -109,32 +108,32 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate
           <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
         </Touchable>
       </Container>
-      <Container center style={{ marginLeft: 20, height: 60, width:'80%' }}>
+      <Container center style={{ marginLeft: 20, height: 60, width:'90%' }}>
         <Input
-          {...register('barcodeNumber')}
-          name="barcodeNumber"
-          ref={barcodeNumber}
+          {...register('barcodeNumberToUpdate')}
+          name="barcodeNumberToUpdate"
+          ref={barcodeNumberToUpdate}
           control={control}
           autoCorrect={false}
           keyboardType="numeric"
           placeholder={'13 dígitos'}
           blurOnSubmit={true}
-          error={errors.barcodeNumber?.message}
+          error={errors.barcodeNumberToUpdate?.message}
           boldLabel
           maxLength={13}
-          onSubmitEditing={() => cardNumberToUpdate.current?.focus()}
+          onSubmitEditing={() => barcodeNumberToUpdate.current?.focus()}
         />
       </Container>
       <Container
         center
-        style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}
+        style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, height: '20%', paddingTop: 50, marginTop: 200 }}
       >
         <Button
           length="long"
           fontSize="h5"
           round
           fontBold
-          style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
+          style={{ marginBottom: 5, width: '90%', backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
           onPress={handleSubmit(submit)}
         >
           Guardar
@@ -215,7 +214,7 @@ const UpdatePreferenteScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate
   );
 };
 
-export default UpdatePreferenteScreen;
+export default UpdatePaybackScreen;
 
 const styles = StyleSheet.create({
   container: {
