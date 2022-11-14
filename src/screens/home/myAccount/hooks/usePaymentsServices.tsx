@@ -6,7 +6,12 @@ export const useServicesPayments = () => {
   const [servicesPayments, setServicesPayments] = useState<ServicePaymentInterface[]>();
 
   const fetchServicesPayments = useCallback(async () => {
-    const data = await vtexServicesPayments.getServicesPayments();
+    let data: ServicePaymentInterface[] = await vtexServicesPayments.getServicesPayments();
+    data = data
+      .filter((i: ServicePaymentInterface) => i.isActive === true)
+      .sort((a: ServicePaymentInterface, b: ServicePaymentInterface) => {
+        return a.index < b.index ? -1 : a.index > b.index ? 1 : 0;
+      });
     setServicesPayments(data);
   }, []);
 

@@ -10,12 +10,14 @@ import PaybackController from 'screens/home/pointCards/payback/PaybackController
 import PaybackHelpScreen from 'screens/home/pointCards/payback/help/PaybackHelpScreen';
 import PreferredController from 'screens/home/pointCards/preferente/PreferredController';
 import PreferredHelpScreen from 'screens/home/pointCards/preferente/help/PreferredHelpScreen';
-import ServicePaymentController from 'screens/home/myAccount/wallet/servicePayment/ServicePayment/ServicePaymentController';
+import ServicePaymentAddController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentAdd/ServicePaymentAddController';
+import ServicePaymentController from 'screens/home/myAccount/wallet/servicePayment/ServicesPayments/ServicesPaymentsController';
+import ServicePaymentGeneralInfoController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentGeneralInfo/ServicePaymentGeneralInfoController';
+import ServicePaymentQRDetailController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentQRDetail/ServicePaymentQRDetailController';
 import theme from 'components/theme/theme';
 import UpdatePaybackController from 'screens/home/pointCards/payback/update/UpdatePaybackController';
 import UpdatePreferredController from 'screens/home/pointCards/preferente/update/UpdatePreferredController';
 import WalletHomeController from 'screens/home/myAccount/wallet/WalletHome/WalletHomeController';
-import ServicePaymentGeneralInfoController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentGeneralInfo/ServicePaymentGeneralInfoController';
 
 const WalletStack: React.FC = () => {
   const Stack = createNativeStackNavigator<WalletStackParams>();
@@ -35,13 +37,12 @@ const WalletStack: React.FC = () => {
       initialRouteName="WalletHome"
     >
       <Stack.Screen options={{ headerShown: true, title: 'Wallet', headerLeft: () => <BackButton /> }} name="WalletHome" component={WalletHomeController} />
-
       <Stack.Screen
         name="Preferred"
         component={PreferredController}
         options={{
           headerTitle: 'ICONN Preferente',
-          headerBackTitleVisible: false,
+          headerBackTitleVisible: false
         }}
       />
       <Stack.Screen
@@ -49,7 +50,7 @@ const WalletStack: React.FC = () => {
         component={UpdatePreferredController}
         options={{
           headerTitle: 'Editar tarjeta',
-          headerBackTitleVisible: false,
+          headerBackTitleVisible: false
         }}
       />
       <Stack.Screen
@@ -57,7 +58,7 @@ const WalletStack: React.FC = () => {
         component={PaybackController}
         options={{
           headerTitle: 'Monedero PAYBACK',
-          headerBackTitleVisible: false,
+          headerBackTitleVisible: false
         }}
       />
       <Stack.Screen
@@ -65,7 +66,7 @@ const WalletStack: React.FC = () => {
         component={UpdatePaybackController}
         options={{
           headerTitle: 'Editar tarjeta',
-          headerBackTitleVisible: false,
+          headerBackTitleVisible: false
         }}
       />
       <Stack.Screen
@@ -107,9 +108,10 @@ const WalletStack: React.FC = () => {
           )
         }}
       />
-
-      <Stack.Screen options={{ title: 'Pago de Servicios' }} name="ServicePayment" component={ServicePaymentController} />
-      <Stack.Screen options={{ headerShown: false, animation: 'none' }} name="ServicePaymentGeneralInfo" component={ServicePaymentGeneralInfoController} />
+      <Stack.Screen options={{ title: 'Pago de Servicios', headerBackTitleVisible: false }} name="ServicePayment" component={ServicePaymentController} />
+      <Stack.Screen options={{ headerShown: false }} name="ServicePaymentGeneralInfo" component={ServicePaymentGeneralInfoController} />
+      <Stack.Screen options={{ title: 'Agregar servicio', headerBackTitleVisible: false }} name="ServicePaymentAdd" component={ServicePaymentAddController} />
+      <Stack.Screen options={{ title: 'QR', headerBackTitleVisible: false }} name="ServicePaymentQRDetail" component={ServicePaymentQRDetailController} />
     </Stack.Navigator>
   );
 };
