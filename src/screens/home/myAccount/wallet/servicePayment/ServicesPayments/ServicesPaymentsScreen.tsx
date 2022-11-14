@@ -7,12 +7,12 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import theme from 'components/theme/theme';
 
 interface Props {
-  onSubmit: () => void;
+  onSubmit: (servicePayment: ServicePaymentInterface) => void;
   servicePaymentList: ServicePaymentInterface[];
   onPressQuestionButton: () => void;
 }
 
-const ServicePaymentScreen: React.FC<Props> = ({ onSubmit, servicePaymentList, onPressQuestionButton }) => {
+const ServicesPaymentsScreen: React.FC<Props> = ({ onSubmit, servicePaymentList, onPressQuestionButton }) => {
   const insets = useSafeAreaInsets();
   return (
     <ScrollView
@@ -26,7 +26,8 @@ const ServicePaymentScreen: React.FC<Props> = ({ onSubmit, servicePaymentList, o
       <TextContainer typography="paragraph" text="Paga tus servicios en caja más rápido." marginTop={23} marginBottom={16} />
 
       <Container flex={1} row style={{ flexWrap: 'wrap' }}>
-        {servicePaymentList && servicePaymentList.map((service, i) => <CardImage key={i} image={service.imageURL} onPress={onSubmit} position={i} />)}
+        {servicePaymentList &&
+          servicePaymentList.map((service, i) => <CardImage key={i} servicePayment={service} onPress={() => onSubmit(service)} position={i} />)}
       </Container>
 
       <Container row center crossCenter>
@@ -39,4 +40,4 @@ const ServicePaymentScreen: React.FC<Props> = ({ onSubmit, servicePaymentList, o
   );
 };
 
-export default ServicePaymentScreen;
+export default ServicesPaymentsScreen;

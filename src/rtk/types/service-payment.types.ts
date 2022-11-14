@@ -1,10 +1,16 @@
+import { ImageSourcePropType } from 'react-native';
+
 /**
  * Model used for each service payment. i.e: Sky, Megacable, etc.
  */
 export interface ServicePaymentInterface {
-  helpImageURL: string;
+  billerId: string;
+  helpImageURL: ImageSourcePropType;
   imageURL: string;
+  index: number;
   isActive: boolean;
+  maxLength: number;
+  minLength: number;
   SKU: string;
   slug: string;
   supplierName: string;
@@ -14,6 +20,6 @@ export interface ServicePaymentInterface {
 export interface ServiceInterface {
   alias: string;
   balance: string;
-  expiration_date: string;
-  number: string;
+  contractNumber: string;
+  expirationDate: string;
 }
