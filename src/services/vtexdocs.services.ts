@@ -37,16 +37,8 @@ async function getAllDocByUserID(dataentity: string, userId: string): Promise<an
   return data;
 }
 
-async function getDocByEmail(dataentity: string, userEmail: string): Promise<any> {
+async function getDocByEmail(dataentity: string): Promise<any> {
   const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
-  console.log('getDocByEmail: '+response);
-  //error handling
-  const { data } = response;
-  return data;
-}
-
-async function saveOrderFormIdDoc(dataentity: string, userEmail: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=userId=${userEmail}`);
   //error handling
   const { data } = response;
   return data;
@@ -73,7 +65,7 @@ async function updateDocByDocID(dataentity: string, docId: string, doc: any): Pr
 /**
  * Function to update one doc.
  */
- async function updateDocByDocIDForAgeStatus(dataentity: string, docId: string, doc: any): Promise<any> {
+async function updateDocByDocIDForAgeStatus(dataentity: string, docId: string, doc: any): Promise<any> {
   const response = await DocsApi.getInstance().patchRequest(`dataentities/${dataentity}/documents/${docId}`, doc);
   const { data } = response;
   return data;
@@ -91,6 +83,15 @@ async function getAddressByPostalCode(postalCode: string): Promise<any> {
   return data;
 }
 
+/**
+ * Function to getImages to welcomeLogin.
+ */
+async function getImagesWelcomeLogin(): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest('dataentities/WM/search?_fields=id,index,description,imageURL,isActive');
+  const { data } = response;
+  return data;
+}
+
 export const vtexDocsServices = {
   createDoc,
   getAllDocByUserID,
@@ -99,5 +100,6 @@ export const vtexDocsServices = {
   updateDocByDocID,
   updateDocByDocIDForAgeStatus,
   getDocByDocID,
-  getAddressByPostalCode
+  getAddressByPostalCode,
+  getImagesWelcomeLogin
 };

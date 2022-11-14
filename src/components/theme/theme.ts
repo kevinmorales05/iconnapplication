@@ -174,7 +174,8 @@ const theme: themeType = {
     grey: '#939598',
     dark_orange: '#f37721',
     light_green: '#008060',
-    placeholder: '#747476'
+    placeholder: '#747476',
+    green: '#5fae8e'
   },
   brandColor: {
     iconn_orange_original: '#f37721',
@@ -199,11 +200,11 @@ const theme: themeType = {
     facebook: '#3b5998',
     google: '#e33629',
     yellow_star: '#f5d736',
-    yellow_container: 'rgba(243, 206, 79, 0.18)'
+    yellow_container: 'rgba(243, 206, 79, 0.18)',
+    accent_secondary: '#faa22d'
   },
   paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(5) : moderateScale(40),
   bottomStickyViewBottomPadding: isIphoneWithNotch ? Math.round(verticalScale(10)) : 0
-
 };
 
 // TODO: we must change some current colors in the code of each component/screen.

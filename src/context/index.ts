@@ -1,4 +1,5 @@
 export * from './alert.context';
+export * from './welcome.context';
 export * from './enter.context';
 export * from './inConstruction.context';
 export * from './loading.context';

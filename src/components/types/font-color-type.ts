@@ -9,3 +9,4 @@ export type FontColorTypes =
   | 'dark_orange'
   | 'light_green'
   | 'placeholder'
+  | 'green';
