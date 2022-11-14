@@ -25,11 +25,12 @@ interface Props {
   deleteCard: () => void;
   cardToUpdate: string;
   cardId: string;
+  barcodeFromScan: string;
 }
 
-const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId }) => {
+const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId, barcodeFromScan }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [paybackCard, setPaybackCard] = useState('0000000000');
+  const [paybackCard, setPaybackCard] = useState(barcodeFromScan!=undefined?barcodeFromScan:'0000000000');
   const [disableButton, setDisableButton] = useState(true);
   const toast = useToast();
   const [visible, setVisible] = useState<boolean>(false);
@@ -82,7 +83,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
       getPointCardById()
       setPaybackCard(addOrShow==1?cardNumberToShow:'0000000000000');
     }
-  }, [paybackCard, disableButton, cardNumberToShow]);
+  }, [paybackCard, disableButton, cardNumberToShow, barcodeFromScan]);
 
   const showAlert = () => {
     alert.show(

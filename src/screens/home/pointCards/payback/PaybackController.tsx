@@ -17,12 +17,15 @@ interface Props {
 const PaybackController: React.FC<Props> = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'Payback'>>();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const [barCodeFromScan, setBarCodeFromScan] = useState<string>();
   const { params } = route;
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [paybackCardToUpdate, setPaybackCardToUpdate] = useState(params.cardId);
   const [paybackCardToShow, setPaybackCardToShow] = useState('');
   const [cardId, setCardId] = useState(params.cardId);
   const toast = useToast();
+
+  console.log('params.ticket: ',params.ticket);
 
   const onSubmit = async (userFields: any) => {
     let { barcodeNumber } = userFields;
@@ -55,6 +58,7 @@ const PaybackController: React.FC<Props> = () => {
   };
 
   useEffect(() => {
+    //setBarCodeFromScan(params.ticket);
   }, [paybackCardToShow, params, cardId]);
 
   return (
@@ -73,6 +77,7 @@ const PaybackController: React.FC<Props> = () => {
         deleteCard={deletePointCard}
         cardToUpdate={paybackCardToUpdate}
         cardId={cardId}
+        barcodeFromScan={params.ticket} 
       />
     </SafeArea>
   );
