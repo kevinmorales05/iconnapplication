@@ -7,6 +7,7 @@ export * from './api-otps';
 export * from './api-search';
 export * from './api-shoppingCar';
 export * from './api-users';
+export * from './arcus-api';
 export * from './vtex-api-auth';
 export * from './vtex-api-onboarding';
 export * from './vtex-api-pickUpPoints';

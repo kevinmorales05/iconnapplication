@@ -32,7 +32,7 @@ const CardImage: React.FC<CardImageProps> = ({ servicePayment, onPress, position
   return (
     <Touchable onPress={onPress} disabled={!servicePayment.isActive} marginLeft={position % 2 !== 0 ? '4%' : 0} marginBottom={16} width={'48%'}>
       <Container row space="between" height={80} style={cardContainerStyle} crossCenter center>
-        <Image source={{ uri: servicePayment.imageURL }} style={cardImageStyle} resizeMode="cover" />
+        <Image source={{ uri: servicePayment.imageURL }} style={cardImageStyle} resizeMode="contain" />
       </Container>
     </Touchable>
   );

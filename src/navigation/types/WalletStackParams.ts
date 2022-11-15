@@ -1,4 +1,4 @@
-import { ServicePaymentInterface } from 'rtk';
+import { QRInterface, ServicePaymentInterface } from 'rtk';
 
 export type WalletStackParams = {
   Payback: undefined;
@@ -8,7 +8,7 @@ export type WalletStackParams = {
   ServicePayment: undefined;
   ServicePaymentAdd: { servicePayment: ServicePaymentInterface };
   ServicePaymentGeneralInfo: undefined;
-  ServicePaymentQRDetail: undefined;
+  ServicePaymentQRDetail: { qrData: QRInterface; servicePayment: ServicePaymentInterface };
   UpdatePayback: undefined | { cardIdToUpdate?: string; paybackCard?: string };
   UpdatePreferred: undefined | { cardIdToUpdate?: string; preferenteCard?: string; cardId?: string };
   WalletHome: undefined;

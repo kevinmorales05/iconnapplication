@@ -43,8 +43,8 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
     };
 
     const populateForUpdate = () => {
-      setValue('contractNumber', service!.contractNumber);
-      setValue('alias', service!.alias);
+      setValue('contractNumber', service!.reference);
+      setValue('alias', service!.label);
       trigger('contractNumber');
       trigger('alias');
     };
@@ -73,7 +73,7 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
    * @param newContractNumber string
    */
   const validateChangesOnContractNumber = (newContractNumber: string) => {
-    if (mode === 'update' && newContractNumber !== service!.contractNumber) setContractNumberChanged(true);
+    if (mode === 'update' && newContractNumber !== service!.reference) setContractNumberChanged(true);
   };
 
   return (
@@ -88,11 +88,11 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
           <TextContainer typography="paragraph" text={'Es importante tener la información de tu recibo a\nla mano.'} marginTop={24} numberOfLines={2} />
 
           <Container center crossCenter style={{ marginTop: 40 }}>
-            <Image source={{ uri: servicePayment.imageURL }} style={{ width: 150, height: 50, resizeMode: 'cover' }} />
+            <Image source={{ uri: servicePayment.imageURL }} style={{ width: 160, height: 80, resizeMode: 'cover' }} />
           </Container>
 
           <Container row center style={{ marginTop: 48 }}>
-            <TextContainer typography="paragraph" text="Número de contrato o servicio." fontBold />
+            <TextContainer typography="label" text="Número de contrato o servicio." fontBold />
             <Touchable onPress={onPressQuestionButton} marginLeft={8}>
               <MaterialIcons name="help" size={24} color={theme.brandColor.iconn_green_original} style={{ alignSelf: 'center' }} />
             </Touchable>
@@ -111,7 +111,7 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
             numeric
             onSubmitEditing={() => aliasRef.current?.focus()}
             rules={numericWithSpecificLenght(servicePayment.minLength)}
-            error={errors.contractNumber?.message}
+            error={errors.contractNumber?.message ? 'Número de caracteres incorrecto' : errors.contractNumber?.message}
             onChangeText={contractNumberValue => validateChangesOnContractNumber(contractNumberValue)}
           />
           <Input
@@ -134,7 +134,7 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
         </Container>
       </Container>
       <Container>
-        <Button disabled={!isValid && contractNumberChanged} round fontBold fontSize="h4" onPress={handleSubmit(onSubmit)}>
+        <Button disabled={!isValid && !contractNumberChanged} round fontBold fontSize="h4" onPress={handleSubmit(onSubmit)}>
           {mode === 'create' ? 'Agregar' : mode === 'update' ? 'Guardar' : 'No mode'}
         </Button>
       </Container>
