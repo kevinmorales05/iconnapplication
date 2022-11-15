@@ -24,7 +24,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
-import { useEnterModal, useInConstruction, useLoading, useToast } from 'context';
+import { useEnterModal, useInConstruction, useLoading, useToast, useWelcomeModal } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
@@ -58,6 +58,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { getFavorites } = useFavorites();
   const { email } = user;
   const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
+  const welcomeModal = useWelcomeModal();
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -215,6 +216,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     setHomeItems(homeItems);
   }, []);
 
+  useEffect(() => {
+    if (!user.seenCarousel) {
+      welcomeModal.show();
+    }
+  }, [user]);
+
   /**
    * We get the full home items.
    */
@@ -266,7 +273,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       toast.show({
         message: (
           <Text>
-            {`¡Muchas gracias por tu compra! Para más detalles en: Cuenta -> `}
+            {'¡Muchas gracias por tu compra! Para más detalles en: Cuenta -> '}
             <Text
               style={{ fontWeight: 'bold' }}
               onPress={() => {

@@ -21,4 +21,5 @@ export type BrandColorTypes =
   | 'iconn_green_discount'
   | 'yellow_star'
   | 'yellow_container'
-  | 'iconn_green_original_med';
+  | 'iconn_green_original_med'
+  | 'accent_secondary';

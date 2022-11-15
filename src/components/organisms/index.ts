@@ -17,3 +17,4 @@ export * from './ServicePaymentHelper';
 export * from './ShippingDropdown';
 export * from './TabAnimatable';
 export * from './TabTwoElements';
+export * from './ModalWelcome';

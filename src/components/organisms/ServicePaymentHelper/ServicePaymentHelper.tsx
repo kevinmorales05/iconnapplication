@@ -3,18 +3,17 @@ import { Image, ImageSourcePropType, StyleSheet, TouchableOpacity } from 'react-
 import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button, TextContainer } from 'components/molecules';
+import { TextContainer } from 'components/molecules';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 interface Props {
-  visible: boolean;
-  onPressOut: () => void;
-  onUnderstood: () => void;
-  message: string;
   img: ImageSourcePropType;
+  message: string;
+  onPressOut: () => void;
+  visible: boolean;
 }
 
-const ServicePaymentHelper: React.FC<Props> = ({ visible, onPressOut, onUnderstood, message, img }) => {
+const ServicePaymentHelper: React.FC<Props> = ({ img, message, onPressOut, visible }) => {
   const { containerStyle } = styles;
 
   const insets = useSafeAreaInsets();
@@ -33,7 +32,7 @@ const ServicePaymentHelper: React.FC<Props> = ({ visible, onPressOut, onUndersto
           <Container>
             <Container row space="between" style={{ marginTop: 16, marginBottom: 16 }}>
               <Container>
-                <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Referencia" typography="h3" fontBold />
+                <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Número de contrato o servicio" typography="h3" fontBold />
               </Container>
               <Container>
                 <ActionButton
@@ -47,11 +46,9 @@ const ServicePaymentHelper: React.FC<Props> = ({ visible, onPressOut, onUndersto
               </Container>
             </Container>
             <Container>
-              <Image resizeMode="cover" source={img} style={{ height: 230, width: 360, alignSelf: 'center' }} />
-              <TextContainer text={message} marginTop={32} textAlign="center" />
-              <Button color="iconn_light_grey" fontColor="dark" round fontBold fontSize="h4" onPress={onUnderstood} style={{ marginTop: 24 }}>
-                Entendido
-              </Button>
+              {/* TODO: fix this "source" eslint error */}
+              <Image resizeMode="cover" source={{ uri: img }} style={{ height: 230, width: 360, alignSelf: 'center' }} />
+              <TextContainer text={message} marginTop={8} numberOfLines={4} />
             </Container>
           </Container>
         </TouchableOpacity>
