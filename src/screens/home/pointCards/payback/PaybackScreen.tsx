@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TextInput, Image } from 'react-native';
+import { StyleSheet, TextInput, Image, Dimensions } from 'react-native';
 import { TextContainer, Container, Button, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import { ICONN_PAYBACK_MAIN, CARD_PETRO, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
@@ -168,7 +168,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
       </Container>
       <Container
         center
-        style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 200 }}
+        style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 150 }}
       >
         <Button
           length="long"
@@ -206,7 +206,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
           maxWidth={167}
         />
         <Container center>
-          <Container style={{ width: '90%', marginTop: 90 }}>
+          <Container style={{ width: '90%', marginTop: 36 }}>
             <Button
               fontSize="h4"
               fontBold
@@ -241,7 +241,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
   );
 
   return (
-    <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%' }}>
+    <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%'}} height={Dimensions.get('window').height * 0.75}>
       {
         paybackStatus == 0 ?
           addPayback :

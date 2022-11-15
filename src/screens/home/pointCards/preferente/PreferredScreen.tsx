@@ -144,7 +144,7 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
             width: '100%',
             height: '20%',
             paddingTop: 50,
-            marginTop: 200,
+            marginTop: 150,
             marginLeft: 35
           }}
         >
@@ -191,7 +191,7 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
           />
 
           <Container center>
-            <Container style={{ width: '100%', marginTop: 120 }}>
+            <Container style={{ width: '100%', marginTop: 36 }}>
               <Button
                 fontSize="h4"
                 fontBold

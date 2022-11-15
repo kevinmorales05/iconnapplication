@@ -129,7 +129,7 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, m
       </Container>
       <Container
         center
-        style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, height: '20%', paddingTop: 50, marginTop: 200 }}
+        style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, height: '20%', paddingTop: 50, marginTop: 150 }}
       >
         <Button
           length="long"

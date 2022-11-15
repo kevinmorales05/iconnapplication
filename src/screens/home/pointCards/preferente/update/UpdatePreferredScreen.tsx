@@ -137,7 +137,7 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
         </Container>
         <Container
           center
-          style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', height: '20%', paddingTop: 50, marginTop: 200, marginLeft:38 }}
+          style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', height: '20%', paddingTop: 50, marginTop: 150, marginLeft:38 }}
         >
           <Button
             length="long"
