@@ -26,6 +26,7 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [preferenteCardToUpdateinUpdate, setPreferenteCardToUpdateinUpdate] = useState(preferenteCardToUpdate);
   const [preferenteStatus, setPreferenteStatus] = useState(0);
+  const [disableButton, setDisableButton] = useState(true);
   const toast = useToast();
   const alert = useAlert();
   const {
@@ -81,11 +82,16 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
     navigate('Preferred', { addOrShow: 1, cardId: cardId, cardNumber: fields.cardNumberToUpdate });
   };
 
-  useEffect(() => {}, [preferenteCardToUpdateinUpdate]);
+  useEffect(() => {}, [disableButton, preferenteCardToUpdateinUpdate]);
 
   const populateForUpdate = () => {
     setValue('cardNumberToUpdate', preferenteCardToUpdateinUpdate);
     trigger('cardNumberToUpdate');
+  };
+
+  const updateButtonStatus = () => {
+    setDisableButton(getValues('cardNumberToUpdate')?.length!=18);
+    setPreferenteCardToUpdateinUpdate(getValues('cardNumberToUpdate'));
   };
 
   useEffect(() => {
@@ -119,12 +125,14 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
             control={control}
             autoCorrect={false}
             keyboardType="number-pad"
+            marginTop={2}
             placeholder={'Código numérico (18 dígitos)'}
             blurOnSubmit={true}
             error={errors.cardNumberToUpdate?.message}
             boldLabel
             maxLength={18}
             onSubmitEditing={() => cardNumberToUpdate.current?.focus()}
+            onChangeText={updateButtonStatus}
           />
         </Container>
         <Container
@@ -138,6 +146,7 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
             fontBold
             style={{ width: '95%',marginBottom: 5, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
             onPress={handleSubmit(submit)}
+            disabled={disableButton}
           >
             Guardar
           </Button>

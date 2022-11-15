@@ -157,6 +157,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
           keyboardType="numeric"
           placeholder={'13 dígitos'}
           blurOnSubmit
+          marginTop={2}
           error={errors.barcodeNumber?.message}
           maxLength={13}
           rules={numericWithSpecificLenght(13)}

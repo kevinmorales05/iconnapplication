@@ -4,12 +4,21 @@ import theme from 'components/theme/theme';
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { Container } from '../Container';
+import { Touchable } from 'components';
 
-const EmptyCardsCard: React.FC = () => {
+interface Props {
+  showPointCardsModal: () => void;
+}
+
+const EmptyCardsCard: React.FC<Props> = ({showPointCardsModal}) => {
     return (
       <Container center crossCenter style={styles.containerCardDot}>
-        <Image source={ICONN_CREDIT_CARD} style={styles.cardIcon} />
-        <TextContainer text="Agregar" fontBold fontSize={16} textColor={theme.fontColor.grey} />
+        <Touchable onPress={() => showPointCardsModal()}>
+          <Container center>
+          <Image source={ICONN_CREDIT_CARD} style={styles.cardIcon} />
+          <TextContainer text="Agregar" fontBold fontSize={16} textColor={theme.fontColor.grey} />
+          </Container>
+        </Touchable>
       </Container>
     );
   };

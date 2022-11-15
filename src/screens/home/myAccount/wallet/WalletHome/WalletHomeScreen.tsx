@@ -115,7 +115,7 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
           </Container>
         )}
       </Container>
-      {savedCards && savedCards.length === 0 ? <EmptyCardsCard /> : <AnimatedCarousel cards items={savedCards} onPressItem={() => {}} onPressOut={() => {}} />}
+      {savedCards && savedCards.length === 0 ? <EmptyCardsCard showPointCardsModal={showPointCardsModal} /> : <AnimatedCarousel cards items={savedCards} onPressItem={() => {}} onPressOut={() => {}} />}
       <TextContainer text="Servicios en Tienda" fontBold fontSize={16} marginTop={24} marginBottom={16} marginLeft={10} />
       <Container style={{ paddingHorizontal: 10 }}>
         <AnimatedCarouselWithBorder items={servicesArr} />

@@ -52,7 +52,8 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, m
   };
 
   const updateButtonStatus = () => {
-    setDisableButton(getValues('cardNumber')?.length!=18);
+    setDisableButton(getValues('barcodeNumberToUpdate')?.length!=13);
+    setPaybackCard(getValues('barcodeNumberToUpdates'));
   };
 
   useEffect(() => {
@@ -116,12 +117,14 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, m
           control={control}
           autoCorrect={false}
           keyboardType="numeric"
+          marginTop={2}
           placeholder={'13 dígitos'}
           blurOnSubmit={true}
           error={errors.barcodeNumberToUpdate?.message}
           boldLabel
           maxLength={13}
           onSubmitEditing={() => barcodeNumberToUpdate.current?.focus()}
+          onChangeText={updateButtonStatus}
         />
       </Container>
       <Container
@@ -135,6 +138,7 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, m
           fontBold
           style={{ marginBottom: 5, width: '90%', backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
           onPress={handleSubmit(submit)}
+          disabled={disableButton}
         >
           Guardar
         </Button>

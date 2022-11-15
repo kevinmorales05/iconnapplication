@@ -127,6 +127,7 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
             control={control}
             keyboardType="numeric"
             placeholder={'Código numérico (18 dígitos)'}
+            marginTop={2}
             blurOnSubmit={true}
             autoCorrect
             error={errors.cardNumber?.message}
