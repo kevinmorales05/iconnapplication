@@ -9,9 +9,6 @@ import { AnimatedCarousel, TabTwoElements, TouchableText } from 'components';
 import Entypo from 'react-native-vector-icons/Entypo';
 import PointCardsModalController from '../../../pointCards/PointCardsModalController';
 import { CarouselItem, PaymentWallet, ServiceQRType, TabItem } from 'rtk';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { WalletStackParams } from 'navigation/types';
 
 const tabNames: TabItem[] = [
   {
@@ -47,7 +44,6 @@ const paymentExamplesArr: PaymentWallet[] = [
   }
 ];
 interface Props {
-  navigate: () => void;
   cards: CarouselItem[];
   serviceQRs: ServiceQRType[];
   rechargeQR: ServiceQRType[];
@@ -55,19 +51,14 @@ interface Props {
 }
 
 const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, servicesArr }) => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
   const insets = useSafeAreaInsets();
   const [idSelected, setIdSelected] = useState('1');
   const savedServices = serviceQRs;
   const savedRecharges = rechargeQR;
   const [allServicesQR, setAllServicesQR] = useState<ServiceQRType[]>();
-  const savedAddressee = 1;
+  const savedAddressee = 0;
   const [visiblePointCardModel, setVisiblePointCardModel] = useState<boolean>(false);
   const savedCards = cards;
-
-  servicesArr[1].onPressItem = () => {
-    navigate('ServicePayment');
-  };
 
   const joinServices = () => {
     let allServices: ServiceQRType[] = [];
@@ -110,7 +101,7 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
     >
       <Container row style={{ justifyContent: 'flex-start' }}>
         <TextContainer text="Tarjetas de puntos" fontBold fontSize={16} marginTop={19.5} marginLeft={10} />
-        {savedCards && savedCards.length == 0 ? null : (
+        {savedCards && savedCards.length === 0 ? null : (
           <Container row style={{ marginTop: 25, position: 'absolute', end: 10 }}>
             <Entypo name="plus" style={{ marginTop: 3 }} color={'#008060'} />
             <TouchableText
@@ -124,7 +115,7 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
           </Container>
         )}
       </Container>
-      {savedCards && savedCards.length == 0 ? <EmptyCardsCard /> : <AnimatedCarousel cards items={savedCards} />}
+      {savedCards && savedCards.length === 0 ? <EmptyCardsCard /> : <AnimatedCarousel cards items={savedCards} onPressItem={() => {}} onPressOut={() => {}} />}
       <TextContainer text="Servicios en Tienda" fontBold fontSize={16} marginTop={24} marginBottom={16} marginLeft={10} />
       <Container style={{ paddingHorizontal: 10 }}>
         <AnimatedCarouselWithBorder items={servicesArr} />
@@ -132,15 +123,15 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
       <TextContainer text="QR Guardados" fontBold fontSize={16} marginTop={32} marginBottom={16} marginLeft={10} />
       <Container width="100%" backgroundColor={theme.brandColor.iconn_white} style={{ paddingTop: 16, paddingBottom: 100 }}>
         <TabTwoElements items={tabNames} onPressItem={onPressTab} idSelected={idSelected} />
-        {idSelected == '1' ? (
-          allServicesQR && allServicesQR.length == 0 ? (
+        {idSelected === '1' ? (
+          allServicesQR && allServicesQR.length === 0 ? (
             <EmptyQRCard />
           ) : allServicesQR && allServicesQR.length > 0 ? (
-            allServicesQR.map(item => {
-              return <ServiceCard key={item.reference} service={item} />;
+            allServicesQR.map((item, index) => {
+              return <ServiceCard key={index} service={item} />;
             })
           ) : null
-        ) : savedAddressee == 0 ? (
+        ) : savedAddressee === 0 ? (
           <EmptyQRCard />
         ) : (
           paymentExamplesArr.map((item, index) => {

@@ -4,17 +4,21 @@ import { vtexDocsServices } from 'services';
 import { CarouselItem, PointCard, RootState, ServiceQRType, ServiceType, useAppSelector } from 'rtk';
 import { CARD_PETRO, CARD_PREF, ICONN_DEPOSIT, ICONN_MOBILE_RECHARGE, ICONN_PACKAGES_SEARCH, ICONN_SERVICE_PAYMENT } from 'assets/images';
 import Config from 'react-native-config';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { WalletStackParams } from 'navigation/types';
 
 const WalletHomeController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { id } = user;
-  // const [cards, setCards] = useState();
-  // const [cardsPics, setCardsPics] = useState<PointCard[]>();
+  //const [cards, setCards] = useState();
+  //const [cardsPics, setCardsPics] = useState<PointCard[]>();
   // const [serviceQR, setServiceQR] = useState<ServiceQRType[]>();
   const [serviceQRTypes, setServiceQRTypes] = useState<ServiceQRType[]>();
   const [rechargeQRTypes, setRechargeQRTypes] = useState<ServiceQRType[]>();
   const { CATEGORIES_ASSETS } = Config;
   const [cardPic, setCardPic] = useState<CarouselItem[]>();
+  const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
 
   const servicesArr: ServiceType[] = [
     {
@@ -25,12 +29,13 @@ const WalletHomeController: React.FC = () => {
     {
       icon: ICONN_SERVICE_PAYMENT,
       serviceName: 'Pago de servicios',
-      onPressItem: () => {}
+      onPressItem: () => navigate('ServicePayment')
     },
     {
       icon: ICONN_MOBILE_RECHARGE,
       serviceName: 'Recargas',
       onPressItem: () => {}
+      //onPressItem: () => navigate('Recharge')
     },
     {
       icon: ICONN_PACKAGES_SEARCH,
@@ -42,7 +47,7 @@ const WalletHomeController: React.FC = () => {
   const getCards = useCallback(async () => {
     const data = await vtexDocsServices.getAllDocByUserID('PC', id as string);
     if (data > 0) {
-      // setCards(data);
+      //setCards(data);
     }
     return data;
   }, []);
@@ -50,7 +55,7 @@ const WalletHomeController: React.FC = () => {
   const getServiceQR = useCallback(async () => {
     const data = await vtexDocsServices.getAllDocByUserID('SP', id as string);
     if (data > 0) {
-      // setServiceQR(data);
+      //setServiceQR(data);
     }
     return data;
   }, []);
@@ -59,50 +64,8 @@ const WalletHomeController: React.FC = () => {
     return data;
   }, []);
 
-  const setServiceQRType = async (services: any) => {
-    const arr = services;
-    const serviceArr = [];
-    if (arr.length > 0) {
-      for (const service of arr) {
-        let userServiceQR: ServiceQRType = {
-          imageURL: CATEGORIES_ASSETS + `${service.supplierName}Logo.png`,
-          supplierName: service.suppierName,
-          isActive: service.isActive,
-          label: service.label,
-          qrType: 'service',
-          reference: service.reference,
-          type: service.type,
-          userId: service.userId
-        };
-        serviceArr.push(userServiceQR);
-      }
-    }
-    setServiceQRTypes(serviceArr);
-  };
-
-  const setRechargeQRType = async (recharges: any) => {
-    const arr = recharges;
-    const rechargesArr = [];
-    if (arr.length > 0) {
-      for (const recharge of arr) {
-        let userRechargeQR: ServiceQRType = {
-          imageURL: CATEGORIES_ASSETS + `${recharge.supplierName}Logo.png`,
-          isActive: recharge.isActive,
-          supplierName: recharge.supplierName,
-          label: recharge.label,
-          qrType: 'recharge',
-          reference: recharge.reference,
-          type: recharge.type,
-          userId: recharge.userId
-        };
-        rechargesArr.push(userRechargeQR);
-      }
-    }
-    setRechargeQRTypes(rechargesArr);
-  };
-
-  const setCardsForImages = async (cards: any) => {
-    const arr = cards;
+  const setCardsForImages = async (cardsArray: any) => {
+    const arr = cardsArray;
     const cardsArr = [];
     if (arr.length > 0) {
       for (const card of arr) {
@@ -112,17 +75,17 @@ const WalletHomeController: React.FC = () => {
           isActive: card.isActive,
           type: card.type,
           userId: card.userId,
-          image: card.type == 'preferente' ? CARD_PREF : CARD_PETRO
+          image: card.type === 'preferente' ? CARD_PREF : CARD_PETRO
         };
         cardsArr.push(userCards);
       }
     }
-    // setCardsPics(cardsArr);
+    //setCardsPics(cardsArr);
     return cardsArr;
   };
 
-  const setCardsforCarousel = (cards: PointCard[]) => {
-    const arr: PointCard[] | undefined | null = cards;
+  const setCardsforCarousel = (cardArray: PointCard[]) => {
+    const arr: PointCard[] | undefined | null = cardArray;
     const cardsCarousel: CarouselItem[] = [];
     if (arr) {
       if (arr.length > 0) {
@@ -131,7 +94,7 @@ const WalletHomeController: React.FC = () => {
             id: card.id,
             cardNumber: card.barCode,
             image: card.image,
-            description: card.type == 'preferente' ? 'Tarjeta Preferente' : 'Tarjeta Payback',
+            description: card.type === 'preferente' ? 'Tarjeta Preferente' : 'Tarjeta Payback',
             link: '',
             navigationType: 'internal',
             promotion_name: 'principal',
@@ -153,10 +116,50 @@ const WalletHomeController: React.FC = () => {
   }, [getCards, cardPic]);
 
   useEffect(() => {
+    const setServiceQRType = async (services: any) => {
+      const arr = services;
+      const serviceArr = [];
+      if (arr.length > 0) {
+        for (const service of arr) {
+          let userServiceQR: ServiceQRType = {
+            imageURL: CATEGORIES_ASSETS + `${service.supplierName}Logo.png`,
+            supplierName: service.suppierName,
+            isActive: service.isActive,
+            label: service.label,
+            qrType: 'service',
+            reference: service.reference,
+            type: service.type,
+            userId: service.userId
+          };
+          serviceArr.push(userServiceQR);
+        }
+      }
+      setServiceQRTypes(serviceArr);
+    };
     getServiceQR().then(data => setServiceQRType(data));
   }, [getServiceQR]);
 
   useEffect(() => {
+    const setRechargeQRType = async (recharges: any) => {
+      const arr = recharges;
+      const rechargesArr = [];
+      if (arr.length > 0) {
+        for (const recharge of arr) {
+          let userRechargeQR: ServiceQRType = {
+            imageURL: CATEGORIES_ASSETS + `${recharge.supplierName}Logo.png`,
+            isActive: recharge.isActive,
+            supplierName: recharge.supplierName,
+            label: recharge.label,
+            qrType: 'recharge',
+            reference: recharge.reference,
+            type: recharge.type,
+            userId: recharge.userId
+          };
+          rechargesArr.push(userRechargeQR);
+        }
+      }
+      setRechargeQRTypes(rechargesArr);
+    };
     getRechargeQR().then(data => setRechargeQRType(data));
   }, [getRechargeQR]);
 
@@ -166,7 +169,6 @@ const WalletHomeController: React.FC = () => {
       rechargeQR={rechargeQRTypes as ServiceQRType[]}
       serviceQRs={serviceQRTypes as ServiceQRType[]}
       cards={cardPic as CarouselItem[]}
-      navigate={() => {}}
     />
   );
 };
