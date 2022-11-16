@@ -30,6 +30,7 @@ import ICONN_EYE_OFF from './iconn-eye-visible.webp';
 import ICONN_EYE_ON from './iconn-eye.webp';
 import ICONN_EYE_VISIBLE from './iconn-eye-visible.webp';
 import ICONN_FULL_EXPERIENCE from './iconn-invite-full-experience.webp';
+import ICONN_HELP_RECHARGE from './iconn-help-recharge.webp';
 import ICONN_HOME_LOCATION from './iconn-home-location.png';
 import ICONN_HOME_OPTION_ACUMMULATE from './iconn-home-option-acummulate.png';
 import ICONN_HOME_OPTION_HEART from './iconn-home-option-heart.webp';
@@ -128,6 +129,7 @@ export {
   ICONN_EYE_ON,
   ICONN_EYE_VISIBLE,
   ICONN_FULL_EXPERIENCE,
+  ICONN_HELP_RECHARGE,
   ICONN_HOME_LOCATION,
   ICONN_HOME_OPTION_ACUMMULATE,
   ICONN_HOME_OPTION_HEART,
@@ -185,11 +187,11 @@ export {
   ICONN_USER_PROFILE,
   ICONN_USER,
   ICONN_WARNING_MARK,
-  SKY_LOGO,
   TAB_CAT,
   TAB_HOME,
   TAB_PIN_LOCATION,
   TAB_PROMOS,
   TAB_USER_PROFILE,
-  TELCEL_LOGO
+  TELCEL_LOGO,
+  SKY_LOGO
 };

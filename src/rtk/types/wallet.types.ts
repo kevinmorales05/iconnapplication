@@ -14,7 +14,7 @@ export interface ServiceType {
   onPressItem: () => void;
 }
 
-export type QRType = 'service' | 'recharge';
+export type QRType = 'service' | 'air';
 export interface ServiceQRType {
   imageURL: string;
   supplierName: string;
@@ -23,6 +23,7 @@ export interface ServiceQRType {
   reference: string;
   type: string;
   userId: string;
+  amount?: number;
   qrType: QRType;
 }
 
@@ -49,4 +50,15 @@ export interface RechargeAmount {
   UPC: string;
   imageUrl: string;
   isSelected?: boolean;
+}
+
+export interface RechargeUser {
+  id?: string;
+  userId: string;
+  type: string;
+  supplierName: string;
+  amount: number;
+  label: string;
+  referenceOrPhone: string;
+  isActive: boolean;
 }

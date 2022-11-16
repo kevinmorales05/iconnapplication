@@ -4,8 +4,7 @@ import { Container } from '../../atoms';
 import { CarouselItem, ProductInterface } from 'rtk';
 import AnimatedItem from './AnimatedItem';
 import { CounterType } from 'components/types/counter-type';
-import  Octicons  from 'react-native-vector-icons/Octicons';
-import { TextContainer } from 'components/molecules';
+import Octicons from 'react-native-vector-icons/Octicons';
 
 interface Props {
   items?: CarouselItem[];
@@ -22,7 +21,6 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
   const slidesRef = useRef(null);
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
-    console.log('visible item: ', viewableItems);
     setCurrentIndex(viewableItems[0].index);
   }).current;
 
@@ -62,9 +60,9 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
       ) : cards ? (
         <FlatList
           data={items}
-          renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={()=>{}} onPressOut={()=>{}} />}
+          renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={() => {}} onPressOut={() => {}} />}
           horizontal
-          bounces={(items && items!.length > 1) ? true : false}
+          bounces={items && items!.length > 1 ? true : false}
           keyExtractor={item => item.id}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
           scrollEventThrottle={32}
@@ -74,23 +72,17 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
           showsHorizontalScrollIndicator={false}
         />
       ) : null}
-      {
-        ( cards && items && items?.length > 0 ) ?
-        (
-          <FlatList
+      {cards && items && items?.length > 0 ? (
+        <FlatList
           data={items}
-          renderItem={({item, index}) => 
-            <Container style={{marginRight: 8, marginTop: 12}}>
-              {
-                (index == currentIndex) ? 
-                <Octicons size={20} name='dot-fill' color={'#008060'}/> :
-                <Octicons size={20} name='dot-fill' color={'#dadadb'}/>
-              }
-            </Container>}
+          renderItem={({ index }) => (
+            <Container style={{ marginRight: 8, marginTop: 12 }}>
+              {index === currentIndex ? <Octicons size={20} name="dot-fill" color={'#008060'} /> : <Octicons size={20} name="dot-fill" color={'#dadadb'} />}
+            </Container>
+          )}
           horizontal
-          />
-        ) : null
-            } 
+        />
+      ) : null}
     </Container>
   );
 };

@@ -25,6 +25,19 @@ async function getDocByDocID(dataentity: string, docID: string): Promise<any> {
 }
 
 /**
+ * Function to get one doc of the docs
+ * TODO error handling
+ * TODO interface for doc
+ */
+
+async function getAllDocsByDocDataEntity(dataentity: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
+  //error handling
+  const { data } = response;
+  return data;
+}
+
+/**
  * Function to get all of the docs
  * TODO error handling
  * TODO interface for doc
@@ -101,5 +114,6 @@ export const vtexDocsServices = {
   updateDocByDocIDForAgeStatus,
   getDocByDocID,
   getAddressByPostalCode,
-  getImagesWelcomeLogin
+  getImagesWelcomeLogin,
+  getAllDocsByDocDataEntity
 };

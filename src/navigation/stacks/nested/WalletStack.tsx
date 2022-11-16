@@ -1,5 +1,5 @@
 import React from 'react';
-import { BackButton } from 'components';
+import { BackButton, RechargeHelpScreen } from 'components';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Touchable } from 'components';
@@ -10,14 +10,18 @@ import PaybackController from 'screens/home/pointCards/payback/PaybackController
 import PaybackHelpScreen from 'screens/home/pointCards/payback/help/PaybackHelpScreen';
 import PreferredController from 'screens/home/pointCards/preferente/PreferredController';
 import PreferredHelpScreen from 'screens/home/pointCards/preferente/help/PreferredHelpScreen';
-import ServicePaymentAddController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentAdd/ServicePaymentAddController';
-import ServicePaymentController from 'screens/home/myAccount/wallet/servicePayment/ServicesPayments/ServicesPaymentsController';
-import ServicePaymentGeneralInfoController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentGeneralInfo/ServicePaymentGeneralInfoController';
-import ServicePaymentQRDetailController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentQRDetail/ServicePaymentQRDetailController';
 import theme from 'components/theme/theme';
 import UpdatePaybackController from 'screens/home/pointCards/payback/update/UpdatePaybackController';
 import UpdatePreferredController from 'screens/home/pointCards/preferente/update/UpdatePreferredController';
 import WalletHomeController from 'screens/home/myAccount/wallet/WalletHome/WalletHomeController';
+import ServicePaymentGeneralInfoController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentGeneralInfo/ServicePaymentGeneralInfoController';
+import RechargesController from 'screens/home/myAccount/wallet/recharges/RechargesController';
+import RechargeOperatorController from 'screens/home/myAccount/wallet/recharges/rechargeOperator/RechargeOperatorController';
+import RechargeAmountController from 'screens/home/myAccount/wallet/recharges/rechargeAmounts/RechargeAmountController';
+import RechargeQRController from 'screens/home/myAccount/wallet/recharges/rechargeQR/RechargeQRController';
+import ServicePaymentController from 'screens/home/myAccount/wallet/servicePayment/ServicesPayments/ServicesPaymentsController';
+import ServicePaymentAddController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentAdd/ServicePaymentAddController';
+import ServicePaymentQRDetailController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentQRDetail/ServicePaymentQRDetailController';
 
 const WalletStack: React.FC = () => {
   const Stack = createNativeStackNavigator<WalletStackParams>();
@@ -37,6 +41,7 @@ const WalletStack: React.FC = () => {
       initialRouteName="WalletHome"
     >
       <Stack.Screen options={{ headerShown: true, title: 'Wallet', headerLeft: () => <BackButton /> }} name="WalletHome" component={WalletHomeController} />
+
       <Stack.Screen
         name="Preferred"
         component={PreferredController}
@@ -108,13 +113,53 @@ const WalletStack: React.FC = () => {
           )
         }}
       />
-      <Stack.Screen options={{ title: 'Pago de Servicios', headerBackTitleVisible: false }} name="ServicePayment" component={ServicePaymentController} />
+
+      <Stack.Screen options={{ title: 'Pago de Servicios' }} name="ServicePayment" component={ServicePaymentController} />
       <Stack.Screen options={{ headerShown: false }} name="ServicePaymentGeneralInfo" component={ServicePaymentGeneralInfoController} />
       <Stack.Screen options={{ title: 'Agregar servicio', headerBackTitleVisible: false }} name="ServicePaymentAdd" component={ServicePaymentAddController} />
       <Stack.Screen
         options={({ route }) => ({ title: route.params.servicePayment.slug, headerBackTitleVisible: false })}
         name="ServicePaymentQRDetail"
         component={ServicePaymentQRDetailController}
+      />
+      <Stack.Screen options={{ title: 'Recargas Tiempo Aire', headerBackTitleVisible: false }} name="Recharge" component={RechargesController} />
+      <Stack.Screen
+        name="RechargeHelp"
+        component={RechargeHelpScreen}
+        options={{
+          headerTitle: 'Recargas',
+          headerBackTitleVisible: false,
+          headerBackVisible: false,
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                navigate('Recharge');
+              }}
+            >
+              <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />
+            </Touchable>
+          )
+        }}
+      />
+      <Stack.Screen options={{ title: 'Agregar recarga', headerBackTitleVisible: false }} name="RechargeOperator" component={RechargeOperatorController} />
+      <Stack.Screen options={{ title: 'Monto de recarga', headerBackTitleVisible: false }} name="RechargeAmounts" component={RechargeAmountController} />
+      <Stack.Screen
+        options={{
+          headerTitle: 'Recarga',
+          headerBackTitleVisible: false,
+          headerBackVisible: false,
+          headerLeft: () => (
+            <Touchable
+              onPress={() => {
+                navigate('WalletHome');
+              }}
+            >
+              <Icon name="arrowleft" size={20} color={theme.brandColor.iconn_dark_grey} />
+            </Touchable>
+          )
+        }}
+        name="RechargeQR"
+        component={RechargeQRController}
       />
     </Stack.Navigator>
   );

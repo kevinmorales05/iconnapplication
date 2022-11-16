@@ -26,3 +26,4 @@ export * from './SearchItem';
 export * from './TaxInfoCard';
 export * from './TextContainer';
 export * from './TouchableText';
+export * from './PackCard';

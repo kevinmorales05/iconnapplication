@@ -21,3 +21,4 @@ export * from './Section';
 export * from './Select';
 export * from './ServiceCard';
 export * from './Touchable';
+export * from './RechargeCard';

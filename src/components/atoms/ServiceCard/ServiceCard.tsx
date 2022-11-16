@@ -4,24 +4,29 @@ import { Image, StyleSheet } from 'react-native';
 import { ServiceQRType } from 'rtk';
 import { Container } from '../Container';
 import theme from 'components/theme/theme';
-
+import { Touchable } from 'components';
 interface ServiceCardProps {
   service: ServiceQRType;
 }
 const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
+  //const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
+  //const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
   return (
-    <Container row style={styles.serviceCard}>
-      <Image source={{ uri: service.imageURL }} style={{ height: 48, width: 48 }} resizeMode={'contain'} />
-      <Container>
-        <TextContainer
-          text={service.qrType == 'service' ? 'Pago de servicio' : 'Recarga Tiempo Aire'}
-          textColor={theme.fontColor.placeholder}
-          fontSize={12}
-          marginLeft={16}
-        />
-        <TextContainer text={service.label} fontBold fontSize={14} marginLeft={16} marginTop={6} />
+    <Touchable onPress={() => {}}>
+      {/* </Touchable><Touchable onPress={() => navigate('RechargeQR', { rechargeUser: service })}> */}
+      <Container row style={styles.serviceCard}>
+        <Image source={{ uri: service.imageURL }} style={{ height: 48, width: 48 }} resizeMode={'contain'} />
+        <Container>
+          <TextContainer
+            text={service.qrType === 'service' ? 'Pago de servicio' : 'Recarga Tiempo Aire'}
+            textColor={theme.fontColor.placeholder}
+            fontSize={12}
+            marginLeft={16}
+          />
+          <TextContainer text={service.label} fontBold fontSize={14} marginLeft={16} marginTop={6} />
+        </Container>
       </Container>
-    </Container>
+    </Touchable>
   );
 };
 

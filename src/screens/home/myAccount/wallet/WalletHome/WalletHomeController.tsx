@@ -34,8 +34,8 @@ const WalletHomeController: React.FC = () => {
     {
       icon: ICONN_MOBILE_RECHARGE,
       serviceName: 'Recargas',
-      onPressItem: () => {}
-      //onPressItem: () => navigate('Recharge')
+      //onPressItem: () => {}
+      onPressItem: () => navigate('Recharge')
     },
     {
       icon: ICONN_PACKAGES_SEARCH,
@@ -100,7 +100,7 @@ const WalletHomeController: React.FC = () => {
             promotion_name: 'principal',
             promotion_type: 'cards',
             status: card.isActive ? 'active' : 'inactive',
-            navigateTo: card.type == 'preferente' ? 'Preferred' : 'Payback'
+            navigateTo: card.type === 'preferente' ? 'Preferred' : 'Payback'
           };
           cardsCarousel.push(newCarouselItem);
         }
@@ -138,7 +138,7 @@ const WalletHomeController: React.FC = () => {
       setServiceQRTypes(serviceArr);
     };
     getServiceQR().then(data => setServiceQRType(data));
-  }, [getServiceQR]);
+  }, [serviceQRTypes]);
 
   useEffect(() => {
     const setRechargeQRType = async (recharges: any) => {
@@ -151,10 +151,11 @@ const WalletHomeController: React.FC = () => {
             isActive: recharge.isActive,
             supplierName: recharge.supplierName,
             label: recharge.label,
-            qrType: 'recharge',
-            reference: recharge.reference,
+            qrType: 'air',
+            reference: recharge.referenceOrPhone,
             type: recharge.type,
-            userId: recharge.userId
+            userId: recharge.userId,
+            amount: recharge.amount
           };
           rechargesArr.push(userRechargeQR);
         }
@@ -162,7 +163,7 @@ const WalletHomeController: React.FC = () => {
       setRechargeQRTypes(rechargesArr);
     };
     getRechargeQR().then(data => setRechargeQRType(data));
-  }, [getRechargeQR]);
+  }, [rechargeQRTypes]);
 
   return (
     <WalletHomeScreen
