@@ -111,7 +111,11 @@ const WalletStack: React.FC = () => {
       <Stack.Screen options={{ title: 'Pago de Servicios', headerBackTitleVisible: false }} name="ServicePayment" component={ServicePaymentController} />
       <Stack.Screen options={{ headerShown: false }} name="ServicePaymentGeneralInfo" component={ServicePaymentGeneralInfoController} />
       <Stack.Screen options={{ title: 'Agregar servicio', headerBackTitleVisible: false }} name="ServicePaymentAdd" component={ServicePaymentAddController} />
-      <Stack.Screen options={{ title: 'QR', headerBackTitleVisible: false }} name="ServicePaymentQRDetail" component={ServicePaymentQRDetailController} />
+      <Stack.Screen
+        options={({ route }) => ({ title: route.params.servicePayment.slug, headerBackTitleVisible: false })}
+        name="ServicePaymentQRDetail"
+        component={ServicePaymentQRDetailController}
+      />
     </Stack.Navigator>
   );
 };

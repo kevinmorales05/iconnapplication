@@ -50,7 +50,7 @@ const ServicePaymentAddController: React.FC<any> = ({ route }: NativeStackScreen
         account_number: service.contractNumber
       });
 
-      const { balance, id, due_date } = arcusResponse;
+      const { balance, id, due_date, balance_updated_at } = arcusResponse;
 
       // 2. Save a QR data into vtex collection ("SP").
       const vtexResponse = await vtexServicesPayments.saveBillIntoVtex({
@@ -64,7 +64,14 @@ const ServicePaymentAddController: React.FC<any> = ({ route }: NativeStackScreen
       // 3. It everything is fine, navigate to QR Detail.
       if (vtexResponse) {
         toast.show({ message: 'Servicio agregado exitosamente.', type: 'success' });
-        const QrData: QRInterface = { alias: service.alias, balance: balance, expirationDate: due_date, contractNumber: service.contractNumber, billId: id };
+        const QrData: QRInterface = {
+          alias: service.alias,
+          balance: balance,
+          expirationDate: due_date,
+          contractNumber: service.contractNumber,
+          billId: id,
+          updatedAt: balance_updated_at
+        };
         navigate('ServicePaymentQRDetail', { qrData: QrData, servicePayment: route.params.servicePayment });
       }
     } catch (err: unknown | AxiosError) {
