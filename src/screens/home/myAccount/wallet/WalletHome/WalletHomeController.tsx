@@ -122,7 +122,7 @@ const WalletHomeController: React.FC = () => {
       if (arr.length > 0) {
         for (const service of arr) {
           let userServiceQR: ServiceQRType = {
-            imageURL: CATEGORIES_ASSETS + `${service.supplierName}Logo.png`,
+            imageURL: CATEGORIES_ASSETS + `${service.type}Logo.png`,
             supplierName: service.suppierName,
             isActive: service.isActive,
             label: service.label,
@@ -132,6 +132,7 @@ const WalletHomeController: React.FC = () => {
             userId: service.userId
           };
           serviceArr.push(userServiceQR);
+          console.log("Lista de servicios ", userServiceQR)
         }
       }
       setServiceQRTypes(serviceArr);
