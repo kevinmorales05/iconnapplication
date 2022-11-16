@@ -7,10 +7,13 @@ import theme from 'components/theme/theme';
 import { SafeArea } from 'components';
 import { HomeStackParams } from 'navigation/types';
 import { useToast } from 'context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 interface Props {}
 
 const UpdatePaybackController: React.FC<Props> = () => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'UpdatePayback'>>();
   const { params } = route;
@@ -37,6 +40,10 @@ const UpdatePaybackController: React.FC<Props> = () => {
     }
   };
 
+  const onPressScan = () => {
+    navigate('CodeReader', {navigationDestiny: 'UpdatePayback'});
+  };
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -45,7 +52,14 @@ const UpdatePaybackController: React.FC<Props> = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <UpdatePaybackScreen onSubmit={onSubmit} paybackCardToUpdate={params.paybackCard} mode={'update'} cardId={params.cardId} />
+      <UpdatePaybackScreen
+        onPressScan={onPressScan}
+        onSubmit={onSubmit}
+        paybackCardToUpdate={params.paybackCard}
+        mode={'update'}
+        cardId={params.cardId}
+        barcodeFromScan={params.ticket}
+      />
     </SafeArea>
   );
 };

@@ -110,7 +110,7 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
     <Container>
       <Image source={ICONN_PREFERENTE_MAIN} style={{ width: '100%', height: moderateScale(193) }} />
       <Container center style={{ width: '90%', marginTop: 10 }}>
-        <TextContainer marginTop={8} fontSize={14} text={`Ingresa tu código numérico y automáticamente\nse generará tu código de barras.`} />
+        <TextContainer marginTop={16} fontSize={14} text={`Ingresa tu código numérico y automáticamente\nse generará tu código de barras.`} />
         <Container style={{ marginTop: 40, marginLeft: 20, height: 80 }}>
         <Container row>
             <TextContainer typography="h6" fontBold text={`Número de tarjeta`} marginTop={4} marginRight={8}/>
@@ -137,7 +137,7 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
         </Container>
         <Container
           center
-          style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', height: '20%', paddingTop: 50, marginTop: 150, marginLeft:38 }}
+          style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', height: '20%', paddingTop: 50, marginTop: 120, marginLeft:38 }}
         >
           <Button
             length="long"

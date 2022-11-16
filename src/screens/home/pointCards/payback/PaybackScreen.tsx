@@ -29,9 +29,9 @@ interface Props {
 }
 
 const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId, barcodeFromScan }) => {
+  let initalButtonValue = false;
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [paybackCard, setPaybackCard] = useState(barcodeFromScan!=undefined?barcodeFromScan:'0000000000');
-  const [disableButton, setDisableButton] = useState(true);
   const toast = useToast();
   const [visible, setVisible] = useState<boolean>(false);
   const [paybackStatus, setPaybackStatus] = useState(addOrShow);
@@ -48,6 +48,15 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
   } = useForm({
     mode: 'onChange'
   });
+
+  if (barcodeFromScan != undefined) {
+    setValue('barcodeNumber',barcodeFromScan.ticketNo);
+    if(barcodeFromScan.ticketNo.length==13){
+      initalButtonValue = true;
+    }
+  }
+
+  const [disableButton, setDisableButton] = useState(initalButtonValue);
 
   const barcodeNumber = useRef<TextInput>(null);
 

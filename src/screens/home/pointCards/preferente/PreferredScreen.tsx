@@ -144,7 +144,7 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
             width: '100%',
             height: '20%',
             paddingTop: 50,
-            marginTop: 150,
+            marginTop: 130,
             marginLeft: 35
           }}
         >

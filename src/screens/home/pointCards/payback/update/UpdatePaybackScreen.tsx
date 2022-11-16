@@ -17,16 +17,18 @@ import { CrudType } from '../../../../../components/types/crud-type';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 interface Props {
+  onPressScan: () => void;
   onSubmit: (data: FieldValues) => void;
   paybackCardToUpdate: string;
   mode: CrudType;
   cardId: string;
+  barcodeFromScan: string;
 }
 
-const UpdatePaybackScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, mode, cardId }) => {
+const UpdatePaybackScreen: React.FC<Props> = ({ onPressScan, onSubmit, paybackCardToUpdate, mode, cardId, barcodeFromScan }) => {
+  let initalButtonValue = false;
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [paybackCard, setPaybackCard] = useState(paybackCardToUpdate);
-  const [disableButton, setDisableButton] = useState(true);
   const [visible, setVisible] = useState<boolean>(false);
   const [paybackStatus, setPaybackStatus] = useState(0);
   const alert = useAlert();
@@ -44,6 +46,15 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, m
   } = useForm({
     mode: 'onChange'
   });
+
+  if (barcodeFromScan != undefined) {
+    setValue('barcodeNumberToUpdate',barcodeFromScan.ticketNo);
+    if(barcodeFromScan.ticketNo.length==13){
+      initalButtonValue = true;
+    }
+  }
+
+  const [disableButton, setDisableButton] = useState(initalButtonValue);
 
   const barcodeNumberToUpdate = useRef<TextInput>(null);
 
@@ -125,6 +136,8 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onSubmit, paybackCardToUpdate, m
           maxLength={13}
           onSubmitEditing={() => barcodeNumberToUpdate.current?.focus()}
           onChangeText={updateButtonStatus}
+          onPressScan={onPressScan}
+          scanIcon={true}
         />
       </Container>
       <Container

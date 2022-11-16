@@ -25,8 +25,6 @@ const PaybackController: React.FC<Props> = () => {
   const [cardId, setCardId] = useState(params.cardId);
   const toast = useToast();
 
-  console.log('params.ticket: ',params.ticket);
-
   const onSubmit = async (userFields: any) => {
     let { barcodeNumber } = userFields;
     let paybackPointCardBody = { type: 'payback', userId: user.id, isActive: true, barCode: barcodeNumber };
