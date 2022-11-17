@@ -52,7 +52,11 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Saldo" fontBold />
-            <TextContainer text={`$${service?.balance}`} />
+            <TextContainer
+              text={`$${parseFloat(service?.balance as string)
+                .toFixed(2)
+                .replace(/\d(?=(\d{3})+\.)/g, '$&,')}`}
+            />
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Vencimiento" fontBold />
