@@ -5,7 +5,7 @@ import { TextContainer } from 'components/molecules';
 import { Image, StyleSheet } from 'react-native';
 import { Container } from '../Container';
 import theme from 'components/theme/theme';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native';
 
 interface BeneficiaryCardProps {
   beneficiary: BeneficiaryInterface;

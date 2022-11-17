@@ -3,7 +3,7 @@ import { Button, Container, Input, Select, TextContainer } from 'components';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { ScrollView, Text, TextInput } from 'react-native';
-import { alphabetRule, numericWithSpecificLenght } from 'utils/rules';
+import { alphabetRule, onlyNumericWithSpecificLenght } from 'utils/rules';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BankInterface, BeneficiaryInterface } from 'rtk';
 import { InfoSvg } from 'components/svgComponents/InfoSvg';
@@ -54,7 +54,8 @@ const DepositScreen: React.FC<Props> = ({ onSubmit, banks, beneficiary }) => {
         flexGrow: 1,
         paddingBottom: insets.bottom + 16,
         paddingTop: insets.top - 16,
-        paddingHorizontal: moderateScale(15)
+        paddingHorizontal: moderateScale(15),
+        backgroundColor: theme.brandColor.iconn_white
       }}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
@@ -69,10 +70,10 @@ const DepositScreen: React.FC<Props> = ({ onSubmit, banks, beneficiary }) => {
           autoCorrect
           autoCapitalize="none"
           keyboardType="number-pad"
-          placeholder=""
+          placeholder="12, 16 o 18 dígitos"
           maxLength={18}
           blurOnSubmit={true}
-          rules={numericWithSpecificLenght(16)}
+          rules={onlyNumericWithSpecificLenght(16)}
           error={errors.numberAccount?.message}
           onSubmitEditing={() => numberAccountRef.current?.focus()}
         />

@@ -171,7 +171,7 @@ const WalletHomeController: React.FC = () => {
   };
 
   useEffect(() => {
-    if (route.params?.toastState! !== 'none') {
+    if (route.params?.toastState! === 'deleteDeposit') {
       toast.show({
         message: 'Beneficiario eliminado exitosamente.',
         type: 'success'

@@ -46,7 +46,11 @@ const WalletStack: React.FC = () => {
       id="WalletStack"
       initialRouteName="WalletHome"
     >
-      <Stack.Screen options={{ headerShown: true, title: 'Wallet', headerLeft: () => <BackButton /> }} name="WalletHome" component={WalletHomeController} />
+      <Stack.Screen
+        options={{ headerShown: true, title: 'Wallet', headerLeft: () => <BackButton />, headerBackVisible: false }}
+        name="WalletHome"
+        component={WalletHomeController}
+      />
 
       <Stack.Screen
         name="Preferred"
@@ -137,11 +141,16 @@ const WalletStack: React.FC = () => {
         name="ServicePaymentQRDetail"
         component={ServicePaymentQRDetailController}
       />
-      <Stack.Screen options={{ headerShown: true, title: 'Depósitos', headerLeft: () => <BackButton /> }} name="DepositWallet" component={DepositController} />
+      <Stack.Screen
+        options={{ headerShown: true, title: 'Depósitos', headerLeft: () => <BackButton />, headerBackVisible: false }}
+        name="DepositWallet"
+        component={DepositController}
+      />
       <Stack.Screen
         options={{
           title: 'Beneficiaros',
           headerBackTitleVisible: false,
+          headerBackVisible: false,
           headerLeft: () => (
             <Touchable
               onPress={() => {

@@ -25,14 +25,14 @@ const ServicePaymentQRDetailController: React.FC<any> = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    const prefixie = prefixes ? prefixes?.filter(item => item.type === 'userDeposits') : [];
+    const prefixie = prefixes ? (prefixes.length ? prefixes?.filter(item => item.type === 'userDeposits') : []) : [];
     const data: QRDepositInterface = {
       accountCard: beneficiary.accountCard,
       name: beneficiary.name,
       tag: beneficiary.tag,
       id: beneficiary.id,
       bank: beneficiary.bank,
-      qrCode: prefixie.length ? `${prefixie[0].prefixe}|${beneficiary.accountCard}` : beneficiary.accountCard
+      qrCode: prefixie.length ? (prefixie[0].prefixe ? `${prefixie[0].prefixe}|${beneficiary.accountCard}` : beneficiary.accountCard) : beneficiary.accountCard
     };
     setQrData(data);
     if (toastState === 'new') {
@@ -67,8 +67,8 @@ const ServicePaymentQRDetailController: React.FC<any> = () => {
       {
         title: 'Eliminar beneficiario',
         message: `¿Seguro que deseas eliminar el beneficiario **${beneficiary.accountCard.substring(
-          beneficiary.accountCard.length - 4,
-          beneficiary.accountCard.length - 1
+          beneficiary.accountCard.length - 3,
+          beneficiary.accountCard.length
         )} (${beneficiary.tag})?\nLo puedes volver agregar en cualquier momento.`,
         acceptTitle: 'Cancelar',
         cancelTitle: 'Eliminar',

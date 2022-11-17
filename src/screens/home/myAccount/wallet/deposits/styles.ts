@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(20)
   },
   containerInfo: {
-    width: moderateScale(339),
+    width: '100%',
     height: moderateScale(55),
     borderRadius: moderateScale(8),
     backgroundColor: theme.brandColor.yellow_container,

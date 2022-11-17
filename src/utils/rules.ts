@@ -3,11 +3,11 @@ import { RegisterOptions } from 'react-hook-form';
 export const emailRules: RegisterOptions = {
   required: {
     value: true,
-    message: `Campo requerido`
+    message: 'Campo requerido'
   },
   validate: (value: string) => {
     if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i.test(value)) {
-      return `Correo electrónico no válido.`;
+      return 'Correo electrónico no válido.';
     }
 
     return true;
@@ -20,13 +20,13 @@ export const emailRules: RegisterOptions = {
 export const passwordRule: RegisterOptions = {
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   validate: (value: string) => {
     if (!(value.length < 8) && value.match(/[A-Z]/) && value.match(/[a-z]/) && value.match(/\d/) && value.match(/\W/) && !value.match(/\s/)) {
       return true;
     }
-    return `Ingresa una contraseña válida.`;
+    return 'Ingresa una contraseña válida.';
   }
 };
 
@@ -40,7 +40,7 @@ export const passwordMinimumRule: RegisterOptions = {
   },
   validate: (value: string) => {
     if (value.length < 8 || value.match(/\s/)) {
-      return `Ingresa una contraseña válida.`;
+      return 'Ingresa una contraseña válida.';
     }
     return true;
   }
@@ -49,15 +49,15 @@ export const passwordMinimumRule: RegisterOptions = {
 export const confirmPasswordRule = (compare: string): RegisterOptions => ({
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   validate: (value: string) => {
     if (!/^(?=.*[A-Z])(?=.*\d)[a-zA-Z.\d]{6,}$/.test(value)) {
-      return `Ingresa una contraseña válida.`;
+      return 'Ingresa una contraseña válida.';
     }
 
     if (value !== compare) {
-      return `La contraseña no coincide.`;
+      return 'La contraseña no coincide.';
     }
 
     return true;
@@ -67,7 +67,7 @@ export const confirmPasswordRule = (compare: string): RegisterOptions => ({
 export const confirmOtpRule = (compare: string): RegisterOptions => ({
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   validate: (value: string) => {
     if (value !== compare) {
@@ -81,7 +81,7 @@ export const confirmOtpRule = (compare: string): RegisterOptions => ({
 export const otpRule: RegisterOptions = {
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   maxLength: 6
 };
@@ -89,21 +89,21 @@ export const otpRule: RegisterOptions = {
 export const alphabetRule = (required: boolean): RegisterOptions => ({
   required: {
     value: required,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   validate: (value: string) => {
     if (!/^[A-Za-zñÑáÁéÉíÍóÓúÚöÖüÜ ]+$/.test(value)) {
-      return `Ingresa un formato valido.`;
+      return 'Ingresa un formato valido.';
     }
 
     return true;
   }
 });
 
-export const mobilePhoneRule = (required: boolean) : RegisterOptions =>  ({
+export const mobilePhoneRule = (required: boolean): RegisterOptions => ({
   required: {
     value: required,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   validate: (value: string) => {
     if (!/^[0-9]{10}$/.test(value)) {
@@ -117,7 +117,7 @@ export const mobilePhoneRule = (required: boolean) : RegisterOptions =>  ({
 export const rfcRule: RegisterOptions = {
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   validate: (value: string) => {
     if (!/^([A-ZÑ&]{3,4})(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01]))([A-Z\d]{2})([A\d])$/.test(value)) {
@@ -135,14 +135,36 @@ export const rfcRule: RegisterOptions = {
 export const numericWithSpecificLenght = (lenght: number): RegisterOptions => ({
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   minLength: {
     value: lenght,
-    message: `Longitud inválida.`
+    message: 'Longitud inválida.'
   },
   validate: (value: string) => {
     if (!value.match(/\d/)) return false;
+    return true;
+  }
+});
+
+/**
+ * Function to validate a minimum length for numeric fields.
+ */
+export const onlyNumericWithSpecificLenght = (lenght: number): RegisterOptions => ({
+  required: {
+    value: true,
+    message: 'Campo requerido.'
+  },
+  minLength: {
+    value: lenght,
+    message: 'Longitud inválida.'
+  },
+  pattern: {
+    value: /^[0-9]*$/,
+    message: 'Caracter no válido.'
+  },
+  validate: (value: string) => {
+    if (!value.match(/^[0-9]*$/)) return false;
     return true;
   }
 });
@@ -153,11 +175,11 @@ export const numericWithSpecificLenght = (lenght: number): RegisterOptions => ({
 export const date: RegisterOptions = {
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   minLength: {
     value: 10,
-    message: `Longitud inválida.`
+    message: 'Longitud inválida.'
   },
   validate: (value: string) => {
     if (
@@ -177,11 +199,11 @@ export const date: RegisterOptions = {
 export const alphaNumeric = (lenght: number): RegisterOptions => ({
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   minLength: {
     value: lenght,
-    message: `Longitud inválida.`
+    message: 'Longitud inválida.'
   },
   validate: (value: string) => {
     if (!value.match(/[A-Za-z0-9]/) || value.match(/\s/)) {
@@ -197,21 +219,21 @@ export const alphaNumeric = (lenght: number): RegisterOptions => ({
 export const openField = (lenght: number): RegisterOptions => ({
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   minLength: {
     value: lenght,
-    message: `Longitud inválida.`
+    message: 'Longitud inválida.'
   }
 });
 
 /**
  * Function to validate an open field with minimum lenght and no white spaces.
  */
- export const openFieldNotRequire = (lenght: number): RegisterOptions => ({
+export const openFieldNotRequire = (lenght: number): RegisterOptions => ({
   minLength: {
     value: lenght,
-    message: `Longitud inválida.`
+    message: 'Longitud inválida.'
   }
 });
 
@@ -221,11 +243,11 @@ export const openField = (lenght: number): RegisterOptions => ({
 export const emailsList = (lenght: number): RegisterOptions => ({
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   minLength: {
     value: lenght,
-    message: `Longitud inválida.`
+    message: 'Longitud inválida.'
   },
   validate: (value: string) => {
     if (!value.match(/^([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4},?)+$/)) {
@@ -238,40 +260,40 @@ export const emailsList = (lenght: number): RegisterOptions => ({
 export const alphaNumericWithSpacesAndDot = (lenght: number): RegisterOptions => ({
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   minLength: {
     value: lenght,
-    message: `Longitud inválida.`
+    message: 'Longitud inválida.'
   },
-  pattern:{
+  pattern: {
     value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]+(\s*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]*)*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1# .\s-]+$/,
-    message: `Caracter no válido.`
+    message: 'Caracter no válido.'
   }
 });
 
 export const alphaNumericWithoutSpaces = (lenght: number): RegisterOptions => ({
   required: {
     value: true,
-    message: `Campo requerido.`
+    message: 'Campo requerido.'
   },
   minLength: {
     value: lenght,
-    message: `Longitud inválida.`
+    message: 'Longitud inválida.'
   },
-  pattern:{
+  pattern: {
     value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1]*$/,
-    message: `Caracter no válido.`
+    message: 'Caracter no válido.'
   }
 });
 
 export const NRalphaNumericWithSpacesAndDot = (lenght: number): RegisterOptions => ({
   minLength: {
     value: lenght,
-    message: `Longitud inválida.`
+    message: 'Longitud inválida.'
   },
-  pattern:{
+  pattern: {
     value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]+(\s*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]*)*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1# .\s-]+$/,
-    message: `Caracter no válido.`
+    message: 'Caracter no válido.'
   }
 });

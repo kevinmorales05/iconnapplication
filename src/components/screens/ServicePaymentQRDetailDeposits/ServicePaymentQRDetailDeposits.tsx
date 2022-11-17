@@ -39,7 +39,7 @@ const ServicePaymentQRDetailDeposits: React.FC<Props> = ({ onPressEditButton, on
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Tarjeta o cuenta" fontBold />
-            <TextContainer text={`****${service?.accountCard.substring(service?.accountCard.length - 5, service?.accountCard.length - 1)}`} />
+            <TextContainer text={`****${service?.accountCard.substring(service?.accountCard.length - 4, service?.accountCard.length)}`} />
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Beneficiario" fontBold />
