@@ -1,9 +1,11 @@
 import React from 'react';
 import { Button, TextContainer } from '../../molecules';
 import { Container } from '../../atoms';
+import { encode } from 'base-64';
 import { Image, Platform, ScrollView } from 'react-native';
-import { QRInterface, ServicePaymentInterface } from 'rtk';
+import { QRInterface, RootState, ServicePaymentInterface, useAppSelector } from 'rtk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import config from 'react-native-config';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import moment from 'moment';
 import Octicons from 'react-native-vector-icons/Octicons';
@@ -19,6 +21,16 @@ interface Props {
 
 const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPressDeleteButton, service, servicePayment }) => {
   const insets = useSafeAreaInsets();
+  const { ARCUS_QR_PREFIX } = config;
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const userIdName = `${user.id}\\${user.name}${user.lastName}${user.secondLastName}`;
+  // console.log('userIdName', userIdName);
+  const encryption = encode(userIdName);
+  // console.log('encryption', encryption);
+  // const decryption = decode(encryption);
+  // console.log('decryption', decryption);
+  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.SKU}|${servicePayment.UPC}|${service?.contractNumber}||${encryption}|`;
+  // console.log('El string del QR es', QRString);
 
   return (
     <ScrollView
@@ -34,7 +46,7 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
             <Container center crossCenter style={{ marginBottom: 16 }}>
               <Image source={{ uri: servicePayment.imageURL }} style={{ width: 100, height: 40, resizeMode: 'cover' }} />
             </Container>
-            <QRCode value={'Hola'} size={140} />
+            <QRCode value={QRString} size={140} />
 
             <TextContainer text={service?.alias!} marginTop={24} fontBold typography="h4" />
           </Container>
