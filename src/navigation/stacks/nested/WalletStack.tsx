@@ -22,6 +22,7 @@ import RechargeQRController from 'screens/home/myAccount/wallet/recharges/rechar
 import ServicePaymentController from 'screens/home/myAccount/wallet/servicePayment/ServicesPayments/ServicesPaymentsController';
 import ServicePaymentAddController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentAdd/ServicePaymentAddController';
 import ServicePaymentQRDetailController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentQRDetail/ServicePaymentQRDetailController';
+import ServicePaymentEditController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentEdit/ServicePaymentEditController';
 
 const WalletStack: React.FC = () => {
   const Stack = createNativeStackNavigator<WalletStackParams>();
@@ -117,6 +118,7 @@ const WalletStack: React.FC = () => {
       <Stack.Screen options={{ title: 'Pago de Servicios', headerBackTitleVisible: false }} name="ServicePayment" component={ServicePaymentController} />
       <Stack.Screen options={{ headerShown: false }} name="ServicePaymentGeneralInfo" component={ServicePaymentGeneralInfoController} />
       <Stack.Screen options={{ title: 'Agregar servicio', headerBackTitleVisible: false }} name="ServicePaymentAdd" component={ServicePaymentAddController} />
+      <Stack.Screen options={{ title: 'Editar servicio', headerBackTitleVisible: false }} name="ServicePaymentEdit" component={ServicePaymentEditController} />
       <Stack.Screen
         options={({ route }) => ({ title: route.params.servicePayment.slug, headerBackTitleVisible: false })}
         name="ServicePaymentQRDetail"

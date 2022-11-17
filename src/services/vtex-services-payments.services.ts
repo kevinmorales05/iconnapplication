@@ -38,9 +38,19 @@ async function saveBillIntoVtex(service: ServiceInterface): Promise<any> {
 /**
  * Function to delete a QR data from vtex collection ("SP").
  */
-async function deleteBillFromVtex(billId: string): Promise<any> {
-  const response = await VtexApi.getInstance().deleteRequest(`/api/dataentities/SP/documents/${billId}`);
+async function deleteBillFromVtex(documentId: string): Promise<any> {
+  const response = await VtexApi.getInstance().deleteRequest(`/api/dataentities/SP/documents/${documentId}`);
   if (response === undefined) return Promise.reject(new Error('deleteBillFromVtex'));
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to delete a QR data from vtex collection ("SP").
+ */
+async function updateBillIntoVtex(service: ServiceInterface, documentId: string): Promise<any> {
+  const response = await VtexApi.getInstance().patchRequest(`/api/dataentities/SP/documents/${documentId}`, service);
+  if (response === undefined) return Promise.reject(new Error('updateBillIntoVtex'));
   const { data } = response;
   return data;
 }
@@ -49,5 +59,6 @@ export const vtexServicesPayments = {
   createBillIntoArcus,
   deleteBillFromVtex,
   getServicesPayments,
-  saveBillIntoVtex
+  saveBillIntoVtex,
+  updateBillIntoVtex
 };

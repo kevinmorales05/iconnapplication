@@ -5,7 +5,7 @@ import { CrudType } from '../../types/crud-type';
 import { FieldValues, useForm } from 'react-hook-form';
 import { Image, Keyboard, Platform, ScrollView, TextInput } from 'react-native';
 import { numericWithSpecificLenght, openField } from 'utils/rules';
-import { ServiceInterface, ServicePaymentInterface } from 'rtk';
+import { QRInterface, ServicePaymentInterface } from 'rtk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import theme from 'components/theme/theme';
@@ -14,7 +14,7 @@ interface Props {
   mode: CrudType;
   onPressQuestionButton: () => void;
   onSubmit: (service: FieldValues) => void;
-  service?: ServiceInterface;
+  service?: QRInterface;
   servicePayment: ServicePaymentInterface;
 }
 
@@ -43,8 +43,8 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
     };
 
     const populateForUpdate = () => {
-      setValue('contractNumber', service!.reference);
-      setValue('alias', service!.label);
+      setValue('contractNumber', service!.contractNumber);
+      setValue('alias', service!.alias);
       trigger('contractNumber');
       trigger('alias');
     };
@@ -73,7 +73,7 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
    * @param newContractNumber string
    */
   const validateChangesOnContractNumber = (newContractNumber: string) => {
-    if (mode === 'update' && newContractNumber !== service!.reference) setContractNumberChanged(true);
+    if (mode === 'update' && newContractNumber !== service!.contractNumber) setContractNumberChanged(true);
   };
 
   return (

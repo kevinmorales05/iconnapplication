@@ -23,8 +23,7 @@ const ServicePaymentQRDetailController: React.FC<any> = ({ route }: NativeStackS
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
 
   const onPressEditButton = () => {
-    route.params.servicePayment = null;
-    // Debe abrir el ServicePaymentScreen en modo update.
+    navigate('ServicePaymentEdit', { qrData: route.params.qrData, servicePayment: route.params.servicePayment });
   };
 
   const deleteServicePayment = async () => {
