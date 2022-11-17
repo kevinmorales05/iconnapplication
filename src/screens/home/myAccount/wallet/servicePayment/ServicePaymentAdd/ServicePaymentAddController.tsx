@@ -76,13 +76,24 @@ const ServicePaymentAddController: React.FC<any> = ({ route }: NativeStackScreen
         navigate('ServicePaymentQRDetail', { qrData: QrData, servicePayment: route.params.servicePayment });
       }
     } catch (err: unknown | AxiosError) {
+      let errMsg;
       if (err instanceof AxiosError && err.response?.data) {
-        toast.show({ message: `Error: ${err.response?.data.error_code}\nMessage: ${err.response?.data.error_message}`, type: 'error' });
+        if (err.response?.data.error_code === 'R1') {
+          errMsg = 'El número de digitos es inválido.';
+        } else if (err.response?.data.error_code === 'R2') {
+          errMsg = 'Número de contrato/servicio inválido.';
+        } else if (err.response?.data.error_code === 'R6') {
+          errMsg = 'El servicio de pago seleccionado no está disponible.';
+        } else {
+          errMsg = 'No se pudo agregar el servicio.\nIntenta más tarde.';
+        }
+        toast.show({ message: errMsg, type: 'error' });
       } else {
         toast.show({ message: 'No se pudo agregar el servicio.\nIntenta más tarde.', type: 'error' });
       }
     } finally {
       loader.hide();
+      navigate('ServicePayment');
     }
   };
 

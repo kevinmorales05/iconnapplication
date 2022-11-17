@@ -1,10 +1,10 @@
 import React from 'react';
 import { Image, ImageSourcePropType, StyleSheet, TouchableOpacity } from 'react-native';
-import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
+import { Container, CustomModal, Touchable } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TextContainer } from 'components/molecules';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 interface Props {
   img: ImageSourcePropType;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const ServicePaymentHelper: React.FC<Props> = ({ img, message, onPressOut, visible }) => {
-  const { containerStyle } = styles;
+  const { containerStyle, closeContainer } = styles;
 
   const insets = useSafeAreaInsets();
 
@@ -30,25 +30,18 @@ const ServicePaymentHelper: React.FC<Props> = ({ img, message, onPressOut, visib
           }}
         >
           <Container>
-            <Container row space="between" style={{ marginTop: 16, marginBottom: 16 }}>
-              <Container>
-                <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Número de contrato o servicio" typography="h3" fontBold />
-              </Container>
-              <Container>
-                <ActionButton
-                  style={{ marginTop: -6, shadowColor: 'none' }}
-                  icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
-                  size="xxsmall"
-                  onPress={onPressOut}
-                  color="iconn_med_grey"
-                  circle
-                />
+            <Container style={{ marginBottom: 8, marginRight: 4 }} crossCenter>
+              <TextContainer marginRight={16} text="Número de contrato o servicio" typography="h3" fontBold textAlign="center" />
+              <Container style={closeContainer}>
+                <Touchable onPress={onPressOut} rounded>
+                  <AntDesign name="close" size={24} color="black" />
+                </Touchable>
               </Container>
             </Container>
             <Container>
               {/* TODO: fix this "source" eslint error */}
-              <Image resizeMode="cover" source={{ uri: img }} style={{ height: 230, width: 360, alignSelf: 'center' }} />
-              <TextContainer text={message} marginTop={8} numberOfLines={4} />
+              <Image resizeMode="contain" source={{ uri: img }} style={{ height: 250, width: '100%', alignSelf: 'center' }} />
+              <TextContainer text={message} marginTop={16} numberOfLines={4} />
             </Container>
           </Container>
         </TouchableOpacity>
@@ -64,6 +57,10 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     width: '100%',
     padding: 16
+  },
+  closeContainer: {
+    position: 'absolute',
+    right: 0
   }
 });
 
