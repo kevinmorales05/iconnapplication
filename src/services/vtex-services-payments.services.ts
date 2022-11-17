@@ -35,8 +35,19 @@ async function saveBillIntoVtex(service: ServiceInterface): Promise<any> {
   return data;
 }
 
+/**
+ * Function to delete a QR data from vtex collection ("SP").
+ */
+async function deleteBillFromVtex(billId: string): Promise<any> {
+  const response = await VtexApi.getInstance().deleteRequest(`/api/dataentities/SP/documents/${billId}`);
+  if (response === undefined) return Promise.reject(new Error('deleteBillFromVtex'));
+  const { data } = response;
+  return data;
+}
+
 export const vtexServicesPayments = {
   createBillIntoArcus,
+  deleteBillFromVtex,
   getServicesPayments,
   saveBillIntoVtex
 };

@@ -70,7 +70,8 @@ const ServicePaymentAddController: React.FC<any> = ({ route }: NativeStackScreen
           expirationDate: due_date,
           contractNumber: service.contractNumber,
           billId: id,
-          updatedAt: balance_updated_at
+          updatedAt: balance_updated_at,
+          id: vtexResponse.DocumentId
         };
         navigate('ServicePaymentQRDetail', { qrData: QrData, servicePayment: route.params.servicePayment });
       }

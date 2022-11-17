@@ -23,6 +23,7 @@ export interface QRInterface {
   billId: string;
   contractNumber: string;
   expirationDate: string;
+  id: string;
   updatedAt: string;
 }
 
