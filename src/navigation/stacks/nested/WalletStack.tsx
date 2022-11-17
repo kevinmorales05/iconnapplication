@@ -121,7 +121,15 @@ const WalletStack: React.FC = () => {
       <Stack.Screen options={{ title: 'Agregar servicio', headerBackTitleVisible: false }} name="ServicePaymentAdd" component={ServicePaymentAddController} />
       <Stack.Screen options={{ title: 'Editar servicio', headerBackTitleVisible: false }} name="ServicePaymentEdit" component={ServicePaymentEditController} />
       <Stack.Screen
-        options={({ route }) => ({ title: route.params.servicePayment.slug, headerBackTitleVisible: false })}
+        options={({ route }) => ({
+          title: route.params.servicePayment.slug,
+          headerBackTitleVisible: false,
+          headerLeft: () => (
+            <Touchable onPress={() => navigate('WalletHome')}>
+              <Icon name="arrowleft" size={20} color={theme.brandColor.iconn_dark_grey} />
+            </Touchable>
+          )
+        })}
         name="ServicePaymentQRDetail"
         component={ServicePaymentQRDetailController}
       />

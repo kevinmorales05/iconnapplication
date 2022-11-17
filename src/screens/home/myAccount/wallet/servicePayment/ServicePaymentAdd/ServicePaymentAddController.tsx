@@ -91,9 +91,9 @@ const ServicePaymentAddController: React.FC<any> = ({ route }: NativeStackScreen
       } else {
         toast.show({ message: 'No se pudo agregar el servicio.\nIntenta más tarde.', type: 'error' });
       }
+      navigate('ServicePayment');
     } finally {
       loader.hide();
-      navigate('ServicePayment');
     }
   };
 

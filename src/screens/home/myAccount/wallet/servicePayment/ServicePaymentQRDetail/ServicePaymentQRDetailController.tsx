@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { ServicePaymentQRDetailScreen } from 'components';
@@ -14,7 +14,7 @@ import theme from 'components/theme/theme';
  * @returns React.FC
  */
 
-const ServicePaymentQRDetailController: React.FC<any> = ({ route }: NativeStackScreenProps<WalletStackParams, 'ServicePaymentQRDetail'>) => {
+const ServicePaymentQRDetailController: React.FC<any> = ({ route, navigation }: NativeStackScreenProps<WalletStackParams, 'ServicePaymentQRDetail'>) => {
   const loader = useLoading();
   const toast = useToast();
   const alert = useAlert();
@@ -65,6 +65,16 @@ const ServicePaymentQRDetailController: React.FC<any> = ({ route }: NativeStackS
       loader.hide();
     }
   };
+
+  /**
+   * Reset the stack to allow user navigate from ServicePaymentQRDetailScreen to WalletHome.
+   */
+  useEffect(() => {
+    const { routes } = navigation.getState();
+    const filteredRoutes: any = routes.filter(r => r.name !== 'ServicePaymentAdd' && r.name !== 'ServicePayment');
+
+    navigation.reset({ index: filteredRoutes.length - 1, routes: filteredRoutes });
+  }, []);
 
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
