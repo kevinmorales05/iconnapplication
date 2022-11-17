@@ -84,11 +84,11 @@ const ServicePaymentEditController: React.FC<any> = ({ route }: NativeStackScree
       let errMsg;
       if (err instanceof AxiosError && err.response?.data) {
         if (err.response?.data.error_code === 'R1') {
-          errMsg = 'El número de digitos es inválido.';
+          errMsg = 'Número de caracteres incorrecto';
         } else if (err.response?.data.error_code === 'R2') {
-          errMsg = 'Número de contrato/servicio inválido.';
+          errMsg = 'Número de referencia inválido';
         } else if (err.response?.data.error_code === 'R6') {
-          errMsg = 'El servicio de pago seleccionado no es válido.';
+          errMsg = 'Servicio no disponible por el momento, intenta más tarde';
         } else {
           errMsg = 'No se pudo actualizar el servicio.\nIntenta más tarde.';
         }
