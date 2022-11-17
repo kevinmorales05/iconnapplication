@@ -7,8 +7,11 @@ import Config from 'react-native-config';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { WalletStackParams } from 'navigation/types';
+import { useIsFocused } from '@react-navigation/native';
 
 const WalletHomeController: React.FC = () => {
+  const isFocused = useIsFocused();
+  console.log('HOLA WHC');
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { id } = user;
   //const [cards, setCards] = useState();
@@ -113,9 +116,7 @@ const WalletHomeController: React.FC = () => {
     getCards()
       .then(data => setCardsForImages(data))
       .then(cardsArr => setCardsforCarousel(cardsArr));
-  }, [getCards, cardPic]);
 
-  useEffect(() => {
     const setServiceQRType = async (services: any) => {
       const arr = services;
       const serviceArr = [];
@@ -132,15 +133,12 @@ const WalletHomeController: React.FC = () => {
             userId: service.userId
           };
           serviceArr.push(userServiceQR);
-          console.log("Lista de servicios ", userServiceQR)
         }
       }
       setServiceQRTypes(serviceArr);
     };
     getServiceQR().then(data => setServiceQRType(data));
-  }, [serviceQRTypes]);
 
-  useEffect(() => {
     const setRechargeQRType = async (recharges: any) => {
       const arr = recharges;
       const rechargesArr = [];
@@ -163,7 +161,7 @@ const WalletHomeController: React.FC = () => {
       setRechargeQRTypes(rechargesArr);
     };
     getRechargeQR().then(data => setRechargeQRType(data));
-  }, [rechargeQRTypes]);
+  }, [isFocused]);
 
   return (
     <WalletHomeScreen
