@@ -88,7 +88,7 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
           <TextContainer typography="paragraph" text={'Es importante tener la información de tu recibo a\nla mano.'} marginTop={24} numberOfLines={2} />
 
           <Container center crossCenter style={{ marginTop: 40 }}>
-            <Image source={{ uri: servicePayment.imageURL }} style={{ width: 160, height: 80, resizeMode: 'cover' }} />
+            <Image source={{ uri: servicePayment.imageURL }} style={{ width: 160, height: 80, resizeMode: 'contain' }} />
           </Container>
 
           <Container row center style={{ marginTop: 48 }}>

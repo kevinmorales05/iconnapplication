@@ -83,7 +83,7 @@ const ServicePaymentAddController: React.FC<any> = ({ route }: NativeStackScreen
         } else if (err.response?.data.error_code === 'R2') {
           errMsg = 'Número de contrato/servicio inválido.';
         } else if (err.response?.data.error_code === 'R6') {
-          errMsg = 'El servicio de pago seleccionado no está disponible.';
+          errMsg = 'El servicio de pago seleccionado no es válido.';
         } else {
           errMsg = 'No se pudo agregar el servicio.\nIntenta más tarde.';
         }
