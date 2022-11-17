@@ -8,11 +8,12 @@ import RechargeAmountScreen from './RechargeAmountScreen';
 
 const RechargeAmountController: React.FC = () => {
   const route = useRoute<RouteProp<WalletStackParams, 'RechargeAmounts'>>();
+  const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
   const { params } = route;
   const supplier = params?.supplierData;
   const selectedParams = params?.selected;
+  const type = params?.type;
   const [supplierRecharges, setSupplierRecharges] = useState<RechargeAmount[]>();
-  const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
 
   const OnPressAmount = async (amountId: string) => {
     const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -49,7 +50,9 @@ const RechargeAmountController: React.FC = () => {
       });
       setSupplierRecharges(selArr as RechargeAmount[]);
       await delay(500);
-      navigate('RechargeOperator', { supplierData: supplier as RechargeSupplier, amount: select as RechargeAmount });
+      type === 'new'
+        ? navigate('RechargeOperator', { supplierData: supplier as RechargeSupplier, amount: select as RechargeAmount })
+        : navigate('RechargeEdit', { supplierData: supplier as RechargeSupplier, amount: select as RechargeAmount });
     }
   };
 

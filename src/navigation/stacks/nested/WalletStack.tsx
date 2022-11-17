@@ -23,6 +23,7 @@ import ServicePaymentController from 'screens/home/myAccount/wallet/servicePayme
 import ServicePaymentAddController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentAdd/ServicePaymentAddController';
 import ServicePaymentQRDetailController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentQRDetail/ServicePaymentQRDetailController';
 import ServicePaymentEditController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentEdit/ServicePaymentEditController';
+import RechargeEditController from 'screens/home/myAccount/wallet/recharges/rechargeEdit/RechargeEditController';
 
 const WalletStack: React.FC = () => {
   const Stack = createNativeStackNavigator<WalletStackParams>();
@@ -163,6 +164,7 @@ const WalletStack: React.FC = () => {
         name="RechargeQR"
         component={RechargeQRController}
       />
+      <Stack.Screen options={{ title: 'Editar recarga', headerBackTitleVisible: false }} name="RechargeEdit" component={RechargeEditController} />
     </Stack.Navigator>
   );
 };

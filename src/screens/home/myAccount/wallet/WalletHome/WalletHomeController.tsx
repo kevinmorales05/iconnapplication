@@ -11,7 +11,6 @@ import { useIsFocused } from '@react-navigation/native';
 
 const WalletHomeController: React.FC = () => {
   const isFocused = useIsFocused();
-  console.log('HOLA WHC');
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { id } = user;
   //const [cards, setCards] = useState();
@@ -43,7 +42,7 @@ const WalletHomeController: React.FC = () => {
     {
       icon: ICONN_PACKAGES_SEARCH,
       serviceName: 'Rastreo de Paquetes',
-      onPressItem: () => {}
+      onPressItem: async () => {}
     }
   ];
 

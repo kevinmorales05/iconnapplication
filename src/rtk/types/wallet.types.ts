@@ -16,6 +16,7 @@ export interface ServiceType {
 
 export type QRType = 'service' | 'air';
 export interface ServiceQRType {
+  id?: string;
   imageURL: string;
   supplierName: string;
   isActive: boolean;

@@ -5,11 +5,11 @@ import { WalletStackParams } from 'navigation/types';
 import React from 'react';
 import { RechargeSupplier, RechargeUser, RootState, useAppSelector } from 'rtk';
 import { vtexDocsServices } from 'services';
-import RechargeOperatorSceen from './RechargeOperatorScreen';
+import RechargeEditSceen from './RechargeEditScreen';
 
-const RechargeOperatorController: React.FC = () => {
+const RechargeEditController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
-  const route = useRoute<RouteProp<WalletStackParams, 'RechargeOperator'>>();
+  const route = useRoute<RouteProp<WalletStackParams, 'RechargeEdit'>>();
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { userId } = user;
   const { params } = route;
@@ -17,18 +17,17 @@ const RechargeOperatorController: React.FC = () => {
 
   const supplier = params?.supplierData;
   const amountSupplier = params?.amount;
+  const fields = params?.fields;
+  const rechargeQRId = params?.rechargeQRId;
 
   const saveRecharge = async (rechargeFields: any, qrData: string, newRecharge: RechargeUser) => {
     try {
-      const response = await vtexDocsServices.createDoc('UR', newRecharge);
-      if (response) {
-        const responseId = response.Id;
-        toast.show({
-          message: 'Número agregado exitosamente.',
-          type: 'success'
-        });
-        navigate('RechargeQR', { fieldValues: rechargeFields, amount: amountSupplier, supplierData: supplier, qrData: qrData, rechargeQRId: responseId });
-      }
+      await vtexDocsServices.updateDocByDocIDForAgeStatus('UR', rechargeQRId as string, newRecharge);
+      toast.show({
+        message: 'Cambios guardados con éxito.',
+        type: 'success'
+      });
+      navigate('RechargeQR', { fieldValues: rechargeFields, amount: amountSupplier, supplierData: supplier, qrData: qrData });
     } catch (error) {
       toast.show({
         message: 'No se pudo agregar el número. \n Intenta más tarde.',
@@ -41,6 +40,7 @@ const RechargeOperatorController: React.FC = () => {
   const onSubmit = async (rechargeFields: any) => {
     const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
     const newRecharge: RechargeUser = {
+      id: rechargeQRId,
       amount: amountSupplier?.ammount as number,
       isActive: true,
       label: rechargeFields.alias,
@@ -53,10 +53,18 @@ const RechargeOperatorController: React.FC = () => {
   };
 
   const onPressAmount = () => {
-    navigate('RechargeAmounts', { supplierData: params?.supplierData, selected: amountSupplier, type: 'new' });
+    navigate('RechargeAmounts', { supplierData: params?.supplierData, selected: amountSupplier, type: 'edit' });
   };
 
-  return <RechargeOperatorSceen supplier={supplier as RechargeSupplier} amount={amountSupplier?.ammount} onPressAmount={onPressAmount} onSubmit={onSubmit} />;
+  return (
+    <RechargeEditSceen
+      fields={fields}
+      supplier={supplier as RechargeSupplier}
+      amount={amountSupplier?.ammount}
+      onPressAmount={onPressAmount}
+      onSubmit={onSubmit}
+    />
+  );
 };
 
-export default RechargeOperatorController;
+export default RechargeEditController;
