@@ -10,14 +10,13 @@ import { TextContainer } from '../../molecules/TextContainer';
 import { ActionButton } from '../ActionButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ICONN_EYE_ON, ICONN_EYE_OFF, ICONN_CALENDAR } from 'assets/images';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { CustomText } from '../CustomText';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export interface Props {
   label?: string;
   placeholder?: string;
-  placeholderTextColor?:string;
+  placeholderTextColor?: string;
   placeholderBold?: string;
   autoCapitalize?: TextInputProps['autoCapitalize'];
   autoComplete?: TextInputProps['autoComplete'];
@@ -29,8 +28,8 @@ export interface Props {
   onSubmitEditing?: TextInputProps['onSubmitEditing'];
   defaultValue?: TextInputProps['value'];
   passwordField?: boolean;
-  scanIcon?: boolean,
-  onPressScan: () => void;
+  scanIcon?: boolean;
+  onPressScan?: () => void;
   showPasswordEnable?: boolean;
   error?: any;
   onFocus?: TextInputProps['onFocus'];

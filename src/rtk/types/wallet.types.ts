@@ -63,3 +63,29 @@ export interface RechargeUser {
   referenceOrPhone: string;
   isActive: boolean;
 }
+export interface WalletSliceInterface {
+  prefixes?: PrefixesInterface[];
+  banks?: BankInterface[];
+  beneficiaries?: BeneficiaryInterface[];
+}
+
+export interface PrefixesInterface {
+  id: string;
+  prefixe: string | null | undefined;
+  type: string;
+}
+
+export interface BankInterface {
+  id: string;
+  name: string;
+  sku: string | null | undefined;
+  upc: string | null | undefined;
+}
+
+export interface BeneficiaryInterface {
+  accountCard: string;
+  name: string;
+  tag: string;
+  bank: string;
+  id: string;
+}

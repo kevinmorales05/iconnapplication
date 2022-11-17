@@ -332,15 +332,15 @@ const CategoryProductsScreen: React.FC = () => {
     );
   };
 
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({ item }: { item: ProductInterface }) => {
     return (
       <CardProduct
         ratingValue={item.ratingValue}
-        price={item.price}
+        price={item.price ? item.price : 0}
         porcentDiscount={item.porcentDiscount}
-        name={item.name}
-        image={item.image}
-        quantity={item.quantity}
+        name={item.name ? item.name : ''}
+        image={item.image ? item.image : {}}
+        quantity={item.quantity ? item.quantity : 0}
         productId={item.productId}
         oldPrice={item.oldPrice}
         onPressAddCart={validateCategoryForAddItem}

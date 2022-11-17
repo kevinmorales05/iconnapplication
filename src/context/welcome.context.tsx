@@ -51,7 +51,9 @@ export const WelcomeModalContextProvider = ({ children }: Props) => {
   };
 
   const show = async () => {
-    setWelcomeModalState({ visible: true });
+    if(imageToRender.length){
+      setWelcomeModalState({ visible: true });
+    }
   };
 
   const hide = () => {

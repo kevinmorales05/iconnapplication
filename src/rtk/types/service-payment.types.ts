@@ -27,6 +27,15 @@ export interface QRInterface {
   updatedAt: string;
 }
 
+export interface QRDepositInterface {
+  accountCard: string;
+  name: string;
+  id: string;
+  tag: string;
+  bank: string;
+  qrCode: string;
+}
+
 export interface ServiceRequestInterface {
   account_number: string;
   biller_id: number;

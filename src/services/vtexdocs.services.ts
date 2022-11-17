@@ -105,6 +105,24 @@ async function getImagesWelcomeLogin(): Promise<any> {
   return data;
 }
 
+/**
+ * Function to getImages to welcomeLogin.
+ */
+async function getPrefixesWallet(): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest('dataentities/QP/scroll?_fields=id,prefixe,type');
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to getImages to welcomeLogin.
+ */
+async function getBanksWallet(): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest('dataentities/AB/scroll?_fields=id,name,sku,upc');
+  const { data } = response;
+  return data;
+}
+
 export const vtexDocsServices = {
   createDoc,
   getAllDocByUserID,
@@ -115,5 +133,7 @@ export const vtexDocsServices = {
   getDocByDocID,
   getAddressByPostalCode,
   getImagesWelcomeLogin,
-  getAllDocsByDocDataEntity
+  getAllDocsByDocDataEntity,
+  getPrefixesWallet,
+  getBanksWallet
 };

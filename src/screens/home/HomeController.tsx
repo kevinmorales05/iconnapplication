@@ -37,6 +37,7 @@ import { vtexPromotionsServices } from 'services/vtexPromotions.services';
 import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
 import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
 import Config from 'react-native-config';
+import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -66,6 +67,11 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   useEffect(() => {
     getFavorites(email as string);
+  }, []);
+
+  useEffect(() => {
+    dispatch(getWalletPrefixesThunk()).unwrap();
+    dispatch(getBanksWalletThunk()).unwrap();
   }, []);
 
   useEffect(() => {

@@ -10,24 +10,28 @@ import PaybackController from 'screens/home/pointCards/payback/PaybackController
 import PaybackHelpScreen from 'screens/home/pointCards/payback/help/PaybackHelpScreen';
 import PreferredController from 'screens/home/pointCards/preferente/PreferredController';
 import PreferredHelpScreen from 'screens/home/pointCards/preferente/help/PreferredHelpScreen';
+import ServicePaymentAddController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentAdd/ServicePaymentAddController';
+import ServicePaymentController from 'screens/home/myAccount/wallet/servicePayment/ServicesPayments/ServicesPaymentsController';
+import ServicePaymentGeneralInfoController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentGeneralInfo/ServicePaymentGeneralInfoController';
+import ServicePaymentQRDetailController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentQRDetail/ServicePaymentQRDetailController';
+import ServicePaymentQRDetailDepositController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentQRDepositDetail/ServicePaymentQRDetailController';
 import theme from 'components/theme/theme';
 import UpdatePaybackController from 'screens/home/pointCards/payback/update/UpdatePaybackController';
 import UpdatePreferredController from 'screens/home/pointCards/preferente/update/UpdatePreferredController';
 import WalletHomeController from 'screens/home/myAccount/wallet/WalletHome/WalletHomeController';
-import ServicePaymentGeneralInfoController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentGeneralInfo/ServicePaymentGeneralInfoController';
 import RechargesController from 'screens/home/myAccount/wallet/recharges/RechargesController';
 import RechargeOperatorController from 'screens/home/myAccount/wallet/recharges/rechargeOperator/RechargeOperatorController';
 import RechargeAmountController from 'screens/home/myAccount/wallet/recharges/rechargeAmounts/RechargeAmountController';
 import RechargeQRController from 'screens/home/myAccount/wallet/recharges/rechargeQR/RechargeQRController';
-import ServicePaymentController from 'screens/home/myAccount/wallet/servicePayment/ServicesPayments/ServicesPaymentsController';
-import ServicePaymentAddController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentAdd/ServicePaymentAddController';
-import ServicePaymentQRDetailController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentQRDetail/ServicePaymentQRDetailController';
 import ServicePaymentEditController from 'screens/home/myAccount/wallet/servicePayment/ServicePaymentEdit/ServicePaymentEditController';
 import RechargeEditController from 'screens/home/myAccount/wallet/recharges/rechargeEdit/RechargeEditController';
+import DepositController from 'screens/home/myAccount/wallet/deposits/DepositController';
+import { Image } from 'react-native';
+import { moderateScale } from 'utils/scaleMetrics';
 
 const WalletStack: React.FC = () => {
   const Stack = createNativeStackNavigator<WalletStackParams>();
-  const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
+  const { navigate, reset } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
 
   return (
     <Stack.Navigator
@@ -132,6 +136,27 @@ const WalletStack: React.FC = () => {
         })}
         name="ServicePaymentQRDetail"
         component={ServicePaymentQRDetailController}
+      />
+      <Stack.Screen options={{ headerShown: true, title: 'Depósitos', headerLeft: () => <BackButton /> }} name="DepositWallet" component={DepositController} />
+      <Stack.Screen
+        options={{
+          title: 'Beneficiaros',
+          headerBackTitleVisible: false,
+          headerLeft: () => (
+            <Touchable
+              onPress={() => {
+                reset({
+                  index: 0,
+                  routes: [{ name: 'WalletHome', params: { toastState: 'none' } }]
+                });
+              }}
+            >
+              <Image style={{ width: moderateScale(24), height: moderateScale(24) }} source={require('../../../assets/images/back-button/left_arrow.png')} />
+            </Touchable>
+          )
+        }}
+        name="ServicePaymentQRDetailDepositController"
+        component={ServicePaymentQRDetailDepositController}
       />
       <Stack.Screen options={{ title: 'Recargas Tiempo Aire', headerBackTitleVisible: false }} name="Recharge" component={RechargesController} />
       <Stack.Screen

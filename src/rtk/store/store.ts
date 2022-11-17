@@ -3,6 +3,7 @@ import authReducer from '../slices/authSlice';
 import appReducer from '../slices/appSlice';
 import cartReducer from '../slices/cartSlice';
 import promotionsReducer from '../slices/promotionsSlice';
+import walletReducer from '../slices/walletSlice';
 import sellerReducer from '../slices/sellerSlice';
 import invoicingReducer from '../slices/invoicingSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
@@ -15,7 +16,8 @@ const reducers = combineReducers({
   invoicing: invoicingReducer,
   cart: cartReducer,
   promotion: promotionsReducer,
-  seller: sellerReducer
+  seller: sellerReducer,
+  wallet: walletReducer
 });
 
 const persistConfig = {

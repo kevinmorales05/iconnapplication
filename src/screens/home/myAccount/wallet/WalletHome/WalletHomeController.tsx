@@ -1,32 +1,36 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import WalletHomeScreen from './WalletHomeScreen';
 import { vtexDocsServices } from 'services';
-import { CarouselItem, PointCard, RootState, ServiceQRType, ServiceType, useAppSelector } from 'rtk';
+import { BeneficiaryInterface, CarouselItem, PointCard, RootState, ServiceQRType, ServiceType, useAppSelector } from 'rtk';
 import { CARD_PETRO, CARD_PREF, ICONN_DEPOSIT, ICONN_MOBILE_RECHARGE, ICONN_PACKAGES_SEARCH, ICONN_SERVICE_PAYMENT } from 'assets/images';
 import Config from 'react-native-config';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { WalletStackParams } from 'navigation/types';
 import { useIsFocused } from '@react-navigation/native';
+import { useToast } from 'context';
 
 const WalletHomeController: React.FC = () => {
   const isFocused = useIsFocused();
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const { beneficiaries } = useAppSelector((state: RootState) => state.wallet);
   const { id } = user;
   //const [cards, setCards] = useState();
   //const [cardsPics, setCardsPics] = useState<PointCard[]>();
   // const [serviceQR, setServiceQR] = useState<ServiceQRType[]>();
+  const route = useRoute<RouteProp<WalletStackParams, 'WalletHome'>>();
   const [serviceQRTypes, setServiceQRTypes] = useState<ServiceQRType[]>();
   const [rechargeQRTypes, setRechargeQRTypes] = useState<ServiceQRType[]>();
   const { CATEGORIES_ASSETS } = Config;
   const [cardPic, setCardPic] = useState<CarouselItem[]>();
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
+  const toast = useToast();
 
   const servicesArr: ServiceType[] = [
     {
       icon: ICONN_DEPOSIT,
       serviceName: 'Depósitos',
-      onPressItem: () => {}
+      onPressItem: () => navigate('DepositWallet')
     },
     {
       icon: ICONN_SERVICE_PAYMENT,
@@ -162,12 +166,27 @@ const WalletHomeController: React.FC = () => {
     getRechargeQR().then(data => setRechargeQRType(data));
   }, [isFocused]);
 
+  const goToDepositDetail = (beneficiary: BeneficiaryInterface) => {
+    navigate('ServicePaymentQRDetailDepositController', { beneficiary: beneficiary, toastState: 'none' });
+  };
+
+  useEffect(() => {
+    if (route.params?.toastState! !== 'none') {
+      toast.show({
+        message: 'Beneficiario eliminado exitosamente.',
+        type: 'success'
+      });
+    }
+  }, [route.params]);
+
   return (
     <WalletHomeScreen
       servicesArr={servicesArr}
       rechargeQR={rechargeQRTypes as ServiceQRType[]}
       serviceQRs={serviceQRTypes as ServiceQRType[]}
       cards={cardPic as CarouselItem[]}
+      beneficiaries={beneficiaries?.length ? beneficiaries : []}
+      goToDepositDetail={goToDepositDetail}
     />
   );
 };

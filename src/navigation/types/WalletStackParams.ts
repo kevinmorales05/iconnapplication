@@ -1,4 +1,4 @@
-import { RechargeAmount, RechargeSupplier, ServicePaymentInterface, ServiceQRType, QRInterface } from 'rtk';
+import { RechargeAmount, RechargeSupplier, ServicePaymentInterface, ServiceQRType, QRInterface, BeneficiaryInterface } from 'rtk';
 
 export type WalletStackParams = {
   Payback: undefined;
@@ -20,6 +20,8 @@ export type WalletStackParams = {
   ServicePaymentQRDetail: { qrData: QRInterface; servicePayment: ServicePaymentInterface };
   UpdatePayback: undefined | { cardIdToUpdate?: string; paybackCard?: string };
   UpdatePreferred: undefined | { cardIdToUpdate?: string; preferenteCard?: string; cardId?: string };
-  WalletHome: undefined;
   RechargeEdit: undefined | { supplierData?: RechargeSupplier; amount?: RechargeAmount; fields?: any; rechargeQRId?: string };
+  WalletHome: { toastState: string };
+  DepositWallet: { beneficiary: BeneficiaryInterface };
+  ServicePaymentQRDetailDepositController: { beneficiary: BeneficiaryInterface; toastState: string };
 };

@@ -11,7 +11,8 @@ import {
   setShoppingCartInitialState,
   useAppDispatch,
   useAppSelector,
-  setPromotionsInitialState
+  setPromotionsInitialState,
+  setWalletInitialState
 } from 'rtk';
 import { authServices } from 'services';
 import { version as app_version } from './../../../../package.json';
@@ -84,6 +85,7 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
       dispatch(setShoppingCartInitialState());
       dispatch(setInvoicingInitialState());
       dispatch(setPromotionsInitialState());
+      dispatch(setWalletInitialState());
       await CookieManager.clearAll();
     }
   };

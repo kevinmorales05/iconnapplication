@@ -2,13 +2,14 @@ import { ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
-import { Container, EmptyCardsCard, ServiceCard, PaymentCard, EmptyQRCard } from 'components/atoms';
+import { Container, EmptyCardsCard, ServiceCard, EmptyQRCard } from 'components/atoms';
 import { TextContainer } from 'components/molecules';
 import { AnimatedCarouselWithBorder } from 'components/organisms/AnimatedCarouselWithBorder';
 import { AnimatedCarousel, TabTwoElements, TouchableText } from 'components';
 import Entypo from 'react-native-vector-icons/Entypo';
 import PointCardsModalController from '../../../pointCards/PointCardsModalController';
-import { CarouselItem, PaymentWallet, ServiceQRType, TabItem } from 'rtk';
+import { BeneficiaryInterface, CarouselItem, ServiceQRType, TabItem } from 'rtk';
+import BeneficiaryCard from 'components/atoms/BeneficiaryCard/BeneficiaryCard';
 
 const tabNames: TabItem[] = [
   {
@@ -20,43 +21,21 @@ const tabNames: TabItem[] = [
     name: 'Destinatarios'
   }
 ];
-
-const paymentExamplesArr: PaymentWallet[] = [
-  {
-    paymentType: 'Depósito Bancario',
-    addressee: 'María Ramírez Saavedra',
-    bank: 'Santander'
-  },
-  {
-    paymentType: 'Depósito Bancario',
-    addressee: 'Ana Victoria Rodríguez',
-    bank: 'BBVA'
-  },
-  {
-    paymentType: 'Depósito Bancario',
-    addressee: 'Marcela Ramos de León',
-    bank: 'Banamex'
-  },
-  {
-    paymentType: 'Depósito Bancario',
-    addressee: 'Gabriel García Medea',
-    bank: 'BBVA'
-  }
-];
 interface Props {
   cards: CarouselItem[];
   serviceQRs: ServiceQRType[];
   rechargeQR: ServiceQRType[];
   servicesArr: any;
+  beneficiaries: BeneficiaryInterface[];
+  goToDepositDetail: (beneficiary: BeneficiaryInterface) => void;
 }
 
-const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, servicesArr }) => {
+const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, servicesArr, beneficiaries, goToDepositDetail }) => {
   const insets = useSafeAreaInsets();
   const [idSelected, setIdSelected] = useState('1');
   const savedServices = serviceQRs;
   const savedRecharges = rechargeQR;
   const [allServicesQR, setAllServicesQR] = useState<ServiceQRType[]>();
-  const savedAddressee = 0;
   const [visiblePointCardModel, setVisiblePointCardModel] = useState<boolean>(false);
   const savedCards = cards;
 
@@ -71,6 +50,7 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
   const hidePointCardsModal = () => {
     setVisiblePointCardModel(false);
   };
+  
 
   const showPointCardsModal = () => {
     setVisiblePointCardModel(true);
@@ -135,11 +115,11 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
               return <ServiceCard key={index} service={item} />;
             })
           ) : null
-        ) : savedAddressee === 0 ? (
+        ) : !beneficiaries.length ? (
           <EmptyQRCard />
         ) : (
-          paymentExamplesArr.map((item, index) => {
-            return <PaymentCard key={index} payment={item} />;
+          beneficiaries.map((item, index) => {
+            return <BeneficiaryCard goToDepositDetail={goToDepositDetail} key={index} beneficiary={item} />;
           })
         )}
       </Container>
