@@ -55,8 +55,8 @@ const ServicePaymentQRDetailController: React.FC<any> = ({ route, navigation }: 
             deleteServicePayment();
           }
         },
-        'error',
-        undefined,
+        'deleteCart',
+        false,
         true
       );
     } catch (error) {
