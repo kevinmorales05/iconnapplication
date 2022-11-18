@@ -59,7 +59,6 @@ const RechargeQRController: React.FC = () => {
       true
     );
   };
-
   return (
     <RechargeQRScreen
       onEdit={onEdit}

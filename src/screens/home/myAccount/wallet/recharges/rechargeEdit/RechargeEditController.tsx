@@ -23,7 +23,7 @@ const RechargeEditController: React.FC = () => {
 
   const saveRecharge = async (rechargeFields: any, qrData: string, newRecharge: RechargeUser) => {
     try {
-      await vtexDocsServices.updateDocByDocIDForAgeStatus('UR', rechargeQRId as string, newRecharge);
+      await vtexDocsServices.updateDocByDocIDForAgeStatus('UR', rechargeUser ? rechargeUser.id : (rechargeQRId.slice(3) as string), newRecharge);
       toast.show({
         message: 'Cambios guardados con éxito.',
         type: 'success'
@@ -43,7 +43,7 @@ const RechargeEditController: React.FC = () => {
   const onSubmit = async (rechargeFields: any) => {
     const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
     const newRecharge: RechargeUser = {
-      id: rechargeUser ? rechargeUser.id : rechargeQRId,
+      //id: rechargeUser ? rechargeUser.id : rechargeQRId,
       amount: amountSupplier?.ammount as number,
       isActive: true,
       label: rechargeFields.alias,
@@ -60,7 +60,6 @@ const RechargeEditController: React.FC = () => {
       navigate('RechargeAmounts', { rechargeUser: rechargeUser, selected: amountSupplier, type: 'edit' });
     } else navigate('RechargeAmounts', { supplierData: params?.supplierData, selected: amountSupplier, type: 'edit' });
   };
-
   return (
     <RechargeEditSceen
       fieldsParams={fields}
