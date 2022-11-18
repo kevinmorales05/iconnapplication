@@ -92,7 +92,7 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
           </Container>
 
           <Container row center style={{ marginTop: 48 }}>
-            <TextContainer typography="label" text="Número de contrato o servicio." fontBold />
+            <TextContainer typography="label" text="Número de contrato o servicio" fontBold />
             <Touchable onPress={onPressQuestionButton} marginLeft={8}>
               <MaterialIcons name="help" size={24} color={theme.brandColor.iconn_green_original} style={{ alignSelf: 'center' }} />
             </Touchable>

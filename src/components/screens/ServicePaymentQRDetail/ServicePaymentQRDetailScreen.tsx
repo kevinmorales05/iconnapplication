@@ -44,7 +44,7 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
           <TextContainer text={'Presenta este QR en tienda para poder realizar\nel pago del servicio.'} numberOfLines={2} marginTop={24} />
           <Container middle style={{ backgroundColor: theme.brandColor.iconn_white, paddingVertical: 16, marginHorizontal: 35, marginTop: 16 }}>
             <Container center crossCenter style={{ marginBottom: 16 }}>
-              <Image source={{ uri: servicePayment.imageURL }} style={{ width: 100, height: 40, resizeMode: 'cover' }} />
+              <Image source={{ uri: servicePayment.imageURL }} style={{ width: 120, height: 50, resizeMode: 'cover' }} />
             </Container>
             <QRCode value={QRString} size={140} />
 
@@ -63,7 +63,7 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
             <TextContainer text={`${moment(service?.expirationDate).format('YYYY-MM-DD')}`} />
           </Container>
           <Container row space="between" style={{ paddingBottom: 16, marginTop: 24 }}>
-            <TextContainer text={'Número de contrato\no de servicio'} fontBold numberOfLines={2} />
+            <TextContainer text={'Número de contrato\no servicio'} fontBold numberOfLines={2} />
             <TextContainer text={`${service?.contractNumber}`} />
           </Container>
         </Container>
