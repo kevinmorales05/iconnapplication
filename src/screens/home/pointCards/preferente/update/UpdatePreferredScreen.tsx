@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TextInput, Image } from 'react-native';
+import { TextInput, Image } from 'react-native';
 import { TextContainer, Container, Button, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import { ICONN_PREFERENTE_MAIN, CARD_PREF, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { Input } from '../../../../../components/atoms';
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
 import Barcode from '@kichiyaki/react-native-barcode-generator';
@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../../navigation/types';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { numericWithSpecificLenght } from 'utils/rules';
 
 interface Props {
   onSubmit: (data: FieldValues) => void;
@@ -34,11 +35,9 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
     handleSubmit,
     formState: { errors, isValid },
     register,
-    reset,
     setValue,
     trigger,
-    getValues,
-    unregister
+    getValues
   } = useForm({
     mode: 'onChange'
   });
@@ -53,7 +52,7 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
     alert.show(
       {
         title: 'Eliminar tarjeta ICONN Preferente',
-        message: `¿Estás seguro que quieres eliminar la tarjeta con terminación 1580?\nLa puedes volver a dar de alta en cualquier momento.`,
+        message: '¿Estás seguro que quieres eliminar la tarjeta con terminación 1580?\nLa puedes volver a dar de alta en cualquier momento.',
         acceptTitle: 'Eliminar',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
@@ -90,14 +89,12 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
   };
 
   const updateButtonStatus = () => {
-    setDisableButton(getValues('cardNumberToUpdate')?.length!=18);
+    setDisableButton(getValues('cardNumberToUpdate')?.length != 18);
     setPreferenteCardToUpdateinUpdate(getValues('cardNumberToUpdate'));
   };
 
   useEffect(() => {
-    if (mode === 'create') {
-
-    } else if (mode === 'update') {
+    if (mode === 'update') {
       populateForUpdate();
     }
   }, [mode]);
@@ -109,47 +106,41 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
   const addPreferente = (
     <Container>
       <Image source={ICONN_PREFERENTE_MAIN} style={{ width: '100%', height: moderateScale(193) }} />
-      <Container center style={{ width: '90%', marginTop: 10 }}>
-        <TextContainer marginTop={16} fontSize={14} text={`Ingresa tu código numérico y automáticamente\nse generará tu código de barras.`} />
-        <Container style={{ marginTop: 40, marginLeft: 20, height: 80 }}>
-        <Container row>
-            <TextContainer typography="h6" fontBold text={`Número de tarjeta`} marginTop={4} marginRight={8}/>
+      <Container style={{ width: '100%', marginTop: 10, paddingHorizontal: moderateScale(15) }}>
+        <TextContainer marginTop={16} fontSize={14} text={'Ingresa tu código numérico y automáticamente\nse generará tu código de barras.'} />
+        <Container style={{ marginTop: 40, height: 80 }}>
+          <Container row>
+            <TextContainer typography="h6" fontBold text={'Número de tarjeta'} marginTop={4} marginRight={8} />
             <Touchable onPress={goToHelp}>
               <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
             </Touchable>
           </Container>
-          <Input
-            {...register('cardNumberToUpdate')}
-            name="cardNumberToUpdate"
-            ref={cardNumberToUpdate}
-            control={control}
-            autoCorrect={false}
-            keyboardType="number-pad"
-            marginTop={2}
-            placeholder={'Código numérico (18 dígitos)'}
-            blurOnSubmit={true}
-            error={errors.cardNumberToUpdate?.message}
-            boldLabel
-            maxLength={18}
-            onSubmitEditing={() => cardNumberToUpdate.current?.focus()}
-            onChangeText={updateButtonStatus}
-          />
+          <Container row center style={{ height: moderateScale(70), width: '100%' }}>
+            <Input
+              {...register('cardNumberToUpdate')}
+              name="cardNumberToUpdate"
+              ref={cardNumberToUpdate}
+              control={control}
+              autoCorrect={false}
+              keyboardType="number-pad"
+              marginTop={2}
+              placeholder={'Código numérico (18 dígitos)'}
+              blurOnSubmit={true}
+              error={errors.cardNumberToUpdate?.message}
+              boldLabel
+              maxLength={18}
+              onSubmitEditing={() => cardNumberToUpdate.current?.focus()}
+              rules={numericWithSpecificLenght(18)}
+              onChangeText={updateButtonStatus}
+            />
+          </Container>
         </Container>
-        <Container
-          center
-          style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', height: '20%', paddingTop: 50, marginTop: 120, marginLeft:38 }}
-        >
-          <Button
-            length="long"
-            fontSize="h5"
-            round
-            fontBold
-            style={{ width: '95%',marginBottom: 5, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
-            onPress={handleSubmit(submit)}
-            disabled={disableButton}
-          >
-            Guardar
-          </Button>
+        <Container style={{ width: '100%', alignItems: 'center', marginTop: verticalScale(200) }}>
+          <Container style={{ width: '100%' }}>
+            <Button length="long" fontSize="h5" round fontBold onPress={handleSubmit(submit)} disabled={!isValid}>
+              Guardar
+            </Button>
+          </Container>
         </Container>
       </Container>
     </Container>
@@ -161,7 +152,7 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
         <Image source={CARD_PREF} style={{ width: moderateScale(261), height: moderateScale(164) }} />
       </Container>
       <Container center style={{ width: '100%', marginTop: 10, backgroundColor: theme.brandColor.iconn_white }}>
-        <TextContainer marginTop={50} fontSize={14} text={`Muestra el código de barras antes de pagar`} />
+        <TextContainer marginTop={50} fontSize={14} text={'Muestra el código de barras antes de pagar'} />
         <Container style={{ width: 360, height: moderateScale(20) }}>
           <Barcode format="CODE128B" value={preferenteCardToUpdateinUpdate} text={preferenteCardToUpdateinUpdate} />
         </Container>
@@ -207,28 +198,3 @@ const UpdatePreferredScreen: React.FC<Props> = ({ onSubmit, preferenteCardToUpda
 };
 
 export default UpdatePreferredScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    width: moderateScale(160),
-    minHeight: moderateScale(254),
-    backgroundColor: theme.brandColor.iconn_white,
-    marginTop: moderateScale(16),
-    borderRadius: moderateScale(10),
-    padding: moderateScale(8)
-  },
-  containerPorcentDiscount: {
-    width: moderateScale(84),
-    height: moderateScale(23),
-    borderRadius: moderateScale(12),
-    backgroundColor: theme.brandColor.iconn_green_discount,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10
-  },
-  image: {
-    width: moderateScale(20),
-    height: moderateScale(20),
-    resizeMode: 'contain'
-  }
-});

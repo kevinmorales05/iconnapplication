@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import UpdatePreferenteScreen from './UpdatePreferredScreen';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
@@ -10,7 +10,7 @@ import { useToast } from 'context';
 
 interface Props {}
 
-const UpdatePreferredController: React.FC<Props> = ({}) => {
+const UpdatePreferredController: React.FC<Props> = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'UpdatePreferente'>>();
   const { params } = route;
@@ -21,19 +21,15 @@ const UpdatePreferredController: React.FC<Props> = ({}) => {
     let preferentePointCardBody = { type: 'preferente', userId: user.id, isActive: true, barCode: cardNumberToUpdate };
     try {
       if (cardNumberToUpdate.length == 18) {
-        const response = await vtexDocsServices.updateDocByDocID('PC', params.cardIdToUpdate, preferentePointCardBody).then(cardSaved => {});
-      } else {
+        await vtexDocsServices.updateDocByDocID('PC', params.cardIdToUpdate, preferentePointCardBody);
       }
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
         type: 'error'
       });
-    } finally {
     }
   };
-
-  useEffect(() => {}, []);
 
   return (
     <SafeArea

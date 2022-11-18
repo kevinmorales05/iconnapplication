@@ -58,11 +58,13 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
 
   const deletePointCard = () => {
     deleteCard();
-    toast.show({
-      message: 'Tarjeta eliminada exitosamente.',
-      type: 'success'
-    });
-    navigate('WalletHome');
+    setTimeout(() => {
+      toast.show({
+        message: 'Tarjeta eliminada exitosamente.',
+        type: 'success'
+      });
+      navigate('WalletHome');
+    }, 250);
   };
 
   const updateButtonStatus = () => {

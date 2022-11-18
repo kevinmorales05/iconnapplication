@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PaybackScreen from './PaybackScreen';
 import { RootState, useAppSelector } from 'rtk';
 import { vtexDocsServices } from 'services';
@@ -10,19 +10,14 @@ import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-interface Props {
-
-}
+interface Props {}
 
 const PaybackController: React.FC<Props> = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'Payback'>>();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [barCodeFromScan, setBarCodeFromScan] = useState<string>();
   const { params } = route;
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [paybackCardToUpdate, setPaybackCardToUpdate] = useState(params.cardId);
-  const [paybackCardToShow, setPaybackCardToShow] = useState('');
-  const [cardId, setCardId] = useState(params.cardId);
   const toast = useToast();
 
   const onSubmit = async (userFields: any) => {
@@ -30,34 +25,27 @@ const PaybackController: React.FC<Props> = () => {
     let paybackPointCardBody = { type: 'payback', userId: user.id, isActive: true, barCode: barcodeNumber };
     try {
       if (barcodeNumber.length == 13) {
-        const response = vtexDocsServices.createDoc('PC', paybackPointCardBody).then(cardSaved => {
-          if (cardSaved) {//
-            setPaybackCardToUpdate(cardSaved.DocumentId);
-          }
-        });
-      } else {
+        const cardSaved = await vtexDocsServices.createDoc('PC', paybackPointCardBody);
+        if (cardSaved) {
+          //
+          setPaybackCardToUpdate(cardSaved.DocumentId);
+        }
       }
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
         type: 'error'
       });
-    } finally {
-
     }
   };
 
   const deletePointCard = async () => {
-    vtexDocsServices.deleteDocByDocID('PC', paybackCardToUpdate);
-  };
-  
-  const onPressScan = () => {
-    navigate('CodeReader', {navigationDestiny: 'Payback'});
+    await vtexDocsServices.deleteDocByDocID('PC', paybackCardToUpdate);
   };
 
-  useEffect(() => {
-    //setBarCodeFromScan(params.ticket);
-  }, [paybackCardToShow, params, cardId]);
+  const onPressScan = () => {
+    navigate('CodeReader', { navigationDestiny: 'Payback' });
+  };
 
   return (
     <SafeArea
@@ -74,8 +62,8 @@ const PaybackController: React.FC<Props> = () => {
         onSubmit={onSubmit}
         deleteCard={deletePointCard}
         cardToUpdate={paybackCardToUpdate}
-        cardId={cardId}
-        barcodeFromScan={params.ticket} 
+        cardId={params.cardId}
+        barcodeFromScan={params.ticket}
       />
     </SafeArea>
   );

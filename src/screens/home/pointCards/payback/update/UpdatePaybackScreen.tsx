@@ -15,6 +15,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../../navigation/types';
 import { CrudType } from '../../../../../components/types/crud-type';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { numericWithSpecificLenght } from 'utils/rules';
 
 interface Props {
   onPressScan: () => void;
@@ -129,6 +130,7 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onPressScan, onSubmit, paybackCa
           onSubmitEditing={() => barcodeNumberToUpdate.current?.focus()}
           onChangeText={updateButtonStatus}
           onPressScan={onPressScan}
+          rules={numericWithSpecificLenght(18)}
           scanIcon={true}
         />
       </Container>
