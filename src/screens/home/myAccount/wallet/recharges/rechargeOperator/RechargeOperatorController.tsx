@@ -41,7 +41,7 @@ const RechargeOperatorController: React.FC = () => {
   const onSubmit = async (rechargeFields: any) => {
     const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
     const newRecharge: RechargeUser = {
-      amount: amountSupplier?.ammount as number,
+      amount: amountSupplier?.ammount,
       isActive: true,
       label: rechargeFields.alias,
       referenceOrPhone: rechargeFields.telephone,

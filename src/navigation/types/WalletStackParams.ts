@@ -6,13 +6,20 @@ export type WalletStackParams = {
   Preferred: undefined;
   PreferredHelp: undefined;
   Recharge: undefined;
-  RechargeAmounts: undefined | { supplierData?: RechargeSupplier; selected?: RechargeAmount; type?: 'new' | 'edit' };
+  RechargeAmounts:
+    | undefined
+    | { supplierData?: RechargeSupplier; selected?: RechargeAmount; type?: 'new' | 'edit' }
+    | { rechargeUser?: ServiceQRType; selected?: RechargeAmount; type?: 'new' | 'edit' };
+  RechargeEdit:
+    | undefined
+    | { supplierData?: RechargeSupplier; amount?: RechargeAmount; fields?: any; rechargeQRId?: string }
+    | { rechargeUser: ServiceQRType; qrData?: string; amount?: RechargeAmount };
   RechargeHelp: undefined;
   RechargeOperator: undefined | { supplierData?: RechargeSupplier; amount?: RechargeAmount };
   RechargeQR:
     | undefined
     | { fieldValues?: any; amount?: RechargeAmount; supplierData?: RechargeSupplier; qrData?: string; rechargeQRId?: string }
-    | { rechargeUser: ServiceQRType };
+    | { rechargeUser: ServiceQRType; qrData?: string; amount?: RechargeAmount };
   ServicePayment: undefined;
   ServicePaymentAdd: { servicePayment: ServicePaymentInterface };
   ServicePaymentEdit: { qrData: QRInterface; servicePayment: ServicePaymentInterface };
@@ -20,8 +27,7 @@ export type WalletStackParams = {
   ServicePaymentQRDetail: { qrData: QRInterface; servicePayment: ServicePaymentInterface };
   UpdatePayback: undefined | { cardIdToUpdate?: string; paybackCard?: string };
   UpdatePreferred: undefined | { cardIdToUpdate?: string; preferenteCard?: string; cardId?: string };
-  RechargeEdit: undefined | { supplierData?: RechargeSupplier; amount?: RechargeAmount; fields?: any; rechargeQRId?: string };
-  WalletHome: { toastState: string };
+  WalletHome: undefined | { toastState: string };
   DepositWallet: { beneficiary: BeneficiaryInterface };
   ServicePaymentQRDetailDepositController: { beneficiary: BeneficiaryInterface; toastState: string };
 };

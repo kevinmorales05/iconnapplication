@@ -19,6 +19,7 @@ const RechargeEditController: React.FC = () => {
   const amountSupplier = params?.amount;
   const fields = params?.fields;
   const rechargeQRId = params?.rechargeQRId;
+  const rechargeUser = params?.rechargeUser;
 
   const saveRecharge = async (rechargeFields: any, qrData: string, newRecharge: RechargeUser) => {
     try {
@@ -27,7 +28,9 @@ const RechargeEditController: React.FC = () => {
         message: 'Cambios guardados con éxito.',
         type: 'success'
       });
-      navigate('RechargeQR', { fieldValues: rechargeFields, amount: amountSupplier, supplierData: supplier, qrData: qrData });
+      rechargeUser
+        ? navigate('RechargeQR', { rechargeUser: newRecharge, qrData: qrData, amount: amountSupplier })
+        : navigate('RechargeQR', { fieldValues: rechargeFields, amount: amountSupplier, supplierData: supplier, qrData: qrData, rechargeQRId: rechargeQRId });
     } catch (error) {
       toast.show({
         message: 'No se pudo agregar el número. \n Intenta más tarde.',
@@ -40,7 +43,7 @@ const RechargeEditController: React.FC = () => {
   const onSubmit = async (rechargeFields: any) => {
     const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
     const newRecharge: RechargeUser = {
-      id: rechargeQRId,
+      id: rechargeUser ? rechargeUser.id : rechargeQRId,
       amount: amountSupplier?.ammount as number,
       isActive: true,
       label: rechargeFields.alias,
@@ -53,16 +56,19 @@ const RechargeEditController: React.FC = () => {
   };
 
   const onPressAmount = () => {
-    navigate('RechargeAmounts', { supplierData: params?.supplierData, selected: amountSupplier, type: 'edit' });
+    if (rechargeUser) {
+      navigate('RechargeAmounts', { rechargeUser: rechargeUser, selected: amountSupplier, type: 'edit' });
+    } else navigate('RechargeAmounts', { supplierData: params?.supplierData, selected: amountSupplier, type: 'edit' });
   };
 
   return (
     <RechargeEditSceen
-      fields={fields}
+      fieldsParams={fields}
       supplier={supplier as RechargeSupplier}
       amount={amountSupplier?.ammount}
       onPressAmount={onPressAmount}
       onSubmit={onSubmit}
+      rechargeUser={rechargeUser}
     />
   );
 };

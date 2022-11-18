@@ -21,23 +21,30 @@ const RechargeQRController: React.FC = () => {
   const rechargeQRId = params?.rechargeQRId;
 
   const onEdit = () => {
-    navigate('RechargeEdit', { amount: amount, supplierData: supplier, fields: fields, rechargeQRId: rechargeQRId });
+    if (rechargeUser) {
+      navigate('RechargeEdit', { amount: amount, rechargeUser: rechargeUser });
+    } else navigate('RechargeEdit', { amount: amount, supplierData: supplier, fields: fields, rechargeQRId: rechargeQRId });
   };
 
   const onDelete = async () => {
-    const hiddenNumber = fields.telephone.slice(-2);
-    const deleteId = rechargeQRId.slice(3);
+    const hiddenNumber = rechargeUser
+      ? rechargeUser.reference === undefined
+        ? rechargeUser.referenceOrPhone.slice(-2)
+        : rechargeUser.reference.slice(-2)
+      : fields.telephone.slice(-2);
+    const deleteId = rechargeUser ? rechargeUser.id : rechargeQRId.slice(3);
     alert.show(
       {
         title: 'Eliminar número',
-        message: `¿Estás seguro que quieres eliminar el número **${hiddenNumber} (${fields.alias})? Lo puedes volver a agregar en cualquier momento.`,
-        acceptTitle: 'Cancelar',
-        async onAccept() {
+        message: `¿Estás seguro que quieres eliminar el número **${hiddenNumber} (${
+          rechargeUser ? rechargeUser.label : fields.alias
+        })? Lo puedes volver a agregar en cualquier momento.`,
+        acceptTitle: 'Eliminar',
+        async onCancel() {
           alert.hide();
         },
-        cancelTitle: 'Eliminar',
-        cancelOutline: 'iconn_red_original',
-        async onCancel() {
+        cancelTitle: 'Cancelar',
+        async onAccept() {
           await vtexDocsServices.deleteDocByDocID('UR', deleteId);
           toast.show({
             message: 'Número eliminado exitosamente.',
@@ -47,7 +54,9 @@ const RechargeQRController: React.FC = () => {
           navigate('WalletHome');
         }
       },
-      'deleteCart'
+      'deleteCart',
+      false,
+      true
     );
   };
 

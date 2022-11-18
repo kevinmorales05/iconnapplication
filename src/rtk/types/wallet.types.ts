@@ -58,7 +58,7 @@ export interface RechargeUser {
   userId: string;
   type: string;
   supplierName: string;
-  amount: number;
+  amount: any;
   label: string;
   referenceOrPhone: string;
   isActive: boolean;

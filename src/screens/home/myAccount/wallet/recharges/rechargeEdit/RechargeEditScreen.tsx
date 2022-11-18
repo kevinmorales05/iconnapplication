@@ -3,10 +3,11 @@ import theme from 'components/theme/theme';
 import React, { useEffect, useRef } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { Image, StyleSheet, TextInput } from 'react-native';
+import Config from 'react-native-config';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { RechargeSupplier } from 'rtk';
+import { RechargeSupplier, ServiceQRType } from 'rtk';
 import { alphabetRule, mobilePhoneRule } from 'utils/rules';
 
 interface Props {
@@ -14,13 +15,14 @@ interface Props {
   supplier: RechargeSupplier;
   onSubmit: (data: FieldValues) => void;
   amount?: number;
-  fields: any;
+  fieldsParams: any;
+  rechargeUser?: ServiceQRType;
 }
 
-const RechargeEditSceen: React.FC<Props> = ({ onPressAmount, supplier, onSubmit, amount, fields }) => {
+const RechargeEditSceen: React.FC<Props> = ({ onPressAmount, supplier, onSubmit, amount, fieldsParams, rechargeUser }) => {
   const insets = useSafeAreaInsets();
   const paramSupplier = supplier;
-
+  const { CATEGORIES_ASSETS } = Config;
   const {
     control,
     formState: { errors, isValid },
@@ -35,8 +37,11 @@ const RechargeEditSceen: React.FC<Props> = ({ onPressAmount, supplier, onSubmit,
   const aliasRef = useRef<TextInput>(null);
   useEffect(() => {
     const populateForUpdate = () => {
-      setValue('telephone', fields!.telephone);
-      setValue('alias', fields!.alias);
+      setValue(
+        'telephone',
+        rechargeUser ? (rechargeUser.reference === undefined ? rechargeUser.referenceOrPhone : rechargeUser.reference) : fieldsParams!.telephone
+      );
+      setValue('alias', rechargeUser ? rechargeUser.label : fieldsParams!.alias);
       trigger('telephone');
       trigger('alias');
     };
@@ -61,7 +66,7 @@ const RechargeEditSceen: React.FC<Props> = ({ onPressAmount, supplier, onSubmit,
       }}
     >
       <Container center>
-        <Image source={{ uri: paramSupplier.imageURL }} style={styles.image} />
+        <Image source={{ uri: rechargeUser ? CATEGORIES_ASSETS + `${rechargeUser.supplierName}Logo.png` : paramSupplier.imageURL }} style={styles.image} />
       </Container>
       <Container style={{ marginHorizontal: 16, marginBottom: 24 }}>
         <Input

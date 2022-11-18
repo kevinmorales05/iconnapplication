@@ -1,18 +1,51 @@
 import { TextContainer } from 'components/molecules';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { ServiceQRType } from 'rtk';
+import { RechargeAmount, ServiceQRType } from 'rtk';
 import { Container } from '../Container';
 import theme from 'components/theme/theme';
 import { Touchable } from 'components';
+import { vtexDocsServices } from 'services';
+import Config from 'react-native-config';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { WalletStackParams } from 'navigation/types';
+
 interface ServiceCardProps {
   service: ServiceQRType;
 }
 const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
-  //const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
+  const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
   //const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
+  const { CATEGORIES_ASSETS } = Config;
+  const getDataforQr = useCallback(async () => {
+    const data = await vtexDocsServices.getAllDocsByDocDataEntity('AR');
+    let amountQR: RechargeAmount;
+    if (data.length > 0) {
+      for (const dat of data) {
+        if (dat.supplierName === service.supplierName && dat.ammount === service.amount) {
+          amountQR = {
+            ammount: dat.ammount,
+            id: dat.id,
+            imageUrl: CATEGORIES_ASSETS + `${dat.supplierName}Logo.png`,
+            productName: dat.productName,
+            SKU: dat.SKU,
+            supplierName: dat.supplierName,
+            UPC: dat.UPC
+          };
+          return amountQR;
+        }
+      }
+    }
+  }, []);
+
+  const setQR = async () => {
+    const amountQR = await getDataforQr();
+    const qrData: string = `711APPU|${amountQR?.UPC}|${amountQR?.SKU}|${service.reference}|${amountQR?.ammount}00`;
+    navigate('RechargeQR', { rechargeUser: service, qrData: qrData, amount: amountQR });
+  };
   return (
-    <Touchable onPress={() => {}}>
+    <Touchable onPress={service.qrType === 'air' ? setQR : () => {}}>
       {/* </Touchable><Touchable onPress={() => navigate('RechargeQR', { rechargeUser: service })}> */}
       <Container row style={styles.serviceCard}>
         <Image source={{ uri: service.imageURL }} style={{ height: 48, width: 48 }} resizeMode={'contain'} />

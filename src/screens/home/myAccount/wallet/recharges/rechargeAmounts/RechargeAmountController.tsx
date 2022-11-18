@@ -14,6 +14,7 @@ const RechargeAmountController: React.FC = () => {
   const selectedParams = params?.selected;
   const type = params?.type;
   const [supplierRecharges, setSupplierRecharges] = useState<RechargeAmount[]>();
+  const rechargeUser = params?.rechargeUser;
 
   const OnPressAmount = async (amountId: string) => {
     const delay = ms => new Promise(res => setTimeout(res, ms));
@@ -52,6 +53,8 @@ const RechargeAmountController: React.FC = () => {
       await delay(500);
       type === 'new'
         ? navigate('RechargeOperator', { supplierData: supplier as RechargeSupplier, amount: select as RechargeAmount })
+        : rechargeUser
+        ? navigate('RechargeEdit', { amount: select, rechargeUser: rechargeUser })
         : navigate('RechargeEdit', { supplierData: supplier as RechargeSupplier, amount: select as RechargeAmount });
     }
   };
@@ -105,8 +108,14 @@ const RechargeAmountController: React.FC = () => {
     const onlySupplierArr: RechargeAmount[] = [];
     if (arr.length > 0) {
       arr.forEach(element => {
-        if (element.supplierName === supplier.type) {
-          onlySupplierArr.push(element);
+        if (rechargeUser) {
+          if (element.supplierName === rechargeUser.supplierName) {
+            onlySupplierArr.push(element);
+          }
+        } else {
+          if (element.supplierName === supplier.type) {
+            onlySupplierArr.push(element);
+          }
         }
       });
     }
@@ -119,9 +128,14 @@ const RechargeAmountController: React.FC = () => {
         showOnlySupplier(amountsArr);
       });
     });
-  }, [getRechargeAmounts]);
+  }, []);
   return (
-    <RechargeAmountScreen suppliersAmounts={supplierRecharges as RechargeAmount[]} supplier={supplier as RechargeSupplier} onPressAmount={OnPressAmount} />
+    <RechargeAmountScreen
+      suppliersAmounts={supplierRecharges as RechargeAmount[]}
+      supplier={supplier as RechargeSupplier}
+      onPressAmount={OnPressAmount}
+      rechargeUser={rechargeUser}
+    />
   );
 };
 

@@ -156,7 +156,8 @@ const WalletHomeController: React.FC = () => {
             reference: recharge.referenceOrPhone,
             type: recharge.type,
             userId: recharge.userId,
-            amount: recharge.amount
+            amount: recharge.amount,
+            id: recharge.id
           };
           rechargesArr.push(userRechargeQR);
         }

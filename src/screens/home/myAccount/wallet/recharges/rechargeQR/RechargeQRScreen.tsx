@@ -40,7 +40,7 @@ const RechargeQRScreen: React.FC<Props> = ({ supplier, amount, fieldValues, qrDa
         <Container>
           <Container row style={styles.containerData}>
             <TextContainer text="Teléfono celular" fontBold marginTop={24} fontSize={14} />
-            <TextContainer text={rechargeUser.reference} marginTop={24} fontSize={14} />
+            <TextContainer text={rechargeUser.reference === undefined ? rechargeUser.referenceOrPhone : rechargeUser.reference} marginTop={24} fontSize={14} />
           </Container>
           <Container style={styles.line} />
           <Container row style={styles.containerData}>
@@ -48,7 +48,7 @@ const RechargeQRScreen: React.FC<Props> = ({ supplier, amount, fieldValues, qrDa
             <TextContainer text={'$' + rechargeUser.amount} marginTop={24} fontSize={14} />
           </Container>
         </Container>
-        <Container>
+        <Container style={{ marginBottom: 35 }}>
           <Container style={{ marginHorizontal: 16, marginTop: 32 }}>
             <Button
               color="iconn_grey_background"
@@ -71,7 +71,7 @@ const RechargeQRScreen: React.FC<Props> = ({ supplier, amount, fieldValues, qrDa
               fontSize="h4"
               borderColor="iconn_med_grey"
               round
-              onPress={() => {}}
+              onPress={onDelete}
               leftIcon={<Ionicons name="md-trash-outline" color={theme.brandColor.iconn_red_original} size={20} />}
             >
               Eliminar
