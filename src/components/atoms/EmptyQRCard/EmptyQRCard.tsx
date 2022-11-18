@@ -7,7 +7,7 @@ import { Container } from '../Container';
 
 const EmptyQRCard: React.FC = () => {
   return (
-    <Container center style={{ marginTop: 75, paddingHorizontal: 40 }}>
+    <Container center style={{ marginTop: 50, paddingHorizontal: 40, paddingBottom: 65 }}>
       <Image source={ICONN_QR_CODE} style={{ height: 40, width: 40 }} />
       <TextContainer
         text="Aquí verás tus códigos QR para pagar más rápido en tienda."

@@ -79,6 +79,7 @@ const RechargeEditSceen: React.FC<Props> = ({ onPressAmount, supplier, onSubmit,
           boldLabel
           placeholder="10 dígitos"
           rules={mobilePhoneRule(true)}
+          maxLength={10}
           onFocus={() => {
             register('telephone', mobilePhoneRule(true));
             trigger('telephone');

@@ -1,4 +1,4 @@
-import { ScrollView } from 'react-native';
+import { Platform, ScrollView } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
@@ -50,7 +50,6 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
   const hidePointCardsModal = () => {
     setVisiblePointCardModel(false);
   };
-  
 
   const showPointCardsModal = () => {
     setVisiblePointCardModel(true);
@@ -69,61 +68,70 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
   return (
     <ScrollView
       bounces={false}
+      contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 }}
+      keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}
-      style={{ flex: 1 }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingBottom: insets.bottom + 16,
-        marginLeft: insets.left,
-        backgroundColor: theme.brandColor.iconn_background,
-        width: '100%'
-      }}
     >
-      <Container row style={{ justifyContent: 'flex-start' }}>
-        <TextContainer text="Tarjetas de puntos" fontBold fontSize={16} marginTop={19.5} marginLeft={10} />
-        {savedCards && savedCards.length === 0 ? null : (
-          <Container row style={{ marginTop: 25, position: 'absolute', end: 10 }}>
-            <Entypo name="plus" style={{ marginTop: 3 }} color={'#008060'} />
-            <TouchableText
-              underline
-              textColor={theme.brandColor.iconn_accent_principal}
-              text="Agregar"
-              typography="h5"
-              fontBold
-              onPress={() => showPointCardsModal()}
-            />
+      <Container flex space="between">
+        <Container>
+          <Container row style={{ justifyContent: 'flex-start' }}>
+            <TextContainer text="Tarjetas de puntos" fontBold fontSize={16} marginTop={19.5} marginLeft={16} />
+            {savedCards && savedCards.length === 0 ? null : (
+              <Container row style={{ marginTop: 25, position: 'absolute', end: 16 }}>
+                <Entypo name="plus" style={{ marginTop: 3 }} color={'#008060'} />
+                <TouchableText
+                  underline
+                  textColor={theme.brandColor.iconn_accent_principal}
+                  text="Agregar"
+                  typography="h5"
+                  fontBold
+                  onPress={() => showPointCardsModal()}
+                />
+              </Container>
+            )}
           </Container>
-        )}
+          {savedCards && savedCards.length === 0 ? (
+            <EmptyCardsCard showPointCardsModal={showPointCardsModal} />
+          ) : (
+            <AnimatedCarousel cards items={savedCards} onPressItem={() => {}} onPressOut={() => {}} />
+          )}
+        </Container>
+        <Container>
+          <TextContainer
+            text="Servicios en Tienda"
+            fontBold
+            fontSize={16}
+            marginTop={savedCards && savedCards.length === 0 ? 44 : 24}
+            marginBottom={16}
+            marginLeft={16}
+          />
+          <Container style={{ paddingHorizontal: 10 }}>
+            <AnimatedCarouselWithBorder items={servicesArr} />
+          </Container>
+        </Container>
+        <Container>
+          <TextContainer text="QR Guardados" fontBold fontSize={16} marginTop={32} marginBottom={16} marginLeft={16} />
+          <Container width="100%" backgroundColor={theme.brandColor.iconn_white} style={{ paddingTop: 16, paddingBottom: 16 }}>
+            <TabTwoElements items={tabNames} onPressItem={onPressTab} idSelected={idSelected} />
+            {idSelected === '1' ? (
+              allServicesQR && allServicesQR.length === 0 ? (
+                <EmptyQRCard />
+              ) : allServicesQR && allServicesQR.length > 0 ? (
+                allServicesQR.map((item, index) => {
+                  return <ServiceCard key={index} service={item} />;
+                })
+              ) : null
+            ) : !beneficiaries.length ? (
+              <EmptyQRCard />
+            ) : (
+              beneficiaries.map((item, index) => {
+                return <BeneficiaryCard goToDepositDetail={goToDepositDetail} key={index} beneficiary={item} />;
+              })
+            )}
+          </Container>
+        </Container>
+        <PointCardsModalController onPressClose={hidePointCardsModal} visible={visiblePointCardModel} />
       </Container>
-      {savedCards && savedCards.length === 0 ? (
-        <EmptyCardsCard showPointCardsModal={showPointCardsModal} />
-      ) : (
-        <AnimatedCarousel cards items={savedCards} onPressItem={() => {}} onPressOut={() => {}} />
-      )}
-      <TextContainer text="Servicios en Tienda" fontBold fontSize={16} marginTop={24} marginBottom={16} marginLeft={10} />
-      <Container style={{ paddingHorizontal: 10 }}>
-        <AnimatedCarouselWithBorder items={servicesArr} />
-      </Container>
-      <TextContainer text="QR Guardados" fontBold fontSize={16} marginTop={32} marginBottom={16} marginLeft={10} />
-      <Container width="100%" backgroundColor={theme.brandColor.iconn_white} style={{ paddingTop: 16, paddingBottom: 100 }}>
-        <TabTwoElements items={tabNames} onPressItem={onPressTab} idSelected={idSelected} />
-        {idSelected === '1' ? (
-          allServicesQR && allServicesQR.length === 0 ? (
-            <EmptyQRCard />
-          ) : allServicesQR && allServicesQR.length > 0 ? (
-            allServicesQR.map((item, index) => {
-              return <ServiceCard key={index} service={item} />;
-            })
-          ) : null
-        ) : !beneficiaries.length ? (
-          <EmptyQRCard />
-        ) : (
-          beneficiaries.map((item, index) => {
-            return <BeneficiaryCard goToDepositDetail={goToDepositDetail} key={index} beneficiary={item} />;
-          })
-        )}
-      </Container>
-      <PointCardsModalController onPressClose={hidePointCardsModal} visible={visiblePointCardModel} />
     </ScrollView>
   );
 };

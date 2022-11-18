@@ -62,6 +62,7 @@ const RechargeOperatorSceen: React.FC<Props> = ({ onPressAmount, supplier, onSub
           label="Número celular"
           boldLabel
           placeholder="10 dígitos"
+          maxLength={10}
           rules={mobilePhoneRule(true)}
           onFocus={() => {
             register('telephone', mobilePhoneRule(true));

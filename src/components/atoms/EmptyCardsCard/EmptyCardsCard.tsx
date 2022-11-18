@@ -10,36 +10,36 @@ interface Props {
   showPointCardsModal: () => void;
 }
 
-const EmptyCardsCard: React.FC<Props> = ({showPointCardsModal}) => {
-    return (
-      <Container center crossCenter style={styles.containerCardDot}>
-        <Touchable onPress={() => showPointCardsModal()}>
-          <Container center>
+const EmptyCardsCard: React.FC<Props> = ({ showPointCardsModal }) => {
+  return (
+    <Container center crossCenter style={styles.containerCardDot}>
+      <Touchable onPress={() => showPointCardsModal()}>
+        <Container center>
           <Image source={ICONN_CREDIT_CARD} style={styles.cardIcon} />
           <TextContainer text="Agregar" fontBold fontSize={16} textColor={theme.fontColor.grey} />
-          </Container>
-        </Touchable>
-      </Container>
-    );
-  };
-  
-  export default EmptyCardsCard;
+        </Container>
+      </Touchable>
+    </Container>
+  );
+};
 
-  const styles = StyleSheet.create({
-    containerCardDot: {
-      borderColor: theme.brandColor.iconn_grey,
-      borderWidth: 1.5,
-      borderStyle: 'dashed',
-      borderRadius: 10,
-      marginHorizontal: 65,
-      marginTop: 16,
-      paddingTop: 50,
-      paddingBottom: 50,
-      height: 164,
-      width: 261
-    },
-    cardIcon: {
-      height: 32,
-      width: 32
-    }
-  });
+export default EmptyCardsCard;
+
+const styles = StyleSheet.create({
+  containerCardDot: {
+    borderColor: theme.brandColor.iconn_grey,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderRadius: 10,
+    marginHorizontal: 50,
+    marginTop: 16,
+    paddingTop: 50,
+    paddingBottom: 50,
+    height: 164
+    //width: 261
+  },
+  cardIcon: {
+    height: 32,
+    width: 32
+  }
+});

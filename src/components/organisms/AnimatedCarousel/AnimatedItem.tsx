@@ -64,7 +64,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
     elevation: 3
   };
   const containerCard: StyleProp<ViewStyle> = {
-    marginHorizontal: 25,
+    marginHorizontal: 16,
     marginTop: 16
   };
 
@@ -203,7 +203,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
       <Touchable
         onPress={() => {
           () => {};
-          if (data.navigateTo?.length>0) {
+          if (data.navigateTo?.length > 0) {
             navigate(data.navigateTo, { addOrShow: 1, cardId: data.id, cardNumber: data.cardNumber });
           }
         }}
