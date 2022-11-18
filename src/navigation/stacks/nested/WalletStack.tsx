@@ -148,7 +148,7 @@ const WalletStack: React.FC = () => {
       />
       <Stack.Screen
         options={{
-          title: 'Beneficiaros',
+          title: 'Beneficiario',
           headerBackTitleVisible: false,
           headerBackVisible: false,
           headerLeft: () => (
