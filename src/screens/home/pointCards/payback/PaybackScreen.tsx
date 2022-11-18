@@ -157,7 +157,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
           <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
         </Touchable>
       </Container>
-      <Container row center style={{ marginLeft: 20, height: 60, width: '85%' }}>
+      <Container row center style={{ marginLeft: 20, height: 65, width: '85%' }}>
         <Input
         {...register('barcodeNumber')}
           name="barcodeNumber"
