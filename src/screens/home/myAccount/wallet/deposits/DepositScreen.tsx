@@ -62,7 +62,7 @@ const DepositScreen: React.FC<Props> = ({ onSubmit, banks, beneficiary }) => {
     >
       <TextContainer typography="h5" text={'Realiza depósitos en caja más rápido.'} marginTop={0} />
       <Container>
-        <TextContainer typography="h6" fontBold text={'Número de tarjeta o cuenta'} marginTop={moderateScale(25)} />
+        <TextContainer typography="h6" fontBold text={'Número de tarjeta, cuenta o CLABE'} marginTop={moderateScale(25)} />
         <Input
           {...register('numberAccount')}
           ref={nameRef}
@@ -70,10 +70,10 @@ const DepositScreen: React.FC<Props> = ({ onSubmit, banks, beneficiary }) => {
           autoCorrect
           autoCapitalize="none"
           keyboardType="number-pad"
-          placeholder="12, 16 o 18 dígitos"
+          placeholder="10, 16 o 18 dígitos"
           maxLength={18}
           blurOnSubmit={true}
-          rules={onlyNumericWithSpecificLenght(16)}
+          rules={onlyNumericWithSpecificLenght(10)}
           error={errors.numberAccount?.message}
           onSubmitEditing={() => numberAccountRef.current?.focus()}
         />
@@ -121,9 +121,9 @@ const DepositScreen: React.FC<Props> = ({ onSubmit, banks, beneficiary }) => {
         <Container style={styles.containerInfo}>
           <InfoSvg size={moderateScale(24)} />
           <Container style={{ marginLeft: moderateScale(10) }}>
-            <Text style={{ fontSize: theme.fontSize.h6 }}>
-              <Text style={{ fontWeight: 'bold' }}>Importante:</Text> Por seguridad, la información de depósitos bancarios será eliminada cuando salgas de tu
-              cuenta.
+            <Text style={{ fontSize: theme.fontSize.h6, color: theme.fontColor.dark, lineHeight: moderateScale(16) }}>
+              <Text style={{ fontWeight: 'bold', color: theme.fontColor.dark }}>Importante:</Text> Por seguridad, la información de depósitos bancarios será
+              eliminada cuando salgas de tu cuenta.
             </Text>
           </Container>
         </Container>

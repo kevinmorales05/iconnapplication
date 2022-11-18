@@ -46,7 +46,7 @@ const ServicePaymentQRDetailDeposits: React.FC<Props> = ({ onPressEditButton, on
             <TextContainer text={`${service?.name}`} />
           </Container>
         </Container>
-        <Container style={{ marginTop: verticalScale(30) }}>
+        <Container style={{ marginTop: verticalScale(30), paddingBottom: moderateScale(40) }}>
           <Button outline round fontBold fontSize="h4" onPress={onPressEditButton} leftIcon={<PenSvg size={moderateScale(20)} />}>
             Editar
           </Button>
