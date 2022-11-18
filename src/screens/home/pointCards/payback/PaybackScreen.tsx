@@ -69,13 +69,14 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
     setPaybackCard(getValues('barcodeNumber'));
   };
 
-  const getPointCardById = () => {
-    vtexDocsServices.getDocByDocID('PC', cardId).then(cardRetrieved => {
+  const getPointCardById = async () => {
+    setTimeout(async () => {
+      const cardRetrieved = await vtexDocsServices.getDocByDocID('PC', cardId);
       if (cardRetrieved) {
         let { barCode } = cardRetrieved[0];
         setPaybackCard(barCode);
       }
-    });
+    }, 250);
   };
 
   useEffect(() => {
@@ -83,7 +84,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
       getPointCardById();
       setPaybackCard(addOrShow == 1 ? cardNumberToShow : '0000000000000');
     }
-  }, [paybackCard, isValid, cardNumberToShow, barcodeFromScan]);
+  }, [isValid, cardNumberToShow, barcodeFromScan]);
 
   const showAlert = () => {
     alert.show(

@@ -24,24 +24,18 @@ const UpdatePaybackController: React.FC<Props> = () => {
     let paybackPointCardBody = { type: 'payback', userId: user.id, isActive: true, barCode: barcodeNumberToUpdate };
     try {
       if (barcodeNumberToUpdate.length == 13) {
-        const response = await vtexDocsServices.updateDocByDocID('PC', params.cardIdToUpdate, paybackPointCardBody).then(cardSaved => {
-          if (cardSaved) {
-
-          }
-        });
-      } else {
+        await vtexDocsServices.updateDocByDocID('PC', params.cardIdToUpdate, paybackPointCardBody);
       }
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
         type: 'error'
       });
-    } finally {
     }
   };
 
   const onPressScan = () => {
-    navigate('CodeReader', {navigationDestiny: 'UpdatePayback'});
+    navigate('CodeReader', { navigationDestiny: 'UpdatePayback' });
   };
 
   return (

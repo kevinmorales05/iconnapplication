@@ -135,7 +135,7 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onPressScan, onSubmit, paybackCa
       <Container style={{ width: '100%', alignItems: 'center', marginTop: verticalScale(250) }}>
         <Container style={{ width: '100%' }}>
           <Button length="long" fontSize="h5" round fontBold onPress={handleSubmit(submit)} disabled={!isValid}>
-            Agregar
+            Guardar
           </Button>
         </Container>
       </Container>
