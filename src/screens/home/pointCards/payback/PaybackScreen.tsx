@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, TextInput, Image, Dimensions } from 'react-native';
+import { TextInput, Image, Dimensions } from 'react-native';
 import { TextContainer, Container, Button, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import { ICONN_PAYBACK_MAIN, CARD_PETRO, ICONN_EMPTY_SHOPPING_CART } from 'assets/images';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { Input } from '../../../../components/atoms';
 import InformationModalController from './information/InformationModalController';
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form';
@@ -29,9 +29,8 @@ interface Props {
 }
 
 const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId, barcodeFromScan }) => {
-  let initalButtonValue = false;
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [paybackCard, setPaybackCard] = useState(barcodeFromScan!=undefined?barcodeFromScan:'0000000000');
+  const [paybackCard, setPaybackCard] = useState(barcodeFromScan != undefined ? barcodeFromScan : '0000000000');
   const toast = useToast();
   const [visible, setVisible] = useState<boolean>(false);
   const [paybackStatus, setPaybackStatus] = useState(addOrShow);
@@ -41,22 +40,15 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
     handleSubmit,
     formState: { errors, isValid },
     register,
-    reset,
     setValue,
-    trigger,
     getValues
   } = useForm({
     mode: 'onChange'
   });
 
   if (barcodeFromScan != undefined) {
-    setValue('barcodeNumber',barcodeFromScan.ticketNo);
-    if(barcodeFromScan.ticketNo.length==13){
-      initalButtonValue = true;
-    }
+    setValue('barcodeNumber', barcodeFromScan.ticketNo);
   }
-
-  const [disableButton, setDisableButton] = useState(initalButtonValue);
 
   const barcodeNumber = useRef<TextInput>(null);
 
@@ -74,7 +66,6 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
   };
 
   const updateButtonStatus = () => {
-    setDisableButton(getValues('barcodeNumber')?.length!=13);
     setPaybackCard(getValues('barcodeNumber'));
   };
 
@@ -88,17 +79,17 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
   };
 
   useEffect(() => {
-    if(addOrShow==1){
-      getPointCardById()
-      setPaybackCard(addOrShow==1?cardNumberToShow:'0000000000000');
+    if (addOrShow === 1) {
+      getPointCardById();
+      setPaybackCard(addOrShow == 1 ? cardNumberToShow : '0000000000000');
     }
-  }, [paybackCard, disableButton, cardNumberToShow, barcodeFromScan]);
+  }, [paybackCard, isValid, cardNumberToShow, barcodeFromScan]);
 
   const showAlert = () => {
     alert.show(
       {
         title: 'Eliminar Monedero PAYBACK',
-        message: `¿Estás seguro que quieres eliminar el monedero con terminación `+paybackCard.slice(paybackCard.length-4)+`?`,
+        message: '¿Estás seguro que quieres eliminar el monedero con terminación ' + paybackCard.slice(paybackCard.length - 4) + '?',
         acceptTitle: 'Eliminar',
         cancelTitle: 'Cancelar',
         cancelOutline: 'iconn_light_grey',
@@ -144,22 +135,22 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
   };
 
   const addPayback = (
-    <Container>
+    <Container style={{ paddingHorizontal: moderateScale(15) }}>
       <Container center>
         <Image source={ICONN_PAYBACK_MAIN} style={{ width: moderateScale(280), height: moderateScale(138) }} />
       </Container>
-      <Container style={{ width: '90%', marginTop: moderateScale(15), marginLeft: moderateScale(10) }}>
+      <Container style={{ width: '100%', marginTop: moderateScale(15) }}>
         <TextContainer marginTop={8} fontSize={14} text={'Ingresa el número bajo el código de barras de tu tarjeta PAYBACK.'} />
       </Container>
-      <Container center row style={{ marginTop: 40, width: '80%', marginLeft: moderateScale(20) }}>
-        <TextContainer typography="h6" fontBold text={`Número de código de barras`} marginRight={8} marginTop={4} />
+      <Container center row style={{ marginTop: 40, width: '100%' }}>
+        <TextContainer typography="h6" fontBold text={'Número de código de barras'} marginRight={8} marginTop={4} />
         <Touchable onPress={goToModalHelp}>
           <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
         </Touchable>
       </Container>
-      <Container row center style={{ marginLeft: 20, height: 65, width: '85%' }}>
+      <Container row center style={{ height: moderateScale(70), width: '100%' }}>
         <Input
-        {...register('barcodeNumber')}
+          {...register('barcodeNumber')}
           name="barcodeNumber"
           ref={barcodeNumber}
           control={control}
@@ -175,21 +166,12 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
           scanIcon={true}
         />
       </Container>
-      <Container
-        center
-        style={{ backgroundColor: theme.brandColor.iconn_background, paddingLeft: 0, width: '100%', height: '20%', paddingTop: 50, marginTop: 150 }}
-      >
-        <Button
-          length="long"
-          fontSize="h5"
-          round
-          fontBold
-          style={{ marginBottom: 5, width: 320, backgroundColor: theme.brandColor.iconn_green_original, height: 50, borderRadius: 10 }}
-          onPress={handleSubmit(submit)}
-          disabled={disableButton}
-        >
-          Agregar
-        </Button>
+      <Container style={{ width: '100%', alignItems: 'center', marginTop: verticalScale(250) }}>
+        <Container style={{ width: '100%' }}>
+          <Button length="long" fontSize="h5" round fontBold onPress={handleSubmit(submit)} disabled={!isValid}>
+            Agregar
+          </Button>
+        </Container>
       </Container>
     </Container>
   );
@@ -215,7 +197,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
           maxWidth={167}
         />
         <Container center>
-          <Container style={{ width: '90%', marginTop: 36 }}>
+          <Container style={{ width: '90%', marginTop: verticalScale(90) }}>
             <Button
               fontSize="h4"
               fontBold
@@ -250,43 +232,11 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
   );
 
   return (
-    <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%'}} height={Dimensions.get('window').height * 0.75}>
-      {
-        paybackStatus == 0 ?
-          addPayback :
-          (paybackStatus == 1 ?
-            addedPayback :
-            <></>)
-      }
+    <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%' }} height={Dimensions.get('window').height * 0.75}>
+      {paybackStatus == 0 ? addPayback : paybackStatus == 1 ? addedPayback : <></>}
       <InformationModalController onPressClose={hideInformationModal} visible={visible} />
     </Container>
-
   );
 };
 
 export default PaybackScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    width: moderateScale(160),
-    minHeight: moderateScale(254),
-    backgroundColor: theme.brandColor.iconn_white,
-    marginTop: moderateScale(16),
-    borderRadius: moderateScale(10),
-    padding: moderateScale(8)
-  },
-  containerPorcentDiscount: {
-    width: moderateScale(84),
-    height: moderateScale(23),
-    borderRadius: moderateScale(12),
-    backgroundColor: theme.brandColor.iconn_green_discount,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10
-  },
-  image: {
-    width: moderateScale(20),
-    height: moderateScale(20),
-    resizeMode: 'contain'
-  }
-});
