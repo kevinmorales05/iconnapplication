@@ -28,8 +28,8 @@ const ServicePaymentQRDetailDeposits: React.FC<Props> = ({ onPressEditButton, on
     >
       <Container flex style={{ paddingHorizontal: moderateScale(15) }}>
         <Container>
-          <TextContainer text={'Presenta este QR en tienda para poder realizar un\ndepósito más rápido.'} numberOfLines={2} marginTop={24} />
-          <Container middle style={{ backgroundColor: theme.brandColor.iconn_white, paddingVertical: 16, marginHorizontal: 35, marginTop: 16 }}>
+          <TextContainer text={'Presenta este QR en tienda para poder realizar un depósito más rápido.'} numberOfLines={2} marginTop={24} />
+          <Container middle style={{ backgroundColor: theme.brandColor.iconn_white, paddingVertical: 16, marginHorizontal: 35, marginTop: moderateScale(20) }}>
             {/* <Container center crossCenter style={{ marginBottom: 16 }}>
               <Image source={{ uri: '' }} style={{ width: moderateScale(40), height: moderateScale(40), resizeMode: 'cover' }} />
             </Container> */}
