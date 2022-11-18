@@ -62,7 +62,7 @@ const DepositScreen: React.FC<Props> = ({ onSubmit, banks, beneficiary }) => {
     >
       <TextContainer typography="h5" text={'Realiza depósitos en caja más rápido.'} marginTop={0} />
       <Container>
-        <TextContainer typography="h6" fontBold text={'Número de tarjeta, cuenta o CLABE'} marginTop={moderateScale(25)} />
+        <TextContainer typography="h6" fontBold text={'Número de cuenta, tarjeta o CLABE'} marginTop={moderateScale(25)} />
         <Input
           {...register('numberAccount')}
           ref={nameRef}
