@@ -290,12 +290,14 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
             </Text>{' '}
           </Text>
         ),
-        type: 'limited'
+        type: 'limited',
+        timeToShow: 10000
       });
     } else if (paySuccess && isGuest) {
       toast.show({
         message: 'Más detalles sobre el pedido en tu correo electrónico',
-        type: 'limited'
+        type: 'limited',
+        timeToShow: 10000
       });
     }
   }, [paySuccess]);
