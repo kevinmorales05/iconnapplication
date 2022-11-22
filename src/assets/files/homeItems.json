@@ -1,0 +1,92 @@
+[
+  {
+    "id": "f8e41f96-3475-11ed-83ab-0add8c32c7e9",
+    "description": "Cafe select más galletas por $30",
+    "image": "https://oneiconn.vtexassets.com/arquivos/cafe_select_mas_galletas.jpg",
+    "link": "https://www.7-eleven.com.mx/promociones.html",
+    "navigationType": "external",
+    "promotion_name": "Cafe select más galletas por $30",
+    "promotion_type": "all_promotions",
+    "status": "active"
+  },
+  {
+    "id": "5a05426b-343b-11ed-83ab-0e8c600a1493",
+    "description": "Regreso a clases",
+    "image": "https://oneiconn.vtexassets.com/arquivos/01_W-P9-BACKTOSCHOOL.jpg",
+    "link": "https://www.7-eleven.com.mx/",
+    "navigationType": "external",
+    "promotion_name": "regreso_a_clases",
+    "promotion_type": "principal",
+    "status": "active"
+  },
+  {
+    "id": "ca0b8b97-343b-11ed-83ab-12d0eff3a6d9",
+    "description": "Apex, gana una réplica",
+    "image": "https://oneiconn.vtexassets.com/arquivos/03_RW-P9-apexCC.jpg",
+    "link": "https://www.7-eleven.com.mx/app.html",
+    "navigationType": "external",
+    "promotion_name": "Apex",
+    "promotion_type": "principal",
+    "status": "active"
+  },
+  {
+    "id": "25f6a5bb-343c-11ed-83ab-0af0737be70f",
+    "description": "Café select, la forma responsable de empezar el día",
+    "image": "https://oneiconn.vtexassets.com/arquivos/04_RW-P8-CAFEHONDURAS.jpg",
+    "link": "https://www.7-eleven.com.mx/",
+    "navigationType": "external",
+    "promotion_name": "7-Reserve",
+    "promotion_type": "principal",
+    "status": "active"
+  },
+  {
+    "id": "67639c4d-3475-11ed-83ab-02357b8613f7",
+    "description": "Comparte 2 Sabritas o paquetaxo variedad 110-200g",
+    "image": "https://oneiconn.vtexassets.com/arquivos/Herradura_Tecate.jpg",
+    "link": "https://www.7-eleven.com.mx/promociones.html",
+    "navigationType": "external",
+    "promotion_name": "Comparte 2 Sabritas o paquetaxo variedad 110-200g",
+    "promotion_type": "all_promotions",
+    "status": "active"
+  },
+  {
+    "id": "0208be5b-3473-11ed-83ab-0add8c32c7e9",
+    "description": "Compra una herradura y llevate 4 Tecate",
+    "image": "https://oneiconn.vtexassets.com/arquivos/Herradura_Tecate.jpg",
+    "link": "https://www.7-eleven.com.mx/promociones.html",
+    "navigationType": "external",
+    "promotion_name": "Compra una herradura y llevate 4 Tecate",
+    "promotion_type": "all_promotions",
+    "status": "active"
+  },
+  {
+    "id": "bc0d3f96-3469-11ed-83ab-02f176c6f4a3",
+    "description": "¡Busca la sucursal más cerca de ti!",
+    "image": "https://oneiconn.vtexassets.com/arquivos/petro7-01_banner-min.jpg",
+    "link": "https://tarjetapetro-7.com.mx/petro7.fuelAvailability/",
+    "navigationType": "external",
+    "promotion_name": "Nuestras sucursales",
+    "promotion_type": "second",
+    "status": "active"
+  },
+  {
+    "id": "b101adcf-33e7-11ed-83ab-12529a619e67",
+    "description": "Sabritas te lleva a Qtar",
+    "image": "https://oneiconn.vtexassets.com/arquivos/02_BANNERS-7ELEVEN_SABRITAS_PROMO-MUNDIAL-QATAR_1440x630px.png",
+    "link": "https://www.7-eleven.com.mx/",
+    "navigationType": "external",
+    "promotion_name": "sabritas_qtar",
+    "promotion_type": "principal",
+    "status": "active"
+  },
+  {
+    "id": "1e707fa9-346a-11ed-83ab-0e76ff8e963f",
+    "description": "Capuccino con bebida base vegetal o probióticos",
+    "image": "https://oneiconn.vtexassets.com/arquivos/petro7-01_banner-min.jpg",
+    "link": "https://www.petro-7.com.mx/",
+    "navigationType": "external",
+    "promotion_name": "Sabe bien, te sientes mejor. ¡Pruébalos!",
+    "promotion_type": "day_promotion",
+    "status": "active"
+  }
+]
