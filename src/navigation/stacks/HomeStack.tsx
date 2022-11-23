@@ -47,6 +47,9 @@ import SearchScreen from 'screens/search/SearchScreen';
 import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
 import TaxInfoController from 'screens/home/myAccount/manageTaxInfo/TaxInfo/TaxInfoController';
+import HelpItemsController from 'screens/home/myAccount/wallet/helpCenter/items/HelpItemsController';
+import QuestionsController from 'screens/home/myAccount/wallet/helpCenter/questions/QuestionsController';
+import StepsController from 'screens/home/myAccount/wallet/helpCenter/steps/StepsController';
 import theme from 'components/theme/theme';
 import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicingPetro/ViewInvoiceGeneratedPetro/ViewInvoiceGeneratedPetroController';
 import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
@@ -91,10 +94,14 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={EditEmailOtpController} />
       <Stack.Screen name="EditPassword" component={EditPasswordController} />
       <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
-      <Stack.Screen options={{ title: 'Nuevo Perfil Fiscal' }} name="AddRFC" component={AddRFCController} />
+      <Stack.Screen options={{ title: 'Nuevo Perfil Fiscal', gestureEnabled: false, headerBackVisible: false }} name="AddRFC" component={AddRFCController} />
       <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
       <Stack.Screen options={{ title: 'Facturar' }} name="Invoice" component={InvoiceController} />
-      <Stack.Screen options={{ title: 'Perfil Fiscal' }} name="CreateTaxProfile" component={CreateTaxProfileController} />
+      <Stack.Screen
+        options={{ title: 'Perfil Fiscal', gestureEnabled: false, headerBackVisible: false }}
+        name="CreateTaxProfile"
+        component={CreateTaxProfileController}
+      />
       <Stack.Screen name="ChangedPassword" options={{ headerShown: false }} component={ChangedPasswordController} />
       <Stack.Screen
         options={{
@@ -142,6 +149,9 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="PostalCode" options={{ title: '', headerShadowVisible: false }} component={PostalCodeController} />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
       <Stack.Screen name="ChangePassword" options={{ title: 'Editar contraseña' }} component={ChangePasswordController} />
+      <Stack.Screen name="HelpItems" options={{ title: 'Ayuda' }} component={HelpItemsController} />
+      <Stack.Screen name="HelpQuestions" options={({ route }) => ({title: route.params.moduleName, headerBackTitleVisible: false })} component={QuestionsController} />
+      <Stack.Screen name="HelpSteps" options={({ route }) => ({ title: route.params.question, headerBackTitleVisible: false })} component={StepsController} />
       <Stack.Screen
         options={{
           headerShown: true,
