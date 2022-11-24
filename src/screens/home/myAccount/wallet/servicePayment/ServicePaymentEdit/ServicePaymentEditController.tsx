@@ -96,7 +96,6 @@ const ServicePaymentEditController: React.FC<any> = ({ route }: NativeStackScree
       } else {
         toast.show({ message: 'No se pudo actualizar el servicio.\nIntenta más tarde.', type: 'error' });
       }
-      navigate('ServicePayment');
     } finally {
       loader.hide();
     }
