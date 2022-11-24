@@ -26,6 +26,7 @@ export interface ServiceQRType {
   userId: string;
   amount?: number;
   qrType: QRType;
+  billerId?: number;
 }
 
 export interface PaymentWallet {

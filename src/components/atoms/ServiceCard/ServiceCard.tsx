@@ -13,8 +13,9 @@ import { WalletStackParams } from 'navigation/types';
 
 interface ServiceCardProps {
   service: ServiceQRType;
+  onPressService: (serviceSelect: ServiceQRType) => void;
 }
-const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({ service, onPressService }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
   //const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
   const { CATEGORIES_ASSETS } = Config;
@@ -45,7 +46,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
     navigate('RechargeQR', { rechargeUser: service, qrData: qrData, amount: amountQR });
   };
   return (
-    <Touchable onPress={service.qrType === 'air' ? setQR : () => {}}>
+    <Touchable onPress={service.qrType === 'air' ? setQR : () => onPressService(service)}>
       {/* </Touchable><Touchable onPress={() => navigate('RechargeQR', { rechargeUser: service })}> */}
       <Container row style={styles.serviceCard}>
         <Image source={{ uri: service.imageURL }} style={{ height: 48, width: 48 }} resizeMode={'contain'} />
