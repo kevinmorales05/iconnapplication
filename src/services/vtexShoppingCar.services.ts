@@ -78,6 +78,16 @@ async function saveShippingData(shoppingCartId: string, shippingData: ShippingDa
   return data;
 }
 
+/**
+ * Function to setCustom values in the orderForm.
+ */
+async function setCustomValues(orderFormId: string): Promise<any> {
+  const response = await ShoppingCar.getInstance().putRequest(`/${orderFormId}/customData/dispositivo/mobile`, { value: 'true' });
+  if (response === undefined) return Promise.reject(new Error('setCustomValues:/attachments'));
+  const { data } = response;
+  return data;
+}
+
 export {
   getCurrentShoppingCartOrCreateNewOne,
   getShoppingCart,
@@ -85,5 +95,6 @@ export {
   emptyShoppingCar,
   clearShoppingCartMessages,
   saveClientProfileData,
-  saveShippingData
+  saveShippingData,
+  setCustomValues
 };

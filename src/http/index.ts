@@ -14,3 +14,4 @@ export * from './vtex-api-pickUpPoints';
 export * from './vtex-api-reviews';
 export * from './vtex-api-users';
 export * from './vtex-api';
+export * from './liveStatus-api';

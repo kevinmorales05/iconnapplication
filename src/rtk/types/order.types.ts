@@ -17,6 +17,7 @@ export interface OrderInterface {
   orderIsComplete?: boolean;
   totalValue: number;
   navigate: (screen: any, params: any) => void;
+  seeMore?: (orderId: string) => void;
 }
 export interface OrdersListInterface {
   list: OrderInterface[];

@@ -50,6 +50,32 @@ async function getAllDocByUserID(dataentity: string, userId: string): Promise<an
   return data;
 }
 
+/**
+ * Function to get items questions about help
+ * TODO error handling
+ * TODO interface for doc
+ */
+
+ async function getHelpModuleQuestionsByModuleId(dataentity: string, helpModuleId: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=moduleId=${helpModuleId}`);
+  //error handling
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to get Question steps about help
+ * TODO error handling
+ * TODO interface for doc
+ */
+
+ async function getHelpQuestionsStepsByQuestionsId(dataentity: string, questionId: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=questionId=${questionId}`);
+  //error handling
+  const { data } = response;
+  return data;
+}
+
 async function getDocByEmail(dataentity: string): Promise<any> {
   const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
   //error handling
@@ -135,5 +161,7 @@ export const vtexDocsServices = {
   getImagesWelcomeLogin,
   getAllDocsByDocDataEntity,
   getPrefixesWallet,
-  getBanksWallet
+  getBanksWallet,
+  getHelpModuleQuestionsByModuleId,
+  getHelpQuestionsStepsByQuestionsId
 };

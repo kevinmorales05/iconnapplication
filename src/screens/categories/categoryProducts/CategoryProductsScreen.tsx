@@ -363,18 +363,26 @@ const CategoryProductsScreen: React.FC = () => {
     if (isLoading) {
       const residuoOperation = productsRender.length % 2;
       if (residuoOperation === 0) {
-        return(
-          <Container style={{justifyContent: 'space-between',flexDirection: 'row', width: Dimensions.get('screen').width, paddingHorizontal: moderateScale(15), left: -moderateScale(15)}}>
+        return (
+          <Container
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              width: Dimensions.get('screen').width,
+              paddingHorizontal: moderateScale(15),
+              left: -moderateScale(15)
+            }}
+          >
             <CardProductSkeleton notMarinLeft />
             <CardProductSkeleton notMarinLeft />
           </Container>
-        )
-      }else{
+        );
+      } else {
         return (
           <Container row>
             <CardProductSkeleton notMarinLeft />
           </Container>
-        )
+        );
       }
     }
     return null;
@@ -428,11 +436,11 @@ const CategoryProductsScreen: React.FC = () => {
             {productsRender.length ? (
               <Container width={'100%'}>
                 <Container style={{ marginTop: moderateScale(15) }}>
-                  <CustomText
+                  {/* <CustomText
                     text={`${productsRender.length} producto${productsRender.length > 1 ? 's' : ''} encontrado${productsRender.length > 1 ? 's' : ''}`}
                     textColor={theme.fontColor.placeholder}
                     fontSize={theme.fontSize.h6}
-                  />
+                  /> */}
                 </Container>
                 <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
                   <FlatList
@@ -442,7 +450,7 @@ const CategoryProductsScreen: React.FC = () => {
                     onEndReached={loadMoreItem}
                     refreshing={refreshing}
                     onRefresh={() => _onRefresh()}
-                    keyExtractor={(item) => item.productId + ""}
+                    keyExtractor={item => item.productId + ''}
                     contentContainerStyle={{
                       flexDirection: 'row',
                       flexWrap: 'wrap',

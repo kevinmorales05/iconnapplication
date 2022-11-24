@@ -132,9 +132,10 @@ const WalletStack: React.FC = () => {
         options={({ route }) => ({
           title: route.params.servicePayment.slug,
           headerBackTitleVisible: false,
+          headerBackVisible: false,
           headerLeft: () => (
             <Touchable onPress={() => navigate('WalletHome')}>
-              <Icon name="arrowleft" size={20} color={theme.brandColor.iconn_dark_grey} />
+              <Icon name="arrowleft" size={25} color={theme.brandColor.iconn_dark_grey} />
             </Touchable>
           )
         })}
