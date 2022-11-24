@@ -95,6 +95,18 @@ import TAB_PIN_LOCATION from './tab_pin_location.webp';
 import TAB_PROMOS from './tab_promos.webp';
 import TAB_USER_PROFILE from './tab_user_profile.webp';
 import TELCEL_LOGO from './telcel_logo.png';
+import ICON_HELPMYACCOUNT from './helpMyAccount.webp';
+import ICON_HELPPAYMENTSANDWALLET from './helpPaymentsAndWallet.webp';
+import ICON_HELPPURCHASESANDORDERS from './helpPurchasesAndOrders.webp';
+import ICON_HELPBILLING from './helpBilling.webp';
+import ICON_HELPREWARDS from './helpRewards.webp';
+import ICON_HELPCALLUS from './helpCallUs.webp';
+import ICON_HELPSADSMILE from './helpSadSmile.webp';
+import ICON_HELPHAPPYSMILE from './helpHappySmile.webp';
+import ICON_HELPVERYHAPPYSMILE from './helpVeryHappySmile.webp';
+import ICON_CONCTACTUSBYPHONE from './callByPhone.webp';
+import ICON_CONCTACTUSBYEMAIL from './sendEmail.webp';
+import ICON_CONCTACTUSBYWHATSAPP from './sendWhatsapp.webp';
 
 export {
   ATT_LOGO,
@@ -193,5 +205,17 @@ export {
   TAB_PROMOS,
   TAB_USER_PROFILE,
   TELCEL_LOGO,
-  SKY_LOGO
+  SKY_LOGO,
+  ICON_HELPMYACCOUNT,
+  ICON_HELPPAYMENTSANDWALLET,
+  ICON_HELPPURCHASESANDORDERS,
+  ICON_HELPBILLING,
+  ICON_HELPREWARDS,
+  ICON_HELPCALLUS,
+  ICON_HELPSADSMILE,
+  ICON_HELPHAPPYSMILE,
+  ICON_HELPVERYHAPPYSMILE,
+  ICON_CONCTACTUSBYPHONE,
+  ICON_CONCTACTUSBYEMAIL,
+  ICON_CONCTACTUSBYWHATSAPP
 };

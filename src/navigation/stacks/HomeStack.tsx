@@ -17,6 +17,7 @@ import ChangePasswordController from 'screens/home/myAccount/changePassword/Chan
 import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
 import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
 import ContactInformationController from 'screens/home/shoppingCart/ContactInformation/ContactInformationController';
+import ContactUsController from 'screens/home/myAccount/wallet/helpCenter/contactUs/ContactUsController';
 import CreateTaxProfileController from 'screens/home/invoicing/CreateTaxProfile/CreateTaxProfileController';
 import DeleteAccountController from 'screens/home/myAccount/deleteAccount/DeleteAccountController';
 import EditEmailController from 'screens/auth/onboarding/EditEmail/EditEmailController';
@@ -151,7 +152,11 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
       <Stack.Screen name="ChangePassword" options={{ title: 'Editar contraseña' }} component={ChangePasswordController} />
       <Stack.Screen name="HelpItems" options={{ title: 'Ayuda' }} component={HelpItemsController} />
-      <Stack.Screen name="HelpQuestions" options={({ route }) => ({title: route.params.moduleName, headerBackTitleVisible: false })} component={QuestionsController} />
+      <Stack.Screen
+        name="HelpQuestions"
+        options={({ route }) => ({ title: route.params.moduleName, headerBackTitleVisible: false })}
+        component={QuestionsController}
+      />
       <Stack.Screen name="HelpSteps" options={({ route }) => ({ title: route.params.question, headerBackTitleVisible: false })} component={StepsController} />
       <Stack.Screen
         options={{
@@ -218,6 +223,7 @@ const HomeStack: React.FC = () => {
         options={{ title: 'Información de contacto', headerBackTitleVisible: false }}
         component={ContactInformationController}
       />
+      <Stack.Screen name="ContactUs" options={{ title: 'Contáctanos', headerBackTitleVisible: false }} component={ContactUsController} />
       <Stack.Screen name="Checkout" options={{ title: 'Confirmar pedido', headerBackTitleVisible: false }} component={CheckoutController} />
       <Stack.Screen
         options={{

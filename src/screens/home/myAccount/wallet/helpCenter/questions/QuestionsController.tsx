@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import QuestionsScreen from './QuestionsScreen';
-import { RootState, useAppSelector } from 'rtk';
 import { vtexDocsServices } from 'services';
 import theme from 'components/theme/theme';
 import { SafeArea } from 'components';
@@ -34,7 +33,7 @@ const QuestionsController: React.FC<Props> = ({  }) => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <QuestionsScreen questionsData = {helpQuestions}
+      <QuestionsScreen questionsData = {helpQuestions} moduleId={moduleId}
       />
     </SafeArea>
   );
