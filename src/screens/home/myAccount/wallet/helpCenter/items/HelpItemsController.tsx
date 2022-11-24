@@ -3,7 +3,7 @@ import HelpItemsScreen from './HelpItemsScreen';
 import { vtexDocsServices } from 'services';
 import theme from 'components/theme/theme';
 import { SafeArea } from 'components';
-import { useToast } from 'context';
+import { ICON_HELPMYACCOUNT, ICON_HELPPAYMENTSANDWALLET, ICON_HELPPURCHASESANDORDERS, ICON_HELPBILLING, ICON_HELPREWARDS, ICON_HELPCALLUS } from 'assets/images';
 
 interface Props {
 
@@ -13,12 +13,12 @@ const HelpItemsController: React.FC<Props> = () => {
 
   const [helpModules, setHelpModules] = useState([]);
   const [helpModulesIcons, setHelpModulesIcons] = useState(new Map([
-    ['myAccount', 'user'],
-    ['paymentsAndWallet', 'wallet'],
-    ['purchasesAndOrders', 'shopping-bag'],
-    ['billing', 'money-bill'],
-    ['rewards', 'inbox'],
-    ['nothing', 'phone-call']
+    ['myAccount', ICON_HELPMYACCOUNT],
+    ['paymentsAndWallet', ICON_HELPPAYMENTSANDWALLET],
+    ['purchasesAndOrders', ICON_HELPPURCHASESANDORDERS],
+    ['billing', ICON_HELPBILLING],
+    ['rewards', ICON_HELPREWARDS],
+    ['callUs', ICON_HELPCALLUS]
   ]));
 
   const fetchData = useCallback(async () => {

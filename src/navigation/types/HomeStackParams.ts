@@ -37,7 +37,7 @@ export type HomeStackParams = {
   Profile: undefined;
   RecomendedForYou: undefined;
   SearchSeller: undefined;
-  HelpSteps: undefined | { questionId?: string, question?: string };
+  HelpSteps: undefined | { moduleId?: string, questionId?: string, question?: string };
   SeeMore: { products: any };
   CategoryProducts: { category: CategoryInterface; categories: CategoryInterface[] };
   SearchProducts: undefined;
