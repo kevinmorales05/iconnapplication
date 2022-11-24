@@ -60,6 +60,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { email } = user;
   const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
   const welcomeModal = useWelcomeModal();
+  const [isChargin, setIsChargin] = useState(false);
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -75,8 +76,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   }, []);
 
   useEffect(() => {
-    if (!!cart.items && cart.items.length) {
-      // console.log({defaultAddress})
+    if (!!cart.items && cart.items.length && defaultAddress?.postalCode && isChargin) {
       addDirection();
     }
   }, [defaultAddress, cart]);
@@ -259,11 +259,13 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     if (userId === cart.userProfileId) {
       getShoppingCart(cart.orderFormId).then(response => {
         dispatch(updateShoppingCartItems(response));
+        setIsChargin(true);
       });
     } else {
       getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         getShoppingCart(newCart.orderFormId).then(response => {
           dispatch(updateShoppingCartItems(response));
+          setIsChargin(true);
         });
       });
     }

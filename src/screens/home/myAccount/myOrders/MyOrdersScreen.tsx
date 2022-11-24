@@ -12,9 +12,10 @@ import { OrderInterface } from 'rtk';
 interface Props {
   navigate: (screen: any, params: any) => void;
   officialOrderArray: Array<OrderInterface>;
+  seeMore: (orderId: string) => void;
 }
 
-const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
+const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate, seeMore }) => {
   const [isOnline, setIsOnline] = useState(false);
   NetInfo.fetch().then(state => {
     if (state.isInternetReachable) {
@@ -61,6 +62,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
                 totalValue={order.totalValue}
                 deliveryChannel={order.deliveryChannel}
                 navigate={navigate}
+                seeMore={seeMore}
               />
             );
           }
@@ -98,6 +100,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
                 orderId={order.orderId}
                 deliveryChannel={order.deliveryChannel}
                 navigate={navigate}
+                seeMore={seeMore}
               />
             );
           }

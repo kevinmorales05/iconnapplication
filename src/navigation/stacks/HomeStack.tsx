@@ -51,6 +51,7 @@ import theme from 'components/theme/theme';
 import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicingPetro/ViewInvoiceGeneratedPetro/ViewInvoiceGeneratedPetroController';
 import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
 import WalletStack from './nested/WalletStack';
+import LiveStatusWidgetController from 'screens/home/myAccount/liveStatusWidget/LiveStatusWidgetController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -217,6 +218,14 @@ const HomeStack: React.FC = () => {
         component={FavoriteController}
       />
       <Stack.Screen name="InConstruction" options={{ headerShown: false, gestureEnabled: false, animation: 'none' }} component={InConstructionScreen} />
+      <Stack.Screen
+        options={{
+          title: '',
+          headerBackTitleVisible: false
+        }}
+        name="LiveStatusWidget"
+        component={LiveStatusWidgetController}
+      />
     </Stack.Navigator>
   );
 };

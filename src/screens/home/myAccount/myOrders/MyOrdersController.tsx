@@ -7,7 +7,7 @@ import { HomeStackParams } from 'navigation/types';
 import { StyleSheet } from 'react-native';
 import { OrderInterface, RootState, useAppSelector, DeliveryChannel } from 'rtk';
 import theme from 'components/theme/theme';
-import { vtexOrdersServices } from 'services';
+import { liveStatusServices, vtexOrdersServices } from 'services';
 import { useLoading } from 'context';
 
 const MyOrdersController: React.FC = () => {
@@ -63,6 +63,12 @@ const MyOrdersController: React.FC = () => {
     AddOrderDC();
   }, []);
 
+  const seeMore = async (orderId: string) => {
+    const res = await liveStatusServices.getUrl(orderId);
+    navigate('LiveStatusWidget', { urlLive: res.href });
+    // console.log({urlSee: res});
+  };
+
   return (
     <SafeArea
       topSafeArea={false}
@@ -72,7 +78,7 @@ const MyOrdersController: React.FC = () => {
       barStyle="dark"
       css={styles.backgroundImage}
     >
-      <MyOrdersScreen goBack={goBack} navigate={navigate} officialOrderArray={lista} />
+      <MyOrdersScreen seeMore={seeMore} goBack={goBack} navigate={navigate} officialOrderArray={lista} />
     </SafeArea>
   );
 };

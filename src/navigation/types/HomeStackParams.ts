@@ -47,6 +47,7 @@ export type HomeStackParams = {
   FavoriteProducts: undefined;
   InitialPage: undefined;
   WalletStack: undefined;
+  LiveStatusWidget: { urlLive: string };
 };
 
 export type HomeTabScreens = {
