@@ -1,19 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Image } from 'react-native';
 import { TextContainer, Container, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import Octicons from 'react-native-vector-icons/Octicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface Props {
   stepsData: [];
   qualify: () => void;
+  updateQualify: () => void;
+  stepReceived: Object;
+  qualificationState: [];
+  isQualified: boolean;
 }
 
-const StepsScreen: React.FC<Props> = ({ stepsData, qualify }) => {
-  const [qualificationStatus, setQualificationStatus] = useState([]);
+const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, stepReceived, qualificationState, isQualified }) => {
+  const [qualificationStatus, setQualificationStatus] = useState(qualificationState);
+  const [currentQualification, setCurrentQualification] = useState(1);
 
-  useEffect(() => {}, []);
+  const qualifyAndChangeColor = async (qualification: number) => {
+    if (isQualified) {
+      updateQualify(qualification);
+    } else {
+      qualify(qualification);
+    }
+
+    for (let i = 0; i < qualificationStatus.length; i++) {
+      if (qualificationStatus[i].qualificationValue == qualification) {
+        qualificationStatus[i].isQualified = true;
+      } else {
+        qualificationStatus[i].isQualified = false;
+      }
+    }
+    setCurrentQualification(qualification);
+    setQualificationStatus(qualificationStatus);
+  };
+
+  useEffect(() => {}, [qualificationStatus, currentQualification]);
 
   return (
     <Container>
@@ -65,16 +87,17 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify }) => {
       <Container style={{ height: '.5%', backgroundColor: theme.brandColor.iconn_background }}></Container>
       <Container center style={{ backgroundColor: theme.brandColor.iconn_white, height: '17.5%' }}>
         <TextContainer text="¿Te resultó útil esta información?" fontBold marginTop={6}></TextContainer>
-        <Container row space="evenly" style={{ width: '100%', marginTop:15 }}>
-          <Touchable onPress={() => qualify('baja')}>
-            <MaterialIcons name="tag-faces" size={40} color={theme.brandColor.iconn_med_grey} />
-          </Touchable>
-          <Touchable onPress={() => qualify('medium')}>
-            <MaterialIcons name="tag-faces" size={40} color={theme.brandColor.iconn_med_grey} />
-          </Touchable>
-          <Touchable onPress={() => qualify('heigth')}>
-            <MaterialIcons name="tag-faces" size={40} color={theme.brandColor.iconn_green_original} />
-          </Touchable>
+        <Container row space="evenly" style={{ width: '100%', marginTop: 15 }}>
+          {qualificationStatus.map(qualification => {
+            return (
+              <Touchable onPress={() => qualifyAndChangeColor(qualification.qualificationValue)}>
+                <Image
+                  source={qualification.img}
+                  style={{ width: 40, height: 40, tintColor: qualification.isQualified ? qualification.color : theme.brandColor.iconn_grey_background }}
+                />
+              </Touchable>
+            );
+          })}
         </Container>
       </Container>
     </Container>

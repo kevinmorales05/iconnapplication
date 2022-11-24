@@ -149,6 +149,15 @@ async function getBanksWallet(): Promise<any> {
   return data;
 }
 
+/**
+ * Function to getDocuments by userID.
+ */
+ async function getDocumentsByUserId(dataentity: string, userId: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`dataentities/${dataentity}/scroll?_fields=_all&_where=userId=${userId}`);
+  const { data } = response;
+  return data;
+}
+
 export const vtexDocsServices = {
   createDoc,
   getAllDocByUserID,
@@ -163,5 +172,6 @@ export const vtexDocsServices = {
   getPrefixesWallet,
   getBanksWallet,
   getHelpModuleQuestionsByModuleId,
-  getHelpQuestionsStepsByQuestionsId
+  getHelpQuestionsStepsByQuestionsId,
+  getDocumentsByUserId
 };
