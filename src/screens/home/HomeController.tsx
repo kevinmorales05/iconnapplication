@@ -24,7 +24,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
-import { useEnterModal, useInConstruction, useLoading, useToast, useWelcomeModal } from 'context';
+import { useEnterModal, useInConstruction, useLoading, useToast } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
@@ -59,7 +59,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { getFavorites } = useFavorites();
   const { email } = user;
   const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
-  const welcomeModal = useWelcomeModal();
+  // const welcomeModal = useWelcomeModal();
   const [isChargin, setIsChargin] = useState(false);
 
   useEffect(() => {
@@ -224,7 +224,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   useEffect(() => {
     if (!user.seenCarousel) {
-      welcomeModal.show();
+      // welcomeModal.show();
     }
   }, [user]);
 
