@@ -23,22 +23,24 @@ const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
       {modulesData.length > 0 ? (
         modulesData.map(module => {
           return (
-            <NavigationMenuItem
-              text={module.name}
-              disable={false}
-              icon={<Image source={icons.get(module.icon)} style={{ width: module.index == 6 ? 40 : 32, height: module.index == 6 ? 40 : 32 }} />}
-              onPressNavigateTo={() => {
-                if (module.index != 6) {
-                  navigate('HelpQuestions', { moduleId: module.id, moduleName: module.name });
-                } else {
-                  navigate('ContactUs');
-                }
-              }}
-              isMainTextBold={true}
-              description={module.description}
-              mainTextSize={14}
-              color={module.index != 6 ? theme.brandColor.iconn_background : theme.brandColor.iconn_white}
-            />
+            <Container style={{ marginLeft: module.index != 6 ? 7 : 0 }}>
+              <NavigationMenuItem
+                text={module.name}
+                disable={false}
+                icon={<Image source={icons.get(module.icon)} style={{ width: module.index == 6 ? 40 : 32, height: module.index == 6 ? 40 : 32 }} />}
+                onPressNavigateTo={() => {
+                  if (module.index != 6) {
+                    navigate('HelpQuestions', { moduleId: module.id, moduleName: module.name });
+                  } else {
+                    navigate('ContactUs');
+                  }
+                }}
+                isMainTextBold={true}
+                description={module.description}
+                mainTextSize={14}
+                color={module.index != 6 ? theme.brandColor.iconn_background : theme.brandColor.iconn_white}
+              />
+            </Container>
           );
         })
       ) : (

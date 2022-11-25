@@ -3,6 +3,7 @@ import { Dimensions, Image } from 'react-native';
 import { TextContainer, Container, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import Octicons from 'react-native-vector-icons/Octicons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {
   stepsData: [];
@@ -80,7 +81,12 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, stepR
               );
             })
           ) : (
-            <></>
+            <Container center>
+              <Container center style={{ width: '70%', height: '100%', marginTop: 100 }}>
+                <MaterialCommunityIcons size={60} name="flask-empty-outline" color={theme.fontColor.grey} />
+                <TextContainer text="Información no disponible por el momento. Disculpe las molestias" textColor={theme.fontColor.grey}></TextContainer>
+              </Container>
+            </Container>
           )}
         </Container>
       </Container>
