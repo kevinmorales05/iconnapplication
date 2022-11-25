@@ -44,7 +44,7 @@ const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
     <WebView
       onNavigationStateChange={onNavigationStateChange.bind(this)}
       source={{
-        uri: `${CHECKOUT_WEBVIEW!}${orderFormId}#/cart`,
+        uri: `${CHECKOUT_WEBVIEW!}${orderFormId}#/payment`,
         headers: {
           Cookie: user?.authCookie?.Name + '=' + user?.authCookie?.Value + '; ' + user?.accountAuthCookie?.Name + '=' + user?.accountAuthCookie?.Value + ';'
         }
