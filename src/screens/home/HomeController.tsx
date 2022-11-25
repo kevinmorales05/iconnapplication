@@ -77,7 +77,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   useEffect(() => {
     if (!!cart.items && cart.items.length && defaultAddress?.postalCode && isChargin) {
-      addDirection();
+      setTimeout(()=>{
+        addDirection();
+      }, 250);
     }
   }, [defaultAddress, cart]);
 
