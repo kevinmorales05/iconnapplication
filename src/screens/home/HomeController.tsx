@@ -24,7 +24,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
-import { useEnterModal, useInConstruction, useLoading, useToast } from 'context';
+import { useEnterModal, useInConstruction, useLoading, useToast, useWelcomeModal } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
@@ -37,7 +37,7 @@ import { vtexPromotionsServices } from 'services/vtexPromotions.services';
 import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
 import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
 import Config from 'react-native-config';
-import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
+// import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -59,7 +59,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { getFavorites } = useFavorites();
   const { email } = user;
   const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
-  // const welcomeModal = useWelcomeModal();
+  const welcomeModal = useWelcomeModal();
   const [isChargin, setIsChargin] = useState(false);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   useEffect(() => {
     if (!!cart.items && cart.items.length && defaultAddress?.postalCode && isChargin) {
-      setTimeout(()=>{
+      setTimeout(() => {
         addDirection();
       }, 250);
     }
@@ -185,7 +185,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3'|| CarouselItem.id === '4')) {
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4')) {
       inConstruction.show();
       return;
     }
@@ -226,7 +226,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   useEffect(() => {
     if (!user.seenCarousel) {
-      // welcomeModal.show();
+      welcomeModal.show();
     }
   }, [user]);
 
