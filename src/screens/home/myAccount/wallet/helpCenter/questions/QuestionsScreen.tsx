@@ -39,7 +39,7 @@ const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
         ) : (
           <Container center>
             <Container center style={{ width: '70%', height: '100%', marginTop: 100 }}>
-              <MaterialCommunityIcons size={60} name="flask-empty-outline" color={theme.fontColor.grey} />
+              <MaterialCommunityIcons size={60} name="alert" color={theme.fontColor.grey} />
               <TextContainer text="Información no disponible por el momento. Disculpe las molestias" textColor={theme.fontColor.grey}></TextContainer>
             </Container>
           </Container>
