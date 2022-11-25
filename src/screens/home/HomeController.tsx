@@ -70,10 +70,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     getFavorites(email as string);
   }, []);
 
-  useEffect(() => {
-    dispatch(getWalletPrefixesThunk()).unwrap();
-    dispatch(getBanksWalletThunk()).unwrap();
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getWalletPrefixesThunk()).unwrap();
+  //   dispatch(getBanksWalletThunk()).unwrap();
+  // }, []);
 
   useEffect(() => {
     if (!!cart.items && cart.items.length && defaultAddress?.postalCode && isChargin) {
