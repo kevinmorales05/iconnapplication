@@ -8,7 +8,7 @@ const BranchesController: React.FC = () => {
   const { permissions, askLocationPermission } = usePermissions();
 
   return (
-    <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_background}>
+    <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_background} childrenContainerStyle={{ paddingHorizontal: 0 }}>
       <BranchesScreen onPressAskPermission={askLocationPermission} permissions={permissions} />
     </SafeArea>
   );

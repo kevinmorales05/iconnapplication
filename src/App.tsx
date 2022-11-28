@@ -14,6 +14,9 @@ import { Toast } from 'context';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import { PermissionsProvider } from 'context/permissions.context';
+import { enableLatestRenderer } from 'react-native-maps';
+
+enableLatestRenderer();
 // import Config from 'react-native-config';
 
 // TODO: remove this:
