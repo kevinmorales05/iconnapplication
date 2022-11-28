@@ -53,9 +53,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     await getShoppingCart(cart.orderFormId)
       .then(response => {
         const { items, messages, totalizers } = response;
-        console.log('-----------------------');
-        console.log(JSON.stringify(response,null,4));
-        console.log('-----------------------');
         let orderItems = [];
         console.log({items})
         items.map((item, index) => {
