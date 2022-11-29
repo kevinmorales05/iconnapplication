@@ -9,6 +9,7 @@ import { QRInterface, ServicePaymentInterface } from 'rtk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import theme from 'components/theme/theme';
+import { verticalScale } from 'utils/scaleMetrics';
 
 interface Props {
   mode: CrudType;
@@ -133,7 +134,7 @@ const ServicePaymentScreen: React.FC<Props> = ({ mode, onPressQuestionButton, on
           />
         </Container>
       </Container>
-      <Container>
+      <Container style={{ marginTop: verticalScale(15) }}>
         <Button disabled={!isValid && !contractNumberChanged} round fontBold fontSize="h4" onPress={handleSubmit(onSubmit)}>
           {mode === 'create' ? 'Agregar' : mode === 'update' ? 'Guardar' : 'No mode'}
         </Button>
