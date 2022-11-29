@@ -1,15 +1,15 @@
 import React from 'react';
-import BranchesScreen from './BranchesScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
+import BranchesScreen from './BranchesScreen';
 import theme from 'components/theme/theme';
 import { usePermissions } from 'context';
 
 const BranchesController: React.FC = () => {
-  const { permissions, askLocationPermission } = usePermissions();
+  const { permissions } = usePermissions();
 
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_background} childrenContainerStyle={{ paddingHorizontal: 0 }}>
-      <BranchesScreen onPressAskPermission={askLocationPermission} permissions={permissions} />
+      <BranchesScreen onPress={() => {}} permissions={permissions} />
     </SafeArea>
   );
 };

@@ -15,7 +15,8 @@ module.exports = {
           rtk: './src/rtk',
           context: './src/context',
           services: './src/services',
-          apis: './src/http'
+          apis: './src/http',
+          hooks: './src/hooks'
         }
       }
     ],
