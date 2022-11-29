@@ -159,7 +159,7 @@ const authSlice = createSlice({
       state.user.addresses!.splice(action.payload.position, 1, action.payload.address);
     },
     setAddressDefault(state, action: PayloadAction<number>) {
-      state.user.addresses!.map(x => (x.isDefault = false));
+      state.user.addresses!.forEach(x => (x.isDefault = false));
       state.user.addresses![action.payload].isDefault = true;
     },
     setSeenCarousel(state, action: PayloadAction<boolean>) {

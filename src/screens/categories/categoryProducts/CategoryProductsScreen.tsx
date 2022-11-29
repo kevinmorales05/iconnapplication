@@ -121,7 +121,7 @@ const CategoryProductsScreen: React.FC = () => {
           name: 'Todo'
         }
       ];
-      category.children.map(categoryFilter => {
+      category.children.forEach(categoryFilter => {
         categoriesTab.push({
           id: categoryFilter.id + '',
           name: categoryFilter.Title
