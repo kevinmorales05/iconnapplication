@@ -14,7 +14,7 @@ import { moderateScale } from 'utils/scaleMetrics';
 
 const OrderCard = (props: OrderInterface) => {
   const { updateShoppingCartProduct } = useShoppingCart();
-  const { status, creationDate, orderId, totalItems, totalValue, deliveryChannel, navigate } = props;
+  const { status, creationDate, orderId, totalItems, totalValue, deliveryChannel, navigate, seeMore } = props;
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const loader = useLoading();
 
@@ -140,7 +140,11 @@ const OrderCard = (props: OrderInterface) => {
               />
             </Container>
           </Touchable>
-          <Touchable onPress={() => {}}>
+          <Touchable
+            onPress={() => {
+              seeMore(orderId);
+            }}
+          >
             <Container row style={styles.contDetails}>
               <TextContainer text="Ver detalles" fontSize={14} textColor={theme.brandColor.iconn_green_original} fontBold underline />
               <Image source={ICONN_LEFT_ARROW} style={{ height: 24, width: 24 }} />
@@ -149,7 +153,11 @@ const OrderCard = (props: OrderInterface) => {
         </Container>
       ) : (
         <Container row alignment="end">
-          <Touchable onPress={() => {}}>
+          <Touchable
+            onPress={() => {
+              seeMore(orderId);
+            }}
+          >
             <Container row style={styles.contDetails}>
               <TextContainer text="Ver detalles" textColor={theme.brandColor.iconn_green_original} fontBold marginTop={3} marginRight={0} underline />
               <Image source={ICONN_LEFT_ARROW} style={{ height: 24, width: 24 }} />

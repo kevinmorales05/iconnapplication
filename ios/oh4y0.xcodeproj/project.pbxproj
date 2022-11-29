@@ -850,7 +850,7 @@
 				CODE_SIGN_ENTITLEMENTS = oh4y0/oh4y0.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = 7RSL84MSF6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = oh4y0/Info.plist;
@@ -859,7 +859,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.10.5;
+				MARKETING_VERSION = 1.10.9;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -883,7 +883,7 @@
 				CODE_SIGN_ENTITLEMENTS = oh4y0/oh4y0.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = 7RSL84MSF6;
 				INFOPLIST_FILE = oh4y0/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
@@ -891,7 +891,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.10.5;
+				MARKETING_VERSION = 1.10.9;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

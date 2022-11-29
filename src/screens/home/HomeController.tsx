@@ -37,7 +37,7 @@ import { vtexPromotionsServices } from 'services/vtexPromotions.services';
 import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
 import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
 import Config from 'react-native-config';
-import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
+// import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -60,6 +60,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { email } = user;
   const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
   const welcomeModal = useWelcomeModal();
+  const [isChargin, setIsChargin] = useState(false);
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -69,15 +70,16 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     getFavorites(email as string);
   }, []);
 
-  useEffect(() => {
-    dispatch(getWalletPrefixesThunk()).unwrap();
-    dispatch(getBanksWalletThunk()).unwrap();
-  }, []);
+  // useEffect(() => {
+  //   dispatch(getWalletPrefixesThunk()).unwrap();
+  //   dispatch(getBanksWalletThunk()).unwrap();
+  // }, []);
 
   useEffect(() => {
-    if (!!cart.items && cart.items.length) {
-      // console.log({defaultAddress})
-      addDirection();
+    if (!!cart.items && cart.items.length && defaultAddress?.postalCode && isChargin) {
+      setTimeout(() => {
+        addDirection();
+      }, 250);
     }
   }, [defaultAddress, cart]);
 
@@ -183,7 +185,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3')) {
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4')) {
       inConstruction.show();
       return;
     }
@@ -259,11 +261,13 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     if (userId === cart.userProfileId) {
       getShoppingCart(cart.orderFormId).then(response => {
         dispatch(updateShoppingCartItems(response));
+        setIsChargin(true);
       });
     } else {
       getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         getShoppingCart(newCart.orderFormId).then(response => {
           dispatch(updateShoppingCartItems(response));
+          setIsChargin(true);
         });
       });
     }

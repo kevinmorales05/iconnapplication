@@ -200,7 +200,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
           maxWidth={167}
         />
         <Container center>
-          <Container style={{ width: '90%', marginTop: verticalScale(90) }}>
+          <Container style={{ width: '90%', marginTop: verticalScale(80) }}>
             <Button
               fontSize="h4"
               fontBold

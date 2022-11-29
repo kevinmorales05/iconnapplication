@@ -54,7 +54,8 @@ const CategoriesController: React.FC = ({ navigation, route }: any) => {
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/ /g, '_')}.png`;
     });
-    setCategories(categoriesRequest);
+    const categoriesToRender = categoriesRequest.filter((c: CategoryInterface) => c.id !== 187 && c.id !== 184 && c.id !== 178);
+    setCategories(categoriesToRender);
   };
   const getCategoryItems = async () => {
     return await dispatch(getCategoryItemsThunk()).unwrap();
