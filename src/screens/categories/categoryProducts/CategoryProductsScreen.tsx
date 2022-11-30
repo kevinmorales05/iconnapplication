@@ -81,6 +81,7 @@ const CategoryProductsScreen: React.FC = () => {
   const [productId, setProductId] = useState<string>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isLoadingNewTab, setLoadingNewTab] = useState<boolean>(false);
+  const [isLoadingMore, setLoadingMore] = useState<boolean>(true);
 
   const hideModalForAdult = () => {
     setVisible(false);
@@ -212,6 +213,7 @@ const CategoryProductsScreen: React.FC = () => {
       await setItemToLoad(itemToLoad + 10);
       loader.hide();
       setLoading(false);
+      setLoadingMore(true);
     } else {
       loader.hide();
       setProductsRender([]);
@@ -232,6 +234,7 @@ const CategoryProductsScreen: React.FC = () => {
     });
     if (!productsRequest.length) {
       setLoading(false);
+      setLoadingMore(false);
     } else {
       let productsToRender: ProductInterface[] = [];
       productsToRender = productsRender.concat(productsToRender);
@@ -389,7 +392,7 @@ const CategoryProductsScreen: React.FC = () => {
   };
 
   const loadMoreItem = async () => {
-    if (!isLoading) {
+    if (!isLoading && isLoadingMore) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       loadMoreProducts(existingProducts);
     }
@@ -458,6 +461,7 @@ const CategoryProductsScreen: React.FC = () => {
                       paddingBottom: moderateScale(50)
                     }}
                     ListFooterComponent={_renderFooter}
+                    ListFooterComponentStyle={{ width: '100%' }}
                   />
                 </Container>
               </Container>
