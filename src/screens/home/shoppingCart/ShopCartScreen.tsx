@@ -294,7 +294,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     // una opcion podria se mandar withoutStockMap a vacio para que no tenga que eliminar
     let request = { orderItems };
     let itOld = [];
-    productList.map((value, index) => {
+    productList.forEach((value, index) => {
       if (!value.hasErrorMessage) {
         itOld.push(value);
       }

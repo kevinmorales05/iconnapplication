@@ -158,7 +158,7 @@ const CardProduct: React.FC<CardProductProps> = ({
   };
 
   const removeFavorite = (oldFav: ItemsFavoritesInterface) => {
-    favs.map(product => {
+    favs.forEach(product => {
       if (product.Id == oldFav.Id) {
         const newFavList = favs.filter(productf => productf.Id != oldFav.Id);
         let listItems: ListItemsWrapperInterface = {
