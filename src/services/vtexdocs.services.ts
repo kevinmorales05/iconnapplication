@@ -31,7 +31,7 @@ async function getDocByDocID(dataentity: string, docID: string): Promise<any> {
  */
 
 async function getAllDocsByDocDataEntity(dataentity: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/scroll?_fields=_all`);
   //error handling
   const { data } = response;
   return data;
@@ -56,7 +56,7 @@ async function getAllDocByUserID(dataentity: string, userId: string): Promise<an
  * TODO interface for doc
  */
 
- async function getHelpModuleQuestionsByModuleId(dataentity: string, helpModuleId: string): Promise<any> {
+async function getHelpModuleQuestionsByModuleId(dataentity: string, helpModuleId: string): Promise<any> {
   const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=moduleId=${helpModuleId}`);
   //error handling
   const { data } = response;
@@ -69,7 +69,7 @@ async function getAllDocByUserID(dataentity: string, userId: string): Promise<an
  * TODO interface for doc
  */
 
- async function getHelpQuestionsStepsByQuestionsId(dataentity: string, questionId: string): Promise<any> {
+async function getHelpQuestionsStepsByQuestionsId(dataentity: string, questionId: string): Promise<any> {
   const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=questionId=${questionId}`);
   //error handling
   const { data } = response;
@@ -135,7 +135,7 @@ async function getImagesWelcomeLogin(): Promise<any> {
  * Function to getImages to welcomeLogin.
  */
 async function getPrefixesWallet(): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest('dataentities/QP/scroll?_fields=id,prefixe,type');
+  const response = await DocsApi.getInstance().getRequest('dataentities/QP/search?_fields=id,prefixe,type');
   const { data } = response;
   return data;
 }
@@ -144,7 +144,7 @@ async function getPrefixesWallet(): Promise<any> {
  * Function to getImages to welcomeLogin.
  */
 async function getBanksWallet(): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest('dataentities/AB/scroll?_fields=id,name,sku,upc');
+  const response = await DocsApi.getInstance().getRequest('dataentities/AB/search?_fields=id,name,sku,upc');
   const { data } = response;
   return data;
 }
@@ -152,7 +152,7 @@ async function getBanksWallet(): Promise<any> {
 /**
  * Function to getDocuments by userID.
  */
- async function getDocumentsByUserId(dataentity: string, userId: string): Promise<any> {
+async function getDocumentsByUserId(dataentity: string, userId: string): Promise<any> {
   const response = await DocsApi.getInstance().getRequest(`dataentities/${dataentity}/scroll?_fields=_all&_where=userId=${userId}`);
   const { data } = response;
   return data;

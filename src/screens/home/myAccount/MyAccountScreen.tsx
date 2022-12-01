@@ -129,8 +129,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<DocumentCashSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            navigate('TaxInfo');
-            //inConstruction.show(true);
+            //navigate('TaxInfo');
+            inConstruction.show(true);
           }}
         />
         <NavigationMenuItem
@@ -138,8 +138,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<TargetSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            navigate('Invoice');
-            //inConstruction.show(true);
+            //navigate('Invoice');
+            inConstruction.show(true);
           }}
         />
 
@@ -167,8 +167,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<HelpSupportSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            //inConstruction.show(true);
-            navigate('HelpItems');
+            inConstruction.show(true);
+            //navigate('HelpItems');
           }}
         />
       </Container>

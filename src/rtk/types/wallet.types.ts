@@ -68,6 +68,7 @@ export interface WalletSliceInterface {
   prefixes?: PrefixesInterface[];
   banks?: BankInterface[];
   beneficiaries?: BeneficiaryInterface[];
+  dateSync?: Date;
 }
 
 export interface PrefixesInterface {
