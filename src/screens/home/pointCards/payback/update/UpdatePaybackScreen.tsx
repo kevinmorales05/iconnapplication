@@ -130,7 +130,7 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onPressScan, onSubmit, paybackCa
           onSubmitEditing={() => barcodeNumberToUpdate.current?.focus()}
           onChangeText={updateButtonStatus}
           onPressScan={onPressScan}
-          rules={numericWithSpecificLenght(18)}
+          rules={numericWithSpecificLenght(13)}
           scanIcon={true}
         />
       </Container>

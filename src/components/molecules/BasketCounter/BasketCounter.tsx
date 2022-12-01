@@ -22,7 +22,7 @@ const BasketCounter = () => {
       if (messages.length > 0) {
         messages.map(value => {
           // TODO: relocate message type to .ENV
-          if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
+          if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code =='withoutPriceFulfillment') {
             withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
           }
         });

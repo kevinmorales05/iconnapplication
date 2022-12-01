@@ -34,6 +34,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
   const toast = useToast();
   const [visible, setVisible] = useState<boolean>(false);
   const [paybackStatus, setPaybackStatus] = useState(addOrShow);
+  const [isSetScan, setIsSetScan] = useState(false);
   const alert = useAlert();
   const {
     control,
@@ -46,14 +47,22 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
     mode: 'onChange'
   });
 
-  if (barcodeFromScan != undefined) {
-    setValue('barcodeNumber', barcodeFromScan.ticketNo);
+  if (barcodeFromScan != undefined && !isSetScan) {
+    setIsSetScan(true);
+    setTimeout(() => {
+      setValue('barcodeNumber', barcodeFromScan.ticketNo);
+    }, 250);
   }
 
   const barcodeNumber = useRef<TextInput>(null);
 
   const editPaybackCard = () => {
     navigate('UpdatePayback', { cardIdToUpdate: cardToUpdate, paybackCard: paybackCard, cardId: cardId });
+  };
+
+  const onPressScanButton = () => {
+    setIsSetScan(false);
+    onPressScan();
   };
 
   const deletePointCard = () => {
@@ -165,7 +174,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
           maxLength={13}
           rules={numericWithSpecificLenght(13)}
           onChangeText={updateButtonStatus}
-          onPressScan={onPressScan}
+          onPressScan={onPressScanButton}
           scanIcon={true}
         />
       </Container>

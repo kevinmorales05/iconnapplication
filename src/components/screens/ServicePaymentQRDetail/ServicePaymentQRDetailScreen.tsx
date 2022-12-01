@@ -11,6 +11,7 @@ import moment from 'moment';
 import Octicons from 'react-native-vector-icons/Octicons';
 import QRCode from 'react-native-qrcode-svg';
 import theme from 'components/theme/theme';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
   onPressEditButton: () => void;
@@ -77,7 +78,14 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
             fontBold
             fontSize="h4"
             onPress={onPressEditButton}
-            leftIcon={<Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_green_original} style={{ marginRight: 5 }} />}
+            leftIcon={
+              <Octicons
+                name="pencil"
+                size={theme.avatarSize.xxxsmall}
+                color={theme.brandColor.iconn_green_original}
+                style={{ marginRight: -moderateScale(5) }}
+              />
+            }
           >
             Editar
           </Button>
@@ -86,7 +94,9 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
             fontBold
             fontSize="h4"
             onPress={onPressDeleteButton}
-            leftIcon={<EvilIcons name="trash" size={theme.actionButtonSize.xxsmall} color={theme.brandColor.iconn_error} />}
+            leftIcon={
+              <EvilIcons name="trash" size={theme.actionButtonSize.xxsmall} color={theme.brandColor.iconn_error} style={{ marginRight: -moderateScale(10) }} />
+            }
             color="iconn_background"
             fontColor="dark"
             borderColor="iconn_med_grey"

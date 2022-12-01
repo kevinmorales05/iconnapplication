@@ -21,7 +21,7 @@ const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, sel
   const [points, setPoints] = useState([]);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const setImagePosition = selected => {
-    statusPoints.map((status, index) => {
+    statusPoints.forEach((status, index) => {
       status.isMain = selected == index;
     });
     setStatusPoints(statusPoints);
@@ -53,7 +53,7 @@ const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, sel
             const { nativeEvent } = navEvent;
             let poinLst = points;
             let statusP = statusPoints;
-            statusP.map((status, index) => {
+            statusP.forEach((status, index) => {
               if (nativeEvent.contentOffset.x == status.valueX) {
                 status.isMain = true;
                 poinLst[index].isMain = true;
