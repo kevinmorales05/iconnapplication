@@ -93,7 +93,7 @@ export const alphabetRule = (required: boolean): RegisterOptions => ({
   },
   validate: (value: string) => {
     if (!/^[A-Za-zñÑáÁéÉíÍóÓúÚöÖüÜ ]+$/.test(value)) {
-      return 'Ingresa un formato valido.';
+      return 'Ingresa un formato válido.';
     }
 
     return true;
