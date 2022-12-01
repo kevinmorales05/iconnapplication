@@ -1,13 +1,15 @@
 import React from 'react';
 import { ScrollView } from 'react-native';
 import { Container, CustomMap, TextContainer } from 'components';
+import { PointInterface } from 'rtk';
 
 interface Props {
-  onPress: () => void;
+  markers: PointInterface[];
+  onPressMarker: (marker: PointInterface) => void;
   permissions: {};
 }
 
-const BranchesScreen: React.FC<Props> = ({ permissions }) => {
+const BranchesScreen: React.FC<Props> = ({ markers, onPressMarker, permissions }) => {
   return (
     <ScrollView
       bounces={false}
@@ -19,7 +21,7 @@ const BranchesScreen: React.FC<Props> = ({ permissions }) => {
       <>
         <TextContainer typography="paragraph" text={JSON.stringify(permissions)} marginTop={23} marginBottom={16} />
         <Container flex>
-          <CustomMap />
+          <CustomMap markers={markers} onPressMarker={onPressMarker} />
         </Container>
       </>
     </ScrollView>

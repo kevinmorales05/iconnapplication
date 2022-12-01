@@ -1,4 +1,4 @@
-import { SellerInterface } from 'rtk';
+import { PointInterface, SellerInterface } from 'rtk';
 
 const turf = require('turf');
 
@@ -27,4 +27,24 @@ export const hasNearbySellers = (position: number[], sellers: SellerInterface[])
   });
 
   return filtered.length > 0;
+};
+
+/**
+ * Function to get nearby points given a point/location.
+ * @param location it could be the current user location.
+ * @param points branches array.
+ * @returns Nearby points array.
+ */
+export const getNearbyPoints = (location: number[], points: PointInterface[], kilometers: number = 5) => {
+  const filtered = points.filter(point => {
+    const to = [Number(point.latitude), Number(point.longitude)];
+    const extent = distance(location, to);
+    if (extent < kilometers) {
+      return point;
+    }
+  });
+
+  // console.log('Número de tiendas cercanas a la ubicación:', filtered.length);
+  // console.log('Detalle de tiendas cercanas a la ubicación:', JSON.stringify(filtered, null, 3));
+  return filtered;
 };

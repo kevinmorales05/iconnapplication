@@ -1,20 +1,24 @@
 import React, { useEffect, useRef } from 'react';
-import { ActionButton } from '../../atoms/ActionButton';
+import { Dimensions } from 'react-native';
+import { PointInterface } from 'rtk';
 import { useLocation } from 'hooks/useLocation';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { usePermissions } from 'context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import theme from 'components/theme/theme';
-import { usePermissions } from 'context';
 
 interface Props {
-  markers?: typeof Marker[];
+  markers?: PointInterface[];
+  onPressMarker: (marker: PointInterface) => void;
 }
 
-const CustomMap: React.FC<Props> = () => {
+const CustomMap: React.FC<Props> = ({ markers, onPressMarker }) => {
   const mapViewRef = useRef<MapView>();
   const followingRef = useRef<boolean>(true);
-  const { getCurrentLocation, followUserLocation, userLocation, stopTrackingUserLocation, initialUserLocation } = useLocation();
+  const { followUserLocation, userLocation, stopTrackingUserLocation, initialUserLocation } = useLocation();
   const { permissions, askLocationPermission } = usePermissions();
+  const { height, width } = Dimensions.get('window');
+  const LATITUDE_DELTA = 0.28;
+  const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
 
   useEffect(() => {
     if (permissions.locationStatus === 'granted') {
@@ -36,14 +40,6 @@ const CustomMap: React.FC<Props> = () => {
     });
   }, [userLocation]);
 
-  const centerPosition = async () => {
-    const location = await getCurrentLocation();
-    followingRef.current = true;
-    mapViewRef.current?.animateCamera({
-      center: location
-    });
-  };
-
   return (
     <>
       <MapView
@@ -51,26 +47,34 @@ const CustomMap: React.FC<Props> = () => {
         provider={PROVIDER_GOOGLE}
         style={{ flex: 1 }}
         showsUserLocation
+        showsMyLocationButton
         initialRegion={{
           latitude: initialUserLocation ? initialUserLocation!.latitude : 0,
           longitude: initialUserLocation ? initialUserLocation!.longitude : 0,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA
         }}
         onTouchStart={() => (followingRef.current = false)}
+        zoomEnabled
+        zoomControlEnabled
       >
-        {/* {initialPosition && (
-          <Marker coordinate={{ latitude: initialPosition!.latitude, longitude: initialPosition!.longitude }} title="My Marker" description="Its description" />
-        )} */}
+        {markers &&
+          markers.map((marker, index) => (
+            <Marker
+              key={index}
+              coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
+              title={marker.shopName}
+              pinColor={
+                marker.type === 'binomial'
+                  ? theme.brandColor.iconn_red_original
+                  : marker.type === 'petro'
+                  ? theme.brandColor.iconn_orange_original
+                  : theme.brandColor.iconn_green_original
+              }
+              onPress={() => onPressMarker(marker)!}
+            />
+          ))}
       </MapView>
-      <ActionButton
-        style={{ position: 'absolute', bottom: 8, right: 8 }}
-        icon={<FontAwesome name="location-arrow" size={25} color={theme.brandColor.iconn_accent_principal} />}
-        size="medium"
-        onPress={centerPosition!}
-        color="iconn_white"
-        circle
-      />
     </>
   );
 };
