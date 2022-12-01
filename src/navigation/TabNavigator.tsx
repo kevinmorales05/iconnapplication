@@ -83,7 +83,8 @@ export const TabNavigator = () => {
         name="BranchesScreen"
         component={isGuest ? InviteSignUpController : BranchesController}
         options={{
-          headerShown: false,
+          unmountOnBlur: true,
+          headerShown: isGuest ? false : true,
           title: 'Sucursales',
           tabBarIcon: ({ focused }) => {
             return (

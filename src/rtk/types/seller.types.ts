@@ -28,17 +28,18 @@ export interface SellerInterface {
 export type PointType = 'binomial' | 'petro' | 'seven';
 
 export interface PointInterface {
+  address: string;
+  googleMapsLink: string;
   id: number;
+  info: object;
   isActive: boolean;
   isUpdated: boolean;
-  type: PointType;
+  kmDistance: string;
   latitude: number;
   longitude: number;
-  googleMapsLink: string;
-  address: string;
-  postalCode: number;
   mallNumber: number;
+  postalCode: number;
   shopName: string;
   shopNumber: number;
-  info: object;
+  type: PointType;
 }

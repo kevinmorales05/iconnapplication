@@ -2,12 +2,33 @@ import ATT_LOGO from './att-logo.png';
 import CARD_PETRO from './card-petro.webp';
 import CARD_PREF from './card-pref.webp';
 import CFE_LOGO from './cfe-logo.png';
+import ICON_CONCTACTUSBYEMAIL from './sendEmail.webp';
+import ICON_CONCTACTUSBYPHONE from './callByPhone.webp';
+import ICON_CONCTACTUSBYWHATSAPP from './sendWhatsapp.webp';
+import ICON_HELPBILLING from './helpBilling.webp';
+import ICON_HELPCALLUS from './helpCallUs.webp';
+import ICON_HELPHAPPYSMILE from './helpHappySmile.webp';
+import ICON_HELPMYACCOUNT from './helpMyAccount.webp';
+import ICON_HELPPAYMENTSANDWALLET from './helpPaymentsAndWallet.webp';
+import ICON_HELPPURCHASESANDORDERS from './helpPurchasesAndOrders.webp';
+import ICON_HELPREWARDS from './helpRewards.webp';
+import ICON_HELPSADSMILE from './helpSadSmile.webp';
+import ICON_HELPVERYHAPPYSMILE from './helpVeryHappySmile.webp';
 import ICONN_ADDRESS_FIND from './iconn-address-find.png';
 import ICONN_BACKGROUND_IMAGE from './iconn-background-image.webp';
 import ICONN_BASKET from './iconn-basket.webp';
 import ICONN_BASKET_SHOPPING_CART from './iconn-basket-shopping-cart.webp';
 import ICONN_BINOMIO_LOGOS from './iconn-binomio.webp';
 import ICONN_BINOMIO_LOGOS_LIGHT from './iconn-binomio-logos-light.webp';
+import ICONN_BRANCHES_ARROW_UP from './iconn-branches-arrow-up.png';
+import ICONN_BRANCHES_BINOMIAL from './iconn-branches-binomial.webp';
+import ICONN_BRANCHES_FILTER_OPTION from './iconn-branches-filter-option.png';
+import ICONN_BRANCHES_LOCATION_BINOMIAL from './iconn-branches-location-binomial.png';
+import ICONN_BRANCHES_LOCATION_PETRO from './iconn-branches-location-petro.png';
+import ICONN_BRANCHES_LOCATION_PIN from './iconn-branches-location-pin.png';
+import ICONN_BRANCHES_LOCATION_SEVEN from './iconn-branches-location-seven.png';
+import ICONN_BRANCHES_PETRO from './iconn-branches-petro.png';
+import ICONN_BRANCHES_SEVEN from './iconn-branches-seven.png';
 import ICONN_CALENDAR from './iconn-calendar-schedule.webp';
 import ICONN_CALENDAR_CUSTOM from './iconn-calendar-custom.webp';
 import ICONN_CALENDAR_MONTH from './iconn-calendar-month.webp';
@@ -95,30 +116,39 @@ import TAB_PIN_LOCATION from './tab_pin_location.webp';
 import TAB_PROMOS from './tab_promos.webp';
 import TAB_USER_PROFILE from './tab_user_profile.webp';
 import TELCEL_LOGO from './telcel_logo.png';
-import ICON_HELPMYACCOUNT from './helpMyAccount.webp';
-import ICON_HELPPAYMENTSANDWALLET from './helpPaymentsAndWallet.webp';
-import ICON_HELPPURCHASESANDORDERS from './helpPurchasesAndOrders.webp';
-import ICON_HELPBILLING from './helpBilling.webp';
-import ICON_HELPREWARDS from './helpRewards.webp';
-import ICON_HELPCALLUS from './helpCallUs.webp';
-import ICON_HELPSADSMILE from './helpSadSmile.webp';
-import ICON_HELPHAPPYSMILE from './helpHappySmile.webp';
-import ICON_HELPVERYHAPPYSMILE from './helpVeryHappySmile.webp';
-import ICON_CONCTACTUSBYPHONE from './callByPhone.webp';
-import ICON_CONCTACTUSBYEMAIL from './sendEmail.webp';
-import ICON_CONCTACTUSBYWHATSAPP from './sendWhatsapp.webp';
 
 export {
   ATT_LOGO,
   CARD_PETRO,
   CARD_PREF,
   CFE_LOGO,
+  ICON_CONCTACTUSBYEMAIL,
+  ICON_CONCTACTUSBYPHONE,
+  ICON_CONCTACTUSBYWHATSAPP,
+  ICON_HELPBILLING,
+  ICON_HELPCALLUS,
+  ICON_HELPHAPPYSMILE,
+  ICON_HELPMYACCOUNT,
+  ICON_HELPPAYMENTSANDWALLET,
+  ICON_HELPPURCHASESANDORDERS,
+  ICON_HELPREWARDS,
+  ICON_HELPSADSMILE,
+  ICON_HELPVERYHAPPYSMILE,
   ICONN_ADDRESS_FIND,
   ICONN_BACKGROUND_IMAGE,
   ICONN_BASKET_SHOPPING_CART,
   ICONN_BASKET,
   ICONN_BINOMIO_LOGOS_LIGHT,
   ICONN_BINOMIO_LOGOS,
+  ICONN_BRANCHES_ARROW_UP,
+  ICONN_BRANCHES_BINOMIAL,
+  ICONN_BRANCHES_FILTER_OPTION,
+  ICONN_BRANCHES_LOCATION_BINOMIAL,
+  ICONN_BRANCHES_LOCATION_PETRO,
+  ICONN_BRANCHES_LOCATION_PIN,
+  ICONN_BRANCHES_LOCATION_SEVEN,
+  ICONN_BRANCHES_PETRO,
+  ICONN_BRANCHES_SEVEN,
   ICONN_CALENDAR_CUSTOM,
   ICONN_CALENDAR_MONTH,
   ICONN_CALENDAR_WEEK,
@@ -199,23 +229,11 @@ export {
   ICONN_USER_PROFILE,
   ICONN_USER,
   ICONN_WARNING_MARK,
+  SKY_LOGO,
   TAB_CAT,
   TAB_HOME,
   TAB_PIN_LOCATION,
   TAB_PROMOS,
   TAB_USER_PROFILE,
-  TELCEL_LOGO,
-  SKY_LOGO,
-  ICON_HELPMYACCOUNT,
-  ICON_HELPPAYMENTSANDWALLET,
-  ICON_HELPPURCHASESANDORDERS,
-  ICON_HELPBILLING,
-  ICON_HELPREWARDS,
-  ICON_HELPCALLUS,
-  ICON_HELPSADSMILE,
-  ICON_HELPHAPPYSMILE,
-  ICON_HELPVERYHAPPYSMILE,
-  ICON_CONCTACTUSBYPHONE,
-  ICON_CONCTACTUSBYEMAIL,
-  ICON_CONCTACTUSBYWHATSAPP
+  TELCEL_LOGO
 };

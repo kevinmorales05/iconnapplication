@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Image } from 'react-native';
 import { PointInterface } from 'rtk';
 import { useLocation } from 'hooks/useLocation';
 import { usePermissions } from 'context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import theme from 'components/theme/theme';
+import { ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN } from 'assets/images';
 
 interface Props {
   markers?: PointInterface[];
@@ -72,7 +73,18 @@ const CustomMap: React.FC<Props> = ({ markers, onPressMarker }) => {
                   : theme.brandColor.iconn_green_original
               }
               onPress={() => onPressMarker(marker)!}
-            />
+            >
+              <Image
+                source={
+                  marker.type === 'binomial'
+                    ? ICONN_BRANCHES_LOCATION_BINOMIAL
+                    : marker.type === 'petro'
+                    ? ICONN_BRANCHES_LOCATION_PETRO
+                    : ICONN_BRANCHES_LOCATION_SEVEN
+                }
+                style={{ height: 35, width: 35 }}
+              />
+            </Marker>
           ))}
       </MapView>
     </>

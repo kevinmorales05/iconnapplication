@@ -40,6 +40,7 @@ export const getNearbyPoints = (location: number[], points: PointInterface[], ki
     const to = [Number(point.latitude), Number(point.longitude)];
     const extent = distance(location, to);
     if (extent < kilometers) {
+      point.kmDistance = extent.toFixed(1); // i.e: 0.9966472642351644 to 1.0, 2.1788058118354643 to 2.2
       return point;
     }
   });
