@@ -1,5 +1,3 @@
-import { ImageSourcePropType } from 'react-native';
-
 export interface AppInterface {
   error?: string;
   internetReachability?: number;
@@ -25,4 +23,9 @@ export interface CarouselItem {
 export interface TabItem {
   id: string;
   name: string;
+}
+
+export interface Location {
+  latitude: number;
+  longitude: number;
 }

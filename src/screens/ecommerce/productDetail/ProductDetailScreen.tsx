@@ -309,7 +309,7 @@ const ProductDetailScreen: React.FC<Props> = ({
 
   const removeFavorite = (oldFav: ItemsFavoritesInterface) => {
     let copyFavs = favs;
-    copyFavs.map(product => {
+    copyFavs.forEach(product => {
       if (product.Id == oldFav.Id) {
         const newFavList = copyFavs.filter(productf => productf.Id != oldFav.Id);
         let listItems: ListItemsWrapperInterface = {

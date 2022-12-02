@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, ScrollView } from 'react-native';
+import { Image, Platform, ScrollView } from 'react-native';
 import { ICONN_BINOMIO_LOGOS_LIGHT } from 'assets/images';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TouchableText, Button, Container } from 'components';
@@ -38,7 +38,7 @@ const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail
               Ingresa con Google
             </Button>
           );
-        } else if (provider.providerName === 'Facebook') {
+        } else if (provider.providerName === 'Facebook' && Platform.OS === 'ios') {
           return (
             <Button
               key="facebookBtn"

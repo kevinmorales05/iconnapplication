@@ -17,7 +17,8 @@ import {
   ExistingProductInCartInterface,
   ShippingDataAddress,
   ShippingDataInfo,
-  ShippingData
+  ShippingData,
+  setDateSync
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -38,6 +39,7 @@ import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.serv
 import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
+import moment from 'moment';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -61,6 +63,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
   const welcomeModal = useWelcomeModal();
   const [isChargin, setIsChargin] = useState(false);
+  const { dateSync } = useAppSelector((state: RootState) => state.wallet);
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -71,13 +74,27 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   }, []);
 
   useEffect(() => {
-    dispatch(getWalletPrefixesThunk()).unwrap();
-    dispatch(getBanksWalletThunk()).unwrap();
+    if (dateSync) {
+      const dateBefore = moment(dateSync);
+      const dateNow = moment();
+      const difDays = dateNow.diff(dateBefore, 'days');
+      if (difDays >= 2) {
+        dispatch(setDateSync(new Date()));
+        dispatch(getWalletPrefixesThunk()).unwrap();
+        dispatch(getBanksWalletThunk()).unwrap();
+      }
+    } else {
+      dispatch(setDateSync(new Date()));
+      dispatch(getWalletPrefixesThunk()).unwrap();
+      dispatch(getBanksWalletThunk()).unwrap();
+    }
   }, []);
 
   useEffect(() => {
     if (!!cart.items && cart.items.length && defaultAddress?.postalCode && isChargin) {
-      addDirection();
+      setTimeout(() => {
+        addDirection();
+      }, 250);
     }
   }, [defaultAddress, cart]);
 
@@ -183,7 +200,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3')) {
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4'  )) {
       inConstruction.show();
       return;
     }

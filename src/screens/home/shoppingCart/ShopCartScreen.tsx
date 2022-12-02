@@ -67,7 +67,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         if (messages.length > 0) {
           messages.map(value => {
             // TODO: relocate message type to .ENV
-            if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
+            if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code =='withoutPriceFulfillment') {
               withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
             }
           });
@@ -192,7 +192,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               let unAvailableItemsNumber = 0;
               messages.map(value => {
                 // TODO: relocate message type to .ENV
-                if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered') {
+                if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code =='withoutPriceFulfillment') {
                   withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
                   unAvailableItemsNumber++;
                 }
@@ -294,7 +294,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     // una opcion podria se mandar withoutStockMap a vacio para que no tenga que eliminar
     let request = { orderItems };
     let itOld = [];
-    productList.map((value, index) => {
+    productList.forEach((value, index) => {
       if (!value.hasErrorMessage) {
         itOld.push(value);
       }
