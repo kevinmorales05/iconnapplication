@@ -3,7 +3,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAlert, useToast } from 'context';
 import { WalletStackParams } from 'navigation/types';
 import React, { useCallback, useEffect, useState } from 'react';
-import { DeliveryStatus, PackageVtex, RootState, useAppSelector } from 'rtk';
+import { DeliveryStatus, PackageVtex, RootState, setPackages, useAppDispatch, useAppSelector } from 'rtk';
 import { estafetaServices } from 'services/estafeta.services';
 import { vtexDocsServices } from 'services/vtexdocs.services';
 import TrackingScreen from './TrackingScreen';
@@ -18,6 +18,7 @@ const TrackingController: React.FC = () => {
   var xml2js = require('xml2js');
   const [userPackages, setUserPackages] = useState<PackageVtex[]>();
   const [barcodeField, setBarcodeField] = useState<string>('');
+  const dispatch = useAppDispatch();
 
   const onPressHelp = () => {
     navigate('PackageHelp');
@@ -82,6 +83,7 @@ const TrackingController: React.FC = () => {
           await sendVtex(id as string, trackingD.waybill[0], trackingD.statusENG[0]);
           setTimeout(() => {
             setBarcodeField(trackingD.waybill[0]);
+            //getPackages();
           }, 250);
         } else {
           toast.show({
@@ -94,12 +96,11 @@ const TrackingController: React.FC = () => {
       //console.log('error TRACKING', error);
     }
   };
-
   const getPackages = useCallback(async () => {
     let packagesFormat: PackageVtex[] = [];
-    const packages = await vtexDocsServices.getAllDocByUserID('ET', id as string);
-    if (packages) {
-      packages.forEach(element => {
+    const packagesFromVtex = await vtexDocsServices.getAllDocByUserID('ET', id as string);
+    if (packagesFromVtex) {
+      packagesFromVtex.forEach(element => {
         const newPackage: PackageVtex = {
           status: element.status,
           userId: element.userId,
@@ -110,6 +111,7 @@ const TrackingController: React.FC = () => {
       });
     }
     setUserPackages(packagesFormat);
+    dispatch(setPackages(packagesFormat));
   }, [barcodeField, getTracking]);
 
   useEffect(() => {
