@@ -104,6 +104,7 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, stepR
         </ScrollView>
       </Container>
       <Container style={{ height: '.5%', backgroundColor: theme.brandColor.iconn_background }}></Container>
+      {stepsData.length > 0 ? (
       <Container center style={{ backgroundColor: theme.brandColor.iconn_white, height: '17.5%' }}>
         <TextContainer text="¿Te resultó útil esta información?" fontBold marginTop={6}></TextContainer>
         <Container row space="evenly" style={{ width: '100%', marginTop: 15 }}>
@@ -118,7 +119,9 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, stepR
             );
           })}
         </Container>
-      </Container>
+      </Container>):
+      <></>
+    }
     </Container>
   );
 };
