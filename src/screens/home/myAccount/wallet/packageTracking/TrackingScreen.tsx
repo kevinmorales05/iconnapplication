@@ -7,7 +7,7 @@ import { Image, Platform, ScrollView, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { moderateScale } from 'utils/scaleMetrics';
-import { trackingNumberRule } from 'utils/rules';
+import { alphaNumericWithoutSpaces } from 'utils/rules';
 import { PackageVtex } from 'rtk';
 
 interface Props {
@@ -60,13 +60,13 @@ const TrackingScreen: React.FC<Props> = ({ onPressDetail, onSubmit, packages, on
               ref={barCodeRef}
               name="barcodeNumber"
               control={control}
-              keyboardType="numeric"
+              keyboardType="default"
               placeholder={'Ingresa o escanea código'}
               blurOnSubmit
               marginTop={2}
               maxLength={22}
               scanIcon={true}
-              rules={trackingNumberRule(true)}
+              rules={alphaNumericWithoutSpaces(22)}
               onPressScan={onPressScan}
             />
           </Container>
