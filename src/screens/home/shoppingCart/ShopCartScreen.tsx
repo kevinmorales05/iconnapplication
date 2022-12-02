@@ -82,9 +82,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               value.errorMessage = withoutStockM.get(index);
             } else {
               let priceDefinition = (value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0)
-              calculated = calculated + ((!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id))&& (productVsPromotion.get('' + value.id).promotionType == 'regular' || productVsPromotion.get('' + value.id).promotionType == 'campaign') ?
-                ((priceDefinition / 100) - (((productVsPromotion.get('' + value.id).percentualDiscountValue) * (priceDefinition / 100)) / 100)) :
-                (priceDefinition / 100));
+              calculated = calculated + (priceDefinition / 100);
               value.hasErrorMessage = false;
               value.errorMessage = '';
             }
@@ -217,9 +215,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               } else {
                 let priceDefinition = (value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0)
                 console.log('real Value: ' + priceDefinition);
-                calculated = calculated + ((!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id))&& (productVsPromotion.get('' + value.id).promotionType == 'regular' || productVsPromotion.get('' + value.id).promotionType == 'campaign') ?
-                ((priceDefinition / 100) - (((productVsPromotion.get('' + value.id).percentualDiscountValue) * (priceDefinition / 100)) / 100)) :
-                (priceDefinition / 100));
+                calculated = calculated + (priceDefinition / 100);
                 value.hasErrorMessage = false;
                 value.errorMessage = '';
               }
@@ -566,7 +562,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               ) : (
                 <TextContainer
                   text={'$' + ( (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id)) && (productVsPromotion.get('' + value.id).promotionType == 'regular' || productVsPromotion.get('' + value.id).promotionType == 'campaign')? 
-                  ((((value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0)) / 100) - ((productVsPromotion.get('' + value.id).percentualDiscountValue * (value.price / 100)) / 100)) :
+                  ((((value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0)) / 100) ) :
                   ( (value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0) / 100) )
                   .toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                   fontBold
@@ -770,7 +766,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
       <Container row space="between" style={{ width: '90%' }}>
         <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
         <CustomText
-          text={'$' + (totalizers != undefined ? subTotalCalculated : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'}
+          text={'$' + (subTotalCalculated).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'}
           fontSize={18}
           fontBold
         ></CustomText>

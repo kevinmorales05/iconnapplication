@@ -106,7 +106,7 @@ const StepsController: React.FC<Props> = () => {
       }
     } catch (error) {
       toast.show({
-        message: 'Hubo un error al obtener la calificacion.\nIntenta mas tarde.',
+        message: 'Hubo un error al obtener la calificación.\nIntenta más tarde.',
         type: 'error'
       });
     }
