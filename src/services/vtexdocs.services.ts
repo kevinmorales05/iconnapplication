@@ -44,7 +44,7 @@ async function getAllDocsByDocDataEntity(dataentity: string): Promise<any> {
  */
 
 async function getAllDocByUserID(dataentity: string, userId: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=userId=${userId}`);
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/scroll?_fields=_all&_where=userId=${userId}`);
   //error handling
   const { data } = response;
   return data;
