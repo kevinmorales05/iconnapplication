@@ -36,7 +36,7 @@ const CustomMap: React.FC<Props> = ({ markers, onPressMarker }) => {
   useEffect(() => {
     if (!followingRef.current) return;
 
-    mapViewRef.current?.animateCamera({
+    mapViewRef.current?.setCamera({
       center: userLocation
     });
   }, [userLocation]);
@@ -49,7 +49,8 @@ const CustomMap: React.FC<Props> = ({ markers, onPressMarker }) => {
         style={{ flex: 1 }}
         showsUserLocation
         showsMyLocationButton
-        initialRegion={{
+        focusable
+        region={{
           latitude: initialUserLocation ? initialUserLocation!.latitude : 0,
           longitude: initialUserLocation ? initialUserLocation!.longitude : 0,
           latitudeDelta: LATITUDE_DELTA,

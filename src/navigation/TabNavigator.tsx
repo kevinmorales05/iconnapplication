@@ -85,7 +85,8 @@ export const TabNavigator = () => {
         options={{
           unmountOnBlur: true,
           headerShown: isGuest ? false : true,
-          title: 'Tiendas y estaciones',
+          title: 'Sucursales',
+          headerTitle: 'Tiendas y estaciones',
           tabBarIcon: ({ focused }) => {
             return (
               <Image
