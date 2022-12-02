@@ -56,6 +56,7 @@ import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicin
 import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
 import WalletStack from './nested/WalletStack';
 import LiveStatusWidgetController from 'screens/home/myAccount/liveStatusWidget/LiveStatusWidgetController';
+import BranchesController from 'screens/branches/BranchesController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -241,6 +242,14 @@ const HomeStack: React.FC = () => {
         }}
         name="LiveStatusWidget"
         component={LiveStatusWidgetController}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Tiendas y estaciones',
+          headerBackTitleVisible: false
+        }}
+        name="Branches"
+        component={BranchesController}
       />
     </Stack.Navigator>
   );
