@@ -82,7 +82,9 @@ const ServicePaymentQRDetailController: React.FC<any> = () => {
           alert.hide();
         }
       },
-      'error'
+      'error',
+      false,
+      false
     );
   };
 

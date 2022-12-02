@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image } from 'react-native';
+import { Dimensions, Image, ScrollView, Platform } from 'react-native';
 import { TextContainer, Container, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import Octicons from 'react-native-vector-icons/Octicons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   stepsData: [];
@@ -16,6 +17,7 @@ interface Props {
 const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, stepReceived, qualificationState, isQualified }) => {
   const [qualificationStatus, setQualificationStatus] = useState(qualificationState);
   const [currentQualification, setCurrentQualification] = useState(1);
+  const insets = useSafeAreaInsets();
 
   const qualifyAndChangeColor = async (qualification: number) => {
     if (isQualified) {
@@ -40,6 +42,14 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, stepR
   return (
     <Container>
       <Container style={{ backgroundColor: theme.brandColor.iconn_white, width: '100%', height: '82%' }} height={Dimensions.get('window').height * 0.75}>
+      
+      <ScrollView
+            bounces={false}
+            contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
+
         <Container center style={{ width: '97%', marginTop: 25 }}>
           {stepsData.length > 0 ? (
             stepsData.map((step, index) => {
@@ -47,7 +57,7 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, stepR
                 <Container style={{ width: '90%' }}>
                   <Container row>
                     <TextContainer text={index + 1 + '.  '} fontBold></TextContainer>
-                    <TextContainer text={step.description} marginBottom={18}></TextContainer>
+                    <TextContainer text={step.description} fontSize={14} marginBottom={18}></TextContainer>
                   </Container>
                   {step.importantMessage != null ? (
                     <Container
@@ -59,7 +69,8 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, stepR
                         borderWidth: 1,
                         backgroundColor: '#fffaed',
                         borderRadius: 8,
-                        paddingVertical: 15
+                        paddingVertical: 15,
+                        marginBottom: 20
                       }}
                     >
                       <Container row style={{ marginLeft: 7 }}>
@@ -83,6 +94,8 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, stepR
             <></>
           )}
         </Container>
+
+        </ScrollView>
       </Container>
       <Container style={{ height: '.5%', backgroundColor: theme.brandColor.iconn_background }}></Container>
       <Container center style={{ backgroundColor: theme.brandColor.iconn_white, height: '17.5%' }}>

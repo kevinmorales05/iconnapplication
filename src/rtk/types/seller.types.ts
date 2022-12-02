@@ -24,3 +24,22 @@ export interface SellerInterface {
   VTEX_APPKEY?: string;
   VTEX_APPTOKEN?: string;
 }
+
+export type PointType = 'binomial' | 'petro' | 'seven';
+
+export interface PointInterface {
+  address: string;
+  googleMapsLink: string;
+  id: number;
+  info: object;
+  isActive: boolean;
+  isUpdated: boolean;
+  kmDistance: string;
+  latitude: number;
+  longitude: number;
+  mallNumber: number;
+  postalCode: number;
+  shopName: string;
+  shopNumber: number;
+  type: PointType;
+}

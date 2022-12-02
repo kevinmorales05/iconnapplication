@@ -36,6 +36,10 @@ const StepsController: React.FC<Props> = () => {
         moduleId: moduleId
       };
       const data = await vtexDocsServices.createDoc('AQ', newRecord);
+      toast.show({
+        message: 'La pregunta ha sido calificada con éxito.',
+        type: 'success'
+      });
       setStepIdSaved(data.DocumentId);
     } catch (error) {
       toast.show({
@@ -55,6 +59,10 @@ const StepsController: React.FC<Props> = () => {
         moduleId: moduleId
       };
       const data = await vtexDocsServices.updateDocByDocID('AQ', stepIdSaved, toUpdate);
+      toast.show({
+        message: 'La calificación de la pregunta ha sido actualizada con éxito.',
+        type: 'success'
+      });
 
       for (let i = 0; i < qualificationStatus.length; i++) {
         if (qualificationStatus[i].qualificationValue == qualification) {
@@ -98,7 +106,7 @@ const StepsController: React.FC<Props> = () => {
       }
     } catch (error) {
       toast.show({
-        message: 'Hubo un error al obtener la calificacion.\nIntenta mas tarde.',
+        message: 'Hubo un error al obtener la calificación.\nIntenta más tarde.',
         type: 'error'
       });
     }

@@ -7,11 +7,11 @@ import CategoriesController from 'screens/categories/CategoriesController';
 import { HomeStackParams, HomeTabScreens } from './types';
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
+import BranchesController from 'screens/branches/BranchesController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import { RootState, useAppSelector } from 'rtk';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TAB_CAT, TAB_HOME, TAB_PIN_LOCATION, TAB_PROMOS, TAB_USER_PROFILE } from 'assets/images';
-import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -21,7 +21,7 @@ export const TabNavigator = () => {
   const { paySuccess } = route.params;
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={() => ({
         tabBarActiveTintColor: theme.brandColor.iconn_green_original,
         tabBarInactiveTintColor: theme.fontColor.placeholder,
         headerShown: true,
@@ -42,6 +42,7 @@ export const TabNavigator = () => {
           }
         }}
         name="HomeScreen"
+        // eslint-disable-next-line react/no-children-prop
         children={() => <HomeController paySuccess={paySuccess} />}
       />
       <Tab.Screen
@@ -80,11 +81,12 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         name="BranchesScreen"
-        component={isGuest ? InviteSignUpController : InConstructionController}
+        component={isGuest ? InviteSignUpController : BranchesController}
         options={{
           unmountOnBlur: true,
-          headerShown: false,
+          headerShown: isGuest ? false : true,
           title: 'Sucursales',
+          headerTitle: 'Tiendas y estaciones',
           tabBarIcon: ({ focused }) => {
             return (
               <Image
