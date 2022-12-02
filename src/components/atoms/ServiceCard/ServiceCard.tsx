@@ -17,7 +17,6 @@ interface ServiceCardProps {
 }
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onPressService }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
-  //const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
   const { CATEGORIES_ASSETS } = Config;
   const getDataforQr = useCallback(async () => {
     const data = await vtexDocsServices.getAllDocsByDocDataEntity('AR');
@@ -42,7 +41,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onPressService }) =>
 
   const setQR = async () => {
     const amountQR = await getDataforQr();
-    const qrData: string = `711APPU|${amountQR?.UPC}|${amountQR?.SKU}|${service.reference}|${amountQR?.ammount}00`;
+    const qrData: string = `711APPPU|${amountQR?.UPC}|${amountQR?.SKU}|${service.reference}|${amountQR?.ammount}00`;
     navigate('RechargeQR', { rechargeUser: service, qrData: qrData, amount: amountQR });
   };
   return (

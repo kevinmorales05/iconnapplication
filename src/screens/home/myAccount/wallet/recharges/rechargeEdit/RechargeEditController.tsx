@@ -41,7 +41,7 @@ const RechargeEditController: React.FC = () => {
   };
 
   const onSubmit = async (rechargeFields: any) => {
-    const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
+    const qrData: string = `711APPPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
     const newRecharge: RechargeUser = {
       //id: rechargeUser ? rechargeUser.id : rechargeQRId,
       amount: amountSupplier?.ammount as number,
