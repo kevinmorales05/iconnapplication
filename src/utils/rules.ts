@@ -114,6 +114,20 @@ export const mobilePhoneRule = (required: boolean): RegisterOptions => ({
   }
 });
 
+export const trackingNumberRule = (required: boolean): RegisterOptions => ({
+  required: {
+    value: required,
+    message: 'Campo requerido.'
+  },
+  validate: (value: string) => {
+    if (!/^[0-9]{22}$/.test(value)) {
+      return 'Formato incorrecto.';
+    }
+
+    return true;
+  }
+});
+
 export const rfcRule: RegisterOptions = {
   required: {
     value: true,
