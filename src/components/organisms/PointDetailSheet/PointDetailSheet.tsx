@@ -46,9 +46,9 @@ const PointDetailSheet: React.FC<Props> = ({ marker, onPressOut, visible }) => {
                 }}
               />
             </Container>
-            <Container row center style={{ paddingRight: 42, marginHorizontal: 16 }}>
+            <Container row style={{ paddingRight: 42, marginHorizontal: 16, marginTop: 16 }}>
               <Image resizeMode="contain" source={ICONN_BRANCHES_LOCATION_PIN} style={{ width: 25, height: 25 }} />
-              <TextContainer text={marker?.address} marginTop={16} numberOfLines={3} marginLeft={4} />
+              <TextContainer text={marker?.address} numberOfLines={3} marginLeft={4} />
             </Container>
             <Container row alignment="end" style={{ marginTop: 16, marginHorizontal: 16 }}>
               <Touchable onPress={onPressOut}>
