@@ -91,3 +91,26 @@ export interface BeneficiaryInterface {
   bank: string;
   id: string;
 }
+
+export type DeliveryStatus = 'ON_TRANSIT' | 'DELIVERED' | 'RETURNED';
+
+export interface TrackingHistory {
+  eventDateTime?: Date;
+  eventDescriptionSPA?: string;
+  eventPlaceName?: string;
+  isLast?: boolean;
+}
+
+export interface PackageDetail {
+  shortWaybillId: string;
+  statusENG: DeliveryStatus;
+  waybill: string;
+  trackingHistory: TrackingHistory[];
+}
+
+export interface PackageVtex {
+  userId: string;
+  waybill: string;
+  status: string;
+  id: string;
+}

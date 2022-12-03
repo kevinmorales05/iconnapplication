@@ -47,6 +47,13 @@ import ICONN_DOLLAR_CIRCLE from './dollar-circle.webp';
 import ICONN_EMAIL from './iconn-email.webp';
 import ICONN_EMPTY_SHOPPING_CART from './trash_delete_bin_empty.png';
 import ICONN_ERROR_CROSS from './iconn-error-cross.webp';
+import ICONN_ESTAFETA_DELIVERED from './iconn-estafeta-delivered.webp';
+import ICONN_ESTAFETA_EXAMPLE from './iconn-estafeta-example.webp';
+import ICONN_ESTAFETA_HELP from './iconn-estafeta-help.webp';
+import ICONN_ESTAFETA_LOGO from './iconn-estafeta-logo.webp';
+import ICONN_ESTAFETA_ONTRANSIT from './iconn-estafeta-ontransit.webp';
+import ICONN_ESTAFETA_RETURN from './iconn-estafeta-return.webp';
+import ICONN_ESTAFETA_RETURNED from './iconn-estafeta-returned.webp';
 import ICONN_EYE_OFF from './iconn-eye-visible.webp';
 import ICONN_EYE_ON from './iconn-eye.webp';
 import ICONN_EYE_VISIBLE from './iconn-eye-visible.webp';
@@ -106,6 +113,13 @@ import ICONN_STAR from './star.webp';
 import ICONN_STO from './iconn-sto.webp';
 import ICONN_STORE_MODERN from './iconn-store-modern.webp';
 import ICONN_SUCCESS from './iconn-success.webp';
+import ICONN_TRACKING_BARCODE from './iconn-tracking-barcode.webp';
+import ICONN_TRACKING_DELIVERED from './iconn-tracking-delivered.webp';
+import ICONN_TRACKING_DELIVERED_GRAY from './iconn-tracking-delivered-gray.webp';
+import ICONN_TRACKING_INTRANSIT from './iconn-tracking-intransit.webp';
+import ICONN_TRACKING_PACKAGE from './iconn-tracking-package.webp';
+import ICONN_TRACKING_SENT from './iconn-tracking-sent.webp';
+import ICONN_TRACKING_SENT_GREEN from './iconn-tracking-sent-green.webp';
 import ICONN_USER from './iconn-user.webp';
 import ICONN_USER_PROFILE from './iconn-user-profile.webp';
 import ICONN_WARNING_MARK from './iconn-warning-mark.webp';
@@ -167,6 +181,13 @@ export {
   ICONN_EMAIL,
   ICONN_EMPTY_SHOPPING_CART,
   ICONN_ERROR_CROSS,
+  ICONN_ESTAFETA_DELIVERED,
+  ICONN_ESTAFETA_EXAMPLE,
+  ICONN_ESTAFETA_HELP,
+  ICONN_ESTAFETA_LOGO,
+  ICONN_ESTAFETA_RETURN,
+  ICONN_ESTAFETA_RETURNED,
+  ICONN_ESTAFETA_ONTRANSIT,
   ICONN_EYE_OFF,
   ICONN_EYE_ON,
   ICONN_EYE_VISIBLE,
@@ -226,6 +247,13 @@ export {
   ICONN_STO,
   ICONN_STORE_MODERN,
   ICONN_SUCCESS,
+  ICONN_TRACKING_BARCODE,
+  ICONN_TRACKING_DELIVERED,
+  ICONN_TRACKING_DELIVERED_GRAY,
+  ICONN_TRACKING_INTRANSIT,
+  ICONN_TRACKING_PACKAGE,
+  ICONN_TRACKING_SENT,
+  ICONN_TRACKING_SENT_GREEN,
   ICONN_USER_PROFILE,
   ICONN_USER,
   ICONN_WARNING_MARK,

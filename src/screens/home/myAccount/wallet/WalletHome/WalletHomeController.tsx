@@ -75,7 +75,7 @@ const WalletHomeController: React.FC = () => {
     {
       icon: ICONN_PACKAGES_SEARCH,
       serviceName: 'Rastreo de Paquetes',
-      onPressItem: () => {}
+      onPressItem: () => navigate('Tracking')
     }
   ];
 
