@@ -98,6 +98,36 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     }
   }, [defaultAddress, cart]);
 
+  useEffect(() => {
+    if (!user.addresses?.length && isChargin) {
+      setTimeout(() => {
+        addDirectionDefault();
+      }, 250);
+    }
+  }, [user, isChargin]);
+
+  const addDirectionDefault = async () => {
+    const selectedAddresses: ShippingDataAddress = {
+      addressType: '',
+      receiverName: '',
+      postalCode: user.cp,
+      city: '',
+      state: '',
+      country: 'MEX',
+      street: '',
+      number: '',
+      neighborhood: '',
+      complement: '',
+      reference: '',
+      geoCoordinates: [],
+      isDisposable: true
+    };
+    const shippingAttachment: ShippingData = {
+      selectedAddresses: [selectedAddresses]
+    };
+    await saveShippingData(cart.orderFormId, shippingAttachment);
+  };
+
   const addDirection = async () => {
     const selectedAddresses: ShippingDataAddress = {
       addressType: defaultAddress?.addressType ? defaultAddress?.addressType : '',
@@ -200,7 +230,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3'   )) {
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3')) {
       inConstruction.show();
       return;
     }
