@@ -141,7 +141,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       neighborhood: defaultAddress?.neighborhood ? defaultAddress?.neighborhood : '',
       complement: defaultAddress?.complement ? defaultAddress?.complement : '',
       reference: defaultAddress?.reference ? defaultAddress?.reference : '',
-      geoCoordinates: defaultAddress?.geoCoordinate ? defaultAddress?.geoCoordinate : []
+      geoCoordinates: defaultAddress?.geoCoordinate ? defaultAddress?.geoCoordinate : [],
+      addressId: defaultAddress?.id ? defaultAddress?.id : ''
     };
     const logisticsInfo: ShippingDataInfo = {
       itemIndex: 0,
