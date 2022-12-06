@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authReducer from '../slices/authSlice';
 import appReducer from '../slices/appSlice';
 import cartReducer from '../slices/cartSlice';
+import helpCenterModulesReducer from '../slices/helpCenterSlice';
 import promotionsReducer from '../slices/promotionsSlice';
 import walletReducer from '../slices/walletSlice';
 import sellerReducer from '../slices/sellerSlice';
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   app: appReducer,
   invoicing: invoicingReducer,
   cart: cartReducer,
+  helpCenterModules: helpCenterModulesReducer,
   promotion: promotionsReducer,
   seller: sellerReducer,
   wallet: walletReducer

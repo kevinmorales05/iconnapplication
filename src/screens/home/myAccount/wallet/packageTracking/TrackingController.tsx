@@ -1,4 +1,4 @@
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAlert, useToast } from 'context';
 import { WalletStackParams } from 'navigation/types';
@@ -18,6 +18,19 @@ const TrackingController: React.FC = () => {
   var xml2js = require('xml2js');
   const [userPackages, setUserPackages] = useState<PackageVtex[]>();
   const [barcodeField, setBarcodeField] = useState<string>('');
+  const [barcodeProp, setBarcodeProp] = useState<string>('');
+  const route = useRoute<RouteProp<WalletStackParams, 'Tracking'>>();
+  const [barcodePropValidate, setBarcodePropValidate] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (route.params?.barcode) {
+      const condition = new RegExp(/^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1]*$/);
+      const isValid = condition.test(route.params.barcode);
+      setBarcodeProp(route.params?.barcode);
+      setBarcodePropValidate(isValid && route.params.barcode.length === 22);
+    }
+  }, [route.params]);
+
   const dispatch = useAppDispatch();
 
   const onPressHelp = () => {
@@ -118,6 +131,10 @@ const TrackingController: React.FC = () => {
     getPackages();
   }, [id, isFocused, barcodeField]);
 
+  const setBarcodeValidate = (validate: boolean) => {
+    setBarcodePropValidate(validate);
+  };
+
   return (
     <TrackingScreen
       onPressDetail={OnPressDetail}
@@ -126,6 +143,9 @@ const TrackingController: React.FC = () => {
       onPressScan={onPressScan}
       onPressHelp={onPressHelp}
       onPressDelete={onDelete}
+      barcodeProp={barcodeProp}
+      barcodePropValidate={barcodePropValidate}
+      setBarcodeValidate={setBarcodeValidate}
     />
   );
 };

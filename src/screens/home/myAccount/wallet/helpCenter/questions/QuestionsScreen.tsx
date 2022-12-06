@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { Container, NavigationMenuItem } from 'components';
 import theme from 'components/theme/theme';
-import { useToast, useAlert } from 'context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../../../navigation/types';
@@ -15,9 +14,6 @@ interface Props {
 
 const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const toast = useToast();
-  const alert = useAlert();
-
   useEffect(() => {}, []);
 
   return (
@@ -31,7 +27,7 @@ const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
                 disable={false}
                 icon={<MaterialCommunityIcons style={{ textAlign: 'center' }} size={24} name="comment-question-outline" color={theme.fontColor.dark} />}
                 onPressNavigateTo={() => {
-                  navigate('HelpSteps', { moduleId: moduleId, questionId: question.id, question: question.question });
+                  navigate('HelpSteps', { moduleId: moduleId, questionId: question.questionId, question: question.question });
                 }}
               />
             );
