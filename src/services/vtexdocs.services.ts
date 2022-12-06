@@ -56,8 +56,8 @@ async function getAllDocByUserID(dataentity: string, userId: string): Promise<an
  * TODO interface for doc
  */
 
-async function getHelpModuleQuestionsByModuleId(dataentity: string, helpModuleId: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=moduleId=${helpModuleId}`);
+ async function getHelpModuleQuestionsByModuleId(dataentity: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
   //error handling
   const { data } = response;
   return data;
@@ -69,8 +69,8 @@ async function getHelpModuleQuestionsByModuleId(dataentity: string, helpModuleId
  * TODO interface for doc
  */
 
-async function getHelpQuestionsStepsByQuestionsId(dataentity: string, questionId: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all&_where=questionId=${questionId}`);
+ async function getHelpQuestionsStepsByQuestionsId(dataentity: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
   //error handling
   const { data } = response;
   return data;
@@ -153,7 +153,7 @@ async function getBanksWallet(): Promise<any> {
  * Function to getDocuments by userID.
  */
 async function getDocumentsByUserId(dataentity: string, userId: string): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest(`dataentities/${dataentity}/scroll?_fields=_all&_where=userId=${userId}`);
+  const response = await DocsApi.getInstance().getRequest(`dataentities/${dataentity}/search?_fields=_all&_where=userId=${userId}`);
   const { data } = response;
   return data;
 }

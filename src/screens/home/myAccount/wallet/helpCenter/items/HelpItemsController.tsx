@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import HelpItemsScreen from './HelpItemsScreen';
-import { vtexDocsServices } from 'services';
 import theme from 'components/theme/theme';
 import { SafeArea } from 'components';
 import { ICON_HELPMYACCOUNT, ICON_HELPPAYMENTSANDWALLET, ICON_HELPPURCHASESANDORDERS, ICON_HELPBILLING, ICON_HELPREWARDS, ICON_HELPCALLUS } from 'assets/images';
+import { RootState, useAppSelector } from 'rtk';
 
 interface Props {
 
 }
 
 const HelpItemsController: React.FC<Props> = () => {
-
+  const { helpCenterModules } = useAppSelector((state: RootState) => state.helpCenterModules);
   const [helpModules, setHelpModules] = useState([]);
   const [helpModulesIcons, setHelpModulesIcons] = useState(new Map([
     ['myAccount', ICON_HELPMYACCOUNT],
@@ -22,8 +22,7 @@ const HelpItemsController: React.FC<Props> = () => {
   ]));
 
   const fetchData = useCallback(async () => {
-    const data = await vtexDocsServices.getAllDocsByDocDataEntity('HM');
-    setHelpModules(data);
+    setHelpModules(helpCenterModules);
   }, []);
 
   useEffect(() => {
