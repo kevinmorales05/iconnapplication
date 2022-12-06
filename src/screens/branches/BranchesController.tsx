@@ -31,6 +31,14 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
         });
       }
     }
+    // Turn header back on when unmount
+    return homeStack
+      ? () => {
+          homeStack.setOptions({
+            headerShown: true
+          });
+        }
+      : undefined;
   }, [navigation, route]);
 
   useEffect(() => {

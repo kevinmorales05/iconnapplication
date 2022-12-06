@@ -1,29 +1,33 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import HelpItemsScreen from './HelpItemsScreen';
-import { vtexDocsServices } from 'services';
 import theme from 'components/theme/theme';
 import { SafeArea } from 'components';
-import { ICON_HELPMYACCOUNT, ICON_HELPPAYMENTSANDWALLET, ICON_HELPPURCHASESANDORDERS, ICON_HELPBILLING, ICON_HELPREWARDS, ICON_HELPCALLUS } from 'assets/images';
+import {
+  ICON_HELPMYACCOUNT,
+  ICON_HELPPAYMENTSANDWALLET,
+  ICON_HELPPURCHASESANDORDERS,
+  ICON_HELPBILLING,
+  ICON_HELPREWARDS,
+  ICON_HELPCALLUS
+} from 'assets/images';
+import { RootState, useAppSelector } from 'rtk';
 
-interface Props {
-
-}
+interface Props {}
 
 const HelpItemsController: React.FC<Props> = () => {
-
+  const { helpCenterModules } = useAppSelector((state: RootState) => state.helpCenterModules);
   const [helpModules, setHelpModules] = useState([]);
-  const [helpModulesIcons, setHelpModulesIcons] = useState(new Map([
+  const helpModulesIcons = new Map([
     ['myAccount', ICON_HELPMYACCOUNT],
     ['paymentsAndWallet', ICON_HELPPAYMENTSANDWALLET],
     ['purchasesAndOrders', ICON_HELPPURCHASESANDORDERS],
     ['billing', ICON_HELPBILLING],
     ['rewards', ICON_HELPREWARDS],
     ['callUs', ICON_HELPCALLUS]
-  ]));
+  ]);
 
   const fetchData = useCallback(async () => {
-    const data = await vtexDocsServices.getAllDocsByDocDataEntity('HM');
-    setHelpModules(data);
+    setHelpModules(helpCenterModules);
   }, []);
 
   useEffect(() => {
@@ -38,8 +42,7 @@ const HelpItemsController: React.FC<Props> = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <HelpItemsScreen modulesData = {helpModules} icons = {helpModulesIcons}
-      />
+      <HelpItemsScreen modulesData={helpModules} icons={helpModulesIcons} />
     </SafeArea>
   );
 };

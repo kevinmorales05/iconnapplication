@@ -1,7 +1,7 @@
 import { TextContainer } from 'components/molecules';
 import React, { useCallback } from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { RechargeAmount, ServiceQRType } from 'rtk';
+import { RechargeAmount, RootState, ServiceQRType, useAppSelector } from 'rtk';
 import { Container } from '../Container';
 import theme from 'components/theme/theme';
 import { Touchable } from 'components';
@@ -17,6 +17,7 @@ interface ServiceCardProps {
 }
 const ServiceCard: React.FC<ServiceCardProps> = ({ service, onPressService }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { CATEGORIES_ASSETS } = Config;
   const getDataforQr = useCallback(async () => {
     const data = await vtexDocsServices.getAllDocsByDocDataEntity('AR');
@@ -40,8 +41,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, onPressService }) =>
   }, []);
 
   const setQR = async () => {
+    const Buffer = require('buffer').Buffer;
     const amountQR = await getDataforQr();
-    const qrData: string = `711APPPU|${amountQR?.UPC}|${amountQR?.SKU}|${service.reference}|${amountQR?.ammount}00`;
+    const nameCut = user.name?.slice(0, 3);
+    const lastCut = user.lastName?.slice(0, 3);
+    const idCut = user.id?.slice(0, 7);
+    let encodedAuth = new Buffer(`${idCut}\\${nameCut} ${lastCut}`).toString('base64');
+    const qrData: string = `711APPPU|${amountQR?.UPC}|${amountQR?.SKU}|${service.reference}|${amountQR?.ammount}00|${encodedAuth}|`;
     navigate('RechargeQR', { rechargeUser: service, qrData: qrData, amount: amountQR });
   };
   return (

@@ -1,13 +1,13 @@
 import { ICONN_ESTAFETA_LOGO, ICONN_TRACKING_PACKAGE } from 'assets/images';
 import { Container, Input, TextContainer, Button, PackageCard, Touchable } from 'components';
 import theme from 'components/theme/theme';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import { Image, Platform, ScrollView, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { moderateScale } from 'utils/scaleMetrics';
-import { trackingNumberRule } from 'utils/rules';
+import { alphaNumericWithoutSpaces } from 'utils/rules';
 import { PackageVtex } from 'rtk';
 
 interface Props {
@@ -17,9 +17,22 @@ interface Props {
   onPressScan: () => void;
   onPressHelp: () => void;
   onPressDelete: (id: string) => void;
+  barcodePropValidate: boolean;
+  barcodeProp: string;
+  setBarcodeValidate: (validate: boolean) => void;
 }
 
-const TrackingScreen: React.FC<Props> = ({ onPressDetail, onSubmit, packages, onPressScan, onPressHelp, onPressDelete }) => {
+const TrackingScreen: React.FC<Props> = ({
+  onPressDetail,
+  onSubmit,
+  packages,
+  onPressScan,
+  onPressHelp,
+  onPressDelete,
+  barcodeProp,
+  barcodePropValidate,
+  setBarcodeValidate
+}) => {
   const insets = useSafeAreaInsets();
   const {
     control,
@@ -36,6 +49,13 @@ const TrackingScreen: React.FC<Props> = ({ onPressDetail, onSubmit, packages, on
     onSubmit(fields);
     setValue('barcodeNumber', '');
   };
+
+  useEffect(() => {
+    if (barcodeProp) {
+      setValue('barcodeNumber', barcodeProp);
+    }
+  }, [barcodeProp]);
+
   return (
     <ScrollView
       bounces={false}
@@ -60,17 +80,28 @@ const TrackingScreen: React.FC<Props> = ({ onPressDetail, onSubmit, packages, on
               ref={barCodeRef}
               name="barcodeNumber"
               control={control}
-              keyboardType="numeric"
+              keyboardType="default"
               placeholder={'Ingresa o escanea código'}
               blurOnSubmit
               marginTop={2}
               maxLength={22}
               scanIcon={true}
-              rules={trackingNumberRule(true)}
+              rules={alphaNumericWithoutSpaces(22)}
               onPressScan={onPressScan}
+              onChangeText={() => {
+                setBarcodeValidate(false);
+              }}
             />
           </Container>
-          <Button onPress={handleSubmit(submit)} round disabled={!isValid} marginTop={24} marginLeft={16} marginRight={16} fontSize="h4">
+          <Button
+            onPress={handleSubmit(submit)}
+            round
+            disabled={barcodePropValidate ? false : !isValid}
+            marginTop={24}
+            marginLeft={16}
+            marginRight={16}
+            fontSize="h4"
+          >
             Agregar
           </Button>
         </Container>

@@ -6,17 +6,20 @@ import { SafeArea } from 'components';
 import { useToast } from 'context';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
-import { useAppSelector, RootState } from 'rtk';
+import { useAppSelector, RootState, useAppDispatch } from 'rtk';
 import { ICON_HELPSADSMILE, ICON_HELPHAPPYSMILE, ICON_HELPVERYHAPPYSMILE } from 'assets/images';
+import { setModules } from 'rtk/slices/helpCenterSlice';
 interface Props {}
 
 const StepsController: React.FC<Props> = () => {
+  const { helpCenterModules } = useAppSelector((state: RootState) => state.helpCenterModules);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'HelpSteps'>>();
   const { params } = route;
   const questionId = params?.questionId;
   const moduleId = params?.moduleId;
   const toast = useToast();
+  const dispatch = useAppDispatch();
   const [helpSteps, setHelpSteps] = useState([]);
   const [stepIdSaved, setStepIdSaved] = useState('');
   const [stepReceived, setStepReceived] = useState(undefined);
@@ -26,6 +29,19 @@ const StepsController: React.FC<Props> = () => {
     { img: ICON_HELPHAPPYSMILE, isQualified: false, qualificationValue: 5, color: theme.brandColor.iconn_orange_original },
     { img: ICON_HELPVERYHAPPYSMILE, isQualified: false, qualificationValue: 10, color: theme.brandColor.iconn_green_original }
   ]);
+
+  const updateReduxQualification = async (moduleId: string, questionId: string, qualification: number) => {
+    for (let m = 0; m < helpCenterModules.length; m++) {
+      if (helpCenterModules[m].id == moduleId) {
+        for (let q = 0; q < helpCenterModules[m].questions.length; q++) {
+          if (helpCenterModules[m].questions[q].questionId == questionId) {
+            helpCenterModules[m].questions[q].qualification.qualification = qualification;
+          }
+        }
+      }
+    }
+    dispatch(setModules(helpCenterModules));
+  };
 
   const qualify = async (qualification: number) => {
     try {
@@ -41,6 +57,8 @@ const StepsController: React.FC<Props> = () => {
         type: 'success'
       });
       setStepIdSaved(data.DocumentId);
+
+      updateReduxQualification(moduleId, questionId, qualification);
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
@@ -51,14 +69,13 @@ const StepsController: React.FC<Props> = () => {
 
   const updateQualify = async (qualification: number) => {
     try {
-      console.log('qualification: ', qualification);
       const toUpdate = {
         questionId: questionId,
         userId: user.id,
         qualification: qualification,
         moduleId: moduleId
       };
-      const data = await vtexDocsServices.updateDocByDocID('AQ', stepIdSaved, toUpdate);
+      await vtexDocsServices.updateDocByDocID('AQ', stepIdSaved, toUpdate);
       toast.show({
         message: 'La calificación de la pregunta ha sido actualizada con éxito.',
         type: 'success'
@@ -72,6 +89,7 @@ const StepsController: React.FC<Props> = () => {
         }
       }
       setQualificationStatus(qualificationStatus);
+      updateReduxQualification(moduleId, questionId, qualification);
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
@@ -82,17 +100,23 @@ const StepsController: React.FC<Props> = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const dataSteps = await vtexDocsServices.getHelpQuestionsStepsByQuestionsId('QS', questionId);
-      setHelpSteps(dataSteps);
-
-      const data = await vtexDocsServices.getDocumentsByUserId('AQ', user.id as string);
+      let steps = [];
+      let qualificationReceived = {};
       let received;
-      for (let i = 0; i < data.length; i++) {
-        if (moduleId == data[i].moduleId && questionId == data[i].questionId) {
-          setStepReceived(data[i]);
-          received = data[i];
+      for (let m = 0; m < helpCenterModules.length; m++) {
+        if (helpCenterModules[m].id == moduleId) {
+          for (let q = 0; q < helpCenterModules[m].questions.length; q++) {
+            if (helpCenterModules[m].questions[q].questionId == questionId) {
+              steps = helpCenterModules[m].questions[q].steps;
+              qualificationReceived = helpCenterModules[m].questions[q].qualification;
+
+              setStepReceived(qualificationReceived);
+              received = qualificationReceived;
+            }
+          }
         }
       }
+      setHelpSteps(steps);
 
       if (received != undefined) {
         setStepIdSaved(received.id);
