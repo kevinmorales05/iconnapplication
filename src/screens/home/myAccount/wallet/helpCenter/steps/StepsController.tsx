@@ -31,16 +31,62 @@ const StepsController: React.FC<Props> = () => {
   ]);
 
   const updateReduxQualification = async (moduleId: string, questionId: string, qualification: number) => {
+    let modules = [];
     for (let m = 0; m < helpCenterModules.length; m++) {
-      if (helpCenterModules[m].id == moduleId) {
-        for (let q = 0; q < helpCenterModules[m].questions.length; q++) {
-          if (helpCenterModules[m].questions[q].questionId == questionId) {
-            helpCenterModules[m].questions[q].qualification.qualification = qualification;
-          }
+      let quests = [];
+      for (let q = 0; q < helpCenterModules[m].questions.length; q++) {
+        if (helpCenterModules[m].id == moduleId) {
+          let ques = {
+            moduleId: helpCenterModules[m].id,
+            moduleName: helpCenterModules[m].questions[q].qualification.name,
+            qualification:
+              helpCenterModules[m].questions[q].questionId == questionId ? qualification : helpCenterModules[m].questions[q].qualification.qualification,
+            questionId: helpCenterModules[m].questions[q].qualification.questionId,
+            userId: helpCenterModules[m].questions[q].qualification.userId,
+            id: helpCenterModules[m].questions[q].qualification.id
+          };
+
+          let question = {
+            moduleId: helpCenterModules[m].id,
+            questionId: helpCenterModules[m].questions[q].questionId,
+            question: helpCenterModules[m].questions[q].question,
+            steps: helpCenterModules[m].questions[q].steps,
+            qualification: ques
+          };
+          quests.push(question);
+        } else {
+          let ques = {
+            moduleId: helpCenterModules[m].id,
+            moduleName: helpCenterModules[m].questions[q].qualification.name,
+            qualification: helpCenterModules[m].questions[q].qualification.qualification,
+            questionId: helpCenterModules[m].questions[q].qualification.questionId,
+            userId: helpCenterModules[m].questions[q].qualification.userId,
+            id: helpCenterModules[m].questions[q].qualification.id
+          };
+
+          let question = {
+            moduleId: helpCenterModules[m].id,
+            questionId: helpCenterModules[m].questions[q].questionId,
+            question: helpCenterModules[m].questions[q].question,
+            steps: helpCenterModules[m].questions[q].steps,
+            qualification: ques
+          };
+          quests.push(question);
         }
       }
+
+      let mod = {
+        index: helpCenterModules[m].index,
+        accountId: helpCenterModules[m].dataModule,
+        description: helpCenterModules[m].description,
+        id: helpCenterModules[m].id,
+        name: helpCenterModules[m].name,
+        icon: helpCenterModules[m].icon,
+        questions: quests
+      };
+      modules.push(mod);
     }
-    dispatch(setModules(helpCenterModules));
+    dispatch(setModules(modules));
   };
 
   const qualify = async (qualification: number) => {
