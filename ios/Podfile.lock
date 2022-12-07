@@ -576,7 +576,7 @@ PODS:
     - React-Core
   - RNPermissions (3.6.1):
     - React-Core
-  - RNReanimated (2.8.0):
+  - RNReanimated (2.13.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -614,7 +614,7 @@ PODS:
   - vision-camera-code-scanner (0.2.0):
     - GoogleMLKit/BarcodeScanning
     - React-Core
-  - VisionCamera (2.13.3):
+  - VisionCamera (2.15.2):
     - React
     - React-callinvoker
     - React-Core
@@ -995,13 +995,13 @@ SPEC CHECKSUMS:
   RNGestureHandler: bad495418bcbd3ab47017a38d93d290ebd406f50
   RNGoogleSignin: b2179ba653c759b936404a7746fc5302f9de6a5a
   RNPermissions: dcdb7b99796bbeda6975a6e79ad519c41b251b1c
-  RNReanimated: 64573e25e078ae6bec03b891586d50b9ec284393
+  RNReanimated: b21b362b4b8ca921932e8b1718e88cf3a36f157e
   RNScreens: ee31ecdf23fe81e93c74feaa086cf173d758ab58
   RNSVG: 38ca962c970dbce1ca38991a5aebf26d163f9efb
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   vision-camera-code-scanner: dda884a7f3ec8243a2a6d6489b91860648371bca
-  VisionCamera: c1c171fcdbf18c438987847f785829c5638f3a4c
+  VisionCamera: d011219ead7037dd6bd0c776ab20fa0874d95de0
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

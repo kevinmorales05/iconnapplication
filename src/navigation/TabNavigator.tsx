@@ -12,6 +12,7 @@ import PromotionsController from 'screens/home/promotions/PromotionsController';
 import { RootState, useAppSelector } from 'rtk';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TAB_CAT, TAB_HOME, TAB_PIN_LOCATION, TAB_PROMOS, TAB_USER_PROFILE } from 'assets/images';
+import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -81,7 +82,7 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         name="BranchesScreen"
-        component={isGuest ? InviteSignUpController : BranchesController}
+        component={isGuest ? InviteSignUpController : InConstructionController}
         options={{
           unmountOnBlur: true,
           headerShown: isGuest ? false : true,
@@ -117,3 +118,9 @@ export const TabNavigator = () => {
     </Tab.Navigator>
   );
 };
+
+
+// component={isGuest ? InviteSignUpController : BranchesController}
+
+
+//component={isGuest ? InviteSignUpController : InConstructionController}
