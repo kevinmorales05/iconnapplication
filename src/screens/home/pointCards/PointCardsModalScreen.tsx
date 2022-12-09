@@ -10,6 +10,7 @@ import { ICONN_POINT_CARD_MODAL_PREFERENTE, ICONN_POINT_CARD_MODAL_PAYBACK } fro
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
   onPressClose: () => void;
@@ -41,8 +42,11 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
             backgroundColor: theme.brandColor.iconn_white
           }}
         >
-          <Container style={{ marginBottom: 16, alignItems: 'center' }}>
-            <Container style={{ alignItems: 'flex-end', width: '100%' }}>
+          <Container style={{ paddingBottom: moderateScale(15), alignItems: 'center', flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
+            <Container style={{ width: '90%', alignItems: 'center', paddingLeft: moderateScale(35) }}>
+              <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Tarjeta de puntos" typography="h3" fontBold />
+            </Container>
+            <Container style={{ width: '10%' }}>
               <ActionButton
                 style={{ shadowColor: 'none' }}
                 size="xxsmall"
@@ -50,9 +54,6 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
                 color="white"
                 icon={<Ionicons name="close" size={24} color={theme.fontColor.dark_grey} />}
               />
-            </Container>
-            <Container>
-              <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Tarjeta de puntos" typography="h3" fontBold />
             </Container>
           </Container>
           <ScrollView
