@@ -70,21 +70,21 @@ const ServicePaymentQRDetailController: React.FC<any> = () => {
           beneficiary.accountCard.length - 3,
           beneficiary.accountCard.length
         )} (${beneficiary.tag})?\nLo puedes volver agregar en cualquier momento.`,
-        acceptTitle: 'Cancelar',
-        cancelTitle: 'Eliminar',
-        cancelOutline: 'iconn_error',
-        cancelTextColor: 'iconn_error',
+        acceptTitle: 'Eliminar',
+        cancelTitle: 'Cancelar',
+        cancelOutline: 'iconn_med_grey',
+        cancelTextColor: 'iconn_accent_secondary',
         onCancel() {
           alert.hide();
-          deleteBeneficiary();
         },
         onAccept() {
           alert.hide();
+          deleteBeneficiary();
         }
       },
-      'error',
+      'deleteCart',
       false,
-      false
+      true
     );
   };
 
