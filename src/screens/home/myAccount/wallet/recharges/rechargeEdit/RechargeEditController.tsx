@@ -42,10 +42,8 @@ const RechargeEditController: React.FC = () => {
 
   const onSubmit = async (rechargeFields: any) => {
     const Buffer = require('buffer').Buffer;
-    const nameCut = user.name?.slice(0, 3);
-    const lastCut = user.lastName?.slice(0, 3);
     const idCut = user.id?.slice(0, 7);
-    let encodedAuth = new Buffer(`${idCut}\\${nameCut} ${lastCut}`).toString('base64');
+    let encodedAuth = new Buffer(`${idCut}\\${user.name} ${user.lastName}`).toString('base64');
     const qrData: string = `711APPPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00|${encodedAuth}|`;
     const newRecharge: RechargeUser = {
       //id: rechargeUser ? rechargeUser.id : rechargeQRId,

@@ -286,7 +286,7 @@ export const alphaNumericWithSpacesAndDot = (lenght: number): RegisterOptions =>
   }
 });
 
-export const alphaNumericWithoutSpaces = (lenght: number): RegisterOptions => ({
+export const alphaNumericWithoutSpaces = (lenght: number, min?: number): RegisterOptions => ({
   required: {
     value: true,
     message: 'Campo requerido.'
@@ -298,6 +298,10 @@ export const alphaNumericWithoutSpaces = (lenght: number): RegisterOptions => ({
   pattern: {
     value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1]*$/,
     message: 'Caracter no válido.'
+  },
+  maxLength: {
+    value: min ? min : 100,
+    message: 'Longitud inválida.'
   }
 });
 
