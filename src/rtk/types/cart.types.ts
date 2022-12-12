@@ -33,6 +33,8 @@ export interface ShippingDataAddress {
   complement: undefined | string;
   reference: undefined | string;
   geoCoordinates: number[];
+  addressId?: string | undefined;
+  isDisposable?: boolean;
 }
 
 export interface ShippingDataInfo {
@@ -43,5 +45,5 @@ export interface ShippingDataInfo {
 
 export interface ShippingData {
   selectedAddresses: ShippingDataAddress[];
-  logisticsInfo: ShippingDataInfo[];
+  logisticsInfo?: ShippingDataInfo[];
 }

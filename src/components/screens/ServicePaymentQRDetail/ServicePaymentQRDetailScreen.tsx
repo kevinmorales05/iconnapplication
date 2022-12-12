@@ -24,13 +24,34 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
   const insets = useSafeAreaInsets();
   const { ARCUS_QR_PREFIX } = config;
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const userIdName = `${user.id}\\${user.name}${user.lastName}${user.secondLastName}`;
-  // console.log('userIdName', userIdName);
+
+  const subStrUser = user.id?.substring(0, 7);
+  // console.log('Los 7 digitos del id de usuario:', subStrUser);
+
+  const fullUserName = `${user.name}${user.lastName}${user.secondLastName}`;
+  // console.log('fullUserName:', fullUserName);
+
+  const fullUserNameWithoutSpaces = fullUserName.replace(/\s/g, '');
+  // console.log('fullUserName sin espacios:', fullUserNameWithoutSpaces);
+
+  // console.log('fullUserName longitud sin espacios:', fullUserNameWithoutSpaces.length);
+  let subStrUserName = '';
+  if (fullUserNameWithoutSpaces.length === 0) {
+    subStrUserName = 'unknown';
+  } else {
+    subStrUserName = fullUserName.substring(0, 7);
+  }
+
+  // console.log('Los 7 digitos del full username:', subStrUserName);
+  // console.log('la longitud del subStrUserName:', subStrUserName.length);
+
+  let userIdName = subStrUser + '\\' + subStrUserName;
+  // console.log('El valor que se codifica es:', userIdName);
   const encryption = encode(userIdName);
   // console.log('encryption', encryption);
   // const decryption = decode(encryption);
   // console.log('decryption', decryption);
-  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.SKU}|${servicePayment.UPC}|${service?.contractNumber}||${encryption}|`;
+  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.UPC}|${servicePayment.SKU}|${service?.billId}||${encryption}|`;
   // console.log('El string del QR es', QRString);
 
   return (

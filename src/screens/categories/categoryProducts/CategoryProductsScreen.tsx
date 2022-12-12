@@ -22,7 +22,7 @@ import { ProductsByCategoryFilter } from 'rtk/types/category.types';
 import { FilterItemTypeProps } from 'components/types/FilterITem';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { useLoading } from 'context';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 
@@ -445,7 +445,7 @@ const CategoryProductsScreen: React.FC = () => {
                     fontSize={theme.fontSize.h6}
                   /> */}
                 </Container>
-                <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
+                <Container height={verticalScale(540)} width={'100%'}>
                   <FlatList
                     data={productsRender}
                     renderItem={_renderItem}

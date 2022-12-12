@@ -86,7 +86,7 @@ const TrackingScreen: React.FC<Props> = ({
               marginTop={2}
               maxLength={22}
               scanIcon={true}
-              rules={alphaNumericWithoutSpaces(22)}
+              rules={alphaNumericWithoutSpaces(10, 22)}
               onPressScan={onPressScan}
               onChangeText={() => {
                 setBarcodeValidate(false);

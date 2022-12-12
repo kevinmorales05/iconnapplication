@@ -141,12 +141,12 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
                     borderRadius: 8,
                     paddingVertical: 15
                   }}>
-                    <Container row style={{ marginLeft: 7, width: '100%' }}>
-                      <Container center space='around' style={{ marginLeft: 7, width: '10%' }}>
+                    <Container row style={{ marginLeft: 4, width: '100%' }}>
+                      <Container center space='around' style={{ marginLeft: 4, width: '10%' }}>
                         <Octicons name="info" size={24} color={theme.fontColor.dark} />
                       </Container>
-                      <Container style={{ width: '90%' }}>
-                        <Container style={{ width: '98%', marginLeft: 8 }}>
+                      <Container style={{ width: '87%' }}>
+                        <Container style={{ width: '95%', marginLeft: 8 }}>
                           <TextContainer
                             text="Al momento de la entrega de los productos se te pedirá tu identificación oficial para corroborar tu mayoría de edad."
                             fontSize={12}
