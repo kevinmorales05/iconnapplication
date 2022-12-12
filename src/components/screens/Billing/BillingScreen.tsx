@@ -13,7 +13,7 @@ import { invoicingServices } from 'services';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useAlert } from 'context';
+import { useAlert, useLoading } from 'context';
 import { HeaderBackButton } from '@react-navigation/elements';
 import { AnnounceItem } from '../../atoms';
 import Feather from 'react-native-vector-icons/Feather';
@@ -40,6 +40,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [disabled, setDisabled] = useState(false);
   const { isGuest } = useAppSelector((state: RootState) => state.auth);
+  const loader = useLoading();
 
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams, 'CreateTaxProfile'>>();
   const alert = useAlert();
@@ -79,18 +80,25 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   }, [navigation, isDirty]);
 
   useEffect(() => {
-    if (current) {
-      setValue('rfc', current.rfc);
-      setValue('cfdi', current.Cfdi.description);
-      setValue('email', current.email);
-      setValue('regime', current.Tax_Regime.sat_tax_regime);
-      setValue('postalCode', current.zip_code);
-      setValue('businessName', current.business_name);
-      setValue('street', current.Address.street);
-      setValue('city', current.Address.city);
-      setValue('state', current.Address.state);
-      setValue('ext_num', current.Address.ext_num);
-    }
+    loader.show();
+    setTimeout(async () => {
+      if (current?.Cfdi) {
+        await setValue('rfc', current.rfc);
+        await setValue('cfdi', current.Cfdi.description);
+        await setValue('email', current.email);
+        await setValue('regime', current.Tax_Regime.sat_tax_regime);
+        await setValue('postalCode', current.zip_code);
+        await setValue('businessName', current.business_name);
+        await setValue('street', current.Address.street);
+        await setValue('city', current.Address.city);
+        await setValue('state', current.Address.state);
+        await setValue('ext_num', current.Address.ext_num);
+        await setValue('cfdi', current.Cfdi.description);
+        loader.hide();
+      } else {
+        loader.hide();
+      }
+    }, 1000);
   }, [current]);
 
   const mandatoryFields = watch(['rfc', 'cfdi', 'email', 'regime', 'postalCode', 'businessName']);
@@ -219,9 +227,9 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             <TextContainer typography="paragraph" text="Crea un perfil fiscal para guardar tus datos de facturación." />
           )}
 
-          <TextContainer textColor={theme.brandColor.iconn_grey} typography="description" text={`Todos los campos son obligatorios.`} marginTop={6} />
-          <TextContainer typography="h3" fontBold text={`Datos Fiscales`} marginTop={25}></TextContainer>
-          <TextContainer typography="h5" fontBold text={`RFC`} marginTop={13}></TextContainer>
+          <TextContainer textColor={theme.brandColor.iconn_grey} typography="description" text={'Todos los campos son obligatorios.'} marginTop={6} />
+          <TextContainer typography="h3" fontBold text={'Datos Fiscales'} marginTop={25} />
+          <TextContainer typography="h5" fontBold text={'RFC'} marginTop={13} />
 
           <Input
             {...register('rfc')}
@@ -232,20 +240,20 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             autoCapitalize="characters"
             autoCorrect={false}
             rules={rfcRule}
-            placeholder={`Escribe tu RFC con homoclave`}
+            placeholder={'Escribe tu RFC con homoclave'}
             blurOnSubmit={false}
             error={errors.rfc?.message}
             maxLength={13}
             marginTop={4}
           />
 
-          <TextContainer typography="h5" fontBold text={`Razón Social`} marginTop={21}></TextContainer>
+          <TextContainer typography="h5" fontBold text={'Razón Social'} marginTop={21} />
           <Input
             {...register('businessName')}
             rules={{
               required: {
                 value: true,
-                message: `Campo requerido.`
+                message: 'Campo requerido.'
               },
               minLength: {
                 value: 3,
@@ -256,28 +264,22 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             control={control}
             autoCorrect={false}
             keyboardType="default"
-            placeholder={`Nombre completo o Razón Social`}
+            placeholder={'Nombre completo o Razón Social'}
             blurOnSubmit={false}
             error={errors.businessName?.message}
             maxLength={100}
             marginTop={4}
           />
 
-          <TextContainer typography="h5" fontBold text={`Correo electrónico`} marginTop={21} />
+          <TextContainer typography="h5" fontBold text={'Correo electrónico'} marginTop={21} />
           <Input
             {...register('email')}
             ref={emailRef}
             name="email"
-            rules={{
-              required: {
-                value: true,
-                message: `Campo requerido.`
-              }
-            }}
             control={control}
             autoCorrect={false}
             keyboardType="email-address"
-            placeholder={`a.ramirez.corp@hotmail.com`}
+            placeholder={'a.ramirez.corp@hotmail.com'}
             blurOnSubmit={false}
             rules={emailRules}
             error={errors.email?.message}
@@ -285,56 +287,55 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             marginTop={4}
           />
 
-          <TextContainer typography="h5" fontBold text={`Régimen fiscal`} marginTop={21} />
+          <TextContainer typography="h5" fontBold text={'Régimen fiscal'} marginTop={21} />
           <Select
             name="regime"
             rules={{
               required: {
                 value: true,
-                message: `Campo requerido.`
+                message: 'Campo requerido.'
               }
             }}
             control={control}
             options={regimensList.map(item => item.sat_tax_regime)}
             onSelect={value => setValue('regime', value)}
             androidMode="dialog"
-            label={`Régimen de Incorporación Fiscal`}
-            placeholder={`Seleccionar`}
+            label={'Régimen de Incorporación Fiscal'}
+            placeholder={'Seleccionar'}
             error={errors.regime?.message}
           />
 
-          <TextContainer typography="h5" fontBold text={`Uso de CFDI (Predeterminado)`} marginTop={21} />
+          <TextContainer typography="h5" fontBold text={'Uso de CFDI (Predeterminado)'} marginTop={21} />
           <Select
             name="cfdi"
             control={control}
             rules={{
               required: {
                 value: true,
-                message: `Campo requerido.`
+                message: 'Campo requerido.'
               }
             }}
             options={cfdiList.map(item => item.description)}
             onSelect={value => setValue('cfdi', value)}
             androidMode="dialog"
-            label={`03-Gastos en General`}
-            placeholder={`Seleccionar`}
+            placeholder={'Seleccionar'}
             error={errors.cfdi?.message}
           />
 
-          <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={21} />
+          <TextContainer typography="h5" fontBold text={'Código Postal'} marginTop={21} />
           <Input
             {...register('postalCode')}
             rules={{
               required: {
                 value: true,
-                message: `Campo requerido.`
+                message: 'Campo requerido.'
               }
             }}
             name="postalCode"
             control={control}
             autoCorrect={false}
             keyboardType="numeric"
-            placeholder={`C.P`}
+            placeholder={'C.P'}
             blurOnSubmit={false}
             error={errors.postalCode?.message}
             maxLength={5}
@@ -369,8 +370,8 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             style={{ marginVertical: 24, paddingVertical: 21, paddingHorizontal: theme.layoutSpace.medium }}
           >
             <Container flex row>
-              <TextContainer textColor={theme.fontColor.dark} typography="h5" fontBold text={`Agregar un domicilio`} />
-              <TextContainer textColor={theme.fontColor.grey} typography="placeholder" text={` (Opcional)`} />
+              <TextContainer textColor={theme.fontColor.dark} typography="h5" fontBold text={'Agregar un domicilio'} />
+              <TextContainer textColor={theme.fontColor.grey} typography="placeholder" text={' (Opcional)'} />
               <Container flex style={{ flexDirection: 'row-reverse' }}>
                 {toggled ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
               </Container>
@@ -380,7 +381,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
         <Container style={styles.billingSection}>
           {colonies && toggled && (
             <Container style={{ marginBottom: 25 }}>
-              <TextContainer typography="h6" fontBold text={`Calle`} marginTop={25} />
+              <TextContainer typography="h6" fontBold text={'Calle'} marginTop={25} />
               <Input
                 {...register('street')}
                 control={control}
@@ -391,7 +392,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
                 error={errors.street?.message}
                 maxLength={30}
               />
-              <TextContainer typography="h6" fontBold text={`Número exterior`} marginTop={25} />
+              <TextContainer typography="h6" fontBold text={'Número exterior'} marginTop={25} />
               <Input
                 control={control}
                 {...register('ext_num')}
@@ -402,7 +403,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
                 error={errors.ext_num?.message}
                 maxLength={30}
               />
-              <TextContainer typography="h6" fontBold text={`Estado`} marginTop={25} />
+              <TextContainer typography="h6" fontBold text={'Estado'} marginTop={25} />
               <View pointerEvents="none">
                 <Input
                   control={control}
@@ -415,7 +416,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
                   maxLength={30}
                 />
               </View>
-              <TextContainer typography="h6" fontBold text={`Municipio, Cuidad o Delegación`} marginTop={25} />
+              <TextContainer typography="h6" fontBold text={'Municipio, Cuidad o Delegación'} marginTop={25} />
               <View pointerEvents="none">
                 <Input
                   control={control}
@@ -429,7 +430,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
                 />
               </View>
 
-              <TextContainer typography="h6" fontBold text={`Colonia`} marginTop={25} />
+              <TextContainer typography="h6" fontBold text={'Colonia'} marginTop={25} />
               <Select
                 name="colony"
                 control={control}
@@ -438,8 +439,8 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
                 })}
                 onSelect={value => setValue('colony', value)}
                 androidMode="dialog"
-                label={`Colonia`}
-                placeholder={`Seleccionar`}
+                label={'Colonia'}
+                placeholder={'Seleccionar'}
                 error={errors.colony?.message}
               />
             </Container>

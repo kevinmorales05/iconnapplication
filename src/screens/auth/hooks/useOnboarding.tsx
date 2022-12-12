@@ -10,6 +10,7 @@ import {
   setLastName,
   setName,
   setTelephone,
+  setUserId,
   useAppDispatch
 } from 'rtk';
 import { authServices, vtexUserServices } from 'services';
@@ -46,6 +47,7 @@ export const useOnboarding = () => {
       dispatch(setBirthday({ birthday: dataVtex.birthday }));
       dispatch(setName({ name: dataVtex.name }));
       dispatch(setLastName({ lastName: dataVtex.lastName }));
+      dispatch(setUserId({ userId: dataVtex.userId }));
     }
   }, []);
 
@@ -61,7 +63,8 @@ export const useOnboarding = () => {
         lastName: data[0].lastName,
         telephone: data[0].homePhone,
         birthday: data[0].birthDate,
-        gender: data[0].gender
+        gender: data[0].gender,
+        userId: data[0].userId
       };
       dispatch(setId({ id: dataVtex.id }));
       dispatch(setTelephone({ telephone: dataVtex.telephone }));
@@ -69,6 +72,7 @@ export const useOnboarding = () => {
       dispatch(setBirthday({ birthday: dataVtex.birthday }));
       dispatch(setName({ name: dataVtex.name }));
       dispatch(setLastName({ lastName: dataVtex.lastName }));
+      dispatch(setUserId({ userId: dataVtex.userId }));
     } else {
       const userNew: AuthDataInterface = {
         email: user.user,
@@ -77,10 +81,8 @@ export const useOnboarding = () => {
         homePhone: '',
         userId: user.userId
       };
-      console.log({ userNew });
       const response = await authServices.newUser(userNew);
       if (response) {
-        console.log({ newUser: response });
         getUser(user.user, true);
       } else {
         alert.show(
