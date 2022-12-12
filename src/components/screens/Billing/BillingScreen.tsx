@@ -198,7 +198,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
       email: fields.email,
       c_use_cfdi,
       tax_code_key,
-      zip_code: Number(fields.postalCode),
+      zip_code: fields.postalCode,
       address: {
         street: fields.street,
         ext_num: fields.ext_num,
@@ -353,7 +353,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
               </Container>
             </Container>
           )}
-          {colonies && !loading && (
+          {colonies?.length && !loading && (
             <Container row>
               <Container flex row style={{ marginTop: 10 }} center>
                 <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
