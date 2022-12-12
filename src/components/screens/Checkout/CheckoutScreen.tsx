@@ -23,12 +23,12 @@ const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
   // TODO: relocate url to .ENV
   const onNavigationStateChange = (navState: WebViewNavigation) => {
     const paramsQuery = navState.url.split('/');
-    if(!isPaySuccess){
+    if (!isPaySuccess) {
       setPaySuccess(paramsQuery.some(item => item === 'congrats') && paramsQuery.some(item => item === 'approved'));
     }
-    const urlParams = navState.url.split(CHECKOUT_URL_RETURNED!)[1]?.split('=%2Fcheckout%2');
+    const urlParams = navState.url.split(CHECKOUT_URL_RETURNED!)[1]?.split('/');
     if (urlParams) {
-      if (urlParams[0] === 'returnUrl') {
+      if (urlParams[1] === 'Success') {
         dispatch(setShoppingCartInitialState());
         reset({
           index: 0,

@@ -100,7 +100,7 @@ const TrackingController: React.FC = () => {
           }, 250);
         } else {
           toast.show({
-            message: 'Número invalido.',
+            message: 'Número inválido.',
             type: 'error'
           });
         }

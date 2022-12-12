@@ -201,7 +201,8 @@ const theme: themeType = {
     google: '#e33629',
     yellow_star: '#f5d736',
     yellow_container: 'rgba(243, 206, 79, 0.18)',
-    accent_secondary: '#faa22d'
+    accent_secondary: '#faa22d',
+    iconn_green_original_opacity: 'rgba(0, 128, 96, 0.08)'
   },
   paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(5) : moderateScale(40),
   bottomStickyViewBottomPadding: isIphoneWithNotch ? Math.round(verticalScale(10)) : 0
