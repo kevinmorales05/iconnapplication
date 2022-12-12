@@ -79,28 +79,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
     });
   }, [navigation, isDirty]);
 
-  useEffect(() => {
-    loader.show();
-    setTimeout(async () => {
-      if (current?.Cfdi) {
-        await setValue('rfc', current.rfc);
-        await setValue('cfdi', current.Cfdi.description);
-        await setValue('email', current.email);
-        await setValue('regime', current.Tax_Regime.sat_tax_regime);
-        await setValue('postalCode', current.zip_code);
-        await setValue('businessName', current.business_name);
-        await setValue('street', current.Address.street);
-        await setValue('city', current.Address.city);
-        await setValue('state', current.Address.state);
-        await setValue('ext_num', current.Address.ext_num);
-        await setValue('cfdi', current.Cfdi.description);
-        loader.hide();
-      } else {
-        loader.hide();
-      }
-    }, 1000);
-  }, [current]);
-
   const mandatoryFields = watch(['rfc', 'cfdi', 'email', 'regime', 'postalCode', 'businessName']);
 
   useEffect(() => {
@@ -137,42 +115,68 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
     fetchCatalogs();
   }, [fetchCatalogs]);
 
-  const { postalCode } = watch();
+  const postalCode = watch('postalCode', '');
 
   useEffect(() => {
-    (async () => {
-      if (!postalCode) {
-        setColonies(null);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const data = await invoicingServices.getColonies(postalCode);
-        if (data.responseCode === 65) {
-          setColonies(data.data as Colony[]);
-        } else {
-          setColonies(null);
-        }
-      } catch (error) {
-        setColonies(null);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    getColonies();
   }, [postalCode]);
 
-  useEffect(() => {
-    if (colonies) {
-      const sample: Colony = colonies[0];
-
-      setValue('state', sample.City.State.name);
-      setValue('city', sample.City.name);
-      if (current) {
-        setValue('colony', current.Address.colony);
-      }
+  const getColonies = async (zipCode?: string) => {
+    const temPostal = zipCode ? zipCode : postalCode;
+    if (!temPostal) {
+      setColonies(null);
+      return;
     }
-  }, [colonies, current]);
+    setLoading(true);
+    try {
+      const data = await invoicingServices.getColonies(temPostal);
+      if (data.responseCode === 65) {
+        setColonies(data.data as Colony[]);
+      } else {
+        setColonies(null);
+      }
+    } catch (error) {
+      setColonies(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (colonies?.length) {
+        const sample: Colony = colonies[0];
+        setValue('state', sample.City.State.name);
+        setValue('city', sample.City.name);
+        if (current?.Address && toggled) {
+          setValue('colony', current.Address.colony);
+          setValue('colony', current.Address.colony);
+        }
+      }
+    }, 250);
+  }, [colonies, current, toggled]);
+
+  useEffect(() => {
+    loader.show();
+    setTimeout(async () => {
+      if (current?.Cfdi) {
+        await getColonies(current.zip_code);
+        await setValue('rfc', current.rfc);
+        await setValue('cfdi', current.Cfdi.description);
+        await setValue('email', current.email);
+        await setValue('regime', current.Tax_Regime.sat_tax_regime);
+        await setValue('postalCode', current.zip_code);
+        await setValue('businessName', current.business_name);
+        await setValue('street', current.Address.street);
+        await setValue('city', current.Address.city);
+        await setValue('state', current.Address.state);
+        await setValue('ext_num', current.Address.ext_num);
+        loader.hide();
+      } else {
+        loader.hide();
+      }
+    }, 100);
+  }, [current]);
 
   const submit = (fields: any) => {
     const { c_use_cfdi } = cfdiList.find(cfdi => {
