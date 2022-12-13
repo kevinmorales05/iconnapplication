@@ -51,8 +51,11 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
   // console.log('encryption', encryption);
   // const decryption = decode(encryption);
   // console.log('decryption', decryption);
-  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.UPC}|${servicePayment.SKU}|${service?.billId}||${encryption}|`;
-  // console.log('El string del QR es', QRString);
+  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.UPC}|${servicePayment.SKU}|${service?.contractNumber}||${encryption}|`;
+  //TO DO: change service.billId with the account number input, after the validation of the existence of ARCUS
+  console.log('El string del QR es', QRString);
+  //  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.SKU}|${servicePayment.UPC}|${service?.billId}||${encryption}|`;  // console.log('El string del QR es', QRString);
+
 
   return (
     <ScrollView
