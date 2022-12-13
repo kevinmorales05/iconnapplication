@@ -287,7 +287,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
             blurOnSubmit={false}
             rules={emailRules}
             error={errors.email?.message}
-            maxLength={30}
+            maxLength={256}
             marginTop={4}
           />
 
