@@ -20,9 +20,34 @@ import ICONN_BASKET from './iconn-basket.webp';
 import ICONN_BASKET_SHOPPING_CART from './iconn-basket-shopping-cart.webp';
 import ICONN_BINOMIO_LOGOS from './iconn-binomio.webp';
 import ICONN_BINOMIO_LOGOS_LIGHT from './iconn-binomio-logos-light.webp';
+import ICONN_BRANCHES_ARROW_DOWN from './iconn-branches-arrow-down.png';
 import ICONN_BRANCHES_ARROW_UP from './iconn-branches-arrow-up.png';
 import ICONN_BRANCHES_BINOMIAL from './iconn-branches-binomial.webp';
 import ICONN_BRANCHES_FILTER_OPTION from './iconn-branches-filter-option.png';
+import ICONN_BRANCHES_ICON_7ELEVEN from './iconn-branches-icon-7eleven.png';
+import ICONN_BRANCHES_ICON_APPLEPAY from './iconn-branches-icon-applepay.png';
+import ICONN_BRANCHES_ICON_ARRIVE from './iconn-branches-icon-arrive.png';
+import ICONN_BRANCHES_ICON_ATM from './iconn-branches-icon-atm.png';
+import ICONN_BRANCHES_ICON_BOTTLE_GLASS from './iconn-branches-icon-bottle-glass.png';
+import ICONN_BRANCHES_ICON_BREAD from './iconn-branches-icon-bread.png';
+import ICONN_BRANCHES_ICON_CARDS from './iconn-branches-icon-cards.png';
+import ICONN_BRANCHES_ICON_CARNET from './iconn-branches-icon-carnet.png';
+import ICONN_BRANCHES_ICON_CARWASH from './iconn-branches-icon-carwash.png';
+import ICONN_BRANCHES_ICON_CASH from './iconn-branches-icon-cash.png';
+import ICONN_BRANCHES_ICON_CINEMA from './iconn-branches-icon-cinema.png';
+import ICONN_BRANCHES_ICON_CONTACTLESS from './iconn-branches-icon-contactless.png';
+import ICONN_BRANCHES_ICON_CUTLERY from './iconn-branches-icon-cutlery.png';
+import ICONN_BRANCHES_ICON_DRIVE_THRU from './iconn-branches-icon-drive-thru.png';
+import ICONN_BRANCHES_ICON_EDENRED from './iconn-branches-icon-edenred.png';
+import ICONN_BRANCHES_ICON_GAS from './iconn-branches-icon-gas.png';
+import ICONN_BRANCHES_ICON_GAS_CAN from './iconn-branches-icon-gas-can.png';
+import ICONN_BRANCHES_ICON_PIZZA from './iconn-branches-icon-pizza.png';
+import ICONN_BRANCHES_ICON_POKEMON from './iconn-branches-icon-pokemon.png';
+import ICONN_BRANCHES_ICON_RESTROOM from './iconn-branches-icon-restroom.png';
+import ICONN_BRANCHES_ICON_SIVALE from './iconn-branches-icon-sivale.png';
+import ICONN_BRANCHES_ICON_TACO from './iconn-branches-icon-taco.png';
+import ICONN_BRANCHES_ICON_TRUCK from './iconn-branches-icon-truck.png';
+import ICONN_BRANCHES_ICON_WIFI from './iconn-branches-icon-wifi.png';
 import ICONN_BRANCHES_LOCATION_BINOMIAL from './iconn-branches-location-binomial.png';
 import ICONN_BRANCHES_LOCATION_PETRO from './iconn-branches-location-petro.png';
 import ICONN_BRANCHES_LOCATION_PIN from './iconn-branches-location-pin.png';
@@ -154,9 +179,34 @@ export {
   ICONN_BASKET,
   ICONN_BINOMIO_LOGOS_LIGHT,
   ICONN_BINOMIO_LOGOS,
+  ICONN_BRANCHES_ARROW_DOWN,
   ICONN_BRANCHES_ARROW_UP,
   ICONN_BRANCHES_BINOMIAL,
   ICONN_BRANCHES_FILTER_OPTION,
+  ICONN_BRANCHES_ICON_7ELEVEN,
+  ICONN_BRANCHES_ICON_APPLEPAY,
+  ICONN_BRANCHES_ICON_ARRIVE,
+  ICONN_BRANCHES_ICON_ATM,
+  ICONN_BRANCHES_ICON_BOTTLE_GLASS,
+  ICONN_BRANCHES_ICON_BREAD,
+  ICONN_BRANCHES_ICON_CARDS,
+  ICONN_BRANCHES_ICON_CARNET,
+  ICONN_BRANCHES_ICON_CARWASH,
+  ICONN_BRANCHES_ICON_CASH,
+  ICONN_BRANCHES_ICON_CINEMA,
+  ICONN_BRANCHES_ICON_CONTACTLESS,
+  ICONN_BRANCHES_ICON_CUTLERY,
+  ICONN_BRANCHES_ICON_DRIVE_THRU,
+  ICONN_BRANCHES_ICON_EDENRED,
+  ICONN_BRANCHES_ICON_GAS_CAN,
+  ICONN_BRANCHES_ICON_GAS,
+  ICONN_BRANCHES_ICON_PIZZA,
+  ICONN_BRANCHES_ICON_POKEMON,
+  ICONN_BRANCHES_ICON_RESTROOM,
+  ICONN_BRANCHES_ICON_SIVALE,
+  ICONN_BRANCHES_ICON_TACO,
+  ICONN_BRANCHES_ICON_TRUCK,
+  ICONN_BRANCHES_ICON_WIFI,
   ICONN_BRANCHES_LOCATION_BINOMIAL,
   ICONN_BRANCHES_LOCATION_PETRO,
   ICONN_BRANCHES_LOCATION_PIN,
@@ -185,9 +235,9 @@ export {
   ICONN_ESTAFETA_EXAMPLE,
   ICONN_ESTAFETA_HELP,
   ICONN_ESTAFETA_LOGO,
+  ICONN_ESTAFETA_ONTRANSIT,
   ICONN_ESTAFETA_RETURN,
   ICONN_ESTAFETA_RETURNED,
-  ICONN_ESTAFETA_ONTRANSIT,
   ICONN_EYE_OFF,
   ICONN_EYE_ON,
   ICONN_EYE_VISIBLE,
@@ -248,12 +298,12 @@ export {
   ICONN_STORE_MODERN,
   ICONN_SUCCESS,
   ICONN_TRACKING_BARCODE,
-  ICONN_TRACKING_DELIVERED,
   ICONN_TRACKING_DELIVERED_GRAY,
+  ICONN_TRACKING_DELIVERED,
   ICONN_TRACKING_INTRANSIT,
   ICONN_TRACKING_PACKAGE,
-  ICONN_TRACKING_SENT,
   ICONN_TRACKING_SENT_GREEN,
+  ICONN_TRACKING_SENT,
   ICONN_USER_PROFILE,
   ICONN_USER,
   ICONN_WARNING_MARK,

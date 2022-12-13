@@ -11,9 +11,10 @@ interface Props {
   markers: PointInterface[];
   onPressMarker: (marker: PointInterface) => void;
   permissions: {};
+  onPressOut: () => void;
 }
 
-const BranchesScreen: React.FC<Props> = ({ markers, onPressMarker }) => {
+const BranchesScreen: React.FC<Props> = ({ markers, onPressMarker, onPressOut }) => {
   return (
     <ScrollView
       bounces={false}
@@ -69,7 +70,7 @@ const BranchesScreen: React.FC<Props> = ({ markers, onPressMarker }) => {
           </Button>
         </Container>
         <Container flex>
-          <CustomMap markers={markers} onPressMarker={onPressMarker} />
+          <CustomMap markers={markers} onPressMarker={onPressMarker} onPressOut={onPressOut} />
         </Container>
       </>
     </ScrollView>
