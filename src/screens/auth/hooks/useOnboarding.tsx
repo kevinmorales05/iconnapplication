@@ -38,7 +38,8 @@ export const useOnboarding = () => {
       lastName: data[0].lastName,
       telephone: data[0].homePhone,
       birthday: data[0].birthDate,
-      gender: data[0].gender
+      gender: data[0].gender,
+      userId: data[0].userId
     };
     dispatch(setId({ id: dataVtex.id }));
     if (isLogin) {
