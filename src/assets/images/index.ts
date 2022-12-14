@@ -28,6 +28,7 @@ import ICONN_BRANCHES_ICON_7ELEVEN from './iconn-branches-icon-7eleven.png';
 import ICONN_BRANCHES_ICON_APPLEPAY from './iconn-branches-icon-applepay.png';
 import ICONN_BRANCHES_ICON_ARRIVE from './iconn-branches-icon-arrive.png';
 import ICONN_BRANCHES_ICON_ATM from './iconn-branches-icon-atm.png';
+import ICONN_BRANCHES_ICON_BINOMIAL from './iconn-branches-icon-binomial.png';
 import ICONN_BRANCHES_ICON_BOTTLE_GLASS from './iconn-branches-icon-bottle-glass.png';
 import ICONN_BRANCHES_ICON_BREAD from './iconn-branches-icon-bread.png';
 import ICONN_BRANCHES_ICON_CARDS from './iconn-branches-icon-cards.png';
@@ -41,6 +42,7 @@ import ICONN_BRANCHES_ICON_DRIVE_THRU from './iconn-branches-icon-drive-thru.png
 import ICONN_BRANCHES_ICON_EDENRED from './iconn-branches-icon-edenred.png';
 import ICONN_BRANCHES_ICON_GAS from './iconn-branches-icon-gas.png';
 import ICONN_BRANCHES_ICON_GAS_CAN from './iconn-branches-icon-gas-can.png';
+import ICONN_BRANCHES_ICON_PETRO from './iconn-branches-icon-petro.png';
 import ICONN_BRANCHES_ICON_PIZZA from './iconn-branches-icon-pizza.png';
 import ICONN_BRANCHES_ICON_POKEMON from './iconn-branches-icon-pokemon.png';
 import ICONN_BRANCHES_ICON_RESTROOM from './iconn-branches-icon-restroom.png';
@@ -187,6 +189,7 @@ export {
   ICONN_BRANCHES_ICON_APPLEPAY,
   ICONN_BRANCHES_ICON_ARRIVE,
   ICONN_BRANCHES_ICON_ATM,
+  ICONN_BRANCHES_ICON_BINOMIAL,
   ICONN_BRANCHES_ICON_BOTTLE_GLASS,
   ICONN_BRANCHES_ICON_BREAD,
   ICONN_BRANCHES_ICON_CARDS,
@@ -200,6 +203,7 @@ export {
   ICONN_BRANCHES_ICON_EDENRED,
   ICONN_BRANCHES_ICON_GAS_CAN,
   ICONN_BRANCHES_ICON_GAS,
+  ICONN_BRANCHES_ICON_PETRO,
   ICONN_BRANCHES_ICON_PIZZA,
   ICONN_BRANCHES_ICON_POKEMON,
   ICONN_BRANCHES_ICON_RESTROOM,

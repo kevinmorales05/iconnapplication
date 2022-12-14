@@ -13,6 +13,7 @@ export * from './Loading';
 export * from './ModalWelcome';
 export * from './OtherInputMethods';
 export * from './PointDetailSheet';
+export * from './PointsList';
 export * from './ResendInvoice';
 export * from './ReviewModal';
 export * from './ReviewPercentage';

@@ -43,3 +43,5 @@ export interface PointInterface {
   shopNumber: number;
   type: PointType;
 }
+
+export type PointDisplayMode = 'map' | 'list';

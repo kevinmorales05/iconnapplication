@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { getNearbyPoints } from 'utils/geolocation';
 import { PointDetailSheet } from 'components';
-import { PointInterface, TabItem } from 'rtk';
+import { PointDisplayMode, PointInterface, TabItem } from 'rtk';
 import { POINTS } from 'assets/files';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useLocation } from 'hooks/useLocation';
@@ -65,7 +65,13 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   // SnapPoints for PointDetailSheet
-  const snapPoints = useMemo(() => [Platform.OS === 'android' ? '45%' : '42%', Dimensions.get('window').height - insets.top], []);
+  const snapPoints = useMemo(
+    () => [
+      Platform.OS === 'android' ? '45%' : '42%',
+      Platform.OS === 'android' ? Dimensions.get('window').height : Dimensions.get('window').height - insets.top
+    ],
+    []
+  );
 
   // callbacks
   const onHandleSheetChanges = useCallback((index: number) => {
@@ -95,9 +101,22 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
     }
   };
 
+  const [pointDisplayMode, setPointDisplayMode] = useState<PointDisplayMode>('map');
+
+  const onPressSeeList = () => setPointDisplayMode('list');
+  const onPressSeeMap = () => setPointDisplayMode('map');
+
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_white} childrenContainerStyle={{ paddingHorizontal: 0 }}>
-      <BranchesScreen permissions={permissions} markers={markers!} onPressMarker={onPressMarker} onPressOut={handleClosePress} />
+      <BranchesScreen
+        markers={markers!}
+        onPressMarker={onPressMarker}
+        onPressOut={handleClosePress}
+        onPressSeeList={onPressSeeList}
+        onPressSeeMap={onPressSeeMap}
+        permissions={permissions}
+        pointDisplayMode={pointDisplayMode}
+      />
       <PointDetailSheet
         bottomSheetRef={bottomSheetRef}
         marker={marker!}

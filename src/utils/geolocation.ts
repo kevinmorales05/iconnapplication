@@ -33,17 +33,22 @@ export const hasNearbySellers = (position: number[], sellers: SellerInterface[])
  * Function to get nearby points given a point/location.
  * @param location it could be the current user location.
  * @param points branches array.
+ * @param kilometers search radius. 5 by default.
  * @returns Nearby points array.
  */
 export const getNearbyPoints = (location: number[], points: PointInterface[], kilometers: number = 5) => {
-  const filtered = points.filter(point => {
-    const to = [Number(point.latitude), Number(point.longitude)];
-    const extent = distance(location, to);
-    if (extent < kilometers) {
-      point.kmDistance = extent.toFixed(1); // i.e: 0.9966472642351644 to 1.0, 2.1788058118354643 to 2.2
-      return point;
-    }
-  });
+  const filtered = points
+    .filter(point => {
+      const to = [Number(point.latitude), Number(point.longitude)];
+      const extent = distance(location, to);
+      if (extent < kilometers) {
+        point.kmDistance = extent.toFixed(1); // i.e: 0.9966472642351644 to 1.0, 2.1788058118354643 to 2.2
+        return point;
+      }
+    })
+    .sort((a, b) => {
+      return (a.kmDistance as unknown as number) - (b.kmDistance as unknown as number);
+    });
 
   // console.log('Número de tiendas cercanas a la ubicación:', filtered.length);
   // console.log('Detalle de tiendas cercanas a la ubicación:', JSON.stringify(filtered, null, 3));
