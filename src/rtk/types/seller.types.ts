@@ -25,7 +25,7 @@ export interface SellerInterface {
   VTEX_APPTOKEN?: string;
 }
 
-export type PointType = 'binomial' | 'petro' | 'seven';
+export type PointType = 'binomial' | 'petro' | '7eleven';
 
 export interface PointInterface {
   address: string;
@@ -43,3 +43,5 @@ export interface PointInterface {
   shopNumber: number;
   type: PointType;
 }
+
+export type PointDisplayMode = 'map' | 'list';
