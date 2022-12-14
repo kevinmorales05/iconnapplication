@@ -37,7 +37,6 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
     emails = emails.filter(e => {
       return validateEmail(e);
     });
-
     setEmails(emails);
   }, [value]);
 

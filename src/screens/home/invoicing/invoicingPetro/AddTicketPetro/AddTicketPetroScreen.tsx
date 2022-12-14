@@ -6,7 +6,6 @@ import theme from 'components/theme/theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ICONN_INVOICING_PETRO } from 'assets/images';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useForm } from 'react-hook-form';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
@@ -131,27 +130,6 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
             <Touchable onPress={onPressQuestionButton} marginTop={8}>
               <MaterialIcons name="help" size={28} color={theme.brandColor.iconn_accent_secondary} style={{ alignSelf: 'center' }} />
             </Touchable>
-
-            <Button
-              round
-              onPress={onPressScan}
-              fontSize="h4"
-              fontBold
-              marginTop={16}
-              outline
-              leftIcon={<MaterialCommunityIcons name="line-scan" size={24} color={theme.brandColor.iconn_accent_principal} />}
-            >
-              Escanear Ticket
-            </Button>
-
-            <Container style={{ marginTop: 34 }} row center>
-              <Container width={'35%'} backgroundColor={theme.brandColor.iconn_light_grey} height={1} />
-              <Container width={'30%'}>
-                <CustomText text="O captura" alignSelf="center"></CustomText>
-              </Container>
-              <Container width={'35%'} backgroundColor={theme.brandColor.iconn_light_grey} height={1} />
-            </Container>
-
             <Input
               {...register('station')}
               name="station"
