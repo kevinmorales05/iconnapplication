@@ -112,8 +112,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<PlacesSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            inConstruction.show(true);
-            //navigate('Branches');
+            //inConstruction.show(true);
+            navigate('Branches');
 
           }}
         />
