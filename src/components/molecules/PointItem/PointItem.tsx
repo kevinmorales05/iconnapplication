@@ -45,6 +45,7 @@ const PointItem: React.FC<PointItemProps> = ({ onPress, point }) => {
               resizeMode="contain"
             />
           </Container>
+          {/* TODO: DT Alex. Alex should provide a new version of json markers, this version should have shopName property for gas stations. */}
           <Container width={'60%'} flex style={{ left: -8 }}>
             <TextContainer text={point.shopName} typography="h5" />
           </Container>

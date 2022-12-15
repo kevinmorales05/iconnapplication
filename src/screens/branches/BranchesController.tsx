@@ -66,7 +66,7 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
   // SnapPoints for PointDetailSheet
   const snapPoints = useMemo(
     () => [
-      Platform.OS === 'android' ? '45%' : '42%',
+      Platform.OS === 'android' ? '50%' : '50%',
       Platform.OS === 'android' ? Dimensions.get('window').height : Dimensions.get('window').height - insets.top
     ],
     []
@@ -96,16 +96,22 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
   const onPressSeeList = () => setPointDisplayMode('list');
   const onPressSeeMap = () => setPointDisplayMode('map');
 
+  /**
+   * This function allows open always the google maps app for IOS. In Android will ask to the user for the app to open the address.
+   * TODO: DT Alex. Alex should provide a new version of json markers, this version should have shopName property for gas stations.
+   */
   const onPressHowToGet = () => {
-    const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
     const latLng = `${marker?.latitude},${marker?.longitude}`;
-    const label = marker?.type === '7eleven' ? marker.shopName : marker?.address;
-    const url = Platform.select({
-      ios: `${scheme}${label}@${latLng}`,
-      android: `${scheme}${latLng}(${label})`
-    });
-
-    Linking.openURL(url!);
+    if (Platform.OS === 'android') {
+      const scheme = Platform.select({ android: 'geo:0,0?q=' });
+      const label = marker?.type === '7eleven' ? marker.shopName : marker?.address;
+      const url = Platform.select({
+        android: `${scheme}${latLng}(${label})`
+      });
+      Linking.openURL(url!);
+    } else {
+      Linking.openURL(`https://maps.google.com/maps?daddr=${latLng}`);
+    }
   };
 
   return (
