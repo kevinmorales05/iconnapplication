@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import HelpItemsScreen from './HelpItemsScreen';
-import theme from 'components/theme/theme';
-import { SafeArea } from 'components';
 import {
   ICON_HELPMYACCOUNT,
   ICON_HELPPAYMENTSANDWALLET,
@@ -11,10 +9,14 @@ import {
   ICON_HELPCALLUS
 } from 'assets/images';
 import { RootState, useAppSelector } from 'rtk';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
 
 interface Props {}
 
 const HelpItemsController: React.FC<Props> = () => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { helpCenterModules } = useAppSelector((state: RootState) => state.helpCenterModules);
   const [helpModules, setHelpModules] = useState([]);
   const helpModulesIcons = new Map([
@@ -30,21 +32,15 @@ const HelpItemsController: React.FC<Props> = () => {
     setHelpModules(helpCenterModules);
   }, []);
 
+  const onPressTour = () => {
+    navigate('VirtualTour', { step: 1 });
+  };
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  return (
-    <SafeArea
-      childrenContainerStyle={{ paddingHorizontal: 0 }}
-      topSafeArea={false}
-      bottomSafeArea={false}
-      backgroundColor={theme.brandColor.iconn_background}
-      barStyle="dark"
-    >
-      <HelpItemsScreen modulesData={helpModules} icons={helpModulesIcons} />
-    </SafeArea>
-  );
+  return <HelpItemsScreen modulesData={helpModules} icons={helpModulesIcons} onPressTour={onPressTour} />;
 };
 
 export default HelpItemsController;
