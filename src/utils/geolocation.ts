@@ -36,7 +36,7 @@ export const hasNearbySellers = (position: number[], sellers: SellerInterface[])
  * @param kilometers search radius. 5 by default.
  * @returns Nearby points array.
  */
-export const getNearbyPoints = (location: number[], points: PointInterface[], kilometers: number = 5) => {
+export const getNearbyPoints = (location: number[], points: PointInterface[], kilometers: number = 1) => {
   const filtered = points
     .filter(point => {
       const to = [Number(point.latitude), Number(point.longitude)];
