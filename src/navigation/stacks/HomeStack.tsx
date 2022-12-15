@@ -58,7 +58,7 @@ import WalletStack from './nested/WalletStack';
 import LiveStatusWidgetController from 'screens/home/myAccount/liveStatusWidget/LiveStatusWidgetController';
 import BranchesController from 'screens/branches/BranchesController';
 import VirtualTourController from 'screens/home/myAccount/wallet/helpCenter/items/VirtualTour/VirtualTourController';
-//import RateOrderController from 'screens/home/myAccount/myOrders/RateOrder/RateOrderController';
+import RateOrderController from 'screens/home/myAccount/myOrders/RateOrder/RateOrderController';
 import CommentOrderController from 'screens/home/myAccount/myOrders/CommentOrder/CommentOrderController';
 
 const HomeStack: React.FC = () => {
@@ -184,7 +184,7 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="DeleteAccount" options={{ title: 'Eliminar cuenta' }} component={DeleteAccountController} />
       <Stack.Screen name="Promotions" options={{ title: 'Promociones', headerRight: () => <BasketCounter /> }} component={PromotionsScreen} />
       <Stack.Screen name="PostalCode" options={{ title: '', headerShadowVisible: false }} component={PostalCodeController} />
-      {/*  <Stack.Screen
+      <Stack.Screen
         options={{
           headerShown: true,
           title: 'Evalúa tu compra',
@@ -193,7 +193,7 @@ const HomeStack: React.FC = () => {
         }}
         name="RateOrder"
         component={RateOrderController}
-      /> */}
+      />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
       <Stack.Screen name="ChangePassword" options={{ title: 'Editar contraseña' }} component={ChangePasswordController} />
       <Stack.Screen name="HelpItems" options={{ title: 'Ayuda' }} component={HelpItemsController} />
