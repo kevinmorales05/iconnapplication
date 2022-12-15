@@ -23,6 +23,7 @@ const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
           questionsData.map(question => {
             return (
               <NavigationMenuItem
+                key={question}
                 text={question.question}
                 disable={false}
                 icon={<MaterialCommunityIcons style={{ textAlign: 'center' }} size={24} name="comment-question-outline" color={theme.fontColor.dark} />}
@@ -36,7 +37,7 @@ const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
           <Container center>
             <Container center style={{ width: '70%', height: '100%', marginTop: 100 }}>
               <MaterialCommunityIcons size={60} name="alert" color={theme.fontColor.grey} />
-              <TextContainer text="Información no disponible por el momento. Disculpe las molestias" textColor={theme.fontColor.grey}></TextContainer>
+              <TextContainer text="Información no disponible por el momento. Disculpe las molestias" textColor={theme.fontColor.grey} />
             </Container>
           </Container>
         )}

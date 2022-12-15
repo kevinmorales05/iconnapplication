@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, onPressScan, ticket, position }) => {
+const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, ticket, position }) => {
   const { closeContainer } = styles;
   const insets = useSafeAreaInsets();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);

@@ -114,7 +114,6 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           onPressNavigateTo={() => {
             //inConstruction.show(true);
             navigate('Branches');
-
           }}
         />
         <NavigationMenuItem
@@ -169,8 +168,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<HelpSupportSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            inConstruction.show(true);
-            //navigate('HelpItems');
+            //inConstruction.show(true);
+            navigate('HelpItems');
           }}
         />
       </Container>

@@ -103,7 +103,7 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
         toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
-      console.warn(error);
+      //console.warn(error);
     }
   };
 
@@ -112,7 +112,7 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
   const onPressOut = () => setHelpVisible(false);
 
   const onPressScan = () => {
-    console.log('onPressScan Petro...');
+    //console.log('onPressScan Petro...');
   };
 
   return (
@@ -129,7 +129,7 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
         onPressOut={onPressOut}
         visible={helpVisible}
         onUnderstood={onPressOut}
-        message={`Puedes encontrar la estación, folio y el web ID\ndel ticket a facturar en tu comprobante físico.`}
+        message={'Puedes encontrar la estación, folio y el web ID\ndel ticket a facturar en tu comprobante físico.'}
         img={ICONN_INVOICING_PETRO_REFERENCE}
       />
     </SafeArea>

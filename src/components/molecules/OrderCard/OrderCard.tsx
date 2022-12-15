@@ -3,7 +3,7 @@ import theme from 'components/theme/theme';
 import { Container, Touchable } from 'components/atoms';
 import { TextContainer } from '../TextContainer';
 import { Image, StyleSheet } from 'react-native';
-import { ICONN_SHOPPING_BAG, ICONN_STORE_MODERN, ICONN_ITEM_REFRESH, ICONN_LEFT_ARROW } from 'assets/images';
+import { ICONN_SHOPPING_BAG, ICONN_STORE_MODERN, ICONN_ITEM_REFRESH, ICONN_LEFT_ARROW, ICONN_ORDERS_EVALUATE } from 'assets/images';
 import Icon from 'react-native-vector-icons/Entypo';
 import { messageType, OrderInterface, RootState, useAppSelector } from 'rtk';
 import { vtexOrdersServices } from 'services';
@@ -11,12 +11,21 @@ import { formatDate2 } from 'utils/functions';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { useLoading } from 'context';
 import { moderateScale } from 'utils/scaleMetrics';
+import { Button } from 'components';
+import { HomeStackParams } from 'navigation/types';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const OrderCard = (props: OrderInterface) => {
   const { updateShoppingCartProduct } = useShoppingCart();
-  const { status, creationDate, orderId, totalItems, totalValue, deliveryChannel, navigate, seeMore } = props;
+  const { navigate: navigation } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { status, creationDate, orderId, totalItems, totalValue, deliveryChannel, navigate, seeMore, qualified } = props;
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const loader = useLoading();
+
+  const toRate = () => {
+    navigation('RateOrder', { orderId: orderId });
+  };
 
   const newDate = (date: string) => {
     let formatDay = new Date(date);
@@ -126,30 +135,49 @@ const OrderCard = (props: OrderInterface) => {
       </Container>
 
       {status === 'canceled' || status === 'invoiced' ? (
-        <Container row space="between">
-          <Touchable onPress={getOrderItems}>
-            <Container row style={styles.contShopAgain}>
-              <Image source={ICONN_ITEM_REFRESH} style={{ height: 24, width: 24 }} />
-              <TextContainer
-                text="Volver a comprar"
-                fontSize={14}
-                textColor={theme.brandColor.iconn_green_original}
-                fontBold
-                marginLeft={moderateScale(5)}
-                underline
-              />
-            </Container>
-          </Touchable>
-          <Touchable
-            onPress={() => {
-              seeMore(orderId);
-            }}
-          >
-            <Container row style={styles.contDetails}>
-              <TextContainer text="Ver detalles" fontSize={14} textColor={theme.brandColor.iconn_green_original} fontBold underline />
-              <Image source={ICONN_LEFT_ARROW} style={{ height: 24, width: 24 }} />
-            </Container>
-          </Touchable>
+        <Container>
+          <Container row space="between">
+            <Touchable onPress={getOrderItems}>
+              <Container row style={styles.contShopAgain}>
+                <Image source={ICONN_ITEM_REFRESH} style={{ height: 24, width: 24 }} />
+                <TextContainer
+                  text="Volver a comprar"
+                  fontSize={14}
+                  textColor={theme.brandColor.iconn_green_original}
+                  fontBold
+                  marginLeft={moderateScale(5)}
+                  underline
+                />
+              </Container>
+            </Touchable>
+            <Touchable
+              onPress={() => {
+                seeMore(orderId);
+              }}
+            >
+              <Container row style={styles.contDetails}>
+                <TextContainer text="Ver detalles" fontSize={14} textColor={theme.brandColor.iconn_green_original} fontBold underline />
+                <Image source={ICONN_LEFT_ARROW} style={{ height: 24, width: 24 }} />
+              </Container>
+            </Touchable>
+          </Container>
+          {qualified && qualified === true ? (
+            <></>
+          ) : (
+            <Button
+              color="iconn_white"
+              borderColor="iconn_med_grey"
+              fontColor="paragraph"
+              fontBold
+              fontSize="h5"
+              marginTop={20}
+              icon={<Image source={ICONN_ORDERS_EVALUATE} style={{ height: 20, width: 20, marginRight: -10 }} resizeMode="contain" />}
+              round
+              onPress={toRate}
+            >
+              Evaluar compra
+            </Button>
+          )}
         </Container>
       ) : (
         <Container row alignment="end">

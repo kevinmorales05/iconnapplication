@@ -14,6 +14,7 @@ import ICON_HELPPURCHASESANDORDERS from './helpPurchasesAndOrders.webp';
 import ICON_HELPREWARDS from './helpRewards.webp';
 import ICON_HELPSADSMILE from './helpSadSmile.webp';
 import ICON_HELPVERYHAPPYSMILE from './helpVeryHappySmile.webp';
+import ICONN_HELP_TOUR from './iconn-help-tour.webp';
 import ICONN_ADDRESS_FIND from './iconn-address-find.png';
 import ICONN_BACKGROUND_IMAGE from './iconn-background-image.webp';
 import ICONN_BASKET from './iconn-basket.webp';
@@ -86,6 +87,14 @@ import ICONN_EYE_ON from './iconn-eye.webp';
 import ICONN_EYE_VISIBLE from './iconn-eye-visible.webp';
 import ICONN_FULL_EXPERIENCE from './iconn-invite-full-experience.webp';
 import ICONN_HELP_RECHARGE from './iconn-help-recharge.webp';
+import ICONN_HELP_STEP1 from './iconn-help-step1.webp';
+import ICONN_HELP_STEP2 from './iconn-help-step2.webp';
+import ICONN_HELP_STEP3 from './iconn-help-step3.webp';
+import ICONN_HELP_STEP4 from './iconn-help-step4.webp';
+import ICONN_HELP_STEP5 from './iconn-help-step5.webp';
+import ICONN_HELP_STEP6 from './iconn-help-step6.webp';
+import ICONN_HELP_STEP7 from './iconn-help-step7.webp';
+import ICONN_HELP_STEP8 from './iconn-help-step8.webp';
 import ICONN_HOME_LOCATION from './iconn-home-location.png';
 import ICONN_HOME_OPTION_ACUMMULATE from './iconn-home-option-acummulate.png';
 import ICONN_HOME_OPTION_HEART from './iconn-home-option-heart.webp';
@@ -113,6 +122,7 @@ import ICONN_NO_ADDRESSES from './iconn-no-addresses.png';
 import ICONN_NO_CONNECTION from './iconn-no-connection.webp';
 import ICONN_NO_CONNECTION_2 from './iconn-no-connection-2.webp';
 import ICONN_NO_RESULTS from './iconn-no-results.webp';
+import ICONN_ORDERS_EVALUATE from './iconn-orders-evaluate.webp';
 import ICONN_PACKAGES_SEARCH from './packages-search.webp';
 import ICONN_PAYBACK_HELP from './20334489-EF69-455D-82EC-83376E415D65.png';
 import ICONN_PAYBACK_MAIN from './05B4012E-C165-4944-AD0E-57B25465876D.png';
@@ -175,6 +185,7 @@ export {
   ICON_HELPREWARDS,
   ICON_HELPSADSMILE,
   ICON_HELPVERYHAPPYSMILE,
+  ICONN_HELP_TOUR,
   ICONN_ADDRESS_FIND,
   ICONN_BACKGROUND_IMAGE,
   ICONN_BASKET_SHOPPING_CART,
@@ -247,6 +258,14 @@ export {
   ICONN_EYE_VISIBLE,
   ICONN_FULL_EXPERIENCE,
   ICONN_HELP_RECHARGE,
+  ICONN_HELP_STEP1,
+  ICONN_HELP_STEP2,
+  ICONN_HELP_STEP3,
+  ICONN_HELP_STEP4,
+  ICONN_HELP_STEP5,
+  ICONN_HELP_STEP6,
+  ICONN_HELP_STEP7,
+  ICONN_HELP_STEP8,
   ICONN_HOME_LOCATION,
   ICONN_HOME_OPTION_ACUMMULATE,
   ICONN_HOME_OPTION_HEART,
@@ -274,6 +293,7 @@ export {
   ICONN_NO_CONNECTION_2,
   ICONN_NO_CONNECTION,
   ICONN_NO_RESULTS,
+  ICONN_ORDERS_EVALUATE,
   ICONN_PACKAGES_SEARCH,
   ICONN_PAYBACK_HELP,
   ICONN_PAYBACK_MAIN,

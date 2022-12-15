@@ -2,15 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import QuestionsScreen from './QuestionsScreen';
 import theme from 'components/theme/theme';
 import { SafeArea } from 'components';
-import { useToast } from 'context';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
 import { RootState, useAppSelector } from 'rtk';
-interface Props {
-  
-}
+interface Props {}
 
-const QuestionsController: React.FC<Props> = ({  }) => {
+const QuestionsController: React.FC<Props> = () => {
   const { helpCenterModules } = useAppSelector((state: RootState) => state.helpCenterModules);
   const route = useRoute<RouteProp<HomeStackParams, 'HelpQuestions'>>();
   const { params } = route;
@@ -39,8 +36,7 @@ const QuestionsController: React.FC<Props> = ({  }) => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <QuestionsScreen questionsData = {helpQuestions} moduleId={moduleId}
-      />
+      <QuestionsScreen questionsData={helpQuestions} moduleId={moduleId} />
     </SafeArea>
   );
 };

@@ -8,7 +8,7 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
 import { useAppSelector, RootState, useAppDispatch } from 'rtk';
 import { ICON_HELPSADSMILE, ICON_HELPHAPPYSMILE, ICON_HELPVERYHAPPYSMILE } from 'assets/images';
-import { setModules  } from 'rtk/slices/helpCenterSlice';
+import { setModules } from 'rtk/slices/helpCenterSlice';
 interface Props {}
 
 const StepsController: React.FC<Props> = () => {
@@ -121,7 +121,7 @@ const StepsController: React.FC<Props> = () => {
         qualification: qualification,
         moduleId: moduleId
       };
-      const data = await vtexDocsServices.updateDocByDocID('AQ', stepIdSaved, toUpdate);
+      await vtexDocsServices.updateDocByDocID('AQ', stepIdSaved, toUpdate);
       toast.show({
         message: 'La calificación de la pregunta ha sido actualizada con éxito.',
         type: 'success'

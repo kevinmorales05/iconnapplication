@@ -25,7 +25,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate, seeMore
 
   const insets = useSafeAreaInsets();
 
-  const haveBeforeOrders = officialOrderArray.length && officialOrderArray.some(order => order.status == 'canceled' || order.status == 'invoiced');
+  const haveBeforeOrders = officialOrderArray.length && officialOrderArray.some(order => order.status === 'canceled' || order.status === 'invoiced');
 
   return (
     <ScrollView
@@ -38,10 +38,11 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate, seeMore
         backgroundColor: theme.brandColor.iconn_background,
         width: '100%'
       }}
+      showsVerticalScrollIndicator={false}
     >
       {!isOnline ? (
         <></>
-      ) : officialOrderArray.length == 0 ? (
+      ) : officialOrderArray.length === 0 ? (
         <></>
       ) : (
         officialOrderArray.map(order => {
@@ -55,6 +56,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate, seeMore
           ) {
             return (
               <OrderCard
+                qualified={order.qualified}
                 orderId={order.orderId}
                 creationDate={order.creationDate}
                 status={order.status}
@@ -70,14 +72,14 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate, seeMore
       )}
       {!isOnline ? (
         <></>
-      ) : officialOrderArray.length == 0 ? (
+      ) : officialOrderArray.length === 0 ? (
         <></>
       ) : haveBeforeOrders ? (
         <TextContainer text="Pedidos anteriores" fontSize={16} fontBold marginTop={15.5} />
       ) : null}
       {!isOnline ? (
         <InfoCard text={'No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.'} />
-      ) : officialOrderArray.length == 0 ? (
+      ) : officialOrderArray.length === 0 ? (
         <Container>
           <Container center style={{ marginTop: 164.2 }}>
             <Image source={ICONN_BASKET_SHOPPING_CART} style={{ height: 40, width: 40 }} />
@@ -93,6 +95,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate, seeMore
           if (order.status === 'canceled' || order.status === 'invoiced') {
             return (
               <OrderCard
+                qualified={order.qualified}
                 creationDate={order.creationDate}
                 totalItems={order.totalItems}
                 totalValue={order.totalValue}
