@@ -45,16 +45,24 @@ import theme from 'components/theme/theme';
 interface Props {
   bottomSheetRef: Ref<BottomSheetModal>;
   marker: PointInterface;
-  onHandleSheetChanges: (index: number) => void;
+  onPressHowToGet: () => void;
   onPressShowLess: () => void;
   onPressShowMore: () => void;
   onPressTab: (item: TabItem) => void;
-  pointDetailVisible: boolean;
   snapPoints: any[];
   tabSelected: number;
 }
 
-const PointDetailSheet: React.FC<Props> = ({ bottomSheetRef, marker, onPressShowLess, onPressShowMore, onPressTab, snapPoints, tabSelected }) => {
+const PointDetailSheet: React.FC<Props> = ({
+  bottomSheetRef,
+  marker,
+  onPressHowToGet,
+  onPressShowLess,
+  onPressShowMore,
+  onPressTab,
+  snapPoints,
+  tabSelected
+}) => {
   const [pointDetailVisible, setPointDetailVisible] = useState(false);
 
   const getSevenOtherItems = () => {
@@ -491,7 +499,7 @@ const PointDetailSheet: React.FC<Props> = ({ bottomSheetRef, marker, onPressShow
                 </Container>
                 <Container style={{ width: '25%' }} />
                 <Container style={{ width: '55%' }} middle>
-                  <Button length="short" round onPress={() => {}} fontSize="h4" fontBold>
+                  <Button length="short" round onPress={onPressHowToGet} fontSize="h4" fontBold>
                     Cómo llegar
                   </Button>
                 </Container>
@@ -508,7 +516,7 @@ const PointDetailSheet: React.FC<Props> = ({ bottomSheetRef, marker, onPressShow
                   <Button
                     length="long"
                     round
-                    onPress={() => {}}
+                    onPress={onPressHowToGet}
                     fontSize="h4"
                     fontBold
                     rightIcon={<Image source={ICONN_BRANCHES_ICON_ARRIVE} style={{ width: 22, height: 22, left: -8 }} />}

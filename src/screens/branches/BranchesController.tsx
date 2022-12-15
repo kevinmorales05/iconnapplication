@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { getNearbyPoints } from 'utils/geolocation';
 import { PointDetailSheet } from 'components';
@@ -9,14 +9,13 @@ import { useLocation } from 'hooks/useLocation';
 import { usePermissions } from 'context';
 import BranchesScreen from './BranchesScreen';
 import theme from 'components/theme/theme';
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, Linking, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const BranchesController: React.FC = ({ navigation, route }: any) => {
   const { permissions } = usePermissions();
   const { userLocation } = useLocation();
   const [markers, setMarkers] = useState<PointInterface[]>();
-  const [pointDetailVisible, setPointDetailVisible] = useState<boolean>(false);
   const [marker, setMarker] = useState<PointInterface>();
   const insets = useSafeAreaInsets();
   const [tabSelected, setTabSelected] = useState(1);
@@ -73,15 +72,6 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
     []
   );
 
-  // callbacks
-  const onHandleSheetChanges = useCallback((index: number) => {
-    if (index === 1) {
-      setPointDetailVisible(true);
-    } else {
-      setPointDetailVisible(false);
-    }
-  }, []);
-
   /**
    * Hide PointDetailSheet.
    */
@@ -106,6 +96,18 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
   const onPressSeeList = () => setPointDisplayMode('list');
   const onPressSeeMap = () => setPointDisplayMode('map');
 
+  const onPressHowToGet = () => {
+    const scheme = Platform.select({ ios: 'maps:0,0?q=', android: 'geo:0,0?q=' });
+    const latLng = `${marker?.latitude},${marker?.longitude}`;
+    const label = marker?.type === '7eleven' ? marker.shopName : marker?.address;
+    const url = Platform.select({
+      ios: `${scheme}${label}@${latLng}`,
+      android: `${scheme}${latLng}(${label})`
+    });
+
+    Linking.openURL(url!);
+  };
+
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_white} childrenContainerStyle={{ paddingHorizontal: 0 }}>
       <BranchesScreen
@@ -120,11 +122,10 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
       <PointDetailSheet
         bottomSheetRef={bottomSheetRef}
         marker={marker!}
-        onHandleSheetChanges={onHandleSheetChanges}
+        onPressHowToGet={onPressHowToGet}
         onPressShowLess={onPressShowLess}
         onPressShowMore={onPressShowMore}
         onPressTab={onPressTab}
-        pointDetailVisible={pointDetailVisible}
         snapPoints={snapPoints}
         tabSelected={tabSelected}
       />
