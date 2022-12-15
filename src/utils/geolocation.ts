@@ -33,7 +33,7 @@ export const hasNearbySellers = (position: number[], sellers: SellerInterface[])
  * Function to get nearby points given a point/location.
  * @param location it could be the current user location.
  * @param points branches array.
- * @param kilometers search radius. 5 by default.
+ * @param kilometers search radius. 1 by default.
  * @returns Nearby points array.
  */
 export const getNearbyPoints = (location: number[], points: PointInterface[], kilometers: number = 1) => {
