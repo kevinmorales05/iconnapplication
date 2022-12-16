@@ -11,6 +11,7 @@ import { EvaluateExperencieSvg } from 'components/svgComponents/EvaluateExperenc
 interface Props {
   modulesData: [];
   icons: Map<string, string>;
+  onPressTour: () => void;
 }
 
 const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
@@ -23,6 +24,9 @@ const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
         flagHelp = true;
         break;
       case 7:
+        flagHelp = true;
+        break;
+      case 8:
         flagHelp = true;
         break;
       default:
@@ -40,6 +44,9 @@ const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
       case 7:
         navigate('EvaluateStack', { barcode: '' });
         break;
+      case 8:
+        navigate('VirtualTour', { step: 1 });
+        break;
       default:
         navigate('HelpQuestions', { moduleId: module.id, moduleName: module.name });
     }
@@ -48,8 +55,6 @@ const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
 
   const getIcon = (module: any, isSpecialModule: boolean) => {
     switch (module.index) {
-      case 6:
-        return <Image source={icons.get(module.icon)} style={{ width: isSpecialModule ? 40 : 32, height: isSpecialModule ? 40 : 32 }} />;
       case 7:
         return <EvaluateExperencieSvg size={40} />;
       default:
@@ -58,7 +63,10 @@ const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
   };
 
   return (
-    <Container style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', marginTop: moderateScale(10) }} height={Dimensions.get('window').height * 0.75}>
+    <Container
+      style={{ backgroundColor: theme.brandColor.iconn_background, width: '100%', marginTop: moderateScale(10) }}
+      height={Dimensions.get('window').height * 0.75}
+    >
       {modulesData.length > 0 ? (
         modulesData.map((module, idx) => {
           const isSpecialModule = getSpecialModule(module.index);

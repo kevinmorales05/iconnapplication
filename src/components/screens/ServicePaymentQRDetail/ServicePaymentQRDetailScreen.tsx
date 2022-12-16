@@ -46,6 +46,7 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
   // console.log('la longitud del subStrUserName:', subStrUserName.length);
 
   let userIdName = subStrUser + '\\' + subStrUserName;
+  //let userIdName = '1111111' + '\\' + subStrUserName;
   // console.log('El valor que se codifica es:', userIdName);
   const encryption = encode(userIdName);
   // console.log('encryption', encryption);

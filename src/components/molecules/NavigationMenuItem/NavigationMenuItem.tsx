@@ -21,6 +21,7 @@ interface NavigationMenuItemProps {
   paddingLeft?: number;
   marginBottom?: number;
   height?: number | string;
+  paddingVertical?: number;
 }
 
 const NavigationMenuItem: React.FC<NavigationMenuItemProps> = ({
@@ -37,13 +38,14 @@ const NavigationMenuItem: React.FC<NavigationMenuItemProps> = ({
   widthContainer,
   paddingLeft,
   marginBottom,
-  height
+  height,
+  paddingVertical
 }: NavigationMenuItemProps) => {
   const NavigationMenuItemStyle: StyleProp<ViewStyle> = {
     marginHorizontal: marginHorizontal != undefined ? marginHorizontal : 8,
     opacity: disable ? 0.5 : 1,
     backgroundColor: disable ? theme.brandColor.iconn_med_grey : color != undefined ? color : theme.brandColor.iconn_white,
-    paddingVertical: 12,
+    paddingVertical: paddingVertical ? paddingVertical : 12,
     borderBottomWidth: 1,
     borderBottomColor: theme.brandColor.iconn_light_grey,
     width: widthContainer ? widthContainer : 'auto',
@@ -58,8 +60,18 @@ const NavigationMenuItem: React.FC<NavigationMenuItemProps> = ({
         <Container width={'80%'} flex row center>
           {icon ? icon : null}
           <Container>
-          <TextContainer text={text} marginLeft={16} fontBold={isMainTextBold} fontSize={(mainTextSize!=undefined?14:15)}  />
-          {description!=undefined ? <TextContainer text={description} marginLeft={14} textColor={theme.fontColor.placeholder} fontSize={(descriptionTextSize!=undefined?12:12)} numberOfLines={2} /> :<></>}
+            <TextContainer text={text} marginLeft={16} fontBold={isMainTextBold} fontSize={mainTextSize != undefined ? 14 : 15} />
+            {description != undefined ? (
+              <TextContainer
+                text={description}
+                marginLeft={14}
+                textColor={theme.fontColor.placeholder}
+                fontSize={descriptionTextSize != undefined ? 12 : 12}
+                numberOfLines={2}
+              />
+            ) : (
+              <></>
+            )}
           </Container>
         </Container>
         <Container width={'20%'} crossAlignment="end" style={{ marginRight: 20 }}>

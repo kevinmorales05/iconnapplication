@@ -14,15 +14,43 @@ import ICON_HELPPURCHASESANDORDERS from './helpPurchasesAndOrders.webp';
 import ICON_HELPREWARDS from './helpRewards.webp';
 import ICON_HELPSADSMILE from './helpSadSmile.webp';
 import ICON_HELPVERYHAPPYSMILE from './helpVeryHappySmile.webp';
+import ICONN_HELP_TOUR from './iconn-help-tour.webp';
 import ICONN_ADDRESS_FIND from './iconn-address-find.png';
 import ICONN_BACKGROUND_IMAGE from './iconn-background-image.webp';
 import ICONN_BASKET from './iconn-basket.webp';
 import ICONN_BASKET_SHOPPING_CART from './iconn-basket-shopping-cart.webp';
 import ICONN_BINOMIO_LOGOS from './iconn-binomio.webp';
 import ICONN_BINOMIO_LOGOS_LIGHT from './iconn-binomio-logos-light.webp';
+import ICONN_BRANCHES_ARROW_DOWN from './iconn-branches-arrow-down.png';
 import ICONN_BRANCHES_ARROW_UP from './iconn-branches-arrow-up.png';
 import ICONN_BRANCHES_BINOMIAL from './iconn-branches-binomial.webp';
 import ICONN_BRANCHES_FILTER_OPTION from './iconn-branches-filter-option.png';
+import ICONN_BRANCHES_ICON_7ELEVEN from './iconn-branches-icon-7eleven.png';
+import ICONN_BRANCHES_ICON_APPLEPAY from './iconn-branches-icon-applepay.png';
+import ICONN_BRANCHES_ICON_ARRIVE from './iconn-branches-icon-arrive.png';
+import ICONN_BRANCHES_ICON_ATM from './iconn-branches-icon-atm.png';
+import ICONN_BRANCHES_ICON_BINOMIAL from './iconn-branches-icon-binomial.png';
+import ICONN_BRANCHES_ICON_BOTTLE_GLASS from './iconn-branches-icon-bottle-glass.png';
+import ICONN_BRANCHES_ICON_BREAD from './iconn-branches-icon-bread.png';
+import ICONN_BRANCHES_ICON_CARDS from './iconn-branches-icon-cards.png';
+import ICONN_BRANCHES_ICON_CARNET from './iconn-branches-icon-carnet.png';
+import ICONN_BRANCHES_ICON_CARWASH from './iconn-branches-icon-carwash.png';
+import ICONN_BRANCHES_ICON_CASH from './iconn-branches-icon-cash.png';
+import ICONN_BRANCHES_ICON_CINEMA from './iconn-branches-icon-cinema.png';
+import ICONN_BRANCHES_ICON_CONTACTLESS from './iconn-branches-icon-contactless.png';
+import ICONN_BRANCHES_ICON_CUTLERY from './iconn-branches-icon-cutlery.png';
+import ICONN_BRANCHES_ICON_DRIVE_THRU from './iconn-branches-icon-drive-thru.png';
+import ICONN_BRANCHES_ICON_EDENRED from './iconn-branches-icon-edenred.png';
+import ICONN_BRANCHES_ICON_GAS from './iconn-branches-icon-gas.png';
+import ICONN_BRANCHES_ICON_GAS_CAN from './iconn-branches-icon-gas-can.png';
+import ICONN_BRANCHES_ICON_PETRO from './iconn-branches-icon-petro.png';
+import ICONN_BRANCHES_ICON_PIZZA from './iconn-branches-icon-pizza.png';
+import ICONN_BRANCHES_ICON_POKEMON from './iconn-branches-icon-pokemon.png';
+import ICONN_BRANCHES_ICON_RESTROOM from './iconn-branches-icon-restroom.png';
+import ICONN_BRANCHES_ICON_SIVALE from './iconn-branches-icon-sivale.png';
+import ICONN_BRANCHES_ICON_TACO from './iconn-branches-icon-taco.png';
+import ICONN_BRANCHES_ICON_TRUCK from './iconn-branches-icon-truck.png';
+import ICONN_BRANCHES_ICON_WIFI from './iconn-branches-icon-wifi.png';
 import ICONN_BRANCHES_LOCATION_BINOMIAL from './iconn-branches-location-binomial.png';
 import ICONN_BRANCHES_LOCATION_PETRO from './iconn-branches-location-petro.png';
 import ICONN_BRANCHES_LOCATION_PIN from './iconn-branches-location-pin.png';
@@ -59,6 +87,14 @@ import ICONN_EYE_ON from './iconn-eye.webp';
 import ICONN_EYE_VISIBLE from './iconn-eye-visible.webp';
 import ICONN_FULL_EXPERIENCE from './iconn-invite-full-experience.webp';
 import ICONN_HELP_RECHARGE from './iconn-help-recharge.webp';
+import ICONN_HELP_STEP1 from './iconn-help-step1.webp';
+import ICONN_HELP_STEP2 from './iconn-help-step2.webp';
+import ICONN_HELP_STEP3 from './iconn-help-step3.webp';
+import ICONN_HELP_STEP4 from './iconn-help-step4.webp';
+import ICONN_HELP_STEP5 from './iconn-help-step5.webp';
+import ICONN_HELP_STEP6 from './iconn-help-step6.webp';
+import ICONN_HELP_STEP7 from './iconn-help-step7.webp';
+import ICONN_HELP_STEP8 from './iconn-help-step8.webp';
 import ICONN_HOME_LOCATION from './iconn-home-location.png';
 import ICONN_HOME_OPTION_ACUMMULATE from './iconn-home-option-acummulate.png';
 import ICONN_HOME_OPTION_HEART from './iconn-home-option-heart.webp';
@@ -86,6 +122,7 @@ import ICONN_NO_ADDRESSES from './iconn-no-addresses.png';
 import ICONN_NO_CONNECTION from './iconn-no-connection.webp';
 import ICONN_NO_CONNECTION_2 from './iconn-no-connection-2.webp';
 import ICONN_NO_RESULTS from './iconn-no-results.webp';
+import ICONN_ORDERS_EVALUATE from './iconn-orders-evaluate.webp';
 import ICONN_PACKAGES_SEARCH from './packages-search.webp';
 import ICONN_PAYBACK_HELP from './20334489-EF69-455D-82EC-83376E415D65.png';
 import ICONN_PAYBACK_MAIN from './05B4012E-C165-4944-AD0E-57B25465876D.png';
@@ -150,15 +187,43 @@ export {
   ICON_HELPREWARDS,
   ICON_HELPSADSMILE,
   ICON_HELPVERYHAPPYSMILE,
+  ICONN_HELP_TOUR,
   ICONN_ADDRESS_FIND,
   ICONN_BACKGROUND_IMAGE,
   ICONN_BASKET_SHOPPING_CART,
   ICONN_BASKET,
   ICONN_BINOMIO_LOGOS_LIGHT,
   ICONN_BINOMIO_LOGOS,
+  ICONN_BRANCHES_ARROW_DOWN,
   ICONN_BRANCHES_ARROW_UP,
   ICONN_BRANCHES_BINOMIAL,
   ICONN_BRANCHES_FILTER_OPTION,
+  ICONN_BRANCHES_ICON_7ELEVEN,
+  ICONN_BRANCHES_ICON_APPLEPAY,
+  ICONN_BRANCHES_ICON_ARRIVE,
+  ICONN_BRANCHES_ICON_ATM,
+  ICONN_BRANCHES_ICON_BINOMIAL,
+  ICONN_BRANCHES_ICON_BOTTLE_GLASS,
+  ICONN_BRANCHES_ICON_BREAD,
+  ICONN_BRANCHES_ICON_CARDS,
+  ICONN_BRANCHES_ICON_CARNET,
+  ICONN_BRANCHES_ICON_CARWASH,
+  ICONN_BRANCHES_ICON_CASH,
+  ICONN_BRANCHES_ICON_CINEMA,
+  ICONN_BRANCHES_ICON_CONTACTLESS,
+  ICONN_BRANCHES_ICON_CUTLERY,
+  ICONN_BRANCHES_ICON_DRIVE_THRU,
+  ICONN_BRANCHES_ICON_EDENRED,
+  ICONN_BRANCHES_ICON_GAS_CAN,
+  ICONN_BRANCHES_ICON_GAS,
+  ICONN_BRANCHES_ICON_PETRO,
+  ICONN_BRANCHES_ICON_PIZZA,
+  ICONN_BRANCHES_ICON_POKEMON,
+  ICONN_BRANCHES_ICON_RESTROOM,
+  ICONN_BRANCHES_ICON_SIVALE,
+  ICONN_BRANCHES_ICON_TACO,
+  ICONN_BRANCHES_ICON_TRUCK,
+  ICONN_BRANCHES_ICON_WIFI,
   ICONN_BRANCHES_LOCATION_BINOMIAL,
   ICONN_BRANCHES_LOCATION_PETRO,
   ICONN_BRANCHES_LOCATION_PIN,
@@ -187,14 +252,22 @@ export {
   ICONN_ESTAFETA_EXAMPLE,
   ICONN_ESTAFETA_HELP,
   ICONN_ESTAFETA_LOGO,
+  ICONN_ESTAFETA_ONTRANSIT,
   ICONN_ESTAFETA_RETURN,
   ICONN_ESTAFETA_RETURNED,
-  ICONN_ESTAFETA_ONTRANSIT,
   ICONN_EYE_OFF,
   ICONN_EYE_ON,
   ICONN_EYE_VISIBLE,
   ICONN_FULL_EXPERIENCE,
   ICONN_HELP_RECHARGE,
+  ICONN_HELP_STEP1,
+  ICONN_HELP_STEP2,
+  ICONN_HELP_STEP3,
+  ICONN_HELP_STEP4,
+  ICONN_HELP_STEP5,
+  ICONN_HELP_STEP6,
+  ICONN_HELP_STEP7,
+  ICONN_HELP_STEP8,
   ICONN_HOME_LOCATION,
   ICONN_HOME_OPTION_ACUMMULATE,
   ICONN_HOME_OPTION_HEART,
@@ -222,6 +295,7 @@ export {
   ICONN_NO_CONNECTION_2,
   ICONN_NO_CONNECTION,
   ICONN_NO_RESULTS,
+  ICONN_ORDERS_EVALUATE,
   ICONN_PACKAGES_SEARCH,
   ICONN_PAYBACK_HELP,
   ICONN_PAYBACK_MAIN,
@@ -250,12 +324,12 @@ export {
   ICONN_STORE_MODERN,
   ICONN_SUCCESS,
   ICONN_TRACKING_BARCODE,
-  ICONN_TRACKING_DELIVERED,
   ICONN_TRACKING_DELIVERED_GRAY,
+  ICONN_TRACKING_DELIVERED,
   ICONN_TRACKING_INTRANSIT,
   ICONN_TRACKING_PACKAGE,
-  ICONN_TRACKING_SENT,
   ICONN_TRACKING_SENT_GREEN,
+  ICONN_TRACKING_SENT,
   ICONN_USER_PROFILE,
   ICONN_USER,
   ICONN_WARNING_MARK,

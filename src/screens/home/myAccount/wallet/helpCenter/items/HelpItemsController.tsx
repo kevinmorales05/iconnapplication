@@ -1,18 +1,27 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import HelpItemsScreen from './HelpItemsScreen';
-import theme from 'components/theme/theme';
-import { SafeArea } from 'components';
-import { ICON_HELPMYACCOUNT, ICON_HELPPAYMENTSANDWALLET, ICON_HELPPURCHASESANDORDERS, ICON_HELPBILLING, ICON_HELPREWARDS, ICON_HELPCALLUS } from 'assets/images';
+import {
+  ICON_HELPMYACCOUNT,
+  ICON_HELPPAYMENTSANDWALLET,
+  ICON_HELPPURCHASESANDORDERS,
+  ICON_HELPBILLING,
+  ICON_HELPREWARDS,
+  ICON_HELPCALLUS,
+  ICONN_HELP_TOUR
+} from 'assets/images';
 import { RootState, useAppSelector } from 'rtk';
-import { HomeStackParams } from 'navigation/types';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { useToast } from 'context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
+import { SafeArea } from 'components';
+import theme from 'components/theme/theme';
 
-interface Props {
-
-}
+interface Props {}
 
 const HelpItemsController: React.FC<Props> = () => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { helpCenterModules } = useAppSelector((state: RootState) => state.helpCenterModules);
   const toast = useToast();
   const route = useRoute<RouteProp<HomeStackParams, 'HelpItems'>>();
@@ -23,7 +32,8 @@ const HelpItemsController: React.FC<Props> = () => {
     ['purchasesAndOrders', ICON_HELPPURCHASESANDORDERS],
     ['billing', ICON_HELPBILLING],
     ['rewards', ICON_HELPREWARDS],
-    ['callUs', ICON_HELPCALLUS]
+    ['callUs', ICON_HELPCALLUS],
+    ['virtualTour', ICONN_HELP_TOUR]
   ]);
 
   const { flagError } = route.params;
@@ -31,6 +41,10 @@ const HelpItemsController: React.FC<Props> = () => {
   const fetchData = useCallback(async () => {
     setHelpModules(helpCenterModules);
   }, []);
+
+  const onPressTour = () => {
+    navigate('VirtualTour', { step: 1 });
+  };
 
   useEffect(() => {
     if (flagError === 'error') {
@@ -58,7 +72,7 @@ const HelpItemsController: React.FC<Props> = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <HelpItemsScreen modulesData = {helpModules} icons = {helpModulesIcons} />
+      <HelpItemsScreen modulesData={helpModules} icons={helpModulesIcons} onPressTour={onPressTour} />
     </SafeArea>
   );
 };

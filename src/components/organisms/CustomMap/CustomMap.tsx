@@ -10,9 +10,10 @@ import { ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_
 interface Props {
   markers?: PointInterface[];
   onPressMarker: (marker: PointInterface) => void;
+  onPressOut: () => void;
 }
 
-const CustomMap: React.FC<Props> = ({ markers, onPressMarker }) => {
+const CustomMap: React.FC<Props> = ({ markers, onPressMarker, onPressOut }) => {
   const mapViewRef = useRef<MapView>();
   const followingRef = useRef<boolean>(true);
   const { followUserLocation, userLocation, stopTrackingUserLocation, initialUserLocation } = useLocation();
@@ -59,6 +60,7 @@ const CustomMap: React.FC<Props> = ({ markers, onPressMarker }) => {
         onTouchStart={() => (followingRef.current = false)}
         zoomEnabled
         zoomControlEnabled
+        onPress={onPressOut}
       >
         {markers &&
           markers.map((marker, index) => (
