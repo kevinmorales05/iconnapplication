@@ -1,5 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useLoading } from 'context';
 import { HomeStackParams } from 'navigation/types';
 import React, { useEffect, useState } from 'react';
 import { SuggestionInterface } from 'rtk';
@@ -9,8 +10,9 @@ import RateOrderScreen from './RateOrderScreen';
 const RateOrderController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const route = useRoute<RouteProp<HomeStackParams, 'RateOrder'>>();
+  const loader = useLoading();
   const { params } = route;
-  const [pressedRating, setPressedRating] = useState<number>(5);
+  const [pressedRating, setPressedRating] = useState<number>(0);
   const [improvementOptions, setImprovementOptions] = useState<SuggestionInterface[]>();
   const [wellDoneOptions, setWellDoneOptions] = useState<SuggestionInterface[]>();
   const [selectsPill, setSelectsPills] = useState<SuggestionInterface[]>([]);
@@ -52,7 +54,13 @@ const RateOrderController: React.FC = () => {
     const { data: data2 } = await ratingServices.getSuggestionList(2);
     setWellDoneOptions(data2);
   };
+
   useEffect(() => {
+    if (improvementOptions === undefined || wellDoneOptions === undefined) {
+      loader.show();
+    } else {
+      loader.hide();
+    }
     getSuggestions();
   }, []);
 

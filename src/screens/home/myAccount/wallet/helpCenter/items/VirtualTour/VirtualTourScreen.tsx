@@ -46,6 +46,7 @@ const VirtualTourScreen: React.FC<Props> = ({ step, imageList, toNextStep, toPre
         </Container>
         <TextContainer text={imageStep.description} fontSize={14} marginHorizontal={30} marginTop={23} textAlign="center" />
         <Container>
+          <Container height={2} backgroundColor={theme.brandColor.iconn_background} />
           <Container
             row
             space="between"
@@ -53,13 +54,10 @@ const VirtualTourScreen: React.FC<Props> = ({ step, imageList, toNextStep, toPre
               step - 1 === 0
                 ? {
                     alignSelf: 'flex-end',
-                    borderTopColor: theme.brandColor.iconn_background,
-                    borderTopWidth: 2,
-                    marginTop: 32,
-                    paddingHorizontal: 16,
-                    marginBottom: 30
+                    marginBottom: 30,
+                    marginRight: 16
                   }
-                : { borderTopColor: theme.brandColor.iconn_background, borderTopWidth: 2, marginTop: 32, paddingHorizontal: 16, marginBottom: 30 }
+                : { marginBottom: 30, marginHorizontal: 16 }
             }
           >
             {step - 1 === 0 ? (
