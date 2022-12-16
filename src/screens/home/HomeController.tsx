@@ -32,7 +32,7 @@ import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne, saveShippingData } from 'services/vtexShoppingCar.services';
 import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
-import { vtexProductsServices } from 'services';
+import { vtexDocsServices, vtexProductsServices } from 'services';
 import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import { vtexPromotionsServices } from 'services/vtexPromotions.services';
 import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
@@ -40,6 +40,7 @@ import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlic
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
 import moment from 'moment';
+import { setModules } from 'rtk/slices/helpCenterSlice';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -82,11 +83,13 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         dispatch(setDateSync(new Date()));
         dispatch(getWalletPrefixesThunk()).unwrap();
         dispatch(getBanksWalletThunk()).unwrap();
+        fetchHelpCenterData();
       }
     } else {
       dispatch(setDateSync(new Date()));
       dispatch(getWalletPrefixesThunk()).unwrap();
       dispatch(getBanksWalletThunk()).unwrap();
+      fetchHelpCenterData();
     }
   }, []);
 
@@ -280,7 +283,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    * We get the full home items.
    */
   useEffect(() => {
-    // fetchHelpCenterData();
     fetchPromotionData();
     fetchHomeItems();
   }, [fetchHomeItems]);
@@ -523,77 +525,77 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     dispatch(setPromotions(productsBuilded));
   }, []);
 
-  // const fetchHelpCenterData = useCallback(async () => {
-  //   try {
-  //     const dataModule = await vtexDocsServices.getAllDocsByDocDataEntity('HM');
-  //     const dataQuestion = await vtexDocsServices.getHelpModuleQuestionsByModuleId('HQ');
-  //     const dataSteps = await vtexDocsServices.getHelpQuestionsStepsByQuestionsId('QS');
-  //     const data = await vtexDocsServices.getDocumentsByUserId('AQ', user.id as string);
+  const fetchHelpCenterData = useCallback(async () => {
+    try {
+      const dataModule = await vtexDocsServices.getAllDocsByDocDataEntity('HM');
+      const dataQuestion = await vtexDocsServices.getHelpModuleQuestionsByModuleId('HQ');
+      const dataSteps = await vtexDocsServices.getHelpQuestionsStepsByQuestionsId('QS');
+      const data = await vtexDocsServices.getDocumentsByUserId('AQ', user.id as string);
 
-  //     let questions = [];
-  //     let modules = [];
-  //     for (let i = 0; i < dataModule.length; i++) {
-  //       modules.push({
-  //         index: dataModule[i].index,
-  //         accountId: dataModule[i].dataModule,
-  //         description: dataModule[i].description,
-  //         id: dataModule[i].id,
-  //         name: dataModule[i].name,
-  //         icon: dataModule[i].icon,
-  //         questions: questions
-  //       });
-  //     }
+      let questions = [];
+      let modules = [];
+      for (let i = 0; i < dataModule.length; i++) {
+        modules.push({
+          index: dataModule[i].index,
+          accountId: dataModule[i].dataModule,
+          description: dataModule[i].description,
+          id: dataModule[i].id,
+          name: dataModule[i].name,
+          icon: dataModule[i].icon,
+          questions: questions
+        });
+      }
 
-  //     for (let i = 0; i < modules.length; i++) {
-  //       let questtt = [];
-  //       for (let j = 0; j < dataQuestion.length; j++) {
-  //         if (modules[i].id == dataQuestion[j].moduleId) {
-  //           let ste = [];
-  //           let qualification = {};
-  //           questtt.push({
-  //             moduleId: dataQuestion[j].moduleId,
-  //             questionId: dataQuestion[j].id,
-  //             question: dataQuestion[j].question,
-  //             steps: ste,
-  //             qualification: qualification
-  //           });
-  //         }
-  //       }
-  //       modules[i].questions = questtt;
-  //     }
+      for (let i = 0; i < modules.length; i++) {
+        let questtt = [];
+        for (let j = 0; j < dataQuestion.length; j++) {
+          if (modules[i].id == dataQuestion[j].moduleId) {
+            let ste = [];
+            let qualification = {};
+            questtt.push({
+              moduleId: dataQuestion[j].moduleId,
+              questionId: dataQuestion[j].id,
+              question: dataQuestion[j].question,
+              steps: ste,
+              qualification: qualification
+            });
+          }
+        }
+        modules[i].questions = questtt;
+      }
 
-  //     for (let i = 0; i < modules.length; i++) {
-  //       for (let q = 0; q < modules[i].questions.length; q++) {
-  //         let stepst = [];
-  //         let qualification = {};
-  //         for (let s = 0; s < dataSteps.length; s++) {
-  //           if (modules[i].questions[q].questionId == dataSteps[s].questionId) {
-  //             stepst.push({
-  //               id: dataSteps[s].id,
-  //               questionId: dataSteps[s].questionId,
-  //               description: dataSteps[s].description,
-  //               importantMessage: dataSteps[s].importantMessage,
-  //               index: dataSteps[s].index
-  //             });
-  //           }
-  //         }
-  //         modules[i].questions[q].steps = stepst;
+      for (let i = 0; i < modules.length; i++) {
+        for (let q = 0; q < modules[i].questions.length; q++) {
+          let stepst = [];
+          let qualification = {};
+          for (let s = 0; s < dataSteps.length; s++) {
+            if (modules[i].questions[q].questionId == dataSteps[s].questionId) {
+              stepst.push({
+                id: dataSteps[s].id,
+                questionId: dataSteps[s].questionId,
+                description: dataSteps[s].description,
+                importantMessage: dataSteps[s].importantMessage,
+                index: dataSteps[s].index
+              });
+            }
+          }
+          modules[i].questions[q].steps = stepst;
 
-  //         for (let qu = 0; qu < data.length; qu++) {
-  //           if (modules[i].id == data[qu].moduleId && modules[i].questions[q].questionId == data[qu].questionId) {
-  //             qualification = data[qu];
-  //           }
-  //         }
-  //         modules[i].questions[q].qualification = qualification;
-  //       }
-  //     }
+          for (let qu = 0; qu < data.length; qu++) {
+            if (modules[i].id == data[qu].moduleId && modules[i].questions[q].questionId == data[qu].questionId) {
+              qualification = data[qu];
+            }
+          }
+          modules[i].questions[q].qualification = qualification;
+        }
+      }
 
-  //     dispatch(setModules(modules));
-  //   } catch (error) {
-  //     console.log('ocurrió un error');
-  //     console.log(error);
-  //   }
-  // }, []);
+      dispatch(setModules(modules));
+    } catch (error) {
+      // console.log('ocurrió un error');
+      // console.log(error);
+    }
+  }, []);
 
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[], collectionId: string) {
     const arr: ProductResponseInterface[] | null | undefined = collectionId === RECOMMENDED_PRODUCTS ? products : otherProducts;

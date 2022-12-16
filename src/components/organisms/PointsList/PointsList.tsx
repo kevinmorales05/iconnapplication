@@ -24,10 +24,10 @@ const PointsList: React.FC<Props> = ({ markers, onPressMarker }) => {
         <Container>
           <Container backgroundColor={theme.brandColor.iconn_background}>
             {markers.map((marker, i) => (
-              <>
-                <PointItem key={i} onPress={onPressMarker} point={marker} />
+              <Container key={i}>
+                <PointItem onPress={onPressMarker} point={marker} />
                 <Container backgroundColor={theme.brandColor.iconn_white} style={{ height: 4 }} />
-              </>
+              </Container>
             ))}
           </Container>
         </Container>

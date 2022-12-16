@@ -13,3 +13,4 @@ export * from './vtexdocs.services';
 export * from './vtexShoppingCar.services';
 export * from './vtexuser.services';
 export * from './liveStatus.services';
+export * from './evaluate.services';

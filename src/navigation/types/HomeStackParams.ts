@@ -1,4 +1,4 @@
-import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface, messageType, ProductSearchItemInterface } from 'rtk';
+import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface, messageType, ProductSearchItemInterface, SuggestionInterface } from 'rtk';
 import { CategoryInterface } from 'rtk/types/category.types';
 
 export type HomeStackParams = {
@@ -12,6 +12,7 @@ export type HomeStackParams = {
   Checkout: undefined;
   CodeReader: { navigationDestiny?: string };
   ContactInformation: undefined;
+  CommentOrder: { rating: number; orderId: string; suggestions: SuggestionInterface[] };
   CreateTaxProfile: undefined | InvoicingProfileInterface;
   EditEmail: undefined;
   EditPassword: undefined;
@@ -35,6 +36,7 @@ export type HomeStackParams = {
   PostalCode: undefined;
   ProductDetail: undefined | { productIdentifier?: string };
   Profile: undefined;
+  RateOrder: { orderId: string };
   RecomendedForYou: undefined;
   SearchSeller: undefined;
   HelpSteps: undefined | { moduleId?: string; questionId?: string; question?: string };
@@ -51,6 +53,9 @@ export type HomeStackParams = {
   WalletStack: undefined;
   LiveStatusWidget: { urlLive: string };
   Branches: undefined;
+  EvaluateStack: { barcode?: string };
+  HelpItems: { flagError: string };
+  VirtualTour: { step: number };
 };
 
 export type HomeTabScreens = {

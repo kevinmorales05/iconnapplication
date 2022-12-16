@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { getNearbyPoints } from 'utils/geolocation';
 import { PointDetailSheet } from 'components';
@@ -9,14 +9,13 @@ import { useLocation } from 'hooks/useLocation';
 import { usePermissions } from 'context';
 import BranchesScreen from './BranchesScreen';
 import theme from 'components/theme/theme';
-import { Dimensions, Platform } from 'react-native';
+import { Dimensions, Linking, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const BranchesController: React.FC = ({ navigation, route }: any) => {
   const { permissions } = usePermissions();
   const { userLocation } = useLocation();
   const [markers, setMarkers] = useState<PointInterface[]>();
-  const [pointDetailVisible, setPointDetailVisible] = useState<boolean>(false);
   const [marker, setMarker] = useState<PointInterface>();
   const insets = useSafeAreaInsets();
   const [tabSelected, setTabSelected] = useState(1);
@@ -67,20 +66,11 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
   // SnapPoints for PointDetailSheet
   const snapPoints = useMemo(
     () => [
-      Platform.OS === 'android' ? '45%' : '42%',
+      Platform.OS === 'android' ? '50%' : '50%',
       Platform.OS === 'android' ? Dimensions.get('window').height : Dimensions.get('window').height - insets.top
     ],
     []
   );
-
-  // callbacks
-  const onHandleSheetChanges = useCallback((index: number) => {
-    if (index === 1) {
-      setPointDetailVisible(true);
-    } else {
-      setPointDetailVisible(false);
-    }
-  }, []);
 
   /**
    * Hide PointDetailSheet.
@@ -106,6 +96,24 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
   const onPressSeeList = () => setPointDisplayMode('list');
   const onPressSeeMap = () => setPointDisplayMode('map');
 
+  /**
+   * This function allows open always the google maps app for IOS. In Android will ask to the user for the app to open the address.
+   * TODO: DT Alex. Alex should provide a new version of json markers, this version should have shopName property for gas stations.
+   */
+  const onPressHowToGet = () => {
+    const latLng = `${marker?.latitude},${marker?.longitude}`;
+    if (Platform.OS === 'android') {
+      const scheme = Platform.select({ android: 'geo:0,0?q=' });
+      const label = marker?.type === '7eleven' ? marker.shopName : marker?.address;
+      const url = Platform.select({
+        android: `${scheme}${latLng}(${label})`
+      });
+      Linking.openURL(url!);
+    } else {
+      Linking.openURL(`https://maps.google.com/maps?daddr=${latLng}`);
+    }
+  };
+
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_white} childrenContainerStyle={{ paddingHorizontal: 0 }}>
       <BranchesScreen
@@ -120,11 +128,10 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
       <PointDetailSheet
         bottomSheetRef={bottomSheetRef}
         marker={marker!}
-        onHandleSheetChanges={onHandleSheetChanges}
+        onPressHowToGet={onPressHowToGet}
         onPressShowLess={onPressShowLess}
         onPressShowMore={onPressShowMore}
         onPressTab={onPressTab}
-        pointDetailVisible={pointDetailVisible}
         snapPoints={snapPoints}
         tabSelected={tabSelected}
       />

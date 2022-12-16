@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 import config from 'react-native-config';
 
-const { API_URL_USERS, API_URL_OTPS, API_URL_INVOICING, API_AUTHORIZATION } = config;
+const { API_URL_USERS, API_URL_OTPS, API_URL_INVOICING, API_AUTHORIZATION, API_URL_BE } = config;
 
 const getApiUrl = (type: string) => {
   switch (type) {
@@ -11,6 +11,8 @@ const getApiUrl = (type: string) => {
       return API_URL_OTPS;
     case 'invoicing':
       return API_URL_INVOICING;
+    case 'be':
+      return API_URL_BE;
     default:
       break;
   }

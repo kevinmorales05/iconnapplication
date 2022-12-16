@@ -57,10 +57,15 @@ import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicin
 import WalletStack from './nested/WalletStack';
 import LiveStatusWidgetController from 'screens/home/myAccount/liveStatusWidget/LiveStatusWidgetController';
 import BranchesController from 'screens/branches/BranchesController';
+import EvaluateStack from './nested/EvaluateStack';
+import VirtualTourController from 'screens/home/myAccount/wallet/helpCenter/items/VirtualTour/VirtualTourController';
+import RateOrderController from 'screens/home/myAccount/myOrders/RateOrder/RateOrderController';
+import CommentOrderController from 'screens/home/myAccount/myOrders/CommentOrder/CommentOrderController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const Stack = createNativeStackNavigator<HomeStackParams>();
+  const { goBack } = useNavigation<any>();
 
   const closeShoppingCart = () => {
     navigate('Home', { paySuccess: false });
@@ -145,14 +150,62 @@ const HomeStack: React.FC = () => {
         initialParams={{ messageType: '', countProducts: 0, cartItems: 0 }}
         component={ShopCartController}
       />
-
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: 'Evalúa tu compra',
+          headerBackButtonMenuEnabled: true,
+          headerBackTitleVisible: false
+        }}
+        name="CommentOrder"
+        component={CommentOrderController}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: 'Tour Virtual',
+          headerBackVisible: false,
+          headerLeft: () => {
+            return <></>;
+          },
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                goBack();
+              }}
+            >
+              <Icon name="close" size={20} />
+            </Touchable>
+          )
+        }}
+        name="VirtualTour"
+        component={VirtualTourController}
+      />
       <Stack.Screen name="ProductZoom" options={{ title: '' }} component={ProductZoomController} />
       <Stack.Screen name="DeleteAccount" options={{ title: 'Eliminar cuenta' }} component={DeleteAccountController} />
       <Stack.Screen name="Promotions" options={{ title: 'Promociones', headerRight: () => <BasketCounter /> }} component={PromotionsScreen} />
       <Stack.Screen name="PostalCode" options={{ title: '', headerShadowVisible: false }} component={PostalCodeController} />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: 'Evalúa tu compra',
+          headerBackButtonMenuEnabled: true,
+          headerBackTitleVisible: false
+        }}
+        name="RateOrder"
+        component={RateOrderController}
+      />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
       <Stack.Screen name="ChangePassword" options={{ title: 'Editar contraseña' }} component={ChangePasswordController} />
-      <Stack.Screen name="HelpItems" options={{ title: 'Ayuda' }} component={HelpItemsController} />
+      <Stack.Screen
+        name="HelpItems"
+        initialParams={{ flagError: '' }}
+        options={{
+          title: 'Ayuda',
+          headerBackTitleVisible: false
+        }}
+        component={HelpItemsController}
+      />
       <Stack.Screen
         name="HelpQuestions"
         options={({ route }) => ({ title: route.params.moduleName, headerBackTitleVisible: false })}
@@ -251,6 +304,7 @@ const HomeStack: React.FC = () => {
         name="Branches"
         component={BranchesController}
       />
+      <Stack.Screen name="EvaluateStack" options={{ headerShown: false }} component={EvaluateStack} />
     </Stack.Navigator>
   );
 };

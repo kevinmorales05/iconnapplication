@@ -52,6 +52,7 @@ export interface Props {
   phone?: boolean;
   numeric?: boolean;
   boldLabel?: boolean;
+  heightValue?: number;
 }
 
 const Input = forwardRef(
@@ -93,7 +94,8 @@ const Input = forwardRef(
       onPressDatePickerIcon,
       phone = false,
       numeric = false,
-      boldLabel = false
+      boldLabel = false,
+      heightValue
     }: Props,
     ref: ForwardedRef<any>
   ) => {
@@ -146,7 +148,7 @@ const Input = forwardRef(
           <Container
             row
             center
-            height={hideLabel ? 68 : undefined}
+            height={hideLabel ? (heightValue ? heightValue : 68) : (heightValue ? heightValue : undefined)}
             style={{
               ...inputContainerStyle,
               borderColor,
