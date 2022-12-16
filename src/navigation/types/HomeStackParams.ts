@@ -51,6 +51,8 @@ export type HomeStackParams = {
   WalletStack: undefined;
   LiveStatusWidget: { urlLive: string };
   Branches: undefined;
+  EvaluateStack: { barcode?: string };
+  HelpItems: { flagError: string };
 };
 
 export type HomeTabScreens = {

@@ -57,6 +57,7 @@ import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicin
 import WalletStack from './nested/WalletStack';
 import LiveStatusWidgetController from 'screens/home/myAccount/liveStatusWidget/LiveStatusWidgetController';
 import BranchesController from 'screens/branches/BranchesController';
+import EvaluateStack from './nested/EvaluateStack';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -152,7 +153,15 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="PostalCode" options={{ title: '', headerShadowVisible: false }} component={PostalCodeController} />
       <Stack.Screen name="SearchSeller" options={{ title: 'Selecciona tienda' }} component={SearchSellerController} />
       <Stack.Screen name="ChangePassword" options={{ title: 'Editar contraseña' }} component={ChangePasswordController} />
-      <Stack.Screen name="HelpItems" options={{ title: 'Ayuda' }} component={HelpItemsController} />
+      <Stack.Screen
+        name="HelpItems"
+        initialParams={{ flagError: '' }}
+        options={{
+          title: 'Ayuda',
+          headerBackTitleVisible: false
+        }}
+        component={HelpItemsController}
+      />
       <Stack.Screen
         name="HelpQuestions"
         options={({ route }) => ({ title: route.params.moduleName, headerBackTitleVisible: false })}
@@ -251,6 +260,7 @@ const HomeStack: React.FC = () => {
         name="Branches"
         component={BranchesController}
       />
+      <Stack.Screen name="EvaluateStack" options={{ headerShown: false }} component={EvaluateStack} />
     </Stack.Navigator>
   );
 };

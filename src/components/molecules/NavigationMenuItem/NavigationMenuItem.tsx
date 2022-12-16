@@ -5,7 +5,6 @@ import { Touchable } from '../../atoms/Touchable';
 import { StyleProp, ViewStyle } from 'react-native';
 import theme from '../../theme/theme';
 import Octicons from 'react-native-vector-icons/Octicons';
-import { color } from '@storybook/addon-knobs';
 
 interface NavigationMenuItemProps {
   disable?: boolean;
@@ -17,21 +16,45 @@ interface NavigationMenuItemProps {
   isMainTextBold?: boolean;
   description?: string;
   descriptionTextSize?: number;
+  marginHorizontal?: number;
+  widthContainer?: string | number;
+  paddingLeft?: number;
+  marginBottom?: number;
+  height?: number | string;
 }
 
-const NavigationMenuItem: React.FC<NavigationMenuItemProps> = ({ text, icon, disable = false, mainTextSize, onPressNavigateTo, color, isMainTextBold, description, descriptionTextSize }: NavigationMenuItemProps) => {
+const NavigationMenuItem: React.FC<NavigationMenuItemProps> = ({
+  text,
+  icon,
+  disable = false,
+  mainTextSize,
+  onPressNavigateTo,
+  color,
+  isMainTextBold,
+  description,
+  descriptionTextSize,
+  marginHorizontal,
+  widthContainer,
+  paddingLeft,
+  marginBottom,
+  height
+}: NavigationMenuItemProps) => {
   const NavigationMenuItemStyle: StyleProp<ViewStyle> = {
-    marginHorizontal: 8,
+    marginHorizontal: marginHorizontal != undefined ? marginHorizontal : 8,
     opacity: disable ? 0.5 : 1,
-    backgroundColor: disable ? theme.brandColor.iconn_med_grey : color!=undefined?color:theme.brandColor.iconn_white,
+    backgroundColor: disable ? theme.brandColor.iconn_med_grey : color != undefined ? color : theme.brandColor.iconn_white,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: theme.brandColor.iconn_light_grey
+    borderBottomColor: theme.brandColor.iconn_light_grey,
+    width: widthContainer ? widthContainer : 'auto',
+    paddingLeft: paddingLeft != undefined ? paddingLeft : 0,
+    marginBottom: marginBottom != undefined ? marginBottom : 0,
+    height: height != undefined ? height : 'auto'
   };
 
   return (
     <Touchable onPress={onPressNavigateTo} disabled={disable}>
-      <Container row space="between" style={NavigationMenuItemStyle} crossCenter center>
+      <Container row space="between" style={NavigationMenuItemStyle} center>
         <Container width={'80%'} flex row center>
           {icon ? icon : null}
           <Container>
