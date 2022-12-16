@@ -21,9 +21,17 @@ interface Props {
   selectsPill: SuggestionInterface[];
 }
 
-const RateOrderScreen: React.FC<Props> = ({ pressedRating, onPressStar, toComment, improvementsOptions, wellDoneOptions, findOptionSelect, onPressPill, selectsPill }) => {
+const RateOrderScreen: React.FC<Props> = ({
+  pressedRating,
+  onPressStar,
+  toComment,
+  improvementsOptions,
+  wellDoneOptions,
+  findOptionSelect,
+  onPressPill,
+  selectsPill
+}) => {
   const insets = useSafeAreaInsets();
-
   return (
     <ScrollView
       bounces={false}
@@ -41,7 +49,7 @@ const RateOrderScreen: React.FC<Props> = ({ pressedRating, onPressStar, toCommen
           <TextContainer text="¿Cómo calificarías tu compra?" textAlign="center" fontBold fontSize={16} marginTop={24} />
           <Container style={{ marginTop: 24 }}>
             <AirbnbRating
-              defaultRating={5}
+              defaultRating={0}
               showRating={false}
               selectedColor="#f5d736"
               unSelectedColor="#dadadb"
@@ -51,21 +59,9 @@ const RateOrderScreen: React.FC<Props> = ({ pressedRating, onPressStar, toCommen
             />
           </Container>
         </Container>
-        {pressedRating >= 4 ? (
-          <Container>
-          <TextContainer text="¿Qué podríamos mejorar?" textAlign="center" fontBold fontSize={16} />
-          <Container style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginTop: moderateScale(20), marginLeft: 16 }}>
-            {wellDoneOptions ? wellDoneOptions.map((option, index) => {
-              const isSelectOption = findOptionSelect(option.description);
-              return (
-                <TouchableOpacity key={option.suggestions_cat_id + index} onPress={() => onPressPill(option)}>
-                  <PillContainer text={option.description} fontSize={'h5'} isSelect={isSelectOption} />
-                </TouchableOpacity>
-              );
-            }) : <></> } 
-          </Container>
-        </Container>
-        ) : (
+        {pressedRating === 0 ? (
+          <></>
+        ) : pressedRating < 4 && pressedRating > 0 ? (
           <Container>
             <TextContainer text="¿Qué podríamos mejorar?" textAlign="center" fontBold fontSize={16} />
             <Container style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginTop: moderateScale(20), marginLeft: 16 }}>
@@ -79,9 +75,27 @@ const RateOrderScreen: React.FC<Props> = ({ pressedRating, onPressStar, toCommen
               })}
             </Container>
           </Container>
+        ) : (
+          <Container>
+            <TextContainer text="¿Qué fue lo que más te gustó?" textAlign="center" fontBold fontSize={16} />
+            <Container style={{ width: '100%', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', marginTop: moderateScale(20), marginLeft: 16 }}>
+              {wellDoneOptions ? (
+                wellDoneOptions.map((option, index) => {
+                  const isSelectOption = findOptionSelect(option.description);
+                  return (
+                    <TouchableOpacity key={option.suggestions_cat_id + index} onPress={() => onPressPill(option)}>
+                      <PillContainer text={option.description} fontSize={'h5'} isSelect={isSelectOption} />
+                    </TouchableOpacity>
+                  );
+                })
+              ) : (
+                <></>
+              )}
+            </Container>
+          </Container>
         )}
         <Button
-          disabled={ selectsPill.length > 0 ? false : true}
+          disabled={selectsPill.length > 0 ? false : true}
           onPress={toComment}
           marginLeft={16}
           marginRight={16}
