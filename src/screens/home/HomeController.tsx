@@ -111,14 +111,14 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const addDirectionDefault = async () => {
     const selectedAddresses: ShippingDataAddress = {
-      addressType: '',
+      addressType: 'residential',
       receiverName: '',
       postalCode: user.cp,
       city: '',
       state: '',
       country: 'MEX',
       street: '',
-      number: '',
+      number: '333',
       neighborhood: '',
       complement: '',
       reference: '',
@@ -133,14 +133,14 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const addDirection = async () => {
     const selectedAddresses: ShippingDataAddress = {
-      addressType: 'residential',
+      addressType: defaultAddress?.addressType ? defaultAddress?.addressType : 'residential',
       receiverName: defaultAddress?.receiverName ? defaultAddress?.receiverName : '',
       postalCode: defaultAddress?.postalCode ? defaultAddress?.postalCode : '',
       city: defaultAddress?.city ? defaultAddress?.city : '',
       state: defaultAddress?.state ? defaultAddress?.state : '',
       country: 'MEX',
       street: defaultAddress?.street ? defaultAddress?.street : '',
-      number: defaultAddress?.number ? defaultAddress?.number : '',
+      number: defaultAddress?.number ? defaultAddress?.number : '333',
       neighborhood: defaultAddress?.neighborhood ? defaultAddress?.neighborhood : '',
       complement: defaultAddress?.complement ? defaultAddress?.complement : '',
       reference: defaultAddress?.reference ? defaultAddress?.reference : '',
