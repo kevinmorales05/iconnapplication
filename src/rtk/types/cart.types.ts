@@ -28,7 +28,7 @@ export interface ShippingDataAddress {
   state: undefined | string;
   country: undefined | string;
   street: undefined | string;
-  number: undefined | string;
+  number: undefined | string | null;
   neighborhood: undefined | string;
   complement: undefined | string;
   reference: undefined | string;
