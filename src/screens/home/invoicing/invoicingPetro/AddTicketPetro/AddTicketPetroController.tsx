@@ -84,7 +84,7 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
           webId: fields.webId
         })
       ).unwrap();
-      if (response.responseCode === 57) {
+      if (response.responseCode === 57 || response.responseCode === 595) {
         if (!invoicingPaymentMethodForPetroTicketList && !invoicingStoreForPetroTicketList) {
           dispatch(setInvoicingPaymentMethodForPetroTicketList(response.data.paymentMethod));
           dispatch(setInvoicingStoreForPetroTicketList(response.data.station));
