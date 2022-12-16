@@ -133,7 +133,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const addDirection = async () => {
     const selectedAddresses: ShippingDataAddress = {
-      addressType: defaultAddress?.addressType ? defaultAddress?.addressType : '',
+      addressType: 'residential',
       receiverName: defaultAddress?.receiverName ? defaultAddress?.receiverName : '',
       postalCode: defaultAddress?.postalCode ? defaultAddress?.postalCode : '',
       city: defaultAddress?.city ? defaultAddress?.city : '',
@@ -234,7 +234,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' )) {
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3')) {
       inConstruction.show();
       return;
     }

@@ -5,7 +5,7 @@ import { CustomModal, Container, Input, Select, CustomText, ActionButton } from 
 import { Button, TextContainer } from '../../molecules';
 import { ICONN_ADDRESS_FIND } from 'assets/images';
 import { FieldValues, useForm } from 'react-hook-form';
-import { numericWithSpecificLenght, openField, alphaNumericWithSpacesAndDot, alphaNumericWithoutSpaces, NRalphaNumericWithSpacesAndDot, openFieldNotRequire } from 'utils/rules';
+import { numericWithSpecificLenght, openField, openFieldNotRequire } from 'utils/rules';
 import { Address, PostalCodeInfo } from 'rtk';
 import { CrudType } from '../../types/crud-type';
 import theme from 'components/theme/theme';
@@ -59,7 +59,8 @@ const AddressModalScreen: React.FC<Props> = ({
       neighborhood: '',
       street: '',
       reference: '',
-      tag: ''
+      tag: '',
+      number: ''
     });
     if (postalCodeRef.current) postalCodeRef.current.focus();
   };
@@ -70,11 +71,13 @@ const AddressModalScreen: React.FC<Props> = ({
     setValue('street', address.street);
     setValue('reference', address.reference);
     setValue('tag', address.addressName);
+    setValue('number', address.number);
     trigger('postalCode');
     trigger('neighborhood');
     trigger('street');
     trigger('reference');
     trigger('tag');
+    trigger('number');
   };
 
   useEffect(() => {
@@ -106,6 +109,7 @@ const AddressModalScreen: React.FC<Props> = ({
   const streetRef = useRef<TextInput>(null);
   const referenceRef = useRef<TextInput>(null);
   const tagRef = useRef<TextInput>(null);
+  const numberRef = useRef<TextInput>(null);
 
   useEffect(() => {
     if (postalCodeRef.current) {
@@ -153,7 +157,10 @@ const AddressModalScreen: React.FC<Props> = ({
           >
             <Container flex>
               <Container>
-                <Container row style={Platform.OS === 'android' ? {justifyContent:'space-between'} : {alignItems: 'flex-end', justifyContent:'space-between'}}>
+                <Container
+                  row
+                  style={Platform.OS === 'android' ? { justifyContent: 'space-between' } : { alignItems: 'flex-end', justifyContent: 'space-between' }}
+                >
                   <Container style={{ width: '48%' }}>
                     <Input
                       {...register('postalCode')}
@@ -161,7 +168,7 @@ const AddressModalScreen: React.FC<Props> = ({
                       control={control}
                       autoCorrect={false}
                       keyboardType="numeric"
-                      placeholder={`Código Postal`}
+                      placeholder={'Código Postal'}
                       blurOnSubmit={true}
                       ref={postalCodeRef}
                       label="Código Postal"
@@ -174,9 +181,9 @@ const AddressModalScreen: React.FC<Props> = ({
                       onChangeText={postalCodeValue => validateChangesOnPostalCode(postalCodeValue)}
                     />
                   </Container>
-                  <Container style={Platform.OS === 'android' ? { width: '48%', position:'relative', top:32 } : { width: '48%' }}>
+                  <Container style={Platform.OS === 'android' ? { width: '48%', position: 'relative', top: 32 } : { width: '48%' }}>
                     <Button
-                      icon={<Image source={ICONN_ADDRESS_FIND} resizeMode="cover" style={{ width: 28, height: 28, tintColor:'white' }} />}
+                      icon={<Image source={ICONN_ADDRESS_FIND} resizeMode="cover" style={{ width: 28, height: 28, tintColor: 'white' }} />}
                       round
                       size={'large'}
                       fontBold
@@ -197,7 +204,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   control={control}
                   autoCorrect={false}
                   keyboardType="default"
-                  placeholder={`Ej. Estado de México`}
+                  placeholder={'Ej. Estado de México'}
                   blurOnSubmit={true}
                   marginTop={21}
                   label="Estado / Provincia / Región"
@@ -214,7 +221,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   control={control}
                   autoCorrect={false}
                   keyboardType="default"
-                  placeholder={`Ej. Toluca`}
+                  placeholder={'Ej. Toluca'}
                   blurOnSubmit={true}
                   marginTop={21}
                   label="Municipio, Ciudad o Delegación"
@@ -225,7 +232,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   editable={false}
                 />
 
-                <TextContainer typography="h6" fontBold text={`Colonia`} marginTop={21} />
+                <TextContainer typography="h6" fontBold text={'Colonia'} marginTop={21} />
                 <Select
                   name="neighborhood"
                   control={control}
@@ -233,7 +240,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   options={postalCodeInfo ? postalCodeInfo.neighborhood?.split('::') : []}
                   onSelect={value => setValue('neighborhood', value)}
                   androidMode="dialog"
-                  placeholder={`Selección`}
+                  placeholder={'Selección'}
                   label="Selección"
                   error={errors.neighborhood?.message}
                   disabled={false}
@@ -245,16 +252,34 @@ const AddressModalScreen: React.FC<Props> = ({
                   control={control}
                   autoCorrect={false}
                   keyboardType="default"
-                  placeholder={`Ej. Blvrd Acapulco #4056`}
+                  placeholder={'Ej. Blvrd Acapulco #4056'}
                   blurOnSubmit={true}
                   marginTop={21}
                   ref={streetRef}
                   label="Calle y número exterior"
                   boldLabel
                   maxLength={50}
-                  onSubmitEditing={() => referenceRef.current?.focus()}
+                  onSubmitEditing={() => numberRef.current?.focus()}
                   rules={openField(3)}
                   error={errors.street?.message}
+                />
+
+                <Input
+                  {...register('number')}
+                  name="number"
+                  control={control}
+                  autoCorrect={false}
+                  keyboardType="default"
+                  placeholder={'Ej. 4056'}
+                  blurOnSubmit={true}
+                  marginTop={21}
+                  ref={numberRef}
+                  label="Número exterior"
+                  boldLabel
+                  maxLength={5}
+                  onSubmitEditing={() => referenceRef.current?.focus()}
+                  rules={openField(1)}
+                  error={errors.number?.message}
                 />
 
                 <Input
@@ -263,7 +288,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   control={control}
                   autoCorrect={false}
                   keyboardType="default"
-                  placeholder={`Ej. Pasando la 2da glorieta, casa blanca.`}
+                  placeholder={'Ej. Pasando la 2da glorieta, casa blanca.'}
                   blurOnSubmit={true}
                   marginTop={21}
                   ref={referenceRef}
@@ -281,7 +306,7 @@ const AddressModalScreen: React.FC<Props> = ({
                   control={control}
                   autoCorrect={false}
                   keyboardType="default"
-                  placeholder={`Ej. Casa`}
+                  placeholder={'Ej. Casa'}
                   blurOnSubmit={true}
                   marginTop={21}
                   ref={tagRef}
