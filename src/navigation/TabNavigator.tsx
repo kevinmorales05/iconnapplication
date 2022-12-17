@@ -1,18 +1,17 @@
 import React from 'react';
-import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import theme from 'components/theme/theme';
-import HomeController from 'screens/home/HomeController';
-import CategoriesController from 'screens/categories/CategoriesController';
 import { HomeStackParams, HomeTabScreens } from './types';
-import MyAccountController from 'screens/home/myAccount/MyAccountController';
-import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
-import BranchesController from 'screens/branches/BranchesController';
-import PromotionsController from 'screens/home/promotions/PromotionsController';
+import { Image } from 'react-native';
 import { RootState, useAppSelector } from 'rtk';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TAB_CAT, TAB_HOME, TAB_PIN_LOCATION, TAB_PROMOS, TAB_USER_PROFILE } from 'assets/images';
-import InConstructionController from 'components/screens/InConstruction/InConstructionController';
+import BranchesStack from './stacks/nested/BranchesStack';
+import CategoriesController from 'screens/categories/CategoriesController';
+import HomeController from 'screens/home/HomeController';
+import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
+import MyAccountController from 'screens/home/myAccount/MyAccountController';
+import PromotionsController from 'screens/home/promotions/PromotionsController';
+import theme from 'components/theme/theme';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -82,10 +81,10 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         name="BranchesScreen"
-        component={isGuest ? InviteSignUpController : BranchesController}
+        component={isGuest ? InviteSignUpController : BranchesStack}
         options={{
           unmountOnBlur: true,
-          headerShown: isGuest ? false : true,
+          headerShown: false,
           title: 'Sucursales',
           headerTitle: 'Tiendas y estaciones',
           tabBarIcon: ({ focused }) => {
@@ -118,7 +117,3 @@ export const TabNavigator = () => {
     </Tab.Navigator>
   );
 };
-
-// component={isGuest ? InviteSignUpController : BranchesController}
-
-//component={isGuest ? InviteSignUpController : InConstructionController}

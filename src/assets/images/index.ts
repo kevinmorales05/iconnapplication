@@ -14,7 +14,6 @@ import ICON_HELPPURCHASESANDORDERS from './helpPurchasesAndOrders.webp';
 import ICON_HELPREWARDS from './helpRewards.webp';
 import ICON_HELPSADSMILE from './helpSadSmile.webp';
 import ICON_HELPVERYHAPPYSMILE from './helpVeryHappySmile.webp';
-import ICONN_HELP_TOUR from './iconn-help-tour.webp';
 import ICONN_ADDRESS_FIND from './iconn-address-find.png';
 import ICONN_BACKGROUND_IMAGE from './iconn-background-image.webp';
 import ICONN_BASKET from './iconn-basket.webp';
@@ -24,6 +23,7 @@ import ICONN_BINOMIO_LOGOS_LIGHT from './iconn-binomio-logos-light.webp';
 import ICONN_BRANCHES_ARROW_DOWN from './iconn-branches-arrow-down.png';
 import ICONN_BRANCHES_ARROW_UP from './iconn-branches-arrow-up.png';
 import ICONN_BRANCHES_BINOMIAL from './iconn-branches-binomial.webp';
+import ICONN_BRANCHES_DETAILS_SYMBOLOGY from './iconn-branches-details-symbology.png';
 import ICONN_BRANCHES_FILTER_OPTION from './iconn-branches-filter-option.png';
 import ICONN_BRANCHES_ICON_7ELEVEN from './iconn-branches-icon-7eleven.png';
 import ICONN_BRANCHES_ICON_APPLEPAY from './iconn-branches-icon-applepay.png';
@@ -55,7 +55,9 @@ import ICONN_BRANCHES_LOCATION_BINOMIAL from './iconn-branches-location-binomial
 import ICONN_BRANCHES_LOCATION_PETRO from './iconn-branches-location-petro.png';
 import ICONN_BRANCHES_LOCATION_PIN from './iconn-branches-location-pin.png';
 import ICONN_BRANCHES_LOCATION_SEVEN from './iconn-branches-location-seven.png';
+import ICONN_BRANCHES_MAP_SIMBOLOGY from './iconn-branches-map-simbology.png';
 import ICONN_BRANCHES_PETRO from './iconn-branches-petro.png';
+import ICONN_BRANCHES_SEARCH_BY_DISTANCE from './iconn-branches-search-by-distance.png';
 import ICONN_BRANCHES_SEVEN from './iconn-branches-seven.png';
 import ICONN_CALENDAR from './iconn-calendar-schedule.webp';
 import ICONN_CALENDAR_CUSTOM from './iconn-calendar-custom.webp';
@@ -95,6 +97,7 @@ import ICONN_HELP_STEP5 from './iconn-help-step5.webp';
 import ICONN_HELP_STEP6 from './iconn-help-step6.webp';
 import ICONN_HELP_STEP7 from './iconn-help-step7.webp';
 import ICONN_HELP_STEP8 from './iconn-help-step8.webp';
+import ICONN_HELP_TOUR from './iconn-help-tour.webp';
 import ICONN_HOME_LOCATION from './iconn-home-location.png';
 import ICONN_HOME_OPTION_ACUMMULATE from './iconn-home-option-acummulate.png';
 import ICONN_HOME_OPTION_HEART from './iconn-home-option-heart.webp';
@@ -187,7 +190,6 @@ export {
   ICON_HELPREWARDS,
   ICON_HELPSADSMILE,
   ICON_HELPVERYHAPPYSMILE,
-  ICONN_HELP_TOUR,
   ICONN_ADDRESS_FIND,
   ICONN_BACKGROUND_IMAGE,
   ICONN_BASKET_SHOPPING_CART,
@@ -197,6 +199,7 @@ export {
   ICONN_BRANCHES_ARROW_DOWN,
   ICONN_BRANCHES_ARROW_UP,
   ICONN_BRANCHES_BINOMIAL,
+  ICONN_BRANCHES_DETAILS_SYMBOLOGY,
   ICONN_BRANCHES_FILTER_OPTION,
   ICONN_BRANCHES_ICON_7ELEVEN,
   ICONN_BRANCHES_ICON_APPLEPAY,
@@ -228,7 +231,9 @@ export {
   ICONN_BRANCHES_LOCATION_PETRO,
   ICONN_BRANCHES_LOCATION_PIN,
   ICONN_BRANCHES_LOCATION_SEVEN,
+  ICONN_BRANCHES_MAP_SIMBOLOGY,
   ICONN_BRANCHES_PETRO,
+  ICONN_BRANCHES_SEARCH_BY_DISTANCE,
   ICONN_BRANCHES_SEVEN,
   ICONN_CALENDAR_CUSTOM,
   ICONN_CALENDAR_MONTH,
@@ -268,6 +273,7 @@ export {
   ICONN_HELP_STEP6,
   ICONN_HELP_STEP7,
   ICONN_HELP_STEP8,
+  ICONN_HELP_TOUR,
   ICONN_HOME_LOCATION,
   ICONN_HOME_OPTION_ACUMMULATE,
   ICONN_HOME_OPTION_HEART,

@@ -1,11 +1,11 @@
 import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
-import { HomeStackParams } from 'navigation/types';
 import { BasketCounter, EcommerceHeader, InConstructionScreen } from 'components';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabNavigator } from 'navigation/TabNavigator';
 import { Touchable } from '../../components';
+import { useNavigation } from '@react-navigation/native';
 import AboutUsController from 'screens/home/myAccount/aboutUs/AboutUsController';
 import AddressesController from 'screens/home/myAccount/addresses/AddressesController';
 import AddRFCController from 'screens/home/myAccount/manageTaxInfo/AddRFC/AddRFCController';
@@ -16,6 +16,7 @@ import ChangedPasswordController from 'screens/auth/onboarding/ChangedPassword/C
 import ChangePasswordController from 'screens/home/myAccount/changePassword/ChangePasswordController';
 import CheckoutController from 'screens/home/shoppingCart/Checkout/CheckoutController';
 import CodeReaderController from 'screens/home/invoicing/invoicingSeven/CodeReader/CodeReaderController';
+import CommentOrderController from 'screens/home/myAccount/myOrders/CommentOrder/CommentOrderController';
 import ContactInformationController from 'screens/home/shoppingCart/ContactInformation/ContactInformationController';
 import ContactUsController from 'screens/home/myAccount/wallet/helpCenter/contactUs/ContactUsController';
 import CreateTaxProfileController from 'screens/home/invoicing/CreateTaxProfile/CreateTaxProfileController';
@@ -24,6 +25,7 @@ import EditEmailController from 'screens/auth/onboarding/EditEmail/EditEmailCont
 import EditEmailOtpController from 'screens/auth/onboarding/EditEmailOtp/EditEmailOtpController';
 import EditPasswordController from 'screens/auth/onboarding/EditPassword/EditPasswordController';
 import FavoriteController from 'screens/home/favoriteScreen/FavoriteController';
+import HelpItemsController from 'screens/home/myAccount/wallet/helpCenter/items/HelpItemsController';
 import Icon from 'react-native-vector-icons/AntDesign';
 import InitialPage from 'screens/home/initialPage/InitPage';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
@@ -34,6 +36,7 @@ import InvoiceHistoryController from 'screens/home/invoicing/InvoiceHistory/Invo
 import InvoiceTicketPetroController from 'screens/home/invoicing/invoicingPetro/InvoiceTicketPetro/InvoiceTicketPetroController';
 import InvoiceTicketSevenController from 'screens/home/invoicing/invoicingSeven/InvoiceTicketSeven/InvoiceTicketSevenController';
 import LegalController from 'screens/home/myAccount/aboutUs/Legal/LegalController';
+import LiveStatusWidgetController from 'screens/home/myAccount/liveStatusWidget/LiveStatusWidgetController';
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import MyOrdersController from 'screens/home/myAccount/myOrders/MyOrdersController';
 import OtherProductsScreen from 'screens/home/viewMore/OtherProductsScreen';
@@ -42,25 +45,20 @@ import ProductDetailController from 'screens/ecommerce/productDetail/ProductDeta
 import ProductZoomController from 'screens/home/productZoom/ProductoZoomController';
 import ProfileController from 'screens/home/myAccount/profile/ProfileController';
 import PromotionsScreen from 'screens/home/promotions/PromotionsScreen';
+import QuestionsController from 'screens/home/myAccount/wallet/helpCenter/questions/QuestionsController';
+import RateOrderController from 'screens/home/myAccount/myOrders/RateOrder/RateOrderController';
 import RecomendedForYouScreen from 'screens/home/viewMore/RecommededForYou';
 import SearchProductResultsScreen from 'screens/search/searchProductResult/SearchProductResult';
 import SearchScreen from 'screens/search/SearchScreen';
 import SearchSellerController from 'screens/ecommerce/seller/SearchSellerController';
 import ShopCartController from 'screens/home/shoppingCart/ShopCartController';
-import TaxInfoController from 'screens/home/myAccount/manageTaxInfo/TaxInfo/TaxInfoController';
-import HelpItemsController from 'screens/home/myAccount/wallet/helpCenter/items/HelpItemsController';
-import QuestionsController from 'screens/home/myAccount/wallet/helpCenter/questions/QuestionsController';
 import StepsController from 'screens/home/myAccount/wallet/helpCenter/steps/StepsController';
+import TaxInfoController from 'screens/home/myAccount/manageTaxInfo/TaxInfo/TaxInfoController';
 import theme from 'components/theme/theme';
 import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicingPetro/ViewInvoiceGeneratedPetro/ViewInvoiceGeneratedPetroController';
 import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
-import WalletStack from './nested/WalletStack';
-import LiveStatusWidgetController from 'screens/home/myAccount/liveStatusWidget/LiveStatusWidgetController';
-import BranchesController from 'screens/branches/BranchesController';
-import EvaluateStack from './nested/EvaluateStack';
 import VirtualTourController from 'screens/home/myAccount/wallet/helpCenter/items/VirtualTour/VirtualTourController';
-import RateOrderController from 'screens/home/myAccount/myOrders/RateOrder/RateOrderController';
-import CommentOrderController from 'screens/home/myAccount/myOrders/CommentOrder/CommentOrderController';
+import WalletStack from './nested/WalletStack';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -296,15 +294,6 @@ const HomeStack: React.FC = () => {
         name="LiveStatusWidget"
         component={LiveStatusWidgetController}
       />
-      <Stack.Screen
-        options={{
-          title: 'Tiendas y estaciones',
-          headerBackTitleVisible: false
-        }}
-        name="Branches"
-        component={BranchesController}
-      />
-      <Stack.Screen name="EvaluateStack" options={{ headerShown: false }} component={EvaluateStack} />
     </Stack.Navigator>
   );
 };

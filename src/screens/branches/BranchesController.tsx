@@ -1,49 +1,28 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BranchesStackParams } from 'navigation/types';
+import { Dimensions, Linking, Platform } from 'react-native';
 import { getNearbyPoints } from 'utils/geolocation';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { PointDetailSheet } from 'components';
 import { PointDisplayMode, PointInterface, TabItem } from 'rtk';
 import { POINTS } from 'assets/files';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useLocation } from 'hooks/useLocation';
+import { useNavigation } from '@react-navigation/native';
 import { usePermissions } from 'context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BranchesScreen from './BranchesScreen';
 import theme from 'components/theme/theme';
-import { Dimensions, Linking, Platform } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const BranchesController: React.FC = ({ navigation, route }: any) => {
+const BranchesController: React.FC = () => {
+  const { navigate } = useNavigation<NativeStackNavigationProp<BranchesStackParams>>();
   const { permissions } = usePermissions();
   const { userLocation } = useLocation();
   const [markers, setMarkers] = useState<PointInterface[]>();
   const [marker, setMarker] = useState<PointInterface>();
   const insets = useSafeAreaInsets();
   const [tabSelected, setTabSelected] = useState(1);
-
-  // removing navigation header in this screen.
-  React.useLayoutEffect(() => {
-    if (!navigation || !route) return;
-
-    // Get stack parent by id
-    const homeStack = navigation.getParent('HomeStack');
-
-    if (homeStack) {
-      // Make sure the route name is "BranchesScreen" before turn header off
-      if (route.name === 'BranchesScreen') {
-        homeStack.setOptions({
-          headerShown: false
-        });
-      }
-    }
-    // Turn header back on when unmount
-    return homeStack
-      ? () => {
-          homeStack.setOptions({
-            headerShown: true
-          });
-        }
-      : undefined;
-  }, [navigation, route]);
 
   useEffect(() => {
     const nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], POINTS as PointInterface[]);
@@ -114,6 +93,10 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
     }
   };
 
+  const onPressShowDetails = () => {
+    navigate('ShowDetails');
+  };
+
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_white} childrenContainerStyle={{ paddingHorizontal: 0 }}>
       <BranchesScreen
@@ -122,6 +105,7 @@ const BranchesController: React.FC = ({ navigation, route }: any) => {
         onPressOut={handleClosePress}
         onPressSeeList={onPressSeeList}
         onPressSeeMap={onPressSeeMap}
+        onPressShowDetails={onPressShowDetails}
         permissions={permissions}
         pointDisplayMode={pointDisplayMode}
       />
