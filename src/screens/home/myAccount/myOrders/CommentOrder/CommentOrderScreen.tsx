@@ -34,7 +34,7 @@ const CommentOrderScreen: React.FC<Props> = ({ onSubmit }) => {
           <TextContainer text="2/2" textAlign="center" fontSize={14} marginTop={31.5} />
           <TextContainer text="¿Quieres dejar un comentario adicional?" textAlign="center" fontBold fontSize={16} marginTop={24} />
           <Container style={{ marginHorizontal: 16, marginTop: 24.5 }}>
-            <InputWithHeight height={200} multiline control={control} name="comment" placeholder="Escribe tus comentarios aquí" />
+            <InputWithHeight height={200} multiline control={control} name="comment" placeholder="Escribe tus comentarios aquí (Opcional)" />
           </Container>
         </Container>
         <Button onPress={handleSubmit(submit)} marginLeft={16} marginRight={16} marginBottom={30} round fontBold fontSize="h4">
