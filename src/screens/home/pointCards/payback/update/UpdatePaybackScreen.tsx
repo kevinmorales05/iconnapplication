@@ -104,7 +104,7 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onPressScan, onSubmit, paybackCa
       <Container center>
         <Image source={ICONN_PAYBACK_MAIN} style={{ width: moderateScale(280), height: moderateScale(138) }} />
       </Container>
-      <Container center style={{ width: '100%', marginTop: moderateScale(15) }}>
+      <Container style={{ width: '100%', marginTop: moderateScale(15) }}>
         <TextContainer marginTop={8} fontSize={14} text={'Ingresa el número bajo el código de barras de tu tarjeta PAYBACK.'} />
       </Container>
       <Container center row style={{ marginTop: 40, width: '100%' }}>
