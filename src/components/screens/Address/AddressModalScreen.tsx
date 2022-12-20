@@ -252,11 +252,11 @@ const AddressModalScreen: React.FC<Props> = ({
                   control={control}
                   autoCorrect={false}
                   keyboardType="default"
-                  placeholder={'Ej. Blvrd Acapulco #4056'}
+                  placeholder={'Ej. Blvrd Acapulco'}
                   blurOnSubmit={true}
                   marginTop={21}
                   ref={streetRef}
-                  label="Calle y número exterior"
+                  label="Calle"
                   boldLabel
                   maxLength={50}
                   onSubmitEditing={() => numberRef.current?.focus()}

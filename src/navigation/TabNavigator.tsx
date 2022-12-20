@@ -12,6 +12,8 @@ import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpContro
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
+import InConstructionController from 'components/screens/InConstruction/InConstructionController';
+
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -19,6 +21,8 @@ export const TabNavigator = () => {
   const { isGuest } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
   const { paySuccess } = route.params;
+
+
   return (
     <Tab.Navigator
       screenOptions={() => ({
@@ -81,7 +85,7 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         name="BranchesScreen"
-        component={isGuest ? InviteSignUpController : BranchesStack}
+        component={isGuest ? InviteSignUpController : InConstructionController}
         options={{
           unmountOnBlur: true,
           headerShown: false,

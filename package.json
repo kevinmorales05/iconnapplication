@@ -1,6 +1,6 @@
 {
   "name": "oh4y0",
-  "version": "1.10.20",
+  "version": "1.10.22",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
