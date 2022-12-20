@@ -4,7 +4,7 @@ import { Button, NavigationMenuItem, Container, TextContainer, Touchable } from 
 import { useNavigation } from '@react-navigation/native';
 import theme from 'components/theme/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from 'navigation/types';
+import { HomeStackParams, HomeTabScreens } from 'navigation/types';
 
 //import icons
 import ProfileSvg from 'components/svgComponents/ProfileSvg/ProfileSvg';
@@ -31,6 +31,7 @@ interface HomeScreenProps {
 
 const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, app_version }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate: navigateToTab } = useNavigation<NativeStackNavigationProp<HomeTabScreens>>();
   const inConstruction = useInConstruction();
 
   return (
@@ -113,7 +114,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<PlacesSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             //inConstruction.show(true);
-            navigate('Branches');
+            navigateToTab('BranchesScreen');
           }}
         />
         <NavigationMenuItem

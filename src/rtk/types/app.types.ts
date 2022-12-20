@@ -2,6 +2,8 @@ export interface AppInterface {
   error?: string;
   internetReachability?: number;
   internetReachabilityReviewed?: number;
+  visibleSearchByDistance?: boolean;
+  visibleStoreSymbology?: boolean;
 }
 
 export type CarouselType = 'homeOptions' | 'principal' | 'second' | 'all_promotions' | 'day_promotion';

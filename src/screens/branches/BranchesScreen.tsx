@@ -14,11 +14,12 @@ interface Props {
   onPressOut: () => void;
   onPressSeeList: () => void;
   onPressSeeMap: () => void;
+  onPressShowDetails: () => void;
   permissions: {};
   pointDisplayMode: PointDisplayMode;
 }
 
-const BranchesScreen: React.FC<Props> = ({ markers, onPressMarker, onPressOut, onPressSeeList, onPressSeeMap, pointDisplayMode }) => {
+const BranchesScreen: React.FC<Props> = ({ markers, onPressMarker, onPressOut, onPressSeeList, onPressSeeMap, onPressShowDetails, pointDisplayMode }) => {
   return (
     <>
       {/* <TextContainer typography="paragraph" text={JSON.stringify(permissions)} marginTop={23} marginBottom={16} /> */}
@@ -59,7 +60,7 @@ const BranchesScreen: React.FC<Props> = ({ markers, onPressMarker, onPressOut, o
         </Container>
         <Container style={{ width: '30%' }}>
           <Button
-            onPress={() => {}}
+            onPress={onPressShowDetails}
             color="iconn_white"
             style={{ borderRadius: 4, borderWidth: 1, borderColor: theme.brandColor.iconn_med_grey }}
             size="xsmall"

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { Dimensions, Image } from 'react-native';
-import { PointInterface } from 'rtk';
+import { PointInterface, RootState, useAppSelector } from 'rtk';
 import { useLocation } from 'hooks/useLocation';
 import { usePermissions } from 'context';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import theme from 'components/theme/theme';
-import { ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN } from 'assets/images';
+import { ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN, ICONN_BRANCHES_MAP_SIMBOLOGY } from 'assets/images';
 
 interface Props {
   markers?: PointInterface[];
@@ -19,8 +19,10 @@ const CustomMap: React.FC<Props> = ({ markers, onPressMarker, onPressOut }) => {
   const { followUserLocation, userLocation, stopTrackingUserLocation, initialUserLocation } = useLocation();
   const { permissions, askLocationPermission } = usePermissions();
   const { height, width } = Dimensions.get('window');
-  const LATITUDE_DELTA = 0.28;
+  // If you want to set more zoom from the height, set a minor decimal number.
+  const LATITUDE_DELTA = 0.08;
   const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
+  const { visibleStoreSymbology } = useAppSelector((state: RootState) => state.app);
 
   useEffect(() => {
     if (permissions.locationStatus === 'granted') {
@@ -90,6 +92,7 @@ const CustomMap: React.FC<Props> = ({ markers, onPressMarker, onPressOut }) => {
             </Marker>
           ))}
       </MapView>
+      {visibleStoreSymbology && <Image source={ICONN_BRANCHES_MAP_SIMBOLOGY} style={{ position: 'absolute', bottom: 4, left: 4, width: 127, height: 103 }} />}
     </>
   );
 };
