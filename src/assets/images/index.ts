@@ -169,6 +169,13 @@ import TAB_USER_PROFILE from './tab_user_profile.webp';
 import TELCEL_LOGO from './telcel_logo.png';
 import SEVEN_LOGO from './seven-logo/seven.png';
 import PETRO_LOGO from './petro-logo/petro.png';
+import BBVA_LOGO from './bbva-logo/bbva-logo.png';
+import BANCOPPEL_LOGO from './banCoppel-logo/banCoppel-logo.png';
+import BANORTE_LOGO from './banorte-logo/banorte-logo.png';
+import BANREGIO_LOGO from './banregio-logo/banregio-logo.png';
+import BANSI_LOGO from './bansi-logo/bansi-logo.png';
+import SANTANDER_LOGO from './santander-logo/santander-logo.png';
+import CITIBANAMEX_LOGO from './citibanamex-logo/citibanamex-logo.png';
 
 export {
   ATT_LOGO,
@@ -341,5 +348,12 @@ export {
   TAB_USER_PROFILE,
   TELCEL_LOGO,
   SEVEN_LOGO,
-  PETRO_LOGO
+  PETRO_LOGO,
+  BBVA_LOGO,
+  BANSI_LOGO,
+  BANCOPPEL_LOGO,
+  BANREGIO_LOGO,
+  CITIBANAMEX_LOGO,
+  SANTANDER_LOGO,
+  BANORTE_LOGO
 };
