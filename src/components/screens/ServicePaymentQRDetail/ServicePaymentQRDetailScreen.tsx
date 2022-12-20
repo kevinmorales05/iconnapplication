@@ -7,6 +7,7 @@ import { QRInterface, RootState, ServicePaymentInterface, useAppSelector } from 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import config from 'react-native-config';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import Octicons from 'react-native-vector-icons/Octicons';
 import QRCode from 'react-native-qrcode-svg';
@@ -54,9 +55,8 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
   // console.log('decryption', decryption);
   const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.UPC}|${servicePayment.SKU}|${service?.contractNumber}||${encryption}|`;
   //TO DO: change service.billId with the account number input, after the validation of the existence of ARCUS
-  console.log('El string del QR es', QRString);
+  //console.log('El string del QR es', QRString);
   //  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.SKU}|${servicePayment.UPC}|${service?.billId}||${encryption}|`;  // console.log('El string del QR es', QRString);
-
 
   return (
     <ScrollView
@@ -81,11 +81,23 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Saldo" fontBold />
-            <TextContainer
+            {+service?.balance === 0 ? (
+              <Container row>
+                <AntDesign name="checkcircle" color={theme.brandColor.iconn_green_original} size={15} />
+                <TextContainer text="Pagado" marginLeft={8} />
+              </Container>
+            ) : (
+              <TextContainer
+                text={`$${parseFloat(service?.balance as string)
+                  .toFixed(2)
+                  .replace(/\d(?=(\d{3})+\.)/g, '$&,')}`}
+              />
+            )}
+            {/* <TextContainer
               text={`$${parseFloat(service?.balance as string)
                 .toFixed(2)
                 .replace(/\d(?=(\d{3})+\.)/g, '$&,')}`}
-            />
+            /> */}
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Vencimiento" fontBold />
