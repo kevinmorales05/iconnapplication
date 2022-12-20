@@ -21,7 +21,6 @@ const ProfileController: React.FC = () => {
   const toast = useToast();
   const dispatch = useAppDispatch();
   const { email, authenticationToken } = user;
-  console.log('TOKEN!', authenticationToken);
 
   const goToChangePassword = async () => {
     try {
@@ -36,7 +35,6 @@ const ProfileController: React.FC = () => {
         navigate('ChangePassword', { authenticationToken: authenticationToken as string, variant: 'recoverPassword' });
       }
     } catch (error) {
-      console.log('ERROR', error);
       toast.show({
         message: 'El correo no pudo ser enviado,\n intenta más tarde',
         type: 'error'

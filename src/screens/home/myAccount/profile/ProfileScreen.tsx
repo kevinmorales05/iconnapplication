@@ -30,7 +30,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
   const { email, name, telephone, gender, birthday, lastName } = user;
   const insets = useSafeAreaInsets();
   const actualDate = new Date();
-  const gendersOptions = ['Selecciona', 'Femenino', 'Masculino'];
+  const gendersOptions = ['Femenino', 'Masculino'];
 
   const {
     control,
@@ -114,7 +114,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           placeholder="Nombre"
           maxLength={30}
           blurOnSubmit={true}
-          rules={alphabetRule(true)}
+          rules={alphabetRule(name ? false : true)}
           error={errors.name?.message}
           onSubmitEditing={() => surnameRef.current?.focus()}
         />
@@ -130,7 +130,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           keyboardType="default"
           placeholder="Apellidos"
           maxLength={30}
-          rules={alphabetRule(true)}
+          rules={alphabetRule(lastName ? false : true)}
           blurOnSubmit={true}
           onSubmitEditing={() => phoneRef.current?.focus()}
           error={errors.lastName?.message}
