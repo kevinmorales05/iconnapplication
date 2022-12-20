@@ -18,7 +18,7 @@ const tabNames: TabItem[] = [
   },
   {
     id: '2',
-    name: 'Destinatarios'
+    name: 'Beneficiarios'
   }
 ];
 interface Props {
