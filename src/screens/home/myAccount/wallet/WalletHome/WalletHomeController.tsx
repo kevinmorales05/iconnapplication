@@ -14,11 +14,12 @@ import {
 } from 'rtk';
 import { CARD_PETRO, CARD_PREF, ICONN_DEPOSIT, ICONN_MOBILE_RECHARGE, ICONN_PACKAGES_SEARCH, ICONN_SERVICE_PAYMENT } from 'assets/images';
 import Config from 'react-native-config';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { WalletStackParams } from 'navigation/types';
 import { useIsFocused } from '@react-navigation/native';
 import { useServicesPayments } from '../../hooks/usePaymentsServices';
+import { useToast } from 'context';
 
 const WalletHomeController: React.FC = () => {
   const isFocused = useIsFocused();
@@ -28,12 +29,14 @@ const WalletHomeController: React.FC = () => {
   //const [cards, setCards] = useState();
   //const [cardsPics, setCardsPics] = useState<PointCard[]>();
   // const [serviceQR, setServiceQR] = useState<ServiceQRType[]>();
+  const route = useRoute<RouteProp<WalletStackParams, 'WalletHome'>>();
   const [serviceQRTypes, setServiceQRTypes] = useState<ServiceQRType[]>();
   const [rechargeQRTypes, setRechargeQRTypes] = useState<ServiceQRType[]>();
   const { CATEGORIES_ASSETS } = Config;
   const [cardPic, setCardPic] = useState<CarouselItem[]>();
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
   const { servicesPayments } = useServicesPayments();
+  const toast = useToast();
 
   const getDataforServiceQR = async (service: ServiceQRType) => {
     const findServiceProvider = servicesPayments?.find(element => element.supplierName === service.type);
@@ -203,14 +206,14 @@ const WalletHomeController: React.FC = () => {
     navigate('ServicePaymentQRDetailDepositController', { beneficiary: beneficiary, toastState: 'none' });
   };
 
-  /* useEffect(() => {
-    if (route.params?.toastState! === 'deleteDeposit') {
+  useEffect(() => {
+    if (route.params?.toastState === 'deleteDeposit') {
       toast.show({
         message: 'Beneficiario eliminado exitosamente.',
         type: 'success'
       });
     }
-  }, [route.params]); */
+  }, [route.params]);
 
   return (
     <WalletHomeScreen
