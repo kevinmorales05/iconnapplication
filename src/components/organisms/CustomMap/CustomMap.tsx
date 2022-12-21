@@ -1,28 +1,28 @@
 import React, { useEffect, useRef } from 'react';
 import { Dimensions, Image } from 'react-native';
-import { PointInterface, RootState, useAppSelector } from 'rtk';
+import { ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN } from 'assets/images';
+import { PointInterface } from 'rtk';
 import { useLocation } from 'hooks/useLocation';
 import { usePermissions } from 'context';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Details, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import theme from 'components/theme/theme';
-import { ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN, ICONN_BRANCHES_MAP_SIMBOLOGY } from 'assets/images';
 
 interface Props {
+  latitudeDelta: number;
   markers?: PointInterface[];
+  onChangeRegionComplete: (r: Region, d: Details) => void;
   onPressMarker: (marker: PointInterface) => void;
   onPressOut: () => void;
 }
 
-const CustomMap: React.FC<Props> = ({ markers, onPressMarker, onPressOut }) => {
+const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComplete, onPressMarker, onPressOut }) => {
   const mapViewRef = useRef<MapView>();
   const followingRef = useRef<boolean>(true);
   const { followUserLocation, userLocation, stopTrackingUserLocation, initialUserLocation } = useLocation();
   const { permissions, askLocationPermission } = usePermissions();
   const { height, width } = Dimensions.get('window');
-  // If you want to set more zoom from the height, set a minor decimal number.
-  const LATITUDE_DELTA = 0.08;
-  const LONGITUDE_DELTA = LATITUDE_DELTA * (width / height);
-  const { visibleStoreSymbology } = useAppSelector((state: RootState) => state.app);
+  // If you want to set more zoom from the height, set latitudeDelta with a minor decimal number.
+  const LONGITUDE_DELTA = latitudeDelta * (width / height);
 
   useEffect(() => {
     if (permissions.locationStatus === 'granted') {
@@ -56,13 +56,14 @@ const CustomMap: React.FC<Props> = ({ markers, onPressMarker, onPressOut }) => {
         region={{
           latitude: initialUserLocation ? initialUserLocation!.latitude : 0,
           longitude: initialUserLocation ? initialUserLocation!.longitude : 0,
-          latitudeDelta: LATITUDE_DELTA,
+          latitudeDelta: latitudeDelta,
           longitudeDelta: LONGITUDE_DELTA
         }}
         onTouchStart={() => (followingRef.current = false)}
         zoomEnabled
         zoomControlEnabled
         onPress={onPressOut}
+        onRegionChangeComplete={(r, d) => onChangeRegionComplete(r, d)}
       >
         {markers &&
           markers.map((marker, index) => (
@@ -92,7 +93,6 @@ const CustomMap: React.FC<Props> = ({ markers, onPressMarker, onPressOut }) => {
             </Marker>
           ))}
       </MapView>
-      {visibleStoreSymbology && <Image source={ICONN_BRANCHES_MAP_SIMBOLOGY} style={{ position: 'absolute', bottom: 4, left: 4, width: 127, height: 103 }} />}
     </>
   );
 };

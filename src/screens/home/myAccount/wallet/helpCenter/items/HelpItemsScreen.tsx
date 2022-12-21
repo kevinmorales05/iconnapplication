@@ -48,7 +48,7 @@ const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
         navigate('VirtualTour', { step: 1 });
         break;
       default:
-        navigate('HelpQuestions', { moduleId: module.id, moduleName: module.name });
+        navigate('HelpQuestions', { moduleId: module.modules_cats_id, moduleName: module.description });
     }
     return flagHelp;
   };
@@ -69,9 +69,9 @@ const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
     >
       {modulesData.length > 0 ? (
         modulesData.map((module, idx) => {
-          const isSpecialModule = getSpecialModule(module.index);
+          const isSpecialModule = getSpecialModule(module.modules_cats_id);
           return (
-            <Container key={module.name + idx} style={{ width: '100%' }}>
+            <Container key={module.description + idx} style={{ width: '100%' }}>
               <NavigationMenuItem
                 text={module.name}
                 disable={false}

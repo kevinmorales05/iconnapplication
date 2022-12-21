@@ -53,10 +53,10 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
             {stepsData.length > 0 ? (
               stepsData.map((step, index) => {
                 return (
-                  <Container key={index} style={{ width: '90%' }}>
-                    <Container row>
-                      <TextContainer text={index + 1 + '.  '} fontBold />
-                      <TextContainer text={step.description} fontSize={14} marginBottom={18} />
+                  <Container key={index+'erCon'} style={{ width: '90%' }}>
+                    <Container row key={index+'erConRow'}>
+                      <TextContainer text={index + 1 + '.  '} fontBold key={index+'erText1'}/>
+                      <TextContainer text={step.description} fontSize={14} marginBottom={18} key={index+'erConText2'}/>
                     </Container>
                     {step.importantMessage != null ? (
                       <Container
@@ -71,14 +71,15 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
                           paddingVertical: 15,
                           marginBottom: 20
                         }}
+                        key={index+'erConSt'}
                       >
-                        <Container row style={{ marginLeft: 7 }}>
-                          <Container center space="around" style={{ marginLeft: 7, width: '10%' }}>
+                        <Container row style={{ marginLeft: 7 }} key={index+'erConIc'}>
+                          <Container center space="around" style={{ marginLeft: 7, width: '10%' }} key={index+'erConIcon'}>
                             <Octicons name="info" size={24} color={theme.fontColor.dark} />
                           </Container>
-                          <Container style={{ width: '90%' }}>
-                            <Container style={{ width: '90%', marginLeft: 8 }}>
-                              <TextContainer text={'Importante: ' + step.importantMessage} fontSize={12} numberOfLines={3} marginRight={4} />
+                          <Container style={{ width: '90%' }} key={index+'erConSubT'}>
+                            <Container style={{ width: '90%', marginLeft: 8 }} key={index+'erContaImport'}>
+                              <TextContainer text={'Importante: ' + step.importantMessage} fontSize={12} numberOfLines={3} marginRight={4} key={index+'erTextImport'}/>
                             </Container>
                           </Container>
                         </Container>
@@ -105,12 +106,13 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
         <Container center style={{ backgroundColor: theme.brandColor.iconn_white, height: '17.5%' }}>
           <TextContainer text="¿Te resultó útil esta información?" fontBold marginTop={6} />
           <Container row space="evenly" style={{ width: '100%', marginTop: 15 }}>
-            {qualificationStatus.map(qualification => {
+            {qualificationStatus.map((qualification, index) => {
               return (
-                <Touchable key={qualification} onPress={() => qualifyAndChangeColor(qualification.qualificationValue)}>
+                <Touchable onPress={() => qualifyAndChangeColor(qualification.qualificationValue)} key={index+'erTouch'}>
                   <Image
                     source={qualification.img}
                     style={{ width: 40, height: 40, tintColor: qualification.isQualified ? qualification.color : theme.brandColor.iconn_grey_background }}
+                    key={index+'erImg'}
                   />
                 </Touchable>
               );

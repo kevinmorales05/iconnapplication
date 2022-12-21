@@ -5,7 +5,7 @@ import { Dimensions, Linking, Platform } from 'react-native';
 import { getNearbyPoints } from 'utils/geolocation';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { PointDetailSheet } from 'components';
-import { PointDisplayMode, PointInterface, TabItem } from 'rtk';
+import { PointDisplayMode, PointInterface, RootState, TabItem, useAppSelector } from 'rtk';
 import { POINTS } from 'assets/files';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useLocation } from 'hooks/useLocation';
@@ -14,6 +14,7 @@ import { usePermissions } from 'context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BranchesScreen from './BranchesScreen';
 import theme from 'components/theme/theme';
+import { Details, Region } from 'react-native-maps';
 
 const BranchesController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<BranchesStackParams>>();
@@ -23,11 +24,14 @@ const BranchesController: React.FC = () => {
   const [marker, setMarker] = useState<PointInterface>();
   const insets = useSafeAreaInsets();
   const [tabSelected, setTabSelected] = useState(1);
+  const { visibleStoreSymbology, visibleSearchByDistance } = useAppSelector((state: RootState) => state.app);
+  const [radiusOfSearch, setRadiusOfSearch] = useState(1);
+  const [latitudeDelta, setLatitudeDelta] = useState(0.04);
 
   useEffect(() => {
-    const nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], POINTS as PointInterface[]);
+    const nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], POINTS as PointInterface[], radiusOfSearch);
     setMarkers(nearbyMarkers);
-  }, [userLocation]);
+  }, [userLocation, radiusOfSearch]);
 
   /**
    * Set the current marker/point in the BottomModalSheet
@@ -97,10 +101,28 @@ const BranchesController: React.FC = () => {
     navigate('ShowDetails');
   };
 
+  const onChangeRegionComplete = (_r: Region, _d: Details) => {
+    // console.log('Cambia region de busqueda', r, d);
+    // details contain if the movement is by gestures or not.
+    // r contain de center coordinates of screen.
+  };
+
+  const onChangeSearchOfRadius = (km: number) => {
+    if (km === 1) setLatitudeDelta(0.04);
+    else if (km === 2) setLatitudeDelta(0.14);
+    else if (km === 3) setLatitudeDelta(0.24);
+    else if (km === 4) setLatitudeDelta(0.34);
+    else if (km === 5) setLatitudeDelta(0.44);
+    setRadiusOfSearch(km);
+  };
+
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_white} childrenContainerStyle={{ paddingHorizontal: 0 }}>
       <BranchesScreen
+        latitudeDelta={latitudeDelta}
         markers={markers!}
+        onChangeRegionComplete={onChangeRegionComplete}
+        onChangeSearchOfRadius={onChangeSearchOfRadius}
         onPressMarker={onPressMarker}
         onPressOut={handleClosePress}
         onPressSeeList={onPressSeeList}
@@ -108,6 +130,8 @@ const BranchesController: React.FC = () => {
         onPressShowDetails={onPressShowDetails}
         permissions={permissions}
         pointDisplayMode={pointDisplayMode}
+        visibleSearchByDistance={visibleSearchByDistance!}
+        visibleStoreSymbology={visibleStoreSymbology!}
       />
       <PointDetailSheet
         bottomSheetRef={bottomSheetRef}

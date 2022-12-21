@@ -1,7 +1,13 @@
 import ATT_LOGO from './att-logo.png';
+import BANCOPPEL_LOGO from './banCoppel-logo/banCoppel-logo.png';
+import BANORTE_LOGO from './banorte-logo/banorte-logo.png';
+import BANREGIO_LOGO from './banregio-logo/banregio-logo.png';
+import BANSI_LOGO from './bansi-logo/bansi-logo.png';
+import BBVA_LOGO from './bbva-logo/bbva-logo.png';
 import CARD_PETRO from './card-petro.webp';
 import CARD_PREF from './card-pref.webp';
 import CFE_LOGO from './cfe-logo.png';
+import CITIBANAMEX_LOGO from './citibanamex-logo/citibanamex-logo.png';
 import ICON_CONCTACTUSBYEMAIL from './sendEmail.webp';
 import ICON_CONCTACTUSBYPHONE from './callByPhone.webp';
 import ICON_CONCTACTUSBYWHATSAPP from './sendWhatsapp.webp';
@@ -48,6 +54,7 @@ import ICONN_BRANCHES_ICON_PIZZA from './iconn-branches-icon-pizza.png';
 import ICONN_BRANCHES_ICON_POKEMON from './iconn-branches-icon-pokemon.png';
 import ICONN_BRANCHES_ICON_RESTROOM from './iconn-branches-icon-restroom.png';
 import ICONN_BRANCHES_ICON_SIVALE from './iconn-branches-icon-sivale.png';
+import ICONN_BRANCHES_ICON_SLIDER from './iconn-branches-icon-slider.png';
 import ICONN_BRANCHES_ICON_TACO from './iconn-branches-icon-taco.png';
 import ICONN_BRANCHES_ICON_TRUCK from './iconn-branches-icon-truck.png';
 import ICONN_BRANCHES_ICON_WIFI from './iconn-branches-icon-wifi.png';
@@ -163,6 +170,9 @@ import ICONN_TRACKING_SENT_GREEN from './iconn-tracking-sent-green.webp';
 import ICONN_USER from './iconn-user.webp';
 import ICONN_USER_PROFILE from './iconn-user-profile.webp';
 import ICONN_WARNING_MARK from './iconn-warning-mark.webp';
+import PETRO_LOGO from './petro-logo/petro.png';
+import SANTANDER_LOGO from './santander-logo/santander-logo.png';
+import SEVEN_LOGO from './seven-logo/seven.png';
 import SKY_LOGO from './sky-logo.png';
 import TAB_CAT from './tab_cat.webp';
 import TAB_HOME from './tab_home.webp';
@@ -170,21 +180,18 @@ import TAB_PIN_LOCATION from './tab_pin_location.webp';
 import TAB_PROMOS from './tab_promos.webp';
 import TAB_USER_PROFILE from './tab_user_profile.webp';
 import TELCEL_LOGO from './telcel_logo.png';
-import SEVEN_LOGO from './seven-logo/seven.png';
-import PETRO_LOGO from './petro-logo/petro.png';
-import BBVA_LOGO from './bbva-logo/bbva-logo.png';
-import BANCOPPEL_LOGO from './banCoppel-logo/banCoppel-logo.png';
-import BANORTE_LOGO from './banorte-logo/banorte-logo.png';
-import BANREGIO_LOGO from './banregio-logo/banregio-logo.png';
-import BANSI_LOGO from './bansi-logo/bansi-logo.png';
-import SANTANDER_LOGO from './santander-logo/santander-logo.png';
-import CITIBANAMEX_LOGO from './citibanamex-logo/citibanamex-logo.png';
 
 export {
   ATT_LOGO,
+  BANCOPPEL_LOGO,
+  BANORTE_LOGO,
+  BANREGIO_LOGO,
+  BANSI_LOGO,
+  BBVA_LOGO,
   CARD_PETRO,
   CARD_PREF,
   CFE_LOGO,
+  CITIBANAMEX_LOGO,
   ICON_CONCTACTUSBYEMAIL,
   ICON_CONCTACTUSBYPHONE,
   ICON_CONCTACTUSBYWHATSAPP,
@@ -231,6 +238,7 @@ export {
   ICONN_BRANCHES_ICON_POKEMON,
   ICONN_BRANCHES_ICON_RESTROOM,
   ICONN_BRANCHES_ICON_SIVALE,
+  ICONN_BRANCHES_ICON_SLIDER,
   ICONN_BRANCHES_ICON_TACO,
   ICONN_BRANCHES_ICON_TRUCK,
   ICONN_BRANCHES_ICON_WIFI,
@@ -346,20 +354,14 @@ export {
   ICONN_USER_PROFILE,
   ICONN_USER,
   ICONN_WARNING_MARK,
+  PETRO_LOGO,
+  SANTANDER_LOGO,
+  SEVEN_LOGO,
   SKY_LOGO,
   TAB_CAT,
   TAB_HOME,
   TAB_PIN_LOCATION,
   TAB_PROMOS,
   TAB_USER_PROFILE,
-  TELCEL_LOGO,
-  SEVEN_LOGO,
-  PETRO_LOGO,
-  BBVA_LOGO,
-  BANSI_LOGO,
-  BANCOPPEL_LOGO,
-  BANREGIO_LOGO,
-  CITIBANAMEX_LOGO,
-  SANTANDER_LOGO,
-  BANORTE_LOGO
+  TELCEL_LOGO
 };

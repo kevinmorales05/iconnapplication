@@ -3,6 +3,7 @@
  * showLogs__api_docs_no_api_prefix: string;
  * showLogs__api_docs: string;
  * showLogs__api_invoicing: string;
+ * showLogs__api_helpCenter: string;
  * showLogs__api_order: string;
  * showLogs__api_orders: string;
  * showLogs__api_products: string;
@@ -19,6 +20,7 @@ let global;
 global.showLogs__api_docs_no_api_prefix = false;
 global.showLogs__api_docs = false;
 global.showLogs__api_invoicing = false;
+global.showLogs__api_helpCenter = false;
 global.showLogs__api_order = false;
 global.showLogs__api_orders = false;
 global.showLogs__api_promotions = false;

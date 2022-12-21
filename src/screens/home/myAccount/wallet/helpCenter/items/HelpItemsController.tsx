@@ -9,7 +9,6 @@ import {
   ICON_HELPCALLUS,
   ICONN_HELP_TOUR
 } from 'assets/images';
-import { RootState, useAppSelector } from 'rtk';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { useToast } from 'context';
 import { useNavigation } from '@react-navigation/native';
@@ -17,12 +16,12 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { SafeArea } from 'components';
 import theme from 'components/theme/theme';
+import { helpCenterServices } from 'services/helpCenter.services';
 
 interface Props {}
 
 const HelpItemsController: React.FC<Props> = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { helpCenterModules } = useAppSelector((state: RootState) => state.helpCenterModules);
   const toast = useToast();
   const route = useRoute<RouteProp<HomeStackParams, 'HelpItems'>>();
   const [helpModules, setHelpModules] = useState([]);
@@ -39,7 +38,11 @@ const HelpItemsController: React.FC<Props> = () => {
   const { flagError } = route.params;
 
   const fetchData = useCallback(async () => {
-    setHelpModules(helpCenterModules);
+    await helpCenterServices.getHelpModulesList().then(async modulesResponse => {
+      if (modulesResponse) {
+        setHelpModules(modulesResponse.data);
+      }
+    });
   }, []);
 
   const onPressTour = () => {
