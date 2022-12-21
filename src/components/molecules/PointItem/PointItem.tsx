@@ -2,14 +2,14 @@ import React from 'react';
 import { Container } from '../../atoms/Container';
 import { ICONN_BRANCHES_ICON_PETRO, ICONN_BRANCHES_ICON_7ELEVEN, ICONN_BRANCHES_ICON_BINOMIAL, ICONN_ERROR_CROSS } from 'assets/images';
 import { Image, ImageStyle, StyleProp } from 'react-native';
-import { PointInterface } from 'rtk';
+import { PointDisplayMode, PointInterface } from 'rtk';
 import { TextContainer } from '../TextContainer';
 import { Touchable } from '../../atoms/Touchable';
 import Octicons from 'react-native-vector-icons/Octicons';
 import theme from '../../theme/theme';
 
 interface PointItemProps {
-  onPress: (marker: PointInterface) => void;
+  onPress: (marker: PointInterface, mode: PointDisplayMode) => void;
   point: PointInterface;
 }
 
@@ -27,7 +27,7 @@ const PointItem: React.FC<PointItemProps> = ({ onPress, point }) => {
   };
 
   return (
-    <Touchable onPress={() => onPress(point)}>
+    <Touchable onPress={() => onPress(point, 'list')}>
       <Container style={{ height: 85, paddingHorizontal: 16, paddingTop: 14 }}>
         <Container row space="between" center height={'60%'}>
           <Container width={'15%'} center>

@@ -1,14 +1,14 @@
 import React from 'react';
 import { Container } from 'components/atoms';
 import { Platform, ScrollView } from 'react-native';
-import { PointInterface } from 'rtk';
+import { PointDisplayMode, PointInterface } from 'rtk';
 import { PointItem } from '../../molecules';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 
 interface Props {
   markers: PointInterface[];
-  onPressMarker: (marker: PointInterface) => void;
+  onPressMarker: (marker: PointInterface, mode?: PointDisplayMode) => void;
 }
 
 const PointsList: React.FC<Props> = ({ markers, onPressMarker }) => {
