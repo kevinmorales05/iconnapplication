@@ -4,24 +4,21 @@ import theme from 'components/theme/theme';
 import { SafeArea } from 'components';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
-import { RootState, useAppSelector } from 'rtk';
+import { helpCenterServices } from 'services/helpCenter.services';
 interface Props {}
 
 const QuestionsController: React.FC<Props> = () => {
-  const { helpCenterModules } = useAppSelector((state: RootState) => state.helpCenterModules);
   const route = useRoute<RouteProp<HomeStackParams, 'HelpQuestions'>>();
   const { params } = route;
   const moduleId = params?.moduleId;
   const [helpQuestions, setHelpQuestions] = useState([]);
 
   const fetchData = useCallback(async () => {
-    let questions = [];
-    for (let i = 0; i < helpCenterModules.length; i++) {
-      if (helpCenterModules[i].id == moduleId) {
-        questions = helpCenterModules[i].questions;
+    await helpCenterServices.getQuestionsListByModuleId(moduleId).then(async questionsResponse => {
+      if (questionsResponse && questionsResponse.data.length>0) {
+        setHelpQuestions(questionsResponse.data);
       }
-    }
-    setHelpQuestions(questions);
+    });
   }, []);
 
   useEffect(() => {

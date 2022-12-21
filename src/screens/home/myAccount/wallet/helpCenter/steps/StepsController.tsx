@@ -1,25 +1,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import HelpItemsScreen from './StepsScreen';
-import { vtexDocsServices } from 'services';
 import theme from 'components/theme/theme';
 import { SafeArea } from 'components';
 import { useToast } from 'context';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
-import { useAppSelector, RootState, useAppDispatch } from 'rtk';
+import { useAppSelector, RootState } from 'rtk';
 import { ICON_HELPSADSMILE, ICON_HELPHAPPYSMILE, ICON_HELPVERYHAPPYSMILE } from 'assets/images';
-import { setModules } from 'rtk/slices/helpCenterSlice';
+import { helpCenterServices } from 'services/helpCenter.services';
 interface Props {}
 
 const StepsController: React.FC<Props> = () => {
-  const { helpCenterModules } = useAppSelector((state: RootState) => state.helpCenterModules);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'HelpSteps'>>();
   const { params } = route;
   const questionId = params?.questionId;
   const moduleId = params?.moduleId;
   const toast = useToast();
-  const dispatch = useAppDispatch();
   const [helpSteps, setHelpSteps] = useState([]);
   const [stepIdSaved, setStepIdSaved] = useState('');
   const [stepReceived, setStepReceived] = useState(undefined);
@@ -30,81 +27,21 @@ const StepsController: React.FC<Props> = () => {
     { img: ICON_HELPVERYHAPPYSMILE, isQualified: false, qualificationValue: 10, color: theme.brandColor.iconn_green_original }
   ]);
 
-  const updateReduxQualification = async (moduleId: string, questionId: string, qualification: number) => {
-    let modules = [];
-    for (let m = 0; m < helpCenterModules.length; m++) {
-      let quests = [];
-      for (let q = 0; q < helpCenterModules[m].questions.length; q++) {
-        if (helpCenterModules[m].id == moduleId) {
-          let ques = {
-            moduleId: helpCenterModules[m].id,
-            moduleName: helpCenterModules[m].questions[q].qualification.name,
-            qualification:
-              helpCenterModules[m].questions[q].questionId == questionId ? qualification : helpCenterModules[m].questions[q].qualification.qualification,
-            questionId: helpCenterModules[m].questions[q].qualification.questionId,
-            userId: helpCenterModules[m].questions[q].qualification.userId,
-            id: helpCenterModules[m].questions[q].qualification.id
-          };
-
-          let question = {
-            moduleId: helpCenterModules[m].id,
-            questionId: helpCenterModules[m].questions[q].questionId,
-            question: helpCenterModules[m].questions[q].question,
-            steps: helpCenterModules[m].questions[q].steps,
-            qualification: ques
-          };
-          quests.push(question);
-        } else {
-          let ques = {
-            moduleId: helpCenterModules[m].id,
-            moduleName: helpCenterModules[m].questions[q].qualification.name,
-            qualification: helpCenterModules[m].questions[q].qualification.qualification,
-            questionId: helpCenterModules[m].questions[q].qualification.questionId,
-            userId: helpCenterModules[m].questions[q].qualification.userId,
-            id: helpCenterModules[m].questions[q].qualification.id
-          };
-
-          let question = {
-            moduleId: helpCenterModules[m].id,
-            questionId: helpCenterModules[m].questions[q].questionId,
-            question: helpCenterModules[m].questions[q].question,
-            steps: helpCenterModules[m].questions[q].steps,
-            qualification: ques
-          };
-          quests.push(question);
-        }
-      }
-
-      let mod = {
-        index: helpCenterModules[m].index,
-        accountId: helpCenterModules[m].dataModule,
-        description: helpCenterModules[m].description,
-        id: helpCenterModules[m].id,
-        name: helpCenterModules[m].name,
-        icon: helpCenterModules[m].icon,
-        questions: quests
-      };
-      modules.push(mod);
-    }
-    dispatch(setModules(modules));
-  };
-
   const qualify = async (qualification: number) => {
     try {
-      const newRecord = {
-        questionId: questionId,
-        userId: user.id,
+      console.log('user.id:::' ,user.id);
+      const newQualification = {
+        questions_cats_id: questionId,
         qualification: qualification,
-        moduleId: moduleId
+        user_id: user.id,
       };
-      const data = await vtexDocsServices.createDoc('AQ', newRecord);
-      toast.show({
-        message: 'La pregunta ha sido calificada con éxito.',
-        type: 'success'
+      await helpCenterServices.qualifyByQuestionId(newQualification).then(async newQualificationResponse => {
+        toast.show({
+          message: 'La pregunta ha sido calificada con éxito.',
+          type: 'success'
+        });
+        setStepIdSaved(newQualificationResponse.questions_qualifications_id);
       });
-      setStepIdSaved(data.DocumentId);
-
-      updateReduxQualification(moduleId, questionId, qualification);
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
@@ -116,26 +53,26 @@ const StepsController: React.FC<Props> = () => {
   const updateQualify = async (qualification: number) => {
     try {
       const toUpdate = {
-        questionId: questionId,
-        userId: user.id,
         qualification: qualification,
-        moduleId: moduleId
+        user_id: user.id
       };
-      await vtexDocsServices.updateDocByDocID('AQ', stepIdSaved, toUpdate);
-      toast.show({
-        message: 'La calificación de la pregunta ha sido actualizada con éxito.',
-        type: 'success'
-      });
-
-      for (let i = 0; i < qualificationStatus.length; i++) {
-        if (qualificationStatus[i].qualificationValue == qualification) {
-          qualificationStatus[i].isQualified = true;
-        } else {
-          qualificationStatus[i].isQualified = false;
+      await helpCenterServices.updateQualificationByQuestionId(toUpdate, questionId).then(async updatedQualificationResponse => {
+        if(updatedQualificationResponse){
+          toast.show({
+            message: 'La calificación de la pregunta ha sido actualizada con éxito.',
+            type: 'success'
+          });
+    
+          for (let i = 0; i < qualificationStatus.length; i++) {
+            if (qualificationStatus[i].qualificationValue == qualification) {
+              qualificationStatus[i].isQualified = true;
+            } else {
+              qualificationStatus[i].isQualified = false;
+            }
+          }
+          setQualificationStatus(qualificationStatus);
         }
-      }
-      setQualificationStatus(qualificationStatus);
-      updateReduxQualification(moduleId, questionId, qualification);
+      });
     } catch (error) {
       toast.show({
         message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
@@ -146,33 +83,30 @@ const StepsController: React.FC<Props> = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      let steps = [];
-      let qualificationReceived = {};
       let received;
-      for (let m = 0; m < helpCenterModules.length; m++) {
-        if (helpCenterModules[m].id == moduleId) {
-          for (let q = 0; q < helpCenterModules[m].questions.length; q++) {
-            if (helpCenterModules[m].questions[q].questionId == questionId) {
-              steps = helpCenterModules[m].questions[q].steps;
-              qualificationReceived = helpCenterModules[m].questions[q].qualification;
-
-              setStepReceived(qualificationReceived);
-              received = qualificationReceived;
-            }
-          }
+      await helpCenterServices.getStepsListByQuestionId(parseInt(questionId)).then(async stepsResponse => {
+        if (stepsResponse && stepsResponse.data.length>0) {
+          setHelpSteps(stepsResponse.data);
         }
-      }
-      setHelpSteps(steps);
+      });
+
+      await helpCenterServices.getQualificationByQuestionIdAndUserId(parseInt(questionId), user.id).then(async qualificationReceived => {
+        if (qualificationReceived) {
+          received = qualificationReceived;
+        }
+      });
 
       if (received != undefined) {
-        setStepIdSaved(received.id);
-        for (let i = 0; i < qualificationStatus.length; i++) {
-          if (qualificationStatus[i].qualificationValue == received.qualification) {
-            qualificationStatus[i].isQualified = true;
-            setIsQualified(true);
+        if (received.responseCode == 416) {
+          setStepIdSaved(received.data.questions_qualifications_id);
+          for (let i = 0; i < qualificationStatus.length; i++) {
+            if (qualificationStatus[i].qualificationValue == received.data.qualification) {
+              qualificationStatus[i].isQualified = true;
+              setIsQualified(true);
+            }
           }
+          setQualificationStatus(qualificationStatus);
         }
-        setQualificationStatus(qualificationStatus);
       }
     } catch (error) {
       toast.show({
