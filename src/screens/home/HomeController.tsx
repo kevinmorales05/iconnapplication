@@ -176,6 +176,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchAddresses = useCallback(async () => {
     loader.show();
     if (user.id) {
+      console.log("Primera peticion")
       await dispatch(getUserAddressesThunk(user.id!));
     }
   }, []);
