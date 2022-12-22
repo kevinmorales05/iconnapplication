@@ -72,7 +72,11 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
             <Container center crossCenter style={{ marginBottom: 16 }}>
               <Image
                 source={{ uri: servicePayment.imageURL }}
-                style={servicePayment.slug === 'CFE' ? { width: 120, height: 50, resizeMode: 'cover' } : { width: 160, height: 50, resizeMode: 'contain' }}
+                style={
+                  servicePayment.slug === 'CFE'
+                    ? { width: moderateScale(160), height: moderateScale(50), resizeMode: 'cover' }
+                    : { width: moderateScale(160), height: moderateScale(50), resizeMode: 'contain' }
+                }
               />
             </Container>
             <QRCode value={QRString} size={140} />
