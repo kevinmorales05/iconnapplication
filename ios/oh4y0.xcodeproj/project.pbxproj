@@ -850,7 +850,7 @@
 				CODE_SIGN_ENTITLEMENTS = oh4y0/oh4y0.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 63;
+				CURRENT_PROJECT_VERSION = 64;
 				DEVELOPMENT_TEAM = 7RSL84MSF6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = oh4y0/Info.plist;
@@ -883,7 +883,7 @@
 				CODE_SIGN_ENTITLEMENTS = oh4y0/oh4y0.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 63;
+				CURRENT_PROJECT_VERSION = 64;
 				DEVELOPMENT_TEAM = 7RSL84MSF6;
 				INFOPLIST_FILE = oh4y0/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
