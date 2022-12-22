@@ -20,7 +20,7 @@ const CodeReaderScreen: React.FC<Props> = ({ onPressOk }) => {
   const devices = useCameraDevices();
   const device = devices.back;
 
-  const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.CODABAR], {
+  const [frameProcessor, barcodes] = useScanBarcodes([BarcodeFormat.ALL_FORMATS], {
     checkInverted: true
   });
 

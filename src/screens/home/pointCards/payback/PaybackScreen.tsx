@@ -42,17 +42,21 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
     formState: { errors, isValid },
     register,
     setValue,
-    getValues
+    getValues,
+    trigger
   } = useForm({
     mode: 'onChange'
   });
 
-  if (barcodeFromScan != undefined && !isSetScan) {
-    setIsSetScan(true);
-    setTimeout(() => {
-      setValue('barcodeNumber', barcodeFromScan.ticketNo);
-    }, 250);
-  }
+  useEffect(() => {
+    if (barcodeFromScan != undefined && !isSetScan) {
+      setIsSetScan(true);
+      setTimeout(() => {
+        setValue('barcodeNumber', barcodeFromScan);
+        trigger('barcodeNumber');
+      }, 250);
+    }
+  }, [barcodeFromScan]);
 
   const barcodeNumber = useRef<TextInput>(null);
 

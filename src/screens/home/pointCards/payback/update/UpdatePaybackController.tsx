@@ -52,7 +52,7 @@ const UpdatePaybackController: React.FC<Props> = () => {
         paybackCardToUpdate={params.paybackCard}
         mode={'update'}
         cardId={params.cardId}
-        barcodeFromScan={params.ticket}
+        barcodeFromScan={params.barcode}
       />
     </SafeArea>
   );
