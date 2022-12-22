@@ -15,7 +15,7 @@ interface Props {
   markers: PointInterface[];
   onChangeRegionComplete: (r: Region, d: Details) => void;
   onChangeSearchOfRadius: (value: number) => void;
-  onPressMarker: (marker: PointInterface) => void;
+  onPressMarker: (marker: PointInterface, mode?: PointDisplayMode) => void;
   onPressOut: () => void;
   onPressSeeList: () => void;
   onPressSeeMap: () => void;
@@ -133,7 +133,7 @@ const BranchesScreen: React.FC<Props> = ({
               />
             )}
             {pointDisplayMode === 'list' && <PointsList markers={markers} onPressMarker={onPressMarker} />}
-            {visibleStoreSymbology && (
+            {visibleStoreSymbology && pointDisplayMode === 'map' && (
               <Container
                 height={120}
                 backgroundColor={theme.brandColor.iconn_white}
@@ -159,7 +159,14 @@ const BranchesScreen: React.FC<Props> = ({
               <Container
                 height={120}
                 backgroundColor={theme.brandColor.iconn_white}
-                style={{ position: 'absolute', marginLeft: 16, paddingVertical: 8, paddingHorizontal: 8, left: 131, bottom: 8 }}
+                style={{
+                  position: 'absolute',
+                  marginLeft: 16,
+                  paddingVertical: 8,
+                  paddingHorizontal: 8,
+                  left: pointDisplayMode === 'map' ? 131 : 8,
+                  bottom: 8
+                }}
               >
                 <TextContainer text={'Distancia de\nbúsqueda (km)'} textColor={theme.brandColor.iconn_accent_secondary} fontBold numberOfLines={2} />
                 <Slider

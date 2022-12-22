@@ -1,20 +1,21 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { BranchesStackParams } from 'navigation/types';
-import { Dimensions, Linking, Platform } from 'react-native';
+import { Details, Region } from 'react-native-maps';
+import { Dimensions, Platform } from 'react-native';
 import { getNearbyPoints } from 'utils/geolocation';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { PointDetailSheet } from 'components';
 import { PointDisplayMode, PointInterface, RootState, TabItem, useAppSelector } from 'rtk';
 import { POINTS } from 'assets/files';
 import { SafeArea } from 'components/atoms/SafeArea';
+import { showLocation } from 'react-native-map-link';
 import { useLocation } from 'hooks/useLocation';
 import { useNavigation } from '@react-navigation/native';
 import { usePermissions } from 'context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import BranchesScreen from './BranchesScreen';
 import theme from 'components/theme/theme';
-import { Details, Region } from 'react-native-maps';
 
 const BranchesController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<BranchesStackParams>>();
@@ -37,9 +38,12 @@ const BranchesController: React.FC = () => {
    * Set the current marker/point in the BottomModalSheet
    * @param point marker
    */
-  const onPressMarker = (point: PointInterface) => {
+  const onPressMarker = (point: PointInterface, mode?: PointDisplayMode) => {
+    // TODO: increase gorhom library to 4.4.3 to fix expand() method in case of markers mode list.
     // console.log(JSON.stringify(point, null, 3));
-    bottomSheetRef.current?.present();
+    // console.log('mode', mode);
+    if (mode === 'list') bottomSheetRef.current?.present();
+    else bottomSheetRef.current?.present();
     setMarker(point);
   };
 
@@ -76,28 +80,38 @@ const BranchesController: React.FC = () => {
 
   const [pointDisplayMode, setPointDisplayMode] = useState<PointDisplayMode>('map');
 
-  const onPressSeeList = () => setPointDisplayMode('list');
-  const onPressSeeMap = () => setPointDisplayMode('map');
+  const onPressSeeList = () => {
+    bottomSheetRef.current?.close();
+    setPointDisplayMode('list');
+  };
+
+  const onPressSeeMap = () => {
+    bottomSheetRef.current?.close();
+    setPointDisplayMode('map');
+  };
 
   /**
-   * This function allows open always the google maps app for IOS. In Android will ask to the user for the app to open the address.
+   * This function "showLocation" will shown an action sheet on iOS and an alert on Android, without any custom styling.
    * TODO: DT Alex. Alex should provide a new version of json markers, this version should have shopName property for gas stations.
    */
   const onPressHowToGet = () => {
-    const latLng = `${marker?.latitude},${marker?.longitude}`;
-    if (Platform.OS === 'android') {
-      const scheme = Platform.select({ android: 'geo:0,0?q=' });
-      const label = marker?.type === '7eleven' ? marker.shopName : marker?.address;
-      const url = Platform.select({
-        android: `${scheme}${latLng}(${label})`
-      });
-      Linking.openURL(url!);
-    } else {
-      Linking.openURL(`https://maps.google.com/maps?daddr=${latLng}`);
-    }
+    showLocation({
+      alwaysIncludeGoogle: true,
+      appsWhiteList: ['google-maps', 'apple-maps', 'waze'],
+      cancelText: 'Cancelar',
+      dialogMessage: '¿Qué aplicación te gustaría utilizar?',
+      dialogTitle: 'Seleccionar aplicación',
+      directionsMode: 'walk',
+      googleForceLatLon: true,
+      latitude: marker?.latitude!,
+      longitude: marker?.longitude!,
+      sourceLatitude: userLocation?.latitude,
+      sourceLongitude: userLocation?.longitude
+    });
   };
 
   const onPressShowDetails = () => {
+    bottomSheetRef.current?.close();
     navigate('ShowDetails');
   };
 
