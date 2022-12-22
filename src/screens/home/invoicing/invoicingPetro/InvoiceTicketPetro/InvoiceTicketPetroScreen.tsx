@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Image, Platform, ScrollView, TextInput } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Image, Platform, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TextContainer, Button, Container, TaxInfoCard, Touchable, CustomText, ActionButton, ListSwipeableItem, Select } from 'components';
 import theme from 'components/theme/theme';
@@ -59,10 +59,21 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({
     setValue('payment_method', paymentMethod ? PAYMENT_METHODS.find(i => i.id === paymentMethod)?.name : '');
   }, [PaymentMethod]);
 
+  useEffect(() => {
+    setValue('payment_method', paymentMethod ? PAYMENT_METHODS.find(i => i.id === paymentMethod)?.name : '');
+  }, [PaymentMethod]);
+
   const fetchCatalogs = useCallback(async () => {
     const { data: cfdis } = await dispatch(getCFDIListThunk()).unwrap();
     setCfdiList(cfdis);
   }, []);
+
+  useEffect(() => {
+    if (defaultProfile?.Cfdi && cfdiList.length) {
+      setValue('cfdi', defaultProfile.Cfdi.description);
+      trigger('cfdi');
+    }
+  }, [defaultProfile, cfdiList]);
 
   useEffect(() => {
     fetchCatalogs();
@@ -116,7 +127,7 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({
             </Container>
 
             <Container style={{ paddingHorizontal: 16 }}>
-              <TextContainer typography="h5" fontBold text={`Uso de CFDI (Predeterminado)`} marginTop={21} />
+              <TextContainer typography="h5" fontBold text={'Uso de CFDI (Predeterminado)'} marginTop={21} />
               <Select
                 name="cfdi"
                 control={control}
@@ -126,19 +137,19 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({
                 optionsValueField="description"
                 onSelect={value => {
                   if (typeof value === 'object') {
-                    setCfdi(value['c_use_cfdi']);
-                    setValue('cfdi', value ? cfdiList.find(i => i['c_use_cfdi'] === value['c_use_cfdi'])!['description'] : '');
+                    setCfdi(value.c_use_cfdi);
+                    setValue('cfdi', value ? cfdiList.find(i => i.c_use_cfdi === value.c_use_cfdi)!.description : '');
                   } else {
                     setCfdi(value);
-                    setValue('cfdi', value ? cfdiList.find(i => i['c_use_cfdi'] === value)!['description'] : '');
+                    setValue('cfdi', value ? cfdiList.find(i => i.c_use_cfdi === value)!.description : '');
                   }
                   trigger('cfdi');
                 }}
                 androidMode="dialog"
-                placeholder={`Seleccionar`}
+                placeholder={'Seleccionar'}
                 label="Selecciona el uso de CFDI:"
               />
-              <TextContainer typography="h5" fontBold text={`Forma de pago`} marginTop={21} />
+              <TextContainer typography="h5" fontBold text={'Forma de pago'} marginTop={21} />
               <Select
                 name="payment_method"
                 control={control}
@@ -148,8 +159,8 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({
                 optionsValueField="name"
                 onSelect={value => {
                   if (typeof value === 'object') {
-                    setPaymentMethod(value['id']);
-                    setValue('payment_method', value ? PAYMENT_METHODS.find(i => i.id === value['id'])?.name : '');
+                    setPaymentMethod(value.id);
+                    setValue('payment_method', value ? PAYMENT_METHODS.find(i => i.id === value.id)?.name : '');
                   } else {
                     setPaymentMethod(value);
                     setValue('payment_method', value ? PAYMENT_METHODS.find(i => i.id === value)?.name : '');
@@ -157,7 +168,7 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({
                   trigger('payment_method');
                 }}
                 androidMode="dialog"
-                placeholder={`Seleccionar`}
+                placeholder={'Seleccionar'}
                 label="Selecciona la forma de pago:"
                 disabled
               />
