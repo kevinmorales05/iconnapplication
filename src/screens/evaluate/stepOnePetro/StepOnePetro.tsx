@@ -103,7 +103,7 @@ const StepOnePetro: React.FC<Props> = ({ onSubmit }) => {
           placeholder="7 dígitos"
           maxLength={7}
           blurOnSubmit={true}
-          rules={onlyNumericWithSpecificLenght(7)}
+          rules={onlyNumericWithSpecificLenght(6)}
           error={errors.sku?.message}
           onSubmitEditing={() => webIdRef.current?.focus()}
         />

@@ -40,9 +40,9 @@ const StepOneController: React.FC<Props> = ({ barcode }) => {
       requestDataInvoicing = {
         establishment: data.establishment_id,
         folio: data.folio,
-        webid: data.webid,
+        webId: data.webid,
         station: data.station,
-        date: formatDate(moment(data.date).toDate(), "yyyy'-'MM'-'dd'T'HH':'mm':'ss"),
+        date: formatDate(moment(data.date, 'DD/MM/YYYY').toDate(), "yyyy'-'MM'-'dd'T'HH':'mm':'ss"),
       };
     } else if (data.establishment_id === 2) {
       requestData = {
