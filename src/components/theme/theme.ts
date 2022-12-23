@@ -6,6 +6,7 @@ import { themeType } from '../types/theme';
 
 const isIphone = Platform.OS === 'ios';
 const isIphoneWithNotch = isIphone && DeviceInfo.hasNotch();
+const isPhoneFourteen = isIphone && DeviceInfo.getModel().includes('iPhone 14 Pro');
 
 const theme: themeType = {
   fontSize: {
@@ -204,7 +205,7 @@ const theme: themeType = {
     accent_secondary: '#faa22d',
     iconn_green_original_opacity: 'rgba(0, 128, 96, 0.08)'
   },
-  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(5) : moderateScale(40),
+  paddingHeader: getStatusBarHeight(true) ? getStatusBarHeight(true) + moderateScale(isPhoneFourteen ? 40 : 5) : moderateScale(40),
   bottomStickyViewBottomPadding: isIphoneWithNotch ? Math.round(verticalScale(10)) : 0
 };
 
