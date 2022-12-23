@@ -165,22 +165,6 @@ const InvoicingHelpModal: React.FC<InvoiceModalProps> = ({ visible, onPressOut }
               <CustomText text="Puedes ver directamente cada factura o enviarla a varias direcciones de correo, deslizando hacia la izquierda en cada factura:" />
               <Results handleSend={() => {}} />
             </Container>
-            <Container>
-              <CustomText fontBold text="¿Tienes mas dudas de Facturación?" />
-              <Button
-                color="iconn_white"
-                textStyle={{ color: theme.brandColor.iconn_green_original }}
-                borderColor="iconn_green_original"
-                round
-                fontBold
-                fontSize="h4"
-                onPress={() => {}}
-                style={{ marginTop: 8 }}
-                rightIcon={<AntDesign name="right" size={20} color={theme.brandColor.iconn_red_original} />}
-              >
-                Ir a centro de ayuda
-              </Button>
-            </Container>
           </Container>
         </TouchableOpacity>
       </Container>

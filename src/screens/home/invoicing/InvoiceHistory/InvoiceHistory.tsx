@@ -81,14 +81,10 @@ const DateSeparator = ({ date }: { date: string }) => {
 
 export const InvoiceItem = ({
   helpPointer = false,
-  hiddenPointer,
-  invoice,
-  results
+  invoice
 }: {
   helpPointer?: boolean;
-  hiddenPointer?: boolean;
   invoice: Result;
-  results?: Result[];
 }) => {
   return (
     <View
@@ -107,11 +103,11 @@ export const InvoiceItem = ({
         <Image source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
       </View>
       <View>
-        <CustomText text={invoice.Invoicing_Profile.rfc} fontBold />
+        <CustomText text={invoice?.Invoicing_Profile?.rfc ? invoice?.Invoicing_Profile?.rfc : ''} fontBold />
       </View>
       <View style={{ flexDirection: 'row' }}>
         <CustomText text="Total: " />
-        <CustomText text={invoice.total.match(/^-?\d+(?:\.\d{0,2})?/)[0]} textColor={theme.fontColor.light_green} fontBold />
+        <CustomText text={invoice?.total ? invoice?.total.match(/^-?\d+(?:\.\d{0,2})?/)[0] : 0} textColor={theme.fontColor.light_green} fontBold />
       </View>
       {helpPointer && (
         <View style={{ position: 'absolute', right: 20, top: 60 }}>
@@ -121,8 +117,6 @@ export const InvoiceItem = ({
     </View>
   );
 };
-
-const testUserId = 'bV2anO5OnIgOy7tE0gtZlyVPqHF2';
 
 const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChild; results?: Result[]; invoice: Result }) => {
   const [separator, setSeparator] = useState(false);
@@ -159,7 +153,6 @@ const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; 
    *
    */
   const renderItem = ({ item, index }, onPreview, onSend) => {
-    //
     const closeRow = index => {
       if (prevOpenedRow && prevOpenedRow !== row[index]) {
         prevOpenedRow.close();
