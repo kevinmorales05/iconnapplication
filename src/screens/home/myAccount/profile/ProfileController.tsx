@@ -50,7 +50,7 @@ const ProfileController: React.FC = () => {
       homePhone: userFields.telephone,
       firstName: userFields.name,
       lastName: userFields.lastName,
-      gender: userFields.gender,
+      gender: userFields.gender === 'Femenino' ? 'female' : 'male',
       email: email,
       birthDate: userFields.birthday ? formatDate(dateObject, "yyyy'-'MM'-'dd'T'HH':'mm':'ss") : null
     };
@@ -58,7 +58,7 @@ const ProfileController: React.FC = () => {
       const resp = await vtexUserServices.putUserByEmail(updatedUser);
       if (resp && resp.DocumentId) {
         dispatch(setTelephone({ telephone: userFields.telephone }));
-        dispatch(setGender({ gender: userFields.gender }));
+        dispatch(setGender({ gender: userFields.gender === 'Femenino' ? 'female' : 'male' }));
         dispatch(setBirthday({ birthday: formatDate(dateObject, "yyyy'-'MM'-'dd'T'HH':'mm':'ss") }));
         dispatch(setName({ name: userFields.name }));
         dispatch(setLastName({ lastName: userFields.lastName }));
@@ -66,6 +66,7 @@ const ProfileController: React.FC = () => {
           message: 'Datos guardados exitosamente.',
           type: 'success'
         });
+        console.log('resp', resp);
       }
     } catch (error) {
       toast.show({
