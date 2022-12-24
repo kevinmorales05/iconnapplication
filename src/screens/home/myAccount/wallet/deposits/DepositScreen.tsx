@@ -86,7 +86,7 @@ const DepositScreen: React.FC<Props> = ({ onSubmit, banks, beneficiary }) => {
           autoCapitalize="none"
           keyboardType="default"
           placeholder="Nombre que aparece en la tarjeta"
-          maxLength={30}
+          maxLength={64}
           blurOnSubmit={true}
           rules={alphabetRule(true)}
           error={errors.name?.message}

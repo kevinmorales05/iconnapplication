@@ -306,10 +306,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchData = useCallback(async () => {
     const { userId } = user;
     if (userId === cart.userProfileId) {
-      getShoppingCart(cart.orderFormId).then(response => {
-        dispatch(updateShoppingCartItems(response));
-        setIsChargin(true);
-      });
+      console.log('usuario igual...');
     } else {
       getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         getShoppingCart(newCart.orderFormId).then(response => {

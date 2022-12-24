@@ -53,7 +53,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
     setValue('lastName', lastName);
     setValue('telephone', telephone);
     setValue('email', email);
-    setValue('gender', gender);
+    setValue('gender', gender === 'female' ? 'Femenino' : 'Masculino');
     setValue('birthday', formatDate(moment(birthday).toDate()));
   };
 

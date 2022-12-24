@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState, useLayoutEffect } from
 import { ScrollView, TextInput, StyleSheet, View } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
-import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
+import { Input, Select, Touchable, Container, CustomText, BackButton } from '../../atoms';
 import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { emailRules, rfcRule } from 'utils/rules';
@@ -14,7 +14,6 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useAlert, useLoading } from 'context';
-import { HeaderBackButton } from '@react-navigation/elements';
 import { AnnounceItem } from '../../atoms';
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -74,7 +73,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: props => {
-        return <HeaderBackButton {...props} onPress={onBack} />;
+        return <BackButton {...props} onPress={onBack} />;
       }
     });
   }, [navigation, isDirty]);

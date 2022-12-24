@@ -45,12 +45,12 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onPressScan, onSubmit, paybackCa
     mode: 'onChange'
   });
 
-  if (barcodeFromScan != undefined) {
-    setValue('barcodeNumberToUpdate', barcodeFromScan.ticketNo);
-    if (barcodeFromScan.ticketNo.length == 13) {
-      initalButtonValue = true;
+  useEffect(() => {
+    if (barcodeFromScan != undefined) {
+      setValue('barcodeNumberToUpdate', barcodeFromScan);
+      trigger('barcodeNumberToUpdate');
     }
-  }
+  }, [barcodeFromScan]);
 
   const [disableButton, setDisableButton] = useState(initalButtonValue);
 

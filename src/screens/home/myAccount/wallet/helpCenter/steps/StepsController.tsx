@@ -29,11 +29,11 @@ const StepsController: React.FC<Props> = () => {
 
   const qualify = async (qualification: number) => {
     try {
-      console.log('user.id:::' ,user.id);
+      console.log('user.id:::' ,user.userId);
       const newQualification = {
         questions_cats_id: questionId,
         qualification: qualification,
-        user_id: user.id,
+        user_id: user.userId,
       };
       await helpCenterServices.qualifyByQuestionId(newQualification).then(async newQualificationResponse => {
         toast.show({
@@ -54,7 +54,7 @@ const StepsController: React.FC<Props> = () => {
     try {
       const toUpdate = {
         qualification: qualification,
-        user_id: user.id
+        user_id: user.userId
       };
       await helpCenterServices.updateQualificationByQuestionId(toUpdate, questionId).then(async updatedQualificationResponse => {
         if(updatedQualificationResponse){
@@ -90,7 +90,7 @@ const StepsController: React.FC<Props> = () => {
         }
       });
 
-      await helpCenterServices.getQualificationByQuestionIdAndUserId(parseInt(questionId), user.id).then(async qualificationReceived => {
+      await helpCenterServices.getQualificationByQuestionIdAndUserId(parseInt(questionId), user.userId).then(async qualificationReceived => {
         if (qualificationReceived) {
           received = qualificationReceived;
         }

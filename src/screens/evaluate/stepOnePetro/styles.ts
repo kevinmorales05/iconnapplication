@@ -5,7 +5,8 @@ import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginTop: verticalScale(45)
+    marginTop: verticalScale(45),
+    paddingBottom: verticalScale(100)
   },
   containerDiv: {
     width: '100%',

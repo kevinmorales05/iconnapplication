@@ -49,7 +49,7 @@ const CategoryProductsScreen: React.FC = () => {
           products = products.concat(result.items);
         }
       });
-      navigate('SearchProductsResults', { products: products, textSearch: results[0].name.replace(/[^a-zA-Z0-9 ]/g, '') });
+      // navigate('SearchProductsResults', { products: products, textSearch: results[0].name.replace(/[^a-zA-Z0-9 ]/g, '') });
     }
   };
 

@@ -102,11 +102,15 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="EnterOtp" options={{ title: 'Editar Correo' }} component={EditEmailOtpController} />
       <Stack.Screen name="EditPassword" component={EditPasswordController} />
       <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
-      <Stack.Screen options={{ title: 'Nuevo Perfil Fiscal', gestureEnabled: false, headerBackVisible: false }} name="AddRFC" component={AddRFCController} />
+      <Stack.Screen
+        options={{ title: 'Nuevo Perfil Fiscal', gestureEnabled: false, headerBackTitleVisible: false }}
+        name="AddRFC"
+        component={AddRFCController}
+      />
       <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
       <Stack.Screen options={{ title: 'Facturación' }} name="Invoice" component={InvoiceController} />
       <Stack.Screen
-        options={{ title: 'Perfil Fiscal', gestureEnabled: false, headerBackVisible: false }}
+        options={{ title: 'Perfil Fiscal', gestureEnabled: false, headerBackTitleVisible: false, headerBackVisible: false }}
         name="CreateTaxProfile"
         component={CreateTaxProfileController}
       />

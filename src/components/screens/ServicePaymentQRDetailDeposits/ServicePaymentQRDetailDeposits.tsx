@@ -63,7 +63,9 @@ const ServicePaymentQRDetailDeposits: React.FC<Props> = ({ onPressEditButton, on
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Beneficiario" fontBold />
-            <TextContainer text={`${service?.name}`} />
+            <Container style={{ width: moderateScale(200) }}>
+              <TextContainer textAlign="right" text={`${service?.name}`} />
+            </Container>
           </Container>
         </Container>
         <Container style={{ marginTop: verticalScale(30), paddingBottom: moderateScale(40) }}>
