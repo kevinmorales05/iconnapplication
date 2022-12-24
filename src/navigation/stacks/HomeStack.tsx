@@ -59,6 +59,8 @@ import ViewInvoiceGeneratedPetroController from 'screens/home/invoicing/invoicin
 import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicingSeven/ViewInvoiceGeneratedSeven/ViewInvoiceGeneratedSevenController';
 import VirtualTourController from 'screens/home/myAccount/wallet/helpCenter/items/VirtualTour/VirtualTourController';
 import WalletStack from './nested/WalletStack';
+import EvaluateStack from './nested/EvaluateStack';
+import WhoWeAreController from 'screens/home/myAccount/aboutUs/About/WhoWeAreController';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -270,6 +272,7 @@ const HomeStack: React.FC = () => {
       />
       <Stack.Screen name="AboutUs" options={{ title: 'Quiénes somos', headerTintColor: theme.fontColor.dark }} component={AboutUsController} />
       <Stack.Screen name="Legal" options={{ title: 'Legal', headerBackTitleVisible: false }} component={LegalController} />
+      <Stack.Screen name="AboutOptions" options={{ title: 'Sobre nosotros', headerBackTitleVisible: false }} component={WhoWeAreController} />
       <Stack.Screen
         name="ContactInformation"
         options={{ title: 'Información de contacto', headerBackTitleVisible: false }}
@@ -294,6 +297,7 @@ const HomeStack: React.FC = () => {
         name="LiveStatusWidget"
         component={LiveStatusWidgetController}
       />
+      <Stack.Screen name="EvaluateStack" options={{ headerShown: false }} component={EvaluateStack} />
     </Stack.Navigator>
   );
 };

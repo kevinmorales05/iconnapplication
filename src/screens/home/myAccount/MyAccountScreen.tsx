@@ -160,8 +160,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<InfoSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            //navigate('AboutUs');
-            inConstruction.show(true);
+            navigate('AboutUs');
+            //inConstruction.show(true);
           }}
         />
         <NavigationMenuItem

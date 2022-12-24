@@ -56,6 +56,7 @@ export type HomeStackParams = {
   EvaluateStack: { barcode?: string };
   HelpItems: { flagError: string };
   VirtualTour: { step: number };
+  AboutOptions:undefined;
 };
 
 export type HomeTabScreens = {
