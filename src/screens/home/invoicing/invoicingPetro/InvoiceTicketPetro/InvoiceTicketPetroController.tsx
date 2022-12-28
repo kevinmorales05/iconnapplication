@@ -89,7 +89,8 @@ const InvoiceTicketPetroController: React.FC = () => {
           tickets: invoicingPetroTicketList.map(t => {
             const { ticketNo: folio, station, webId, date } = t;
             return { folio, station, webId, date };
-          })
+          }),
+          address: defaultProfile?.Address!,
         })
       ).unwrap();
       // TODO we need add a ternary to convert establishment from 1 to petro

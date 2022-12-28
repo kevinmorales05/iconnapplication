@@ -83,7 +83,8 @@ const InvoiceTicketSevenController: React.FC = () => {
           store: invoicingStoreForSevenTicketList,
           invoicingProfileId: defaultProfile?.invoicing_profile_id!,
           cfdiUse: cfdi,
-          tickets: invoicingSevenTicketList.map(t => t.ticketNo)
+          tickets: invoicingSevenTicketList.map(t => t.ticketNo),
+          address: defaultProfile?.Address!,
         })
       ).unwrap();
       // TODO we need add a ternary to convert establishment from 2 to seven
