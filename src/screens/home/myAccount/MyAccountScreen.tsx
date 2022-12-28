@@ -140,8 +140,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<TargetSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            //navigate('Invoice');
-            inConstruction.show(true);
+            navigate('Invoice');
+            //inConstruction.show(true);
           }}
         />
 
