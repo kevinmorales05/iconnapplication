@@ -102,7 +102,7 @@ const InvoiceTicketPetroController: React.FC = () => {
         dispatch(resetInvoicingPetroTicketList());
         navigate('InvoiceGeneratedPetro', { invoiceGenerated: response.data });
       } else {
-        toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
+        toast.show({ message: `${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
       console.warn(error);

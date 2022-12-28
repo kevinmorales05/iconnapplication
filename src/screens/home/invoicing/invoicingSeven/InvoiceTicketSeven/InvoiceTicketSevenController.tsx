@@ -30,6 +30,7 @@ const InvoiceTicketSevenController: React.FC = () => {
   useEffect(() => {
     setDefaultProfile(
       invoicingProfileList.find(item => {
+        console.log("PROFILE",item )
         return item.default === true;
       }) ?? null
     );
@@ -95,7 +96,7 @@ const InvoiceTicketSevenController: React.FC = () => {
         dispatch(resetInvoicingSevenTicketList());
         navigate('InvoiceGeneratedSeven', { invoiceGenerated: response.data });
       } else {
-        toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
+        toast.show({ message: `${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
       console.warn(error);

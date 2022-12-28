@@ -43,7 +43,7 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const [cfdiList, setCfdiList] = useState([]);
-  const [Cfdi, setCfdi] = useState<string>('');
+  const [Cfdi, setCfdi] = useState<any>('');
   const [PaymentMethod, setPaymentMethod] = useState<string>(paymentMethod);
   const [visible, setVisible] = useState(false);
   const {
@@ -182,7 +182,7 @@ const InvoiceTicketPetroScreen: React.FC<Props> = ({
               round
               fontBold
               fontSize="h4"
-              onPress={() => onSubmit(Cfdi, PaymentMethod)}
+              onPress={() => onSubmit(Cfdi == "" ? defaultProfile?.Cfdi.c_use_cfdi: Cfdi, PaymentMethod)}
               leftIcon={<Image source={ICONN_INVOICING_INVOICE} />}
             >
               Facturar

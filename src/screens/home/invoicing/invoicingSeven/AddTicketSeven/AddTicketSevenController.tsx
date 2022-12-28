@@ -81,7 +81,7 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
 
         navigate('InvoiceTicketSeven');
       } else {
-        toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
+        toast.show({ message: `${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
       console.warn(error);

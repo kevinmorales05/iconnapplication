@@ -13,6 +13,7 @@ import Octicons from 'react-native-vector-icons/Octicons';
 interface Props {
   label?: string;
   placeholder?: string;
+  defaultValue?:string;
   placeholderTextColor?: string;
   error?: any;
   options: Array<any>;
@@ -32,6 +33,7 @@ interface Props {
 const Select: React.FC<Props> = ({
   placeholder = '',
   placeholderTextColor = '',
+  defaultValue,
   error = '',
   options,
   optionsIdField = '',
@@ -87,6 +89,7 @@ const Select: React.FC<Props> = ({
           control={control}
           rules={rules}
           renderErrorIcon={false}
+          defaultValue={defaultValue}
         />
         <Container
           middle

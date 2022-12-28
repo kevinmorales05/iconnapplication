@@ -79,7 +79,8 @@ const HomeStack: React.FC = () => {
         headerTintColor: `${theme.brandColor.iconn_accent_secondary}`,
         headerTitleAlign: 'center',
         animation: 'slide_from_right',
-        headerBackImageSource: require('../../assets/images/back-button/left_arrow.png')
+        headerBackImageSource: require('../../assets/images/back-button/left_arrow.png'),
+        
       }}
       initialRouteName="InitialPage"
       id="HomeStack"
@@ -103,14 +104,15 @@ const HomeStack: React.FC = () => {
       <Stack.Screen name="EditPassword" component={EditPasswordController} />
       <Stack.Screen name="InviteSignUp" component={InviteSignUpController} />
       <Stack.Screen
-        options={{ title: 'Nuevo Perfil Fiscal', gestureEnabled: false, headerBackTitleVisible: false }}
+        options={{ title: 'Nuevo Perfil Fiscal', gestureEnabled: false, headerBackTitleVisible: false, headerBackVisible: false,
+        }}
         name="AddRFC"
         component={AddRFCController}
       />
       <Stack.Screen options={{ title: 'Datos Fiscales' }} name="TaxInfo" component={TaxInfoController} />
       <Stack.Screen options={{ title: 'Facturación' }} name="Invoice" component={InvoiceController} />
       <Stack.Screen
-        options={{ title: 'Perfil Fiscal', gestureEnabled: false, headerBackTitleVisible: false, headerBackVisible: false }}
+        options={{ title: 'Perfil Fiscal', gestureEnabled: false, headerBackTitleVisible: false, headerBackVisible: false,  }}
         name="CreateTaxProfile"
         component={CreateTaxProfileController}
       />

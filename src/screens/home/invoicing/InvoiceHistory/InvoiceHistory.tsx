@@ -73,6 +73,7 @@ const FilterChip = ({ highlight = false, label, onPress, onReset }: FilterChipPr
 };
 
 const DateSeparator = ({ date }: { date: string }) => {
+  console.log("FECHA",date)
   return (
     <View style={{ marginTop: 10, marginLeft: 15 }}>
       <CustomText text={date} textColor={theme.fontColor.grey} fontBold />
@@ -101,7 +102,7 @@ export const InvoiceItem = ({
       }}
     >
       <View>
-        <Image style={{ width: moderateScale(38), height: moderateScale(38) }} source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
+        <Image style={{ width: moderateScale(38), height: moderateScale(48) }} source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
       </View>
       <View>
         <CustomText text={invoice?.Invoicing_Profile?.rfc ? invoice?.Invoicing_Profile?.rfc : ''} fontBold />

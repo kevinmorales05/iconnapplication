@@ -17,7 +17,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 
 interface Props {
-  onSubmit: (cfdi: string, paymentMethod: string) => void;
+  onSubmit: (cfdi: any, paymentMethod: string) => void;
   goBack: () => void;
   onPressAddNewTicket: () => void;
   onPressEditTicket: () => void;
@@ -43,7 +43,7 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const [cfdiList, setCfdiList] = useState([]);
-  const [Cfdi, setCfdi] = useState<string>('');
+  const [Cfdi, setCfdi] = useState<any>('');
   const [PaymentMethod, setPaymentMethod] = useState<string>(paymentMethod);
   const [visible, setVisible] = useState(false);
   const {
@@ -57,6 +57,8 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
 
   useEffect(() => {
     setValue('payment_method', paymentMethod ? PAYMENT_METHODS.find(i => i.id === paymentMethod)?.name : '');
+    //setValue('cfdi', defaultProfile?.Cfdi.c_use_cfdi);
+
   }, [PaymentMethod]);
 
   useEffect(() => {
@@ -133,15 +135,20 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
                   if (typeof value === 'object') {
                     setCfdi(value['c_use_cfdi']);
                     setValue('cfdi', value ? cfdiList.find(i => i['c_use_cfdi'] === value['c_use_cfdi'])!['description'] : '');
+    
                   } else {
+                    console.log("this is the value ", typeof value)
                     setCfdi(value);
                     setValue('cfdi', value ? cfdiList.find(i => i['c_use_cfdi'] === value)!['description'] : '');
+                    console.log("VAlue else ", value)
+                    console.log("valor del cfdi", Cfdi)
                   }
                   trigger('cfdi');
                 }}
                 androidMode="dialog"
                 placeholder={`Seleccionar`}
                 label="Selecciona el uso de CFDI:"
+                
               />
               <TextContainer typography="h5" fontBold text={`Forma de pago`} marginTop={21} />
               <Select
@@ -155,9 +162,11 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
                   if (typeof value === 'object') {
                     setPaymentMethod(value['id']);
                     setValue('payment_method', value ? PAYMENT_METHODS.find(i => i.id === value['id'])?.name : '');
+                    
                   } else {
                     setPaymentMethod(value);
                     setValue('payment_method', value ? PAYMENT_METHODS.find(i => i.id === value)?.name : '');
+                    console.log("print ", value)
                   }
                   trigger('payment_method');
                 }}
@@ -176,7 +185,7 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
               round
               fontBold
               fontSize="h4"
-              onPress={() => onSubmit(Cfdi, PaymentMethod)}
+              onPress={() => onSubmit(Cfdi == "" ? defaultProfile?.Cfdi.c_use_cfdi: Cfdi, PaymentMethod)}
               leftIcon={<Image source={ICONN_INVOICING_INVOICE} />}
             >
               Facturar
