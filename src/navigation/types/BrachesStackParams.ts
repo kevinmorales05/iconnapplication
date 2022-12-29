@@ -1,4 +1,7 @@
+import { PointFilteringDetailInterface } from 'rtk';
+
 export type BranchesStackParams = {
-  Branches: undefined;
+  Branches: { filterObject: PointFilteringDetailInterface };
+  BranchesFilters: { filterObject: PointFilteringDetailInterface };
   ShowDetails: undefined;
 };

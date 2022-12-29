@@ -4,6 +4,7 @@ import { BranchesStackParams } from 'navigation/types';
 import theme from 'components/theme/theme';
 import ShowDetailsController from 'screens/branches/ShowDetails/ShowDetailsController';
 import BranchesController from 'screens/branches/BranchesController';
+import BranchesFiltersController from 'screens/branches/BranchesFilters/BranchesFiltersController';
 
 const BranchesStack: React.FC = ({ navigation, route }: any) => {
   const Stack = createNativeStackNavigator<BranchesStackParams>();
@@ -48,6 +49,7 @@ const BranchesStack: React.FC = ({ navigation, route }: any) => {
     >
       <Stack.Screen options={{ title: 'Tiendas y estaciones', headerBackTitleVisible: false }} name="Branches" component={BranchesController} />
       <Stack.Screen options={{ headerShown: false }} name="ShowDetails" component={ShowDetailsController} />
+      <Stack.Screen options={{ headerShown: false }} name="BranchesFilters" component={BranchesFiltersController} />
     </Stack.Navigator>
   );
 };
