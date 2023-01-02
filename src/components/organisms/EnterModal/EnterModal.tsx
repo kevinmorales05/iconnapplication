@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { Button, TextContainer } from 'components/molecules';
@@ -23,7 +23,7 @@ const EnterModal: React.FC<EnterModalDataInterface> = ({ visible, secondaryMessa
   const renderButtons = () => {
     if (providers.length) {
       return providers.map(provider => {
-        if (provider.providerName === 'Facebook') {
+        if (provider.providerName === 'Facebook' && Platform.OS === 'ios') {
           return (
             <Button
               key="facebookBtn"

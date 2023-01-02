@@ -34,6 +34,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
   const toast = useToast();
   const [visible, setVisible] = useState<boolean>(false);
   const [paybackStatus, setPaybackStatus] = useState(addOrShow);
+  const [isSetScan, setIsSetScan] = useState(false);
   const alert = useAlert();
   const {
     control,
@@ -41,19 +42,31 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
     formState: { errors, isValid },
     register,
     setValue,
-    getValues
+    getValues,
+    trigger
   } = useForm({
     mode: 'onChange'
   });
 
-  if (barcodeFromScan != undefined) {
-    setValue('barcodeNumber', barcodeFromScan.ticketNo);
-  }
+  useEffect(() => {
+    if (barcodeFromScan != undefined && !isSetScan) {
+      setIsSetScan(true);
+      setTimeout(() => {
+        setValue('barcodeNumber', barcodeFromScan);
+        trigger('barcodeNumber');
+      }, 250);
+    }
+  }, [barcodeFromScan]);
 
   const barcodeNumber = useRef<TextInput>(null);
 
   const editPaybackCard = () => {
     navigate('UpdatePayback', { cardIdToUpdate: cardToUpdate, paybackCard: paybackCard, cardId: cardId });
+  };
+
+  const onPressScanButton = () => {
+    setIsSetScan(false);
+    onPressScan();
   };
 
   const deletePointCard = () => {
@@ -165,7 +178,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
           maxLength={13}
           rules={numericWithSpecificLenght(13)}
           onChangeText={updateButtonStatus}
-          onPressScan={onPressScan}
+          onPressScan={onPressScanButton}
           scanIcon={true}
         />
       </Container>
@@ -200,7 +213,7 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
           maxWidth={167}
         />
         <Container center>
-          <Container style={{ width: '90%', marginTop: verticalScale(90) }}>
+          <Container style={{ width: '90%', marginTop: verticalScale(80) }}>
             <Button
               fontSize="h4"
               fontBold

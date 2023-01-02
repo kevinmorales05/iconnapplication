@@ -59,6 +59,13 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
     setValue('payment_method', paymentMethod ? PAYMENT_METHODS.find(i => i.id === paymentMethod)?.name : '');
   }, [PaymentMethod]);
 
+  useEffect(() => {
+    if (defaultProfile?.Cfdi && cfdiList.length) {
+      setValue('cfdi', defaultProfile.Cfdi.description);
+      trigger('cfdi');
+    }
+  }, [defaultProfile, cfdiList]);
+
   const fetchCatalogs = useCallback(async () => {
     const { data: cfdis } = await dispatch(getCFDIListThunk()).unwrap();
     setCfdiList(cfdis);

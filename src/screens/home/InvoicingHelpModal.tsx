@@ -3,13 +3,12 @@ import { StyleSheet, TouchableOpacity, View, Image, FlatList } from 'react-nativ
 import { ActionButton, Container, CustomModal, CustomText, Touchable } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Button } from 'components/molecules';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import { InvoiceItem } from 'screens/home/invoicing/InvoiceHistory/InvoiceHistory';
 import { InvoiceInterface } from 'rtk';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import Feather from 'react-native-vector-icons/Feather';
+import { moderateScale } from 'utils/scaleMetrics';
 
 const DATA = [
   {
@@ -66,14 +65,14 @@ const Results = ({ handleSend }: { handleSend: () => void }) => {
         >
           <Touchable onPress={onPreview}>
             <View style={[{ backgroundColor: '#808386' }, itemStyle]}>
-              <Feather name="eye" size={30} color={theme.brandColor.iconn_white} />
-              <CustomText text="Ver" textColor={'white'} fontBold />
+              <Feather name="eye" size={moderateScale(22)} color={theme.brandColor.iconn_white} />
+              <CustomText typography="h6" text="Ver" textColor={'white'} fontBold />
             </View>
           </Touchable>
           <Touchable onPress={onSend}>
             <View style={[{ backgroundColor: '#406BA3' }, itemStyle]}>
-              <Feather name="send" size={30} color={theme.brandColor.iconn_white} />
-              <CustomText text="Enviar" textColor={'white'} fontBold />
+              <Feather name="send" size={moderateScale(22)} color={theme.brandColor.iconn_white} />
+              <CustomText typography="h6" text="Enviar" textColor={'white'} fontBold />
             </View>
           </Touchable>
         </View>
@@ -161,25 +160,9 @@ const InvoicingHelpModal: React.FC<InvoiceModalProps> = ({ visible, onPressOut }
               </Container>
             </Container>
             <Container>
-              <CustomText text="Puedes consultar tus facturas hasta 3 meses atrás." />
-              <CustomText text="Puedes ver directamente cada factura o enviarla a varias direcciones de correo, deslizando hacia la izquierda en cada factura:" />
+              <CustomText typography="h5" text="Puedes consultar tus facturas hasta 3 meses atrás." />
+              <CustomText typography="h5" text="Puedes ver directamente cada factura o enviarla a varias direcciones de correo, deslizando hacia la izquierda en cada factura:" />
               <Results handleSend={() => {}} />
-            </Container>
-            <Container>
-              <CustomText fontBold text="¿Tienes mas dudas de Facturación?" />
-              <Button
-                color="iconn_white"
-                textStyle={{ color: theme.brandColor.iconn_green_original }}
-                borderColor="iconn_green_original"
-                round
-                fontBold
-                fontSize="h4"
-                onPress={() => {}}
-                style={{ marginTop: 8 }}
-                rightIcon={<AntDesign name="right" size={20} color={theme.brandColor.iconn_red_original} />}
-              >
-                Ir a centro de ayuda
-              </Button>
             </Container>
           </Container>
         </TouchableOpacity>

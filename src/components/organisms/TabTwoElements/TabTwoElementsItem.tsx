@@ -7,20 +7,21 @@ import { moderateScale } from 'utils/scaleMetrics';
 
 const CONTAINER_WIDTH = Dimensions.get('window').width;
 
-
 interface Props {
   data: TabItem;
   isSelected: boolean;
   onPressItem: (item: TabItem) => void;
+  disabled?: boolean;
 }
 
-const TabTwoElementsItem: React.FC<Props> = ({ data, isSelected, onPressItem }) => {
+const TabTwoElementsItem: React.FC<Props> = ({ data, isSelected, onPressItem, disabled = false }) => {
   return (
     <Touchable
       opacityEffect={true}
       onPress={() => {
         onPressItem(data);
       }}
+      disabled={disabled}
     >
       <Container style={isSelected ? styles.containerSelected : styles.container}>
         <CustomText
@@ -28,7 +29,7 @@ const TabTwoElementsItem: React.FC<Props> = ({ data, isSelected, onPressItem }) 
           fontSize={theme.fontSize.h5}
           fontWeight={isSelected ? '900' : 'normal'}
           textColor={isSelected ? theme.brandColor.iconn_green_original : theme.brandColor.iconn_accent_secondary}
-          textAlign='center'
+          textAlign="center"
         />
       </Container>
     </Touchable>
@@ -41,9 +42,9 @@ const styles = StyleSheet.create({
   container: {
     paddingBottom: moderateScale(12),
     marginRight: moderateScale(15),
-/*     borderBottomColor: theme.brandColor.iconn_med_grey,
+    /*     borderBottomColor: theme.brandColor.iconn_med_grey,
     borderBottomWidth: moderateScale(1), */
-    width: CONTAINER_WIDTH/2,
+    width: CONTAINER_WIDTH / 2,
     paddingRight: 10
   },
   containerSelected: {
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     marginRight: moderateScale(15),
     borderBottomColor: theme.brandColor.iconn_green_original,
     borderBottomWidth: moderateScale(4),
-    width: CONTAINER_WIDTH/2,
+    width: CONTAINER_WIDTH / 2,
     paddingRight: 10
   }
 });

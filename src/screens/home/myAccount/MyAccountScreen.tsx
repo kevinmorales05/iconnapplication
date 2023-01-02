@@ -4,7 +4,7 @@ import { Button, NavigationMenuItem, Container, TextContainer, Touchable } from 
 import { useNavigation } from '@react-navigation/native';
 import theme from 'components/theme/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from 'navigation/types';
+import { HomeStackParams, HomeTabScreens } from 'navigation/types';
 
 //import icons
 import ProfileSvg from 'components/svgComponents/ProfileSvg/ProfileSvg';
@@ -31,6 +31,7 @@ interface HomeScreenProps {
 
 const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, app_version }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate: navigateToTab } = useNavigation<NativeStackNavigationProp<HomeTabScreens>>();
   const inConstruction = useInConstruction();
 
   return (
@@ -113,6 +114,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<PlacesSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             inConstruction.show(true);
+            //navigateToTab('BranchesScreen');
           }}
         />
         <NavigationMenuItem
@@ -120,7 +122,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<WalletSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            navigate('WalletStack');
+            //navigate('WalletStack');
+            inConstruction.show(true);
           }}
         />
         <NavigationMenuItem
@@ -128,7 +131,7 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<DocumentCashSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            // navigate('TaxInfo');
+            //navigate('TaxInfo');
             inConstruction.show(true);
           }}
         />
@@ -137,8 +140,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<TargetSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            // navigate('Invoice');
-            inConstruction.show(true);
+            navigate('Invoice');
+            //inConstruction.show(true);
           }}
         />
 
@@ -157,7 +160,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<InfoSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            navigate('AboutUs');
+            //navigate('AboutUs');
+            inConstruction.show(true);
           }}
         />
         <NavigationMenuItem
@@ -165,7 +169,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<HelpSupportSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            inConstruction.show(true);
+            //inConstruction.show(true);
+            navigate('HelpItems');
           }}
         />
       </Container>

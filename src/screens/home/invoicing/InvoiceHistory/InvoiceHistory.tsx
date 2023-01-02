@@ -22,6 +22,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { useAppSelector, RootState, InvoiceGeneratedResponseInterface } from 'rtk';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 
 interface EstablishmentResult {
   establishment_id: number;
@@ -81,14 +82,10 @@ const DateSeparator = ({ date }: { date: string }) => {
 
 export const InvoiceItem = ({
   helpPointer = false,
-  hiddenPointer,
-  invoice,
-  results
+  invoice
 }: {
   helpPointer?: boolean;
-  hiddenPointer?: boolean;
   invoice: Result;
-  results?: Result[];
 }) => {
   return (
     <View
@@ -104,25 +101,23 @@ export const InvoiceItem = ({
       }}
     >
       <View>
-        <Image source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
+        <Image style={{ width: moderateScale(38), height: moderateScale(38) }} source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
       </View>
       <View>
-        <CustomText text={invoice.Invoicing_Profile.rfc} fontBold />
+        <CustomText text={invoice?.Invoicing_Profile?.rfc ? invoice?.Invoicing_Profile?.rfc : ''} fontBold />
       </View>
       <View style={{ flexDirection: 'row' }}>
         <CustomText text="Total: " />
-        <CustomText text={invoice.total.match(/^-?\d+(?:\.\d{0,2})?/)[0]} textColor={theme.fontColor.light_green} fontBold />
+        <CustomText text={invoice?.total ? invoice?.total.match(/^-?\d+(?:\.\d{0,2})?/)[0] : 0} textColor={theme.fontColor.light_green} fontBold />
       </View>
       {helpPointer && (
-        <View style={{ position: 'absolute', right: 20, top: 60 }}>
-          <FontAwesome5 name="hand-point-up" size={60} />
+        <View style={{ position: 'absolute', right: moderateScale(10), top: verticalScale(40) }}>
+          <FontAwesome5 name="hand-point-up" size={moderateScale(40)} />
         </View>
       )}
     </View>
   );
 };
-
-const testUserId = 'bV2anO5OnIgOy7tE0gtZlyVPqHF2';
 
 const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChild; results?: Result[]; invoice: Result }) => {
   const [separator, setSeparator] = useState(false);
@@ -159,7 +154,6 @@ const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; 
    *
    */
   const renderItem = ({ item, index }, onPreview, onSend) => {
-    //
     const closeRow = index => {
       if (prevOpenedRow && prevOpenedRow !== row[index]) {
         prevOpenedRow.close();
@@ -181,13 +175,13 @@ const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; 
         >
           <Touchable onPress={onPreview}>
             <View style={[{ backgroundColor: '#808386' }, itemStyle]}>
-              <Feather name="eye" size={30} color={theme.brandColor.iconn_white} />
+              <Feather name="eye" size={moderateScale(22)} color={theme.brandColor.iconn_white} />
               <CustomText text="Ver" textColor={'white'} fontBold />
             </View>
           </Touchable>
           <Touchable onPress={onSend}>
             <View style={[{ backgroundColor: '#406BA3' }, itemStyle]}>
-              <Feather name="send" size={30} color={theme.brandColor.iconn_white} />
+              <Feather name="send" size={moderateScale(22)} color={theme.brandColor.iconn_white} />
               <CustomText text="Enviar" textColor={'white'} fontBold />
             </View>
           </Touchable>

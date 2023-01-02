@@ -2,7 +2,7 @@ import { CounterType } from 'components/types/counter-type';
 import { useCallback } from 'react';
 import { cartItemInterface, cartItemsRequestInterface, useAppDispatch } from 'rtk';
 import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
-import { updateShoppingCart } from 'services';
+import { updateShoppingCart, clearShoppingCartMessages } from 'services';
 import { store } from 'rtk';
 
 export const useShoppingCart = () => {
@@ -34,7 +34,8 @@ export const useShoppingCart = () => {
    * @param productId is the vtex product id.
    * @returns
    */
-  const buildNewCartItems = (type: CounterType, productId: string): cartItemsRequestInterface | undefined => {
+  const buildNewCartItems = (type: CounterType, productId: string, orderFormId: string): cartItemsRequestInterface | undefined => {
+    clearShoppingCartMessages(orderFormId, {});
     const reduxCartItems: cartItemInterface[] | undefined = getCartItemsFromRedux();
     let cartItemsRequest: cartItemsRequestInterface;
 
@@ -74,7 +75,7 @@ export const useShoppingCart = () => {
 
   const updateShoppingCartProduct = useCallback(async (type: CounterType, productId: string) => {
     const { orderFormId } = store.getState().cart.cart;
-    const newCartItemsRequest = buildNewCartItems(type, productId);
+    const newCartItemsRequest = buildNewCartItems(type, productId, orderFormId);
     const response = await updateShoppingCart(orderFormId, newCartItemsRequest);
     dispatch(updateShoppingCartItems(response));
   }, []);

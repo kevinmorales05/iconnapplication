@@ -1,9 +1,9 @@
-import { ImageSourcePropType } from 'react-native';
-
 export interface AppInterface {
   error?: string;
   internetReachability?: number;
   internetReachabilityReviewed?: number;
+  visibleSearchByDistance?: boolean;
+  visibleStoreSymbology?: boolean;
 }
 
 export type CarouselType = 'homeOptions' | 'principal' | 'second' | 'all_promotions' | 'day_promotion';
@@ -25,4 +25,9 @@ export interface CarouselItem {
 export interface TabItem {
   id: string;
   name: string;
+}
+
+export interface Location {
+  latitude: number;
+  longitude: number;
 }

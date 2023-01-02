@@ -30,7 +30,6 @@ interface Props {
 }
 
 const Select: React.FC<Props> = ({
-  label,
   placeholder = '',
   placeholderTextColor = '',
   error = '',
@@ -46,7 +45,6 @@ const Select: React.FC<Props> = ({
   testID,
   disabled = false
 }) => {
-
   const pickerRef = useRef<any>(null);
   const sheetRef = useRef<RBSheet>(null);
 
@@ -68,21 +66,16 @@ const Select: React.FC<Props> = ({
     <>
       <Touchable testID={testID} onPress={onPressPicker} disabled={disabled}>
         {Platform.OS === 'android' && (
-        <Picker
-          ref={pickerRef}
-          selectedValue={value}
-          onValueChange={setValue}
-          style={[StyleSheet.absoluteFill, { opacity: 0 }]}
-          mode={androidMode}
-        >
-          {options.map((element) => 
-            optionsIdField !== '' ?
-            (
-              <Picker.Item key={element[optionsIdField]} label={element[optionsValueField]} value={element[optionsIdField]} />
-            ) : (
-              <Picker.Item key={element} label={element} value={element} />
-            ))}
-        </Picker>
+          <Picker ref={pickerRef} selectedValue={value} onValueChange={setValue} style={[StyleSheet.absoluteFill, { opacity: 0 }]} mode={androidMode}>
+            <Picker.Item label={placeholder} value={placeholder} />
+            {options.map(element =>
+              optionsIdField !== '' ? (
+                <Picker.Item key={element[optionsIdField]} label={element[optionsValueField]} value={element[optionsIdField]} />
+              ) : (
+                <Picker.Item key={element} label={element} value={element} />
+              )
+            )}
+          </Picker>
         )}
         <Input
           placeholder={placeholder}
@@ -112,14 +105,9 @@ const Select: React.FC<Props> = ({
       <RBSheet ref={sheetRef}>
         <Container style={{ backgroundColor: theme.brandColor.iconn_med_grey }}>
           <Container row space="between" style={{ paddingTop: 8 }}>
+            <TouchableText text={'Cancelar'} textColor={theme.brandColor.iconn_accent_principal} marginLeft={16} onPress={() => sheetRef.current?.close()} />
             <TouchableText
-              text={`Cancelar`}
-              textColor={theme.brandColor.iconn_accent_principal}
-              marginLeft={16}
-              onPress={() => sheetRef.current?.close()}
-            />
-            <TouchableText
-              text={`Aceptar`}
+              text={'Aceptar'}
               textColor={theme.brandColor.iconn_accent_principal}
               marginRight={16}
               onPress={() => {
@@ -129,12 +117,8 @@ const Select: React.FC<Props> = ({
               }}
             />
           </Container>
-          <Picker
-            ref={pickerRef}
-            selectedValue={value}
-            onValueChange={setValue}
-            dropdownIconRippleColor={theme.brandColor.iconn_accent_principal}
-          >
+          <Picker ref={pickerRef} selectedValue={value} onValueChange={setValue} dropdownIconRippleColor={theme.brandColor.iconn_accent_principal}>
+            <Picker.Item label={placeholder} value={placeholder} />
             {options.map(element =>
               optionsIdField !== '' ? (
                 <Picker.Item
@@ -144,13 +128,9 @@ const Select: React.FC<Props> = ({
                   color={theme.brandColor.iconn_dark_grey}
                 />
               ) : (
-                <Picker.Item
-                  key={element}
-                  label={element}
-                  value={element}
-                  color={theme.brandColor.iconn_dark_grey}
-                />
-              ))}
+                <Picker.Item key={element} label={element} value={element} color={theme.brandColor.iconn_dark_grey} />
+              )
+            )}
           </Picker>
           <SafeAreaView />
         </Container>

@@ -8,6 +8,7 @@ import { HomeStackParams } from 'navigation/types';
 import { RouteProp, useNavigation, useNavigationState, useRoute } from '@react-navigation/native';
 import { saveClientProfileDataThunk } from 'rtk/thunks/vtex-shoppingCart.thunks';
 import { useLoading, useToast } from 'context';
+import { setCustomValues } from 'services';
 
 const ShopCartController: React.FC = () => {
   const { user, isGuest } = useAppSelector((state: RootState) => state.auth);
@@ -17,7 +18,7 @@ const ShopCartController: React.FC = () => {
   const toast = useToast();
 
   const dispatch = useAppDispatch();
-  const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const route = useRoute<RouteProp<HomeStackParams, 'ShopCart'>>();
   const { messageType, countProducts, cartItems } = route.params;
 
@@ -45,6 +46,7 @@ const ShopCartController: React.FC = () => {
     };
 
     try {
+      await setCustomValues(cart.orderFormId);
       let response: any;
       response = await dispatch(saveClientProfileDataThunk({ orderFormId: cart.orderFormId, clientProfileData: clientProfileDataPayload })).unwrap();
       if (response) navigate('Checkout');
@@ -64,7 +66,14 @@ const ShopCartController: React.FC = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <ShopCartScreen messageType={messageType} countProducts={countProducts} cartItems={cartItems} routes={routes} onPressCheckout={goToCheckout} onPressSeeMore={() => navigate('Home',{ screen: 'CategoriesScreen' })} />
+      <ShopCartScreen
+        messageType={messageType}
+        countProducts={countProducts}
+        cartItems={cartItems}
+        routes={routes}
+        onPressCheckout={goToCheckout}
+        onPressSeeMore={() => navigate('Home', { screen: 'CategoriesScreen' })}
+      />
     </SafeArea>
   );
 };

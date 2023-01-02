@@ -17,7 +17,8 @@ import {
   ExistingProductInCartInterface,
   ShippingDataAddress,
   ShippingDataInfo,
-  ShippingData
+  ShippingData,
+  setDateSync
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -38,6 +39,7 @@ import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.serv
 import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
+import moment from 'moment';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -60,6 +62,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { email } = user;
   const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
   const welcomeModal = useWelcomeModal();
+  const [isChargin, setIsChargin] = useState(false);
+  const { dateSync } = useAppSelector((state: RootState) => state.wallet);
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -70,31 +74,75 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   }, []);
 
   useEffect(() => {
-    dispatch(getWalletPrefixesThunk()).unwrap();
-    dispatch(getBanksWalletThunk()).unwrap();
+    if (dateSync) {
+      const dateBefore = moment(dateSync);
+      const dateNow = moment();
+      const difDays = dateNow.diff(dateBefore, 'days');
+      if (difDays >= 2) {
+        dispatch(setDateSync(new Date()));
+        dispatch(getWalletPrefixesThunk()).unwrap();
+        dispatch(getBanksWalletThunk()).unwrap();
+      }
+    } else {
+      dispatch(setDateSync(new Date()));
+      dispatch(getWalletPrefixesThunk()).unwrap();
+      dispatch(getBanksWalletThunk()).unwrap();
+    }
   }, []);
 
   useEffect(() => {
-    if (!!cart.items && cart.items.length) {
-      // console.log({defaultAddress})
-      addDirection();
+    if (!!cart.items && cart.items.length && defaultAddress?.postalCode && isChargin) {
+      setTimeout(() => {
+        addDirection();
+      }, 250);
     }
   }, [defaultAddress, cart]);
 
+  useEffect(() => {
+    if (!user.addresses?.length && isChargin) {
+      setTimeout(() => {
+        addDirectionDefault();
+      }, 250);
+    }
+  }, [user, isChargin]);
+
+  const addDirectionDefault = async () => {
+    const selectedAddresses: ShippingDataAddress = {
+      addressType: 'residential',
+      receiverName: '',
+      postalCode: user.cp,
+      city: '',
+      state: '',
+      country: 'MEX',
+      street: '',
+      number: '333',
+      neighborhood: '',
+      complement: '',
+      reference: '',
+      geoCoordinates: [],
+      isDisposable: true
+    };
+    const shippingAttachment: ShippingData = {
+      selectedAddresses: [selectedAddresses]
+    };
+    await saveShippingData(cart.orderFormId, shippingAttachment);
+  };
+
   const addDirection = async () => {
     const selectedAddresses: ShippingDataAddress = {
-      addressType: defaultAddress?.addressType ? defaultAddress?.addressType : '',
+      addressType: defaultAddress?.addressType ? defaultAddress?.addressType : 'residential',
       receiverName: defaultAddress?.receiverName ? defaultAddress?.receiverName : '',
       postalCode: defaultAddress?.postalCode ? defaultAddress?.postalCode : '',
       city: defaultAddress?.city ? defaultAddress?.city : '',
       state: defaultAddress?.state ? defaultAddress?.state : '',
       country: 'MEX',
       street: defaultAddress?.street ? defaultAddress?.street : '',
-      number: defaultAddress?.number ? defaultAddress?.number : '',
+      number: defaultAddress?.number ? defaultAddress?.number : '333',
       neighborhood: defaultAddress?.neighborhood ? defaultAddress?.neighborhood : '',
       complement: defaultAddress?.complement ? defaultAddress?.complement : '',
       reference: defaultAddress?.reference ? defaultAddress?.reference : '',
-      geoCoordinates: defaultAddress?.geoCoordinate ? defaultAddress?.geoCoordinate : []
+      geoCoordinates: defaultAddress?.geoCoordinate ? defaultAddress?.geoCoordinate : [],
+      addressId: defaultAddress?.id ? defaultAddress?.id : ''
     };
     const logisticsInfo: ShippingDataInfo = {
       itemIndex: 0,
@@ -125,6 +173,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchAddresses = useCallback(async () => {
     loader.show();
     if (user.id) {
+      console.log("Primera peticion")
       await dispatch(getUserAddressesThunk(user.id!));
     }
   }, []);
@@ -183,7 +232,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3')) {
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4')) {
       inConstruction.show();
       return;
     }
@@ -257,13 +306,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchData = useCallback(async () => {
     const { userId } = user;
     if (userId === cart.userProfileId) {
-      getShoppingCart(cart.orderFormId).then(response => {
-        dispatch(updateShoppingCartItems(response));
-      });
+      console.log('usuario igual...');
     } else {
       getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         getShoppingCart(newCart.orderFormId).then(response => {
           dispatch(updateShoppingCartItems(response));
+          setIsChargin(true);
         });
       });
     }
@@ -290,12 +338,14 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
             </Text>{' '}
           </Text>
         ),
-        type: 'limited'
+        type: 'limited',
+        timeToShow: 10000
       });
     } else if (paySuccess && isGuest) {
       toast.show({
         message: 'Más detalles sobre el pedido en tu correo electrónico',
-        type: 'limited'
+        type: 'limited',
+        timeToShow: 10000
       });
     }
   }, [paySuccess]);

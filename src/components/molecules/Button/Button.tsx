@@ -45,13 +45,14 @@ const getContainerStyle = (props: ButtonProps) => {
     marginBottom,
     marginLeft,
     marginRight,
-    marginTop
+    marginTop,
+    borderWidth
   } = props;
   
   const buttonStyles: any = [styles.container];
   buttonStyles.push({
     backgroundColor: theme.brandColor[color],
-    borderWidth: 2,
+    borderWidth: borderWidth ? borderWidth : 2,
     borderColor: theme.brandColor[color],
   });
   

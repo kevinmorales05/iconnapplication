@@ -1,6 +1,7 @@
 #import <Firebase.h>
 #import <React/RCTLinkingManager.h>
 #import "AppDelegate.h"
+#import <GoogleMaps/GoogleMaps.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
@@ -31,6 +32,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [GMSServices provideAPIKey:@"AIzaSyAirlPB4NODrmqJzTMOly0kdGx5z6VwkxU"];
   [FIRApp configure];
   [[FBSDKApplicationDelegate sharedInstance] application:application
                       didFinishLaunchingWithOptions:launchOptions];
