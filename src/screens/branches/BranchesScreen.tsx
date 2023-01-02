@@ -20,6 +20,7 @@ interface Props {
   onPressSeeList: () => void;
   onPressSeeMap: () => void;
   onPressShowDetails: () => void;
+  onPressShowFilters: () => void;
   permissions: {};
   pointDisplayMode: PointDisplayMode;
   visibleSearchByDistance: boolean;
@@ -36,13 +37,11 @@ const BranchesScreen: React.FC<Props> = ({
   onPressSeeList,
   onPressSeeMap,
   onPressShowDetails,
+  onPressShowFilters,
   pointDisplayMode,
   visibleSearchByDistance,
   visibleStoreSymbology
 }) => {
-  // const [thumbIcon, setThumbIcon] = useState<any>();
-  // Icon.getImageSource('pause-circle-filled', 28, theme.brandColor.iconn_med_grey).then(source => setThumbIcon(source));
-
   return (
     <>
       {/* <TextContainer typography="paragraph" text={JSON.stringify(permissions)} marginTop={23} marginBottom={16} /> */}
@@ -99,7 +98,7 @@ const BranchesScreen: React.FC<Props> = ({
         </Container>
         <Container style={{ width: '30%' }}>
           <Button
-            onPress={() => {}}
+            onPress={onPressShowFilters}
             color="iconn_white"
             style={{ borderRadius: 4, borderWidth: 1, borderColor: theme.brandColor.iconn_med_grey }}
             size="xsmall"
@@ -155,7 +154,7 @@ const BranchesScreen: React.FC<Props> = ({
               </Container>
             )}
 
-            {visibleSearchByDistance && (
+            {visibleSearchByDistance && pointDisplayMode === 'map' && (
               <Container
                 height={120}
                 backgroundColor={theme.brandColor.iconn_white}
@@ -164,7 +163,7 @@ const BranchesScreen: React.FC<Props> = ({
                   marginLeft: 16,
                   paddingVertical: 8,
                   paddingHorizontal: 8,
-                  left: pointDisplayMode === 'map' ? 131 : 8,
+                  left: pointDisplayMode === 'map' ? 131 : 0,
                   bottom: 8
                 }}
               >
