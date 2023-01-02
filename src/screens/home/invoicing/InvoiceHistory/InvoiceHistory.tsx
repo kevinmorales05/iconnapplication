@@ -23,6 +23,7 @@ import { useAppSelector, RootState, InvoiceGeneratedResponseInterface } from 'rt
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
+import { print } from '@gorhom/bottom-sheet/lib/typescript/utilities/logger';
 
 interface EstablishmentResult {
   establishment_id: number;
@@ -40,6 +41,7 @@ export interface Result {
   total: string;
   Establishment: EstablishmentResult;
   Invoicing_Profile: InvoicingProfile;
+  created_At: string;
 }
 
 interface FilterChipProps {
@@ -430,6 +432,7 @@ const InvoiceScreen: React.FC = () => {
             const { rows } = data;
 
             const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
+              console.log(`item factura ${b.created_At}`)
               return moment(a.emission_date).diff(b.emission_date);
             });
 
