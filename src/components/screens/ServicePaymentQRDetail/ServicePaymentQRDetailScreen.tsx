@@ -7,10 +7,12 @@ import { QRInterface, RootState, ServicePaymentInterface, useAppSelector } from 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import config from 'react-native-config';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import moment from 'moment';
 import Octicons from 'react-native-vector-icons/Octicons';
 import QRCode from 'react-native-qrcode-svg';
 import theme from 'components/theme/theme';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
   onPressEditButton: () => void;
@@ -23,14 +25,38 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
   const insets = useSafeAreaInsets();
   const { ARCUS_QR_PREFIX } = config;
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const userIdName = `${user.id}\\${user.name}${user.lastName}${user.secondLastName}`;
-  // console.log('userIdName', userIdName);
+
+  const subStrUser = user.id?.substring(0, 7);
+  // console.log('Los 7 digitos del id de usuario:', subStrUser);
+
+  const fullUserName = `${user.name}${user.lastName}${user.secondLastName}`;
+  // console.log('fullUserName:', fullUserName);
+
+  const fullUserNameWithoutSpaces = fullUserName.replace(/\s/g, '');
+  // console.log('fullUserName sin espacios:', fullUserNameWithoutSpaces);
+
+  // console.log('fullUserName longitud sin espacios:', fullUserNameWithoutSpaces.length);
+  let subStrUserName = '';
+  if (fullUserNameWithoutSpaces.length === 0) {
+    subStrUserName = 'unknown';
+  } else {
+    subStrUserName = fullUserName.substring(0, 7);
+  }
+
+  // console.log('Los 7 digitos del full username:', subStrUserName);
+  // console.log('la longitud del subStrUserName:', subStrUserName.length);
+
+  let userIdName = subStrUser + '\\' + subStrUserName;
+  //let userIdName = '1111111' + '\\' + subStrUserName;
+  // console.log('El valor que se codifica es:', userIdName);
   const encryption = encode(userIdName);
   // console.log('encryption', encryption);
   // const decryption = decode(encryption);
   // console.log('decryption', decryption);
-  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.SKU}|${servicePayment.UPC}|${service?.contractNumber}||${encryption}|`;
-  // console.log('El string del QR es', QRString);
+  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.UPC}|${servicePayment.SKU}|${service?.contractNumber}||${encryption}|`;
+  //TO DO: change service.billId with the account number input, after the validation of the existence of ARCUS
+  //console.log('El string del QR es', QRString);
+  //  const QRString = `${ARCUS_QR_PREFIX}|${servicePayment.SKU}|${servicePayment.UPC}|${service?.billId}||${encryption}|`;  // console.log('El string del QR es', QRString);
 
   return (
     <ScrollView
@@ -46,7 +72,11 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
             <Container center crossCenter style={{ marginBottom: 16 }}>
               <Image
                 source={{ uri: servicePayment.imageURL }}
-                style={servicePayment.slug === 'CFE' ? { width: 120, height: 50, resizeMode: 'cover' } : { width: 160, height: 50, resizeMode: 'contain' }}
+                style={
+                  servicePayment.slug === 'CFE'
+                    ? { width: moderateScale(160), height: moderateScale(50), resizeMode: 'cover' }
+                    : { width: moderateScale(160), height: moderateScale(50), resizeMode: 'contain' }
+                }
               />
             </Container>
             <QRCode value={QRString} size={140} />
@@ -55,11 +85,23 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Saldo" fontBold />
-            <TextContainer
+            {+service?.balance === 0 ? (
+              <Container row>
+                <AntDesign name="checkcircle" color={theme.brandColor.iconn_green_original} size={15} />
+                <TextContainer text="Pagado" marginLeft={8} />
+              </Container>
+            ) : (
+              <TextContainer
+                text={`$${parseFloat(service?.balance as string)
+                  .toFixed(2)
+                  .replace(/\d(?=(\d{3})+\.)/g, '$&,')}`}
+              />
+            )}
+            {/* <TextContainer
               text={`$${parseFloat(service?.balance as string)
                 .toFixed(2)
                 .replace(/\d(?=(\d{3})+\.)/g, '$&,')}`}
-            />
+            /> */}
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Vencimiento" fontBold />
@@ -77,7 +119,14 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
             fontBold
             fontSize="h4"
             onPress={onPressEditButton}
-            leftIcon={<Octicons name="pencil" size={theme.avatarSize.xxxsmall} color={theme.brandColor.iconn_green_original} style={{ marginRight: 5 }} />}
+            leftIcon={
+              <Octicons
+                name="pencil"
+                size={theme.avatarSize.xxxsmall}
+                color={theme.brandColor.iconn_green_original}
+                style={{ marginRight: -moderateScale(5) }}
+              />
+            }
           >
             Editar
           </Button>
@@ -86,7 +135,9 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
             fontBold
             fontSize="h4"
             onPress={onPressDeleteButton}
-            leftIcon={<EvilIcons name="trash" size={theme.actionButtonSize.xxsmall} color={theme.brandColor.iconn_error} />}
+            leftIcon={
+              <EvilIcons name="trash" size={theme.actionButtonSize.xxsmall} color={theme.brandColor.iconn_error} style={{ marginRight: -moderateScale(10) }} />
+            }
             color="iconn_background"
             fontColor="dark"
             borderColor="iconn_med_grey"

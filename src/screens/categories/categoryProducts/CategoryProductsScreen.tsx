@@ -22,7 +22,7 @@ import { ProductsByCategoryFilter } from 'rtk/types/category.types';
 import { FilterItemTypeProps } from 'components/types/FilterITem';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { useLoading } from 'context';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 
@@ -81,6 +81,7 @@ const CategoryProductsScreen: React.FC = () => {
   const [productId, setProductId] = useState<string>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isLoadingNewTab, setLoadingNewTab] = useState<boolean>(false);
+  const [isLoadingMore, setLoadingMore] = useState<boolean>(true);
 
   const hideModalForAdult = () => {
     setVisible(false);
@@ -121,7 +122,7 @@ const CategoryProductsScreen: React.FC = () => {
           name: 'Todo'
         }
       ];
-      category.children.map(categoryFilter => {
+      category.children.forEach(categoryFilter => {
         categoriesTab.push({
           id: categoryFilter.id + '',
           name: categoryFilter.Title
@@ -212,6 +213,7 @@ const CategoryProductsScreen: React.FC = () => {
       await setItemToLoad(itemToLoad + 10);
       loader.hide();
       setLoading(false);
+      setLoadingMore(true);
     } else {
       loader.hide();
       setProductsRender([]);
@@ -232,6 +234,7 @@ const CategoryProductsScreen: React.FC = () => {
     });
     if (!productsRequest.length) {
       setLoading(false);
+      setLoadingMore(false);
     } else {
       let productsToRender: ProductInterface[] = [];
       productsToRender = productsRender.concat(productsToRender);
@@ -363,25 +366,33 @@ const CategoryProductsScreen: React.FC = () => {
     if (isLoading) {
       const residuoOperation = productsRender.length % 2;
       if (residuoOperation === 0) {
-        return(
-          <Container style={{justifyContent: 'space-between',flexDirection: 'row', width: Dimensions.get('screen').width, paddingHorizontal: moderateScale(15), left: -moderateScale(15)}}>
+        return (
+          <Container
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              width: Dimensions.get('screen').width,
+              paddingHorizontal: moderateScale(15),
+              left: -moderateScale(15)
+            }}
+          >
             <CardProductSkeleton notMarinLeft />
             <CardProductSkeleton notMarinLeft />
           </Container>
-        )
-      }else{
+        );
+      } else {
         return (
           <Container row>
             <CardProductSkeleton notMarinLeft />
           </Container>
-        )
+        );
       }
     }
     return null;
   };
 
   const loadMoreItem = async () => {
-    if (!isLoading) {
+    if (!isLoading && isLoadingMore) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       loadMoreProducts(existingProducts);
     }
@@ -428,13 +439,13 @@ const CategoryProductsScreen: React.FC = () => {
             {productsRender.length ? (
               <Container width={'100%'}>
                 <Container style={{ marginTop: moderateScale(15) }}>
-                  <CustomText
+                  {/* <CustomText
                     text={`${productsRender.length} producto${productsRender.length > 1 ? 's' : ''} encontrado${productsRender.length > 1 ? 's' : ''}`}
                     textColor={theme.fontColor.placeholder}
                     fontSize={theme.fontSize.h6}
-                  />
+                  /> */}
                 </Container>
-                <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
+                <Container height={verticalScale(540)} width={'100%'}>
                   <FlatList
                     data={productsRender}
                     renderItem={_renderItem}
@@ -442,7 +453,7 @@ const CategoryProductsScreen: React.FC = () => {
                     onEndReached={loadMoreItem}
                     refreshing={refreshing}
                     onRefresh={() => _onRefresh()}
-                    keyExtractor={(item) => item.productId + ""}
+                    keyExtractor={item => item.productId + ''}
                     contentContainerStyle={{
                       flexDirection: 'row',
                       flexWrap: 'wrap',
@@ -450,6 +461,7 @@ const CategoryProductsScreen: React.FC = () => {
                       paddingBottom: moderateScale(50)
                     }}
                     ListFooterComponent={_renderFooter}
+                    ListFooterComponentStyle={{ width: '100%' }}
                   />
                 </Container>
               </Container>

@@ -14,6 +14,7 @@ const RechargeAmountController: React.FC = () => {
   const selectedParams = params?.selected;
   const type = params?.type;
   const [supplierRecharges, setSupplierRecharges] = useState<RechargeAmount[]>();
+  const [supplierRechargesSort, setSupplierRechargesSort] = useState<RechargeAmount[]>();
   const rechargeUser = params?.rechargeUser;
 
   const OnPressAmount = async (amountId: string) => {
@@ -129,9 +130,16 @@ const RechargeAmountController: React.FC = () => {
       });
     });
   }, []);
+
+  useEffect(() => {
+    if (supplierRecharges?.length) {
+      const tem = supplierRecharges.sort((p1, p2) => (p1.ammount > p2.ammount ? 1 : p1.ammount < p2.ammount ? -1 : 0));
+      setSupplierRechargesSort(tem);
+    }
+  }, [supplierRecharges]);
   return (
     <RechargeAmountScreen
-      suppliersAmounts={supplierRecharges as RechargeAmount[]}
+      suppliersAmounts={supplierRechargesSort as RechargeAmount[]}
       supplier={supplier as RechargeSupplier}
       onPressAmount={OnPressAmount}
       rechargeUser={rechargeUser}

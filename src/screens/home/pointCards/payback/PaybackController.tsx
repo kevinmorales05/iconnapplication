@@ -63,7 +63,7 @@ const PaybackController: React.FC<Props> = () => {
         deleteCard={deletePointCard}
         cardToUpdate={paybackCardToUpdate}
         cardId={params.cardId}
-        barcodeFromScan={params.ticket}
+        barcodeFromScan={params.barcode}
       />
     </SafeArea>
   );

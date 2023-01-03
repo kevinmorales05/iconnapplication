@@ -10,6 +10,7 @@ import { ICONN_POINT_CARD_MODAL_PREFERENTE, ICONN_POINT_CARD_MODAL_PAYBACK } fro
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
   onPressClose: () => void;
@@ -20,13 +21,13 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const insets = useSafeAreaInsets();
 
-  const showPreferenteScreen = (async () => {
+  const showPreferenteScreen = async () => {
     onPressClose();
-  })
+  };
 
-  const showPayBackScreen = (async () => {
+  const showPayBackScreen = async () => {
     onPressClose();
-  })
+  };
 
   const { containerStyle } = styles;
 
@@ -41,25 +42,17 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
             backgroundColor: theme.brandColor.iconn_white
           }}
         >
-          <Container row space="between" style={{ marginTop: 16, marginBottom: 16 }}>
-            <Container />
-            <Container>
-              <CustomText textColor={theme.brandColor.iconn_dark_grey} text='Tarjeta de puntos' typography="h3" fontBold />
+          <Container style={{ paddingBottom: moderateScale(15), alignItems: 'center', flexDirection: 'row', justifyContent: 'center', width: '100%' }}>
+            <Container style={{ width: '90%', alignItems: 'center', paddingLeft: moderateScale(35) }}>
+              <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Tarjeta de puntos" typography="h3" fontBold />
             </Container>
-            <Container>
+            <Container style={{ width: '10%' }}>
               <ActionButton
-                style={{ marginTop: -6, shadowColor: 'none' }}
+                style={{ shadowColor: 'none' }}
                 size="xxsmall"
                 onPress={onPressClose}
                 color="white"
-                icon={
-                  <Ionicons
-                    name="close"
-                    size={24}
-                    color={theme.fontColor.dark_grey}
-                  />
-                }
-
+                icon={<Ionicons name="close" size={24} color={theme.fontColor.dark_grey} />}
               />
             </Container>
           </Container>
@@ -73,48 +66,34 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
               <Container center>
                 <Container space="between" style={{ width: '95%' }}>
                   <Container center>
-                    <TextContainer
-                      text="Selecciona el tipo de tarjeta de puntos que deseas agregar:"
-                      fontSize={14}
-                      marginTop={15}
-                      marginBottom={8}
-                    ></TextContainer>
+                    <TextContainer text="Selecciona el tipo de tarjeta de puntos que deseas agregar:" fontSize={14} marginTop={15} marginBottom={8} />
                   </Container>
                   <Container style={{ marginTop: 20, marginBottom: 25 }}>
-                    <Container row space='evenly'>
+                    <Container row space="evenly">
                       <Container>
-                        <Touchable onPress={() => {
-                          showPreferenteScreen()
-                          navigate('Preferred', { addOrShow:0, cardNumberToShow: '' });
-                        }}>
+                        <Touchable
+                          onPress={() => {
+                            showPreferenteScreen();
+                            navigate('Preferred', { addOrShow: 0, cardNumberToShow: '' });
+                          }}
+                        >
                           <Image source={ICONN_POINT_CARD_MODAL_PREFERENTE} resizeMode="cover" style={{ width: 108, height: 108 }} />
-                          <TextContainer
-                            text={`ICONN \nPreferente`}
-                            fontSize={14}
-                            marginTop={20}
-                            textAlign="center"
-                            marginBottom={8}
-                          ></TextContainer>
+                          <TextContainer text={'ICONN \nPreferente'} fontSize={14} marginTop={20} textAlign="center" marginBottom={8} />
                         </Touchable>
                       </Container>
                       <Container>
-                        <Touchable onPress={() => {
-                          showPayBackScreen()
-                          navigate('Payback', { addOrShow:0, cardNumberToShow: '' });
-                        }}>
+                        <Touchable
+                          onPress={() => {
+                            showPayBackScreen();
+                            navigate('Payback', { addOrShow: 0, cardNumberToShow: '' });
+                          }}
+                        >
                           <Image source={ICONN_POINT_CARD_MODAL_PAYBACK} resizeMode="cover" style={{ width: 108, height: 108 }} />
-                          <TextContainer
-                            text={`Monedero \nPAYBACK`}
-                            fontSize={14}
-                            marginTop={20}
-                            textAlign="center"
-                            marginBottom={8}
-                          ></TextContainer>
+                          <TextContainer text={'Monedero \nPAYBACK'} fontSize={14} marginTop={20} textAlign="center" marginBottom={8} />
                         </Touchable>
                       </Container>
                     </Container>
-                    <Container>
-                    </Container>
+                    <Container />
                   </Container>
                 </Container>
               </Container>

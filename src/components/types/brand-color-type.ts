@@ -22,4 +22,5 @@ export type BrandColorTypes =
   | 'yellow_star'
   | 'yellow_container'
   | 'iconn_green_original_med'
-  | 'accent_secondary';
+  | 'accent_secondary'
+  | 'iconn_green_original_opacity';

@@ -6,13 +6,7 @@ import { RootState, useAppSelector } from 'rtk';
 import { ICONN_PREFERENTE_HELP } from 'assets/images';
 import { moderateScale } from 'utils/scaleMetrics';
 
-interface Props {
-  
-}
-
-const PreferredHelpScreen: React.FC<Props> = ({
-  
-}) => {
+const PreferredHelpScreen: React.FC = () => {
   const { detailSelected, cart } = useAppSelector((state: RootState) => state.cart);
 
   

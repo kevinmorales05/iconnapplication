@@ -12,9 +12,10 @@ import { OrderInterface } from 'rtk';
 interface Props {
   navigate: (screen: any, params: any) => void;
   officialOrderArray: Array<OrderInterface>;
+  seeMore: (orderId: string) => void;
 }
 
-const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
+const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate, seeMore }) => {
   const [isOnline, setIsOnline] = useState(false);
   NetInfo.fetch().then(state => {
     if (state.isInternetReachable) {
@@ -24,7 +25,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
 
   const insets = useSafeAreaInsets();
 
-  const haveBeforeOrders = officialOrderArray.length && officialOrderArray.some(order => order.status == 'canceled' || order.status == 'invoiced');
+  const haveBeforeOrders = officialOrderArray.length && officialOrderArray.some(order => order.status === 'canceled' || order.status === 'invoiced');
 
   return (
     <ScrollView
@@ -37,10 +38,11 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
         backgroundColor: theme.brandColor.iconn_background,
         width: '100%'
       }}
+      showsVerticalScrollIndicator={false}
     >
       {!isOnline ? (
         <></>
-      ) : officialOrderArray.length == 0 ? (
+      ) : officialOrderArray.length === 0 ? (
         <></>
       ) : (
         officialOrderArray.map(order => {
@@ -54,6 +56,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
           ) {
             return (
               <OrderCard
+                qualified={order.qualified}
                 orderId={order.orderId}
                 creationDate={order.creationDate}
                 status={order.status}
@@ -61,6 +64,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
                 totalValue={order.totalValue}
                 deliveryChannel={order.deliveryChannel}
                 navigate={navigate}
+                seeMore={seeMore}
               />
             );
           }
@@ -68,14 +72,14 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
       )}
       {!isOnline ? (
         <></>
-      ) : officialOrderArray.length == 0 ? (
+      ) : officialOrderArray.length === 0 ? (
         <></>
       ) : haveBeforeOrders ? (
         <TextContainer text="Pedidos anteriores" fontSize={16} fontBold marginTop={15.5} />
       ) : null}
       {!isOnline ? (
         <InfoCard text={'No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.'} />
-      ) : officialOrderArray.length == 0 ? (
+      ) : officialOrderArray.length === 0 ? (
         <Container>
           <Container center style={{ marginTop: 164.2 }}>
             <Image source={ICONN_BASKET_SHOPPING_CART} style={{ height: 40, width: 40 }} />
@@ -91,6 +95,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
           if (order.status === 'canceled' || order.status === 'invoiced') {
             return (
               <OrderCard
+                qualified={order.qualified}
                 creationDate={order.creationDate}
                 totalItems={order.totalItems}
                 totalValue={order.totalValue}
@@ -98,6 +103,7 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate }) => {
                 orderId={order.orderId}
                 deliveryChannel={order.deliveryChannel}
                 navigate={navigate}
+                seeMore={seeMore}
               />
             );
           }

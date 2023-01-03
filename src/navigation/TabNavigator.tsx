@@ -1,17 +1,19 @@
 import React from 'react';
-import { Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import theme from 'components/theme/theme';
-import HomeController from 'screens/home/HomeController';
-import CategoriesController from 'screens/categories/CategoriesController';
 import { HomeStackParams, HomeTabScreens } from './types';
-import MyAccountController from 'screens/home/myAccount/MyAccountController';
-import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
-import PromotionsController from 'screens/home/promotions/PromotionsController';
+import { Image } from 'react-native';
 import { RootState, useAppSelector } from 'rtk';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TAB_CAT, TAB_HOME, TAB_PIN_LOCATION, TAB_PROMOS, TAB_USER_PROFILE } from 'assets/images';
+import BranchesStack from './stacks/nested/BranchesStack';
+import CategoriesController from 'screens/categories/CategoriesController';
+import HomeController from 'screens/home/HomeController';
+import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
+import MyAccountController from 'screens/home/myAccount/MyAccountController';
+import PromotionsController from 'screens/home/promotions/PromotionsController';
+import theme from 'components/theme/theme';
 import InConstructionController from 'components/screens/InConstruction/InConstructionController';
+
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -19,9 +21,11 @@ export const TabNavigator = () => {
   const { isGuest } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
   const { paySuccess } = route.params;
+
+
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={() => ({
         tabBarActiveTintColor: theme.brandColor.iconn_green_original,
         tabBarInactiveTintColor: theme.fontColor.placeholder,
         headerShown: true,
@@ -42,6 +46,7 @@ export const TabNavigator = () => {
           }
         }}
         name="HomeScreen"
+        // eslint-disable-next-line react/no-children-prop
         children={() => <HomeController paySuccess={paySuccess} />}
       />
       <Tab.Screen
@@ -85,6 +90,7 @@ export const TabNavigator = () => {
           unmountOnBlur: true,
           headerShown: false,
           title: 'Sucursales',
+          headerTitle: 'Tiendas y estaciones',
           tabBarIcon: ({ focused }) => {
             return (
               <Image

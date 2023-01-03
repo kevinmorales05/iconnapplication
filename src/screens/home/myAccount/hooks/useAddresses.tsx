@@ -153,6 +153,7 @@ export const useAddresses = () => {
       city: addressTosubmit.city,
       state: addressTosubmit.state,
       country: 'MEX',
+      number: addressTosubmit.number,
       postalCode: addressTosubmit.postalCode,
       street: addressTosubmit.street,
       neighborhood: addressTosubmit.neighborhood,
