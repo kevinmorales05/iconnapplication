@@ -8,7 +8,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import theme from 'components/theme/theme';
 import Octicons from 'react-native-vector-icons/Octicons';
-import { GENDERS } from 'assets/files';
 import { RootState, useAppSelector } from 'rtk';
 import moment from 'moment';
 import { mobilePhoneRule, alphabetRule } from 'utils/rules';
@@ -31,7 +30,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
   const { email, name, telephone, gender, birthday, lastName } = user;
   const insets = useSafeAreaInsets();
   const actualDate = new Date();
-  console.log('FECHA', actualDate);
+  const gendersOptions = ['Femenino', 'Masculino'];
 
   const {
     control,
@@ -54,7 +53,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
     setValue('lastName', lastName);
     setValue('telephone', telephone);
     setValue('email', email);
-    setValue('gender', gender);
+    setValue('gender', gender === 'female' ? 'Femenino' : 'Masculino');
     setValue('birthday', formatDate(moment(birthday).toDate()));
   };
 
@@ -103,7 +102,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
       showsVerticalScrollIndicator={false}
     >
       <Container>
-        <TextContainer typography="h6" fontBold text={`Nombre(s)`} marginTop={0} />
+        <TextContainer typography="h6" fontBold text={'Nombre(s)'} marginTop={0} />
 
         <Input
           {...register('name')}
@@ -115,12 +114,12 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           placeholder="Nombre"
           maxLength={30}
           blurOnSubmit={true}
-          rules={alphabetRule(true)}
+          rules={alphabetRule(name ? false : true)}
           error={errors.name?.message}
           onSubmitEditing={() => surnameRef.current?.focus()}
         />
 
-        <TextContainer typography="h6" fontBold text={`Apellido(s)`} marginTop={21} />
+        <TextContainer typography="h6" fontBold text={'Apellido(s)'} marginTop={21} />
 
         <Input
           {...register('lastName')}
@@ -131,19 +130,19 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           keyboardType="default"
           placeholder="Apellidos"
           maxLength={30}
-          rules={alphabetRule(true)}
+          rules={alphabetRule(lastName ? false : true)}
           blurOnSubmit={true}
           onSubmitEditing={() => phoneRef.current?.focus()}
           error={errors.lastName?.message}
         />
 
-        <TextContainer typography="h6" fontBold text={`Correo electrónico`} marginTop={21} />
+        <TextContainer typography="h6" fontBold text={'Correo electrónico'} marginTop={21} />
         <Input {...register('email')} editable={false} control={control} autoCorrect autoCapitalize="words" keyboardType="default" />
 
-        <TextContainer typography="h6" fontBold text={`Contraseña`} marginTop={21} />
+        <TextContainer typography="h6" fontBold text={'Contraseña'} marginTop={21} />
 
         <Container row center crossCenter space="between" style={{ marginTop: 10 }}>
-          <CustomText fontBold typography="dot" text={`••••••••`} textColor={theme.brandColor.iconn_dark_grey} />
+          <CustomText fontBold typography="dot" text={'••••••••'} textColor={theme.brandColor.iconn_dark_grey} />
           {
             <TouchableOpacity onPress={goToChangePwd}>
               <Container row center crossCenter>
@@ -154,7 +153,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           }
         </Container>
 
-        <TextContainer typography="h6" fontBold text={`Celular`} marginTop={24} />
+        <TextContainer typography="h6" fontBold text={'Celular'} marginTop={24} />
         <Input
           name="telephone"
           ref={phoneRef}
@@ -165,8 +164,13 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           error={errors.telephone?.message}
           maxLength={10}
           onFocus={t => {
-            register('telephone', mobilePhoneRule(false));
-            trigger('telephone');
+            if (t) {
+              register('telephone', mobilePhoneRule(false));
+              trigger('telephone');
+            } else {
+              register('telephone', mobilePhoneRule(false));
+              trigger('telephone');
+            }
           }}
           onChangeText={t => {
             if (t.length === 0) {
@@ -175,7 +179,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           }}
         />
 
-        <TextContainer typography="h6" fontBold text={`Fecha de nacimiento`} marginTop={21} />
+        <TextContainer typography="h6" fontBold text={'Fecha de nacimiento'} marginTop={21} />
 
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
@@ -186,20 +190,22 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
           textColor={theme.brandColor.iconn_accent_principal}
           maximumDate={actualDate}
         />
-        <Touchable onPress={showDatePicker} >
-        <DatePicker name="birthday" control={control} error={errors.birthday?.message} />
+        <Touchable onPress={showDatePicker}>
+          <DatePicker name="birthday" control={control} error={errors.birthday?.message} />
         </Touchable>
 
-        <TextContainer typography="h6" fontBold text={`Género`} marginTop={21} />
+        <TextContainer typography="h6" fontBold text={'Género'} marginTop={21} />
 
         <Select
           name="gender"
           control={control}
-          options={GENDERS.map(item => item.name)}
+          options={gendersOptions}
           onSelect={value => {
-            setValue('gender', value);
-            register('gender');
-            trigger('gender');
+            if (value === 'Selecciona') {
+              setValue('gender', null);
+            } else {
+              setValue('gender', value);
+            }
           }}
           androidMode="dialog"
           placeholder="Selecciona"
@@ -207,23 +213,25 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
         <Button length="long" disabled={!isValid} round onPress={handleSubmit(submit)} fontSize="h4" fontBold marginTop={32}>
           Guardar
         </Button>
-        {Platform.OS === 'ios' ? <Button
-          length="long"
-          fontColor='dark'
-          fontSize="h5"
-          round
-          fontBold
-          leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} style={{width:18, height:18, marginRight:0}} />}
-          borderColor='iconn_grey'
-          style={{ marginTop:8,marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
-          onPress={() => {
-            navigate('DeleteAccount');
-          }}
-        >
-          Eliminar cuenta
-        </Button>:
+        {Platform.OS === 'ios' ? (
+          <Button
+            length="long"
+            fontColor="dark"
+            fontSize="h5"
+            round
+            fontBold
+            leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} style={{ width: 18, height: 18, marginRight: 0 }} />}
+            borderColor="iconn_grey"
+            style={{ marginTop: 8, marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
+            onPress={() => {
+              navigate('DeleteAccount');
+            }}
+          >
+            Eliminar cuenta
+          </Button>
+        ) : (
           <></>
-        }
+        )}
       </Container>
     </ScrollView>
   );

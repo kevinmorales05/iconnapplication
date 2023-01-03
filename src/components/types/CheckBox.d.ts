@@ -1,28 +1,23 @@
 import React from 'react';
-import {
-  AccessibilityProps,
-  StyleProp,
-  TextStyle,
-  ViewStyle
-} from 'react-native';
+import { AccessibilityProps, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import { BrandColorTypes } from './brand-color-type';
+import { FontColorTypes } from './font-color-type';
 import { SizeType } from './size-type';
 import { TypographyTypes } from './typography-type';
-import { BrandColorTypes } from './brand-color-type';
-import { FontColorTypes } from './font-color-type'
 
 interface CheckBoxProps extends AccessibilityProps {
-  style?: StyleProp<ViewStyle>;
-  textStyle?: StyleProp<TextStyle>;
-  children: string;
   checked?: boolean;
-  iconRight?: boolean;
-  color?: BrandColorTypes;
-  textColor?: FontColorTypes;
-  size?: SizeType;
-  onPress: () => void;
   checkedIcon?: React.ReactElement;
-  uncheckedIcon?: React.ReactElement;
+  children: string;
+  color?: BrandColorTypes;
   fontSize?: TypographyTypes;
+  iconRight?: boolean;
+  onPress?: () => void;
+  size?: SizeType;
+  style?: StyleProp<ViewStyle>;
+  textColor?: FontColorTypes;
+  textStyle?: StyleProp<TextStyle>;
+  uncheckedIcon?: React.ReactElement;
 }
 
 export const CheckBox: React.FC<CheckBoxProps>;

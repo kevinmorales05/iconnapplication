@@ -5,7 +5,8 @@ import { BeneficiaryInterface, WalletSliceInterface } from 'rtk/types';
 const initialState: WalletSliceInterface = {
   prefixes: [],
   banks: [],
-  beneficiaries: []
+  beneficiaries: [],
+  dateSync: undefined
 };
 
 const walletSlice = createSlice({
@@ -16,9 +17,13 @@ const walletSlice = createSlice({
       state.prefixes = [];
       state.banks = [];
       state.beneficiaries = [];
+      state.dateSync = undefined;
     },
     setBeneficiaries(state, action: PayloadAction<BeneficiaryInterface[]>) {
       state.beneficiaries = action.payload;
+    },
+    setDateSync(state, action: PayloadAction<Date>) {
+      state.dateSync = action.payload;
     }
   },
   extraReducers: builder => {
@@ -39,5 +44,5 @@ const walletSlice = createSlice({
   }
 });
 
-export const { setWalletInitialState, setBeneficiaries } = walletSlice.actions;
+export const { setWalletInitialState, setBeneficiaries, setDateSync } = walletSlice.actions;
 export default walletSlice.reducer;

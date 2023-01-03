@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, TextContainer } from '../../molecules';
 import { Container } from '../../atoms';
-import { Platform, ScrollView } from 'react-native';
+import { Image, Platform, ScrollView } from 'react-native';
 import { QRDepositInterface } from 'rtk';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import QRCode from 'react-native-qrcode-svg';
@@ -9,6 +9,7 @@ import theme from 'components/theme/theme';
 import { PenSvg } from 'components/svgComponents/PenSvg';
 import { TrashSvg } from 'components/svgComponents/TrashSvg';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
+import { BANCOPPEL_LOGO, BANORTE_LOGO, BANREGIO_LOGO, BANSI_LOGO, BBVA_LOGO, CITIBANAMEX_LOGO, SANTANDER_LOGO } from 'assets/images';
 
 interface Props {
   onPressEditButton: () => void;
@@ -18,6 +19,25 @@ interface Props {
 
 const ServicePaymentQRDetailDeposits: React.FC<Props> = ({ onPressEditButton, onPressDeleteButton, service }) => {
   const insets = useSafeAreaInsets();
+
+  const getImage = (name: string) => {
+    switch (name) {
+      case 'BBVA':
+        return BBVA_LOGO;
+      case 'BanCoppel':
+        return BANCOPPEL_LOGO;
+      case 'Bansi':
+        return BANSI_LOGO;
+      case 'Banorte':
+        return BANORTE_LOGO;
+      case 'Banregio':
+        return BANREGIO_LOGO;
+      case 'Santander':
+        return SANTANDER_LOGO;
+      case 'Citibanamex':
+        return CITIBANAMEX_LOGO;
+    }
+  };
 
   return (
     <ScrollView
@@ -30,9 +50,9 @@ const ServicePaymentQRDetailDeposits: React.FC<Props> = ({ onPressEditButton, on
         <Container>
           <TextContainer text={'Presenta este QR en tienda para poder realizar un depósito más rápido.'} numberOfLines={2} marginTop={24} />
           <Container middle style={{ backgroundColor: theme.brandColor.iconn_white, paddingVertical: 16, marginHorizontal: 35, marginTop: moderateScale(20) }}>
-            {/* <Container center crossCenter style={{ marginBottom: 16 }}>
-              <Image source={{ uri: '' }} style={{ width: moderateScale(40), height: moderateScale(40), resizeMode: 'cover' }} />
-            </Container> */}
+            <Container center crossCenter style={{ marginBottom: 16 }}>
+              <Image source={getImage(service?.bank)} style={{ width: moderateScale(114), height: moderateScale(40), resizeMode: 'cover' }} />
+            </Container>
             <QRCode value={`${service?.qrCode}`} size={moderateScale(190)} />
 
             <TextContainer text={service?.tag!} marginTop={24} fontBold typography="h4" />
@@ -43,7 +63,9 @@ const ServicePaymentQRDetailDeposits: React.FC<Props> = ({ onPressEditButton, on
           </Container>
           <Container row space="between" style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_med_grey, paddingBottom: 16, marginTop: 24 }}>
             <TextContainer text="Beneficiario" fontBold />
-            <TextContainer text={`${service?.name}`} />
+            <Container style={{ width: moderateScale(200) }}>
+              <TextContainer textAlign="right" text={`${service?.name}`} />
+            </Container>
           </Container>
         </Container>
         <Container style={{ marginTop: verticalScale(30), paddingBottom: moderateScale(40) }}>

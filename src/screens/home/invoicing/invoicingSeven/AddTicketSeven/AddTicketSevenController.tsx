@@ -60,7 +60,7 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
     try {
       // establishment 2 = seven
       const response = await dispatch(getTicketThunk({ establishment: 2, ticket: fields.barCode })).unwrap();
-      if (response.responseCode === 57) {
+      if (response.responseCode === 57 || response.responseCode === 595) {
         if (!invoicingPaymentMethodForSevenTicketList && !invoicingStoreForSevenTicketList) {
           dispatch(setInvoicingPaymentMethodForSevenTicketList(response.data.paymentMethod));
           dispatch(setInvoicingStoreForSevenTicketList(response.data.store));

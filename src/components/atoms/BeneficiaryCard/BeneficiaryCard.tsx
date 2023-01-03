@@ -6,6 +6,7 @@ import { Image, StyleSheet } from 'react-native';
 import { Container } from '../Container';
 import theme from 'components/theme/theme';
 import { TouchableOpacity } from 'react-native';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface BeneficiaryCardProps {
   beneficiary: BeneficiaryInterface;
@@ -21,7 +22,9 @@ const BeneficiaryCard: React.FC<BeneficiaryCardProps> = ({ beneficiary, goToDepo
         </Container>
         <Container>
           <TextContainer text="Depósito bancario" marginLeft={16} fontSize={12} textColor={theme.fontColor.placeholder} />
-          <TextContainer text={beneficiary.name} fontBold marginLeft={16} fontSize={14} marginTop={2} />
+          <Container style={{ width: moderateScale(300) }}>
+            <TextContainer text={beneficiary.name} fontBold marginLeft={16} fontSize={14} marginTop={2} />
+          </Container>
           <TextContainer text={beneficiary.bank} marginLeft={16} fontSize={14} marginTop={2} />
         </Container>
       </Container>

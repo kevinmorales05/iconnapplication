@@ -43,6 +43,7 @@ interface ButtonProps extends AccessibilityProps {
   marginBottom?: number;
   marginLeft?: number;
   marginRight?: number;
+  borderWidth?: number;
 }
 
 export const Button: React.FC<ButtonProps>;

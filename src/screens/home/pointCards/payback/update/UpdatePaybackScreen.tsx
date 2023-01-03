@@ -45,12 +45,12 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onPressScan, onSubmit, paybackCa
     mode: 'onChange'
   });
 
-  if (barcodeFromScan != undefined) {
-    setValue('barcodeNumberToUpdate', barcodeFromScan.ticketNo);
-    if (barcodeFromScan.ticketNo.length == 13) {
-      initalButtonValue = true;
+  useEffect(() => {
+    if (barcodeFromScan != undefined) {
+      setValue('barcodeNumberToUpdate', barcodeFromScan);
+      trigger('barcodeNumberToUpdate');
     }
-  }
+  }, [barcodeFromScan]);
 
   const [disableButton, setDisableButton] = useState(initalButtonValue);
 
@@ -104,7 +104,7 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onPressScan, onSubmit, paybackCa
       <Container center>
         <Image source={ICONN_PAYBACK_MAIN} style={{ width: moderateScale(280), height: moderateScale(138) }} />
       </Container>
-      <Container center style={{ width: '100%', marginTop: moderateScale(15) }}>
+      <Container style={{ width: '100%', marginTop: moderateScale(15) }}>
         <TextContainer marginTop={8} fontSize={14} text={'Ingresa el número bajo el código de barras de tu tarjeta PAYBACK.'} />
       </Container>
       <Container center row style={{ marginTop: 40, width: '100%' }}>
@@ -130,7 +130,7 @@ const UpdatePaybackScreen: React.FC<Props> = ({ onPressScan, onSubmit, paybackCa
           onSubmitEditing={() => barcodeNumberToUpdate.current?.focus()}
           onChangeText={updateButtonStatus}
           onPressScan={onPressScan}
-          rules={numericWithSpecificLenght(18)}
+          rules={numericWithSpecificLenght(13)}
           scanIcon={true}
         />
       </Container>

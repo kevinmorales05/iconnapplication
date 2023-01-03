@@ -154,6 +154,7 @@ export interface InvoiceInterface {
   invoicingProfileId: number;
   cfdiUse: string;
   tickets?: string[] | InvoicingGetInvoiceTicketInterface[];
+  address: Object;
 }
 
 export interface InvoiceGeneratedResponseInterface {

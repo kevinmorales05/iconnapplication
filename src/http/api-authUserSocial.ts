@@ -9,7 +9,7 @@ export class AuthUserSocial extends HttpClient {
 
   private constructor() {
     if (global.showLogs__api_product) {
-      console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('authUserSocial'), null, 3));
+      console.log('AxiosRequestConfig ===> VTEXApiConfig social ===> \n\n', JSON.stringify(VTEXApiConfig('authUserSocial'), null, 3));
     }
 
     super(VTEXApiConfig('authUserSocial'));
@@ -22,7 +22,7 @@ export class AuthUserSocial extends HttpClient {
         const { headers, baseURL, method, url, data } = request;
         if (global.showLogs__api_product) {
           console.log(
-            'INTERCEPTOR - Starting Request ===> \n\n',
+            'INTERCEPTOR - Starting Request Social ===> \n\n',
             JSON.stringify(headers, null, 3),
             '\n',
             `baseURL: ${baseURL}`,
@@ -65,8 +65,8 @@ export class AuthUserSocial extends HttpClient {
     );
   }
 
-  public static getInstance() {
-    if (!this.classInstance) {
+  public static getInstance(isNewLogin?: boolean) {
+    if (!this.classInstance || isNewLogin) {
       this.classInstance = new AuthUserSocial();
     }
 

@@ -18,7 +18,7 @@ const tabNames: TabItem[] = [
   },
   {
     id: '2',
-    name: 'Destinatarios'
+    name: 'Beneficiarios'
   }
 ];
 interface Props {
@@ -28,9 +28,10 @@ interface Props {
   servicesArr: any;
   beneficiaries: BeneficiaryInterface[];
   goToDepositDetail: (beneficiary: BeneficiaryInterface) => void;
+  onPressService: (service: ServiceQRType) => void;
 }
 
-const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, servicesArr, beneficiaries, goToDepositDetail }) => {
+const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, servicesArr, beneficiaries, goToDepositDetail, onPressService }) => {
   const insets = useSafeAreaInsets();
   const [idSelected, setIdSelected] = useState('1');
   const savedServices = serviceQRs;
@@ -118,7 +119,7 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
                 <EmptyQRCard />
               ) : allServicesQR && allServicesQR.length > 0 ? (
                 allServicesQR.map((item, index) => {
-                  return <ServiceCard key={index} service={item} />;
+                  return <ServiceCard key={index} service={item} onPressService={onPressService} />;
                 })
               ) : null
             ) : !beneficiaries.length ? (

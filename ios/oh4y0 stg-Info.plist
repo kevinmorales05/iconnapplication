@@ -26,10 +26,10 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>iconn</string>
+			<string>oh4y0</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>iconn</string>
+				<string>oh4y0</string>
 				<string>com.googleusercontent.apps.579450743521-4pe95epj9q15d1u8llo34g6j58nioioi</string>
 				<string>fb401469165374419</string>
 			</array>
@@ -48,6 +48,25 @@
 	<array>
 		<string>fbapi</string>
 		<string>fb-messenger-share-api</string>
+		<string>comgooglemaps</string>
+		<string>citymapper</string>
+		<string>uber</string>
+		<string>lyft</string>
+		<string>transit</string>
+		<string>truckmap</string>
+		<string>waze</string>
+		<string>yandexnavi</string>
+		<string>moovit</string>
+		<string>yandextaxi</string>
+		<string>yandexmaps</string>
+		<string>kakaomap</string>
+		<string>szn-mapy</string>
+		<string>mapsme</string>
+		<string>osmandmaps</string>
+		<string>gett</string>
+		<string>nmap</string>
+		<string>dgis</string>
+		<string>lftgpas</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -66,6 +85,10 @@
 	</dict>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use your camera</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+  	<string>0. Esto nos ayudará a mejorar tu experiencia al mostrarte sucursales y servicios cerca de ti, calcular costos de envío y realizar entregas más precisas.</string>
+  	<key>NSLocationAlwaysUsageDescription</key>
+  	<string>1. Esto nos ayudará a mejorar tu experiencia al mostrarte sucursales y servicios cerca de ti, calcular costos de envío y realizar entregas más precisas.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Esto nos ayudará a mejorar tu experiencia al mostrarte sucursales y servicios cerca de ti, calcular costos de envío y realizar entregas más precisas.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

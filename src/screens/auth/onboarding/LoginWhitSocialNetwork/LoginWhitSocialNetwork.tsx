@@ -51,7 +51,7 @@ const LoginWhitSocialNetworkScreen: React.FC<Props> = ({ providerLogin, authenti
         onNavigationStateChange={e => {
           onChangePage(e);
         }}
-        javaScriptEnabled={true}
+        incognito={true}
         userAgent={userAgent[Platform.OS]}
       />
     </SafeArea>

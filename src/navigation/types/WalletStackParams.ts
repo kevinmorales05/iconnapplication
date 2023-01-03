@@ -1,6 +1,9 @@
-import { RechargeAmount, RechargeSupplier, ServicePaymentInterface, ServiceQRType, QRInterface, BeneficiaryInterface } from 'rtk';
+import { RechargeAmount, RechargeSupplier, ServicePaymentInterface, ServiceQRType, QRInterface, BeneficiaryInterface, PackageVtex } from 'rtk';
 
 export type WalletStackParams = {
+  CodeReader: { navigationDestiny?: string };
+  PackageDetail: undefined | { packageData: string; packageVtex: PackageVtex };
+  PackageHelp: undefined;
   Payback: undefined;
   PaybackHelp: any;
   Preferred: undefined;
@@ -25,6 +28,7 @@ export type WalletStackParams = {
   ServicePaymentEdit: { qrData: QRInterface; servicePayment: ServicePaymentInterface };
   ServicePaymentGeneralInfo: undefined;
   ServicePaymentQRDetail: { qrData: QRInterface; servicePayment: ServicePaymentInterface };
+  Tracking: undefined | { barcode?: string };
   UpdatePayback: undefined | { cardIdToUpdate?: string; paybackCard?: string };
   UpdatePreferred: undefined | { cardIdToUpdate?: string; preferenteCard?: string; cardId?: string };
   WalletHome: undefined | { toastState: string };
