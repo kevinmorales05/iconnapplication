@@ -1,5 +1,5 @@
-import { ActionButton, Container, CustomModal, CustomText, Input } from 'components/atoms';
-import { Button, TextContainer } from 'components/molecules';
+import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
+import { Button } from 'components/molecules';
 import theme from 'components/theme/theme';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, View, Image } from 'react-native';
@@ -40,10 +40,6 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
     setEmails(emails);
   }, [value]);
 
-  useEffect(() => {
-    console.log('emails:', emails);
-  }, [emails]);
-
   function validateEmail(email: string) {
     var re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
     return re.test(email);
@@ -81,7 +77,7 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
                 <View
                   style={{
                     height: 40,
-                    margin: 12,
+                    marginVertical: 12,
                     borderWidth: 1,
                     borderRadius: 8,
                     padding: 10,
@@ -114,7 +110,7 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
               </View>
             </Container>
             <Container row space="between" style={{ marginTop: 29 }}>
-              <Button length="short" color="iconn_light_grey" fontColor="dark" round fontBold fontSize="h4" onPress={() => {}}>
+              <Button length="short" color="iconn_light_grey" fontColor="dark" round fontBold fontSize="h4" onPress={onPressOut}>
                 Cancelar
               </Button>
               <Button
@@ -136,7 +132,7 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
                     alert.show(
                       {
                         title: 'Factura reenviada',
-                        message: `Tu factura se ha enviado a:`,
+                        message: 'Tu factura se ha enviado a:',
                         acceptTitle: 'Aceptar',
                         secondMessage: (() => {
                           return emails.join(' \n ');
@@ -147,7 +143,9 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
                       },
                       'success'
                     );
-                  } catch (e) {}
+                  } catch (e) {
+                    // console.log()
+                  }
                   loader.hide();
                 }}
               >

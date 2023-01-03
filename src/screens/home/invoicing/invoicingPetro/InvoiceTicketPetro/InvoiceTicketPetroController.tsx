@@ -49,30 +49,7 @@ const InvoiceTicketPetroController: React.FC = () => {
   }, [invoicingPetroTicketList]);
 
   // TODO: add double check to this!!
-  const onSubmit = async (cfdi: string, paymentMethod: string) => {
-    // TODO: remove this "if":
-    // if (true) {
-    //   navigate('InvoiceGeneratedPetro');
-    //   return;
-    // }
-
-    console.log('establishment: ', 2);
-    console.log('rfc: ', defaultProfile?.rfc);
-    console.log('zipCode: ', defaultProfile?.zip_code);
-    console.log('taxRegime: ', defaultProfile?.tax_code_key);
-    console.log('businessName: ', defaultProfile?.business_name);
-    console.log('methodOfPayment: ', invoicingPaymentMethodForPetroTicketList);
-    console.log('store: ', invoicingStoreForPetroTicketList);
-    console.log('invoicingProfileId: ', defaultProfile?.invoicing_profile_id);
-    console.log('cfdiUse: ', cfdi);
-    console.log(
-      'tickets: ',
-      invoicingPetroTicketList.map(t => {
-        const { ticketNo: folio, station, webId, date } = t;
-        return { folio, station, webId, date };
-      })
-    );
-
+  const onSubmit = async (cfdi: string) => {
     loader.show();
     try {
       const response = await dispatch(
@@ -90,7 +67,7 @@ const InvoiceTicketPetroController: React.FC = () => {
             const { ticketNo: folio, station, webId, date } = t;
             return { folio, station, webId, date };
           }),
-          address: defaultProfile?.Address!,
+          address: defaultProfile?.Address!
         })
       ).unwrap();
       // TODO we need add a ternary to convert establishment from 1 to petro
@@ -106,7 +83,7 @@ const InvoiceTicketPetroController: React.FC = () => {
         toast.show({ message: `${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
-      console.warn(error);
+      // console.warn(error);
       // navigate('InvoiceGeneratedPetro', { invoiceGenerated: { emissionDate: 'qwqwe', uuidInvoice: '123ASD', establishment: 'petro', total: '57.00' } });
     }
   };
