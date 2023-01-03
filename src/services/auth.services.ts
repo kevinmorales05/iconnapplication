@@ -288,7 +288,7 @@ async function loginWhitSocialNetwork(authCookie: AuthCookie, accountAuthCookie:
  * @returns
  */
 async function valideteUserSocial(): Promise<any> {
-  const response = await AuthUserSocial.getInstance().getRequest(`/vtexid/pub/authenticated/user`);
+  const response = await AuthUserSocial.getInstance(true).getRequest(`/vtexid/pub/authenticated/user`);
   if (response === undefined) return Promise.reject(new Error('getUser:/users/getUser'));
   const { data } = response;
   return data;

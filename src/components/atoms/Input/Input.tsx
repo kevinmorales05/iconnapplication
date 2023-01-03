@@ -11,7 +11,8 @@ import { ActionButton } from '../ActionButton';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ICONN_EYE_ON, ICONN_EYE_OFF, ICONN_CALENDAR } from 'assets/images';
 import { CustomText } from '../CustomText';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { ScanBarCodeSvg } from 'components/svgComponents/ScanBarCodeSvg';
+import { moderateScale } from 'utils/scaleMetrics';
 
 export interface Props {
   label?: string;
@@ -51,6 +52,7 @@ export interface Props {
   phone?: boolean;
   numeric?: boolean;
   boldLabel?: boolean;
+  heightValue?: number;
 }
 
 const Input = forwardRef(
@@ -92,7 +94,8 @@ const Input = forwardRef(
       onPressDatePickerIcon,
       phone = false,
       numeric = false,
-      boldLabel = false
+      boldLabel = false,
+      heightValue
     }: Props,
     ref: ForwardedRef<any>
   ) => {
@@ -145,7 +148,7 @@ const Input = forwardRef(
           <Container
             row
             center
-            height={hideLabel ? 68 : undefined}
+            height={hideLabel ? (heightValue ? heightValue : 68) : (heightValue ? heightValue : undefined)}
             style={{
               ...inputContainerStyle,
               borderColor,
@@ -203,9 +206,11 @@ const Input = forwardRef(
               </Touchable>
             )}
             {scanIcon && (
-              <Touchable onPress={onPressScan}>
-                <MaterialCommunityIcons name="line-scan" size={24} color={theme.fontColor.placeholder} style={{marginRight:13}} />
-              </Touchable>
+              <Container style={{marginRight: moderateScale(13)}}>
+                <Touchable onPress={onPressScan}>
+                  <ScanBarCodeSvg size={moderateScale(24)} />
+                </Touchable>
+              </Container>
             )}
             {datePicker && (
               <ActionButton

@@ -1,13 +1,16 @@
 import React, { useRef } from 'react';
-import { FlatList, Animated } from 'react-native';
+import { FlatList, Animated, ViewStyle, ImageStyle } from 'react-native';
 import { Container } from '../../atoms';
 import AnimatedItemWithBorder from './AnimatedItemWithBorder';
 
 interface Props {
   items?: any;
+  style?: ViewStyle;
+  slug?: boolean;
+  imgStyle?: ImageStyle;
 }
 
-const AnimatedCarouselWithBorder: React.FC<Props> = ({ items }) => {
+const AnimatedCarouselWithBorder: React.FC<Props> = ({ items, style, slug = true, imgStyle }) => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
 
@@ -22,10 +25,19 @@ const AnimatedCarouselWithBorder: React.FC<Props> = ({ items }) => {
     <Container flex center crossCenter>
       <FlatList
         data={items}
-        renderItem={({ item }) => <AnimatedItemWithBorder icon={item.icon} serviceName={item.serviceName} onPressItem={item.onPressItem} />}
+        renderItem={({ item }) => (
+          <AnimatedItemWithBorder
+            style={style}
+            icon={item.icon}
+            serviceName={item.serviceName}
+            onPressItem={item.onPressItem}
+            slug={slug}
+            imgStyle={imgStyle}
+          />
+        )}
         horizontal
         bounces={items!.length > 1 ? true : false}
-        keyExtractor={item => item.id}
+        keyExtractor={(_item, index) => index.toString()}
         onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
         scrollEventThrottle={32}
         onViewableItemsChanged={viewableItemsChanged}

@@ -12,7 +12,7 @@ import {
   sendEmailToRecoverPasswordThunk
 } from '../thunks/auth.thunks';
 import { startAuthenticationThunk } from '../thunks/vtex-auth.thunks';
-import { Address, AddressWithPositionInterface, AuthCookie, AuthDataInterface, ItemsFavoritesInterface, PointCard } from '../types';
+import { Address, AddressWithPositionInterface, AuthCookie, AuthDataInterface, ItemsFavoritesInterface, PackageVtex, PointCard } from '../types';
 
 const initialState: AuthDataInterface = {
   accountAuthCookie: { Name: '', Value: '' },
@@ -51,6 +51,7 @@ const initialState: AuthDataInterface = {
 };
 
 const favsInitialState: ItemsFavoritesInterface[] = [];
+const packagesInitialState: PackageVtex[] = [];
 const favsIdInitialState: string = '';
 const emptyPointCard: PointCard = {
   barCode: '',
@@ -59,17 +60,18 @@ const emptyPointCard: PointCard = {
   isActive: false,
   type: 'payback',
   userId: ''
-}
+};
 
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: initialState,
     loading: false,
-    favs: favsInitialState, 
+    favs: favsInitialState,
     favsId: favsIdInitialState,
     isGuest: false,
     pointCard: emptyPointCard,
+    packages: packagesInitialState
   },
   reducers: {
     setAuthInitialState(state) {
@@ -79,6 +81,13 @@ const authSlice = createSlice({
       state.favsId = '';
       state.isGuest = false;
       state.pointCard = emptyPointCard;
+      state.packages = { ...packagesInitialState };
+    },
+    setPackages(state, action: PayloadAction<PackageVtex[]>) {
+      state.packages = action.payload;
+    },
+    addPackage(state, action: PayloadAction<PackageVtex>) {
+      state.packages.push(action.payload);
     },
     setPointCard(state, action: PayloadAction<PointCard>) {
       state.pointCard = action.payload;
@@ -159,7 +168,7 @@ const authSlice = createSlice({
       state.user.addresses!.splice(action.payload.position, 1, action.payload.address);
     },
     setAddressDefault(state, action: PayloadAction<number>) {
-      state.user.addresses!.map(x => (x.isDefault = false));
+      state.user.addresses!.forEach(x => (x.isDefault = false));
       state.user.addresses![action.payload].isDefault = true;
     },
     setSeenCarousel(state, action: PayloadAction<boolean>) {
@@ -173,7 +182,7 @@ const authSlice = createSlice({
     },
     setIsGuest(state, action: PayloadAction<boolean>) {
       state.isGuest = action.payload;
-    }, 
+    },
     setAuthenticationToken(state, action: PayloadAction<string>) {
       state.user.authenticationToken = action.payload;
     },
@@ -182,7 +191,7 @@ const authSlice = createSlice({
     },
     setUserGeoPoint(state, action: PayloadAction<AuthDataInterface>) {
       state.user.geopoint = action.payload.geopoint;
-    },
+    }
   },
   extraReducers: builder => {
     builder.addCase(preSignUpThunk.pending, state => {
@@ -310,6 +319,7 @@ export const {
   setFav,
   addFav,
   addAddressToList,
+  addPackage,
   deleteAddressFromList,
   replaceAddressFromList,
   setAccountAuthCookie,
@@ -327,6 +337,7 @@ export const {
   setIsLogged,
   setLastName,
   setName,
+  setPackages,
   setPassword,
   setPhoto,
   setSecretKey,

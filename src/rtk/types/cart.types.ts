@@ -28,11 +28,13 @@ export interface ShippingDataAddress {
   state: undefined | string;
   country: undefined | string;
   street: undefined | string;
-  number: undefined | string;
+  number: undefined | string | null;
   neighborhood: undefined | string;
   complement: undefined | string;
   reference: undefined | string;
   geoCoordinates: number[];
+  addressId?: string | undefined;
+  isDisposable?: boolean;
 }
 
 export interface ShippingDataInfo {
@@ -43,5 +45,5 @@ export interface ShippingDataInfo {
 
 export interface ShippingData {
   selectedAddresses: ShippingDataAddress[];
-  logisticsInfo: ShippingDataInfo[];
+  logisticsInfo?: ShippingDataInfo[];
 }

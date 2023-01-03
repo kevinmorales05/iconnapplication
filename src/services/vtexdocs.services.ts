@@ -50,6 +50,32 @@ async function getAllDocByUserID(dataentity: string, userId: string): Promise<an
   return data;
 }
 
+/**
+ * Function to get items questions about help
+ * TODO error handling
+ * TODO interface for doc
+ */
+
+async function getHelpModuleQuestionsByModuleId(dataentity: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
+  //error handling
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to get Question steps about help
+ * TODO error handling
+ * TODO interface for doc
+ */
+
+async function getHelpQuestionsStepsByQuestionsId(dataentity: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
+  //error handling
+  const { data } = response;
+  return data;
+}
+
 async function getDocByEmail(dataentity: string): Promise<any> {
   const response = await DocsApi.getInstance().getRequest(`/dataentities/${dataentity}/search?_fields=_all`);
   //error handling
@@ -109,7 +135,7 @@ async function getImagesWelcomeLogin(): Promise<any> {
  * Function to getImages to welcomeLogin.
  */
 async function getPrefixesWallet(): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest('dataentities/QP/scroll?_fields=id,prefixe,type');
+  const response = await DocsApi.getInstance().getRequest('dataentities/QP/search?_fields=id,prefixe,type');
   const { data } = response;
   return data;
 }
@@ -118,7 +144,16 @@ async function getPrefixesWallet(): Promise<any> {
  * Function to getImages to welcomeLogin.
  */
 async function getBanksWallet(): Promise<any> {
-  const response = await DocsApi.getInstance().getRequest('dataentities/AB/scroll?_fields=id,name,sku,upc');
+  const response = await DocsApi.getInstance().getRequest('dataentities/AB/search?_fields=id,name,sku,upc');
+  const { data } = response;
+  return data;
+}
+
+/**
+ * Function to getDocuments by userID.
+ */
+async function getDocumentsByUserId(dataentity: string, userId: string): Promise<any> {
+  const response = await DocsApi.getInstance().getRequest(`dataentities/${dataentity}/search?_fields=_all&_where=userId=${userId}`);
   const { data } = response;
   return data;
 }
@@ -135,5 +170,8 @@ export const vtexDocsServices = {
   getImagesWelcomeLogin,
   getAllDocsByDocDataEntity,
   getPrefixesWallet,
-  getBanksWallet
+  getBanksWallet,
+  getHelpModuleQuestionsByModuleId,
+  getHelpQuestionsStepsByQuestionsId,
+  getDocumentsByUserId
 };

@@ -52,7 +52,7 @@ const WelcomeModal: React.FC<WelcomeModalDataInterface> = ({ visible, onPressOut
             </TouchableOpacity>
           </Container>
           <Container style={styles.containerText}>
-            <CustomText fontSize={theme.fontSize.h3} fontBold text={`¡Hola ${userName}!`} />
+            <CustomText fontSize={theme.fontSize.h3} fontBold text={`¡Hola${' ' + userName}!`} />
           </Container>
           <ScrollView bounces={false} onScroll={onScroll} showsHorizontalScrollIndicator={false} pagingEnabled={true} horizontal>
             <View onStartShouldSetResponder={(): boolean => true}>

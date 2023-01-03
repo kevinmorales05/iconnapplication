@@ -309,7 +309,7 @@ const ProductDetailScreen: React.FC<Props> = ({
 
   const removeFavorite = (oldFav: ItemsFavoritesInterface) => {
     let copyFavs = favs;
-    copyFavs.map(product => {
+    copyFavs.forEach(product => {
       if (product.Id == oldFav.Id) {
         const newFavList = copyFavs.filter(productf => productf.Id != oldFav.Id);
         let listItems: ListItemsWrapperInterface = {
@@ -581,7 +581,7 @@ const ProductDetailScreen: React.FC<Props> = ({
 
           <Container style={{ paddingVertical: 10 }} backgroundColor={theme.brandColor.iconn_background}>
             <TextContainer text={`¿Un último antojo?`} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
-            <ScrollView pagingEnabled horizontal showsHorizontalScrollIndicator={false}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <Container row style={{ width: '100%', marginBottom: 20, paddingLeft: 5, paddingRight: 30 }}>
                 {complementaryProducts.length === 0 ? (
                   <>

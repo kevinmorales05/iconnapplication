@@ -1,5 +1,5 @@
 import React from 'react';
-import { BackButton, RechargeHelpScreen } from 'components';
+import { BackButton, PackageHelpScreen, RechargeHelpScreen } from 'components';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Touchable } from 'components';
@@ -28,6 +28,9 @@ import RechargeEditController from 'screens/home/myAccount/wallet/recharges/rech
 import DepositController from 'screens/home/myAccount/wallet/deposits/DepositController';
 import { Image } from 'react-native';
 import { moderateScale } from 'utils/scaleMetrics';
+import TrackingController from 'screens/home/myAccount/wallet/packageTracking/TrackingController';
+import PackageDetailController from 'screens/home/myAccount/wallet/packageTracking/packageDetail/PackageDetailController';
+import CodeReaderController from 'screens/home/myAccount/wallet/CodeReader/CodeReaderController';
 
 const WalletStack: React.FC = () => {
   const Stack = createNativeStackNavigator<WalletStackParams>();
@@ -132,9 +135,10 @@ const WalletStack: React.FC = () => {
         options={({ route }) => ({
           title: route.params.servicePayment.slug,
           headerBackTitleVisible: false,
+          headerBackVisible: false,
           headerLeft: () => (
             <Touchable onPress={() => navigate('WalletHome')}>
-              <Icon name="arrowleft" size={20} color={theme.brandColor.iconn_dark_grey} />
+              <Icon name="arrowleft" size={25} color={theme.brandColor.iconn_dark_grey} />
             </Touchable>
           )
         })}
@@ -167,7 +171,6 @@ const WalletStack: React.FC = () => {
         name="ServicePaymentQRDetailDepositController"
         component={ServicePaymentQRDetailDepositController}
       />
-      <Stack.Screen options={{ title: 'Recargas Tiempo Aire', headerBackTitleVisible: false }} name="Recharge" component={RechargesController} />
       <Stack.Screen
         name="RechargeHelp"
         component={RechargeHelpScreen}
@@ -207,6 +210,28 @@ const WalletStack: React.FC = () => {
         component={RechargeQRController}
       />
       <Stack.Screen options={{ title: 'Editar recarga', headerBackTitleVisible: false }} name="RechargeEdit" component={RechargeEditController} />
+      <Stack.Screen options={{ title: 'Rastreo de paquete', headerBackTitleVisible: false }} name="Tracking" component={TrackingController} />
+      <Stack.Screen options={{ title: 'Rastreo de paquete', headerBackTitleVisible: false }} name="PackageDetail" component={PackageDetailController} />
+      <Stack.Screen options={{ title: 'Recargas Tiempo Aire', headerBackTitleVisible: false }} name="Recharge" component={RechargesController} />
+      <Stack.Screen options={{ headerBackTitleVisible: false, headerShown: false }} name="CodeReader" component={CodeReaderController} />
+      <Stack.Screen
+        name="PackageHelp"
+        component={PackageHelpScreen}
+        options={{
+          headerTitle: 'Rastreo de paquete',
+          headerBackTitleVisible: false,
+          headerBackVisible: false,
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                navigate('Tracking');
+              }}
+            >
+              <Icon name="close" size={20} color={theme.brandColor.iconn_dark_grey} />
+            </Touchable>
+          )
+        }}
+      />
     </Stack.Navigator>
   );
 };

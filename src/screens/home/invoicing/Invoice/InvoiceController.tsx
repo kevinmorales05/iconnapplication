@@ -8,6 +8,7 @@ import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } 
 import theme from 'components/theme/theme';
 import { getInvoicingProfileListThunk, resendVerificationEmailThunk } from 'rtk/thunks/invoicing.thunks';
 import { useAlert, useLoading, useToast } from 'context';
+import { invoicingServices } from 'services';
 
 const InvoiceController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -48,7 +49,6 @@ const InvoiceController: React.FC = () => {
   // Monitors if user has verified his email from web.
   useEffect(() => {
     let interval = setInterval(async () => {
-      console.log('fetching profiles again...');
       await dispatch(getInvoicingProfileListThunk(user.userId!));
     }, 10000);
 
@@ -62,17 +62,25 @@ const InvoiceController: React.FC = () => {
   // Clear interval
   useEffect(() => {
     if (defaultProfile?.verified_mail === true) {
-      console.log('cleaning interval...', intervalId);
       clearInterval(intervalId);
     }
   }, [defaultProfile]);
 
   useEffect(() => {
-    setDefaultProfile(
+    const tem: InvoicingProfileInterface | null =
       invoicingProfileList.find(item => {
         return item.default === true;
-      }) ?? null
-    );
+      }) ?? null;
+    if (!tem?.rfc) {
+      if (invoicingProfileList.length) {
+        invoicingServices.selectDefault(invoicingProfileList[0].invoicing_profile_id);
+        setTimeout(() => {
+          fetchInvoicingProfileList();
+        }, 500);
+      }
+    } else {
+      setDefaultProfile(tem);
+    }
   }, [invoicingProfileList]);
 
   const onSubmit = async () => {
@@ -96,7 +104,7 @@ const InvoiceController: React.FC = () => {
     alert.show(
       {
         title: 'Verifica tu correo electronico',
-        message: `Para facturar sólo falta verificar tu correo. Revisa tu bandeja de entrada:`,
+        message: 'Para facturar sólo falta verificar tu correo. Revisa tu bandeja de entrada:',
         acceptTitle: 'Aceptar',
         secondMessage: defaultProfile?.email,
         onAccept() {
@@ -122,7 +130,7 @@ const InvoiceController: React.FC = () => {
         });
       }
     } catch (error) {
-      console.warn(error);
+      // console.warn(error);
     } finally {
       loader.hide();
     }

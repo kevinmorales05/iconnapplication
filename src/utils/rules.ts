@@ -93,7 +93,7 @@ export const alphabetRule = (required: boolean): RegisterOptions => ({
   },
   validate: (value: string) => {
     if (!/^[A-Za-zñÑáÁéÉíÍóÓúÚöÖüÜ ]+$/.test(value)) {
-      return 'Ingresa un formato valido.';
+      return 'Ingresa un formato válido.';
     }
 
     return true;
@@ -107,6 +107,20 @@ export const mobilePhoneRule = (required: boolean): RegisterOptions => ({
   },
   validate: (value: string) => {
     if (!/^[0-9]{10}$/.test(value)) {
+      return 'Formato incorrecto.';
+    }
+
+    return true;
+  }
+});
+
+export const trackingNumberRule = (required: boolean): RegisterOptions => ({
+  required: {
+    value: required,
+    message: 'Campo requerido.'
+  },
+  validate: (value: string) => {
+    if (!/^[0-9]{22}$/.test(value)) {
       return 'Formato incorrecto.';
     }
 
@@ -272,7 +286,7 @@ export const alphaNumericWithSpacesAndDot = (lenght: number): RegisterOptions =>
   }
 });
 
-export const alphaNumericWithoutSpaces = (lenght: number): RegisterOptions => ({
+export const alphaNumericWithoutSpaces = (lenght: number, min?: number): RegisterOptions => ({
   required: {
     value: true,
     message: 'Campo requerido.'
@@ -284,6 +298,10 @@ export const alphaNumericWithoutSpaces = (lenght: number): RegisterOptions => ({
   pattern: {
     value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1]*$/,
     message: 'Caracter no válido.'
+  },
+  maxLength: {
+    value: min ? min : 100,
+    message: 'Longitud inválida.'
   }
 });
 

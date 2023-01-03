@@ -1,13 +1,24 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import WalletHomeScreen from './WalletHomeScreen';
-import { vtexDocsServices } from 'services';
-import { BeneficiaryInterface, CarouselItem, PointCard, RootState, ServiceQRType, ServiceType, useAppSelector } from 'rtk';
+import { vtexDocsServices, vtexServicesPayments } from 'services';
+import {
+  BeneficiaryInterface,
+  CarouselItem,
+  PointCard,
+  QRInterface,
+  RootState,
+  ServicePaymentInterface,
+  ServiceQRType,
+  ServiceType,
+  useAppSelector
+} from 'rtk';
 import { CARD_PETRO, CARD_PREF, ICONN_DEPOSIT, ICONN_MOBILE_RECHARGE, ICONN_PACKAGES_SEARCH, ICONN_SERVICE_PAYMENT } from 'assets/images';
 import Config from 'react-native-config';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { WalletStackParams } from 'navigation/types';
 import { useIsFocused } from '@react-navigation/native';
+import { useServicesPayments } from '../../hooks/usePaymentsServices';
 import { useToast } from 'context';
 
 const WalletHomeController: React.FC = () => {
@@ -24,7 +35,28 @@ const WalletHomeController: React.FC = () => {
   const { CATEGORIES_ASSETS } = Config;
   const [cardPic, setCardPic] = useState<CarouselItem[]>();
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
+  const { servicesPayments } = useServicesPayments();
   const toast = useToast();
+
+  const getDataforServiceQR = async (service: ServiceQRType) => {
+    const findServiceProvider = servicesPayments?.find(element => element.supplierName === service.type);
+    const arcusResponse = await vtexServicesPayments.createBillIntoArcus({
+      biller_id: findServiceProvider?.billerId as number,
+      account_number: service.reference
+    });
+    const { balance, id: idBill, due_date, balance_updated_at } = arcusResponse;
+    const QrData: QRInterface = {
+      alias: service.label,
+      balance: balance,
+      expirationDate: due_date,
+      contractNumber: service.reference,
+      billId: idBill,
+      updatedAt: balance_updated_at,
+      id: service.id as string
+    };
+
+    navigate('ServicePaymentQRDetail', { qrData: QrData, servicePayment: findServiceProvider as ServicePaymentInterface });
+  };
 
   const servicesArr: ServiceType[] = [
     {
@@ -46,7 +78,7 @@ const WalletHomeController: React.FC = () => {
     {
       icon: ICONN_PACKAGES_SEARCH,
       serviceName: 'Rastreo de Paquetes',
-      onPressItem: async () => {}
+      onPressItem: () => navigate('Tracking')
     }
   ];
 
@@ -116,6 +148,7 @@ const WalletHomeController: React.FC = () => {
   };
 
   useEffect(() => {
+    //getDataforServiceQR();
     getCards()
       .then(data => setCardsForImages(data))
       .then(cardsArr => setCardsforCarousel(cardsArr));
@@ -133,7 +166,9 @@ const WalletHomeController: React.FC = () => {
             qrType: 'service',
             reference: service.reference,
             type: service.type,
-            userId: service.userId
+            userId: service.userId,
+            billerId: service.billId,
+            id: service.id
           };
           serviceArr.push(userServiceQR);
         }
@@ -172,7 +207,7 @@ const WalletHomeController: React.FC = () => {
   };
 
   useEffect(() => {
-    if (route.params?.toastState! === 'deleteDeposit') {
+    if (route.params?.toastState === 'deleteDeposit') {
       toast.show({
         message: 'Beneficiario eliminado exitosamente.',
         type: 'success'
@@ -188,6 +223,7 @@ const WalletHomeController: React.FC = () => {
       cards={cardPic as CarouselItem[]}
       beneficiaries={beneficiaries?.length ? beneficiaries : []}
       goToDepositDetail={goToDepositDetail}
+      onPressService={getDataforServiceQR}
     />
   );
 };

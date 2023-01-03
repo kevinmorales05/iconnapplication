@@ -4,7 +4,9 @@ import { AppInterface } from 'rtk/types';
 const initialState: AppInterface = {
   error: '',
   internetReachability: 0,
-  internetReachabilityReviewed: 0
+  internetReachabilityReviewed: 0,
+  visibleSearchByDistance: true,
+  visibleStoreSymbology: true
 };
 
 const appSlice = createSlice({
@@ -15,6 +17,8 @@ const appSlice = createSlice({
       state.error = '';
       state.internetReachability = 0;
       state.internetReachabilityReviewed = 0;
+      state.visibleStoreSymbology = true;
+      state.visibleSearchByDistance = true;
     },
     setAppError(state, action: PayloadAction<AppInterface>) {
       state.error = action.payload.error;
@@ -24,9 +28,22 @@ const appSlice = createSlice({
     },
     setAppInternetReachabilityReviewed(state, action: PayloadAction<AppInterface>) {
       state.internetReachabilityReviewed = action.payload.internetReachabilityReviewed;
+    },
+    setAppVisibleStoreSymbology(state, action: PayloadAction<AppInterface>) {
+      state.visibleStoreSymbology = action.payload.visibleStoreSymbology;
+    },
+    setAppVisibleSearchByDistance(state, action: PayloadAction<AppInterface>) {
+      state.visibleSearchByDistance = action.payload.visibleSearchByDistance;
     }
   }
 });
 
-export const { setAppInitialState, setAppError, setAppInternetReachability, setAppInternetReachabilityReviewed } = appSlice.actions;
+export const {
+  setAppError,
+  setAppInitialState,
+  setAppInternetReachability,
+  setAppInternetReachabilityReviewed,
+  setAppVisibleSearchByDistance,
+  setAppVisibleStoreSymbology
+} = appSlice.actions;
 export default appSlice.reducer;

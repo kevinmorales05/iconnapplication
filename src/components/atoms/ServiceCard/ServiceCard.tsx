@@ -1,7 +1,7 @@
 import { TextContainer } from 'components/molecules';
 import React, { useCallback } from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { RechargeAmount, ServiceQRType } from 'rtk';
+import { RechargeAmount, RootState, ServiceQRType, useAppSelector } from 'rtk';
 import { Container } from '../Container';
 import theme from 'components/theme/theme';
 import { Touchable } from 'components';
@@ -13,10 +13,11 @@ import { WalletStackParams } from 'navigation/types';
 
 interface ServiceCardProps {
   service: ServiceQRType;
+  onPressService: (serviceSelect: ServiceQRType) => void;
 }
-const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
+const ServiceCard: React.FC<ServiceCardProps> = ({ service, onPressService }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
-  //const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { CATEGORIES_ASSETS } = Config;
   const getDataforQr = useCallback(async () => {
     const data = await vtexDocsServices.getAllDocsByDocDataEntity('AR');
@@ -40,12 +41,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
   }, []);
 
   const setQR = async () => {
+    const Buffer = require('buffer').Buffer;
     const amountQR = await getDataforQr();
-    const qrData: string = `711APPU|${amountQR?.UPC}|${amountQR?.SKU}|${service.reference}|${amountQR?.ammount}00`;
+    const idCut = user.id?.slice(0, 7);
+    let encodedAuth = new Buffer(`${idCut}\\${user.name} ${user.lastName}`).toString('base64');
+    const qrData: string = `711APPPU|${amountQR?.UPC}|${amountQR?.SKU}|${service.reference}|${amountQR?.ammount}00|${encodedAuth}|`;
     navigate('RechargeQR', { rechargeUser: service, qrData: qrData, amount: amountQR });
   };
   return (
-    <Touchable onPress={service.qrType === 'air' ? setQR : () => {}}>
+    <Touchable onPress={service.qrType === 'air' ? setQR : () => onPressService(service)}>
       {/* </Touchable><Touchable onPress={() => navigate('RechargeQR', { rechargeUser: service })}> */}
       <Container row style={styles.serviceCard}>
         <Image source={{ uri: service.imageURL }} style={{ height: 48, width: 48 }} resizeMode={'contain'} />

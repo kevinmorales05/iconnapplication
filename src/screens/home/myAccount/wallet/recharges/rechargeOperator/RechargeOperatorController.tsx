@@ -39,7 +39,10 @@ const RechargeOperatorController: React.FC = () => {
   };
 
   const onSubmit = async (rechargeFields: any) => {
-    const qrData: string = `711APPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00`;
+    const Buffer = require('buffer').Buffer;
+    const idCut = user.id?.slice(0, 7);
+    let encodedAuth = new Buffer(`${idCut}\\${user.name} ${user.lastName}`).toString('base64');
+    const qrData: string = `711APPPU|${amountSupplier?.UPC}|${amountSupplier?.SKU}|${rechargeFields.telephone}|${amountSupplier?.ammount}00|${encodedAuth}|`;
     const newRecharge: RechargeUser = {
       amount: amountSupplier?.ammount,
       isActive: true,
