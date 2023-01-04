@@ -123,19 +123,22 @@ export const useAddresses = () => {
       {
         title: 'Eliminar Dirección',
         message: '¿Estás seguro que quieres eliminar esta dirección de tu cuenta?',
-        acceptTitle: 'Cancelar',
-        cancelTitle: 'Eliminar',
-        cancelOutline: 'iconn_error',
-        cancelTextColor: 'iconn_error',
+        acceptTitle: 'Eliminar',
+        cancelTitle: 'Cancelar',
+        cancelOutline: 'iconn_light_grey',
+        cancelTextColor: 'iconn_dark_grey',
         onCancel() {
           alert.hide();
-          deleteAdress(address, position);
         },
         onAccept() {
           alert.hide();
+          deleteAdress(address, position);
         }
       },
-      'error'
+      'deleteCart',
+      true,
+      true,
+      false
     );
   };
 
