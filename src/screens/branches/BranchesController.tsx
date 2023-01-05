@@ -245,7 +245,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
       const nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], POINTS as PointInterface[], radiusOfSearch);
       if (nearbyMarkers.length === 0) {
         if (radiusOfSearch < 5) {
-          toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área o aumentar el radio de busquedaSSSS.', type: 'error' });
+          toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área o aumentar el radio de busqueda.', type: 'error' });
         } else {
           toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área.', type: 'error' });
         }
