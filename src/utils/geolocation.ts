@@ -1,33 +1,4 @@
-import { PointInterface, SellerInterface } from 'rtk';
-
-const turf = require('turf');
-
-export const distance = (from: number[] = [-95.343, 39.984], to: number[] = [-75.534, 39.123]): number => {
-  var distance = turf.distance(turf.point(from), turf.point(to));
-  return distance;
-};
-
-export const sortByDistance = (position: number[], sellers: SellerInterface[]): SellerInterface[] => {
-  return sellers
-    .map(seller => {
-      const to = [Number(seller.Longitud), Number(seller.Latitud)];
-
-      return { ...seller, distance: distance(position, to) } as SellerInterface;
-    })
-    .sort((a, b) => {
-      return (a.distance as number) - (b.distance as number);
-    });
-};
-
-export const hasNearbySellers = (position: number[], sellers: SellerInterface[]) => {
-  const filtered = sellers.filter(seller => {
-    const to = [Number(seller.Longitud), Number(seller.Latitud)];
-    const extent = distance(position, to);
-    return extent < 8;
-  });
-
-  return filtered.length > 0;
-};
+import { PointInterface } from 'rtk';
 
 /**
  * Function to get nearby points given a point/location.
@@ -40,7 +11,7 @@ export const getNearbyPoints = (location: number[], points: PointInterface[], ki
   const filtered = points
     .filter(point => {
       const to = [Number(point.latitude), Number(point.longitude)];
-      const extent = distance(location, to);
+      const extent = distanceInKmBetweenEarthCoordinates(location[0], location[1], to[0], to[1]);
       if (extent < kilometers) {
         point.kmDistance = extent.toFixed(1); // i.e: 0.9966472642351644 to 1.0, 2.1788058118354643 to 2.2
         return point;
@@ -54,3 +25,36 @@ export const getNearbyPoints = (location: number[], points: PointInterface[], ki
   // console.log('Detalle de tiendas cercanas a la ubicación:', JSON.stringify(filtered, null, 3));
   return filtered;
 };
+
+/**
+ * Converts degrees to radians.
+ * @param degrees degrees
+ * @returns Radians
+ */
+const degreesToRadians = (degrees: number) => {
+  return (degrees * Math.PI) / 180;
+};
+
+/**
+ * This function is responsible to calculate the distance between 2 points, given a pair of coordinates.
+ * @param lat1 Origin Latitude.
+ * @param lon1 Origin Longitude.
+ * @param lat2 Destination Latitude.
+ * @param lon2 Destination Longitude.
+ * @returns distance in kilometers.
+ */
+export const distanceInKmBetweenEarthCoordinates = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const earthRadiusKm: number = 6371; // https://www.univision.com/explora/cual-es-el-radio-de-la-tierra
+
+  const dLat: number = degreesToRadians(lat2 - lat1);
+  const dLon: number = degreesToRadians(lon2 - lon1);
+
+  lat1 = degreesToRadians(lat1);
+  lat2 = degreesToRadians(lat2);
+
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return earthRadiusKm * c;
+};
+
+// console.log('Example to test', distanceInKmBetweenEarthCoordinates(0, 0, 0, 0));
