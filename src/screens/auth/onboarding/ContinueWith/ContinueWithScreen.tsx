@@ -56,10 +56,10 @@ const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail
             </Button>
           );
         } else if (provider.providerName === 'Apple' && Platform.OS === 'ios') {
-            return (
-              <Button
-              key="facebookBtn"
-              color="apple"
+          return (
+            <Button
+              key="appleBtn"
+              color="iconn_dark_grey"
               round
               onPress={() => {
                 onPressSocialButton(provider.providerName);
@@ -71,10 +71,8 @@ const ContinueWithScreen: React.FC<Props> = ({ onPressSocialButton, onPressEmail
             >
               Ingresa con Apple
             </Button>
-            )
-        }
-        
-        else {
+          );
+        } else {
           return null;
         }
       });

@@ -100,7 +100,6 @@
     "redux-persist": "^6.0.0",
     "stream": "^0.0.2",
     "timers": "^0.1.1",
-    "turf": "^3.0.14",
     "vision-camera-code-scanner": "0.2.0",
     "xml2js": "^0.4.23"
   },

@@ -5,7 +5,6 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Container } from 'components/atoms';
 import { TextContainer } from '../TextContainer';
 import theme from 'components/theme/theme';
-import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { InvoicingPetroTicketResponseInterface, InvoicingSevenTicketResponseInterface } from 'rtk';
 
@@ -16,15 +15,16 @@ interface ListSwipeableItemProps {
   onPressDelete: (ticket: any, position: number) => any;
   index: number;
   rowRefs: any;
+  editable: boolean;
 }
 
 const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
-  onPressEdit,
   onPressDelete,
   ticketSeven,
   ticketPetro,
   index,
-  rowRefs
+  rowRefs,
+  editable = true
 }: ListSwipeableItemProps): any => {
   const item: StyleProp<ViewStyle> = {
     height: 68,
@@ -92,7 +92,8 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
   };
 
   const renderRightActions = () => (
-    <Container row style={{ width: 60 }}>
+    <Container row style={{ width: editable ? 120 : 60 }}>
+      {editable && renderRightAction('edit', theme.brandColor.iconn_grey)}
       {renderRightAction('delete', theme.brandColor.iconn_red_original)}
     </Container>
   );
