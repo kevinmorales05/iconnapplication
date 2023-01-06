@@ -32,7 +32,7 @@ export const Toast = () => {
     <Animated.View
       style={[
         styles.toast,
-        toast.visible ? { position: 'absolute', top: 50 } : { height: 0 },
+        toast.visible ? { height: 'auto', position: 'absolute', top: 50 } : { height: 0 },
         { opacity: fade },
         {
           backgroundColor:
@@ -82,18 +82,21 @@ export default Toast;
 
 const styles = StyleSheet.create({
   toast: {
-    display: 'flex',
-    justifyContent: 'center',
     borderRadius: 8,
+    display: 'flex',
+    elevation: 1,
+    height: 0,
+    justifyContent: 'center',
+    left: 0,
     marginHorizontal: 16,
     paddingVertical: 16,
-    zIndex: 1,
-    elevation: 1,
+    position: 'absolute',
     right: 0,
-    left: 0,
     shadowColor: '#171717',
     shadowOffset: { width: -2, height: 4 },
     shadowOpacity: 0.4,
-    shadowRadius: 8
+    shadowRadius: 8,
+    top: 0,
+    zIndex: 1
   }
 });
