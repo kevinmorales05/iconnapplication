@@ -58,7 +58,6 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
   useEffect(() => {
     setValue('payment_method', paymentMethod ? PAYMENT_METHODS.find(i => i.id === paymentMethod)?.name : '');
     //setValue('cfdi', defaultProfile?.Cfdi.c_use_cfdi);
-
   }, [PaymentMethod]);
 
   useEffect(() => {
@@ -109,6 +108,7 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
                   ticketSeven={ticket}
                   index={i}
                   rowRefs={rowRefs}
+                  editable={false}
                 />
               ))}
               <Container style={{ paddingTop: 24, paddingBottom: 16, paddingHorizontal: 16 }}>
@@ -123,7 +123,7 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
             </Container>
 
             <Container style={{ paddingHorizontal: 16 }}>
-              <TextContainer typography="h5" fontBold text={`Uso de CFDI (Predeterminado)`} marginTop={21} />
+              <TextContainer typography="h5" fontBold text={'Uso de CFDI (Predeterminado)'} marginTop={21} />
               <Select
                 name="cfdi"
                 control={control}
@@ -133,24 +133,19 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
                 optionsValueField="description"
                 onSelect={value => {
                   if (typeof value === 'object') {
-                    setCfdi(value['c_use_cfdi']);
-                    setValue('cfdi', value ? cfdiList.find(i => i['c_use_cfdi'] === value['c_use_cfdi'])!['description'] : '');
-    
+                    setCfdi(value.c_use_cfdi);
+                    setValue('cfdi', value ? cfdiList.find(i => i.c_use_cfdi === value.c_use_cfdi)!.description : '');
                   } else {
-                    console.log("this is the value ", typeof value)
                     setCfdi(value);
-                    setValue('cfdi', value ? cfdiList.find(i => i['c_use_cfdi'] === value)!['description'] : '');
-                    console.log("VAlue else ", value)
-                    console.log("valor del cfdi", Cfdi)
+                    setValue('cfdi', value ? cfdiList.find(i => i.c_use_cfdi === value)!.description : '');
                   }
                   trigger('cfdi');
                 }}
                 androidMode="dialog"
-                placeholder={`Seleccionar`}
+                placeholder={'Seleccionar'}
                 label="Selecciona el uso de CFDI:"
-                
               />
-              <TextContainer typography="h5" fontBold text={`Forma de pago`} marginTop={21} />
+              <TextContainer typography="h5" fontBold text={'Forma de pago'} marginTop={21} />
               <Select
                 name="payment_method"
                 control={control}
@@ -160,18 +155,16 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
                 optionsValueField="name"
                 onSelect={value => {
                   if (typeof value === 'object') {
-                    setPaymentMethod(value['id']);
-                    setValue('payment_method', value ? PAYMENT_METHODS.find(i => i.id === value['id'])?.name : '');
-                    
+                    setPaymentMethod(value.id);
+                    setValue('payment_method', value ? PAYMENT_METHODS.find(i => i.id === value.id)?.name : '');
                   } else {
                     setPaymentMethod(value);
                     setValue('payment_method', value ? PAYMENT_METHODS.find(i => i.id === value)?.name : '');
-                    console.log("print ", value)
                   }
                   trigger('payment_method');
                 }}
                 androidMode="dialog"
-                placeholder={`Seleccionar`}
+                placeholder={'Seleccionar'}
                 label="Selecciona la forma de pago:"
                 disabled
               />
@@ -185,7 +178,7 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
               round
               fontBold
               fontSize="h4"
-              onPress={() => onSubmit(Cfdi == "" ? defaultProfile?.Cfdi.c_use_cfdi: Cfdi, PaymentMethod)}
+              onPress={() => onSubmit(Cfdi == '' ? defaultProfile?.Cfdi.c_use_cfdi : Cfdi, PaymentMethod)}
               leftIcon={<Image source={ICONN_INVOICING_INVOICE} />}
             >
               Facturar
