@@ -22,9 +22,10 @@ interface Props {
   onDelete?: (invoicingProfileInterface: InvoicingProfileInterface) => void;
   onBack?: () => void;
   current?: InvoicingProfileInterface;
+  isReset?: boolean;
 }
 
-const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
+const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current, isReset }) => {
   const dispatch = useAppDispatch();
   const {
     control,
@@ -32,7 +33,8 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
     watch,
     formState: { errors, isDirty },
     register,
-    handleSubmit
+    handleSubmit,
+    reset
   } = useForm({
     mode: 'onChange'
   });
@@ -68,6 +70,12 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
       navigation.goBack();
     }
   };
+
+  useEffect(() => {
+    if (isReset) {
+      resetForm();
+    }
+  }, [isReset]);
 
   /** Custom event for software 'Back Button' android /ios (software button) */
   useLayoutEffect(() => {
@@ -154,6 +162,22 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current }) => {
       }
     }, 250);
   }, [colonies, current, toggled]);
+
+  const resetForm = () => {
+    reset({
+      rfc: '',
+      cfdi: '',
+      email: '',
+      regime: '',
+      postalCode: '',
+      businessName: '',
+      street: '',
+      city: '',
+      state: '',
+      ext_num: ''
+    });
+    if (rfcRef.current) rfcRef.current.focus();
+  };
 
   useEffect(() => {
     loader.show();
