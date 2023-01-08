@@ -15,7 +15,7 @@ import {
   resetInvoicingSevenTicketList
 } from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
-import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
+import { forwardInvoiceThunk, getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
 
 const InvoiceTicketSevenController: React.FC = () => {
   const { navigate, goBack, push } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -30,7 +30,6 @@ const InvoiceTicketSevenController: React.FC = () => {
   useEffect(() => {
     setDefaultProfile(
       invoicingProfileList.find(item => {
-        console.log("PROFILE",item )
         return item.default === true;
       }) ?? null
     );
@@ -49,26 +48,12 @@ const InvoiceTicketSevenController: React.FC = () => {
     }
   }, [invoicingSevenTicketList]);
 
-  const onSubmit = async (cfdi: string, paymentMethod: string) => {
+  const onSubmit = async (cfdi: string) => {
     // TODO: remove this "if":
     // if (true) {
     //   navigate('InvoiceGeneratedSeven');
     //   return;
     // }
-
-    console.log('establishment: ', 2);
-    console.log('rfc: ', defaultProfile?.rfc);
-    console.log('zipCode: ', defaultProfile?.zip_code);
-    console.log('taxRegime: ', defaultProfile?.tax_code_key);
-    console.log('businessName: ', defaultProfile?.business_name);
-    console.log('methodOfPayment: ', invoicingPaymentMethodForSevenTicketList);
-    console.log('store: ', invoicingStoreForSevenTicketList);
-    console.log('invoicingProfileId: ', defaultProfile?.invoicing_profile_id);
-    console.log('cfdiUse: ', cfdi);
-    console.log(
-      'tickets: ',
-      invoicingSevenTicketList.map(t => t.ticketNo)
-    );
 
     loader.show();
     try {
@@ -84,7 +69,7 @@ const InvoiceTicketSevenController: React.FC = () => {
           invoicingProfileId: defaultProfile?.invoicing_profile_id!,
           cfdiUse: cfdi,
           tickets: invoicingSevenTicketList.map(t => t.ticketNo),
-          address: defaultProfile?.Address!,
+          address: defaultProfile?.Address!
         })
       ).unwrap();
       // TODO we need add a ternary to convert establishment from 2 to seven
@@ -94,13 +79,19 @@ const InvoiceTicketSevenController: React.FC = () => {
       // }
       // return;
       if (response.responseCode === 75) {
+        await dispatch(
+          forwardInvoiceThunk({
+            uuid: response.data.uuidInvoice ? response.data.uuidInvoice : undefined,
+            emails: [defaultProfile?.email]
+          })
+        ).unwrap();
         dispatch(resetInvoicingSevenTicketList());
         navigate('InvoiceGeneratedSeven', { invoiceGenerated: response.data });
       } else {
         toast.show({ message: `${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
-      console.warn(error);
+      // console.warn(error);
     }
   };
 

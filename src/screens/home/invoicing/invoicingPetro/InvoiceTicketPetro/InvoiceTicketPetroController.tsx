@@ -15,7 +15,7 @@ import {
   resetInvoicingPetroTicketList
 } from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
-import { getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
+import { forwardInvoiceThunk, getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
 
 const InvoiceTicketPetroController: React.FC = () => {
   const { navigate, goBack, push } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -77,6 +77,12 @@ const InvoiceTicketPetroController: React.FC = () => {
       // }
       // return;
       if (response.responseCode === 75) {
+        await dispatch(
+          forwardInvoiceThunk({
+            uuid: response.data.uuidInvoice ? response.data.uuidInvoice : undefined,
+            emails: [defaultProfile?.email]
+          })
+        ).unwrap();
         dispatch(resetInvoicingPetroTicketList());
         navigate('InvoiceGeneratedPetro', { invoiceGenerated: response.data });
       } else {
