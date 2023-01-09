@@ -49,7 +49,7 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, viewGen
             rfcText={defaultProfile ? defaultProfile.rfc : 'Error'}
             textCard="Total:"
             actionText={invoiceGenerated ? `$${invoiceGenerated.total}` : 'Error'}
-            typeImage={invoiceGenerated ? invoiceGenerated.establishment : undefined}
+            typeImage={invoiceGenerated ? (invoiceGenerated.establishment === 1 ? 'petro' : 'seven') : undefined}
             textButtonLeft="Ver"
             textButtonRigth="Reenviar"
             onPressButtonLeft={viewGeneratedInvoice}

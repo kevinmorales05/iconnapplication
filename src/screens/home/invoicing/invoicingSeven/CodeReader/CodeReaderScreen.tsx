@@ -42,12 +42,11 @@ const CodeReaderScreen: React.FC<Props> = ({ onPressOk }) => {
         read.current = true;
         Vibration.vibrate(10);
         setCameraActive(false);
-        const barCode =
-          barcodes[0].displayValue?.length === 35 ? barcodes[0].displayValue : barcodes[0].displayValue?.slice(1, barcodes[0].displayValue.length - 1);
+        const barCode = barcodes[0].displayValue?.length === 35 ? barcodes[0].displayValue : barcodes[0].displayValue?.substring(1);
         Alert.alert('Código de barras: ', barCode, [
           {
             onPress: () => {
-              onPressOk(barcodes[0].displayValue);
+              onPressOk(barCode);
             }
           }
         ]);

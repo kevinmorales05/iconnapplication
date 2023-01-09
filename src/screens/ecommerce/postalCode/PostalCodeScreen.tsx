@@ -104,7 +104,7 @@ const PostalCodeScreen = () => {
         }
       }
       toast.show({
-        message: 'No se encontraron tiendas cercanas',
+        message: 'Servicio no disponible en esta zona.',
         type: 'error'
       });
       loader.hide();
@@ -132,7 +132,7 @@ const PostalCodeScreen = () => {
       }
     }
     toast.show({
-      message: 'No se encontraron tiendas cercanas',
+      message: 'Servicio no disponible en esta zona.',
       type: 'error'
     });
     loader.hide();
