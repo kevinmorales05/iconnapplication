@@ -192,7 +192,7 @@ const SearchSellerScreen = () => {
         return;
       }
       toast.show({
-        message: 'No se encontraron tiendas cercanas',
+        message: 'Servicio no disponible en esta zona.',
         type: 'error'
       });
       setSellers([]);
@@ -220,7 +220,7 @@ const SearchSellerScreen = () => {
       }
     }
     toast.show({
-      message: 'No se encontraron tiendas cercanas',
+      message: 'Servicio no disponible en esta zona.',
       type: 'error'
     });
     setSellers([]);
