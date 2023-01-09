@@ -1,15 +1,17 @@
 import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
 import { Button } from 'components/molecules';
 import theme from 'components/theme/theme';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, TextInput, View, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ICONN_EMAIL } from 'assets/images';
 import { Result } from 'screens/home/invoicing/InvoiceHistory/InvoiceHistory';
-import { invoicingServices } from 'services';
-import { useAlert, useLoading } from 'context';
+import { useAlert, useLoading, useToast } from 'context';
+import { Controller, FieldValues, useForm } from 'react-hook-form';
+import { emailsList } from 'utils/rules';
+import { forwardInvoiceThunk, useAppDispatch } from 'rtk';
 
 const DEFAULT_COUNTDOWN_TIME = 30;
 interface SendInvoiceModalProps {
@@ -22,28 +24,52 @@ interface SendInvoiceModalProps {
 
 const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut, invoice, seconds, startCountdown }) => {
   const { containerStyle } = styles;
+  const dispatch = useAppDispatch();
+  const toast = useToast();
 
   const insets = useSafeAreaInsets();
 
-  const [value, onChangeText] = useState('');
-  const [emails, setEmails] = useState<string[]>([]);
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid }
+  } = useForm({
+    mode: 'onChange'
+  });
 
   const loader = useLoading();
   const alert = useAlert();
 
-  useEffect(() => {
-    let emails = value.split(' ');
-
-    emails = emails.filter(e => {
-      return validateEmail(e);
-    });
-    setEmails(emails);
-  }, [value]);
-
-  function validateEmail(email: string) {
-    var re = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i;
-    return re.test(email);
-  }
+  const submit = async (fields: FieldValues) => {
+    loader.show();
+    onPressOut();
+    try {
+      const response = await dispatch(
+        forwardInvoiceThunk({
+          uuid: invoice.invoice_uuid,
+          emails: fields.emailsList.split(',')
+        })
+      ).unwrap();
+      if (response.responseCode === 901) {
+        startCountdown(DEFAULT_COUNTDOWN_TIME);
+        alert.show(
+          {
+            title: 'Factura reenviada',
+            message: `Tu factura se ha enviado a: \n\n${fields.emailsList}`,
+            acceptTitle: 'Aceptar',
+            onAccept() {
+              alert.hide();
+            }
+          },
+          'success'
+        );
+      } else {
+        toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
+      }
+    } catch (error) {
+      // console.warn(error);
+    }
+  };
 
   return (
     <CustomModal visible={visible} onDismiss={onPressOut}>
@@ -83,21 +109,27 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
                     padding: 10,
                     flexDirection: 'row',
                     borderColor: '#dadadb',
-                    alignContent: 'center',
                     minHeight: 100
                   }}
                 >
                   <Image style={{ width: 20, height: 20, marginRight: 10 }} source={ICONN_EMAIL} />
-                  <TextInput
-                    multiline
-                    numberOfLines={4}
-                    onChangeText={text => {
-                      if (emails.length >= 10) return;
-
-                      onChangeText(text.toLowerCase());
-                    }}
-                    value={value}
-                    style={{ padding: 10, width: '90%' }}
+                  <Controller
+                    name="emailsList"
+                    rules={emailsList(3)}
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <TextInput
+                        style={{ width: '100%', height: '100%' }}
+                        onBlur={onBlur}
+                        onChangeText={val => onChange(val)}
+                        value={value}
+                        multiline
+                        textAlignVertical="center"
+                        placeholder=""
+                        keyboardType="default"
+                        maxLength={300}
+                      />
+                    )}
                   />
                 </View>
                 <View>
@@ -114,40 +146,13 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
                 Cancelar
               </Button>
               <Button
-                disabled={emails.length === 0 || seconds > 0}
+                disabled={!isValid || seconds > 0}
                 length="short"
                 round
                 fontBold
                 fontSize="h4"
                 leftIcon={seconds === 0 ? <Feather name="send" size={20} color={theme.fontColor.white} /> : undefined}
-                onPress={async () => {
-                  if (!value) return;
-                  if (emails.length === 0) return;
-                  loader.show();
-                  onPressOut();
-
-                  try {
-                    await invoicingServices.sendInvoiceEmail(emails, invoice.invoice_uuid);
-                    startCountdown(DEFAULT_COUNTDOWN_TIME);
-                    alert.show(
-                      {
-                        title: 'Factura reenviada',
-                        message: 'Tu factura se ha enviado a:',
-                        acceptTitle: 'Aceptar',
-                        secondMessage: (() => {
-                          return emails.join(' \n ');
-                        })(),
-                        onAccept() {
-                          alert.hide();
-                        }
-                      },
-                      'success'
-                    );
-                  } catch (e) {
-                    // console.log()
-                  }
-                  loader.hide();
-                }}
+                onPress={handleSubmit(submit)}
               >
                 {seconds > 0 ? `Reenviar (${seconds})` : 'Reenviar'}
               </Button>
