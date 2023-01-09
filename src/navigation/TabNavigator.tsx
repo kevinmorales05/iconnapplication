@@ -85,7 +85,8 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         name="BranchesScreen"
-        component={isGuest ? InviteSignUpController : BranchesStack}
+        component={isGuest ? InviteSignUpController : InConstructionController}
+        // component={isGuest ? InviteSignUpController : BranchesStack}
         options={{
           unmountOnBlur: true,
           headerShown: false,

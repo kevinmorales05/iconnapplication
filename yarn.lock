@@ -1856,6 +1856,11 @@
   dependencies:
     invariant "^2.2.4"
 
+"@react-native-firebase/analytics@14.9.1":
+  version "14.9.1"
+  resolved "https://repo.huaweicloud.com/repository/npm/@react-native-firebase/analytics/-/analytics-14.9.1.tgz#0f756da8a90f4c1a296b9e73803cf8dc9aa00be8"
+  integrity sha512-FlvzqSoDNcrtH2ZYIMi3Wq70dXJtJrf4WcUpHFyNVijIdEWRnI2zuCzXCnnXstPogwdUBqoQs4qboi9K4toSUQ==
+
 "@react-native-firebase/app@14.9.1":
   version "14.9.1"
   resolved "https://repo.huaweicloud.com/repository/npm/@react-native-firebase/app/-/app-14.9.1.tgz"
