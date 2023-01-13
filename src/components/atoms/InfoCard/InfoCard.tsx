@@ -30,8 +30,8 @@ const InfoCard: React.FC<InfoCardProps> = ({ text, type }: InfoCardProps) => {
   };
 
   const ImageStyle: StyleProp<ImageStyle> = {
-    width: type === 'connection' ? 28 : 28,
-    height: type === 'no-data' ? 28 : 28,
+    width: 28,
+    height: 28,
     alignSelf: 'center'
   };
 

@@ -77,7 +77,7 @@ const MyOrdersController: React.FC = () => {
 
   const seeMore = async (orderId: string) => {
     const res = await liveStatusServices.getUrl(orderId);
-    navigate('LiveStatusWidget', { urlLive: res.href });
+    navigate('LiveStatusWidget', { urlLive: res.href + '&primaryColor=%23008060&secondaryColor=%23000000' });
   };
 
   return (

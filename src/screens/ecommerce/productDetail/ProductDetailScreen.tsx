@@ -387,7 +387,6 @@ const ProductDetailScreen: React.FC<Props> = ({
                 <Container style={{ marginTop: -3.5, marginLeft: 2 }}>
                   <TouchableText
                     marginLeft={8}
-                    underline
                     textColor={theme.brandColor.iconn_accent_principal}
                     text={productRating.totalCount + ' Calificaciones'}
                     typography="h4"

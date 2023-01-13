@@ -31,7 +31,7 @@ import ICONN_BRANCHES_ARROW_UP from './iconn-branches-arrow-up.png';
 import ICONN_BRANCHES_BINOMIAL from './iconn-branches-binomial.webp';
 import ICONN_BRANCHES_DETAILS_SYMBOLOGY from './iconn-branches-details-symbology.png';
 import ICONN_BRANCHES_FILTER_OPTION from './iconn-branches-filter-option.png';
-import ICONN_BRANCHES_FILTERS_BINOMIAL from './iconn-branches-binomial.png';
+import ICONN_BRANCHES_FILTERS_BINOMIAL from './iconn-branches-binomial-filters.png';
 import ICONN_BRANCHES_ICON_7ELEVEN from './iconn-branches-icon-7eleven.png';
 import ICONN_BRANCHES_ICON_APPLEPAY from './iconn-branches-icon-applepay.png';
 import ICONN_BRANCHES_ICON_ARRIVE from './iconn-branches-icon-arrive.png';

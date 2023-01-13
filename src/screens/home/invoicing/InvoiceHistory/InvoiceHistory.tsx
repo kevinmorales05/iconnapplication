@@ -23,6 +23,7 @@ import { useAppSelector, RootState, InvoiceGeneratedResponseInterface } from 'rt
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
+import { print } from '@gorhom/bottom-sheet/lib/typescript/utilities/logger';
 
 interface EstablishmentResult {
   establishment_id: number;
@@ -40,6 +41,7 @@ export interface Result {
   total: string;
   Establishment: EstablishmentResult;
   Invoicing_Profile: InvoicingProfile;
+  created_At: string;
 }
 
 interface FilterChipProps {
@@ -73,6 +75,7 @@ const FilterChip = ({ highlight = false, label, onPress, onReset }: FilterChipPr
 };
 
 const DateSeparator = ({ date }: { date: string }) => {
+  console.log("FECHA",date)
   return (
     <View style={{ marginTop: 10, marginLeft: 15 }}>
       <CustomText text={date} textColor={theme.fontColor.grey} fontBold />
@@ -101,7 +104,7 @@ export const InvoiceItem = ({
       }}
     >
       <View>
-        <Image style={{ width: moderateScale(38), height: moderateScale(38) }} source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
+        <Image style={{ width: moderateScale(38), height: moderateScale(48) }} source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
       </View>
       <View>
         <CustomText text={invoice?.Invoicing_Profile?.rfc ? invoice?.Invoicing_Profile?.rfc : ''} fontBold />
@@ -429,6 +432,7 @@ const InvoiceScreen: React.FC = () => {
             const { rows } = data;
 
             const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
+              console.log(`item factura ${b.created_At}`)
               return moment(a.emission_date).diff(b.emission_date);
             });
 

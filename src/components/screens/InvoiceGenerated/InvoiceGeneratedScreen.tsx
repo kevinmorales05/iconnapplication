@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, CardDivided, TextContainer } from '../../molecules';
 import { Container } from '../../atoms';
 import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface } from 'rtk';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
   finalize: () => void;
@@ -21,7 +22,7 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, viewGen
   return (
     <ScrollView
       bounces={false}
-      style={{ flex: 1 }}
+      style={{ flex: 1, width: '100%' }}
       contentContainerStyle={{
         flexGrow: 1,
         paddingBottom: insets.bottom + 16,
@@ -48,7 +49,7 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, viewGen
             rfcText={defaultProfile ? defaultProfile.rfc : 'Error'}
             textCard="Total:"
             actionText={invoiceGenerated ? `$${invoiceGenerated.total}` : 'Error'}
-            typeImage={invoiceGenerated ? invoiceGenerated.establishment : undefined}
+            typeImage={invoiceGenerated ? (invoiceGenerated.establishment === 1 ? 'petro' : 'seven') : undefined}
             textButtonLeft="Ver"
             textButtonRigth="Reenviar"
             onPressButtonLeft={viewGeneratedInvoice}
@@ -56,9 +57,9 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, viewGen
           />
         </Container>
       </Container>
-      <Container flex row crossAlignment="end" space="between" style={{ marginBottom: 8 }}>
+      <Container flex row space="around" style={{ marginBottom: 8, alignItems: 'center', alignContent: 'center', width: '100%' }}>
         <Button
-          style={{ width: 170, height: 58, borderRadius: 12 }}
+          style={{ width: moderateScale(150), height: 58, borderRadius: 12 }}
           length="short"
           round
           fontBold
@@ -73,7 +74,7 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, viewGen
           Nueva factura
         </Button>
         <Button
-          style={{ width: 170, height: 58, borderRadius: 12 }}
+          style={{ width: moderateScale(150), height: 58, borderRadius: 12 }}
           round
           fontBold
           fontSize="h3"

@@ -26,7 +26,6 @@ const CommentOrderController: React.FC = () => {
       score: paramRating as number,
       comment: comment ? comment.comment : ''
     };
-
     try {
       await ratingServices.postOrderRating(sendRating);
       toast.show({
