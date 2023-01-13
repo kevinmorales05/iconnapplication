@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Image, ScrollView, TextInput, StyleSheet, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, Dimensions } from 'react-native';
 import { CustomText, Touchable, Container } from 'components';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import theme from 'components/theme/theme';
-import { ICONN_PIN_LOCATION } from 'assets/images';
-import sellers from 'assets/files/sellers.json';
-import { SellerInterface, setDefaultSeller, useAppDispatch, useAppSelector, RootState } from 'rtk';
-import { hasNearbySellers, sortByDistance } from 'utils/geolocation';
-import { useLoading, useAlert, useToast } from 'context';
-import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
-import appConfig from '../../../../app.json';
-import { PlacesSvg } from 'components/svgComponents/PlacesSvg';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
+import { PlacesSvg } from 'components/svgComponents/PlacesSvg';
+import { ScrollView, TextInput, StyleSheet, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking } from 'react-native';
+import { SellerInterface, setDefaultSeller, useAppDispatch, useAppSelector, RootState } from 'rtk';
+import { useLoading, useAlert, useToast } from 'context';
 import { vtexPickUpPoints } from 'services';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import appConfig from '../../../../app.json';
+import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
 import Octicons from 'react-native-vector-icons/Octicons';
+import sellers from 'assets/files/sellers.json';
+import theme from 'components/theme/theme';
 
 /*regla de negocio:
   delivery hasta 7 km 
@@ -129,7 +127,7 @@ const SearchSellerScreen = () => {
     if (status === 'disabled') {
       Alert.alert(`Turn on Location Services to allow "${appConfig.displayName}" to determine your location.`, '', [
         { text: 'Go to Settings', onPress: openSetting },
-        { text: "Don't Use Location", onPress: () => {} }
+        { text: 'Do not use location', onPress: () => {} }
       ]);
     }
 
@@ -167,79 +165,79 @@ const SearchSellerScreen = () => {
     return false;
   };
 
-  useEffect(()=>{
-    if(user.cp){
-      getPickUpPoints(user.cp)
-      onChangeText(user.cp)
-    }else if(user.geopoint){
-      getPickUpPointsByAddress(user.geopoint)
+  useEffect(() => {
+    if (user.cp) {
+      getPickUpPoints(user.cp);
+      onChangeText(user.cp);
+    } else if (user.geopoint) {
+      getPickUpPointsByAddress(user.geopoint);
     }
-  }, [ user ])
+  }, [user]);
 
   const getPickUpPoints = async (cp: string) => {
-    if(cp.length === 5){
+    if (cp.length === 5) {
       const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
       const temSellers: SellerInterface[] = [];
-      if(pickUp.items.length){
-        sellers.forEach((seller)=>{
-          console.log({temSellers:pickUp.items})
-          const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-          if(store.distance < 20){
+      if (pickUp.items.length) {
+        sellers.forEach(seller => {
+          // console.log({ temSellers: pickUp.items });
+          const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+          if (store.distance < 20) {
             temSellers.push(seller);
           }
-        })
+        });
       }
-      if(temSellers.length){
-        setSellers(temSellers)
+      if (temSellers.length) {
+        setSellers(temSellers);
         return;
       }
       toast.show({
-        message: 'No se encontraron tiendas cercanas',
+        message: 'Servicio no disponible en esta zona.',
         type: 'error'
       });
-      setSellers([])
+      setSellers([]);
       loader.hide();
     }
-  }
+  };
 
   const getPickUpPointsByAddress = async (position: GeoCoordinates) => {
-    if(position){
-        onChangeText('')
-        const pickUp = await vtexPickUpPoints.getPickUpPointsByAddress(position.longitude, position.latitude);
-        const temSellers: SellerInterface[] = [];
-        if(pickUp.items.length){
-        sellers.forEach((seller)=>{
-          console.log({temSellers:pickUp.items})
-          const store = pickUp.items.find((store)=> `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-          if(store.distance < 20){
+    if (position) {
+      onChangeText('');
+      const pickUp = await vtexPickUpPoints.getPickUpPointsByAddress(position.longitude, position.latitude);
+      const temSellers: SellerInterface[] = [];
+      if (pickUp.items.length) {
+        sellers.forEach(seller => {
+          // console.log({ temSellers: pickUp.items });
+          const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+          if (store.distance < 20) {
             temSellers.push(seller);
           }
-        })
+        });
       }
-      if(temSellers.length){
-        setSellers(temSellers)
+      if (temSellers.length) {
+        setSellers(temSellers);
         return;
       }
     }
     toast.show({
-      message: 'No se encontraron tiendas cercanas',
+      message: 'Servicio no disponible en esta zona.',
       type: 'error'
     });
-    setSellers([])
+    setSellers([]);
     loader.hide();
-  }
+  };
 
-  const onChanged = (text) => {
+  const onChanged = text => {
     let newText = '';
     let numbers = '0123456789';
 
-    for (var i=0; i < text.length; i++) {
-        if(numbers.indexOf(text[i]) > -1 ) {
-            newText = newText + text[i];
-        }
+    for (var i = 0; i < text.length; i++) {
+      if (numbers.indexOf(text[i]) > -1) {
+        newText = newText + text[i];
+      }
     }
     onChangeText(newText);
-}
+  };
 
   return (
     <Container flex style={{ backgroundColor: theme.brandColor.iconn_grey_background }}>
@@ -249,14 +247,13 @@ const SearchSellerScreen = () => {
           placeholderTextColor={theme.fontColor.placeholder}
           placeholder={'Ingresa Código Postal'}
           keyboardType={'numeric'}
-          onChangeText={(text)=>{
+          onChangeText={text => {
             onChanged(text);
           }}
-          onEndEditing={()=>{
+          onEndEditing={() => {
             getPickUpPoints(value);
           }}
           value={value}
-
           style={{ marginLeft: 10, flex: 1, paddingVertical: 5, color: theme.fontColor.dark }}
         />
       </Container>
@@ -274,7 +271,7 @@ const SearchSellerScreen = () => {
               loader.hide();
               getPickUpPointsByAddress(position.coords);
             },
-            error => {
+            _error => {
               loader.hide();
             },
             {
@@ -316,14 +313,11 @@ const SearchSellerScreen = () => {
           })}
         </ScrollView>
       </Container>
-      <Container width={'100%'} style={{alignItems: 'center'}}>
+      <Container width={'100%'} style={{ alignItems: 'center' }}>
         <Container style={styles.containerInfo}>
-          <Octicons name="info" size={theme.iconSize.large} color={theme.brandColor.iconn_accent_secondary}/>
-          <Container style={{marginLeft: moderateScale(10)}}>
-            <CustomText
-              text={'Por el momento solo podrás disfrutar de dos tiendas.'}
-              fontSize={theme.fontSize.h6}
-            />
+          <Octicons name="info" size={theme.iconSize.large} color={theme.brandColor.iconn_accent_secondary} />
+          <Container style={{ marginLeft: moderateScale(10) }}>
+            <CustomText text={'Por el momento solo podrás disfrutar de dos tiendas.'} fontSize={theme.fontSize.h6} />
           </Container>
         </Container>
       </Container>
@@ -370,14 +364,14 @@ const styles = StyleSheet.create({
     height: moderateScale(55),
     borderRadius: moderateScale(8),
     backgroundColor: theme.brandColor.yellow_container,
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: 1,
     borderColor: theme.brandColor.iconn_warning,
     marginTop: moderateScale(40),
     paddingLeft: moderateScale(15),
     paddingRight: moderateScale(40),
     flexDirection: 'row',
-    alignItems:'center'
+    alignItems: 'center'
   }
 });
 

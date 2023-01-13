@@ -13,9 +13,10 @@ interface Props {
   onChangeRegionComplete: (r: Region, d: Details) => void;
   onPressMarker: (marker: PointInterface) => void;
   onPressOut: () => void;
+  onRegionChange: () => void;
 }
 
-const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComplete, onPressMarker, onPressOut }) => {
+const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComplete, onPressMarker, onPressOut, onRegionChange }) => {
   const mapViewRef = useRef<MapView>();
   const followingRef = useRef<boolean>(true);
   const { followUserLocation, userLocation, stopTrackingUserLocation, initialUserLocation } = useLocation();
@@ -64,6 +65,7 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
         zoomControlEnabled
         onPress={onPressOut}
         onRegionChangeComplete={(r, d) => onChangeRegionComplete(r, d)}
+        onRegionChange={onRegionChange}
       >
         {markers &&
           markers.map((marker, index) => (

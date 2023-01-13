@@ -20,6 +20,7 @@ interface Props {
   onPressScan: () => void;
   ticket?: InvoicingPetroTicketResponseInterface;
   position?: number;
+  isReset?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -29,7 +30,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, ticket, position }) => {
+const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, ticket, position, isReset }) => {
   const { closeContainer } = styles;
   const insets = useSafeAreaInsets();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -67,6 +68,12 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
     });
     if (stationRef.current) stationRef.current.focus();
   };
+
+  useEffect(() => {
+    if (isReset) {
+      resetForm();
+    }
+  }, [isReset]);
 
   const populateForm = () => {
     setValue('station', ticket?.station);
@@ -198,7 +205,6 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
               name="ticketDate"
               control={control}
               autoCorrect={false}
-              keyboardType="default"
               placeholder="dd/mm/aaaa"
               blurOnSubmit={true}
               marginTop={21}
@@ -208,6 +214,7 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
               onPressDatePickerIcon={showDatePicker}
               maxLength={10}
               rules={date}
+              editable={false}
               error={errors.ticketDate?.message}
             />
           </Container>

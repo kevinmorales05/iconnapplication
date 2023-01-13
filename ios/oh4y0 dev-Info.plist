@@ -86,9 +86,9 @@
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use your camera</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-  	<string>0. Esto nos ayudará a mejorar tu experiencia al mostrarte sucursales y servicios cerca de ti, calcular costos de envío y realizar entregas más precisas.</string>
-  	<key>NSLocationAlwaysUsageDescription</key>
-  	<string>1. Esto nos ayudará a mejorar tu experiencia al mostrarte sucursales y servicios cerca de ti, calcular costos de envío y realizar entregas más precisas.</string>
+	<string>0. Esto nos ayudará a mejorar tu experiencia al mostrarte sucursales y servicios cerca de ti, calcular costos de envío y realizar entregas más precisas.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>1. Esto nos ayudará a mejorar tu experiencia al mostrarte sucursales y servicios cerca de ti, calcular costos de envío y realizar entregas más precisas.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Esto nos ayudará a mejorar tu experiencia al mostrarte sucursales y servicios cerca de ti, calcular costos de envío y realizar entregas más precisas.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
