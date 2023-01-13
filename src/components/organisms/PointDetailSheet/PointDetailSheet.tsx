@@ -195,7 +195,7 @@ const PointDetailSheet: React.FC<Props> = ({
     >
       {pointDetailVisible && (
         <Container row space="between" style={{ marginHorizontal: 16, height: 25 }} middle>
-          <Octicons name="share-android" size={theme.iconSize.small} color={theme.brandColor.iconn_dark_grey} />
+          <Octicons name="share-android" size={theme.iconSize.small} color={theme.brandColor.iconn_white} />
           <Container row>
             <Touchable onPress={onPressShowLess}>
               <Container row middle>

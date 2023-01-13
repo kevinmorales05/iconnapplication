@@ -33,6 +33,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const [latitudeDelta, setLatitudeDelta] = useState(0.04);
   const [visibleSearchByAreaButton, setVisibleSearchByAreaButton] = useState(false);
   const [searchArea, setSearchArea] = useState<Location>();
+  const [isButtonSearchBar, setIsButtonSearchBar] = useState(true);
+  const [search, setSearch] = useState<string>('');
+  const [markersFound, setMarkersFound] = useState<PointInterface[]>();
+  const [oneMarker, setOneMarker] = useState(false);
 
   useEffect(() => {
     if (route?.params && route?.params.filterObject && markers) {
@@ -434,23 +438,102 @@ const BranchesController: React.FC<any> = ({ route }) => {
     setRadiusOfSearch(km);
   };
 
+  /**
+   * Function used when user tap on SearchBar.
+   */
+  const onPressSearch = () => {
+    setIsButtonSearchBar(false);
+    bottomSheetRef.current?.close();
+  };
+
+  /**
+   * Function used when user tap on arrow left to cancel search.
+   */
+  const onPressCancelSearch = () => {
+    setIsButtonSearchBar(true);
+  };
+
+  /**
+   * Search method continuously executed while the user types.
+   * @param str User typing.
+   */
+  const onChangeTextSearch = (str: string) => {
+    if (str.trim().length > 0) {
+      const pointsFound = finalMarkers?.filter((mrkr: PointInterface) => {
+        try {
+          if (
+            mrkr.shopName.search(new RegExp(str, 'i')) >= 0 ||
+            mrkr.address.search(new RegExp(str, 'i')) >= 0 ||
+            mrkr.postalCode.toString().search(new RegExp(str, 'i')) >= 0
+          ) {
+            return mrkr;
+          }
+        } catch (error) {
+          // console.warn('marcador con inconsistencias', JSON.stringify(mrkr, null, 3));
+        }
+      });
+      setMarkersFound(pointsFound);
+    } else {
+      setMarkersFound(undefined);
+    }
+  };
+
+  /**
+   * Function to navigate the user to the Map with the found point.
+   * @param point is the Point selected from the PointsFound list.
+   * @param mode Always will be "map" because we want that when user tap on any found element, He should go to map.
+   */
+  const setMarkerFound = (point: PointInterface, mode?: PointDisplayMode) => {
+    setIsButtonSearchBar(true);
+    setPointDisplayMode(mode!);
+    setFinalMarkers([point]);
+    setMarker(point);
+    setOneMarker(true); // TODO: checate (Si fuera necesario) cuando debes regresar a false este state, has el flujo de ir a un punto buscandolo con el searchbar y luego de ahi dependiendo lo que vaya hacer el usuario es que lo pones en false.
+    bottomSheetRef.current?.present();
+  };
+
+  /**
+   * This method is executed when user press "Search/Buscar" from his keyboard.
+   * This type of search will return all matches considering the search radius and the filter currently active.
+   */
+  const onEndWriting = () => {
+    // console.log('palabra a buscar: ', search);
+  };
+
+  const onSelectState = (_val: any) => {
+    // console.log('val', val);
+  };
+
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_white} childrenContainerStyle={{ paddingHorizontal: 0 }}>
       <BranchesScreen
+        isButtonSearchBar={isButtonSearchBar}
         latitudeDelta={latitudeDelta}
         markers={finalMarkers!}
+        markersFound={markersFound!}
         onChangeRegionComplete={onChangeRegionComplete}
         onChangeSearchOfRadius={onChangeSearchOfRadius}
+        onChangeTextSearch={onChangeTextSearch}
+        oneMarker={oneMarker}
+        onEndWriting={onEndWriting}
+        onPressCancelSearch={onPressCancelSearch}
         onPressMarker={onPressMarker}
         onPressOut={handleClosePress}
+        onPressSearch={onPressSearch}
         onPressSeeList={onPressSeeList}
         onPressSeeMap={onPressSeeMap}
         onPressShowDetails={onPressShowDetails}
         onPressShowFilters={onPressShowFilters}
         onRegionChange={onRegionChange}
         onSearchMarkersByArea={onSearchMarkersByArea}
+        onSelectState={onSelectState}
         permissions={permissions}
         pointDisplayMode={pointDisplayMode}
+        radiusOfSearch={radiusOfSearch}
+        search={search}
+        searchArea={searchArea}
+        setMarkerFound={setMarkerFound}
+        setSearch={setSearch}
         visibleSearchByAreaButton={visibleSearchByAreaButton}
         visibleSearchByDistance={visibleSearchByDistance!}
         visibleStoreSymbology={visibleStoreSymbology!}

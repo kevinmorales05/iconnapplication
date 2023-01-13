@@ -12,8 +12,7 @@ import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpContro
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
-import InConstructionController from 'components/screens/InConstruction/InConstructionController';
-
+// import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -22,14 +21,14 @@ export const TabNavigator = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
   const { paySuccess } = route.params;
 
-
   return (
     <Tab.Navigator
       screenOptions={() => ({
         tabBarActiveTintColor: theme.brandColor.iconn_green_original,
         tabBarInactiveTintColor: theme.fontColor.placeholder,
         headerShown: true,
-        tabBarLabelStyle: { fontSize: theme.fontSize.h6 }
+        tabBarLabelStyle: { fontSize: theme.fontSize.h6 },
+        tabBarHideOnKeyboard: true
       })}
     >
       <Tab.Screen

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Dimensions, Image } from 'react-native';
 import { ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN } from 'assets/images';
-import { PointInterface } from 'rtk';
+import { Location, PointInterface } from 'rtk';
 import { useLocation } from 'hooks/useLocation';
 import { usePermissions } from 'context';
 import MapView, { Details, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
@@ -11,15 +11,17 @@ interface Props {
   latitudeDelta: number;
   markers?: PointInterface[];
   onChangeRegionComplete: (r: Region, d: Details) => void;
+  oneMarker: boolean;
   onPressMarker: (marker: PointInterface) => void;
   onPressOut: () => void;
   onRegionChange: () => void;
+  searchArea?: Location;
 }
 
-const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComplete, onPressMarker, onPressOut, onRegionChange }) => {
+const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComplete, oneMarker, onPressMarker, onPressOut, onRegionChange, searchArea }) => {
   const mapViewRef = useRef<MapView>();
   const followingRef = useRef<boolean>(true);
-  const { followUserLocation, userLocation, stopTrackingUserLocation, initialUserLocation } = useLocation();
+  const { followUserLocation, userLocation, stopTrackingUserLocation } = useLocation();
   const { permissions, askLocationPermission } = usePermissions();
   const { height, width } = Dimensions.get('window');
   // If you want to set more zoom from the height, set latitudeDelta with a minor decimal number.
@@ -37,13 +39,13 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
     };
   }, [permissions.locationStatus]);
 
-  useEffect(() => {
-    if (!followingRef.current) return;
+  // useEffect(() => {
+  //   if (!followingRef.current) return;
 
-    mapViewRef.current?.setCamera({
-      center: userLocation
-    });
-  }, [userLocation]);
+  //   mapViewRef.current?.setCamera({
+  //     center: userLocation
+  //   });
+  // }, [userLocation]);
 
   return (
     <>
@@ -55,8 +57,22 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
         showsMyLocationButton
         focusable
         region={{
-          latitude: initialUserLocation ? initialUserLocation!.latitude : 0,
-          longitude: initialUserLocation ? initialUserLocation!.longitude : 0,
+          latitude:
+            markers && markers.length === 1 && oneMarker === true
+              ? markers![0].latitude
+              : markers?.length! > 1 && searchArea
+              ? searchArea!.latitude
+              : userLocation
+              ? userLocation.latitude
+              : 0,
+          longitude:
+            markers && markers.length === 1 && oneMarker === true
+              ? markers![0].longitude
+              : markers?.length! > 1 && searchArea
+              ? searchArea!.longitude
+              : userLocation
+              ? userLocation.longitude
+              : 0,
           latitudeDelta: latitudeDelta,
           longitudeDelta: LONGITUDE_DELTA
         }}
