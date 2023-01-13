@@ -55,7 +55,7 @@ const StepOneController: React.FC<Props> = ({ barcode }) => {
       };
     }
     const responseFirstEvaluation = await invoicingServices.getTicket(requestDataInvoicing);
-    if (responseFirstEvaluation.responseCode === 57 || responseFirstEvaluation.responseCode === 595) {
+    if (responseFirstEvaluation.responseCode === 57 || responseFirstEvaluation.responseCode === 595 || responseFirstEvaluation.responseCode === 580) {
       const responseSecondEvaluation = await evaluatedServices.getTicketValid(requestData);
       if (responseSecondEvaluation.data?.isValid) {
         navigate('StepTwo', { dataParam: requestData });

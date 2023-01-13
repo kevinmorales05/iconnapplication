@@ -7,25 +7,25 @@ import { HomeStackParams } from 'navigation/types';
 
 interface LegalScreenProps {}
 
-const LegalScreen: React.FC<LegalScreenProps> = ({openPage}) => {
+const WhoWeAreScreen: React.FC<LegalScreenProps> = ({openPage}) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   return (
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
       <Container style={{ marginHorizontal: 8 }}>
         <NavigationMenuItem
-          text="Términos y Condiciones"
+          text="Seven Eleven"
           disable={false}
           onPressNavigateTo={() => {
-            openPage('https://www.tiendaenlinea.7-eleven.com.mx/terminos-y-condiciones');
+            openPage('https://7-eleven.com.mx/nuestra-empresa/quienes-somos/');
 
           }}
         />
         <NavigationMenuItem
-          text="Aviso de privacidad"
+          text="Petro-7"
           disable={false}
           onPressNavigateTo={() => {
-            openPage('https://www.tiendaenlinea.7-eleven.com.mx/aviso-de-privacidad');
+            openPage('https://www.petro-7.com.mx/nosotros/');
           }}
         />
       </Container>
@@ -33,4 +33,4 @@ const LegalScreen: React.FC<LegalScreenProps> = ({openPage}) => {
   );
 };
 
-export default LegalScreen;
+export default WhoWeAreScreen;

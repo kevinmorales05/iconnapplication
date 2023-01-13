@@ -8,6 +8,8 @@ import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
+import analytics from '@react-native-firebase/analytics';
+
 
 interface Props {
   onPressShowAddressesModal: () => void;
@@ -133,7 +135,18 @@ const HomeScreen: React.FC<Props> = ({
                 text="Ver todo"
                 typography="h5"
                 fontBold
-                onPress={() => viewRecomendedProducts()}
+                onPress={ async () => {
+                  
+                  try {
+                    await analytics().logEvent("recomendedyou",{
+                      id: "1",
+                      name: "recomendados para ti",
+                    });
+                    console.log("succesfully added to firebase!")
+                  } catch (error) {
+                    console.log(error)
+                  }
+                  viewRecomendedProducts()}}
               />
             </Container>
             <Container style={{ position: 'absolute', top: 35 }}>
