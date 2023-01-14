@@ -5,7 +5,6 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { Container } from 'components/atoms';
 import { TextContainer } from '../TextContainer';
 import theme from 'components/theme/theme';
-import Octicons from 'react-native-vector-icons/Octicons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { InvoicingPetroTicketResponseInterface, InvoicingSevenTicketResponseInterface } from 'rtk';
 
@@ -16,15 +15,16 @@ interface ListSwipeableItemProps {
   onPressDelete: (ticket: any, position: number) => any;
   index: number;
   rowRefs: any;
+  editable: boolean;
 }
 
 const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
-  onPressEdit,
   onPressDelete,
   ticketSeven,
   ticketPetro,
   index,
-  rowRefs
+  rowRefs,
+  editable = true
 }: ListSwipeableItemProps): any => {
   const item: StyleProp<ViewStyle> = {
     height: 68,
@@ -43,7 +43,7 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
   const renderRightAction = (buttonType: string, backgroundColor: any) => {
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
-        {buttonType === 'edit' ? (
+        {/* {buttonType === 'edit' ? (
           <RectButton
             style={[rightAction, { backgroundColor: backgroundColor }]}
             onPress={() => {
@@ -57,7 +57,7 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
             </Container>
           </RectButton>
         ) : (
-          <RectButton
+           <RectButton
             style={[rightAction, { backgroundColor: backgroundColor }]}
             onPress={() => {
               closeRow(index);
@@ -71,14 +71,29 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
               <TextContainer fontBold text="Borrar" textColor={theme.fontColor.white} fontSize={theme.fontSize.h6} marginTop={4} />
             </Container>
           </RectButton>
-        )}
+        )} */}
+
+        <RectButton
+          style={[rightAction, { backgroundColor: backgroundColor }]}
+          onPress={() => {
+            closeRow(index);
+            setTimeout(() => {
+              onPressDelete(ticketSeven ? ticketSeven : ticketPetro, index);
+            }, 500);
+          }}
+        >
+          <Container middle>
+            <Ionicons name="md-trash-outline" size={theme.iconSize.xsmall} color={theme.brandColor.iconn_white} />
+            <TextContainer fontBold text="Borrar" textColor={theme.fontColor.white} fontSize={theme.fontSize.h6} marginTop={4} />
+          </Container>
+        </RectButton>
       </Animated.View>
     );
   };
 
   const renderRightActions = () => (
-    <Container row style={{ width: 120 }}>
-      {renderRightAction('edit', theme.brandColor.iconn_grey)}
+    <Container row style={{ width: editable ? 120 : 60 }}>
+      {editable && renderRightAction('edit', theme.brandColor.iconn_grey)}
       {renderRightAction('delete', theme.brandColor.iconn_red_original)}
     </Container>
   );

@@ -39,10 +39,10 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
       <Container style={{ marginHorizontal: 8 }}>
         <NavigationMenuItem
-          text="Acerca de la APP"
+          text="Acerca de Nosotros"
           disable={false}
           onPressNavigateTo={() => {
-            // console.log('Acerca de la APP...');
+            navigate('AboutOptions')
           }}
         />
         <NavigationMenuItem
@@ -50,13 +50,6 @@ const AboutUsScreen: React.FC<AboutUsScreenProps> = ({
           disable={false}
           onPressNavigateTo={() => {
             navigate('Legal');
-          }}
-        />
-        <NavigationMenuItem
-          text="Contáctanos por correo electrónico"
-          disable={false}
-          onPressNavigateTo={() => {
-            navigate('ContactInformation');
           }}
         />
         <NavigationMenuItem

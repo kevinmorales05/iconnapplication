@@ -35,6 +35,7 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
 
   const { navigate, goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [helpVisible, setHelpVisible] = useState<boolean>(false);
+  const [resetFields, setResetFields] = useState<boolean>(false);
   const toast = useToast();
   const loader = useLoading();
   const dispatch = useAppDispatch();
@@ -97,10 +98,11 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
         else dispatch(addTicketPetroToList(response.data));
 
         toast.show({ message: 'Ticket agregado correctamente.', type: 'success' });
-
+        setResetFields(true);
         navigate('InvoiceTicketPetro');
+        setResetFields(false);
       } else {
-        toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
+        toast.show({ message: `${response.responseMessage}`, type: 'error' });
       }
     } catch (error) {
       //console.warn(error);
@@ -124,6 +126,7 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
         onPressScan={onPressScan}
         ticket={Ticket}
         position={Position}
+        isReset={resetFields}
       />
       <InvoicingHelper
         onPressOut={onPressOut}

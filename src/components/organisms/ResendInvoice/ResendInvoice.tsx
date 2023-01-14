@@ -81,7 +81,7 @@ const ResendInvoice: React.FC<Props> = ({ visible, message, secondMessage, onPre
 
               <Container flex row crossAlignment="end" space="between" style={{ marginBottom: 8, marginTop: 24 }}>
                 <Button
-                  style={{ width: 170, height: 58, borderRadius: 12 }}
+                  style={{ width: 150, height: 58, borderRadius: 12 }}
                   length="short"
                   round
                   fontBold
@@ -96,7 +96,7 @@ const ResendInvoice: React.FC<Props> = ({ visible, message, secondMessage, onPre
                   {`${'Cancelar'}`}
                 </Button>
                 <Button
-                  style={{ width: 170, height: 58, borderRadius: 12 }}
+                  style={{ width: 150, height: 58, borderRadius: 12 }}
                   round
                   fontBold
                   fontSize="h3"

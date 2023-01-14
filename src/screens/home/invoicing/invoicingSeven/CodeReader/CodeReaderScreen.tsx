@@ -16,7 +16,7 @@ interface Props {
 
 const CodeReaderScreen: React.FC<Props> = ({ onPressOk }) => {
   const { goBack } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { arrowContainer, arrowStyle } = styles;
+  const { arrowContainer } = styles;
   const devices = useCameraDevices();
   const device = devices.back;
 
@@ -38,17 +38,25 @@ const CodeReaderScreen: React.FC<Props> = ({ onPressOk }) => {
 
   useEffect(() => {
     if (barcodes.length > 0 && !read.current) {
-      read.current = true;
-      console.log(barcodes[0].displayValue);
-      Vibration.vibrate(10);
-      setCameraActive(false);
-      Alert.alert('Código de barras: ', barcodes[0].displayValue, [
-        {
-          onPress: () => {
-            onPressOk(barcodes[0].displayValue);
+      if (barcodes[0].displayValue?.length === 35 || barcodes[0].displayValue?.length === 36) {
+        read.current = true;
+        Vibration.vibrate(10);
+        setCameraActive(false);
+        const barCode = barcodes[0].displayValue?.length === 35 ? barcodes[0].displayValue : barcodes[0].displayValue?.substring(1);
+        Alert.alert('Código de barras: ', barCode, [
+          {
+            onPress: () => {
+              onPressOk(barCode);
+            }
           }
-        }
-      ]);
+        ]);
+      } else {
+        Alert.alert('Código de barras incorrecto', barcodes[0].displayValue, [
+          {
+            onPress: () => {}
+          }
+        ]);
+      }
     }
   }, [barcodes]);
 

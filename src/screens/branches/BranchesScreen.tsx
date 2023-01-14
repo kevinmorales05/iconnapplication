@@ -21,8 +21,11 @@ interface Props {
   onPressSeeMap: () => void;
   onPressShowDetails: () => void;
   onPressShowFilters: () => void;
+  onRegionChange: () => void;
+  onSearchMarkersByArea: () => void;
   permissions: {};
   pointDisplayMode: PointDisplayMode;
+  visibleSearchByAreaButton: boolean;
   visibleSearchByDistance: boolean;
   visibleStoreSymbology: boolean;
 }
@@ -38,7 +41,10 @@ const BranchesScreen: React.FC<Props> = ({
   onPressSeeMap,
   onPressShowDetails,
   onPressShowFilters,
+  onRegionChange,
+  onSearchMarkersByArea,
   pointDisplayMode,
+  visibleSearchByAreaButton,
   visibleSearchByDistance,
   visibleStoreSymbology
 }) => {
@@ -129,6 +135,7 @@ const BranchesScreen: React.FC<Props> = ({
                 onChangeRegionComplete={onChangeRegionComplete}
                 onPressMarker={onPressMarker}
                 onPressOut={onPressOut}
+                onRegionChange={onRegionChange}
               />
             )}
             {pointDisplayMode === 'list' && <PointsList markers={markers} onPressMarker={onPressMarker} />}
@@ -186,6 +193,23 @@ const BranchesScreen: React.FC<Props> = ({
                   <TextContainer text="1 km" fontBold typography="h6" />
                   <TextContainer text="5 km" fontBold typography="h6" />
                 </Container>
+              </Container>
+            )}
+            {visibleSearchByAreaButton && (
+              <Container style={{ position: 'absolute', top: 65, alignSelf: 'center' }}>
+                <Button
+                  color="iconn_green_original"
+                  fontBold
+                  fontSize="h5"
+                  length="long"
+                  onPress={onSearchMarkersByArea}
+                  outline
+                  round
+                  size="xsmall"
+                  style={{ borderRadius: 12, borderColor: theme.brandColor.iconn_green_original, backgroundColor: theme.brandColor.iconn_white }}
+                >
+                  {'   Buscar en esta área   '}
+                </Button>
               </Container>
             )}
           </Container>

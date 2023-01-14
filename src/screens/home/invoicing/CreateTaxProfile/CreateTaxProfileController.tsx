@@ -17,6 +17,7 @@ const CreateTaxProfileController: React.FC = () => {
   const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
 
   const [current, setCurrent] = useState<InvoicingProfileInterface | undefined>(undefined);
+  const [resetFields, setResetFields] = useState<boolean>(false);
 
   const loader = useLoading();
   const dispatch = useAppDispatch();
@@ -46,10 +47,13 @@ const CreateTaxProfileController: React.FC = () => {
               return item.invoicing_profile_id !== invoiceProfile.invoicing_profile_id;
             });
             dispatch(setInvoicingProfilesList(newList));
+            setResetFields(true);
+            setCurrent(undefined);
             navigate('TaxInfo');
+            setResetFields(false);
             alert.hide();
           } catch (error) {
-            console.log('error:', error);
+            // console.log('error:', error);
           } finally {
             loader.hide();
           }
@@ -77,10 +81,10 @@ const CreateTaxProfileController: React.FC = () => {
           }
           return item;
         });
-
+        setResetFields(true);
         dispatch(setInvoicingProfilesList(newList));
-
         goBack();
+        setResetFields(false);
       } else {
         toast.show({
           message: data.responseSubject,
@@ -98,7 +102,6 @@ const CreateTaxProfileController: React.FC = () => {
   };
 
   const onBack = () => {
-    
     alert.show(
       {
         title: '¿Salir sin guardar cambios?',
@@ -120,7 +123,7 @@ const CreateTaxProfileController: React.FC = () => {
 
   return (
     <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
-      <BillingScreen onSubmit={onSubmit} onDelete={onDelete} onBack={onBack} current={current} />
+      <BillingScreen onSubmit={onSubmit} onDelete={onDelete} onBack={onBack} current={current} isReset={resetFields} />
     </SafeArea>
   );
 };
