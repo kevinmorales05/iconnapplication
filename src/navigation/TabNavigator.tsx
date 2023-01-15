@@ -5,14 +5,14 @@ import { Image } from 'react-native';
 import { RootState, useAppSelector } from 'rtk';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TAB_CAT, TAB_HOME, TAB_PIN_LOCATION, TAB_PROMOS, TAB_USER_PROFILE } from 'assets/images';
-import BranchesStack from './stacks/nested/BranchesStack';
+// import BranchesStack from './stacks/nested/BranchesStack';
 import CategoriesController from 'screens/categories/CategoriesController';
 import HomeController from 'screens/home/HomeController';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
-// import InConstructionController from 'components/screens/InConstruction/InConstructionController';
+import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 

@@ -1,0 +1,661 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing on <PointItem /> should match with the snapshot 1`] = `
+<View
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  hitSlop={
+    Object {
+      "bottom": undefined,
+      "left": undefined,
+      "right": undefined,
+      "top": undefined,
+    }
+  }
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "flex": 0,
+      "height": undefined,
+      "marginBottom": undefined,
+      "marginHorizontal": undefined,
+      "marginLeft": undefined,
+      "marginRight": undefined,
+      "marginTop": undefined,
+      "marginVertical": undefined,
+      "opacity": 1,
+      "width": undefined,
+      "zIndex": 2,
+    }
+  }
+>
+  <View
+    pointerEvents="none"
+  >
+    <View
+      collapsable={false}
+      style={
+        Array [
+          Array [
+            Object {
+              "flexDirection": "column",
+            },
+            Object {},
+            Object {},
+            Object {},
+            Object {},
+            Object {},
+            Object {},
+            Object {},
+            Object {},
+            Object {},
+            Object {},
+            Object {},
+            Object {},
+          ],
+          Object {
+            "height": 85,
+            "paddingHorizontal": 16,
+            "paddingTop": 14,
+          },
+        ]
+      }
+    >
+      <View
+        collapsable={false}
+        style={
+          Array [
+            Array [
+              Object {
+                "flexDirection": "column",
+              },
+              Object {
+                "flexDirection": "row",
+              },
+              Object {},
+              Object {},
+              Object {},
+              Object {
+                "alignItems": "center",
+              },
+              Object {},
+              Object {},
+              Object {
+                "justifyContent": "space-between",
+              },
+              Object {},
+              Object {
+                "height": "60%",
+              },
+              Object {},
+              Object {},
+            ],
+            undefined,
+          ]
+        }
+      >
+        <View
+          collapsable={false}
+          style={
+            Array [
+              Array [
+                Object {
+                  "flexDirection": "column",
+                },
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {
+                  "alignItems": "center",
+                },
+                Object {},
+                Object {},
+                Object {},
+                Object {
+                  "width": "15%",
+                },
+                Object {},
+                Object {},
+                Object {},
+              ],
+              undefined,
+            ]
+          }
+        >
+          <Image
+            resizeMode="contain"
+            source={
+              Object {
+                "testUri": "../../../src/assets/images/iconn-branches-icon-7eleven.png",
+              }
+            }
+            style={
+              Object {
+                "height": 35,
+                "right": 8,
+                "top": 0,
+                "width": 35,
+              }
+            }
+          />
+        </View>
+        <View
+          collapsable={false}
+          style={
+            Array [
+              Array [
+                Object {
+                  "flexDirection": "column",
+                },
+                Object {},
+                Object {
+                  "flex": 1,
+                },
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {
+                  "width": "60%",
+                },
+                Object {},
+                Object {},
+                Object {},
+              ],
+              Object {
+                "left": -8,
+              },
+            ]
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              Array [
+                Array [
+                  Object {
+                    "flexDirection": "column",
+                  },
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                ],
+                Object {
+                  "marginBottom": undefined,
+                  "marginHorizontal": undefined,
+                  "marginLeft": undefined,
+                  "marginRight": undefined,
+                  "marginTop": undefined,
+                  "marginVertical": undefined,
+                },
+              ]
+            }
+          >
+            <Text
+              ellipsizeMode="tail"
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "color": "#000000",
+                      "fontSize": 15,
+                    },
+                    Object {
+                      "fontSize": 10,
+                    },
+                  ],
+                  Object {
+                    "alignSelf": undefined,
+                    "letterSpacing": undefined,
+                    "lineHeight": undefined,
+                    "textAlign": undefined,
+                    "textDecorationLine": "none",
+                    "textTransform": undefined,
+                  },
+                ]
+              }
+            >
+              string
+            </Text>
+          </View>
+          <View
+            collapsable={false}
+            style={
+              Array [
+                Array [
+                  Object {
+                    "flexDirection": "column",
+                  },
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                ],
+                Object {
+                  "marginBottom": undefined,
+                  "marginHorizontal": undefined,
+                  "marginLeft": undefined,
+                  "marginRight": undefined,
+                  "marginTop": undefined,
+                  "marginVertical": undefined,
+                },
+              ]
+            }
+          >
+            <Text
+              ellipsizeMode="tail"
+              numberOfLines={4}
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "color": "#000000",
+                      "fontSize": 15,
+                    },
+                    Object {
+                      "fontSize": 10,
+                    },
+                  ],
+                  Object {
+                    "alignSelf": undefined,
+                    "letterSpacing": undefined,
+                    "lineHeight": undefined,
+                    "textAlign": undefined,
+                    "textDecorationLine": "none",
+                    "textTransform": undefined,
+                  },
+                ]
+              }
+            >
+              string
+            </Text>
+          </View>
+        </View>
+        <View
+          collapsable={false}
+          style={
+            Array [
+              Array [
+                Object {
+                  "flexDirection": "column",
+                },
+                Object {
+                  "flexDirection": "row",
+                },
+                Object {},
+                Object {
+                  "justifyContent": "flex-end",
+                },
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {
+                  "width": "25%",
+                },
+                Object {},
+                Object {},
+                Object {},
+              ],
+              undefined,
+            ]
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              Array [
+                Array [
+                  Object {
+                    "flexDirection": "column",
+                  },
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                ],
+                Object {
+                  "marginBottom": undefined,
+                  "marginHorizontal": undefined,
+                  "marginLeft": undefined,
+                  "marginRight": 20,
+                  "marginTop": undefined,
+                  "marginVertical": undefined,
+                },
+              ]
+            }
+          >
+            <Text
+              ellipsizeMode="tail"
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "color": "#000000",
+                      "fontSize": 14,
+                    },
+                    Object {
+                      "color": "#008060",
+                    },
+                    Object {
+                      "fontWeight": "bold",
+                    },
+                  ],
+                  Object {
+                    "alignSelf": undefined,
+                    "letterSpacing": undefined,
+                    "lineHeight": undefined,
+                    "textAlign": undefined,
+                    "textDecorationLine": "underline",
+                    "textTransform": undefined,
+                  },
+                ]
+              }
+            >
+              Detalles
+            </Text>
+          </View>
+          <Text
+            allowFontScaling={false}
+            selectable={false}
+            style={
+              Array [
+                Object {
+                  "color": "#008060",
+                  "fontSize": 24,
+                },
+                Object {
+                  "bottom": 4,
+                  "right": 8,
+                },
+                Object {
+                  "fontFamily": "Octicons",
+                  "fontStyle": "normal",
+                  "fontWeight": "normal",
+                },
+                Object {},
+              ]
+            }
+          >
+            
+          </Text>
+        </View>
+      </View>
+      <View
+        collapsable={false}
+        style={
+          Array [
+            Array [
+              Object {
+                "flexDirection": "column",
+              },
+              Object {
+                "flexDirection": "row",
+              },
+              Object {},
+              Object {
+                "justifyContent": "flex-start",
+              },
+              Object {},
+              Object {},
+              Object {},
+              Object {},
+              Object {},
+              Object {},
+              Object {
+                "height": "40%",
+              },
+              Object {},
+              Object {},
+            ],
+            Object {
+              "marginTop": 4,
+            },
+          ]
+        }
+      >
+        <View
+          collapsable={false}
+          style={
+            Array [
+              Array [
+                Object {
+                  "flexDirection": "column",
+                },
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {
+                  "width": "15%",
+                },
+                Object {},
+                Object {},
+                Object {},
+              ],
+              undefined,
+            ]
+          }
+        />
+        <View
+          collapsable={false}
+          style={
+            Array [
+              Array [
+                Object {
+                  "flexDirection": "column",
+                },
+                Object {
+                  "flexDirection": "row",
+                },
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {
+                  "width": "70%",
+                },
+                Object {},
+                Object {},
+                Object {},
+              ],
+              Object {
+                "left": -8,
+              },
+            ]
+          }
+        >
+          <View
+            collapsable={false}
+            style={
+              Array [
+                Array [
+                  Object {
+                    "flexDirection": "column",
+                  },
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                ],
+                Object {
+                  "marginBottom": undefined,
+                  "marginHorizontal": undefined,
+                  "marginLeft": undefined,
+                  "marginRight": undefined,
+                  "marginTop": undefined,
+                  "marginVertical": undefined,
+                },
+              ]
+            }
+          >
+            <Text
+              ellipsizeMode="tail"
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "color": "#000000",
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "color": "#747476",
+                    },
+                  ],
+                  Object {
+                    "alignSelf": undefined,
+                    "letterSpacing": undefined,
+                    "lineHeight": undefined,
+                    "textAlign": undefined,
+                    "textDecorationLine": "none",
+                    "textTransform": undefined,
+                  },
+                ]
+              }
+            >
+              DISTANCIA
+            </Text>
+          </View>
+          <View
+            collapsable={false}
+            style={
+              Array [
+                Array [
+                  Object {
+                    "flexDirection": "column",
+                  },
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                  Object {},
+                ],
+                Object {
+                  "marginBottom": undefined,
+                  "marginHorizontal": undefined,
+                  "marginLeft": 8,
+                  "marginRight": undefined,
+                  "marginTop": undefined,
+                  "marginVertical": undefined,
+                },
+              ]
+            }
+          >
+            <Text
+              ellipsizeMode="tail"
+              style={
+                Array [
+                  Array [
+                    Object {
+                      "color": "#000000",
+                      "fontSize": 12,
+                    },
+                    Object {
+                      "fontWeight": "bold",
+                    },
+                  ],
+                  Object {
+                    "alignSelf": undefined,
+                    "letterSpacing": undefined,
+                    "lineHeight": undefined,
+                    "textAlign": undefined,
+                    "textDecorationLine": "none",
+                    "textTransform": undefined,
+                  },
+                ]
+              }
+            >
+              string km
+            </Text>
+          </View>
+        </View>
+        <View
+          collapsable={false}
+          style={
+            Array [
+              Array [
+                Object {
+                  "flexDirection": "column",
+                },
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {},
+                Object {
+                  "width": "15%",
+                },
+                Object {},
+                Object {},
+                Object {},
+              ],
+              undefined,
+            ]
+          }
+        />
+      </View>
+    </View>
+  </View>
+</View>
+`;
