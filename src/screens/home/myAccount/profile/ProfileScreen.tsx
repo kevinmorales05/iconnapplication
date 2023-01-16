@@ -167,9 +167,6 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
             if (t) {
               register('telephone', mobilePhoneRule(false));
               trigger('telephone');
-            } else {
-              register('telephone', mobilePhoneRule(false));
-              trigger('telephone');
             }
           }}
           onChangeText={t => {
