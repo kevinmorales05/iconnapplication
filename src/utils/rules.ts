@@ -271,21 +271,6 @@ export const emailsList = (lenght: number): RegisterOptions => ({
   }
 });
 
-export const alphaNumericWithSpacesAndDot = (lenght: number): RegisterOptions => ({
-  required: {
-    value: true,
-    message: 'Campo requerido.'
-  },
-  minLength: {
-    value: lenght,
-    message: 'Longitud inválida.'
-  },
-  pattern: {
-    value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]+(\s*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]*)*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1# .\s-]+$/,
-    message: 'Caracter no válido.'
-  }
-});
-
 export const alphaNumericWithoutSpaces = (lenght: number, min?: number): RegisterOptions => ({
   required: {
     value: true,
@@ -311,7 +296,7 @@ export const NRalphaNumericWithSpacesAndDot = (lenght: number): RegisterOptions 
     message: 'Longitud inválida.'
   },
   pattern: {
-    value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]+(\s*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]*)*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1# .\s-]+$/,
+    value: /^[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]+(\s*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1#]+)*[a-zA-Z0-9-ZÀ-ÿ\u00f1\u00d1# .\s-]+$/,
     message: 'Caracter no válido.'
   }
 });
