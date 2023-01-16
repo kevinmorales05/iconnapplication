@@ -850,7 +850,7 @@
 				CODE_SIGN_ENTITLEMENTS = oh4y0/oh4y0.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 71;
 				DEVELOPMENT_TEAM = 7RSL84MSF6;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = oh4y0/Info.plist;
@@ -859,7 +859,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.10.22;
+				MARKETING_VERSION = 1.10.31;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -883,7 +883,7 @@
 				CODE_SIGN_ENTITLEMENTS = oh4y0/oh4y0.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 64;
+				CURRENT_PROJECT_VERSION = 70;
 				DEVELOPMENT_TEAM = 7RSL84MSF6;
 				INFOPLIST_FILE = oh4y0/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.food-and-drink";
@@ -891,7 +891,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.10.22;
+				MARKETING_VERSION = 1.10.30;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1061,7 +1061,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.oh4y0.iconn;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oh4y0.develop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1089,7 +1089,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.oh4y0.iconn;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oh4y0.develop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1119,7 +1119,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.oh4y0.iconn;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oh4y0.staging;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1149,7 +1149,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.oh4y0.iconn;
+				PRODUCT_BUNDLE_IDENTIFIER = com.oh4y0.staging;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";

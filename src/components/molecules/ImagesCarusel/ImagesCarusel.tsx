@@ -21,10 +21,11 @@ const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, sel
   const [points, setPoints] = useState([]);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const setImagePosition = selected => {
-    statusPoints.forEach((status, index) => {
+    const temarr = statusPoints.concat([]);
+    temarr.forEach((status, index) => {
       status.isMain = selected == index;
     });
-    setStatusPoints(statusPoints);
+    setStatusPoints(temarr);
   };
 
   useEffect(() => {

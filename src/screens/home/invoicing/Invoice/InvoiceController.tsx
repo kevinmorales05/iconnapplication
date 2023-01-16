@@ -11,6 +11,8 @@ import { useAlert, useLoading, useToast } from 'context';
 import { invoicingServices } from 'services';
 
 const InvoiceController: React.FC = () => {
+
+
   const { user } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -21,6 +23,9 @@ const InvoiceController: React.FC = () => {
     invoicingPetroTicketList
   } = useAppSelector((state: RootState) => state.invoicing);
   const [intervalId, setIntervalId] = useState<any>();
+
+
+
 
   const alert = useAlert();
   const loader = useLoading();
@@ -44,6 +49,7 @@ const InvoiceController: React.FC = () => {
    */
   useEffect(() => {
     if (user.userId && invoicingProfileList.length === 0) fetchInvoicingProfileList();
+    
   }, [fetchInvoicingProfileList]);
 
   // Monitors if user has verified his email from web.

@@ -12,7 +12,7 @@ const getApiUrl = (type: string) => {
     case 'invoicing':
       return API_URL_INVOICING;
     case 'helpCenter':
-      return 'https://api-be-ecommerce-dev.apps-backend.iconn.com.mx/ecommerce/help/';
+      return API_URL_HELP_CENTER;
     case 'be':
       return API_URL_BE;
     default:

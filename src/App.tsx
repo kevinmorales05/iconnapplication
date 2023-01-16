@@ -8,9 +8,9 @@ import {
   InConstructionContextProvider,
   LoadingContextProvider,
   ToastContextProvider,
-  WelcomeModalContextProvider
+  WelcomeModalContextProvider,
+  Toast
 } from 'context';
-import { Toast } from 'context';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
 import { PermissionsProvider } from 'context/permissions.context';
@@ -19,8 +19,6 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NotificationListener, requestUserPermission } from 'utils/notification-helper';
 
 enableLatestRenderer();
-// import Config from 'react-native-config';
-
 // TODO: remove this:
 // console.log('Environment variables:', JSON.stringify(Config, null, 3));
 

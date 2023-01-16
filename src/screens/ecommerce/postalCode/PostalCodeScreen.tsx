@@ -1,32 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, StyleSheet, Keyboard } from 'react-native';
-import theme from 'components/theme/theme';
-import { useForm } from 'react-hook-form';
-import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
+import React, { useState } from 'react';
+import { HomeStackParams } from 'navigation/types';
 import { ICONN_POSTAL_CODE_HEADER_ICON, ICONN_PIN_LOCATION } from 'assets/images';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, Keyboard } from 'react-native';
+import { setDefaultSeller, setUserCP, setUserGeoPoint, useAppDispatch } from 'rtk';
+import { useForm } from 'react-hook-form';
 import { useLoading, useAlert, useToast } from 'context';
 import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from 'navigation/types';
+import { verticalScale } from 'utils/scaleMetrics';
+import { vtexPickUpPoints } from 'services';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import appConfig from '../../../../app.json';
+import config from 'react-native-config';
 import Geolocation from 'react-native-geolocation-service';
 import sellers from 'assets/files/sellers.json';
-import Octicons from 'react-native-vector-icons/Octicons';
-
-import { setDefaultSeller, setUserCP, setUserGeoPoint, useAppDispatch } from 'rtk';
-import { sortByDistance } from 'utils/geolocation';
-
-import appConfig from '../../../../app.json';
-import { moderateScale, verticalScale } from 'utils/scaleMetrics';
-import { vtexPickUpPoints } from 'services';
-import config from 'react-native-config';
+import theme from 'components/theme/theme';
 
 const PostalCodeScreen = () => {
   const {
     control,
     formState: { errors, isValid },
-    register,
-    handleSubmit
+    register
   } = useForm({
     mode: 'onChange'
   });
@@ -90,7 +85,7 @@ const PostalCodeScreen = () => {
   // }, [position]);
 
   const getPickUpPoints = async (cp: string) => {
-    if(cp.length === 5){
+    if (cp.length === 5) {
       const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
       let item;
       if (pickUp.items.length) {
@@ -104,12 +99,12 @@ const PostalCodeScreen = () => {
           dispatch(setDefaultSeller({ defaultSeller: item }));
           loader.show('', 'ecommerce');
           navigate('Home', { paySuccess: false });
-          dispatch(setUserCP({cp: cp}))
+          dispatch(setUserCP({ cp: cp }));
           return;
         }
       }
       toast.show({
-        message: 'No se encontraron tiendas cercanas',
+        message: 'Servicio no disponible en esta zona.',
         type: 'error'
       });
       loader.hide();
@@ -131,13 +126,13 @@ const PostalCodeScreen = () => {
           dispatch(setDefaultSeller({ defaultSeller: item }));
           loader.show('', 'ecommerce');
           navigate('Home', { paySuccess: false });
-          dispatch(setUserGeoPoint({geopoint: position.coords}))
+          dispatch(setUserGeoPoint({ geopoint: position.coords }));
           return;
         }
       }
     }
     toast.show({
-      message: 'No se encontraron tiendas cercanas',
+      message: 'Servicio no disponible en esta zona.',
       type: 'error'
     });
     loader.hide();
@@ -180,8 +175,8 @@ const PostalCodeScreen = () => {
 
     if (status === 'disabled') {
       Alert.alert(`Turn on Location Services to allow "${appConfig.displayName}" to determine your location.`, '', [
-        { text: 'Go to Settings', onPress: openSetting },
-        { text: "Don't Use Location", onPress: () => {} }
+        { text: 'Go to settings', onPress: openSetting },
+        { text: 'Do not use location', onPress: () => {} }
       ]);
     }
 
@@ -233,7 +228,7 @@ const PostalCodeScreen = () => {
         loader.hide();
         getPickUpPointsByAddress(position);
       },
-      error => {
+      _error => {
         loader.hide();
         alert.show(
           {
@@ -285,23 +280,24 @@ const PostalCodeScreen = () => {
             <CustomText text={'Compártenos tu código postal'} fontSize={20} fontBold />
           </Container>
         </Container>
-        <TextContainer typography="h5" fontBold text={`Código Postal`} marginTop={40} />
+        <TextContainer typography="h5" fontBold text={'Código Postal'} marginTop={40} />
         <Container style={{ marginBottom: 24 }}>
           <Input
             {...register('postalCode')}
             rules={{
               required: {
                 value: true,
-                message: `Campo requerido.`
+                message: 'Campo requerido.'
               },
               minLength: {
                 value: 5,
-                message: `Mínimo 5 valores`
+                message: 'Mínimo 5 valores'
               },
               validate: (value: string) => {
                 if (value.length === 5) {
                   const input = Number(value);
 
+                  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
                   const found = sellers.find(item => {
                     const current = Number(item['Código postal']);
                     return current === input;
@@ -322,7 +318,7 @@ const PostalCodeScreen = () => {
             control={control}
             autoCorrect={false}
             keyboardType="numeric"
-            placeholder={`C.P`}
+            placeholder={'C.P'}
             blurOnSubmit={false}
             error={errors.postalCode?.message}
             maxLength={5}
@@ -369,20 +365,3 @@ const PostalCodeScreen = () => {
 };
 
 export default PostalCodeScreen;
-
-const styles = StyleSheet.create({
-  containerInfo: {
-    width: moderateScale(309),
-    height: moderateScale(55),
-    borderRadius: moderateScale(8),
-    backgroundColor: theme.brandColor.yellow_container,
-    borderStyle: 'solid',
-    borderWidth: 1,
-    borderColor: theme.brandColor.iconn_warning,
-    marginHorizontal: moderateScale(12),
-    marginTop: moderateScale(40),
-    paddingHorizontal: moderateScale(15),
-    flexDirection: 'row',
-    alignItems: 'center'
-  }
-});
