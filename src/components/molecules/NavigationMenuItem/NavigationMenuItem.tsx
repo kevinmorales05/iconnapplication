@@ -66,7 +66,7 @@ const NavigationMenuItem: React.FC<NavigationMenuItemProps> = ({
                 text={description}
                 marginLeft={14}
                 textColor={theme.fontColor.placeholder}
-                fontSize={descriptionTextSize != undefined ? 12 : 12}
+                fontSize={descriptionTextSize != undefined ? descriptionTextSize : 12}
                 numberOfLines={2}
               />
             ) : (
