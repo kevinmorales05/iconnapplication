@@ -22,12 +22,14 @@ const PointsList: React.FC<Props> = ({ markers, onPressMarker }) => {
     >
       <Container flex space="between">
         <Container backgroundColor={theme.brandColor.iconn_background}>
-          {markers.map((marker, i) => (
-            <Container key={i}>
-              <PointItem onPress={onPressMarker} point={marker} />
-              <Container backgroundColor={theme.brandColor.iconn_white} style={{ height: 4 }} />
-            </Container>
-          ))}
+          {markers
+            ? markers.map((marker, i) => (
+                <Container key={i}>
+                  <PointItem onPress={onPressMarker} point={marker} />
+                  <Container backgroundColor={theme.brandColor.iconn_white} style={{ height: 4 }} />
+                </Container>
+              ))
+            : null}
         </Container>
       </Container>
     </ScrollView>

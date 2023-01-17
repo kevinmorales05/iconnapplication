@@ -61,5 +61,13 @@ export const useLocation = () => {
     }
   };
 
-  return { initialUserLocation, getCurrentLocation, followUserLocation, userLocation, stopTrackingUserLocation };
+  /**
+   * Center de camera to temporal location while the user give the permissions to his real location.
+   * @param location location by municipality, is the default location per point in the defaultPoints.json
+   */
+  const setLocationByMunicipality = (location: Location) => {
+    setUserLocation(location);
+  };
+
+  return { initialUserLocation, getCurrentLocation, followUserLocation, userLocation, stopTrackingUserLocation, setLocationByMunicipality };
 };

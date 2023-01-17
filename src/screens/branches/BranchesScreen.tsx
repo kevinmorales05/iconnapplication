@@ -1,10 +1,10 @@
 import React from 'react';
+import { BranchesState, Location, PointDisplayMode, PointInterface } from 'rtk';
 import { Button, Container, CustomMap, PointsFound, PointsList, SearchBranch, SearchBranchByState, TextContainer } from 'components';
 import { Details, Region } from 'react-native-maps';
 import { ICONN_BRANCHES_FILTER_OPTION, ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN } from 'assets/images';
 import { Image, ScrollView } from 'react-native';
 import { PermissionsState } from 'context';
-import { Location, PointDisplayMode, PointInterface } from 'rtk';
 import Feather from 'react-native-vector-icons/Feather';
 import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -31,7 +31,7 @@ interface Props {
   onPressShowFilters: () => void;
   onRegionChange: () => void;
   onSearchMarkersByArea: () => void;
-  onSelectState: (v: any) => void;
+  onSelectMunicipality: (state: any, municipality: any) => void;
   permissions: PermissionsState;
   pointDisplayMode: PointDisplayMode;
   radiusOfSearch: number;
@@ -42,6 +42,7 @@ interface Props {
   visibleSearchByAreaButton: boolean;
   visibleSearchByDistance: boolean;
   visibleStoreSymbology: boolean;
+  states: BranchesState[];
 }
 
 const BranchesScreen: React.FC<Props> = ({
@@ -64,7 +65,7 @@ const BranchesScreen: React.FC<Props> = ({
   onPressShowFilters,
   onRegionChange,
   onSearchMarkersByArea,
-  onSelectState,
+  onSelectMunicipality,
   permissions,
   pointDisplayMode,
   radiusOfSearch,
@@ -74,7 +75,8 @@ const BranchesScreen: React.FC<Props> = ({
   setSearch,
   visibleSearchByAreaButton,
   visibleSearchByDistance,
-  visibleStoreSymbology
+  visibleStoreSymbology,
+  states
 }) => {
   return (
     <>
@@ -165,7 +167,7 @@ const BranchesScreen: React.FC<Props> = ({
         </Container>
       ) : permissions.locationStatus === 'blocked' && pointDisplayMode === 'list' ? (
         <Container backgroundColor={theme.brandColor.iconn_background} height={64}>
-          <SearchBranchByState onSelectState={onSelectState} />
+          <SearchBranchByState onSelectMunicipality={onSelectMunicipality} states={states} />
         </Container>
       ) : null}
 
@@ -262,7 +264,7 @@ const BranchesScreen: React.FC<Props> = ({
                 setSearch={setSearch}
               />
             ) : permissions.locationStatus === 'blocked' && pointDisplayMode === 'map' ? (
-              <SearchBranchByState onSelectState={onSelectState} />
+              <SearchBranchByState onSelectMunicipality={onSelectMunicipality} states={states} />
             ) : null}
 
             {!isButtonSearchBar && (

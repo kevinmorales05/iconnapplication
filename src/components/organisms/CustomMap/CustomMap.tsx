@@ -47,6 +47,10 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
   //   });
   // }, [userLocation]);
 
+  // useEffect(() => {
+  //   console.log('esta cambianfo la seacrh area en mapa:', searchArea);
+  // }, [searchArea]);
+
   return (
     <>
       <MapView

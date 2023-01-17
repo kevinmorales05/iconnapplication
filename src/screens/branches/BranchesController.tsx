@@ -4,10 +4,22 @@ import { BranchesStackParams } from 'navigation/types';
 import { Details, Region } from 'react-native-maps';
 import { Dimensions, Platform } from 'react-native';
 import { getNearbyPoints } from 'utils/geolocation';
-import { Location, PointDisplayMode, PointInfoNode, PointInterface, PointType, RootState, TabItem, useAppSelector } from 'rtk';
+import {
+  BranchesState,
+  Location,
+  PointDisplayMode,
+  PointInfoNode,
+  PointInterface,
+  PointType,
+  RootState,
+  setAppStateAndMunicipality,
+  TabItem,
+  useAppDispatch,
+  useAppSelector
+} from 'rtk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { PointDetailSheet } from 'components';
-import { POINTS } from 'assets/files';
+import { PointDetailSheet, StateMunicipalitySheet } from 'components';
+import { DEFAULT_POINTS, POINTS } from 'assets/files';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { showLocation } from 'react-native-map-link';
 import { useLocation } from 'hooks/useLocation';
@@ -20,15 +32,23 @@ import theme from 'components/theme/theme';
 
 const BranchesController: React.FC<any> = ({ route }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<BranchesStackParams>>();
+  const dispatch = useAppDispatch();
   const { permissions } = usePermissions();
-  const { userLocation } = useLocation();
+  const { userLocation, setLocationByMunicipality } = useLocation();
   const toast = useToast();
   const [markers, setMarkers] = useState<PointInterface[]>();
   const [finalMarkers, setFinalMarkers] = useState<PointInterface[]>();
   const [marker, setMarker] = useState<PointInterface>();
   const insets = useSafeAreaInsets();
   const [tabSelected, setTabSelected] = useState(1);
-  const { visibleStoreSymbology, visibleSearchByDistance } = useAppSelector((state: RootState) => state.app);
+  const {
+    visibleStoreSymbology,
+    visibleSearchByDistance,
+    state: branchesState,
+    municipality,
+    latitude: defaultLatitude,
+    longitude: defaultLongitude
+  } = useAppSelector((state: RootState) => state.app);
   const [radiusOfSearch, setRadiusOfSearch] = useState(1);
   const [latitudeDelta, setLatitudeDelta] = useState(0.04);
   const [visibleSearchByAreaButton, setVisibleSearchByAreaButton] = useState(false);
@@ -38,6 +58,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const [markersFound, setMarkersFound] = useState<PointInterface[]>();
   const [oneMarker, setOneMarker] = useState(false);
 
+  /**
+   * Is used to check if there is an activated filters.
+   * Uses route.params to get the params when user come back from filters screen.
+   */
   useEffect(() => {
     if (route?.params && route?.params.filterObject && markers) {
       /**
@@ -244,6 +268,9 @@ const BranchesController: React.FC<any> = ({ route }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route?.params, markers]);
 
+  /**
+   * Is used when the userLocation and the radius of search has been changed, then reload the search of branches.
+   */
   useEffect(() => {
     if (userLocation && radiusOfSearch) {
       const nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], POINTS as PointInterface[], radiusOfSearch);
@@ -258,6 +285,23 @@ const BranchesController: React.FC<any> = ({ route }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLocation, radiusOfSearch]);
+
+  /**
+   * Is used when user has blocked the location permission.
+   * Check if there is a location stored in redux to set temporal location in the map and search the branches.
+   */
+  useEffect(() => {
+    if (permissions.locationStatus === 'blocked') {
+      if (branchesState === '' && municipality === '' && defaultLatitude === 0 && defaultLongitude === 0) {
+        bottomSheetSMRef.current?.present();
+      } else {
+        if (defaultLatitude && defaultLongitude) {
+          setSearchArea({ latitude: defaultLatitude, longitude: defaultLongitude });
+          setLocationByMunicipality({ latitude: defaultLatitude, longitude: defaultLongitude });
+        }
+      }
+    }
+  }, []);
 
   /**
    * Search the markers based on the search area and considers the last selected search radius. And it also keeps the original markers.
@@ -312,10 +356,21 @@ const BranchesController: React.FC<any> = ({ route }) => {
     []
   );
 
+  // ref to StateMunicipalitySheet
+  const bottomSheetSMRef = useRef<BottomSheetModal>(null);
+
+  // SnapPoints for PointDetailSheet
+  const snapPointsSM = useMemo(() => [Platform.OS === 'android' ? '45%' : '40%', Platform.OS === 'android' ? '45%' : '40%'], []);
+
   /**
    * Hide PointDetailSheet.
    */
   const handleClosePress = () => bottomSheetRef.current?.close();
+
+  /**
+   * Hide StateMunicipalitySheet.
+   */
+  const handleClosePressSM = () => bottomSheetSMRef.current?.close();
 
   /**
    * Expand the bottomSheet.
@@ -495,13 +550,41 @@ const BranchesController: React.FC<any> = ({ route }) => {
   /**
    * This method is executed when user press "Search/Buscar" from his keyboard.
    * This type of search will return all matches considering the search radius and the filter currently active.
+   * IMPORTANT: THIS METHOD IS UNUSED BECAUSE THE SEARCH IS TRIGGERED AS SOON AS THE USER STARTS TYPING.
    */
   const onEndWriting = () => {
     // console.log('palabra a buscar: ', search);
   };
 
-  const onSelectState = (_val: any) => {
-    // console.log('val', val);
+  /**
+   * Used from map view.
+   * Store in redux the location of the town of municipality selected. Also update the map view and center the camera.
+   * @param stateToSearch Selected state from select input in the map.
+   * @param municipalityToSearch Selected municipality from select input in the map.
+   */
+  const onSelectMunicipality = (stateToSearch: any, municipalityToSearch: any) => {
+    if (stateToSearch && municipalityToSearch) {
+      const municipalityTown: BranchesState = DEFAULT_POINTS.find(dp => dp.stateName === stateToSearch);
+      const latlon: Location = {
+        latitude: municipalityTown.municipalities.find(mt => mt.municipalityName === municipalityToSearch)?.latitude!,
+        longitude: municipalityTown.municipalities.find(mt => mt.municipalityName === municipalityToSearch)?.longitude!
+      };
+      dispatch(
+        setAppStateAndMunicipality({ state: stateToSearch, municipality: municipalityToSearch, latitude: latlon.latitude, longitude: latlon.longitude })
+      );
+      setSearchArea(latlon);
+      setLocationByMunicipality(latlon);
+    }
+  };
+
+  /**
+   * Used from Modal.
+   * Store in redux the location of the town of municipality selected. Also update the map view and center the camera.
+   * @param fieldValues state and municipality strings.
+   */
+  const onSearchStateMunicipality = (fieldValues: any) => {
+    onSelectMunicipality(fieldValues.state, fieldValues.municipality);
+    handleClosePressSM();
   };
 
   return (
@@ -526,7 +609,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
         onPressShowFilters={onPressShowFilters}
         onRegionChange={onRegionChange}
         onSearchMarkersByArea={onSearchMarkersByArea}
-        onSelectState={onSelectState}
+        onSelectMunicipality={onSelectMunicipality}
         permissions={permissions}
         pointDisplayMode={pointDisplayMode}
         radiusOfSearch={radiusOfSearch}
@@ -537,6 +620,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
         visibleSearchByAreaButton={visibleSearchByAreaButton}
         visibleSearchByDistance={visibleSearchByDistance!}
         visibleStoreSymbology={visibleStoreSymbology!}
+        states={DEFAULT_POINTS as BranchesState[]}
       />
       <PointDetailSheet
         bottomSheetRef={bottomSheetRef}
@@ -547,6 +631,13 @@ const BranchesController: React.FC<any> = ({ route }) => {
         onPressTab={onPressTab}
         snapPoints={snapPoints}
         tabSelected={tabSelected}
+      />
+      <StateMunicipalitySheet
+        bottomSheetRef={bottomSheetSMRef}
+        onPressClose={handleClosePressSM}
+        onSubmit={onSearchStateMunicipality}
+        snapPoints={snapPointsSM}
+        states={DEFAULT_POINTS as BranchesState[]}
       />
     </SafeArea>
   );

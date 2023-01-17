@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { AppState, Platform } from 'react-native';
-import { PERMISSIONS, PermissionStatus, request, check, openSettings } from 'react-native-permissions';
+import { PERMISSIONS, PermissionStatus, request, check } from 'react-native-permissions';
 
 export interface PermissionsState {
   locationStatus: PermissionStatus;
@@ -39,7 +39,8 @@ export const PermissionsProvider = ({ children }: any) => {
     }
 
     if (permissionStatus === 'blocked') {
-      openSettings();
+      // TODO: Show modal to indicate to the user that should set permissions to location.
+      // openSettings();
     }
 
     setPermissions({
