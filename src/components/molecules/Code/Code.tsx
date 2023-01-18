@@ -104,7 +104,7 @@ const Code: FunctionComponent<Props> = ({
     if (text.length > 1) {
       const textArray = text ? text.split('') : [];
       if (text.length > 2) {
-        textArray.map((char, i) => setTextCode(i, char));
+        textArray.forEach((char, i) => setTextCode(i, char));
       } else {
         setTextToIndex(index, textArray[1]);
       }

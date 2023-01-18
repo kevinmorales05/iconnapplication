@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import { Dimensions, Image } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Container } from 'components/atoms';
+import { Dimensions, Image, Platform } from 'react-native';
 import { ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN } from 'assets/images';
 import { Location, PointInterface } from 'rtk';
 import { useLocation } from 'hooks/useLocation';
@@ -21,35 +22,19 @@ interface Props {
 const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComplete, oneMarker, onPressMarker, onPressOut, onRegionChange, searchArea }) => {
   const mapViewRef = useRef<MapView>();
   const followingRef = useRef<boolean>(true);
-  const { followUserLocation, userLocation, stopTrackingUserLocation } = useLocation();
+  const { userLocation } = useLocation();
   const { permissions, askLocationPermission } = usePermissions();
   const { height, width } = Dimensions.get('window');
   // If you want to set more zoom from the height, set latitudeDelta with a minor decimal number.
   const LONGITUDE_DELTA = latitudeDelta * (width / height);
 
+  const [selectedMarker, setSelectedMarker] = useState<{ i: number; selected: boolean }>();
+
   useEffect(() => {
-    if (permissions.locationStatus === 'granted') {
-      followUserLocation();
-    } else if (permissions.locationStatus === 'denied') {
+    if (Platform.OS === 'android' && permissions.locationStatus === 'blocked') {
       askLocationPermission();
     }
-
-    return () => {
-      stopTrackingUserLocation();
-    };
   }, [permissions.locationStatus]);
-
-  // useEffect(() => {
-  //   if (!followingRef.current) return;
-
-  //   mapViewRef.current?.setCamera({
-  //     center: userLocation
-  //   });
-  // }, [userLocation]);
-
-  // useEffect(() => {
-  //   console.log('esta cambianfo la seacrh area en mapa:', searchArea);
-  // }, [searchArea]);
 
   return (
     <>
@@ -83,35 +68,64 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
         onTouchStart={() => (followingRef.current = false)}
         zoomEnabled
         zoomControlEnabled
+        zoomTapEnabled
+        maxZoomLevel={20}
         onPress={onPressOut}
         onRegionChangeComplete={(r, d) => onChangeRegionComplete(r, d)}
-        onRegionChange={onRegionChange}
+        onPanDrag={onRegionChange}
       >
         {markers &&
           markers.map((marker, index) => (
             <Marker
+              tracksViewChanges={Platform.OS === 'android' ? false : true}
               key={index}
               coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
               title={marker.shopName}
-              pinColor={
-                marker.type === 'binomial'
-                  ? theme.brandColor.iconn_red_original
-                  : marker.type === 'petro'
-                  ? theme.brandColor.iconn_orange_original
-                  : theme.brandColor.iconn_green_original
-              }
-              onPress={() => onPressMarker(marker)!}
+              onPress={() => {
+                mapViewRef.current?.animateToRegion({
+                  latitude: marker.latitude,
+                  longitude: marker.longitude,
+                  latitudeDelta: latitudeDelta,
+                  longitudeDelta: LONGITUDE_DELTA
+                });
+                onPressMarker(marker)!;
+                setSelectedMarker({ i: index, selected: true });
+              }}
             >
-              <Image
-                source={
-                  marker.type === 'binomial'
-                    ? ICONN_BRANCHES_LOCATION_BINOMIAL
-                    : marker.type === 'petro'
-                    ? ICONN_BRANCHES_LOCATION_PETRO
-                    : ICONN_BRANCHES_LOCATION_SEVEN
-                }
-                style={{ height: 35, width: 35 }}
-              />
+              {markers.length === 1 || (selectedMarker && selectedMarker.selected && selectedMarker.i === index) ? (
+                <Container
+                  style={{
+                    width: 60,
+                    height: 60,
+                    alignSelf: 'center',
+                    borderRadius: 30,
+                    shadowColor: theme.brandColor.iconn_orange_original,
+                    shadowOffset: {
+                      width: 0,
+                      height: 1
+                    },
+                    shadowOpacity: 1,
+                    shadowRadius: 16,
+                    overflow: 'hidden',
+                    borderWidth: 0.01,
+                    borderColor: theme.brandColor.iconn_orange_original
+                  }}
+                  middle
+                >
+                  <Image source={ICONN_BRANCHES_LOCATION_PETRO} style={{ width: 44, height: 44 }} />
+                </Container>
+              ) : (
+                <Image
+                  source={
+                    marker.type === 'binomial'
+                      ? ICONN_BRANCHES_LOCATION_BINOMIAL
+                      : marker.type === 'petro'
+                      ? ICONN_BRANCHES_LOCATION_PETRO
+                      : ICONN_BRANCHES_LOCATION_SEVEN
+                  }
+                  style={{ height: 36, width: 36 }}
+                />
+              )}
             </Marker>
           ))}
       </MapView>

@@ -64,7 +64,7 @@ const SearchBranchByState: React.FC<SearchBranchProps> = ({ onSelectMunicipality
             trigger('state');
             trigger('municipality');
           }}
-          androidMode="dialog"
+          androidMode="dropdown"
           placeholder={'Selección'}
           disabled={false}
           marginTop={0}
@@ -76,14 +76,17 @@ const SearchBranchByState: React.FC<SearchBranchProps> = ({ onSelectMunicipality
           control={control}
           rules={openField(3)}
           options={municipalities ? municipalities : []}
-          optionsIdField="municipalityId"
+          optionsIdField="municipalityName"
           optionsValueField="municipalityName"
           onSelect={(value: number | string | BranchesMunicipality) => {
             if (value !== 'Selección') {
               if (typeof value === 'object') {
-                setValue('municipality', value && municipalities ? municipalities.find(i => i.municipalityId === value.municipalityId)!.municipalityName : '');
+                setValue(
+                  'municipality',
+                  value && municipalities ? municipalities.find(i => i.municipalityName === value.municipalityName)!.municipalityName : ''
+                );
               } else {
-                setValue('municipality', value && municipalities ? municipalities.find(i => i.municipalityId === value)!.municipalityName : '');
+                setValue('municipality', value !== '' && municipalities ? municipalities.find(i => i.municipalityName === value)!.municipalityName : '');
               }
               onSelectMunicipality(getValues('state'), getValues('municipality'));
             } else {
@@ -91,7 +94,7 @@ const SearchBranchByState: React.FC<SearchBranchProps> = ({ onSelectMunicipality
             }
             trigger('municipality');
           }}
-          androidMode="dialog"
+          androidMode="dropdown"
           placeholder={'Selección'}
           disabled={false}
           marginTop={0}

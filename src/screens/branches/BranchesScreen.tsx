@@ -3,7 +3,7 @@ import { BranchesState, Location, PointDisplayMode, PointInterface } from 'rtk';
 import { Button, Container, CustomMap, PointsFound, PointsList, SearchBranch, SearchBranchByState, TextContainer } from 'components';
 import { Details, Region } from 'react-native-maps';
 import { ICONN_BRANCHES_FILTER_OPTION, ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN } from 'assets/images';
-import { Image, ScrollView } from 'react-native';
+import { Image, Platform, ScrollView } from 'react-native';
 import { PermissionsState } from 'context';
 import Feather from 'react-native-vector-icons/Feather';
 import Foundation from 'react-native-vector-icons/Foundation';
@@ -274,7 +274,7 @@ const BranchesScreen: React.FC<Props> = ({
             )}
 
             {visibleSearchByAreaButton && isButtonSearchBar && (
-              <Container style={{ position: 'absolute', top: 65, alignSelf: 'center' }}>
+              <Container style={{ position: 'absolute', top: Platform.OS === 'android' ? 70 : 65, alignSelf: 'center' }}>
                 <Button
                   color="iconn_green_original"
                   fontBold

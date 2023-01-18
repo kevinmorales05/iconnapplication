@@ -36,6 +36,9 @@ export const PermissionsProvider = ({ children }: any) => {
       permissionStatus = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     } else {
       permissionStatus = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      if (permissionStatus === 'denied') {
+        permissionStatus = 'blocked';
+      }
     }
 
     if (permissionStatus === 'blocked') {
@@ -56,6 +59,9 @@ export const PermissionsProvider = ({ children }: any) => {
       permissionStatus = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
     } else {
       permissionStatus = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      if (permissionStatus === 'denied') {
+        permissionStatus = 'blocked';
+      }
     }
 
     setPermissions({

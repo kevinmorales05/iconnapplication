@@ -1,4 +1,4 @@
-import { Location } from 'rtk';
+import { Location, setAppInitialPreferences, useAppDispatch } from 'rtk';
 import { useEffect, useRef, useState } from 'react';
 import { usePermissions } from 'context';
 import Geolocation from 'react-native-geolocation-service';
@@ -8,16 +8,18 @@ export const useLocation = () => {
   const [initialUserLocation, setInitialUserLocation] = useState<Location>();
   const [userLocation, setUserLocation] = useState<Location>();
   const watchId = useRef<number>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (permissions.locationStatus === 'granted') {
+      dispatch(setAppInitialPreferences());
       getCurrentLocation().then(location => {
         setInitialUserLocation(location);
         setUserLocation(location);
       });
     } else if (permissions.locationStatus === 'denied') {
       askLocationPermission();
-    } else if (permissions.locationStatus === 'blocked') {
+    } else if (permissions.locationStatus === 'blocked' || permissions.locationStatus === 'unavailable') {
       setInitialUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
       setUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
     }

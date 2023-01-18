@@ -53,6 +53,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const [latitudeDelta, setLatitudeDelta] = useState(0.04);
   const [visibleSearchByAreaButton, setVisibleSearchByAreaButton] = useState(false);
   const [searchArea, setSearchArea] = useState<Location>();
+  const [searchCoordinatesByGesture, setSearchCoordinatesByGesture] = useState<Location>();
   const [isButtonSearchBar, setIsButtonSearchBar] = useState(true);
   const [search, setSearch] = useState<string>('');
   const [markersFound, setMarkersFound] = useState<PointInterface[]>();
@@ -251,11 +252,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
         // console.log('En estas tiendas es donde lo encontraras:', JSON.stringify(uniquePoints, null, 3));
         // console.log('Total de tiendas en donde lo encontraras:', uniquePoints?.length);
         if (uniquePoints.length === 0) {
-          if (radiusOfSearch < 5) {
-            toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área o aumentar el radio de busqueda.', type: 'error' });
-          } else {
-            toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área.', type: 'error' });
-          }
+          toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
         }
         setFinalMarkers(uniquePoints);
       };
@@ -275,11 +272,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
     if (userLocation && radiusOfSearch) {
       const nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], POINTS as PointInterface[], radiusOfSearch);
       if (nearbyMarkers.length === 0) {
-        if (radiusOfSearch < 5) {
-          toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área o aumentar el radio de busqueda.', type: 'error' });
-        } else {
-          toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área.', type: 'error' });
-        }
+        toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
       }
       setMarkers(nearbyMarkers);
     }
@@ -291,7 +284,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
    * Check if there is a location stored in redux to set temporal location in the map and search the branches.
    */
   useEffect(() => {
-    if (permissions.locationStatus === 'blocked') {
+    if (permissions.locationStatus === 'blocked' || permissions.locationStatus === 'unavailable') {
       if (branchesState === '' && municipality === '' && defaultLatitude === 0 && defaultLongitude === 0) {
         bottomSheetSMRef.current?.present();
       } else {
@@ -309,7 +302,11 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const onSearchMarkersByArea = () => {
     // We get the points close to the new search area.
     // Remember that in the case of "Buscar en esta area" the "search radius" from the user's real location does not matter more than to limit the radius in this initial search.
-    let nearbyMarkers = getNearbyPoints([searchArea?.latitude!, searchArea?.longitude!], POINTS as PointInterface[], radiusOfSearch); // After this line we use 100000 as search radius.
+    let nearbyMarkers = getNearbyPoints(
+      [searchCoordinatesByGesture?.latitude!, searchCoordinatesByGesture?.longitude!],
+      POINTS as PointInterface[],
+      radiusOfSearch
+    ); // After this line we use 100000 as search radius.
     if (nearbyMarkers.length > 0) {
       // We obtain the distance between the real location of the user and each of the new points in the new zone.
       nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], nearbyMarkers as PointInterface[], 100000);
@@ -323,11 +320,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
       // the total distance of each marker from the actual location of the user.
       setMarkers(uniquePoints);
     } else {
-      if (radiusOfSearch < 5) {
-        toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área o aumentar el radio de busqueda.', type: 'error' });
-      } else {
-        toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área.', type: 'error' });
-      }
+      toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
     }
   };
 
@@ -335,12 +328,11 @@ const BranchesController: React.FC<any> = ({ route }) => {
    * Set the current marker/point in the BottomModalSheet
    * @param point marker
    */
-  const onPressMarker = (point: PointInterface, mode?: PointDisplayMode) => {
+  const onPressMarker = (point: PointInterface, _mode?: PointDisplayMode) => {
     // TODO: increase gorhom library to 4.4.3 to fix expand() method of bottomSheet, in case of markers mode list.
     // console.log(JSON.stringify(point, null, 3));
     // console.log('mode', mode);
-    if (mode === 'list') bottomSheetRef.current?.present();
-    else bottomSheetRef.current?.present();
+    bottomSheetRef.current?.present();
     setMarker(point);
   };
 
@@ -349,10 +341,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
 
   // SnapPoints for PointDetailSheet
   const snapPoints = useMemo(
-    () => [
-      Platform.OS === 'android' ? '50%' : '50%',
-      Platform.OS === 'android' ? Dimensions.get('window').height : Dimensions.get('window').height - insets.top
-    ],
+    () => ['46%', Platform.OS === 'android' ? Dimensions.get('window').height - insets.top + 16 : Dimensions.get('window').height - insets.top],
     []
   );
 
@@ -463,7 +452,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
     // console.log('Cambia region de busqueda', r, d);
     if (d.isGesture) {
       setVisibleSearchByAreaButton(true);
-      setSearchArea({ latitude: r.latitude, longitude: r.longitude });
+      setSearchCoordinatesByGesture({ latitude: r.latitude, longitude: r.longitude });
     }
 
     // Details: contain if the movement is by gestures or not.
@@ -572,6 +561,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
       dispatch(
         setAppStateAndMunicipality({ state: stateToSearch, municipality: municipalityToSearch, latitude: latlon.latitude, longitude: latlon.longitude })
       );
+      setSearchCoordinatesByGesture(latlon);
       setSearchArea(latlon);
       setLocationByMunicipality(latlon);
     }
