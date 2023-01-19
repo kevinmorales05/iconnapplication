@@ -6,7 +6,11 @@ const initialState: AppInterface = {
   internetReachability: 0,
   internetReachabilityReviewed: 0,
   visibleSearchByDistance: true,
-  visibleStoreSymbology: true
+  visibleStoreSymbology: true,
+  state: '',
+  municipality: '',
+  latitude: 0,
+  longitude: 0
 };
 
 const appSlice = createSlice({
@@ -17,8 +21,14 @@ const appSlice = createSlice({
       state.error = '';
       state.internetReachability = 0;
       state.internetReachabilityReviewed = 0;
+    },
+    setAppInitialPreferences(state) {
       state.visibleStoreSymbology = true;
       state.visibleSearchByDistance = true;
+      state.state = '';
+      state.municipality = '';
+      state.latitude = 0;
+      state.longitude = 0;
     },
     setAppError(state, action: PayloadAction<AppInterface>) {
       state.error = action.payload.error;
@@ -34,6 +44,12 @@ const appSlice = createSlice({
     },
     setAppVisibleSearchByDistance(state, action: PayloadAction<AppInterface>) {
       state.visibleSearchByDistance = action.payload.visibleSearchByDistance;
+    },
+    setAppStateAndMunicipality(state, action: PayloadAction<AppInterface>) {
+      state.state = action.payload.state;
+      state.municipality = action.payload.municipality;
+      state.latitude = action.payload.latitude;
+      state.longitude = action.payload.longitude;
     }
   }
 });
@@ -41,8 +57,10 @@ const appSlice = createSlice({
 export const {
   setAppError,
   setAppInitialState,
+  setAppInitialPreferences,
   setAppInternetReachability,
   setAppInternetReachabilityReviewed,
+  setAppStateAndMunicipality,
   setAppVisibleSearchByDistance,
   setAppVisibleStoreSymbology
 } = appSlice.actions;

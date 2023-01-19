@@ -24,6 +24,8 @@ export * from './QuantityProduct';
 export * from './RadioButton';
 export * from './Rating';
 export * from './SearchBar';
+export * from './SearchBranch';
+export * from './SearchBranchByState';
 export * from './SearchItem';
 export * from './TaxInfoCard';
 export * from './TextContainer';

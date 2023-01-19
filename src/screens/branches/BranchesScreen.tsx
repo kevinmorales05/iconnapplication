@@ -1,61 +1,126 @@
 import React from 'react';
-import { Image, ScrollView } from 'react-native';
-import { Button, Container, CustomMap, PointsList, TextContainer } from 'components';
-import { PointDisplayMode, PointInterface } from 'rtk';
-import theme from 'components/theme/theme';
-import Foundation from 'react-native-vector-icons/Foundation';
-import Feather from 'react-native-vector-icons/Feather';
+import { BranchesState, Location, PointDisplayMode, PointInterface } from 'rtk';
+import { Button, Container, CustomMap, PointsFound, PointsList, SearchBranch, SearchBranchByState, TextContainer } from 'components';
+import { Details, Region } from 'react-native-maps';
 import { ICONN_BRANCHES_FILTER_OPTION, ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN } from 'assets/images';
+import { Image, Platform, ScrollView } from 'react-native';
+import { PermissionsState } from 'context';
+import Feather from 'react-native-vector-icons/Feather';
+import Foundation from 'react-native-vector-icons/Foundation';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Slider from '@react-native-community/slider';
-import { Details, Region } from 'react-native-maps';
+import theme from 'components/theme/theme';
 
 interface Props {
+  isButtonSearchBar: boolean;
   latitudeDelta: number;
   markers: PointInterface[];
+  markersFound: PointInterface[];
   onChangeRegionComplete: (r: Region, d: Details) => void;
   onChangeSearchOfRadius: (value: number) => void;
+  onChangeTextSearch: (text: string) => void;
+  oneMarker: boolean;
+  onEndWriting: () => void;
+  onPressCancelSearch: () => void;
   onPressMarker: (marker: PointInterface, mode?: PointDisplayMode) => void;
   onPressOut: () => void;
+  onPressSearch: () => void;
   onPressSeeList: () => void;
   onPressSeeMap: () => void;
   onPressShowDetails: () => void;
   onPressShowFilters: () => void;
   onRegionChange: () => void;
   onSearchMarkersByArea: () => void;
-  permissions: {};
+  onSelectMunicipality: (state: any, municipality: any) => void;
+  permissions: PermissionsState;
   pointDisplayMode: PointDisplayMode;
+  radiusOfSearch: number;
+  search: string;
+  searchArea?: Location;
+  setMarkerFound: (marker: PointInterface, mode?: PointDisplayMode) => void;
+  setSearch: (str: string) => void;
   visibleSearchByAreaButton: boolean;
   visibleSearchByDistance: boolean;
   visibleStoreSymbology: boolean;
+  states: BranchesState[];
 }
 
 const BranchesScreen: React.FC<Props> = ({
+  isButtonSearchBar,
   latitudeDelta,
   markers,
+  markersFound,
   onChangeRegionComplete,
   onChangeSearchOfRadius,
+  onChangeTextSearch,
+  oneMarker,
+  onEndWriting,
+  onPressCancelSearch,
   onPressMarker,
   onPressOut,
+  onPressSearch,
   onPressSeeList,
   onPressSeeMap,
   onPressShowDetails,
   onPressShowFilters,
   onRegionChange,
   onSearchMarkersByArea,
+  onSelectMunicipality,
+  permissions,
   pointDisplayMode,
+  radiusOfSearch,
+  search,
+  searchArea,
+  setMarkerFound,
+  setSearch,
   visibleSearchByAreaButton,
   visibleSearchByDistance,
-  visibleStoreSymbology
+  visibleStoreSymbology,
+  states
 }) => {
   return (
     <>
       {/* <TextContainer typography="paragraph" text={JSON.stringify(permissions)} marginTop={23} marginBottom={16} /> */}
-      <Container row space="between" middle style={{ paddingHorizontal: 16, paddingVertical: 8, width: '100%' }}>
-        <Container style={{ width: '30%' }}>
-          {pointDisplayMode === 'map' && (
+
+      {isButtonSearchBar && (
+        <Container row space="between" middle style={{ paddingHorizontal: 16, paddingVertical: 8, width: '100%' }}>
+          <Container style={{ width: '30%' }}>
+            {pointDisplayMode === 'map' && (
+              <Button
+                onPress={onPressSeeList}
+                color="iconn_white"
+                style={{ borderRadius: 4, borderWidth: 1, borderColor: theme.brandColor.iconn_med_grey }}
+                size="xsmall"
+                length="long"
+                width="xxlarge"
+                fontColor="dark"
+                fontBold
+                fontSize="label"
+                leftIcon={<Foundation name="list-bullet" size={24} color={theme.brandColor.iconn_dark_grey} style={{ left: 8 }} />}
+              >
+                Ver lista
+              </Button>
+            )}
+            {pointDisplayMode === 'list' && (
+              <Button
+                onPress={onPressSeeMap}
+                color="iconn_white"
+                style={{ borderRadius: 4, borderWidth: 1, borderColor: theme.brandColor.iconn_med_grey }}
+                size="xsmall"
+                length="long"
+                width="xxlarge"
+                fontColor="dark"
+                fontBold
+                fontSize="label"
+                leftIcon={<Ionicons name="map-outline" size={24} color={theme.brandColor.iconn_dark_grey} style={{ left: 8 }} />}
+              >
+                Ver Mapa
+              </Button>
+            )}
+          </Container>
+          <Container style={{ width: '30%' }}>
             <Button
-              onPress={onPressSeeList}
+              onPress={onPressShowDetails}
               color="iconn_white"
               style={{ borderRadius: 4, borderWidth: 1, borderColor: theme.brandColor.iconn_med_grey }}
               size="xsmall"
@@ -64,14 +129,14 @@ const BranchesScreen: React.FC<Props> = ({
               fontColor="dark"
               fontBold
               fontSize="label"
-              leftIcon={<Foundation name="list-bullet" size={24} color={theme.brandColor.iconn_dark_grey} style={{ left: 8 }} />}
+              leftIcon={<Feather name="layers" size={24} color={theme.brandColor.iconn_dark_grey} style={{ left: 8 }} />}
             >
-              Ver lista
+              Mostrar
             </Button>
-          )}
-          {pointDisplayMode === 'list' && (
+          </Container>
+          <Container style={{ width: '30%' }}>
             <Button
-              onPress={onPressSeeMap}
+              onPress={onPressShowFilters}
               color="iconn_white"
               style={{ borderRadius: 4, borderWidth: 1, borderColor: theme.brandColor.iconn_med_grey }}
               size="xsmall"
@@ -80,45 +145,32 @@ const BranchesScreen: React.FC<Props> = ({
               fontColor="dark"
               fontBold
               fontSize="label"
-              leftIcon={<Ionicons name="map-outline" size={24} color={theme.brandColor.iconn_dark_grey} style={{ left: 8 }} />}
+              leftIcon={<Image source={ICONN_BRANCHES_FILTER_OPTION} style={{ left: 8, width: 24, height: 24 }} />}
             >
-              Ver Mapa
+              Filtrar
             </Button>
-          )}
+          </Container>
         </Container>
-        <Container style={{ width: '30%' }}>
-          <Button
-            onPress={onPressShowDetails}
-            color="iconn_white"
-            style={{ borderRadius: 4, borderWidth: 1, borderColor: theme.brandColor.iconn_med_grey }}
-            size="xsmall"
-            length="long"
-            width="xxlarge"
-            fontColor="dark"
-            fontBold
-            fontSize="label"
-            leftIcon={<Feather name="layers" size={24} color={theme.brandColor.iconn_dark_grey} style={{ left: 8 }} />}
-          >
-            Mostrar
-          </Button>
+      )}
+      {permissions.locationStatus === 'granted' && pointDisplayMode === 'list' ? (
+        <Container backgroundColor={isButtonSearchBar ? theme.brandColor.iconn_background : undefined} height={64}>
+          <SearchBranch
+            isButtonSearchBar={isButtonSearchBar}
+            onChangeTextSearch={onChangeTextSearch}
+            onEndWriting={onEndWriting}
+            onPressCancelSearch={onPressCancelSearch}
+            onPressSearch={onPressSearch}
+            pointDisplayMode={pointDisplayMode}
+            search={search}
+            setSearch={setSearch}
+          />
         </Container>
-        <Container style={{ width: '30%' }}>
-          <Button
-            onPress={onPressShowFilters}
-            color="iconn_white"
-            style={{ borderRadius: 4, borderWidth: 1, borderColor: theme.brandColor.iconn_med_grey }}
-            size="xsmall"
-            length="long"
-            width="xxlarge"
-            fontColor="dark"
-            fontBold
-            fontSize="label"
-            leftIcon={<Image source={ICONN_BRANCHES_FILTER_OPTION} style={{ left: 8, width: 24, height: 24 }} />}
-          >
-            Filtrar
-          </Button>
+      ) : permissions.locationStatus === 'blocked' && pointDisplayMode === 'list' ? (
+        <Container backgroundColor={theme.brandColor.iconn_background} height={64}>
+          <SearchBranchByState onSelectMunicipality={onSelectMunicipality} states={states} />
         </Container>
-      </Container>
+      ) : null}
+
       <ScrollView
         bounces={false}
         keyboardShouldPersistTaps="handled"
@@ -128,7 +180,7 @@ const BranchesScreen: React.FC<Props> = ({
       >
         <>
           <Container flex>
-            {pointDisplayMode === 'map' && (
+            {pointDisplayMode === 'map' && isButtonSearchBar && (
               <CustomMap
                 latitudeDelta={latitudeDelta}
                 markers={markers}
@@ -136,10 +188,14 @@ const BranchesScreen: React.FC<Props> = ({
                 onPressMarker={onPressMarker}
                 onPressOut={onPressOut}
                 onRegionChange={onRegionChange}
+                oneMarker={oneMarker}
+                searchArea={searchArea}
               />
             )}
-            {pointDisplayMode === 'list' && <PointsList markers={markers} onPressMarker={onPressMarker} />}
-            {visibleStoreSymbology && pointDisplayMode === 'map' && (
+
+            {pointDisplayMode === 'list' && isButtonSearchBar && <PointsList markers={markers} onPressMarker={onPressMarker} />}
+
+            {visibleStoreSymbology && pointDisplayMode === 'map' && isButtonSearchBar && (
               <Container
                 height={120}
                 backgroundColor={theme.brandColor.iconn_white}
@@ -161,7 +217,7 @@ const BranchesScreen: React.FC<Props> = ({
               </Container>
             )}
 
-            {visibleSearchByDistance && pointDisplayMode === 'map' && (
+            {visibleSearchByDistance && pointDisplayMode === 'map' && isButtonSearchBar && (
               <Container
                 height={120}
                 backgroundColor={theme.brandColor.iconn_white}
@@ -176,18 +232,18 @@ const BranchesScreen: React.FC<Props> = ({
               >
                 <TextContainer text={'Distancia de\nbúsqueda (km)'} textColor={theme.brandColor.iconn_accent_secondary} fontBold numberOfLines={2} />
                 <Slider
-                  onSlidingComplete={v => onChangeSearchOfRadius(v)}
-                  style={{ flex: 1, width: 140, marginVertical: 8 }}
-                  minimumValue={1}
+                  lowerLimit={1}
+                  maximumTrackTintColor={theme.brandColor.iconn_med_grey}
                   maximumValue={5}
                   minimumTrackTintColor={theme.brandColor.iconn_green_original}
-                  maximumTrackTintColor={theme.brandColor.iconn_med_grey}
+                  minimumValue={1}
+                  onSlidingComplete={v => onChangeSearchOfRadius(v)}
                   step={1}
-                  value={1}
-                  lowerLimit={1}
-                  upperLimit={5}
+                  style={{ flex: 1, width: 140, marginVertical: 8 }}
                   tapToSeek={true}
                   thumbTintColor={theme.brandColor.iconn_med_grey}
+                  upperLimit={5}
+                  value={radiusOfSearch}
                 />
                 <Container row space="between">
                   <TextContainer text="1 km" fontBold typography="h6" />
@@ -195,8 +251,30 @@ const BranchesScreen: React.FC<Props> = ({
                 </Container>
               </Container>
             )}
-            {visibleSearchByAreaButton && (
-              <Container style={{ position: 'absolute', top: 65, alignSelf: 'center' }}>
+
+            {permissions.locationStatus === 'granted' && pointDisplayMode === 'map' ? (
+              <SearchBranch
+                isButtonSearchBar={isButtonSearchBar}
+                onChangeTextSearch={onChangeTextSearch}
+                onEndWriting={onEndWriting}
+                onPressCancelSearch={onPressCancelSearch}
+                onPressSearch={onPressSearch}
+                pointDisplayMode={pointDisplayMode}
+                search={search}
+                setSearch={setSearch}
+              />
+            ) : permissions.locationStatus === 'blocked' && pointDisplayMode === 'map' ? (
+              <SearchBranchByState onSelectMunicipality={onSelectMunicipality} states={states} />
+            ) : null}
+
+            {!isButtonSearchBar && (
+              <Container style={{ top: pointDisplayMode === 'list' ? 0 : 64 }}>
+                <PointsFound markers={markersFound} setMarkerFound={setMarkerFound} />
+              </Container>
+            )}
+
+            {visibleSearchByAreaButton && isButtonSearchBar && (
+              <Container style={{ position: 'absolute', top: Platform.OS === 'android' ? 70 : 65, alignSelf: 'center' }}>
                 <Button
                   color="iconn_green_original"
                   fontBold
