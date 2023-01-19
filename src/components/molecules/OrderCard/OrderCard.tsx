@@ -60,7 +60,7 @@ const OrderCard = (props: OrderInterface) => {
         isCreate = true;
       }
     });
-    const messType: messageType = isAdd && !isCreate ? 'add' : !isAdd && isCreate ? 'create' : 'create';
+    const messType: messageType = isAdd && !isCreate ? 'add' : 'create';
     loader.show();
     setTimeout(() => {
       navigate('ShopCart', {

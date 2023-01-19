@@ -12,7 +12,8 @@ import {
   useAppDispatch,
   useAppSelector,
   setPromotionsInitialState,
-  setWalletInitialState
+  setWalletInitialState,
+  setAppInitialPreferences
 } from 'rtk';
 import { authServices } from 'services';
 import { version as app_version } from './../../../../package.json';
@@ -80,10 +81,10 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
       // console.log('LOGOUT ERROR', error);
     } finally {
       dispatch(setAppInitialState());
+      dispatch(setAppInitialPreferences());
       dispatch(setAuthInitialState());
       dispatch(setInvoicingInitialState());
       dispatch(setShoppingCartInitialState());
-      dispatch(setInvoicingInitialState());
       dispatch(setPromotionsInitialState());
       dispatch(setWalletInitialState());
       await CookieManager.clearAll();

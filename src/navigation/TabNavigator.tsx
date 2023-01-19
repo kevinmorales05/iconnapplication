@@ -5,7 +5,7 @@ import { Image } from 'react-native';
 import { RootState, useAppSelector } from 'rtk';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TAB_CAT, TAB_HOME, TAB_PIN_LOCATION, TAB_PROMOS, TAB_USER_PROFILE } from 'assets/images';
-import BranchesStack from './stacks/nested/BranchesStack';
+// import BranchesStack from './stacks/nested/BranchesStack';
 import CategoriesController from 'screens/categories/CategoriesController';
 import HomeController from 'screens/home/HomeController';
 import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpController';
@@ -14,7 +14,6 @@ import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
 import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 
-
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
 export const TabNavigator = () => {
@@ -22,14 +21,14 @@ export const TabNavigator = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
   const { paySuccess } = route.params;
 
-
   return (
     <Tab.Navigator
       screenOptions={() => ({
         tabBarActiveTintColor: theme.brandColor.iconn_green_original,
         tabBarInactiveTintColor: theme.fontColor.placeholder,
         headerShown: true,
-        tabBarLabelStyle: { fontSize: theme.fontSize.h6 }
+        tabBarLabelStyle: { fontSize: theme.fontSize.h6 },
+        tabBarHideOnKeyboard: true
       })}
     >
       <Tab.Screen
