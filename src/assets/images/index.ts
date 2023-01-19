@@ -15,6 +15,8 @@ import ICON_HELPBILLING from './helpBilling.webp';
 import ICON_HELPCALLUS from './helpCallUs.webp';
 import ICON_HELPHAPPYSMILE from './helpHappySmile.webp';
 import ICON_HELPMYACCOUNT from './helpMyAccount.webp';
+import ICON_HELPCANCELLATIONS from './helpCancellations.webp';
+import ICON_HELPPROMOTIONS from './helpPromotions.webp';
 import ICON_HELPPAYMENTSANDWALLET from './helpPaymentsAndWallet.webp';
 import ICON_HELPPURCHASESANDORDERS from './helpPurchasesAndOrders.webp';
 import ICON_HELPREWARDS from './helpRewards.webp';
@@ -200,6 +202,8 @@ export {
   ICON_HELPCALLUS,
   ICON_HELPHAPPYSMILE,
   ICON_HELPMYACCOUNT,
+  ICON_HELPCANCELLATIONS,
+  ICON_HELPPROMOTIONS,
   ICON_HELPPAYMENTSANDWALLET,
   ICON_HELPPURCHASESANDORDERS,
   ICON_HELPREWARDS,

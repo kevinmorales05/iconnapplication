@@ -7,7 +7,9 @@ import {
   ICON_HELPBILLING,
   ICON_HELPREWARDS,
   ICON_HELPCALLUS,
-  ICONN_HELP_TOUR
+  ICONN_HELP_TOUR,
+  ICON_HELPCANCELLATIONS,
+  ICON_HELPPROMOTIONS
 } from 'assets/images';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { useToast } from 'context';
@@ -27,11 +29,13 @@ const HelpItemsController: React.FC<Props> = () => {
   const [helpModules, setHelpModules] = useState([]);
   const helpModulesIcons = new Map([
     ['myAccount', ICON_HELPMYACCOUNT],
-    ['paymentsAndWallet', ICON_HELPPAYMENTSANDWALLET],
+    ['wallet', ICON_HELPPAYMENTSANDWALLET],
     ['purchasesAndOrders', ICON_HELPPURCHASESANDORDERS],
     ['billing', ICON_HELPBILLING],
     ['rewards', ICON_HELPREWARDS],
     ['callUs', ICON_HELPCALLUS],
+    ['cancelling', ICON_HELPCANCELLATIONS],
+    ['promotions', ICON_HELPPROMOTIONS],
     ['virtualTour', ICONN_HELP_TOUR]
   ]);
 
