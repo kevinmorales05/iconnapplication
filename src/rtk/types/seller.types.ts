@@ -101,3 +101,19 @@ export interface PointFilteringDetailInterface {
 }
 
 export type PointDisplayMode = 'map' | 'list';
+
+export interface BranchesState {
+  municipalities: BranchesMunicipality[];
+  postalCode: string;
+  stateId: number;
+  stateName: string;
+  type: string;
+}
+
+export interface BranchesMunicipality {
+  latitude: number;
+  longitude: number;
+  municipalityId: number;
+  municipalityName: string;
+  neighborhood: string;
+}

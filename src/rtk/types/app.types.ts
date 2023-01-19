@@ -4,6 +4,10 @@ export interface AppInterface {
   internetReachabilityReviewed?: number;
   visibleSearchByDistance?: boolean;
   visibleStoreSymbology?: boolean;
+  state?: string;
+  municipality?: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export type CarouselType = 'homeOptions' | 'principal' | 'second' | 'all_promotions' | 'day_promotion';

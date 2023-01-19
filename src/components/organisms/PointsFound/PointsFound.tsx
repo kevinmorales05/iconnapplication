@@ -8,10 +8,10 @@ import theme from 'components/theme/theme';
 
 interface Props {
   markers: PointInterface[];
-  onPressMarker: (marker: PointInterface, mode?: PointDisplayMode) => void;
+  setMarkerFound: (marker: PointInterface, mode?: PointDisplayMode) => void;
 }
 
-const PointsList: React.FC<Props> = ({ markers, onPressMarker }) => {
+const PointsFound: React.FC<Props> = ({ markers, setMarkerFound }) => {
   const insets = useSafeAreaInsets();
   return (
     <ScrollView
@@ -21,12 +21,12 @@ const PointsList: React.FC<Props> = ({ markers, onPressMarker }) => {
       showsVerticalScrollIndicator={false}
     >
       <Container flex space="between">
-        <Container backgroundColor={theme.brandColor.iconn_background}>
+        <Container backgroundColor={theme.brandColor.iconn_white}>
           {markers
             ? markers.map((marker, i) => (
                 <Container key={i}>
-                  <PointItem onPress={onPressMarker} point={marker} />
-                  <Container backgroundColor={theme.brandColor.iconn_white} style={{ height: 4 }} />
+                  <PointItem onPress={setMarkerFound} point={marker} pointFound={true} />
+                  <Container backgroundColor={theme.brandColor.iconn_background} style={{ height: 4 }} />
                 </Container>
               ))
             : null}
@@ -36,4 +36,4 @@ const PointsList: React.FC<Props> = ({ markers, onPressMarker }) => {
   );
 };
 
-export default PointsList;
+export default PointsFound;

@@ -9,6 +9,7 @@ export * from './CardAction';
 export * from './Checkbox';
 export * from './ConnectionItem';
 export * from './Container';
+export * from './CustomBackdrop';
 export * from './CustomModal';
 export * from './CustomSwitch';
 export * from './CustomText';

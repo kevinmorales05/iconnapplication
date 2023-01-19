@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import AuthStack from './stacks/AuthStack';
-import auth from '@react-native-firebase/auth';
 import { useToast, useAlert, useLoading } from 'context';
 import { DeviceEventEmitter } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -27,11 +26,6 @@ const AppNavigator: any = () => {
   const { user: userLogged, isGuest } = useAppSelector((state: RootState) => state.auth);
   const { isLogged } = userLogged;
 
-  // TODO: remove this function, it was used when app used firebase auth, no currently.
-  const onAuthStateChanged = (user: any) => {
-    auth().currentUser?.reload(); // refresh user after backend sets emailVerified as true.
-  };
-
   /**
    * Show global http errors and reset AppError.
    */
@@ -57,8 +51,7 @@ const AppNavigator: any = () => {
   /**
    * 1. Listen global http exceptions.
    * 2. Fetch connection status first time when app loads as listener is added afterwards.
-   * 3. Subscribe to changes of firebase authentication.
-   * 4. Reset the app state
+   * 3. Reset the app state
    */
   useEffect(() => {
     // 1.
@@ -87,17 +80,13 @@ const AppNavigator: any = () => {
       }
     });
     // 3.
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    // 4.
     dispatch(setAppInitialState());
-    return subscriber;
   }, []);
 
   /**
    * Manages stack navigation based on logged user.
    */
   if (!isLogged && !isGuest) {
-    console.log('No authenticated.');
     return (
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="AuthStack">
         <Stack.Screen name="AuthStack" component={AuthStack} />
