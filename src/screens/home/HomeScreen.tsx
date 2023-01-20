@@ -9,7 +9,7 @@ import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDrop
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
 import analytics from '@react-native-firebase/analytics';
-
+import { ForAnalytics } from 'utils/functions';
 
 interface Props {
   onPressShowAddressesModal: () => void;
@@ -44,13 +44,13 @@ const HomeScreen: React.FC<Props> = ({
   homeProducts,
   homeOtherProducts,
   updateShoppingCartProduct,
-  onPressViewMore,
   viewRecomendedProducts,
   viewOtherProducts,
   isAddressModalSelectionVisible
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const onPressOut = () => {
     setVisible(!visible);
@@ -66,7 +66,16 @@ const HomeScreen: React.FC<Props> = ({
     <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%', backgroundColor: theme.brandColor.iconn_white }}>
       <View style={{ zIndex: 0, width: '100%' }}>
         <Touchable
-          onPress={() => {
+          onPress={async () => {
+            try {
+              await analytics().logEvent('hmOpenDeliveryMethods', {
+                id: user.id,
+                description: 'Abrir modal para elegir el método de entrega'
+              });
+              //console.log('succesfully added to firebase!');
+            } catch (error) {
+              //console.log(error);
+            }
             setToggle(current => {
               return !current;
             });
@@ -101,7 +110,7 @@ const HomeScreen: React.FC<Props> = ({
                   {defaultAddress ? (
                     <CustomText text={`${defaultAddress.addressName} - ${defaultAddress.city}, ${defaultAddress.street}`} fontSize={16} />
                   ) : (
-                    <CustomText text={`Agrega dirección`} fontSize={16} />
+                    <CustomText text={'Agrega dirección'} fontSize={16} />
                   )}
                 </Container>
               </Container>
@@ -118,7 +127,7 @@ const HomeScreen: React.FC<Props> = ({
 
         <Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+            <AnimatedCarousel banner items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container style={{ marginTop: 16 }}>
             <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
@@ -135,18 +144,18 @@ const HomeScreen: React.FC<Props> = ({
                 text="Ver todo"
                 typography="h5"
                 fontBold
-                onPress={ async () => {
-                  
+                onPress={async () => {
                   try {
-                    await analytics().logEvent("recomendedyou",{
-                      id: "1",
-                      name: "recomendados para ti",
+                    await analytics().logEvent('hmRcmdfycMoreButton', {
+                      id: user.id,
+                      name: 'Abrir el detalle de la colección de recomendados para ti'
                     });
-                    console.log("succesfully added to firebase!")
+                    //console.log('succesfully added to firebase!');
                   } catch (error) {
-                    console.log(error)
+                    //console.log(error);
                   }
-                  viewRecomendedProducts()}}
+                  viewRecomendedProducts();
+                }}
               />
             </Container>
             <Container style={{ position: 'absolute', top: 35 }}>
@@ -174,14 +183,25 @@ const HomeScreen: React.FC<Props> = ({
           </Container>
           <Container height={367} style={{ marginTop: 0 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
-              <TextContainer text={`Otros productos`} fontBold typography="h4" />
+              <TextContainer text={'Otros productos'} fontBold typography="h4" />
               <TouchableText
                 underline
                 textColor={theme.brandColor.iconn_accent_principal}
                 text="Ver todo"
                 typography="h5"
                 fontBold
-                onPress={() => viewOtherProducts()}
+                onPress={async () => {
+                  try {
+                    await analytics().logEvent('hmOpcMoreButton', {
+                      id: user.id,
+                      name: 'Abrir el detalle de la colección en otros productos'
+                    });
+                    //console.log('succesfully added to firebase!');
+                  } catch (error) {
+                    //console.log(error);
+                  }
+                  viewOtherProducts();
+                }}
               />
             </Container>
             <Container style={{ position: 'absolute', top: 35 }}>
@@ -215,7 +235,16 @@ const HomeScreen: React.FC<Props> = ({
         <View style={{ zIndex: 2, position: 'absolute', top: 35, width: '100%' }}>
           <ShippingDropdown
             mode={mode}
-            handleMode={mode => {
+            handleMode={mode => async () => {
+              try {
+                await analytics().logEvent(`select_delivery_method_${mode}`, {
+                  id: user.id,
+                  description: `Selección de ${mode} en método de entrega`
+                });
+                //console.log('succesfully added to firebase!');
+              } catch (error) {
+                //console.log(error);
+              }
               setMode(mode);
             }}
             onPressAddAddress={onPressAddNewAddress}

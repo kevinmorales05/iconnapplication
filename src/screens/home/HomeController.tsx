@@ -40,6 +40,7 @@ import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlic
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
 import moment from 'moment';
+import analytics from '@react-native-firebase/analytics';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -156,7 +157,16 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     await saveShippingData(cart.orderFormId, shippingAttachment);
   };
 
-  const onPressSearch = () => {
+  const onPressSearch = async () => {
+    try {
+      await analytics().logEvent('SelectSearchBar', {
+        id: user.id,
+        description: 'Seleccionar barra de búsqueda'
+      });
+      //console.log('succesfully added to firebase!');
+    } catch (error) {
+      //console.log(error);
+    }
     navigate('SearchProducts');
   };
 
@@ -173,7 +183,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchAddresses = useCallback(async () => {
     loader.show();
     if (user.id) {
-      console.log("Primera peticion")
+      //console.log('Primera peticion');
       await dispatch(getUserAddressesThunk(user.id!));
     }
   }, []);
@@ -204,6 +214,26 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     setPostalCodeError
   } = useAddresses();
 
+  const onPressSendAnalyticst = async (analyticsName: string, analyticsDecription: string, otherTagName?: string, otherTagContent?: string) => {
+    try {
+      if (otherTagName) {
+        await analytics().logEvent(analyticsName, {
+          id: user.id,
+          description: analyticsDecription,
+          [otherTagName]: otherTagContent
+        });
+      } else {
+        await analytics().logEvent(analyticsName, {
+          id: user.id,
+          description: analyticsDecription
+        });
+      }
+      //console.log('succesfully added to firebase!');
+    } catch (error) {
+      //console.log(error);
+    }
+  };
+
   const onPressCloseAddressModalSelection = () => {
     setAddressModalSelectionVisible(false);
   };
@@ -231,10 +261,29 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   }, [user.addresses]);
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
+    if (CarouselItem.promotion_type === 'second') {
+      onPressSendAnalyticst('hmPetro7Banner', 'Abrir el link del banner de Petro-7', 'petroBannerID', CarouselItem.id);
+    }
+    if (CarouselItem.promotion_type === 'day_promotion') {
+      onPressSendAnalyticst('hmDayPromotionBanner', 'Abrir el link de promoción del día');
+    }
+    if (CarouselItem.promotion_type === 'all_promotions') {
+      onPressSendAnalyticst('hmAllPromotionsBanner', 'Abrir el link de baner en la sección inferior de home en inicio', 'selectedBannerId', CarouselItem.id);
+    }
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4' )) {
-      inConstruction.show();
-      return;
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3')) {
+      if (CarouselItem.id === '1') {
+        onPressSendAnalyticst('hmOpenPetro7', 'Abrir categorias Petro-7 desde home');
+        inConstruction.show();
+        return;
+      }
+      if (CarouselItem.id === '3') {
+        onPressSendAnalyticst('hmOpenAccumulate', 'Abrir Acumuladesde el botón de home');
+        inConstruction.show();
+        return;
+      }
+      /* inConstruction.show();
+      return; */
     }
 
     // If is a guest and press any option diferent to "Categories".
@@ -244,12 +293,28 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     }
 
     if (CarouselItem.navigateTo) {
+      if (CarouselItem.id === '2') {
+        onPressSendAnalyticst('hmOpenFavorites', 'Abrir favoritos desde home');
+        navigate(CarouselItem.navigateTo);
+        return;
+      }
+      if (CarouselItem.id === '4') {
+        onPressSendAnalyticst('hmOpenWallet', 'Abrir wallet desde home');
+        navigate(CarouselItem.navigateTo);
+        return;
+      }
+      if (CarouselItem.id === '5') {
+        onPressSendAnalyticst('hmOpenOrders', 'Abrir pedidos desde  home');
+        navigate(CarouselItem.navigateTo);
+        return;
+      }
       navigate(CarouselItem.navigateTo);
       return;
     }
 
     // If press "Categories"
     if (CarouselItem.id === '0') {
+      onPressSendAnalyticst('hmOpenCategories', 'Abrir categorias Seven desde home');
       navigate('CategoriesScreen');
       return;
     }
@@ -306,7 +371,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchData = useCallback(async () => {
     const { userId } = user;
     if (userId === cart.userProfileId) {
-      console.log('usuario igual...');
+      //console.log('usuario igual...');
     } else {
       getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         getShoppingCart(newCart.orderFormId).then(response => {
@@ -602,8 +667,30 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       barStyle="dark"
     >
       <HomeScreen
-        onPressAddNewAddress={onPressAddNewAddress}
-        onPressShowAddressesModal={() => setAddressModalSelectionVisible(true)}
+        onPressAddNewAddress={async () => {
+          try {
+            await analytics().logEvent('hmSelectDeliveryMethodAddAddress', {
+              id: user.id,
+              description: 'Añadir una dirección en el método de entrega a domicilio'
+            });
+            //console.log('succesfully added to firebase!');
+          } catch (error) {
+            //console.log(error);
+          }
+          onPressAddNewAddress();
+        }}
+        onPressShowAddressesModal={async () => {
+          try {
+            await analytics().logEvent('hmSelectDeliveryMethodChooseAddress', {
+              id: user.id,
+              description: 'Seleccionar una dirección en el método de entrega a domicilio'
+            });
+            //console.log('succesfully added to firebase!');
+          } catch (error) {
+            //console.log(error);
+          }
+          setAddressModalSelectionVisible(true);
+        }}
         onPressSearch={onPressSearch}
         defaultAddress={defaultAddress!}
         showShippingDropDown={showShippingDropDown}

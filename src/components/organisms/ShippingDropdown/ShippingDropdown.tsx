@@ -14,6 +14,7 @@ import { HomeStackParams } from 'navigation/types';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { vtexPickUpPoints } from 'services';
 import { useAlert } from 'context';
+import analytics from '@react-native-firebase/analytics';
 
 interface Props {
   onPressAddAddress: () => void;
@@ -22,7 +23,7 @@ interface Props {
   onPressToogle: () => void;
   mode: ShippingMode | null;
   handleMode: (mode: ShippingMode | null) => void;
-  isAddressModalSelectionVisible: boolean
+  isAddressModalSelectionVisible: boolean;
 }
 
 /*regla de negocio:
@@ -30,38 +31,46 @@ interface Props {
   pickup hasta 20 km
 */
 
-const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPressToogle, onPressShowAddressesModal, mode, handleMode, isAddressModalSelectionVisible }) => {
+const ShippingDropdown: React.FC<Props> = ({
+  onPressAddAddress,
+  address,
+  onPressToogle,
+  onPressShowAddressesModal,
+  mode,
+  handleMode,
+  isAddressModalSelectionVisible
+}) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const [ near, setNear ] = useState<boolean>(false);
+  const [near, setNear] = useState<boolean>(false);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
-  const alert = useAlert();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
-  useEffect(()=>{
-    if(address?.postalCode){
-      getPickUpPoints(address?.postalCode).then((isNear)=>{
+  useEffect(() => {
+    if (address?.postalCode) {
+      getPickUpPoints(address?.postalCode).then(isNear => {
         setNear(isNear);
-      })
+      });
     }
-  },[address])
-  
+  }, [address]);
+
   const getPickUpPoints = async (cp: string) => {
-    console.log({getPickUpPoints: cp})
+    //console.log({ getPickUpPoints: cp });
     const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
-    console.log({getPickUpPoints: pickUp})
+    //console.log({ getPickUpPoints: pickUp });
     let isNear = false;
-    if(pickUp.items.length){
-      pickUp.items.forEach((store)=>{
-        if(store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`){
-          if(store.distance < 7){
+    if (pickUp.items.length) {
+      pickUp.items.forEach(store => {
+        if (store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`) {
+          if (store.distance < 7) {
             isNear = true;
           }
         }
-      })
+      });
     }
     return isNear;
-  }
-  
-  console.log({defaultSeller: !address})
+  };
+
+  //console.log({ defaultSeller: !address });
 
   return (
     <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: theme.brandColor.iconn_white }}>
@@ -94,10 +103,25 @@ const ShippingDropdown: React.FC<Props> = ({ onPressAddAddress, address, onPress
         />
       </Container>
       {mode !== ShippingMode.PICKUP && (
-        <DefaultAddress mode={mode} onPressAddAddress={onPressAddAddress} address={address} onPressShowAddressesModal={onPressShowAddressesModal} isAddressModalSelectionVisible={isAddressModalSelectionVisible} />
+        <DefaultAddress
+          mode={mode}
+          onPressAddAddress={onPressAddAddress}
+          address={address}
+          onPressShowAddressesModal={onPressShowAddressesModal}
+          isAddressModalSelectionVisible={isAddressModalSelectionVisible}
+        />
       )}
       <DefaultSeller
-        onPress={() => {
+        onPress={async () => {
+          try {
+            await analytics().logEvent('selectDeliveryChooseStore', {
+              id: user.id,
+              description: 'Seleccionar una tienda en el método de entrega'
+            });
+            //console.log('succesfully added to firebase!');
+          } catch (error) {
+            //console.log(error);
+          }
           navigate('SearchSeller');
         }}
       />
@@ -136,7 +160,7 @@ const DefaultSeller = ({ onPress }: { onPress: () => void }) => {
                   </Container>
                   <Container row center>
                     <Ionicons name="close-outline" size={24} color={theme.brandColor.iconn_error} />
-                    <CustomText text="Recoger en tienda no disponible." textColor={theme.brandColor.iconn_error}/>
+                    <CustomText text="Recoger en tienda no disponible." textColor={theme.brandColor.iconn_error} />
                   </Container>
                 </Container>
               </Container>
@@ -156,25 +180,37 @@ interface DefaultItemProps extends Partial<Props> {}
 const DefaultAddress: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, mode, isAddressModalSelectionVisible }) => {
   return address ? (
     <Touchable onPress={onPressShowAddressesModal!}>
-      <DefaultItem address={address} onPressAddAddress={onPressAddAddress} mode={mode} onPressShowAddressesModal={onPressShowAddressesModal} isAddressModalSelectionVisible={isAddressModalSelectionVisible} />
+      <DefaultItem
+        address={address}
+        onPressAddAddress={onPressAddAddress}
+        mode={mode}
+        onPressShowAddressesModal={onPressShowAddressesModal}
+        isAddressModalSelectionVisible={isAddressModalSelectionVisible}
+      />
     </Touchable>
   ) : (
-    <DefaultItem address={address} onPressAddAddress={onPressAddAddress} mode={mode} onPressShowAddressesModal={onPressShowAddressesModal} isAddressModalSelectionVisible={isAddressModalSelectionVisible} />
+    <DefaultItem
+      address={address}
+      onPressAddAddress={onPressAddAddress}
+      mode={mode}
+      onPressShowAddressesModal={onPressShowAddressesModal}
+      isAddressModalSelectionVisible={isAddressModalSelectionVisible}
+    />
   );
 };
 
 const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, mode, isAddressModalSelectionVisible }) => {
   const { card } = styles;
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
-  const [ near, setNear ] = useState<boolean>(false);
+  const [near, setNear] = useState<boolean>(false);
   const alert = useAlert();
 
-  useEffect(()=>{
-    if(address?.postalCode && !isAddressModalSelectionVisible){
-      getPickUpPoints(address?.postalCode).then((isNear)=>{
+  useEffect(() => {
+    if (address?.postalCode && !isAddressModalSelectionVisible) {
+      getPickUpPoints(address?.postalCode).then(isNear => {
         setNear(isNear);
-        if(!isNear){
-          console.log('ShippingDropDown')
+        if (!isNear) {
+          //console.log('ShippingDropDown');
           alert.show(
             {
               title: 'Entrega a domicilio no disponible.',
@@ -188,7 +224,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
               },
               onAccept() {
                 alert.hide();
-                onPressShowAddressesModal();  
+                onPressShowAddressesModal();
               }
             },
             'error',
@@ -197,26 +233,26 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
             true
           );
         }
-      })
+      });
     }
-  },[address, isAddressModalSelectionVisible])
-  
+  }, [address, isAddressModalSelectionVisible]);
+
   const getPickUpPoints = async (cp: string) => {
-    console.log({getPickUpPoints: cp})
+    //console.log({ getPickUpPoints: cp });
     const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
-    console.log({getPickUpPoints: pickUp})
+    //console.log({ getPickUpPoints: pickUp });
     let isNear = false;
-    if(pickUp.items.length){
-      pickUp.items.forEach((store)=>{
-        if(store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`){
-          if(store.distance < 7){
+    if (pickUp.items.length) {
+      pickUp.items.forEach(store => {
+        if (store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`) {
+          if (store.distance < 7) {
             isNear = true;
           }
         }
-      })
+      });
     }
     return isNear;
-  }
+  };
 
   return (
     <Container style={[card, { marginTop: 24 }]}>
@@ -229,35 +265,31 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
             <Container row flex={1}>
               <CustomText numberOfLines={1} fontSize={16} text={address ? address.addressName! : 'Agrega una dirección de entrega'} fontBold />
             </Container>
-            {address ?
-            <Container style={{ flexDirection: 'row', width: '95%', marginVertical: 5 }}>
-              <CustomText
-                numberOfLines={2}
-                lineHeight={22}
-                fontSize={16}
-                text={`${address?.street}, ${address?.neighborhood}, ${address?.city}, ${address?.state}`}
-              />
-            </Container>
-            :
-            <></>
-            }
-            {address ?
+            {address ? (
+              <Container style={{ flexDirection: 'row', width: '95%', marginVertical: 5 }}>
+                <CustomText
+                  numberOfLines={2}
+                  lineHeight={22}
+                  fontSize={16}
+                  text={`${address?.street}, ${address?.neighborhood}, ${address?.city}, ${address?.state}`}
+                />
+              </Container>
+            ) : (
+              <></>
+            )}
+            {address ? (
               near ? (
-                  <Container row center>
-                    <Ionicons name="md-checkmark-sharp" size={24} color={theme.brandColor.iconn_green_original} />
-                    <CustomText text="Entrega a domicilio" />
-                  </Container>
-                )
-              :
-                (
-                  <Container row center>
-                    <Ionicons name="close-outline" size={24} color={theme.brandColor.iconn_error} />
-                    <CustomText text="Entrega a domicilio no disponible." textColor={theme.brandColor.iconn_error}/>
-                  </Container>
-                )
-              :
-                  null
-            }
+                <Container row center>
+                  <Ionicons name="md-checkmark-sharp" size={24} color={theme.brandColor.iconn_green_original} />
+                  <CustomText text="Entrega a domicilio" />
+                </Container>
+              ) : (
+                <Container row center>
+                  <Ionicons name="close-outline" size={24} color={theme.brandColor.iconn_error} />
+                  <CustomText text="Entrega a domicilio no disponible." textColor={theme.brandColor.iconn_error} />
+                </Container>
+              )
+            ) : null}
           </Container>
         </Container>
         {!address && (
@@ -312,7 +344,7 @@ const ShippingOption = ({
         </Container>
       )}
       <Container>
-        <Touchable  disabled={disable} onPress={onPress}>
+        <Touchable disabled={disable} onPress={onPress}>
           <Container
             style={[
               {
@@ -327,7 +359,17 @@ const ShippingOption = ({
               selected && highlight
             ]}
           >
-            <Image source={icon} style={{tintColor: (mode === ShippingMode.DELIVERY) ? (disable ? theme.fontColor.placeholder : theme.brandColor.iconn_accent_principal) : (theme.fontColor.placeholder )}} />
+            <Image
+              source={icon}
+              style={{
+                tintColor:
+                  mode === ShippingMode.DELIVERY
+                    ? disable
+                      ? theme.fontColor.placeholder
+                      : theme.brandColor.iconn_accent_principal
+                    : theme.fontColor.placeholder
+              }}
+            />
           </Container>
         </Touchable>
       </Container>

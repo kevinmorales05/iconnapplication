@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Image, Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TextContainer, Button, AddressCard, TouchableText } from '../../molecules';
-import { CustomModal, Container, InfoCard, CustomText, ActionButton, Touchable } from '../../atoms';
+import { TextContainer, AddressCard, TouchableText } from '../../molecules';
+import { CustomModal, Container, InfoCard, CustomText, ActionButton } from '../../atoms';
 import { ICONN_HOME_LOCATION, ICONN_NO_ADDRESSES } from 'assets/images';
-import { Address } from 'rtk';
+import { Address, RootState, useAppSelector } from 'rtk';
 import NetInfo from '@react-native-community/netinfo';
 import theme from '../../theme/theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import analytics from '@react-native-firebase/analytics';
 
 interface Props {
   visible: boolean;
@@ -22,6 +23,7 @@ interface Props {
 const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAddNewAddress, onPressEdit, onPressDelete, onPressClose, onPressSetDefault }) => {
   const insets = useSafeAreaInsets();
   const [isOnline, setIsOnline] = useState(false);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   NetInfo.fetch().then(state => {
     if (state.isInternetReachable) {
@@ -84,7 +86,18 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
                     return (
                       <Container key={i} style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_light_grey }}>
                         <AddressCard
-                          onPressSetDefault={() => onPressSetDefault(address, i)}
+                          onPressSetDefault={async () => {
+                            try {
+                              await analytics().logEvent('hmSelectAddress', {
+                                id: user.id,
+                                description: 'Seleccionar una tienda de la lista de tiendas disponibles'
+                              });
+                              //console.log('succesfully added to firebase!');
+                            } catch (error) {
+                              //console.log(error);
+                            }
+                            onPressSetDefault(address, i);
+                          }}
                           address={address}
                           onPressEdit={() => {
                             onPressClose();
