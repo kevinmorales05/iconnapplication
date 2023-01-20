@@ -1,0 +1,18 @@
+[
+  {
+    "id": "01",
+    "name": "Efectivo"
+  },
+  {
+    "id": "02",
+    "name": "Vales de despensa"
+  },
+  {
+    "id": "03",
+    "name": "Tarjeta de débito"
+  },
+  {
+    "id": "04",
+    "name": "Tarjeta de crédito"
+  }
+]

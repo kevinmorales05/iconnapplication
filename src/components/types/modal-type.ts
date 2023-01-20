@@ -1,0 +1,1 @@
+export type modalType = 'warning' | 'error' | 'success'| 'limited' | "deleteCart";

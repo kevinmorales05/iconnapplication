@@ -1,0 +1,65 @@
+[
+  {
+    "id": "0",
+    "description": "Categorías",
+    "image": "iconn-home-option-orders.png",
+    "link": "https://www.7-eleven.com.mx/promociones.html",
+    "navigationType": "external",
+    "promotion_name": "Cafe select más galletas por $30",
+    "promotion_type": "homeOptions",
+    "status": "active"
+  },
+  {
+    "id": "1",
+    "description": " Petro\nSeven",
+    "image": "iconn-home-option-orders.png",
+    "link": "https://www.7-eleven.com.mx/",
+    "navigationType": "external",
+    "promotion_name": "regreso_a_clases",
+    "promotion_type": "homeOptions",
+    "status": "active"
+  },
+  { 
+    "id": "2",
+    "description": "Favoritos",
+    "image": "iconn-home-option-orders.png",
+    "link": "https://www.7-eleven.com.mx/app.html",
+    "navigationType": "external",
+    "promotion_name": "Apex",
+    "promotion_type": "homeOptions",
+    "navigateTo": "FavoriteProducts",
+    "status": "active"
+  },
+  {
+    "id": "3",
+    "description": "Acumula",
+    "image": "iconn-home-option-orders.png",
+    "link": "https://www.7-eleven.com.mx/",
+    "navigationType": "external",
+    "promotion_name": "7-Reserve",
+    "promotion_type": "homeOptions",
+    "status": "active"
+  },
+  {
+    "id": "4",
+    "description": "Wallet",
+    "image": "../images/iconn-home-option-orders.png",
+    "link": "https://www.7-eleven.com.mx/promociones.html",
+    "navigationType": "external",
+    "promotion_name": "Comparte 2 Sabritas o paquetaxo variedad 110-200g",
+    "promotion_type": "homeOptions",
+    "navigateTo": "WalletStack",
+    "status": "active"
+  },
+  {
+    "id": "5",
+    "description": "Pedidos",
+    "image": "iconn-home-option-orders.png",
+    "link": "https://www.7-eleven.com.mx/promociones.html",
+    "navigationType": "external",
+    "promotion_name": "Compra una herradura y llevate 4 Tecate",
+    "promotion_type": "homeOptions",
+    "navigateTo": "MyOrders",
+    "status": "active"
+  }
+]
