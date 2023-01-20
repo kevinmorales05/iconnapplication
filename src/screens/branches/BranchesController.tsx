@@ -291,8 +291,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
     // TODO: increase gorhom library to 4.4.3 to fix expand() method of bottomSheet, in case of markers mode list.
     // console.log(JSON.stringify(point, null, 3));
     // console.log('mode', mode);
-    if (mode === 'list') bottomSheetRef.current?.present();
-    else bottomSheetRef.current?.present();
+    bottomSheetRef.current?.present();
     setMarker(point);
   };
 
@@ -300,13 +299,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
   // SnapPoints for PointDetailSheet
-  const snapPoints = useMemo(
-    () => [
-      Platform.OS === 'android' ? '50%' : '50%',
-      Platform.OS === 'android' ? Dimensions.get('window').height : Dimensions.get('window').height - insets.top
-    ],
-    []
-  );
+  const snapPoints = useMemo(() => ['50%', Platform.OS === 'android' ? Dimensions.get('window').height : Dimensions.get('window').height - insets.top], []);
 
   /**
    * Hide PointDetailSheet.
