@@ -7,7 +7,7 @@ import { ServiceInterface, ServiceRequestInterface } from 'rtk';
  */
 async function getServicesPayments(): Promise<any> {
   const response = await VtexApi.getInstance().getRequest(
-    '/api/dataentities/AS/scroll?_fields=billerId,helpImageURL,imageURL,index,isActive,maxLength,minLength,name,SKU,slug,supplierName,UPC'
+    '/api/dataentities/AS/search?_fields=billerId,helpImageURL,imageURL,index,isActive,maxLength,minLength,name,SKU,slug,supplierName,UPC'
   );
   if (response === undefined) return Promise.reject(new Error('getServicesPayments'));
   const { data } = response;

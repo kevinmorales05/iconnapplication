@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AuthDataInterface, setShoppingCartInitialState, useAppDispatch } from 'rtk';
 import { WebView, WebViewNavigation } from 'react-native-webview';
 import { PartialState, StackNavigationState } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
 import config from 'react-native-config';
+import { Platform } from 'react-native';
 
 interface Props {
   reset: (param: StackNavigationState<HomeStackParams> | PartialState<StackNavigationState<HomeStackParams>>) => void;
@@ -13,29 +14,50 @@ interface Props {
 
 const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
   const dispatch = useAppDispatch();
-  const [isPaySuccess, setPaySuccess] = useState<boolean>(false);
-  const { CHECKOUT_URL_RETURNED, CHECKOUT_WEBVIEW } = config;
+  const { CHECKOUT_WEBVIEW } = config;
 
   // function onMessage(data: any) {
   //   toast.show({ message: `${data.nativeEvent.data}`, type: 'success' });
   // }
 
   // TODO: relocate url to .ENV
-  const onNavigationStateChange = (navState: WebViewNavigation) => {
-    const paramsQuery = navState.url.split('/');
-    if (!isPaySuccess) {
-      setPaySuccess(paramsQuery.some(item => item === 'congrats') && paramsQuery.some(item => item === 'approved'));
-    }
-    const urlParams = navState.url.split(CHECKOUT_URL_RETURNED!)[1]?.split('/');
-    if (urlParams) {
-      if (urlParams[1] === 'Success') {
-        dispatch(setShoppingCartInitialState());
-        reset({
-          index: 0,
-          routes: [{ name: 'Home', params: { paySuccess: isPaySuccess } }]
-        });
-        setPaySuccess(false);
+
+  const evaluateAndroid = (url: string) => {
+    const paramsQuery = url.split('/');
+    if (paramsQuery.some(param => param === 'checkout') && paramsQuery.some(param => param === 'orderPlaced')) {
+      const orderId = paramsQuery[5].split('=');
+      if (orderId[0] === '?og') {
+        return true;
       }
+    }
+    return false;
+  };
+
+  const evaluateiOS = (url: string) => {
+    const paramsQuery = url.split('/');
+    if (
+      paramsQuery.some(param => param === 'checkout') &&
+      paramsQuery.some(param => param === 'gatewayCallback') &&
+      paramsQuery.some(param => param === 'Success')
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const onNavigationStateChange = (navState: WebViewNavigation) => {
+    let isSuccess: boolean;
+    if (Platform.OS === 'android') {
+      isSuccess = evaluateAndroid(navState.url);
+    } else {
+      isSuccess = evaluateiOS(navState.url);
+    }
+    if (isSuccess) {
+      dispatch(setShoppingCartInitialState());
+      reset({
+        index: 0,
+        routes: [{ name: 'Home', params: { paySuccess: true } }]
+      });
     }
   };
 
