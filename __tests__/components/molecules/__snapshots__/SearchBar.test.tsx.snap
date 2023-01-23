@@ -1,0 +1,314 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing on <SearchBar /> should match with the snapshot as button 1`] = `
+<View
+  collapsable={false}
+  style={
+    Array [
+      Array [
+        Object {
+          "flexDirection": "column",
+        },
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+      ],
+      Object {
+        "backgroundColor": "#ffffff",
+        "borderColor": "#dadadb",
+        "borderRadius": 15.714285714285714,
+        "borderWidth": 1.5714285714285714,
+        "flexDirection": "row",
+        "height": 62.857142857142854,
+        "width": "100%",
+      },
+    ]
+  }
+>
+  <View
+    collapsable={false}
+    style={
+      Array [
+        Array [
+          Object {
+            "flexDirection": "column",
+          },
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+        ],
+        Object {
+          "alignItems": "center",
+          "flex": 0.2,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        Array [
+          Object {
+            "color": "#747476",
+            "fontSize": 22,
+          },
+          undefined,
+          Object {
+            "fontFamily": "Feather",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <View
+    collapsable={false}
+    style={
+      Array [
+        Array [
+          Object {
+            "flexDirection": "column",
+          },
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+        ],
+        Object {
+          "flex": 1,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <View
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      hitSlop={
+        Object {
+          "bottom": undefined,
+          "left": undefined,
+          "right": undefined,
+          "top": undefined,
+        }
+      }
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "flex": 0,
+          "height": undefined,
+          "marginBottom": undefined,
+          "marginHorizontal": undefined,
+          "marginLeft": undefined,
+          "marginRight": undefined,
+          "marginTop": undefined,
+          "marginVertical": undefined,
+          "opacity": 1,
+          "width": undefined,
+          "zIndex": 2,
+        }
+      }
+    >
+      <View
+        pointerEvents="none"
+      >
+        <Text
+          ellipsizeMode="tail"
+          style={
+            Array [
+              Array [
+                Object {
+                  "color": "#000000",
+                  "fontSize": 15,
+                },
+                Object {
+                  "color": "#747476",
+                },
+              ],
+              Object {
+                "alignSelf": undefined,
+                "letterSpacing": undefined,
+                "lineHeight": undefined,
+                "textAlign": undefined,
+                "textDecorationLine": "none",
+                "textTransform": undefined,
+              },
+            ]
+          }
+        >
+          ¿Qué estás buscando?
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`Testing on <SearchBar /> should match with the snapshot as input text 1`] = `
+<View
+  collapsable={false}
+  style={
+    Array [
+      Array [
+        Object {
+          "flexDirection": "column",
+        },
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+        Object {},
+      ],
+      Object {
+        "backgroundColor": "#ffffff",
+        "borderColor": "#dadadb",
+        "borderRadius": 15.714285714285714,
+        "borderWidth": 1.5714285714285714,
+        "flexDirection": "row",
+        "height": 62.857142857142854,
+        "width": "100%",
+      },
+    ]
+  }
+>
+  <View
+    collapsable={false}
+    style={
+      Array [
+        Array [
+          Object {
+            "flexDirection": "column",
+          },
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+        ],
+        Object {
+          "alignItems": "center",
+          "flex": 0.2,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        Array [
+          Object {
+            "color": "#747476",
+            "fontSize": 22,
+          },
+          undefined,
+          Object {
+            "fontFamily": "Feather",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <View
+    collapsable={false}
+    style={
+      Array [
+        Array [
+          Object {
+            "flexDirection": "column",
+          },
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+          Object {},
+        ],
+        Object {
+          "flex": 1,
+          "justifyContent": "center",
+        },
+      ]
+    }
+  >
+    <TextInput
+      multiline={false}
+      onChangeText={[Function]}
+      onEndEditing={[Function]}
+      placeholder="¿Qué estás buscando?"
+      placeholderTextColor="#747476"
+      style={
+        Object {
+          "color": "#000000",
+        }
+      }
+      value=""
+    />
+  </View>
+</View>
+`;
