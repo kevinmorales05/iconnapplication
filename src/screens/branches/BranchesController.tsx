@@ -160,107 +160,112 @@ const BranchesController: React.FC<any> = ({ route }) => {
         const typeOfsearch = getTypeOfSearch();
         // console.log('El tipo de busqueda que se hará es: ', typeOfsearch);
 
-        let newMarkersWithAvailableServices: PointInterface[] = [];
+        if (typeOfsearch !== undefined) {
+          let newMarkersWithAvailableServices: PointInterface[] = [];
 
-        for (const property in route?.params.filterObject) {
-          if (property === 'info_binomial' || property === 'info_seven' || property === 'info_petro') {
-            // console.log('Saltamos al siguiente property porque el actual es un botón: ', property);
-            continue; // because its a main button.
+          for (const property in route?.params.filterObject) {
+            if (property === 'info_binomial' || property === 'info_seven' || property === 'info_petro') {
+              // console.log('Saltamos al siguiente property porque el actual es un botón: ', property);
+              continue; // because its a main button.
+            }
+
+            const mapPropertyValue = getMaperValue(property);
+            // console.log('Vamos a buscar el type:', mapPropertyValue);
+
+            const filteredMarkers = markers?.filter((mrkr: PointInterface) => {
+              let markerHasProperty: boolean = false;
+
+              // This "if" means that the user has filtered by services that are only in 7eleven.
+              if (typeOfsearch === '7eleven') {
+                // This "if" means that we only search in points of type "7eleven" and "binomial"
+                if (mrkr?.type === '7eleven' || mrkr?.type === 'binomial') {
+                  // 1. Buscamos en Seven food:
+                  markerHasProperty = mrkr.info.seven.food.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 2. Buscamos en Seven others:
+                  markerHasProperty = mrkr.info.seven.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 3. Buscamos en Seven extra:
+                  markerHasProperty = mrkr.info.seven.extra.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                }
+              }
+
+              // This "if" means that the user has filtered by services that are only in petro.
+              if (typeOfsearch === 'petro') {
+                // This "if" means that we only search in points of type "petro" and "binomial"
+                if (mrkr?.type === 'petro' || mrkr?.type === 'binomial') {
+                  // 1. Buscamos en Petro complementaryProducts:
+                  markerHasProperty = mrkr.info.petro.complementaryProducts.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 2. Buscamos en Petro others:
+                  markerHasProperty = mrkr.info.petro.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 3. Buscamos en Petro payMethods:
+                  markerHasProperty = mrkr.info.petro.payMethods.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 4. Buscamos en Petro evouchers:
+                  markerHasProperty = mrkr.info.petro.evouchers.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 5. Buscamos en Petro benefits:
+                  markerHasProperty = mrkr.info.petro.benefits.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                }
+              }
+
+              // This "if" means that the user has filtered by services that are only in binomial.
+              if (typeOfsearch === 'binomial') {
+                // This "if" means that we only search in points of type "binomial"
+                if (mrkr?.type === 'binomial') {
+                  // 1. Buscamos en Seven food:
+                  markerHasProperty = mrkr.info.seven.food.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 2. Buscamos en Seven others:
+                  markerHasProperty = mrkr.info.seven.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 3. Buscamos en Seven extra:
+                  markerHasProperty = mrkr.info.seven.extra.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+
+                  // 1. Buscamos en Petro complementaryProducts:
+                  markerHasProperty = mrkr.info.petro.complementaryProducts.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 2. Buscamos en Petro others:
+                  markerHasProperty = mrkr.info.petro.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 3. Buscamos en Petro payMethods:
+                  markerHasProperty = mrkr.info.petro.payMethods.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 4. Buscamos en Petro evouchers:
+                  markerHasProperty = mrkr.info.petro.evouchers.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 5. Buscamos en Petro benefits:
+                  markerHasProperty = mrkr.info.petro.benefits.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                }
+              }
+            });
+
+            newMarkersWithAvailableServices = newMarkersWithAvailableServices!.concat(filteredMarkers!);
           }
 
-          const mapPropertyValue = getMaperValue(property);
-          // console.log('Vamos a buscar el type:', mapPropertyValue);
+          // Filter by uniques Ids.
+          const uniquePoints: PointInterface[] = newMarkersWithAvailableServices.filter((v, i, a) => a.findIndex(v2 => v2.id === v.id) === i);
 
-          const filteredMarkers = markers?.filter((mrkr: PointInterface) => {
-            let markerHasProperty: boolean = false;
-
-            // This "if" means that the user has filtered by services that are only in 7eleven.
-            if (typeOfsearch === '7eleven') {
-              // This "if" means that we only search in points of type "7eleven" and "binomial"
-              if (mrkr?.type === '7eleven' || mrkr?.type === 'binomial') {
-                // 1. Buscamos en Seven food:
-                markerHasProperty = mrkr.info.seven.food.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 2. Buscamos en Seven others:
-                markerHasProperty = mrkr.info.seven.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 3. Buscamos en Seven extra:
-                markerHasProperty = mrkr.info.seven.extra.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-              }
-            }
-
-            // This "if" means that the user has filtered by services that are only in petro.
-            if (typeOfsearch === 'petro') {
-              // This "if" means that we only search in points of type "petro" and "binomial"
-              if (mrkr?.type === 'petro' || mrkr?.type === 'binomial') {
-                // 1. Buscamos en Petro complementaryProducts:
-                markerHasProperty = mrkr.info.petro.complementaryProducts.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 2. Buscamos en Petro others:
-                markerHasProperty = mrkr.info.petro.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 3. Buscamos en Petro payMethods:
-                markerHasProperty = mrkr.info.petro.payMethods.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 4. Buscamos en Petro evouchers:
-                markerHasProperty = mrkr.info.petro.evouchers.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 5. Buscamos en Petro benefits:
-                markerHasProperty = mrkr.info.petro.benefits.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-              }
-            }
-
-            // This "if" means that the user has filtered by services that are only in binomial.
-            if (typeOfsearch === 'binomial') {
-              // This "if" means that we only search in points of type "binomial"
-              if (mrkr?.type === 'binomial') {
-                // 1. Buscamos en Seven food:
-                markerHasProperty = mrkr.info.seven.food.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 2. Buscamos en Seven others:
-                markerHasProperty = mrkr.info.seven.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 3. Buscamos en Seven extra:
-                markerHasProperty = mrkr.info.seven.extra.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-
-                // 1. Buscamos en Petro complementaryProducts:
-                markerHasProperty = mrkr.info.petro.complementaryProducts.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 2. Buscamos en Petro others:
-                markerHasProperty = mrkr.info.petro.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 3. Buscamos en Petro payMethods:
-                markerHasProperty = mrkr.info.petro.payMethods.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 4. Buscamos en Petro evouchers:
-                markerHasProperty = mrkr.info.petro.evouchers.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 5. Buscamos en Petro benefits:
-                markerHasProperty = mrkr.info.petro.benefits.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-              }
-            }
-          });
-
-          newMarkersWithAvailableServices = newMarkersWithAvailableServices!.concat(filteredMarkers!);
+          // console.log('En estas tiendas es donde lo encontraras:', JSON.stringify(uniquePoints, null, 3));
+          // console.log('Total de tiendas en donde lo encontraras:', uniquePoints?.length);
+          if (uniquePoints.length === 0) {
+            toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
+          }
+          setFinalMarkers(uniquePoints);
+        } else {
+          setFinalMarkers(markers);
         }
-
-        // Filter by uniques Ids.
-        const uniquePoints: PointInterface[] = newMarkersWithAvailableServices.filter((v, i, a) => a.findIndex(v2 => v2.id === v.id) === i);
-
-        // console.log('En estas tiendas es donde lo encontraras:', JSON.stringify(uniquePoints, null, 3));
-        // console.log('Total de tiendas en donde lo encontraras:', uniquePoints?.length);
-        if (uniquePoints.length === 0) {
-          toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
-        }
-        setFinalMarkers(uniquePoints);
       };
 
       filterNearbyMarkers();
     } else {
+      // console.log('dejamos todo como estaba...');
       // If user hasnt filtered, then show the default geolocable markers.
       setFinalMarkers(markers);
     }
@@ -293,10 +298,25 @@ const BranchesController: React.FC<any> = ({ route }) => {
         if (defaultLatitude && defaultLongitude) {
           setSearchArea({ latitude: defaultLatitude, longitude: defaultLongitude });
           setLocationByMunicipality({ latitude: defaultLatitude, longitude: defaultLongitude });
+        } else {
+          toast.show({ message: `Error en la geolocalización. ${permissions.locationStatus}`, type: 'warning' });
         }
       }
+    } else if (permissions.locationStatus === 'granted') {
+      bottomSheetSMRef.current?.close();
+      // There is a weird behavior in android when modal permissions appears and after appears the modal for state and municipality.
+      // For that reason it is necessary to close and present consecutively.
+      if (Platform.OS === 'android') {
+        setTimeout(() => {
+          bottomSheetSMRef.current?.close();
+        }, 700);
+      }
     }
-  }, []);
+    // else {
+    //   // Denied
+    //   toast.show({ message: `Por favor active los permisos de geolocalización. ${permissions.locationStatus}`, type: 'warning' });
+    // }
+  }, [permissions.locationStatus]);
 
   /**
    * Search the markers based on the search area and considers the last selected search radius. And it also keeps the original markers.
@@ -631,6 +651,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_white} childrenContainerStyle={{ paddingHorizontal: 0 }}>
       <BranchesScreen
+        filterObject={route?.params ? route?.params.filterObject! : undefined}
         isButtonSearchBar={isButtonSearchBar}
         latitudeDelta={latitudeDelta}
         markers={finalMarkers!}
@@ -658,10 +679,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
         searchArea={searchArea}
         setMarkerFound={setMarkerFound}
         setSearch={setSearch}
+        states={DEFAULT_POINTS as BranchesState[]}
         visibleSearchByAreaButton={visibleSearchByAreaButton}
         visibleSearchByDistance={visibleSearchByDistance!}
         visibleStoreSymbology={visibleStoreSymbology!}
-        states={DEFAULT_POINTS as BranchesState[]}
       />
       <PointDetailSheet
         bottomSheetRef={bottomSheetRef}
