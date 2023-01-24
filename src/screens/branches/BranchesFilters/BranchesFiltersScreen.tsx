@@ -30,10 +30,9 @@ interface Props {
   goBack: () => void;
   setFiltering: (key: string, value: boolean) => void;
   showResults: () => void;
-  showResultsButtonEnabled: boolean;
 }
 
-const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, goBack, setFiltering, showResults, showResultsButtonEnabled }) => {
+const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, goBack, setFiltering, showResults }) => {
   const insets = useSafeAreaInsets();
   const [sevenToggled, setSevenToggled] = useState(true);
   const [petroToggled, setPetroToggled] = useState(true);
@@ -438,7 +437,7 @@ const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, go
             </Button>
           </Container>
           <Container width={'54%'}>
-            <Button disabled={!showResultsButtonEnabled} length="long" round onPress={showResults} fontSize="h4" fontBold>
+            <Button length="long" round onPress={showResults} fontSize="h4" fontBold>
               Mostrar resultados
             </Button>
           </Container>
