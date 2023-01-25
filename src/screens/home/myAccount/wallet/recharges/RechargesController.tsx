@@ -5,10 +5,13 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { vtexDocsServices } from 'services';
 import RechargesScreen from './RechargesScreen';
 import { RechargeSupplier } from '../../../../../rtk/types/wallet.types';
+import { logEvent } from 'utils/analytics';
+import { RootState, useAppSelector } from 'rtk';
 
 const RechargesController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
   const [supplierList, setSupplierList] = useState<RechargeSupplier[]>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const getRechargeSuppliers = useCallback(async () => {
     const data = await vtexDocsServices.getAllDocsByDocDataEntity('RS');
@@ -43,9 +46,18 @@ const RechargesController: React.FC = () => {
 
   const onPressHalp = () => {
     navigate('RechargeHelp');
+    logEvent("walRechargesHelp", {
+      id: user.id,
+      description: "Botón de ayuda de recargas de tiempo Aire",
+    })
   };
   const onPressOperator = (supplierData: RechargeSupplier) => {
     navigate('RechargeOperator', { supplierData: supplierData });
+    logEvent("walRechargeProvider", {
+      id: user.id,
+      description: "Seleccionar un proveedor de tiempo aire",
+      //TODO rechargeProviderId
+    })
   };
 
   return <RechargesScreen supplierList={supplierList as RechargeSupplier[]} onPressHelp={onPressHalp} onPressOperator={onPressOperator} />;
