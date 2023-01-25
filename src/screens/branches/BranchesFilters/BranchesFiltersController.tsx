@@ -8,7 +8,6 @@ import { PointFilteringDetailInterface } from 'rtk';
 const BranchesFiltersController: React.FC<any> = ({ route }) => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<BranchesStackParams>>();
   const [filterObject, setFilterObject] = useState<PointFilteringDetailInterface>();
-  const [showResultsButtonEnabled, setShowResultsButtonEnabled] = useState(false);
 
   useEffect(() => {
     if (route?.params) {
@@ -42,25 +41,13 @@ const BranchesFiltersController: React.FC<any> = ({ route }) => {
     }
 
     if (!value && key !== 'info_binomial' && key !== 'info_seven' && key !== 'info_petro') delete newFilterObject[key];
+
+    if (Object.keys(newFilterObject).length === 0) newFilterObject = undefined;
     setFilterObject(newFilterObject);
     // console.log('newFilterObject mutado: ', JSON.stringify(newFilterObject, null, 3));
-
-    /**
-     * Loop in charge of enabling the "show results" button if the user has enabled any filter.
-     */
-    let activeFilters: boolean = false;
-    for (const property in newFilterObject) {
-      if (newFilterObject[property] === true && property !== 'info_binomial' && property !== 'info_seven' && property !== 'info_petro') {
-        activeFilters = true;
-        break;
-      }
-    }
-
-    setShowResultsButtonEnabled(activeFilters);
   };
 
   const cleanFilters = () => {
-    setShowResultsButtonEnabled(true);
     setFilterObject(undefined);
   };
 
@@ -70,14 +57,7 @@ const BranchesFiltersController: React.FC<any> = ({ route }) => {
   };
 
   return (
-    <BranchesFiltersScreen
-      cleanFilters={cleanFilters}
-      filterObject={filterObject!}
-      goBack={goBack}
-      setFiltering={setFiltering}
-      showResults={showResults}
-      showResultsButtonEnabled={showResultsButtonEnabled}
-    />
+    <BranchesFiltersScreen cleanFilters={cleanFilters} filterObject={filterObject!} goBack={goBack} setFiltering={setFiltering} showResults={showResults} />
   );
 };
 
