@@ -324,10 +324,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
     } else {
       toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
     }
-    logEvent("SearchInThisArea", {
+    logEvent('SearchInThisArea', {
       id: user.id,
-      description: "Buscar en esta área"
-    })
+      description: 'Buscar en esta área'
+    });
   };
 
   /**
@@ -340,19 +340,18 @@ const BranchesController: React.FC<any> = ({ route }) => {
     // console.log('mode', mode);
     bottomSheetRef.current?.present();
     setMarker(point);
-    if(mode === "list"){
-      logEvent("sucSelectDetailsOnList", {
+    if (mode === 'list') {
+      logEvent('sucSelectDetailsOnList', {
         id: user.id,
-        description: "Seleccionar dellate en lista",
+        description: 'Seleccionar detalle en lista',
         shopId: point.shopNumber
-      })
-    }
-    else{ 
-      logEvent("sucSelectPin", {
+      });
+    } else {
+      logEvent('sucSelectPin', {
         id: user.id,
-        description: "Seleccionar un indicador del mapa interactivo",
+        description: 'Seleccionar un indicador del mapa interactivo',
         shopId: point.shopNumber
-      })
+      });
     }
   };
 
@@ -386,10 +385,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
    */
   const onPressShowMore = () => {
     bottomSheetRef.current?.snapToIndex(1);
-    logEvent("sucShowMore", {
+    logEvent('sucShowMore', {
       id: user.id,
-      description: `Tocar el Botón "Mostrar más" del modal (bottom shift) de información`
-    })
+      description: 'Tocar el Botón "Mostrar más" del modal (bottom shift) de información'
+    });
   };
 
   /**
@@ -397,10 +396,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
    */
   const onPressShowLess = () => {
     bottomSheetRef.current?.snapToIndex(0);
-    logEvent("sucShowLess", {
+    logEvent('sucShowLess', {
       id: user.id,
-      description: `Tocar el Botón "Mostrar menos" del modal (bottom shift) de información`
-    })
+      description: 'Tocar el Botón "Mostrar menos" del modal (bottom shift) de información'
+    });
   };
 
   /**
@@ -425,10 +424,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
     setVisibleSearchByAreaButton(false);
     bottomSheetRef.current?.close();
     setPointDisplayMode('list');
-    logEvent("sucListView", {
+    logEvent('sucListView', {
       id: user.id,
-      description: "Botón de vista de lista"
-    })
+      description: 'Botón de vista de lista'
+    });
   };
 
   /**
@@ -457,10 +456,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
       sourceLatitude: userLocation?.latitude,
       sourceLongitude: userLocation?.longitude
     });
-    logEvent("sucHowToGetThere", {
+    logEvent('sucHowToGetThere', {
       id: user.id,
-      description: "Botón de cómo llegar"
-    })
+      description: 'Botón de cómo llegar'
+    });
   };
 
   /**
@@ -469,10 +468,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const onPressShowDetails = () => {
     bottomSheetRef.current?.close();
     navigate('ShowDetails');
-    logEvent("sucShowAnnotations", {
+    logEvent('sucShowAnnotations', {
       id: user.id,
-      description: "Botón para configurar vista de anotaciones"
-    })
+      description: 'Botón para configurar vista de anotaciones'
+    });
   };
 
   /**
@@ -481,10 +480,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const onPressShowFilters = () => {
     bottomSheetRef.current?.close();
     navigate('BranchesFilters', route.params ? route.params : undefined);
-    logEvent("sucOpenFilters", {
+    logEvent('sucOpenFilters', {
       id: user.id,
-      description: "Botón de abrir filtros"
-    })
+      description: 'Botón de abrir filtros'
+    });
   };
 
   /**
@@ -524,10 +523,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
     else if (km === 4) setLatitudeDelta(0.34);
     else if (km === 5) setLatitudeDelta(0.44);
     setRadiusOfSearch(km);
-    logEvent("changeSearchRatio", {
+    logEvent('changeSearchRatio', {
       id: user.id,
-      description: "swipe del radio de selección de distancia."
-    })
+      description: 'swipe del radio de selección de distancia.'
+    });
   };
 
   /**
@@ -536,6 +535,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const onPressSearch = () => {
     setIsButtonSearchBar(false);
     bottomSheetRef.current?.close();
+    logEvent('sucSelectStoresUbicationSearchBar', {
+      id: user.id,
+      description: 'Seleccionar la barra de búsqueda de estaciones'
+    });
   };
 
   /**

@@ -25,12 +25,15 @@ const RechargeQRController: React.FC = () => {
   const onEdit = () => {
     if (rechargeUser) {
       navigate('RechargeEdit', { amount: amount, rechargeUser: rechargeUser });
-    } else navigate('RechargeEdit', { amount: amount, supplierData: supplier, fields: fields, rechargeQRId: rechargeQRId });
-    logEvent("walEditRecharge", {
+    } else {
+      navigate('RechargeEdit', { amount: amount, supplierData: supplier, fields: fields, rechargeQRId: rechargeQRId });
+    }
+
+    logEvent('walEditRecharge', {
       id: user.id,
-      description: "Botón de editar recarga"
-      //TODO rechargeId
-    })
+      description: 'Botón de editar recarga',
+      rechargeId: supplier.supplierName
+    });
   };
 
   const onDelete = async () => {

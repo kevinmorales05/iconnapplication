@@ -19,26 +19,26 @@ const ContinueWithController: React.FC = () => {
 
   const onPressSocialMedia = (socialMedia: string) => {
     navigate('LoginWhitSocialNetwork', { authenticationToken: authToken, providerLogin: socialMedia });
-    logEvent("appleLogin", {
+    logEvent('appleLogin', {
       id: user.id,
-      description: "Seleccionar iniciar con apple",
-    })
+      description: 'Seleccionar iniciar con apple'
+    });
   };
 
   const onContinueWithEmail = () => {
     navigate('EnterEmail');
-    logEvent("emailLogin", {
+    logEvent('emailLogin', {
       id: user.id,
-      description: "Seleccionar iniciar con email",
-    })
+      description: 'Seleccionar iniciar con email'
+    });
   };
 
   const onContinueAsGuest = () => {
     dispatch(setIsGuest(true));
-    logEvent("noLogin(FreeMode)", {
+    logEvent('noLogin(FreeMode)', {
       id: user.id,
-      description: "Seleccionar iniciar sin autenticarse",
-    })
+      description: 'Seleccionar iniciar sin autenticarse'
+    });
   };
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const ContinueWithController: React.FC = () => {
         start={{ x: 0, y: 1 }}
         end={{ x: 0, y: 0 }}
         style={{ height: '100%', width: '100%', position: 'absolute' }}
-      ></LinearGradient>
+      />
       <SafeArea topSafeArea={false} bottomSafeArea={false} backgroundColor="transparent" barStyle="light">
         <ContinueWithScreen
           onPressSocialButton={onPressSocialMedia}

@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { DeliveryStatus, PackageVtex, RootState, setPackages, useAppDispatch, useAppSelector } from 'rtk';
 import { estafetaServices } from 'services/estafeta.services';
 import { vtexDocsServices } from 'services/vtexdocs.services';
+import { logEvent } from 'utils/analytics';
 import TrackingScreen from './TrackingScreen';
 
 const TrackingController: React.FC = () => {
@@ -75,6 +76,10 @@ const TrackingController: React.FC = () => {
     } else {
       await getTracking(barCodeFields.barcodeNumber);
     }
+    logEvent('walSavePacket', {
+      id: user.id,
+      description: 'Botón de añadir un paquete'
+    });
   };
 
   const onPressScan = () => {

@@ -11,6 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { moderateScale } from 'utils/scaleMetrics';
+import { logEvent } from 'utils/analytics';
+import { RootState, useAppSelector } from 'rtk';
 
 interface Props {
   onPressClose: () => void;
@@ -20,13 +22,24 @@ interface Props {
 const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const insets = useSafeAreaInsets();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const showPreferenteScreen = async () => {
     onPressClose();
+    logEvent('walAddCard', {
+      id: user.id,
+      description: 'El usuario toca el botón de agregar una tarjeta de puntos',
+      cardType: 'ICONN Preferente'
+    });
   };
 
   const showPayBackScreen = async () => {
     onPressClose();
+    logEvent('walAddCard', {
+      id: user.id,
+      description: 'El usuario toca el botón de agregar una tarjeta de puntos',
+      cardType: 'Monedero PAYBACK'
+    });
   };
 
   const { containerStyle } = styles;

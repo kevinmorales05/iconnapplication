@@ -46,18 +46,18 @@ const RechargesController: React.FC = () => {
 
   const onPressHalp = () => {
     navigate('RechargeHelp');
-    logEvent("walRechargesHelp", {
+    logEvent('walRechargesHelp', {
       id: user.id,
-      description: "Botón de ayuda de recargas de tiempo Aire",
-    })
+      description: 'Botón de ayuda de recargas de tiempo Aire'
+    });
   };
   const onPressOperator = (supplierData: RechargeSupplier) => {
     navigate('RechargeOperator', { supplierData: supplierData });
-    logEvent("walRechargeProvider", {
+    logEvent('walRechargeProvider', {
       id: user.id,
-      description: "Seleccionar un proveedor de tiempo aire",
-      //TODO rechargeProviderId
-    })
+      description: 'Seleccionar un proveedor de tiempo aire',
+      rechargeProviderId: supplierData.supplierName
+    });
   };
 
   return <RechargesScreen supplierList={supplierList as RechargeSupplier[]} onPressHelp={onPressHalp} onPressOperator={onPressOperator} />;
