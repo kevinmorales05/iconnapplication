@@ -16,6 +16,7 @@ import {
 } from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 import { forwardInvoiceThunk, getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
+import { logEvent } from 'utils/analytics';
 
 const InvoiceTicketPetroController: React.FC = () => {
   const { navigate, goBack, push } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -26,6 +27,7 @@ const InvoiceTicketPetroController: React.FC = () => {
   const loader = useLoading();
   const toast = useToast();
   const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     setDefaultProfile(
@@ -99,6 +101,11 @@ const InvoiceTicketPetroController: React.FC = () => {
   const editTicket: any = (ticket: any, position: number) => push('AddTicketPetro', { ticket, position });
 
   const deleteTicket: any = (ticket: any, index: number) => {
+    logEvent('invRemoveTicket', {
+      id: user.id,
+      description: 'Quitar ticket Petro7',
+      type: 'Petro7'
+    });
     alert.show(
       {
         title: 'Borrar ticket',
@@ -111,9 +118,19 @@ const InvoiceTicketPetroController: React.FC = () => {
           alert.hide();
           dispatch(deleteTicketPetroFromList(index));
           toast.show({ message: 'Ticket borrado correctamente.', type: 'success' });
+          logEvent('invRemoveTicketYes', {
+            id: user.id,
+            description: 'Quitar ticket Petro7 "Si"',
+            type: 'Petro7'
+          });
         },
         onAccept() {
           alert.hide();
+          logEvent('invRemoveTicketNo', {
+            id: user.id,
+            description: 'Quitar ticket Petro7 "No"',
+            type: 'Petro7'
+          });
         }
       },
       'error'

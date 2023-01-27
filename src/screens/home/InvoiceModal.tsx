@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { invoicingServices } from 'services';
 import { setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
+import { logEvent } from 'utils/analytics';
 
 interface InvoiceItemProps {
   invoicingProfile: InvoicingProfileInterface;
@@ -22,6 +23,7 @@ const InvoiceItem = ({ invoicingProfile }: InvoiceItemProps) => {
 
   const [loading, setLoading] = useState(false);
   const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   return (
     <TouchableOpacity
@@ -39,9 +41,15 @@ const InvoiceItem = ({ invoicingProfile }: InvoiceItemProps) => {
             dispatch(setInvoicingProfilesList(newList));
           }
         } catch (error) {
+          null;
         } finally {
           setLoading(false);
         }
+        logEvent('invSelectInvoicingProfile', {
+          id: user.id,
+          description: 'Seleccionar perfil fiscal',
+          invoincingProfileId: invoicingProfile.invoicing_profile_id
+        });
       }}
     >
       <View style={[invoicingProfile.default ? highlightBorder : {}, { backgroundColor: '#EBF9F3', borderRadius: 10, padding: 16, marginTop: 10 }]}>
@@ -65,7 +73,7 @@ interface InvoiceModalProps {
 
 const InvoiceModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPressOut, onManage, invoicingProfileList }) => {
   const { containerStyle } = styles;
-
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const insets = useSafeAreaInsets();
 
   return (
@@ -89,7 +97,13 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPressOut,
                   style={{ marginTop: -6, shadowColor: 'none' }}
                   icon={<Ionicons name="close-outline" size={20} color={theme.fontColor.dark_grey} />}
                   size="xxsmall"
-                  onPress={onPressOut}
+                  onPress={() => {
+                    onPressOut();
+                    logEvent('invCloseInvoincingModal', {
+                      id: user.id,
+                      description: 'Cerrar modal de datos de facturación'
+                    });
+                  }}
                   color="iconn_med_grey"
                   circle
                 />
@@ -117,6 +131,10 @@ const InvoiceModal: React.FC<InvoiceModalProps> = ({ visible, onAdd, onPressOut,
                     return item.default == true;
                   });
                   onManage(defaultInvoicingProfile ?? null);
+                  logEvent('invManageInvoicingProfiles', {
+                    id: user.id,
+                    description: 'Administrar perfiles fiscales'
+                  });
                 }}
                 style={{ marginTop: 8 }}
               >

@@ -16,6 +16,7 @@ import {
 } from 'rtk';
 import { useAlert, useLoading, useToast } from 'context';
 import { forwardInvoiceThunk, getInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
+import { logEvent } from 'utils/analytics';
 
 const InvoiceTicketSevenController: React.FC = () => {
   const { navigate, goBack, push } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -26,6 +27,7 @@ const InvoiceTicketSevenController: React.FC = () => {
   const loader = useLoading();
   const toast = useToast();
   const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     setDefaultProfile(
@@ -100,6 +102,11 @@ const InvoiceTicketSevenController: React.FC = () => {
   const editTicket: any = (ticket: any, position: number) => push('AddTicketSeven', { ticket, position });
 
   const deleteTicket: any = (ticket: any, index: number) => {
+    logEvent('invRemoveTicket', {
+      id: user.id,
+      description: 'Quitar ticket 7Eleven',
+      type: '7Eleven'
+    });
     alert.show(
       {
         title: 'Borrar ticket',
@@ -112,9 +119,19 @@ const InvoiceTicketSevenController: React.FC = () => {
           alert.hide();
           dispatch(deleteTicketSevenFromList(index));
           toast.show({ message: 'Ticket borrado correctamente.', type: 'success' });
+          logEvent('invRemoveTicketYes', {
+            id: user.id,
+            description: 'Quitar ticket 7Eleven "Si"',
+            type: '7Eleven'
+          });
         },
         onAccept() {
           alert.hide();
+          logEvent('invRemoveTicketNo', {
+            id: user.id,
+            description: 'Quitar ticket 7Eleven "No"',
+            type: '7Eleven'
+          });
         }
       },
       'error'
