@@ -7,6 +7,7 @@ import { RootState, useAppSelector } from 'rtk';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
 import { useToast } from 'context';
+import { logEvent } from 'utils/analytics';
 
 interface Props {}
 
@@ -22,6 +23,12 @@ const UpdatePreferredController: React.FC<Props> = () => {
     try {
       if (cardNumberToUpdate.length == 18) {
         await vtexDocsServices.updateDocByDocID('PC', params.cardIdToUpdate, preferentePointCardBody);
+        logEvent('walSaveCard', {
+          id: user.id,
+          description: 'Botón de editar un depósito',
+          cardType: 'ICONN',
+          cardId: params.cardIdToUpdate
+        });
       }
     } catch (error) {
       toast.show({

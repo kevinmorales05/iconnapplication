@@ -173,7 +173,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchAddresses = useCallback(async () => {
     loader.show();
     if (user.id) {
-      console.log("Primera peticion")
+      //console.log("Primera peticion")
       await dispatch(getUserAddressesThunk(user.id!));
     }
   }, []);
@@ -232,7 +232,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4' )) {
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3')) {
       inConstruction.show();
       return;
     }
@@ -306,7 +306,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchData = useCallback(async () => {
     const { userId } = user;
     if (userId === cart.userProfileId) {
-      console.log('usuario igual...');
+      //console.log('usuario igual...');
     } else {
       getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         getShoppingCart(newCart.orderFormId).then(response => {

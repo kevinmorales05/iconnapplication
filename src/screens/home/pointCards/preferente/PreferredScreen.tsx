@@ -14,6 +14,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../navigation/types';
 import { numericWithSpecificLenght } from 'utils/rules';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { RootState, useAppSelector } from 'rtk';
 
 interface Props {
   addOrShow: number;
@@ -22,10 +23,12 @@ interface Props {
   deleteCard: () => void;
   cardToUpdate: string;
   cardId: string;
+  onPressSendAnalytics: (analyticsName: string, analyticsData: any) => void;
 }
 
-const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId }) => {
+const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId, onPressSendAnalytics }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [preferenteCard, setPreferenteCard] = useState('000000000000000000');
   const [preferenteStatus, setPreferenteStatus] = useState(addOrShow);
   const toast = useToast();
@@ -44,6 +47,12 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
 
   const editPreferenteCard = () => {
     navigate('UpdatePreferred', { cardIdToUpdate: cardToUpdate, preferenteCard: preferenteCard, cardId: cardId });
+    onPressSendAnalytics('walEditCard', {
+      id: user.id,
+      description: 'El usuario ingresa a la sección para editar una tarjeta de puntos',
+      cardType: 'ICONN',
+      cardId: cardId
+    });
   };
 
   const deletePointCard = () => {
@@ -68,6 +77,12 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
   }, [isValid, cardNumberToShow]);
 
   const showAlert = () => {
+    onPressSendAnalytics('walDeleteCard', {
+      id: user.id,
+      description: 'El usuario toca el botón de eliminar una tarjeta de puntos',
+      cardType: 'ICONN',
+      cardId: cardId
+    });
     alert.show(
       {
         title: 'Eliminar tarjeta ICONN Preferente',
@@ -82,9 +97,21 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
         onAccept() {
           deletePointCard();
           alert.hide();
+          onPressSendAnalytics('walConfirmDeleteCard', {
+            id: user.id,
+            description: 'El usuario toca el botón de confirmar eliminación de una tarjeta de puntos',
+            cardType: 'ICONN',
+            cardId: cardId
+          });
         },
         onCancel() {
           alert.hide('cancelar');
+          onPressSendAnalytics('walCancelDeleteCard', {
+            id: user.id,
+            description: 'El usuario toca el botón de cancelar eliminación de una tarjeta de puntos',
+            cardType: 'ICONN',
+            cardId: cardId
+          });
         }
       },
       'deleteCart',
@@ -115,7 +142,16 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
         <Container style={{ marginTop: verticalScale(40) }}>
           <Container row>
             <TextContainer typography="h6" fontBold text={'Número de tarjeta'} marginRight={moderateScale(8)} marginTop={4} />
-            <Touchable onPress={goToHelp}>
+            <Touchable
+              onPress={() => {
+                onPressSendAnalytics('walHelpAddCard', {
+                  id: user.id,
+                  description: 'El usuario toca el botón de ayuda al ingresar una tarjeta de puntos',
+                  cardType: 'ICONN'
+                });
+                goToHelp();
+              }}
+            >
               <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
             </Touchable>
           </Container>
@@ -152,7 +188,16 @@ const PreferredScreen: React.FC<Props> = ({ addOrShow, cardNumberToShow, onSubmi
     <Container>
       <Container center space="around" style={{ width: '100%', height: moderateScale(193), backgroundColor: theme.brandColor.iconn_background }}>
         <Image source={CARD_PREF} style={{ width: moderateScale(261), height: moderateScale(164) }} />
-        <Touchable onPress={goToHelp}>
+        <Touchable
+          onPress={() => {
+            onPressSendAnalytics('walHelpCard', {
+              id: user.id,
+              description: 'El usuario toca el botón de ayuda de una tarjeta de puntos',
+              cardType: 'ICONN'
+            });
+            goToHelp();
+          }}
+        >
           <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
         </Touchable>
       </Container>

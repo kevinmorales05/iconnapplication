@@ -17,9 +17,10 @@ import { RootState, useAppSelector } from 'rtk';
 interface Props {
   onPressClose: () => void;
   visible: boolean;
+  onPressSendAnalytics: (analyticsName: string, analyticsData: any) => void;
 }
 
-const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
+const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible, onPressSendAnalytics }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const insets = useSafeAreaInsets();
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -88,6 +89,11 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
                           onPress={() => {
                             showPreferenteScreen();
                             navigate('Preferred', { addOrShow: 0, cardNumberToShow: '' });
+                            onPressSendAnalytics('walOpenNewCardButton', {
+                              id: user.id,
+                              description: 'El usuario ingresa a la sección para crear una tarjeta de puntos',
+                              cardType: 'ICONN'
+                            });
                           }}
                         >
                           <Image source={ICONN_POINT_CARD_MODAL_PREFERENTE} resizeMode="cover" style={{ width: 108, height: 108 }} />
@@ -99,6 +105,11 @@ const PointCardsModalScreen: React.FC<Props> = ({ onPressClose, visible }) => {
                           onPress={() => {
                             showPayBackScreen();
                             navigate('Payback', { addOrShow: 0, cardNumberToShow: '' });
+                            onPressSendAnalytics('walOpenNewCardButton', {
+                              id: user.id,
+                              description: 'El usuario ingresa a la sección para crear una tarjeta de puntos',
+                              cardType: 'PAYBACK'
+                            });
                           }}
                         >
                           <Image source={ICONN_POINT_CARD_MODAL_PAYBACK} resizeMode="cover" style={{ width: 108, height: 108 }} />
