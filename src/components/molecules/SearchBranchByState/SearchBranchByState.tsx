@@ -5,6 +5,7 @@ import { openField } from 'utils/rules';
 import { Select } from 'components/atoms';
 import { useForm } from 'react-hook-form';
 import theme from '../../theme/theme';
+import { logEvent } from 'utils/analytics';
 
 interface SearchBranchProps {
   onSelectMunicipality: (state: any, municipality: any) => void;
@@ -13,6 +14,7 @@ interface SearchBranchProps {
 
 const SearchBranchByState: React.FC<SearchBranchProps> = ({ onSelectMunicipality, states }: SearchBranchProps) => {
   const { state: selectedState, municipality: selectedMunicipality } = useAppSelector((state: RootState) => state.app);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { control, setValue, trigger, getValues } = useForm({
     mode: 'onChange'
   });
@@ -63,6 +65,10 @@ const SearchBranchByState: React.FC<SearchBranchProps> = ({ onSelectMunicipality
             }
             trigger('state');
             trigger('municipality');
+            logEvent('SearchByStateColony', {
+              id: user.id,
+              description: 'Buscar por texto de búsqueda'
+            });
           }}
           androidMode="dropdown"
           placeholder={'Selección'}

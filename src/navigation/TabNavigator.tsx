@@ -13,11 +13,12 @@ import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
 import InConstructionController from 'components/screens/InConstruction/InConstructionController';
+import { logEvent } from 'utils/analytics';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
 export const TabNavigator = () => {
-  const { isGuest } = useAppSelector((state: RootState) => state.auth);
+  const { isGuest, user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
   const { paySuccess } = route.params;
 
@@ -98,6 +99,14 @@ export const TabNavigator = () => {
                 style={{ tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height: 24, width: 24 }}
               />
             );
+          }
+        }}
+        listeners={{
+          tabPress: () => {
+            logEvent('tabNavigationOpenStoreUbication', {
+              id: user.id,
+              description: 'Seleccionar ubicación de tiendas y estaciones del menú inferior'
+            });
           }
         }}
       />
