@@ -19,10 +19,22 @@ const ContinueWithController: React.FC = () => {
 
   const onPressSocialMedia = (socialMedia: string) => {
     navigate('LoginWhitSocialNetwork', { authenticationToken: authToken, providerLogin: socialMedia });
-    logEvent('appleLogin', {
-      id: user.id,
-      description: 'Seleccionar iniciar con apple'
-    });
+    if (socialMedia === 'Apple') {
+      logEvent('appleLogin', {
+        id: user.id,
+        description: 'Seleccionar iniciar con apple'
+      });
+    } else if (socialMedia === 'Google') {
+      logEvent('googleLogin', {
+        id: user.id,
+        description: 'Seleccionar iniciar con Google'
+      });
+    } else if (socialMedia === 'Facebook') {
+      logEvent('facebookLogin', {
+        id: user.id,
+        description: 'Seleccionar iniciar con Facebook'
+      });
+    }
   };
 
   const onContinueWithEmail = () => {
