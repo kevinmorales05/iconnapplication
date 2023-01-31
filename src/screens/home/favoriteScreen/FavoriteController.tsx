@@ -4,27 +4,26 @@ import { useLoading } from 'context';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 import {
   ExistingProductInCartInterface,
-  getProductPriceByProductIdThunk,
-  getProductRatingByProductIdThunk,
+  getProductsListItemsThunk,
   ItemsFavoritesInterface,
   ProductInterface,
+  ProductListCacheRequestInterface,
+  ProductResponseInterface,
   RootState,
   setFav,
   setFavId,
   useAppDispatch,
   useAppSelector
 } from 'rtk';
-import { getSkuFilesById } from 'services/vtexProduct.services';
-import Config from 'react-native-config';
 
 const InviteSignUpController: React.FC = () => {
   const dispatch = useAppDispatch();
   const { cart } = useAppSelector((state: RootState) => state.cart);
-  const { favs, user, favsId } = useAppSelector((state: RootState) => state.auth);
+  const { favs, user } = useAppSelector((state: RootState) => state.auth);
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
   const { email } = user;
   const [completeList, setCompleteList] = useState<ProductInterface[] | null>();
-  const { FAVORITE_ASSETS } = Config;
   const loader = useLoading();
 
   const getFavorites = useCallback(async () => {
@@ -51,59 +50,40 @@ const InviteSignUpController: React.FC = () => {
     getFavorites();
   }, []);
 
-  const getPicture = async (productId: string) => {
-    const imgRoot = FAVORITE_ASSETS;
-    let pics = [];
-    await getSkuFilesById(productId)
-      .then(async responseSku => {
-        let skuForImages = [];
-        if (responseSku) {
-          if (responseSku.length > 0) {
-            responseSku.map(sku => {
-              skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
-            });
-          }
-          pics = skuForImages;
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
-    return pics;
-  };
-
-  const getPriceByProductId = async (productId: string) => {
-    return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
-  };
-
-  const getRatingByProductId = async (productId: string) => {
-    return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
-  };
-
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[]) {
-    const arr: ItemsFavoritesInterface[] | null | undefined = favs;
-    const favProductsArr: ProductInterface[] | undefined = [];
-    for (const product of arr) {
-      const price = await getPriceByProductId(product.Id);
-      const raiting = await getRatingByProductId(product.Id);
-      const pic = await getPicture(product.Id);
-      if (price && raiting) {
-        const newProduct: ProductInterface = {
-          productId: product.Id,
-          name: product.Name,
-          image: pic && pic.length ? pic[0].url : '',
-          price: price.sellingPrice,
-          oldPrice: price.sellingPrice,
-          porcentDiscount: 0,
-          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.Id.toString())?.quantity : 0,
-          ratingValue: raiting.average
-        };
-        favProductsArr.push(newProduct);
-      }
+    const response = await getProducts(favs);
+    if (response.responseCode === 603) {
+      const productsArr: ProductInterface[] = response.data.map((product: ProductResponseInterface) => ({
+        productId: product.ProductId,
+        name: product.ProductName,
+        image: product.SkuImageUrl,
+        price: Number.parseFloat(product.sellingPrice),
+        oldPrice: Number.parseFloat(product.sellingPrice),
+        porcentDiscount: 0,
+        quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.ProductId.toString())?.quantity : 0,
+        ratingValue: product.qualificationAverage,
+        promotionType: product.promotion && product.promotion.type,
+        promotionName: product.promotion && product.promotion.name,
+        percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
+        maximumUnitPriceDiscount: product.promotion && product.promotion.maximum_unit_price_discount,
+        costDiscountPrice: product.costDiscountPrice
+      }));
+      setCompleteList(productsArr);
+      loader.hide();
+    } else {
+      loader.hide();
     }
-    setCompleteList(favProductsArr);
-    loader.hide();
   }
+
+  const getProducts = async (favProductsArr: ItemsFavoritesInterface[] | null | undefined) => {
+    if (favProductsArr) {
+      const data: ProductListCacheRequestInterface = {
+        storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
+        products: favProductsArr.map(item => item.Id)
+      };
+      return await dispatch(getProductsListItemsThunk(data)).unwrap();
+    }
+  };
 
   const getExistingProductsInCart = () => {
     const { items } = cart;

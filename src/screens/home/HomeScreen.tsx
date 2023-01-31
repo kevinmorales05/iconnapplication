@@ -10,7 +10,6 @@ import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultA
 import { CounterType } from 'components/types/counter-type';
 import analytics from '@react-native-firebase/analytics';
 
-
 interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
@@ -44,7 +43,6 @@ const HomeScreen: React.FC<Props> = ({
   homeProducts,
   homeOtherProducts,
   updateShoppingCartProduct,
-  onPressViewMore,
   viewRecomendedProducts,
   viewOtherProducts,
   isAddressModalSelectionVisible
@@ -101,7 +99,7 @@ const HomeScreen: React.FC<Props> = ({
                   {defaultAddress ? (
                     <CustomText text={`${defaultAddress.addressName} - ${defaultAddress.city}, ${defaultAddress.street}`} fontSize={16} />
                   ) : (
-                    <CustomText text={`Agrega dirección`} fontSize={16} />
+                    <CustomText text={'Agrega dirección'} fontSize={16} />
                   )}
                 </Container>
               </Container>
@@ -135,27 +133,26 @@ const HomeScreen: React.FC<Props> = ({
                 text="Ver todo"
                 typography="h5"
                 fontBold
-                onPress={ async () => {
-                  
+                onPress={async () => {
                   try {
-                    await analytics().logEvent("recomendedyou",{
-                      id: "1",
-                      name: "recomendados para ti",
+                    await analytics().logEvent('recomendedyou', {
+                      id: '1',
+                      name: 'recomendados para ti'
                     });
-                    console.log("succesfully added to firebase!")
                   } catch (error) {
-                    console.log(error)
+                    // console.log(error);
                   }
-                  viewRecomendedProducts()}}
+                  viewRecomendedProducts();
+                }}
               />
             </Container>
             <Container style={{ position: 'absolute', top: 35 }}>
               {!homeProducts ? (
                 <>
                   <Container flex row style={{ marginLeft: 8 }}>
+                    {/* <CardProductSkeleton />
                     <CardProductSkeleton />
-                    <CardProductSkeleton />
-                    <CardProductSkeleton />
+                    <CardProductSkeleton /> */}
                   </Container>
                 </>
               ) : (
@@ -174,7 +171,7 @@ const HomeScreen: React.FC<Props> = ({
           </Container>
           <Container height={367} style={{ marginTop: 0 }} backgroundColor={theme.brandColor.iconn_background}>
             <Container row space="between" style={{ margin: 16 }}>
-              <TextContainer text={`Otros productos`} fontBold typography="h4" />
+              <TextContainer text={'Otros productos'} fontBold typography="h4" />
               <TouchableText
                 underline
                 textColor={theme.brandColor.iconn_accent_principal}

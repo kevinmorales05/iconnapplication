@@ -1,7 +1,6 @@
 export * from './auth.services';
 export * from './invoicing.services';
-export * from './vtex-categories.services';
-export * from './vtex-home.services';
+export * from './citi-categories.services';
 export * from './vtex-orders.services';
 export * from './vtex-pickUpPoints.services';
 export * from './vtex-products.services';
@@ -14,3 +13,4 @@ export * from './vtexShoppingCar.services';
 export * from './vtexuser.services';
 export * from './liveStatus.services';
 export * from './evaluate.services';
+export * from './home-services';

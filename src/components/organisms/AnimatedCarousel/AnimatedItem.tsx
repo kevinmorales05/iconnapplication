@@ -11,6 +11,7 @@ import theme from 'components/theme/theme';
 import { CounterType } from 'components/types/counter-type';
 import React from 'react';
 import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { CarouselItem, ProductInterface } from 'rtk';
 import { navigate } from '../../../navigation/RootNavigation';
 
@@ -127,7 +128,10 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
           productId={product.productId}
           quantity={product.quantity!}
           ratingValue={product.ratingValue}
-          // quantity={2}
+          promotionType={product.promotionType}
+          percentualDiscountValue={product.percentualDiscountValue}
+          promotionName={product.promotionName}
+          costDiscountPrice={product.costDiscountPrice}
           onPressAddCart={() => {
             onPressProduct!('create', product.productId);
           }}
@@ -152,7 +156,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
       >
         <Container style={containerStyle}>
           <Container style={imageContainer}>
-            <Image source={{ uri: data.image }} style={image} />
+            <FastImage source={{ uri: data.image }} style={image} />
           </Container>
           <Container flex space="evenly" style={footerContainer}>
             <CustomText text={data.promotion_name} fontBold />
@@ -196,7 +200,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
         }}
       >
         <Container style={containerSecond}>
-          <Image source={{ uri: data.image }} style={secondImageStyle} />
+          <FastImage source={{ uri: data.image }} style={secondImageStyle} />
         </Container>
       </Touchable>
     ) : data !== undefined && data.promotion_type === 'cards' ? (
@@ -208,7 +212,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
         }}
       >
         <Container center style={containerCard}>
-          <Image source={data.image} style={cardImageStyle} />
+          <FastImage source={data.image} style={cardImageStyle} />
         </Container>
       </Touchable>
     ) : data !== undefined && data.promotion_type === 'day_promotion' ? (
@@ -219,7 +223,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
       >
         <Container style={dayPromotionContainer}>
           <Container style={dayPromotionImageStyle}>
-            <Image source={{ uri: data.image }} style={image} />
+            <FastImage source={{ uri: data.image }} style={image} />
           </Container>
           <Container flex space="evenly" style={dayPromotionFooterContainer}>
             <CustomText text={data.promotion_name} fontBold />
@@ -235,7 +239,7 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
         marginLeft={position}
       >
         <Container style={allPromotionsContainer}>
-          <Image source={{ uri: data.image }} style={allPromotionsImage} />
+          <FastImage source={{ uri: data.image }} style={allPromotionsImage} />
         </Container>
       </Touchable>
     ) : null;
