@@ -9,6 +9,8 @@ import { ICONN_CALENDAR_YESTERDAY, ICONN_CALENDAR_WEEK, ICONN_CALENDAR_MONTH, IC
 import { EstablishmentFilter, Establishment } from './EstablishmentModal';
 import { AmountFilter, Amount } from './AmountModal';
 import { DateFilter, Period } from './DateModal';
+import { logEvent } from 'utils/analytics';
+import { RootState, useAppSelector } from 'rtk';
 
 interface MultipleFilterModalProps {
   visible: boolean;
@@ -43,6 +45,7 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
   const insets = useSafeAreaInsets();
 
   const [current, setCurrent] = useState<Period | null>(null);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     setCurrent(visible ? period : null);
@@ -196,6 +199,11 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
                 if (currentA) handleAmount(currentA);
 
                 onPressOut();
+                logEvent('invSelectInvoicingHistoryFilter', {
+                  id: user.id,
+                  description: 'Filtrar historial de facturas',
+                  filterType: 'Multiple'
+                });
               }}
               marginTop={28}
               round

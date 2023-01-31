@@ -97,7 +97,15 @@ const InvoiceTicketSevenController: React.FC = () => {
     }
   };
 
-  const onPressAddNewTicket = () => push('AddTicketSeven', { ticket: null, position: undefined });
+  const onPressAddNewTicket = () => {
+    push('AddTicketSeven', { ticket: null, position: undefined });
+    logEvent('invAddTicket', {
+      id: user.id,
+      description: 'Añadir otro ticket',
+      origin: 'noFirst',
+      type: '7Eleven'
+    });
+  };
 
   const editTicket: any = (ticket: any, position: number) => push('AddTicketSeven', { ticket, position });
 
