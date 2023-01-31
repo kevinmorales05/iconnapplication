@@ -51,7 +51,7 @@ interface Props {
   isReviewed?: boolean;
 }
 
-const ProductDetailScreen: React.FC<Props> = ({ itemId, fetchReviewData, showModal, star1, star2, star3, star4, star5, totalCount, average, isReviewed }) => {
+const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star1, star2, star3, star4, star5, totalCount, average, isReviewed }) => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const [productDetail, setProductDetail] = useState<ProductDeatilCacheInterface>({});
   const [skusForProductImages, setSkusForProductImages] = useState([]);
@@ -68,7 +68,7 @@ const ProductDetailScreen: React.FC<Props> = ({ itemId, fetchReviewData, showMod
   const dispatch = useAppDispatch();
   const { COMPLEMENTRY_PRODUCTS } = Config;
 
-  itemId = detailSelected;
+  const itemId = detailSelected;
 
   const fetchDataProduct = useCallback(async () => {
     const productInfo: ProductCacheInterface = {
@@ -477,13 +477,13 @@ const ProductDetailScreen: React.FC<Props> = ({ itemId, fetchReviewData, showMod
             {showAdditionalInfo ? (
               <Container style={{ marginTop: 10, paddingHorizontal: 10 }}>
                 <Container>
-                  <TextContainer text="Descripción del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
+                  <TextContainer text="Descripción del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold />
                   <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
                     {productDetail.Description}
                   </Text>
                 </Container>
                 <Container style={{ marginTop: 20 }}>
-                  <TextContainer text="Especificación del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
+                  <TextContainer text="Especificación del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold />
                   <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
                     {productDetail.Title}
                   </Text>
@@ -495,7 +495,7 @@ const ProductDetailScreen: React.FC<Props> = ({ itemId, fetchReviewData, showMod
           </Container>
 
           <Container style={{ paddingVertical: 10 }} backgroundColor={theme.brandColor.iconn_background}>
-            <TextContainer text={`¿Un último antojo?`} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
+            <TextContainer text={'¿Un último antojo?'} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <Container row style={{ width: '100%', marginBottom: 20, paddingLeft: 5, paddingRight: 30 }}>
                 {complementaryProducts.length === 0 ? (
