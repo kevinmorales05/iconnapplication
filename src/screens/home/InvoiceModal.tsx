@@ -10,6 +10,7 @@ import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } 
 import { invoicingServices } from 'services';
 import { setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
 import { logEvent } from 'utils/analytics';
+import { useToast } from 'context';
 
 interface InvoiceItemProps {
   invoicingProfile: InvoicingProfileInterface;
@@ -20,7 +21,7 @@ const InvoiceItem = ({ invoicingProfile }: InvoiceItemProps) => {
     borderColor: '#2FB97A'
   };
   const dispatch = useAppDispatch();
-
+  const toast = useToast();
   const [loading, setLoading] = useState(false);
   const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -41,7 +42,10 @@ const InvoiceItem = ({ invoicingProfile }: InvoiceItemProps) => {
             dispatch(setInvoicingProfilesList(newList));
           }
         } catch (error) {
-          null;
+          toast.show({
+            message: `Ocurrió un error al asignar el perfil default. ${error}`,
+            type: 'error'
+          });
         } finally {
           setLoading(false);
         }
