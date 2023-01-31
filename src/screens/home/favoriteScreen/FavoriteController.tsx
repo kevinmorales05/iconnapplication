@@ -79,7 +79,7 @@ const InviteSignUpController: React.FC = () => {
     if (favProductsArr) {
       const data: ProductListCacheRequestInterface = {
         storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
-        products: favProductsArr.map(item => item.Id)
+        products: favProductsArr.map(item => item.Id + "")
       };
       return await dispatch(getProductsListItemsThunk(data)).unwrap();
     }

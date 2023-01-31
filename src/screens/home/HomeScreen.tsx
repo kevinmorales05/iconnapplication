@@ -150,9 +150,9 @@ const HomeScreen: React.FC<Props> = ({
               {!homeProducts ? (
                 <>
                   <Container flex row style={{ marginLeft: 8 }}>
-                    {/* <CardProductSkeleton />
                     <CardProductSkeleton />
-                    <CardProductSkeleton /> */}
+                    <CardProductSkeleton />
+                    <CardProductSkeleton />
                   </Container>
                 </>
               ) : (
