@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ScrollView, StyleSheet, Text } from 'react-native';
+import { ScrollView, Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import { CustomText, Button, Container, Touchable, TextContainer } from 'components';
@@ -10,7 +10,6 @@ import IconO from 'react-native-vector-icons/FontAwesome5';
 import { ConnectionItem } from 'components/organisms/ConnectionItem';
 import { useAlert, useLoading, useToast } from 'context';
 import { updateShoppingCartItems, setDetailSelected } from 'rtk/slices/cartSlice';
-import analytics from '@react-native-firebase/analytics';
 
 interface Props {
   routes: any;
@@ -23,9 +22,10 @@ interface Props {
 
 import { RootState, useAppSelector, useAppDispatch, messageType } from 'rtk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { HomeStackParams } from '../../../navigation/types';
 import { moderateScale } from 'utils/scaleMetrics';
+import { logEvent } from 'utils/analytics';
 
 const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, routes, messageType, countProducts, cartItems }) => {
   const insets = useSafeAreaInsets();
@@ -50,71 +50,50 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   const [subTotalCalculated, setSubTotalCalculated] = useState(0);
   const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
 
-  const onPressSendAnalyticst = async (analyticsName: string, analyticsDecription: string, otherTagName?: string, otherTagContent?: string) => {
-    try {
-      if (otherTagName) {
-        await analytics().logEvent(analyticsName, {
-          id: user.id,
-          description: analyticsDecription,
-          [otherTagName]: otherTagContent
-        });
-      } else {
-        await analytics().logEvent(analyticsName, {
-          id: user.id,
-          description: analyticsDecription
-        });
-      }
-      //console.log('succesfully added to firebase!');
-    } catch (error) {
-      //console.log(error);
-    }
-  };
-
   const fetchData = useCallback(async () => {
     //console.log('fetchData...');
-    await getShoppingCart(cart.orderFormId)
-      .then(response => {
-        const { items, messages, totalizers } = response;
-        let orderItems = [];
-        //console.log({ items });
-        items.map((item, index) => {
-          orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
+    await getShoppingCart(cart.orderFormId).then(response => {
+      const { items, messages, totalizers } = response;
+      let orderItems = [];
+      //console.log({ items });
+      items.map((item, index) => {
+        orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
+      });
+      setRequestList(orderItems);
+      setMessages(messages);
+      //console.log({ messagesCar: messages });
+      setTotalizers(totalizers[0]);
+      setOrderFormId(cart.orderFormId);
+      let withoutStockM = new Map();
+      if (messages.length > 0) {
+        messages.map(value => {
+          // TODO: relocate message type to .ENV
+          if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code == 'withoutPriceFulfillment') {
+            withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
+          }
         });
-        setRequestList(orderItems);
-        setMessages(messages);
-        //console.log({ messagesCar: messages });
-        setTotalizers(totalizers[0]);
-        setOrderFormId(cart.orderFormId);
-        let withoutStockM = new Map();
-        if (messages.length > 0) {
-          messages.map(value => {
-            // TODO: relocate message type to .ENV
-            if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code == 'withoutPriceFulfillment') {
-              withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
-            }
-          });
-          setWithoutStockMap(withoutStockM);
-        }
+        setWithoutStockMap(withoutStockM);
+      }
 
-        let calculated = 0;
-        if (items.length > 0) {
-          items.map((value, index) => {
-            if (withoutStockM.get(index)) {
-              value.hasErrorMessage = true;
-              value.errorMessage = withoutStockM.get(index);
-            } else {
-              let priceDefinition = value.priceDefinition != undefined && value.priceDefinition.total != undefined ? value.priceDefinition.total : 0;
-              calculated = calculated + priceDefinition / 100;
-              value.hasErrorMessage = false;
-              value.errorMessage = '';
-            }
-          });
-          setSubTotalCalculated(calculated);
-        }
-        setProductList(items);
-        dispatch(updateShoppingCartItems(response));
-      })
-      .catch(error => console.log(error));
+      let calculated = 0;
+      if (items.length > 0) {
+        items.map((value, index) => {
+          if (withoutStockM.get(index)) {
+            value.hasErrorMessage = true;
+            value.errorMessage = withoutStockM.get(index);
+          } else {
+            let priceDefinition = value.priceDefinition != undefined && value.priceDefinition.total != undefined ? value.priceDefinition.total : 0;
+            calculated = calculated + priceDefinition / 100;
+            value.hasErrorMessage = false;
+            value.errorMessage = '';
+          }
+        });
+        setSubTotalCalculated(calculated);
+      }
+      setProductList(items);
+      dispatch(updateShoppingCartItems(response));
+    });
+    //.catch(error => console.log(error));
   }, []);
 
   useEffect(() => {
@@ -290,7 +269,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         cancelOutline: 'iconn_light_grey',
         cancelTextColor: 'iconn_dark_grey',
         onAccept() {
-          onPressSendAnalyticst('cartEmpty', 'Remover todos los productos de la canasta');
+          logEvent('cartEmpty', { id: user.id, description: 'Remover todos los productos de la canasta' });
           deleteUnavailableItems();
           alert.hide();
         },
@@ -429,7 +408,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         <Container style={{ marginLeft: 13 }}>
           <Touchable
             onPress={() => {
-              onPressSendAnalyticst('cartMinusProduct', 'Quitar un producto de la canasta', 'productId', item.id);
+              logEvent('cartMinusProduct', { id: user.id, description: 'Quitar un producto de la canasta', productId: item.id });
               decreaseItem();
             }}
           >
@@ -450,7 +429,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         <Container style={{ marginRight: 13 }}>
           <Touchable
             onPress={() => {
-              onPressSendAnalyticst('cartPlusProduct', 'Añadir productos de la canasta', 'productId', item.id);
+              logEvent('cartPlusProduct', { id: user.id, description: 'Añadir productos de la canasta', productId: item.id });
               increaseItem();
             }}
           >
@@ -515,7 +494,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
               leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
               onPress={() => {
-                onPressSendAnalyticst('cartEmpty', 'Remover todos los productos de la canasta');
+                logEvent('cartEmpty', { id: user.id, description: 'Remover todos los productos de la canasta' });
                 emptyShoppingCart();
               }}
             >
@@ -573,7 +552,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         <Container style={{ paddingHorizontal: 10 }}>
           <Touchable
             onPress={() => {
-              onPressSendAnalyticst('cartOpenProduct', 'Abrir detalle de producto', 'productId', value.id);
+              logEvent('cartOpenProduct', { id: user.id, description: 'Abrir detalle de producto', productId: value.id });
               dispatch(setDetailSelected(value.id));
               navigate('ProductDetail', { productIdentifier: value.id });
             }}
@@ -586,7 +565,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             <Container style={{ width: '70%' }}>
               <Touchable
                 onPress={() => {
-                  onPressSendAnalyticst('cartOpenProduct', 'Abrir detalle de producto', 'productId', value.id);
+                  logEvent('cartOpenProduct', { id: user.id, description: 'Abrir detalle de producto', productId: value.id });
                   dispatch(setDetailSelected(value.id));
                   navigate('ProductDetail', { productIdentifier: value.id });
                 }}
@@ -677,7 +656,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               size="xxsmall"
               marginRight={30}
               onPress={() => {
-                onPressSendAnalyticst('cartRemoveProduct', 'Quitar producto de la canasta', 'productId', value.id);
+                logEvent('cartRemoveProduct', { id: user.id, description: 'Quitar producto de la canasta', productId: value.id });
                 deleteShoppingCartItem();
               }}
               transparent
@@ -839,7 +818,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           fontBold
           disabled={!subTotalCalculated}
           onPress={() => {
-            onPressSendAnalyticst('cartContinueToCheckout', 'Continuar al checkout');
+            logEvent('cartContinueToCheckout', { id: user.id, description: 'Continuar al checkout' });
             onPressCheckout();
           }}
           borderColor={subTotalCalculated ? 'iconn_green_original' : 'iconn_green_original_med'}

@@ -7,6 +7,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../../../navigation/types';
 import { moderateScale } from 'utils/scaleMetrics';
 import { EvaluateExperencieSvg } from 'components/svgComponents/EvaluateExperencieSvg';
+import { RootState, useAppSelector } from 'rtk';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   modulesData: [];
@@ -16,6 +18,7 @@ interface Props {
 
 const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const getSpecialModule = (moduleHelp: number) => {
     let flagHelp: boolean = false;
@@ -77,6 +80,7 @@ const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
                 disable={false}
                 icon={getIcon(module, isSpecialModule)}
                 onPressNavigateTo={() => {
+                  logEvent(`accOpen${module.icon}HelpModule`, { id: user.id, description: `Abrir modulo de ayuda ${module.name}` });
                   navigateTo(module);
                 }}
                 isMainTextBold={true}

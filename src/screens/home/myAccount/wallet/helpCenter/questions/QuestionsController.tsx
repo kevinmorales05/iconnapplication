@@ -5,6 +5,7 @@ import { SafeArea } from 'components';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
 import { helpCenterServices } from 'services/helpCenter.services';
+
 interface Props {}
 
 const QuestionsController: React.FC<Props> = () => {
@@ -15,7 +16,7 @@ const QuestionsController: React.FC<Props> = () => {
 
   const fetchData = useCallback(async () => {
     await helpCenterServices.getQuestionsListByModuleId(moduleId).then(async questionsResponse => {
-      if (questionsResponse && questionsResponse.data.length>0) {
+      if (questionsResponse && questionsResponse.data.length > 0) {
         setHelpQuestions(questionsResponse.data);
       }
     });

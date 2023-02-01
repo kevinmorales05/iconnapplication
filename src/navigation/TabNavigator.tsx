@@ -13,15 +13,15 @@ import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
 import InConstructionController from 'components/screens/InConstruction/InConstructionController';
-
+import { logEvent } from 'utils/analytics';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
 export const TabNavigator = () => {
   const { isGuest } = useAppSelector((state: RootState) => state.auth);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
   const { paySuccess } = route.params;
-
 
   return (
     <Tab.Navigator
@@ -33,6 +33,11 @@ export const TabNavigator = () => {
       })}
     >
       <Tab.Screen
+        listeners={{
+          tabPress: e => {
+            logEvent('tabNavigationOpenHome', { id: user.id, description: 'Abrir inicio en el menú inferior' });
+          }
+        }}
         options={{
           headerShown: false,
           title: 'Inicio',
@@ -50,6 +55,11 @@ export const TabNavigator = () => {
         children={() => <HomeController paySuccess={paySuccess} />}
       />
       <Tab.Screen
+        listeners={{
+          tabPress: e => {
+            logEvent('tabNavigationOpenCategories', { id: user.id, description: 'Abir categorías desde el menú inferior' });
+          }
+        }}
         name="CategoriesScreen"
         component={CategoriesController}
         options={{
@@ -67,6 +77,11 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
+        listeners={{
+          tabPress: e => {
+            logEvent('tabNavigationOpenPromotions', { id: user.id, description: 'Abrir promociones del menú inferior' });
+          }
+        }}
         name="PromosScreen"
         component={PromotionsController}
         options={{
@@ -84,6 +99,11 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
+        listeners={{
+          tabPress: e => {
+            logEvent('tabNavigationOpenStoreUbication', { id: user.id, description: 'Seleccionar ubicación de tiendas y estaciones del menú inferior' });
+          }
+        }}
         name="BranchesScreen"
         component={isGuest ? InviteSignUpController : InConstructionController}
         // component={isGuest ? InviteSignUpController : BranchesStack}
@@ -103,6 +123,11 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
+        listeners={{
+          tabPress: e => {
+            logEvent('tabNavigationAccount', { id: user.id, description: 'Crear cuenta desde menú de cuenta' });
+          }
+        }}
         name="MyAccountScreen"
         component={isGuest ? InviteSignUpController : MyAccountController}
         options={{

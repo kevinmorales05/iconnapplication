@@ -8,6 +8,8 @@ import { HomeStackParams } from 'navigation/types';
 import { useAppSelector, RootState } from 'rtk';
 import { ICON_HELPSADSMILE, ICON_HELPHAPPYSMILE, ICON_HELPVERYHAPPYSMILE } from 'assets/images';
 import { helpCenterServices } from 'services/helpCenter.services';
+import { logEvent } from 'utils/analytics';
+
 interface Props {}
 
 const StepsController: React.FC<Props> = () => {
@@ -15,7 +17,6 @@ const StepsController: React.FC<Props> = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'HelpSteps'>>();
   const { params } = route;
   const questionId = params?.questionId;
-  const moduleId = params?.moduleId;
   const toast = useToast();
   const [helpSteps, setHelpSteps] = useState([]);
   const [stepIdSaved, setStepIdSaved] = useState('');
@@ -27,13 +28,17 @@ const StepsController: React.FC<Props> = () => {
     { img: ICON_HELPVERYHAPPYSMILE, isQualified: false, qualificationValue: 10, color: theme.brandColor.iconn_green_original }
   ]);
 
-  const qualify = async (qualification: number) => {
+  const qualify = (qualification: number) => {
+    logEvent('accRateInformation', {
+      id: user.id,
+      description: 'Calificar información de respuesta',
+      questionId: questionId
+    });
     try {
-      console.log('user.id:::' ,user.userId);
       const newQualification = {
         questions_cats_id: questionId,
         qualification: qualification,
-        user_id: user.userId,
+        user_id: user.userId
       };
       await helpCenterServices.qualifyByQuestionId(newQualification).then(async newQualificationResponse => {
         toast.show({
@@ -57,12 +62,12 @@ const StepsController: React.FC<Props> = () => {
         user_id: user.userId
       };
       await helpCenterServices.updateQualificationByQuestionId(toUpdate, questionId).then(async updatedQualificationResponse => {
-        if(updatedQualificationResponse){
+        if (updatedQualificationResponse) {
           toast.show({
             message: 'La calificación de la pregunta ha sido actualizada con éxito.',
             type: 'success'
           });
-    
+
           for (let i = 0; i < qualificationStatus.length; i++) {
             if (qualificationStatus[i].qualificationValue == qualification) {
               qualificationStatus[i].isQualified = true;
@@ -85,7 +90,7 @@ const StepsController: React.FC<Props> = () => {
     try {
       let received;
       await helpCenterServices.getStepsListByQuestionId(parseInt(questionId)).then(async stepsResponse => {
-        if (stepsResponse && stepsResponse.data.length>0) {
+        if (stepsResponse && stepsResponse.data.length > 0) {
           setHelpSteps(stepsResponse.data);
         }
       });

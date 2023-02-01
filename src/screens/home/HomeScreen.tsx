@@ -8,9 +8,7 @@ import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
-import analytics from '@react-native-firebase/analytics';
-import { ForAnalytics } from 'utils/functions';
-
+import { logEvent } from 'utils/analytics';
 interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
@@ -67,15 +65,11 @@ const HomeScreen: React.FC<Props> = ({
       <View style={{ zIndex: 0, width: '100%' }}>
         <Touchable
           onPress={async () => {
-            try {
-              await analytics().logEvent('hmOpenDeliveryMethods', {
-                id: user.id,
-                description: 'Abrir modal para elegir el método de entrega'
-              });
-              //console.log('succesfully added to firebase!');
-            } catch (error) {
-              //console.log(error);
-            }
+            logEvent('hmOpenDeliveryMethods', {
+              id: user.id,
+              description: 'Abrir modal para elegir el método de entrega'
+            });
+            //console.log('succesfully added to firebase!');
             setToggle(current => {
               return !current;
             });
@@ -144,16 +138,12 @@ const HomeScreen: React.FC<Props> = ({
                 text="Ver todo"
                 typography="h5"
                 fontBold
-                onPress={async () => {
-                  try {
-                    await analytics().logEvent('hmRcmdfycMoreButton', {
-                      id: user.id,
-                      name: 'Abrir el detalle de la colección de recomendados para ti'
-                    });
-                    //console.log('succesfully added to firebase!');
-                  } catch (error) {
-                    //console.log(error);
-                  }
+                onPress={() => {
+                  logEvent('hmRcmdfycMoreButton', {
+                    id: user.id,
+                    name: 'Abrir el detalle de la colección de recomendados para ti'
+                  });
+                  //console.log('succesfully added to firebase!');
                   viewRecomendedProducts();
                 }}
               />
@@ -190,16 +180,12 @@ const HomeScreen: React.FC<Props> = ({
                 text="Ver todo"
                 typography="h5"
                 fontBold
-                onPress={async () => {
-                  try {
-                    await analytics().logEvent('hmOpcMoreButton', {
-                      id: user.id,
-                      name: 'Abrir el detalle de la colección en otros productos'
-                    });
-                    //console.log('succesfully added to firebase!');
-                  } catch (error) {
-                    //console.log(error);
-                  }
+                onPress={() => {
+                  logEvent('hmOpcMoreButton', {
+                    id: user.id,
+                    name: 'Abrir el detalle de la colección en otros productos'
+                  });
+                  //console.log('succesfully added to firebase!')
                   viewOtherProducts();
                 }}
               />
@@ -235,16 +221,12 @@ const HomeScreen: React.FC<Props> = ({
         <View style={{ zIndex: 2, position: 'absolute', top: 35, width: '100%' }}>
           <ShippingDropdown
             mode={mode}
-            handleMode={mode => async () => {
-              try {
-                await analytics().logEvent(`select_delivery_method_${mode}`, {
-                  id: user.id,
-                  description: `Selección de ${mode} en método de entrega`
-                });
-                //console.log('succesfully added to firebase!');
-              } catch (error) {
-                //console.log(error);
-              }
+            handleMode={mode => () => {
+              logEvent(`select_delivery_method_${mode}`, {
+                id: user.id,
+                description: `Selección de ${mode} en método de entrega`
+              });
+              //console.log('succesfully added to firebase!')
               setMode(mode);
             }}
             onPressAddAddress={onPressAddNewAddress}

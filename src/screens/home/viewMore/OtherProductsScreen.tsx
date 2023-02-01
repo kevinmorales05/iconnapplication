@@ -12,16 +12,23 @@ import { useNavigation } from '@react-navigation/native';
 import { ExistingProductInCartInterface, ProductInterface, ProductResponseInterface, RootState, useAppSelector } from 'rtk';
 import Config from 'react-native-config';
 import { useLoading } from 'context';
+import { logEvent } from 'utils/analytics';
 
 function OtherProductsScreen() {
   const [productsList, setProductsList] = useState<ProductInterface[]>();
-  const [size, setSize] = useState();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const loader = useLoading();
 
   const onPressSearch = () => {
+    logEvent('SelectSearchBar', {
+      id: user.id,
+      description: 'Seleccionar barra de búsqueda de tienda',
+      origin: 'collectionView',
+      collectionName: 'Other Products'
+    });
     navigate('SearchProducts');
   };
 
@@ -39,21 +46,55 @@ function OtherProductsScreen() {
         productId={item.productId}
         oldPrice={item.oldPrice}
         onPressAddCart={() => {
+          logEvent('addProduct', {
+            id: user.id,
+            description: 'Añadir un producto de la canasta en la colección',
+            origin: 'collectionView',
+            collectionName: 'Other Products',
+            productId: item.productId
+          });
           updateShoppingCartProduct!('create', item.productId);
         }}
         onPressAddQuantity={() => {
+          logEvent('plusProduct', {
+            id: user.id,
+            description: 'Sumar uno a un producto en la canasta en la colección',
+            origin: 'collectionView',
+            collectionName: 'Other Products',
+            productId: item.productId
+          });
           updateShoppingCartProduct!('add', item.productId);
         }}
         onPressDeleteCart={() => {
+          logEvent('removeProduct', {
+            id: user.id,
+            description: 'Sacar un producto de la canasta en la colección',
+            origin: 'collectionView',
+            collectionName: 'Other Products',
+            productId: item.productId
+          });
           updateShoppingCartProduct!('remove', item.productId);
         }}
         onPressDecreaseQuantity={() => {
+          logEvent('minusProduct', {
+            id: user.id,
+            description: 'Restar uno a un producto en la canasta en la colección',
+            origin: 'collectionView',
+            collectionName: 'Other Products',
+            productId: item.productId
+          });
           updateShoppingCartProduct!('substract', item.productId);
         }}
         notNeedMarginLeft
-        onPressOut={function (): void {
-          throw new Error('Function not implemented.');
-        }}
+        onPressAnalytics={async () =>
+          logEvent('openProduct', {
+            id: user.id,
+            description: 'Abrir un producto en una colección',
+            origin: 'collectionView',
+            collectionName: 'Other Products',
+            productId: item.productId
+          })
+        }
       />
     );
   };
@@ -62,10 +103,9 @@ function OtherProductsScreen() {
   const getCollection = async () => {
     const { OTHER_PRODUCTS } = Config;
     let dataList: ProductResponseInterface[] = [];
-    const response = await vtexProductsServices.getProductsByCollectionId(OTHER_PRODUCTS!).then(res => {
-      const { Data, Size } = res;
+    await vtexProductsServices.getProductsByCollectionId(OTHER_PRODUCTS!).then(res => {
+      const { Data } = res;
       dataList = Data;
-      setSize(Size);
     });
     return dataList;
   };
@@ -91,8 +131,6 @@ function OtherProductsScreen() {
         completeArray.push(newProduct);
       }
     }
-    console.log('this is the product list ', completeArray);
-
     setProductsList(completeArray);
     loader.hide();
   };

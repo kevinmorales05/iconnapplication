@@ -25,6 +25,7 @@ import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { useLoading } from 'context';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
+import { logEvent } from 'utils/analytics';
 
 const ordenBy: FilterItemTypeProps[] = [
   {
@@ -66,6 +67,7 @@ const CategoryProductsScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const { category } = route.params;
 
@@ -93,12 +95,26 @@ const CategoryProductsScreen: React.FC = () => {
 
   const userUpdated = (productId: string) => {
     updateShoppingCartProduct!('create', productId);
+    logEvent('catAddProduct', {
+      id: user.id,
+      description: 'Añadir producto a la canasta desde sección de categorías',
+      selectedCategoryId: category.id.toString(),
+      subCategoryId: idCategorySelected,
+      productId: productId.toString()
+    });
     hideModalForAdult();
   };
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
     if (isAdult) {
       updateShoppingCartProduct!('create', productId);
+      logEvent('catAddProduct', {
+        id: user.id,
+        description: 'Añadir producto a la canasta desde sección de categorías',
+        selectedCategoryId: category.id.toString(),
+        subCategoryId: idCategorySelected,
+        productId: productId.toString()
+      });
     } else {
       setProductId(productId);
       showModalForAdult();
@@ -267,6 +283,12 @@ const CategoryProductsScreen: React.FC = () => {
       setLoadingNewTab(true);
       setProductsRender([]);
       setIdCategorySelected(cateogry.id);
+      logEvent('catSelectSubcategory', {
+        id: user.id,
+        description: 'Seleccionar subcategoría',
+        selectedCategoryId: category.id.toString(),
+        subCategoryId: cateogry.id
+      });
     }
   };
 
@@ -349,15 +371,63 @@ const CategoryProductsScreen: React.FC = () => {
         onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
           updateShoppingCartProduct!('add', item.productId);
+          logEvent('catPlusProduct', {
+            id: user.id,
+            description: 'Sumar un producto en la canasta desde categorías',
+            selectedCategoryId: category.id.toString(),
+            subCategoryId: idCategorySelected,
+            productId: item.productId.toString()
+          });
         }}
         onPressDeleteCart={() => {
           updateShoppingCartProduct!('remove', item.productId);
+          logEvent('catRemoveProduct', {
+            id: user.id,
+            description: 'Eliminar un producto en la canasta desde categorías',
+            selectedCategoryId: category.id.toString(),
+            subCategoryId: idCategorySelected,
+            productId: item.productId.toString()
+          });
         }}
         onPressDecreaseQuantity={() => {
           updateShoppingCartProduct!('substract', item.productId);
+          logEvent('catMinusProduct', {
+            id: user.id,
+            description: 'Restar un producto en la canasta desde categorías',
+            selectedCategoryId: category.id.toString(),
+            subCategoryId: idCategorySelected,
+            productId: item.productId.toString()
+          });
         }}
         onPressOut={hideModalForAdult}
         notNeedMarginLeft
+        onPressAnalytics={() =>
+          logEvent('catSelectProduct', {
+            id: user.id,
+            description: 'Abrir un producto en subcategoría',
+            selectedCategoryId: category.id.toString(),
+            subCategoryId: idCategorySelected,
+            productId: item.productId.toString()
+          })
+        }
+        pressFavfromCategory={() =>
+          logEvent('catAddFavourite', {
+            id: user.id,
+            description: 'Añadir producto a favoritos desde sección de categorías',
+            selectedCategoryId: category.id.toString(),
+            subCategoryId: idCategorySelected,
+            productId: item.productId.toString()
+          })
+        }
+        pressNoFavfromCategory={() =>
+          logEvent('catRemoveFavourite', {
+            id: user.id,
+            description: 'Remover producto de favoritos desde sección de categorías',
+            selectedCategoryId: category.id.toString(),
+            subCategoryId: idCategorySelected,
+            productId: item.productId.toString()
+          })
+        }
       />
     );
   };

@@ -11,7 +11,7 @@ import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { Touchable } from 'components';
 import { useNavigation } from '@react-navigation/native';
 import { setDetailSelected } from 'rtk/slices/cartSlice';
-import { getProductDetailById, getProductSpecification } from 'services/vtexProduct.services';
+import { getProductSpecification } from 'services/vtexProduct.services';
 import { vtexUserServices } from 'services';
 import {
   addFav,
@@ -19,7 +19,6 @@ import {
   ItemsFavoritesInterface,
   ListItemsWrapperInterface,
   NewFavoritesResponseInterface,
-  ProductResponseInterface,
   RootState,
   setFav,
   setFavId,
@@ -45,32 +44,33 @@ interface CardProductProps {
   porcentDiscount?: number;
   notNeedMarginLeft?: boolean;
   isFavorite?: boolean;
-  onPressOut: () => void;
+  onPressAnalytics?: () => void;
+  pressFavfromCategory?: () => void;
+  pressNoFavfromCategory?: () => void;
 }
 
 const CardProduct: React.FC<CardProductProps> = ({
   ratingValue,
   price,
   oldPrice,
-  porcentDiscount,
   name,
   image,
   quantity,
   productId,
-  isFavorite,
   onPressAddCart,
   onPressDeleteCart,
   onPressAddQuantity,
   onPressDecreaseQuantity,
   notNeedMarginLeft,
-  onPressOut
+  onPressAnalytics,
+  pressFavfromCategory,
+  pressNoFavfromCategory
 }: CardProductProps) => {
   const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
 
   const validateCategoryForAddItem = () => {
     let isAdultInProductSpecification = false;
     getProductSpecification(productId).then(producSpecificationResponse => {
-      console.log(producSpecificationResponse);
       if (producSpecificationResponse.length > 0) {
         const { Value } = producSpecificationResponse[0];
         if (Value.length > 0) {
@@ -102,7 +102,7 @@ const CardProduct: React.FC<CardProductProps> = ({
   const [isFav, setIsFav] = useState<boolean>();
   const { favs, favsId, user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
-  const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
+  //const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
 
   const getIsFavorite = () => {
     if (favs) {
@@ -129,7 +129,6 @@ const CardProduct: React.FC<CardProductProps> = ({
 
   const addFavorite1 = async (newFav: ItemsFavoritesInterface) => {
     if (favsId === '') {
-      console.log('no hay favsid');
       const adding: ItemsFavoritesInterface[] = [];
       adding.push(newFav);
       dispatch(setFav(adding));
@@ -137,11 +136,8 @@ const CardProduct: React.FC<CardProductProps> = ({
     } else {
       let copyFavs = favs;
       dispatch(addFav(newFav));
-      console.log('INICIANDO', copyFavs);
       let copycopy = copyFavs.concat(newFav);
-      console.log('ANTES VTEX', copycopy);
-      const response = await uploadVtex(copycopy);
-      console.log('TERMINANDO', copycopy, response);
+      await uploadVtex(copycopy);
     }
   };
 
@@ -151,7 +147,6 @@ const CardProduct: React.FC<CardProductProps> = ({
       email: email as string,
       ListItemsWrapper: [{ ListItems: favs, IsPublic: true, Name: 'Wishlist' }]
     });
-    console.log('Añadiendo a vtex', response.DocumentId, favs);
     if (favsId === '') {
       dispatch(setFavId(response.DocumentId));
     }
@@ -171,14 +166,11 @@ const CardProduct: React.FC<CardProductProps> = ({
           email: email as string,
           ListItemsWrapper: [listItems]
         };
-        console.log('REMOVIDO', newFavList);
-        console.log('REMOVIDO!', product.Id);
-        const response = updateFavorites(tryList, 'update');
-        setFavList(newFavList);
+        updateFavorites(tryList, 'update');
+        //setFavList(newFavList);
         dispatch(setFav(newFavList));
         return newFavList;
       } else {
-        console.log('NO HABIA', favs);
         return favs;
       }
     });
@@ -190,11 +182,9 @@ const CardProduct: React.FC<CardProductProps> = ({
         email: email as string,
         ListItemsWrapper: updatedList.ListItemsWrapper
       };
-      const response = await vtexFavoriteServices.patchFavorites(email as string, listNoId);
-      console.log('HIGOS', response);
+      await vtexFavoriteServices.patchFavorites(email as string, listNoId);
     } else {
-      const response = await vtexFavoriteServices.patchFavorites(email as string, updatedList);
-      console.log('UVAS', response);
+      await vtexFavoriteServices.patchFavorites(email as string, updatedList);
     }
   }, []);
 
@@ -205,6 +195,7 @@ const CardProduct: React.FC<CardProductProps> = ({
         Name: name
       };
       removeFavorite(productToRemove);
+      if (pressNoFavfromCategory) pressNoFavfromCategory();
     }
     if (!isFav) {
       const productToAdd: ItemsFavoritesInterface = {
@@ -212,8 +203,8 @@ const CardProduct: React.FC<CardProductProps> = ({
         Name: name
       };
       addFavorite1(productToAdd);
+      if (pressFavfromCategory) pressFavfromCategory();
     }
-    console.log('ACTUAL FAVS', favs, favsId);
     setIsFav(!isFav);
   };
 
@@ -223,18 +214,17 @@ const CardProduct: React.FC<CardProductProps> = ({
         <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
           <Container row width={'100%'} space="between">
             <Container flex width={'100%'}>
-              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId) ? 
-              (
+              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId) ? (
                 productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
                 productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ||
                 productVsPromotion.get('' + productId).promotionType == 'campaign' ||
-                productVsPromotion.get('' + productId).promotionType == 'regular' ? 
-                (
+                productVsPromotion.get('' + productId).promotionType == 'regular' ? (
                   <Container
                     style={
-                      productVsPromotion.get('' + productId).promotionType == 'campaign' ||
-                      productVsPromotion.get('' + productId).promotionType == 'regular'
-                        ? (productVsPromotion.get('' + productId).percentualDiscountValue>0?styles.containerPorcentDiscount:styles.containerPorcentDiscountCero)
+                      productVsPromotion.get('' + productId).promotionType == 'campaign' || productVsPromotion.get('' + productId).promotionType == 'regular'
+                        ? productVsPromotion.get('' + productId).percentualDiscountValue > 0
+                          ? styles.containerPorcentDiscount
+                          : styles.containerPorcentDiscountCero
                         : styles.containerPromotionName
                     }
                   >
@@ -283,10 +273,11 @@ const CardProduct: React.FC<CardProductProps> = ({
         </ImageBackground>
         <Container>
           <Touchable
-            onPress={() => {
+            onPress={async () => {
               dispatch(setDetailSelected(productId));
-              console.log('DETAILID', productId);
+              //console.log('DETAILID', productId);
               navigate('ProductDetail', { productIdentifier: productId });
+              if (onPressAnalytics) onPressAnalytics();
             }}
           >
             <Container style={styles.containerTitle}>
@@ -313,7 +304,6 @@ const CardProduct: React.FC<CardProductProps> = ({
             round
             size={'xxxsmall'}
             onPress={() => {
-              console.log('ejecuta...');
               validateCategoryForAddItem();
             }}
             fontSize="h4"

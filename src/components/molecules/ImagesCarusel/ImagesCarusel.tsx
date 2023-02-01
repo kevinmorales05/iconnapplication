@@ -14,9 +14,10 @@ interface ImageCaruselProps {
   selectecPointColor: string;
   generalPointsColor: string;
   localImg?: boolean;
+  onPressZoom?: () => void;
 }
 
-const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, selectecPointColor, generalPointsColor, localImg }) => {
+const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, selectecPointColor, generalPointsColor, localImg, onPressZoom }) => {
   const [statusPoints, setStatusPoints] = useState([]);
   const [points, setPoints] = useState([]);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -38,6 +39,7 @@ const ImagesCarusel: React.FC<ImageCaruselProps> = ({ imagesList, imageSize, sel
   }, [imagesList, statusPoints]);
 
   const openImageZoom = () => {
+    if (onPressZoom) onPressZoom();
     navigate('ProductZoom', statusPoints);
   };
 

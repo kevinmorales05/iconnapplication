@@ -15,6 +15,7 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import { vtexPickUpPoints } from 'services';
 import { useAlert } from 'context';
 import analytics from '@react-native-firebase/analytics';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   onPressAddAddress: () => void;
@@ -112,16 +113,11 @@ const ShippingDropdown: React.FC<Props> = ({
         />
       )}
       <DefaultSeller
-        onPress={async () => {
-          try {
-            await analytics().logEvent('selectDeliveryChooseStore', {
-              id: user.id,
-              description: 'Seleccionar una tienda en el método de entrega'
-            });
-            //console.log('succesfully added to firebase!');
-          } catch (error) {
-            //console.log(error);
-          }
+        onPress={() => {
+          logEvent('selectDeliveryChooseStore', {
+            id: user.id,
+            description: 'Seleccionar una tienda en el método de entrega'
+          });
           navigate('SearchSeller');
         }}
       />
@@ -199,11 +195,12 @@ const DefaultAddress: React.FC<DefaultItemProps> = ({ onPressAddAddress, address
   );
 };
 
-const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, mode, isAddressModalSelectionVisible }) => {
+const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, onPressShowAddressesModal, isAddressModalSelectionVisible }) => {
   const { card } = styles;
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const [near, setNear] = useState<boolean>(false);
   const alert = useAlert();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (address?.postalCode && !isAddressModalSelectionVisible) {
@@ -224,7 +221,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
               },
               onAccept() {
                 alert.hide();
-                onPressShowAddressesModal();
+                if (onPressShowAddressesModal) onPressShowAddressesModal();
               }
             },
             'error',
@@ -294,7 +291,16 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
         </Container>
         {!address && (
           <Container style={{ marginVertical: 10 }}>
-            <Button onPress={onPressAddAddress!} round fontBold fontSize="h4" length="long">
+            <Button
+              onPress={() => {
+                logEvent('sdAddAddress', { id: user.id, description: 'Añadir dirección', origin: 'selectDSeliveryMethod' });
+                if (onPressAddAddress) onPressAddAddress();
+              }}
+              round
+              fontBold
+              fontSize="h4"
+              length="long"
+            >
               Agregar dirección
             </Button>
           </Container>

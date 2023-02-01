@@ -19,12 +19,10 @@ import {
   getProductRatingByProductIdThunk,
   ItemsFavoritesInterface,
   ListItemsWrapperInterface,
-  NewFavoritesResponseInterface,
   ProductInterface,
   RootState,
   setFav,
   setFavId,
-  UpdateType,
   useAppDispatch,
   useAppSelector
 } from 'rtk';
@@ -34,6 +32,7 @@ import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultA
 import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 import Config from 'react-native-config';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   itemId: string;
@@ -53,20 +52,7 @@ interface Props {
   prodId?: number;
 }
 
-const ProductDetailScreen: React.FC<Props> = ({
-  itemId,
-  fetchReviewData,
-  showModal,
-  star1,
-  star2,
-  star3,
-  star4,
-  star5,
-  totalCount,
-  average,
-  isReviewed,
-  prodId
-}) => {
+const ProductDetailScreen: React.FC<Props> = ({ itemId, fetchReviewData, showModal, star1, star2, star3, star4, star5, totalCount, average, isReviewed }) => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const [productPrice, setProductPrice] = useState(0);
   const [productDetail, setProductDetail] = useState(Object);
@@ -81,8 +67,8 @@ const ProductDetailScreen: React.FC<Props> = ({
   const [isFav, setIsFav] = useState<boolean>();
   const { favs, favsId, user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
-  const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
-  const [productId, setProductId] = useState<string>();
+  //const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
+  //const [productId, setProductId] = useState<string>();
   const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
   const dispatch = useAppDispatch();
   const { PRODUCT_DETAIL_ASSETS, COMPLEMENTRY_PRODUCTS } = Config;
@@ -91,63 +77,55 @@ const ProductDetailScreen: React.FC<Props> = ({
 
   const fetchData = useCallback(async () => {
     const imgRoot = PRODUCT_DETAIL_ASSETS;
-    await getSkuFilesById(itemId)
-      .then(async responseSku => {
-        let skuForImages = [];
-        if (responseSku) {
-          if (responseSku.length > 0) {
-            responseSku.map(sku => {
-              skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
-            });
-            setSkusForProductImages(skuForImages);
-          }
+    await getSkuFilesById(itemId).then(async responseSku => {
+      let skuForImages = [];
+      if (responseSku) {
+        if (responseSku.length > 0) {
+          responseSku.map(sku => {
+            skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
+          });
+          setSkusForProductImages(skuForImages);
         }
-      })
-      .catch(error => console.log(error));
+      }
+    });
+    //.catch(error => console.log(error));
 
-    await getProductDetailById(itemId)
-      .then(async responseProductDetail => {
-        setProductDetail(responseProductDetail);
-      })
-      .catch(error => console.log(error));
+    await getProductDetailById(itemId).then(async responseProductDetail => {
+      setProductDetail(responseProductDetail);
+    });
+    //.catch(error => console.log(error));
 
-    await vtexProductsServices
-      .getProductPriceByProductId(itemId)
-      .then(async responsePrice => {
-        setProductPrice(responsePrice);
-      })
-      .catch(error => console.log(error));
+    await vtexProductsServices.getProductPriceByProductId(itemId).then(async responsePrice => {
+      setProductPrice(responsePrice);
+    });
+    // .catch(error => console.log(error));
 
-    await vtexProductsServices
-      .getProductRatingByProductId(itemId)
-      .then(async responseRating => {
-        setProductRating(responseRating);
-      })
-      .catch(error => console.log(error));
+    await vtexProductsServices.getProductRatingByProductId(itemId).then(async responseRating => {
+      setProductRating(responseRating);
+    });
+    //.catch(error => console.log(error));
 
     setCartItemQuantity(isProductIdInShoppingCart(itemId));
   }, [cart, detailSelected]);
 
   const getComplementaryProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
-    vtexProductsServices
-      .getProductsByCollectionId(COMPLEMENTRY_PRODUCTS!)
-      .then(responseCollection => {
-        const { Data } = responseCollection;
-        let complementaryList = [];
-        if (Data) {
-          if (Data.length) {
-            Data.map(product => {
-              complementaryList.push({
-                productId: product.ProductId,
-                name: product.ProductName,
-                image: { uri: product.SkuImageUrl }
-              });
+    vtexProductsServices.getProductsByCollectionId(COMPLEMENTRY_PRODUCTS!).then(responseCollection => {
+      const { Data } = responseCollection;
+      let complementaryList = [];
+      if (Data) {
+        if (Data.length) {
+          Data.map(product => {
+            complementaryList.push({
+              productId: product.ProductId,
+              name: product.ProductName,
+              image: { uri: product.SkuImageUrl }
             });
-            refillProductsWithPrice(existingProductsInCart, complementaryList);
-          }
+          });
+          refillProductsWithPrice(existingProductsInCart, complementaryList);
         }
-      })
-      .catch(error => console.log(error));
+      }
+    });
+    //.catch(error => console.log(error));
   };
 
   async function refillProductsWithPrice(existingProductsInCart: ExistingProductInCartInterface[], products: ProductInterface[]) {
@@ -189,9 +167,14 @@ const ProductDetailScreen: React.FC<Props> = ({
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
     if (isAdult) {
+      logEvent('addProduct', {
+        id: user.id,
+        description: 'Añadir un producto de la canasta en la colección',
+        productId: productId.toString()
+      });
       updateShoppingCartProduct!('create', productId);
     } else {
-      setProductId(productId);
+      //setProductId(productId);
       showModalForAdult();
     }
   };
@@ -210,6 +193,11 @@ const ProductDetailScreen: React.FC<Props> = ({
               const { data } = userResponse;
               if (data[0].isAdult === true) {
                 updateShoppingCartProduct('create', itemId);
+                logEvent('pdAddProductProduct', {
+                  id: user.id,
+                  description: 'Añadir producto de la canasta en detalle de producto',
+                  productId: itemId.toString()
+                });
               } else {
                 showModalForAdult();
               }
@@ -217,9 +205,19 @@ const ProductDetailScreen: React.FC<Props> = ({
           });
         } else {
           updateShoppingCartProduct('create', itemId);
+          logEvent('pdAddProductProduct', {
+            id: user.id,
+            description: 'Añadir producto de la canasta en detalle de producto',
+            productId: itemId.toString()
+          });
         }
       } else {
         updateShoppingCartProduct('create', itemId);
+        logEvent('pdAddProductProduct', {
+          id: user.id,
+          description: 'Añadir producto de la canasta en detalle de producto',
+          productId: itemId.toString()
+        });
       }
     });
   };
@@ -292,7 +290,7 @@ const ProductDetailScreen: React.FC<Props> = ({
       let copyFavs = favs;
       dispatch(addFav(newFav));
       let copycopy = copyFavs.concat(newFav);
-      const response = await uploadVtex(copycopy);
+      await uploadVtex(copycopy);
     }
   };
 
@@ -322,14 +320,14 @@ const ProductDetailScreen: React.FC<Props> = ({
           email: email as string,
           ListItemsWrapper: [listItems]
         };
-        const response = uploadVtex(newFavList);
-        setFavList(newFavList);
+        uploadVtex(newFavList);
+        //setFavList(newFavList);
         dispatch(setFav(newFavList));
       }
     });
   };
 
-  const updateFavorites = useCallback(async (updatedList: FavoritesResponseInterface | NewFavoritesResponseInterface, updateType: UpdateType) => {
+  /*  const updateFavorites = useCallback(async (updatedList: FavoritesResponseInterface | NewFavoritesResponseInterface, updateType: UpdateType) => {
     if (updateType === 'new') {
       const listNoId: NewFavoritesResponseInterface = {
         email: email as string,
@@ -339,7 +337,7 @@ const ProductDetailScreen: React.FC<Props> = ({
     } else {
       const response = await vtexFavoriteServices.patchFavorites(email as string, updatedList);
     }
-  }, []);
+  }, []); */
 
   const changeFavorite = () => {
     if (isFav) {
@@ -349,6 +347,11 @@ const ProductDetailScreen: React.FC<Props> = ({
       };
       removeFavorite(productToRemove);
       setIsFav(!isFav);
+      logEvent('pdRemoveFavorite', {
+        id: user.id,
+        description: 'Remover favorito en detalle de producto',
+        productId: itemId.toString()
+      });
     }
     if (!isFav) {
       const productToAdd: ItemsFavoritesInterface = {
@@ -357,6 +360,11 @@ const ProductDetailScreen: React.FC<Props> = ({
       };
       addFavorite1(productToAdd);
       setIsFav(!isFav);
+      logEvent('pdAddFavorite', {
+        id: user.id,
+        description: 'Añadir favorito en detalle de producto',
+        productId: itemId.toString()
+      });
     }
   };
 
@@ -379,7 +387,14 @@ const ProductDetailScreen: React.FC<Props> = ({
                 imageSize={240}
                 selectecPointColor={theme.brandColor.iconn_dark_grey}
                 generalPointsColor={theme.brandColor.iconn_grey}
-              ></ImagesCarusel>
+                onPressZoom={() =>
+                  logEvent('pdOpenImage', {
+                    id: user.id,
+                    description: 'Abrir imagen de producto',
+                    productId: detailSelected.toString()
+                  })
+                }
+              />
             </Container>
             <Container row space="between" style={{ marginTop: 16, width: '100%', paddingHorizontal: 10 }}>
               <Container row>
@@ -426,25 +441,21 @@ const ProductDetailScreen: React.FC<Props> = ({
                     !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                       ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
                         ? '$' +
-                        (
-                          productVsPromotion.get('' + itemId).percentualDiscountValue > 0 ?
-                            (
-                              (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) -
+                          (productVsPromotion.get('' + itemId).percentualDiscountValue > 0
+                            ? (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) -
                               (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
                                 productVsPromotion.get('' + itemId).percentualDiscountValue) /
-                              100
-                            ) :
-                            (
-                              productVsPromotion.get('' + itemId).maximumUnitPriceDiscount != undefined ?
-                                productVsPromotion.get('' + itemId).maximumUnitPriceDiscount : 0
-                            )
-                        )
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                                100
+                            : productVsPromotion.get('' + itemId).maximumUnitPriceDiscount != undefined
+                            ? productVsPromotion.get('' + itemId).maximumUnitPriceDiscount
+                            : 0
+                          )
+                            .toFixed(2)
+                            .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                         : ''
                       : ''
                   }
-                ></TextContainer>
+                />
                 {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
                   productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
                     <Container style={{ marginLeft: 15, marginTop: 1 }}>
@@ -497,25 +508,15 @@ const ProductDetailScreen: React.FC<Props> = ({
                         'ahorra $' +
                         (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
                           ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
-                            ? (
-                              productVsPromotion.get('' + itemId).percentualDiscountValue > 0 ?
-                                (
-                                  (
-                                    (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
-                                      productVsPromotion.get('' + itemId).percentualDiscountValue) /
-                                    100
-                                  )
-                                ) : (
-                                  (
-                                    (
-                                      parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0)
-                                    )
-                                  ) - (
-                                    productVsPromotion.get('' + itemId).maximumUnitPriceDiscount != undefined ?
-                                      productVsPromotion.get('' + itemId).maximumUnitPriceDiscount : 0
-                                  )
-                                )
-                            )
+                            ? (productVsPromotion.get('' + itemId).percentualDiscountValue > 0
+                                ? (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
+                                    productVsPromotion.get('' + itemId).percentualDiscountValue) /
+                                  100
+                                : parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) -
+                                  (productVsPromotion.get('' + itemId).maximumUnitPriceDiscount != undefined
+                                    ? productVsPromotion.get('' + itemId).maximumUnitPriceDiscount
+                                    : 0)
+                              )
                                 .toFixed(2)
                                 .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                             : ''
@@ -550,6 +551,11 @@ const ProductDetailScreen: React.FC<Props> = ({
             <Touchable
               marginTop={16}
               onPress={() => {
+                logEvent('pdShowInformation', {
+                  id: user.id,
+                  description: 'Mostrar detalles del producto',
+                  productId: itemId.toString()
+                });
                 setShowAdditionalInfo(!showAdditionalInfo);
               }}
             >
@@ -561,13 +567,13 @@ const ProductDetailScreen: React.FC<Props> = ({
             {showAdditionalInfo ? (
               <Container style={{ marginTop: 10, paddingHorizontal: 10 }}>
                 <Container>
-                  <TextContainer text="Descripción del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
+                  <TextContainer text="Descripción del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold />
                   <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
                     {productDetail.Description}
                   </Text>
                 </Container>
                 <Container style={{ marginTop: 20 }}>
-                  <TextContainer text="Especificación del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
+                  <TextContainer text="Especificación del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold />
                   <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
                     {productDetail.Title}
                   </Text>
@@ -579,7 +585,7 @@ const ProductDetailScreen: React.FC<Props> = ({
           </Container>
 
           <Container style={{ paddingVertical: 10 }} backgroundColor={theme.brandColor.iconn_background}>
-            <TextContainer text={`¿Un último antojo?`} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
+            <TextContainer text={'¿Un último antojo?'} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <Container row style={{ width: '100%', marginBottom: 20, paddingLeft: 5, paddingRight: 30 }}>
                 {complementaryProducts.length === 0 ? (
@@ -594,6 +600,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                   complementaryProducts.map((prod, index) => {
                     return (
                       <CardProduct
+                        key={index}
                         image={prod.image!}
                         name={prod.name!}
                         ratingValue={prod.ratingValue!}
@@ -602,15 +609,37 @@ const ProductDetailScreen: React.FC<Props> = ({
                         quantity={prod.quantity!}
                         onPressAddCart={validateCategoryForAddItem}
                         onPressAddQuantity={() => {
+                          logEvent('plusProduct', {
+                            id: user.id,
+                            description: 'Sumar uno a un producto en la canasta en la colección',
+                            productId: prod.productId.toString()
+                          });
                           updateShoppingCartProduct('add', prod.productId);
                         }}
                         onPressDeleteCart={() => {
+                          logEvent('removeProduct', {
+                            id: user.id,
+                            description: 'Sacar un producto de la canasta en la colección de recomendados para ti',
+                            productId: prod.productId.toString()
+                          });
                           updateShoppingCartProduct('remove', prod.productId);
                         }}
                         onPressDecreaseQuantity={() => {
+                          logEvent('minusProduct', {
+                            id: user.id,
+                            description: 'Restar uno a un producto en la canasta en la colección',
+                            productId: prod.productId.toString()
+                          });
                           updateShoppingCartProduct('substract', prod.productId);
                         }}
                         onPressOut={hideModalForAdult}
+                        onPressAnalytics={async () =>
+                          logEvent('openProduct', {
+                            id: user.id,
+                            description: 'Abrir un producto en una colección',
+                            productId: prod.productId.toString()
+                          })
+                        }
                       />
                     );
                   })
@@ -651,14 +680,29 @@ const ProductDetailScreen: React.FC<Props> = ({
                 let currentQuantity = cartItemQuantity + 1;
                 setCartItemQuantity(currentQuantity);
                 updateShoppingCartProduct('add', itemId);
+                logEvent('pdPlusProductProduct', {
+                  id: user.id,
+                  description: 'Sumar producto de la canasta en detalle de producto',
+                  productId: itemId.toString()
+                });
               }}
               onPressDeleteCart={() => {
                 updateShoppingCartProduct('remove', itemId);
+                logEvent('pdRemoveProductProduct', {
+                  id: user.id,
+                  description: 'Remover producto de la canasta en detalle de producto',
+                  productId: itemId.toString()
+                });
               }}
               onPressDecreaseQuantity={() => {
                 let currentQuantity = cartItemQuantity - 1;
                 setCartItemQuantity(currentQuantity);
                 updateShoppingCartProduct('substract', itemId);
+                logEvent('pdMinusProductProduct', {
+                  id: user.id,
+                  description: 'Restar producto de la canasta en detalle de producto',
+                  productId: itemId.toString()
+                });
               }}
             />
           </Container>

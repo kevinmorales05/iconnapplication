@@ -6,6 +6,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../../../navigation/types';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TextContainer } from 'components/molecules';
+import { RootState, useAppSelector } from 'rtk';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   questionsData: [];
@@ -14,6 +16,8 @@ interface Props {
 
 const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+
   useEffect(() => {}, []);
 
   return (
@@ -23,12 +27,17 @@ const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
           questionsData.map((question, index) => {
             return (
               <NavigationMenuItem
-                key={index+'nav'}
+                key={index + 'nav'}
                 text={question.description}
                 disable={false}
                 icon={<MaterialCommunityIcons style={{ textAlign: 'center' }} size={24} name="comment-question-outline" color={theme.fontColor.dark} />}
                 onPressNavigateTo={() => {
                   navigate('HelpSteps', { moduleId: moduleId, questionId: question.questions_cats_id, question: question.description });
+                  logEvent('accOpenQuestion', {
+                    id: user.id,
+                    description: 'Calificar información de respuesta',
+                    questionId: question.questions_cats_id
+                  });
                 }}
               />
             );

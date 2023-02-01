@@ -11,11 +11,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { useLoading } from 'context';
+import { logEvent } from 'utils/analytics';
 
 const PromotionsScreen: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [productFromPromotion, setProductFromPromotion] = useState([]);
   const { promotions, productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
   const [visible, setVisible] = useState<boolean>(false);
@@ -32,11 +34,13 @@ const PromotionsScreen: React.FC = () => {
 
   const userUpdated = (productId: string) => {
     updateShoppingCartProduct!('create', productId);
+    logEvent('promoAddProduct', { id: user.id, description: 'Añadir producto a la canasta', productId: productId.toString() });
     hideModalForAdult();
   };
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
     if (isAdult) {
+      logEvent('promoAddProduct', { id: user.id, description: 'Añadir producto a la canasta', productId: productId.toString() });
       updateShoppingCartProduct!('create', productId);
     } else {
       setProductId(productId);
@@ -58,7 +62,6 @@ const PromotionsScreen: React.FC = () => {
     } else {
       loader.show();
     }
-
     let prodList = promotions;
     let prodListWithQuantities = [];
     if (prodList.length > 0) {
@@ -114,15 +117,19 @@ const PromotionsScreen: React.FC = () => {
         onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
           updateShoppingCartProduct!('add', item.productId);
+          logEvent('promoAddProduct', { id: user.id, description: 'Sumar un producto a la canasta', productId: item.productId.toString() });
         }}
         onPressDeleteCart={() => {
           updateShoppingCartProduct!('remove', item.productId);
+          logEvent('promoDeleteProduct', { id: user.id, description: 'Eliminar un producto de la canasta', productId: item.productId.toString() });
         }}
         onPressDecreaseQuantity={() => {
           updateShoppingCartProduct!('substract', item.productId);
+          logEvent('promoMinusProduct', { id: user.id, description: 'Restar un producto de la canasta', productId: item.productId.toString() });
         }}
         notNeedMarginLeft
         productPromotions={new Map<string, Object>()}
+        onPressAnalytics={() => logEvent('promoOpenProduct', { id: user.id, description: 'Abrir producto', productId: item.productId.toString() })}
       />
     );
   };
