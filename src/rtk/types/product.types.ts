@@ -11,6 +11,12 @@ export interface ProductInterface {
   porcentDiscount?: number;
   isFavorite?: boolean;
   category?: string;
+  promotionType?: string;
+  percentualDiscountValue?: number;
+  maximumUnitPriceDiscount?: number;
+  promotionName?: string;
+  costDiscountPrice?: string;
+  promotionId?: string;
 }
 
 export interface ProductResponseInterface {
@@ -20,20 +26,11 @@ export interface ProductResponseInterface {
   Position: string;
   ProductName: string;
   SkuImageUrl: string;
+  qualificationAverage: number;
+  sellingPrice: string;
+  promotion?: PromotionCacheInterface;
+  costDiscountPrice: string;
 }
-export interface ProductRaitingResponseInterface {
-  average: number;
-  totalCount: number;
-}
-export interface ProductPriceResponseInterface {
-  itemId: string;
-  listPrice: number;
-  costPrice: number;
-  markup: number;
-  basePrice: number;
-  fixedPrices: [];
-}
-
 export interface ExistingProductInCartInterface {
   itemId: string;
   quantity?: number;
@@ -51,14 +48,67 @@ export interface NewFavoritesResponseInterface {
 }
 
 export interface ListItemsWrapperInterface {
-  ListItems: ItemsFavoritesInterface[],
-  IsPublic: boolean,
-  Name: string,
+  ListItems: ItemsFavoritesInterface[];
+  IsPublic: boolean;
+  Name: string;
 }
 
 export interface ItemsFavoritesInterface {
-  Id: string,
-  Name: string,
+  Id: string;
+  Name: string;
+}
+
+export interface ProductsByCollectionInterface {
+  collectionId: number;
+  pageSize: number;
+  pageNumber: number;
+  selectedStore?: number;
+}
+
+export interface ProductCacheInterface {
+  store: number;
+  collectionId?: number;
+}
+export interface ProductDeatilCacheInterface {
+  Name: string;
+  DescriptionShort: string;
+  Description: string;
+  Title: string;
+  average: number;
+  selling_price: string;
+  promotionType?: string;
+  percentualDiscountValue?: number;
+  maximumUnitPriceDiscount?: number;
+  totalCount?: number;
+  promotionName?: string;
+  costDiscountPrice?: string;
+}
+
+export interface PromotionCacheInterface {
+  type: string;
+  percentual_discount_value: string;
+  maximum_unit_price_discount: string;
+  name: string;
+  costDiscountPrice: string;
+}
+
+export interface ProductsBySubCategorieRequestInterface {
+  categoryId: number;
+  pageSize: number;
+  pageNumber: number;
+  subCategoryId?: number;
+  storeId?: number;
+}
+
+export interface ProductsByPromotionsRequestInterface {
+  pageSize: number;
+  pageNumber: number;
+  storeId?: number;
+}
+
+export interface ProductListCacheRequestInterface {
+  products: string[];
+  storeId?: number;
 }
 
 export type UpdateType = 'new' | 'update';

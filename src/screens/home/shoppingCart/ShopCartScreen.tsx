@@ -17,7 +17,7 @@ interface Props {
   onPressCheckout: () => void;
   messageType: messageType | undefined;
   countProducts: number;
-  cartItems: number
+  cartItems: number;
 }
 
 import { RootState, useAppSelector, useAppDispatch, messageType } from 'rtk';
@@ -54,20 +54,20 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
       .then(response => {
         const { items, messages, totalizers } = response;
         let orderItems = [];
-        console.log({items})
+        console.log({ items });
         items.map((item, index) => {
           orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
         });
         setRequestList(orderItems);
         setMessages(messages);
-        console.log({messagesCar: messages})
+        console.log({ messagesCar: messages });
         setTotalizers(totalizers[0]);
         setOrderFormId(cart.orderFormId);
         let withoutStockM = new Map();
         if (messages.length > 0) {
           messages.map(value => {
             // TODO: relocate message type to .ENV
-            if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code =='withoutPriceFulfillment') {
+            if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code == 'withoutPriceFulfillment') {
               withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
             }
           });
@@ -81,8 +81,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               value.hasErrorMessage = true;
               value.errorMessage = withoutStockM.get(index);
             } else {
-              let priceDefinition = (value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0)
-              calculated = calculated + (priceDefinition / 100);
+              let priceDefinition = value.priceDefinition != undefined && value.priceDefinition.total != undefined ? value.priceDefinition.total : 0;
+              calculated = calculated + priceDefinition / 100;
               value.hasErrorMessage = false;
               value.errorMessage = '';
             }
@@ -96,20 +96,20 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   }, []);
 
   useEffect(() => {
-    if(routes.length){
-      if(routes[routes.length-1].name === 'ShopCart'){
+    if (routes.length) {
+      if (routes[routes.length - 1].name === 'ShopCart') {
         fetchData();
-        console.log({routes})
+        console.log({ routes });
       }
     }
   }, [routes]);
 
   useEffect(() => {
-    if(messageType){
-      if(messages){
-        if(messages.some((mess)=> mess.status === 'error')){
-          if(cart.items.length === cartItems + countProducts){
-            switch(messageType){
+    if (messageType) {
+      if (messages) {
+        if (messages.some(mess => mess.status === 'error')) {
+          if (cart.items.length === cartItems + countProducts) {
+            switch (messageType) {
               case 'add':
                 toast.show({
                   message: 'Se actualizó el artículo en la canasta.',
@@ -123,13 +123,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 });
                 break;
             }
-          }else{
-            if(cart.items.length === cartItems){
+          } else {
+            if (cart.items.length === cartItems) {
               toast.show({
                 message: 'No está disponible ningún artículo de tu pedido anterior.',
                 type: 'error'
               });
-            }else{
+            } else {
               toast.show({
                 message: 'Algunos artículos no estaban disponibles en esta tienda',
                 type: 'limited'
@@ -137,8 +137,8 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             }
           }
         }
-      }else{
-        switch(messageType){
+      } else {
+        switch (messageType) {
           case 'add':
             toast.show({
               message: 'Se actualizó el artículo en la canasta.',
@@ -157,10 +157,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   }, [messageType, messages]);
 
   useEffect(() => {
-    if(routes.length){
-      if(routes[routes.length-1].name === 'ShopCart'){
+    if (routes.length) {
+      if (routes[routes.length - 1].name === 'ShopCart') {
         fetchData();
-        console.log({routes})
+        console.log({ routes });
       }
     }
   }, [routes]);
@@ -192,7 +192,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               let unAvailableItemsNumber = 0;
               messages.map(value => {
                 // TODO: relocate message type to .ENV
-                if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code =='withoutPriceFulfillment') {
+                if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code == 'withoutPriceFulfillment') {
                   withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
                   unAvailableItemsNumber++;
                 }
@@ -213,9 +213,9 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 value.hasErrorMessage = true;
                 value.errorMessage = withoutStockM.get(index);
               } else {
-                let priceDefinition = (value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0)
+                let priceDefinition = value.priceDefinition != undefined && value.priceDefinition.total != undefined ? value.priceDefinition.total : 0;
                 console.log('real Value: ' + priceDefinition);
-                calculated = calculated + (priceDefinition / 100);
+                calculated = calculated + priceDefinition / 100;
                 value.hasErrorMessage = false;
                 value.errorMessage = '';
               }
@@ -410,13 +410,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         </Container>
         <Container>
           <Container>
-            <CustomText text="" fontSize={7}></CustomText>
+            <CustomText text="" fontSize={7} />
           </Container>
           <Container>
-            <TextContainer text={item.quantity} textAlign="auto" fontSize={14}></TextContainer>
+            <TextContainer text={item.quantity} textAlign="auto" fontSize={14} />
           </Container>
           <Container>
-            <CustomText text="" fontSize={7}></CustomText>
+            <CustomText text="" fontSize={7} />
           </Container>
         </Container>
         <Container style={{ marginRight: 13 }}>
@@ -464,11 +464,11 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         ) : (
           <></>
         )}
-        <Container center style={{marginTop:16, backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
+        <Container center style={{ marginTop: 16, backgroundColor: theme.brandColor.iconn_background, paddingHorizontal: 16 }}>
           <Container
             style={{
-              width: moderateScale(340), 
-              justifyContent: 'center', 
+              width: moderateScale(340),
+              justifyContent: 'center',
               paddingHorizontal: '0.5%'
             }}
           >
@@ -477,11 +477,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               fontBold
               outline
               round
-              color='black'
+              color="black"
               length="long"
-              style={{borderColor:`${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%'}}
-              leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{tintColor:'red', height:20, width:20}} />}
-              onPress={emptyShoppingCart}>
+              style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
+              leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
+              onPress={emptyShoppingCart}
+            >
               Vaciar canasta
             </Button>
           </Container>
@@ -491,8 +492,9 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             fontSize={12}
             marginTop={24}
             textAlign="justify"
-            marginBottom={8}/>
-          <CustomText text=""></CustomText>
+            marginBottom={8}
+          />
+          <CustomText text=""/>
         </Container>
       </Container>
     );
@@ -500,7 +502,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
 
   const Item: React.FC = ({ value, arrayIndex, orderForm }) => {
     const deleteShoppingCartItem = () => {
-      console.log('***delete item: ' + value.id + ' arrayIndex: ' + arrayIndex);
       const orderItems = requestList;
       orderItems[arrayIndex].quantity = 0;
       try {
@@ -512,12 +513,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         updateShoppingCartQuantityServiceCall(orderForm, { orderItems }, 'delete', 'Se eliminó el artículo de la canasta.', arrayIndex);
         //setLoadingStatus(false);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       } finally {
         //loader.hide();
       }
     };
 
+    const imageUrl: string = value.imageUrl.replace('-55-55', '-1000-1000');
     return (
       <Container
         row
@@ -529,17 +531,17 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           height: 120,
           backgroundColor: theme.brandColor.iconn_white,
           borderRadius: 8,
-          paddingBottom: 10, 
+          paddingBottom: 10
         }}
       >
-        <Container style={{paddingHorizontal: 10}} >
+        <Container style={{ paddingHorizontal: 10 }}>
           <Touchable
             onPress={() => {
               dispatch(setDetailSelected(value.id));
               navigate('ProductDetail', { productIdentifier: value.id });
             }}
           >
-            <Image source={{ uri: value.imageUrl }} style={{ marginTop: 10, width: 80, height: 88 }} />
+            <Image source={{ uri: imageUrl }} style={{ marginTop: 10, width: 80, height: 88 }} />
           </Touchable>
         </Container>
         <Container space="between" style={{ marginTop: 10, width: '100%', height: 58 }}>
@@ -561,13 +563,21 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 <></>
               ) : (
                 <TextContainer
-                  text={'$' + ( (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id)) && (productVsPromotion.get('' + value.id).promotionType == 'regular' || productVsPromotion.get('' + value.id).promotionType == 'campaign')? 
-                  ((((value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0)) / 100) ) :
-                  ( (value.priceDefinition!=undefined && value.priceDefinition.total!=undefined?value.priceDefinition.total:0) / 100) )
-                  .toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}
+                  text={
+                    '$' +
+                    (!!productVsPromotion &&
+                    Object.keys(productVsPromotion).length &&
+                    productVsPromotion.has('' + value.id) &&
+                    (productVsPromotion.get('' + value.id).promotionType == 'regular' || productVsPromotion.get('' + value.id).promotionType == 'campaign')
+                      ? (value.priceDefinition != undefined && value.priceDefinition.total != undefined ? value.priceDefinition.total : 0) / 100
+                      : (value.priceDefinition != undefined && value.priceDefinition.total != undefined ? value.priceDefinition.total : 0) / 100
+                    )
+                      .toFixed(2)
+                      .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                  }
                   fontBold
                   marginLeft={10}
-                ></TextContainer>
+                />
               )}
             </Container>
           </Container>
@@ -575,40 +585,52 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             <Container>
               <Text
                 style={{
-                  textDecorationLine: (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id)) ?
-                    ((productVsPromotion.get('' + value.id).promotionType == 'campaign' || productVsPromotion.get('' + value.id).promotionType == 'regular') ? 'line-through' : 'none') : 'none',
+                  textDecorationLine:
+                    !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id)
+                      ? productVsPromotion.get('' + value.id).promotionType == 'campaign' || productVsPromotion.get('' + value.id).promotionType == 'regular'
+                        ? 'line-through'
+                        : 'none'
+                      : 'none',
                   color: theme.brandColor.iconn_grey,
                   fontSize: theme.fontSize.h6,
                   marginTop: 3
                 }}
               >
-                {'$' + (value.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ((!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id)) ?
-                ((productVsPromotion.get('' + value.id).promotionType == 'campaign' || productVsPromotion.get('' + value.id).promotionType == 'regular')?'':' c/u' ) : ' c/u')}
+                {'$' +
+                  (value.price / 100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') +
+                  (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id)
+                    ? productVsPromotion.get('' + value.id).promotionType == 'campaign' || productVsPromotion.get('' + value.id).promotionType == 'regular'
+                      ? ''
+                      : ' c/u'
+                    : ' c/u')}
               </Text>
             </Container>
-            {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id) ?
-              (
-                productVsPromotion.get('' + value.id).promotionType == 'campaign' || productVsPromotion.get('' + value.id).promotionType == 'regular' ?
-                  (
-                    <Container style={{ marginLeft: 10 }}>
-                      <TextContainer
-                        numberOfLines={1}
-                        text={'$' + (
-                          productVsPromotion.get('' + value.id).percentualDiscountValue > 0 ?
-                            (
-                              (value.price / 100) - ((productVsPromotion.get('' + value.id).percentualDiscountValue * (value.price / 100)) / 100)
-                            ) : productVsPromotion.get('' + value.id).maximumUnitPriceDiscount
-                        )
-                          .toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' c/u'}
-                        textColor="grey"
-                        fontSize={12}
-                        marginTop={4}
-                      ></TextContainer>
-                    </Container>
-                  ) : <></>
-              ) :
+            {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + value.id) ? (
+              productVsPromotion.get('' + value.id).promotionType == 'campaign' || productVsPromotion.get('' + value.id).promotionType == 'regular' ? (
+                <Container style={{ marginLeft: 10 }}>
+                  <TextContainer
+                    numberOfLines={1}
+                    text={
+                      '$' +
+                      (productVsPromotion.get('' + value.id).percentualDiscountValue > 0
+                        ? value.price / 100 - (productVsPromotion.get('' + value.id).percentualDiscountValue * (value.price / 100)) / 100
+                        : productVsPromotion.get('' + value.id).maximumUnitPriceDiscount
+                      )
+                        .toFixed(2)
+                        .replace(/\d(?=(\d{3})+\.)/g, '$&,') +
+                      ' c/u'
+                    }
+                    textColor="grey"
+                    fontSize={12}
+                    marginTop={4}
+                  />
+                </Container>
+              ) : (
+                <></>
+              )
+            ) : (
               <></>
-            }
+            )}
           </Container>
           <Container row crossCenter space="between" style={{ width: '73%', marginTop: 4 }}>
             <Button
@@ -675,7 +697,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               height: 137,
               backgroundColor: theme.brandColor.iconn_white,
               borderRadius: 8,
-              paddingVertical: 15,
+              paddingVertical: 15
             }}
           >
             <Container
@@ -685,7 +707,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 borderBottomColor: theme.brandColor.iconn_white,
                 borderTopColor: theme.brandColor.iconn_white,
                 borderWidth: 1,
-                alignItems: 'center',
+                alignItems: 'center'
               }}
             >
               <Container style={{ marginLeft: moderateScale(7), marginRight: moderateScale(6) }}>
@@ -708,7 +730,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
                 ></TextContainer>
               </Container>
             </Container>
-            <Container style={{ marginLeft: moderateScale(17), marginTop: moderateScale(10)}}>
+            <Container style={{ marginLeft: moderateScale(17), marginTop: moderateScale(10) }}>
               <Button
                 fontSize="h6"
                 color="iconn_red_original"
@@ -721,7 +743,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               >
                 Eliminar artículos no disponibles
               </Button>
-              </Container>
+            </Container>
           </Container>
         ) : (
           <></>
@@ -762,21 +784,17 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
 
   const fullCartFooter = (
     <Container space="evenly" style={{ width: '100%', height: '25%', backgroundColor: theme.fontColor.white }}>
-      <Container center style={{paddingHorizontal: 0}} >
-      <Container row space="between" style={{ width: '90%' }}>
-        <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
-        <CustomText
-          text={'$' + (subTotalCalculated).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'}
-          fontSize={18}
-          fontBold
-        ></CustomText>
+      <Container center style={{ paddingHorizontal: 0 }}>
+        <Container row space="between" style={{ width: '90%' }}>
+          <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+          <CustomText text={'$' + subTotalCalculated.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'} fontSize={18} fontBold></CustomText>
+        </Container>
+        <Container row space="between" style={{ marginTop: 10, width: '90%' }}>
+          <TextContainer text="Gastos de envío:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+          <TextContainer marginBottom={10} text="Por calcular" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+        </Container>
       </Container>
-      <Container row space="between" style={{ marginTop: 10, width: '90%' }}>
-        <TextContainer text="Gastos de envío:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
-        <TextContainer marginBottom={10} text="Por calcular" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
-      </Container>
-      </Container>
-      <Container center style={{paddingHorizontal: 15}}>
+      <Container center style={{ paddingHorizontal: 15 }}>
         <Button
           length="long"
           fontSize="h5"
@@ -785,7 +803,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           disabled={!subTotalCalculated}
           onPress={onPressCheckout}
           borderColor={subTotalCalculated ? 'iconn_green_original' : 'iconn_green_original_med'}
-          style={{ marginBottom: 8, width: '100%', backgroundColor: subTotalCalculated ? theme.brandColor.iconn_green_original : theme.brandColor.iconn_green_original_med, height: 50, borderRadius: 12}}
+          style={{
+            marginBottom: 8,
+            width: '100%',
+            backgroundColor: subTotalCalculated ? theme.brandColor.iconn_green_original : theme.brandColor.iconn_green_original_med,
+            height: 50,
+            borderRadius: 12
+          }}
         >
           Continuar
         </Button>
@@ -793,7 +817,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     </Container>
   );
 
-  const cartFooter = productList != undefined && productList.length > 0 ? fullCartFooter  : emptyCartFooter;
+  const cartFooter = productList != undefined && productList.length > 0 ? fullCartFooter : emptyCartFooter;
   const cartBody = productList != undefined && productList.length > 0 ? fullCart : emptyCart;
 
   return (

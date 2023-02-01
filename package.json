@@ -1,6 +1,6 @@
 {
   "name": "oh4y0",
-  "version": "1.10.31",
+  "version": "1.10.34",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -51,6 +51,7 @@
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
     "@reduxjs/toolkit": "^1.9.1",
+    "@shopify/flash-list": "^1.4.1",
     "@types/base-64": "^1.0.0",
     "@types/crypto-js": "^4.1.1",
     "@types/react-native-snap-carousel": "^3.8.5",
@@ -72,6 +73,7 @@
     "react-native-collapsible": "^1.6.0",
     "react-native-config": "^1.4.11",
     "react-native-device-info": "^10.3.0",
+    "react-native-fast-image": "^8.6.3",
     "react-native-fbsdk-next": "^10.0.0",
     "react-native-geolocation-service": "^5.3.0",
     "react-native-gesture-handler": "^2.5.0",

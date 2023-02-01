@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { vtexProductsServices } from 'services';
 import { Button, CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import theme from 'components/theme/theme';
@@ -9,23 +8,27 @@ import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
-import { ExistingProductInCartInterface, ProductInterface, ProductResponseInterface, RootState, useAppSelector } from 'rtk';
+import { ExistingProductInCartInterface, ProductInterface, ProductsByCollectionInterface, RootState, useAppSelector } from 'rtk';
 import Config from 'react-native-config';
 import { useLoading } from 'context';
+import { useProducts } from '../hooks/useProducts';
 
 function RecommededForYouScreen() {
   const [productsList, setProductsList] = useState<ProductInterface[]>();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const loader = useLoading();
+
+  const { fetchProducts, products } = useProducts();
 
   const onPressSearch = () => {
     navigate('SearchProducts');
   };
 
   //render item function
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({ item }: { item: ProductInterface }) => {
     return (
       <CardProduct
         key={item.productId}
@@ -37,6 +40,10 @@ function RecommededForYouScreen() {
         quantity={item.quantity}
         productId={item.productId}
         oldPrice={item.oldPrice}
+        promotionType={item.promotionType}
+        percentualDiscountValue={item.percentualDiscountValue}
+        promotionName={item.promotionName}
+        costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={() => {
           updateShoppingCartProduct!('create', item.productId);
         }}
@@ -60,39 +67,30 @@ function RecommededForYouScreen() {
   //Function to get collection of products
   const getCollection = async () => {
     const { RECOMMENDED_PRODUCTS } = Config;
-    let dataList: ProductResponseInterface[] = [];
-    const response = await vtexProductsServices.getProductsByCollectionId(RECOMMENDED_PRODUCTS!).then(res => {
-      const { Data } = res;
-      dataList = Data;
-    });
-    return dataList;
+    const productOther: ProductsByCollectionInterface = {
+      collectionId: Number.parseInt(RECOMMENDED_PRODUCTS ? RECOMMENDED_PRODUCTS : '0'),
+      pageSize: 10,
+      pageNumber: 0,
+      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+    };
+    fetchProducts(productOther);
   };
 
   const getInfoProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     loader.show();
-    const copyArray = await getCollection();
     const completeArray: ProductInterface[] = [];
-    for (const item of copyArray) {
-      const price = await vtexProductsServices.getProductPriceByProductId(item.ProductId);
-      const raiting = await vtexProductsServices.getProductRatingByProductId(item.ProductId);
-      if (price && raiting) {
+    if (products) {
+      for (const item of products) {
         const newProduct: ProductInterface = {
-          productId: item.ProductId,
-          name: item.ProductName,
-          image: item.SkuImageUrl,
-          price: price.sellingPrice,
-          oldPrice: price.sellingPrice,
-          porcentDiscount: 0,
-          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === item.ProductId.toString())?.quantity : 0,
-          ratingValue: raiting.average
+          ...item,
+          image: item.image.uri,
+          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === item.productId.toString())?.quantity : 0
         };
         completeArray.push(newProduct);
       }
     }
-
     setProductsList(completeArray);
     loader.hide();
-    //return completeArray;
   };
 
   const getExistingProductsInCart = () => {
@@ -112,7 +110,11 @@ function RecommededForYouScreen() {
   useEffect(() => {
     const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
     getInfoProducts(existingProducts);
-  }, [cart]);
+  }, [cart, products]);
+
+  useEffect(() => {
+    getCollection();
+  }, []);
 
   return (
     <SafeArea
