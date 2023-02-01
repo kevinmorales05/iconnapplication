@@ -11,6 +11,7 @@ import theme from '../../theme/theme';
 interface PointItemProps {
   onPress: (marker: PointInterface, mode: PointDisplayMode) => void;
   point: PointInterface;
+  pointFound?: boolean;
 }
 
 /**
@@ -18,7 +19,7 @@ interface PointItemProps {
  * @param PointItemProps
  * @returns React.FC
  */
-const PointItem: React.FC<PointItemProps> = ({ onPress, point }) => {
+const PointItem: React.FC<PointItemProps> = ({ onPress, point, pointFound = false }) => {
   const cardImageStyle: StyleProp<ImageStyle> = {
     width: point.type === 'binomial' ? 50 : 35,
     height: point.type === 'binomial' ? 60 : 35,
@@ -27,7 +28,7 @@ const PointItem: React.FC<PointItemProps> = ({ onPress, point }) => {
   };
 
   return (
-    <Touchable onPress={() => onPress(point, 'list')}>
+    <Touchable onPress={() => onPress(point, pointFound ? 'map' : 'list')}>
       <Container style={{ height: 85, paddingHorizontal: 16, paddingTop: 14 }}>
         <Container row space="between" center height={'60%'}>
           <Container width={'15%'} center>
@@ -46,15 +47,22 @@ const PointItem: React.FC<PointItemProps> = ({ onPress, point }) => {
             />
           </Container>
           {/* TODO: DT Alex. Alex should provide a new version of json markers, this version should have shopName property for gas stations. */}
-          <Container width={'60%'} flex style={{ left: -8 }}>
-            <TextContainer text={point.shopName} typography="h5" />
+          <Container width={pointFound ? '75%' : '60%'} flex style={{ left: -8 }}>
+            <TextContainer text={point.shopName} fontSize={10} />
+            <TextContainer text={point.address} numberOfLines={4} fontSize={10} />
           </Container>
-          <Container width={'25%'} row alignment="end">
-            <TextContainer text="Detalles" typography="h5" fontBold underline textColor={theme.brandColor.iconn_green_original} marginRight={20} />
-            <Octicons name="chevron-right" size={24} color={theme.brandColor.iconn_green_original} style={{ right: 8, bottom: 4 }} />
+          <Container width={pointFound ? '10%' : '25%'} row alignment="end">
+            {pointFound ? (
+              <Octicons name="link-external" size={24} color={theme.brandColor.iconn_dark_grey} style={{ right: 8 }} />
+            ) : (
+              <>
+                <TextContainer text="Detalles" typography="h5" fontBold underline textColor={theme.brandColor.iconn_green_original} marginRight={20} />
+                <Octicons name="chevron-right" size={24} color={theme.brandColor.iconn_green_original} style={{ right: 8, bottom: 4 }} />
+              </>
+            )}
           </Container>
         </Container>
-        <Container row alignment="start" height={'40%'}>
+        <Container row alignment="start" height={'40%'} style={{ marginTop: 4 }}>
           <Container width={'15%'} />
           <Container row width={'70%'} style={{ left: -8 }}>
             <TextContainer text="DISTANCIA" textColor={theme.fontColor.placeholder} typography="h6" />

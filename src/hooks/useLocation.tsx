@@ -1,24 +1,27 @@
-import { Location } from 'rtk';
+import { Location, setAppInitialPreferences, useAppDispatch } from 'rtk';
 import { useEffect, useRef, useState } from 'react';
 import { usePermissions } from 'context';
 import Geolocation from 'react-native-geolocation-service';
 
 export const useLocation = () => {
   const { permissions, askLocationPermission } = usePermissions();
-  const [hasLocation, setHasLocation] = useState(false);
   const [initialUserLocation, setInitialUserLocation] = useState<Location>();
   const [userLocation, setUserLocation] = useState<Location>();
   const watchId = useRef<number>();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (permissions.locationStatus === 'granted') {
+      dispatch(setAppInitialPreferences());
       getCurrentLocation().then(location => {
         setInitialUserLocation(location);
         setUserLocation(location);
-        setHasLocation(true);
       });
     } else if (permissions.locationStatus === 'denied') {
       askLocationPermission();
+    } else if (permissions.locationStatus === 'blocked' || permissions.locationStatus === 'unavailable') {
+      setInitialUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
+      setUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
     }
   }, [permissions.locationStatus]);
 
@@ -60,5 +63,13 @@ export const useLocation = () => {
     }
   };
 
-  return { hasLocation, initialUserLocation, getCurrentLocation, followUserLocation, userLocation, stopTrackingUserLocation };
+  /**
+   * Center de camera to temporal location while the user give the permissions to his real location.
+   * @param location location by municipality, is the default location per point in the defaultPoints.json
+   */
+  const setLocationByMunicipality = (location: Location) => {
+    setUserLocation(location);
+  };
+
+  return { initialUserLocation, getCurrentLocation, followUserLocation, userLocation, stopTrackingUserLocation, setLocationByMunicipality };
 };

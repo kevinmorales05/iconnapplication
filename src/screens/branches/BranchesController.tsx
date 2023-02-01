@@ -4,10 +4,22 @@ import { BranchesStackParams } from 'navigation/types';
 import { Details, Region } from 'react-native-maps';
 import { Dimensions, Platform } from 'react-native';
 import { getNearbyPoints } from 'utils/geolocation';
-import { Location, PointDisplayMode, PointInfoNode, PointInterface, PointType, RootState, TabItem, useAppSelector } from 'rtk';
+import {
+  BranchesState,
+  Location,
+  PointDisplayMode,
+  PointInfoNode,
+  PointInterface,
+  PointType,
+  RootState,
+  setAppStateAndMunicipality,
+  TabItem,
+  useAppDispatch,
+  useAppSelector
+} from 'rtk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { PointDetailSheet } from 'components';
-import { POINTS } from 'assets/files';
+import { PointDetailSheet, StateMunicipalitySheet } from 'components';
+import { DEFAULT_POINTS, POINTS } from 'assets/files';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { showLocation } from 'react-native-map-link';
 import { useLocation } from 'hooks/useLocation';
@@ -20,20 +32,37 @@ import theme from 'components/theme/theme';
 
 const BranchesController: React.FC<any> = ({ route }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<BranchesStackParams>>();
+  const dispatch = useAppDispatch();
   const { permissions } = usePermissions();
-  const { userLocation } = useLocation();
+  const { userLocation, setLocationByMunicipality } = useLocation();
   const toast = useToast();
   const [markers, setMarkers] = useState<PointInterface[]>();
   const [finalMarkers, setFinalMarkers] = useState<PointInterface[]>();
   const [marker, setMarker] = useState<PointInterface>();
   const insets = useSafeAreaInsets();
   const [tabSelected, setTabSelected] = useState(1);
-  const { visibleStoreSymbology, visibleSearchByDistance } = useAppSelector((state: RootState) => state.app);
+  const {
+    visibleStoreSymbology,
+    visibleSearchByDistance,
+    state: branchesState,
+    municipality,
+    latitude: defaultLatitude,
+    longitude: defaultLongitude
+  } = useAppSelector((state: RootState) => state.app);
   const [radiusOfSearch, setRadiusOfSearch] = useState(1);
   const [latitudeDelta, setLatitudeDelta] = useState(0.04);
   const [visibleSearchByAreaButton, setVisibleSearchByAreaButton] = useState(false);
   const [searchArea, setSearchArea] = useState<Location>();
+  const [searchCoordinatesByGesture, setSearchCoordinatesByGesture] = useState<Location>();
+  const [isButtonSearchBar, setIsButtonSearchBar] = useState(true);
+  const [search, setSearch] = useState<string>('');
+  const [markersFound, setMarkersFound] = useState<PointInterface[]>();
+  const [oneMarker, setOneMarker] = useState(false);
 
+  /**
+   * Is used to check if there is an activated filters.
+   * Uses route.params to get the params when user come back from filters screen.
+   */
   useEffect(() => {
     if (route?.params && route?.params.filterObject && markers) {
       /**
@@ -129,126 +158,126 @@ const BranchesController: React.FC<any> = ({ route }) => {
         const typeOfsearch = getTypeOfSearch();
         // console.log('El tipo de busqueda que se hará es: ', typeOfsearch);
 
-        let newMarkersWithAvailableServices: PointInterface[] = [];
+        if (typeOfsearch !== undefined) {
+          let newMarkersWithAvailableServices: PointInterface[] = [];
 
-        for (const property in route?.params.filterObject) {
-          if (property === 'info_binomial' || property === 'info_seven' || property === 'info_petro') {
-            // console.log('Saltamos al siguiente property porque el actual es un botón: ', property);
-            continue; // because its a main button.
+          for (const property in route?.params.filterObject) {
+            if (property === 'info_binomial' || property === 'info_seven' || property === 'info_petro') {
+              // console.log('Saltamos al siguiente property porque el actual es un botón: ', property);
+              continue; // because its a main button.
+            }
+
+            const mapPropertyValue = getMaperValue(property);
+            // console.log('Vamos a buscar el type:', mapPropertyValue);
+
+            const filteredMarkers = markers?.filter((mrkr: PointInterface) => {
+              let markerHasProperty: boolean = false;
+
+              // This "if" means that the user has filtered by services that are only in 7eleven.
+              if (typeOfsearch === '7eleven') {
+                // This "if" means that we only search in points of type "7eleven" and "binomial"
+                if (mrkr?.type === '7eleven' || mrkr?.type === 'binomial') {
+                  // 1. Buscamos en Seven food:
+                  markerHasProperty = mrkr.info.seven.food.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 2. Buscamos en Seven others:
+                  markerHasProperty = mrkr.info.seven.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 3. Buscamos en Seven extra:
+                  markerHasProperty = mrkr.info.seven.extra.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                }
+              }
+
+              // This "if" means that the user has filtered by services that are only in petro.
+              if (typeOfsearch === 'petro') {
+                // This "if" means that we only search in points of type "petro" and "binomial"
+                if (mrkr?.type === 'petro' || mrkr?.type === 'binomial') {
+                  // 1. Buscamos en Petro complementaryProducts:
+                  markerHasProperty = mrkr.info.petro.complementaryProducts.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 2. Buscamos en Petro others:
+                  markerHasProperty = mrkr.info.petro.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 3. Buscamos en Petro payMethods:
+                  markerHasProperty = mrkr.info.petro.payMethods.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 4. Buscamos en Petro evouchers:
+                  markerHasProperty = mrkr.info.petro.evouchers.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 5. Buscamos en Petro benefits:
+                  markerHasProperty = mrkr.info.petro.benefits.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                }
+              }
+
+              // This "if" means that the user has filtered by services that are only in binomial.
+              if (typeOfsearch === 'binomial') {
+                // This "if" means that we only search in points of type "binomial"
+                if (mrkr?.type === 'binomial') {
+                  // 1. Buscamos en Seven food:
+                  markerHasProperty = mrkr.info.seven.food.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 2. Buscamos en Seven others:
+                  markerHasProperty = mrkr.info.seven.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 3. Buscamos en Seven extra:
+                  markerHasProperty = mrkr.info.seven.extra.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+
+                  // 1. Buscamos en Petro complementaryProducts:
+                  markerHasProperty = mrkr.info.petro.complementaryProducts.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 2. Buscamos en Petro others:
+                  markerHasProperty = mrkr.info.petro.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 3. Buscamos en Petro payMethods:
+                  markerHasProperty = mrkr.info.petro.payMethods.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 4. Buscamos en Petro evouchers:
+                  markerHasProperty = mrkr.info.petro.evouchers.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                  // 5. Buscamos en Petro benefits:
+                  markerHasProperty = mrkr.info.petro.benefits.some((item: PointInfoNode) => item.type === mapPropertyValue);
+                  if (markerHasProperty) return mrkr;
+                }
+              }
+            });
+
+            newMarkersWithAvailableServices = newMarkersWithAvailableServices!.concat(filteredMarkers!);
           }
 
-          const mapPropertyValue = getMaperValue(property);
-          // console.log('Vamos a buscar el type:', mapPropertyValue);
+          // Filter by uniques Ids.
+          const uniquePoints: PointInterface[] = newMarkersWithAvailableServices.filter((v, i, a) => a.findIndex(v2 => v2.id === v.id) === i);
 
-          const filteredMarkers = markers?.filter((mrkr: PointInterface) => {
-            let markerHasProperty: boolean = false;
-
-            // This "if" means that the user has filtered by services that are only in 7eleven.
-            if (typeOfsearch === '7eleven') {
-              // This "if" means that we only search in points of type "7eleven" and "binomial"
-              if (mrkr?.type === '7eleven' || mrkr?.type === 'binomial') {
-                // 1. Buscamos en Seven food:
-                markerHasProperty = mrkr.info.seven.food.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 2. Buscamos en Seven others:
-                markerHasProperty = mrkr.info.seven.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 3. Buscamos en Seven extra:
-                markerHasProperty = mrkr.info.seven.extra.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-              }
-            }
-
-            // This "if" means that the user has filtered by services that are only in petro.
-            if (typeOfsearch === 'petro') {
-              // This "if" means that we only search in points of type "petro" and "binomial"
-              if (mrkr?.type === 'petro' || mrkr?.type === 'binomial') {
-                // 1. Buscamos en Petro complementaryProducts:
-                markerHasProperty = mrkr.info.petro.complementaryProducts.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 2. Buscamos en Petro others:
-                markerHasProperty = mrkr.info.petro.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 3. Buscamos en Petro payMethods:
-                markerHasProperty = mrkr.info.petro.payMethods.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 4. Buscamos en Petro evouchers:
-                markerHasProperty = mrkr.info.petro.evouchers.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 5. Buscamos en Petro benefits:
-                markerHasProperty = mrkr.info.petro.benefits.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-              }
-            }
-
-            // This "if" means that the user has filtered by services that are only in binomial.
-            if (typeOfsearch === 'binomial') {
-              // This "if" means that we only search in points of type "binomial"
-              if (mrkr?.type === 'binomial') {
-                // 1. Buscamos en Seven food:
-                markerHasProperty = mrkr.info.seven.food.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 2. Buscamos en Seven others:
-                markerHasProperty = mrkr.info.seven.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 3. Buscamos en Seven extra:
-                markerHasProperty = mrkr.info.seven.extra.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-
-                // 1. Buscamos en Petro complementaryProducts:
-                markerHasProperty = mrkr.info.petro.complementaryProducts.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 2. Buscamos en Petro others:
-                markerHasProperty = mrkr.info.petro.others.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 3. Buscamos en Petro payMethods:
-                markerHasProperty = mrkr.info.petro.payMethods.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 4. Buscamos en Petro evouchers:
-                markerHasProperty = mrkr.info.petro.evouchers.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-                // 5. Buscamos en Petro benefits:
-                markerHasProperty = mrkr.info.petro.benefits.some((item: PointInfoNode) => item.type === mapPropertyValue);
-                if (markerHasProperty) return mrkr;
-              }
-            }
-          });
-
-          newMarkersWithAvailableServices = newMarkersWithAvailableServices!.concat(filteredMarkers!);
-        }
-
-        // Filter by uniques Ids.
-        const uniquePoints: PointInterface[] = newMarkersWithAvailableServices.filter((v, i, a) => a.findIndex(v2 => v2.id === v.id) === i);
-
-        // console.log('En estas tiendas es donde lo encontraras:', JSON.stringify(uniquePoints, null, 3));
-        // console.log('Total de tiendas en donde lo encontraras:', uniquePoints?.length);
-        if (uniquePoints.length === 0) {
-          if (radiusOfSearch < 5) {
-            toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área o aumentar el radio de busqueda.', type: 'error' });
-          } else {
-            toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área.', type: 'error' });
+          // console.log('En estas tiendas es donde lo encontraras:', JSON.stringify(uniquePoints, null, 3));
+          // console.log('Total de tiendas en donde lo encontraras:', uniquePoints?.length);
+          if (uniquePoints.length === 0) {
+            toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
           }
+          setFinalMarkers(uniquePoints);
+        } else {
+          setFinalMarkers(markers);
         }
-        setFinalMarkers(uniquePoints);
       };
 
       filterNearbyMarkers();
     } else {
+      // console.log('dejamos todo como estaba...');
       // If user hasnt filtered, then show the default geolocable markers.
       setFinalMarkers(markers);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [route?.params, markers]);
 
+  /**
+   * Is used when the userLocation and the radius of search has been changed, then reload the search of branches.
+   */
   useEffect(() => {
     if (userLocation && radiusOfSearch) {
       const nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], POINTS as PointInterface[], radiusOfSearch);
       if (nearbyMarkers.length === 0) {
-        if (radiusOfSearch < 5) {
-          toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área o aumentar el radio de busqueda.', type: 'error' });
-        } else {
-          toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área.', type: 'error' });
-        }
+        toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
       }
       setMarkers(nearbyMarkers);
     }
@@ -256,12 +285,48 @@ const BranchesController: React.FC<any> = ({ route }) => {
   }, [userLocation, radiusOfSearch]);
 
   /**
+   * Is used when user has blocked the location permission.
+   * Check if there is a location stored in redux to set temporal location in the map and search the branches.
+   */
+  useEffect(() => {
+    if (permissions.locationStatus === 'blocked' || permissions.locationStatus === 'unavailable') {
+      if (branchesState === '' && municipality === '' && defaultLatitude === 0 && defaultLongitude === 0) {
+        bottomSheetSMRef.current?.present();
+      } else {
+        if (defaultLatitude && defaultLongitude) {
+          setSearchArea({ latitude: defaultLatitude, longitude: defaultLongitude });
+          setLocationByMunicipality({ latitude: defaultLatitude, longitude: defaultLongitude });
+        } else {
+          toast.show({ message: `Error en la geolocalización. ${permissions.locationStatus}`, type: 'warning' });
+        }
+      }
+    } else if (permissions.locationStatus === 'granted') {
+      bottomSheetSMRef.current?.close();
+      // There is a weird behavior in android when modal permissions appears and after appears the modal for state and municipality.
+      // For that reason it is necessary to close and present consecutively.
+      if (Platform.OS === 'android') {
+        setTimeout(() => {
+          bottomSheetSMRef.current?.close();
+        }, 700);
+      }
+    }
+    // else {
+    //   // Denied
+    //   toast.show({ message: `Por favor active los permisos de geolocalización. ${permissions.locationStatus}`, type: 'warning' });
+    // }
+  }, [permissions.locationStatus]);
+
+  /**
    * Search the markers based on the search area and considers the last selected search radius. And it also keeps the original markers.
    */
   const onSearchMarkersByArea = () => {
     // We get the points close to the new search area.
     // Remember that in the case of "Buscar en esta area" the "search radius" from the user's real location does not matter more than to limit the radius in this initial search.
-    let nearbyMarkers = getNearbyPoints([searchArea?.latitude!, searchArea?.longitude!], POINTS as PointInterface[], radiusOfSearch); // After this line we use 100000 as search radius.
+    let nearbyMarkers = getNearbyPoints(
+      [searchCoordinatesByGesture?.latitude!, searchCoordinatesByGesture?.longitude!],
+      POINTS as PointInterface[],
+      radiusOfSearch
+    ); // After this line we use 100000 as search radius.
     if (nearbyMarkers.length > 0) {
       // We obtain the distance between the real location of the user and each of the new points in the new zone.
       nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], nearbyMarkers as PointInterface[], 100000);
@@ -275,11 +340,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
       // the total distance of each marker from the actual location of the user.
       setMarkers(uniquePoints);
     } else {
-      if (radiusOfSearch < 5) {
-        toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área o aumentar el radio de busqueda.', type: 'error' });
-      } else {
-        toast.show({ message: 'No se encontraron resultados. Intenta desplazarte hacia otra área.', type: 'error' });
-      }
+      toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
     }
   };
 
@@ -287,12 +348,11 @@ const BranchesController: React.FC<any> = ({ route }) => {
    * Set the current marker/point in the BottomModalSheet
    * @param point marker
    */
-  const onPressMarker = (point: PointInterface, mode?: PointDisplayMode) => {
+  const onPressMarker = (point: PointInterface, _mode?: PointDisplayMode) => {
     // TODO: increase gorhom library to 4.4.3 to fix expand() method of bottomSheet, in case of markers mode list.
     // console.log(JSON.stringify(point, null, 3));
     // console.log('mode', mode);
-    if (mode === 'list') bottomSheetRef.current?.present();
-    else bottomSheetRef.current?.present();
+    bottomSheetRef.current?.present();
     setMarker(point);
   };
 
@@ -301,17 +361,25 @@ const BranchesController: React.FC<any> = ({ route }) => {
 
   // SnapPoints for PointDetailSheet
   const snapPoints = useMemo(
-    () => [
-      Platform.OS === 'android' ? '50%' : '50%',
-      Platform.OS === 'android' ? Dimensions.get('window').height : Dimensions.get('window').height - insets.top
-    ],
+    () => ['46%', Platform.OS === 'android' ? Dimensions.get('window').height - insets.top + 16 : Dimensions.get('window').height - insets.top],
     []
   );
+
+  // ref to StateMunicipalitySheet
+  const bottomSheetSMRef = useRef<BottomSheetModal>(null);
+
+  // SnapPoints for PointDetailSheet
+  const snapPointsSM = useMemo(() => [Platform.OS === 'android' ? '45%' : '40%', Platform.OS === 'android' ? '45%' : '40%'], []);
 
   /**
    * Hide PointDetailSheet.
    */
   const handleClosePress = () => bottomSheetRef.current?.close();
+
+  /**
+   * Hide StateMunicipalitySheet.
+   */
+  const handleClosePressSM = () => bottomSheetSMRef.current?.close();
 
   /**
    * Expand the bottomSheet.
@@ -404,7 +472,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
     // console.log('Cambia region de busqueda', r, d);
     if (d.isGesture) {
       setVisibleSearchByAreaButton(true);
-      setSearchArea({ latitude: r.latitude, longitude: r.longitude });
+      setSearchCoordinatesByGesture({ latitude: r.latitude, longitude: r.longitude });
     }
 
     // Details: contain if the movement is by gestures or not.
@@ -434,23 +502,133 @@ const BranchesController: React.FC<any> = ({ route }) => {
     setRadiusOfSearch(km);
   };
 
+  /**
+   * Function used when user tap on SearchBar.
+   */
+  const onPressSearch = () => {
+    setIsButtonSearchBar(false);
+    bottomSheetRef.current?.close();
+  };
+
+  /**
+   * Function used when user tap on arrow left to cancel search.
+   */
+  const onPressCancelSearch = () => {
+    setIsButtonSearchBar(true);
+  };
+
+  /**
+   * Search method continuously executed while the user types.
+   * @param str User typing.
+   */
+  const onChangeTextSearch = (str: string) => {
+    if (str.trim().length > 0) {
+      const pointsFound = finalMarkers?.filter((mrkr: PointInterface) => {
+        try {
+          if (
+            mrkr.shopName.search(new RegExp(str, 'i')) >= 0 ||
+            mrkr.address.search(new RegExp(str, 'i')) >= 0 ||
+            mrkr.postalCode.toString().search(new RegExp(str, 'i')) >= 0
+          ) {
+            return mrkr;
+          }
+        } catch (error) {
+          // console.warn('marcador con inconsistencias', JSON.stringify(mrkr, null, 3));
+        }
+      });
+      setMarkersFound(pointsFound);
+    } else {
+      setMarkersFound(undefined);
+    }
+  };
+
+  /**
+   * Function to navigate the user to the Map with the found point.
+   * @param point is the Point selected from the PointsFound list.
+   * @param mode Always will be "map" because we want that when user tap on any found element, He should go to map.
+   */
+  const setMarkerFound = (point: PointInterface, mode?: PointDisplayMode) => {
+    setIsButtonSearchBar(true);
+    setPointDisplayMode(mode!);
+    setFinalMarkers([point]);
+    setMarker(point);
+    setOneMarker(true); // TODO: checate (Si fuera necesario) cuando debes regresar a false este state, has el flujo de ir a un punto buscandolo con el searchbar y luego de ahi dependiendo lo que vaya hacer el usuario es que lo pones en false.
+    bottomSheetRef.current?.present();
+  };
+
+  /**
+   * This method is executed when user press "Search/Buscar" from his keyboard.
+   * This type of search will return all matches considering the search radius and the filter currently active.
+   * IMPORTANT: THIS METHOD IS UNUSED BECAUSE THE SEARCH IS TRIGGERED AS SOON AS THE USER STARTS TYPING.
+   */
+  const onEndWriting = () => {
+    // console.log('palabra a buscar: ', search);
+  };
+
+  /**
+   * Used from map view.
+   * Store in redux the location of the town of municipality selected. Also update the map view and center the camera.
+   * @param stateToSearch Selected state from select input in the map.
+   * @param municipalityToSearch Selected municipality from select input in the map.
+   */
+  const onSelectMunicipality = (stateToSearch: any, municipalityToSearch: any) => {
+    if (stateToSearch && municipalityToSearch) {
+      const municipalityTown: BranchesState = DEFAULT_POINTS.find(dp => dp.stateName === stateToSearch);
+      const latlon: Location = {
+        latitude: municipalityTown.municipalities.find(mt => mt.municipalityName === municipalityToSearch)?.latitude!,
+        longitude: municipalityTown.municipalities.find(mt => mt.municipalityName === municipalityToSearch)?.longitude!
+      };
+      dispatch(
+        setAppStateAndMunicipality({ state: stateToSearch, municipality: municipalityToSearch, latitude: latlon.latitude, longitude: latlon.longitude })
+      );
+      setSearchCoordinatesByGesture(latlon);
+      setSearchArea(latlon);
+      setLocationByMunicipality(latlon);
+    }
+  };
+
+  /**
+   * Used from Modal.
+   * Store in redux the location of the town of municipality selected. Also update the map view and center the camera.
+   * @param fieldValues state and municipality strings.
+   */
+  const onSearchStateMunicipality = (fieldValues: any) => {
+    onSelectMunicipality(fieldValues.state, fieldValues.municipality);
+    handleClosePressSM();
+  };
+
   return (
     <SafeArea barStyle="dark" backgroundColor={theme.brandColor.iconn_white} childrenContainerStyle={{ paddingHorizontal: 0 }}>
       <BranchesScreen
+        filterObject={route?.params ? route?.params.filterObject! : undefined}
+        isButtonSearchBar={isButtonSearchBar}
         latitudeDelta={latitudeDelta}
         markers={finalMarkers!}
+        markersFound={markersFound!}
         onChangeRegionComplete={onChangeRegionComplete}
         onChangeSearchOfRadius={onChangeSearchOfRadius}
+        onChangeTextSearch={onChangeTextSearch}
+        oneMarker={oneMarker}
+        onEndWriting={onEndWriting}
+        onPressCancelSearch={onPressCancelSearch}
         onPressMarker={onPressMarker}
         onPressOut={handleClosePress}
+        onPressSearch={onPressSearch}
         onPressSeeList={onPressSeeList}
         onPressSeeMap={onPressSeeMap}
         onPressShowDetails={onPressShowDetails}
         onPressShowFilters={onPressShowFilters}
         onRegionChange={onRegionChange}
         onSearchMarkersByArea={onSearchMarkersByArea}
+        onSelectMunicipality={onSelectMunicipality}
         permissions={permissions}
         pointDisplayMode={pointDisplayMode}
+        radiusOfSearch={radiusOfSearch}
+        search={search}
+        searchArea={searchArea}
+        setMarkerFound={setMarkerFound}
+        setSearch={setSearch}
+        states={DEFAULT_POINTS as BranchesState[]}
         visibleSearchByAreaButton={visibleSearchByAreaButton}
         visibleSearchByDistance={visibleSearchByDistance!}
         visibleStoreSymbology={visibleStoreSymbology!}
@@ -464,6 +642,13 @@ const BranchesController: React.FC<any> = ({ route }) => {
         onPressTab={onPressTab}
         snapPoints={snapPoints}
         tabSelected={tabSelected}
+      />
+      <StateMunicipalitySheet
+        bottomSheetRef={bottomSheetSMRef}
+        onPressClose={handleClosePressSM}
+        onSubmit={onSearchStateMunicipality}
+        snapPoints={snapPointsSM}
+        states={DEFAULT_POINTS as BranchesState[]}
       />
     </SafeArea>
   );

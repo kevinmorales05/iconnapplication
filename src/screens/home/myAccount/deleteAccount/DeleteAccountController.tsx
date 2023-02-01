@@ -9,7 +9,9 @@ import {
   setShoppingCartInitialState,
   useAppSelector,
   setPromotionsInitialState,
-  RootState
+  RootState,
+  setAppInitialPreferences,
+  setWalletInitialState
 } from 'rtk';
 import { emptyShoppingCar, clearShoppingCartMessages } from 'services/vtexShoppingCar.services';
 import DeleteAccountScreen from './DeleteAccountScreen';
@@ -28,19 +30,21 @@ const DeleteAccountController: React.FC = () => {
       clientId: `CL-${user.id}`
     };
     const response = await vtexDocsServices.createDoc('CD', dataUser);
-    if (!!response.DocumentId) {
+    if (response.DocumentId) {
       try {
         await clearShoppingCartMessages(cart.orderFormId, {});
         await emptyShoppingCar(cart.orderFormId, {});
         await authServices.logOutUser();
       } catch (error) {
-        //console.log('LOGOUT ERROR', error);
+        // console.log('LOGOUT ERROR', error);
       } finally {
         dispatch(setAppInitialState());
+        dispatch(setAppInitialPreferences());
         dispatch(setAuthInitialState());
         dispatch(setInvoicingInitialState());
         dispatch(setShoppingCartInitialState());
         dispatch(setPromotionsInitialState());
+        dispatch(setWalletInitialState());
       }
     }
   };
