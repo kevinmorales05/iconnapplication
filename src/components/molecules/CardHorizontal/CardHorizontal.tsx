@@ -1,10 +1,11 @@
 import React from 'react';
 import { Container } from '../../atoms/Container';
 import { TextContainer } from '../TextContainer';
-import { Image, ImageSourcePropType, StyleProp, ViewStyle, Dimensions } from 'react-native';
+import { ImageSourcePropType, StyleProp, ViewStyle } from 'react-native';
 import theme from '../../theme/theme';
 import { Touchable } from '../../atoms/Touchable';
 import { moderateScale } from 'utils/scaleMetrics';
+import FastImage from 'react-native-fast-image';
 
 interface CardHorizontalProps {
   text: string;
@@ -12,14 +13,13 @@ interface CardHorizontalProps {
   onPress: () => void;
 }
 
-
 const CardHorizontal: React.FC<CardHorizontalProps> = ({ text, image, onPress }: CardHorizontalProps) => {
   const taxInfoStyle: StyleProp<ViewStyle> = {
     borderRadius: moderateScale(10),
     marginTop: moderateScale(12),
     height: moderateScale(80),
     backgroundColor: theme.brandColor.iconn_white,
-    width: moderateScale(160) 
+    width: moderateScale(160)
   };
 
   return (
@@ -32,7 +32,7 @@ const CardHorizontal: React.FC<CardHorizontalProps> = ({ text, image, onPress }:
             </Container>
           </Container>
           <Container flex={0.5} crossCenter center height={'100%'}>
-            <Image source={image} resizeMode={'contain'} style={{ width: '100%', height: '100%' }} />
+            <FastImage source={image} resizeMode={'contain'} style={{ width: '100%', height: '100%' }} />
           </Container>
         </Container>
       </Touchable>

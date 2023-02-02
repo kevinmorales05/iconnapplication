@@ -23,7 +23,7 @@ const FavoriteScreen: React.FC<Props> = ({ completeList }) => {
     navigate('SearchProducts');
   };
 
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({ item }: { item: ProductInterface }) => {
     return (
       <CardProduct
         key={item.productId}
@@ -35,6 +35,10 @@ const FavoriteScreen: React.FC<Props> = ({ completeList }) => {
         quantity={item.quantity}
         productId={item.productId}
         oldPrice={item.oldPrice}
+        promotionType={item.promotionType}
+        percentualDiscountValue={item.percentualDiscountValue}
+        promotionName={item.promotionName}
+        costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={() => {
           updateShoppingCartProduct!('create', item.productId);
         }}

@@ -1,31 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { BasketCounter, Container, CustomText, SafeArea } from 'components';
 import theme from 'components/theme/theme';
 import PromotionsScreen from './PromotionsScreen';
-import { vtexPromotionsServices } from 'services/vtexPromotions.services';
-import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
-import PriceWithDiscount from '../../../components/molecules/PriceWithDiscount/PriceWithDiscount';
-import { RootState, useAppSelector } from 'rtk';
-import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
-import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from '../../../navigation/types';
-import { vtexProductsServices } from 'services';
 import { moderateScale } from 'utils/scaleMetrics';
 import { StyleSheet } from 'react-native';
 
 const PromotionsController: React.FC = ({ navigation, route }: any) => {
-  
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  
-
   /*
   const onPressBack = () => {
     navigate('SearchProducts');
   };*/
 
   React.useLayoutEffect(() => {
-    console.log({routeEffect: route.name})
     if (!navigation || !route) return;
 
     // Get stack parent by id
@@ -49,16 +35,9 @@ const PromotionsController: React.FC = ({ navigation, route }: any) => {
       : undefined;
   }, [navigation, route]);
 
-
   useEffect(() => {
     //fetchData();
   }, []);
-
-
-
-  const onPressOut = () => {
- 
-  };
 
   return (
     <SafeArea
@@ -69,19 +48,15 @@ const PromotionsController: React.FC = ({ navigation, route }: any) => {
       barStyle="dark"
     >
       <Container row style={styles.containerHeaderBar}>
-          <Container style={{ justifyContent: 'center' }} flex={0.12}/>
-          <Container flex={0.67} style={{ justifyContent: 'center', alignItems: 'center', paddingLeft: moderateScale(50) }}> 
-            <CustomText
-              text='Promociones'
-              fontBold
-              fontSize={theme.fontSize.h3}
-            />
-          </Container>
-          <Container width={'100%'} flex={0.23} style={{ paddingLeft: moderateScale(10), height: moderateScale(25),  justifyContent: 'center' }}>
-            <BasketCounter />
-          </Container>
+        <Container style={{ justifyContent: 'center' }} flex={0.12} />
+        <Container flex={0.67} style={{ justifyContent: 'center', alignItems: 'center', paddingLeft: moderateScale(50) }}>
+          <CustomText text="Promociones" fontBold fontSize={theme.fontSize.h3} />
         </Container>
-      <PromotionsScreen/>
+        <Container width={'100%'} flex={0.23} style={{ paddingLeft: moderateScale(10), height: moderateScale(25), justifyContent: 'center' }}>
+          <BasketCounter />
+        </Container>
+      </Container>
+      <PromotionsScreen />
     </SafeArea>
   );
 };
@@ -97,4 +72,3 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.brandColor.iconn_med_grey
   }
 });
-
