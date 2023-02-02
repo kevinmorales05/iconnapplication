@@ -5,9 +5,10 @@ import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { StyleSheet, FlatList } from 'react-native';
 import {
   ExistingProductInCartInterface,
-  getProductPriceByProductIdThunk,
-  getProductRatingByProductIdThunk,
+  getProductsListItemsThunk,
   ProductInterface,
+  ProductListCacheRequestInterface,
+  ProductResponseInterface,
   ProductSearchItemInterface,
   RootState,
   useAppDispatch,
@@ -30,6 +31,7 @@ const SearchProductResult: React.FC = () => {
   const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
 
   const { products, textSearch } = route.params;
   const [productsRender, setProductsRender] = useState<ProductInterface[]>([]);
@@ -60,6 +62,7 @@ const SearchProductResult: React.FC = () => {
 
   useEffect(() => {
     if (products?.length! > 0) {
+      loader.show();
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       refillProductsWithPrice(existingProducts);
     }
@@ -71,8 +74,6 @@ const SearchProductResult: React.FC = () => {
       updateQuantityProducts(existingProducts);
     }
   }, [cart]);
-
-
 
   const getExistingProductsInCart = () => {
     const { items } = cart;
@@ -97,40 +98,42 @@ const SearchProductResult: React.FC = () => {
     setProductsRender(productsToRender);
   }
 
+  const getProducts = async (favProductsArr: ProductSearchItemInterface[] | null | undefined) => {
+    if (favProductsArr) {
+      const data: ProductListCacheRequestInterface = {
+        storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
+        products: favProductsArr.map(item => item.productId)
+      };
+      return await dispatch(getProductsListItemsThunk(data)).unwrap();
+    }
+  };
 
   async function refillProductsWithPrice(existingProductsInCart: ExistingProductInCartInterface[]) {
-    loader.show();
-    let productsToRender: ProductInterface[] = [];
-    let productsTem: ProductSearchItemInterface[] = [];
-    productsTem = products.concat(productsTem);
-    for (const p of products) {
-      const price = await getPriceByProductId(p.productId);
-      const raiting = await getRatingByProductId(p.productId);
-      if (price && raiting) {
-        productsToRender.push({
-          ratingValue: raiting.average,
-          price: price?.sellingPrice,
-          oldPrice: price?.sellingPrice,
-          name: p.nameComplete,
-          image: { uri: p.imageUrl },
-          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0,
-          productId: p.productId
-        });
-      }
+    const response = await getProducts(products);
+    if (response.responseCode === 603) {
+      const productsArr: ProductInterface[] = response.data.map((product: ProductResponseInterface) => ({
+        productId: product.ProductId,
+        name: product.ProductName,
+        image: { uri: product.SkuImageUrl },
+        price: Number.parseFloat(product.sellingPrice),
+        oldPrice: Number.parseFloat(product.sellingPrice),
+        porcentDiscount: 0,
+        quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.ProductId.toString())?.quantity : 0,
+        ratingValue: product.qualificationAverage,
+        promotionType: product.promotion && product.promotion.type,
+        promotionName: product.promotion && product.promotion.name,
+        percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
+        maximumUnitPriceDiscount: product.promotion && product.promotion.maximum_unit_price_discount,
+        costDiscountPrice: product.costDiscountPrice
+      }));
+      setProductsRender(productsArr);
+      loader.hide();
+    } else {
+      loader.hide();
     }
-    setProductsRender(productsToRender);
-    loader.hide();
   }
 
-  const getPriceByProductId = async (productId: string) => {
-    return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
-  };
-
-  const getRatingByProductId = async (productId: string) => {
-    return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
-  };
-
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({ item }: { item: ProductInterface }) => {
     return (
       <CardProduct
         key={item.productId}
@@ -142,6 +145,10 @@ const SearchProductResult: React.FC = () => {
         quantity={item.quantity}
         productId={item.productId}
         oldPrice={item.oldPrice}
+        promotionType={item.promotionType}
+        percentualDiscountValue={item.percentualDiscountValue}
+        promotionName={item.promotionName}
+        costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
           updateShoppingCartProduct!('add', item.productId);

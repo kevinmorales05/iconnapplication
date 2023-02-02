@@ -1,6 +1,14 @@
 import { useLoading } from 'context';
 import { useCallback, useEffect, useState } from 'react';
-import { getProductsByCollectionIdThunk, ProductResponseInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
+import {
+  getProductsByCollectionIdThunk,
+  ProductInterface,
+  ProductResponseInterface,
+  ProductsByCollectionInterface,
+  RootState,
+  useAppDispatch,
+  useAppSelector
+} from 'rtk';
 import Config from 'react-native-config';
 
 export const useProducts = () => {
@@ -9,8 +17,8 @@ export const useProducts = () => {
   const dispatch = useAppDispatch();
   const loader = useLoading();
 
-  const [products, setProducts] = useState<ProductResponseInterface[] | null>();
-  const [otherProducts, setOtherProducts] = useState<ProductResponseInterface[] | null>();
+  const [products, setProducts] = useState<ProductInterface[] | null>();
+  const [otherProducts, setOtherProducts] = useState<ProductInterface[] | null>();
 
   useEffect(() => {
     if (loading === false) {
@@ -18,21 +26,29 @@ export const useProducts = () => {
     }
   }, [loading]);
 
-  const fetchProducts = useCallback(async (collectionId: string) => {
-    const { Data } = await dispatch(getProductsByCollectionIdThunk(collectionId)).unwrap();
-    const productsArr: ProductResponseInterface[] = Data.map(
-      ({ ProductId, SkuId, SubCollectionId, Position, ProductName, SkuImageUrl }: ProductResponseInterface) => ({
-        ProductId,
-        SkuId,
-        SubCollectionId,
-        Position,
-        ProductName,
-        SkuImageUrl
-      })
-    );
-
-    if (collectionId === RECOMMENDED_PRODUCTS) setProducts(productsArr);
-    if (collectionId === OTHER_PRODUCTS) setOtherProducts(productsArr);
+  const fetchProducts = useCallback(async (collectionData: ProductsByCollectionInterface) => {
+    const response = await dispatch(getProductsByCollectionIdThunk(collectionData)).unwrap();
+    if (response.responseCode === 603) {
+      const productsArr: ProductInterface[] = response.data.products.map(
+        ({ ProductId, ProductName, SkuImageUrl, qualificationAverage, sellingPrice, promotion, costDiscountPrice }: ProductResponseInterface) => ({
+          productId: ProductId,
+          name: ProductName ? ProductName : '',
+          image: { uri: SkuImageUrl },
+          price: Number.parseFloat(sellingPrice),
+          oldPrice: Number.parseFloat(sellingPrice),
+          porcentDiscount: 0,
+          quantity: 0,
+          ratingValue: qualificationAverage,
+          promotionType: promotion && promotion.type,
+          promotionName: promotion && promotion.name,
+          percentualDiscountValue: promotion && promotion.percentual_discount_value,
+          maximumUnitPriceDiscount: promotion && promotion.maximum_unit_price_discount,
+          costDiscountPrice: costDiscountPrice
+        })
+      );
+      if (collectionData.collectionId == RECOMMENDED_PRODUCTS) setProducts(productsArr);
+      if (collectionData.collectionId == OTHER_PRODUCTS) setOtherProducts(productsArr);
+    }
   }, []);
 
   return {
