@@ -10,15 +10,13 @@ import {
   setAddressDefault,
   CarouselItem,
   getHomeItemsThunk,
-  getProductPriceByProductIdThunk,
-  getProductRatingByProductIdThunk,
   ProductInterface,
-  ProductResponseInterface,
   ExistingProductInCartInterface,
   ShippingDataAddress,
   ShippingDataInfo,
   ShippingData,
-  setDateSync
+  setDateSync,
+  ProductsByCollectionInterface
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -32,11 +30,7 @@ import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne, saveShippingData } from 'services/vtexShoppingCar.services';
 import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
-import { vtexProductsServices } from 'services';
 import { useFavorites } from 'screens/auth/hooks/useFavorites';
-import { vtexPromotionsServices } from 'services/vtexPromotions.services';
-import { getProductDetailById, getSkuFilesById } from 'services/vtexProduct.services';
-import { setProductVsPromotions, setPromotions } from 'rtk/slices/promotionsSlice';
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
 import moment from 'moment';
@@ -60,7 +54,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const inConstruction = useInConstruction();
   const { getFavorites } = useFavorites();
   const { email } = user;
-  const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, DEFAULT_IMAGE_URL, PRODUCT_DETAIL_ASSETS } = Config;
+  const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS } = Config;
   const welcomeModal = useWelcomeModal();
   const [isChargin, setIsChargin] = useState(false);
   const { dateSync } = useAppSelector((state: RootState) => state.wallet);
@@ -173,7 +167,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchAddresses = useCallback(async () => {
     loader.show();
     if (user.id) {
-      console.log("Primera peticion")
       await dispatch(getUserAddressesThunk(user.id!));
     }
   }, []);
@@ -232,7 +225,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4' )) {
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4')) {
       inConstruction.show();
       return;
     }
@@ -268,7 +261,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchHomeItems = useCallback(async () => {
     loader.show();
     const homeItems = await dispatch(getHomeItemsThunk()).unwrap();
-    setHomeItems(homeItems);
+    if (homeItems.responseCode === 603) {
+      setHomeItems(homeItems.data);
+    }
   }, []);
 
   useEffect(() => {
@@ -281,7 +276,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    * We get the full home items.
    */
   useEffect(() => {
-    fetchPromotionData();
     fetchHomeItems();
   }, [fetchHomeItems]);
 
@@ -306,7 +300,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchData = useCallback(async () => {
     const { userId } = user;
     if (userId === cart.userProfileId) {
-      console.log('usuario igual...');
+      // console.log('usuario igual...');
     } else {
       getCurrentShoppingCartOrCreateNewOne().then(newCart => {
         getShoppingCart(newCart.orderFormId).then(response => {
@@ -350,195 +344,15 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     }
   }, [paySuccess]);
 
-  const getPriceByProductId = async (productId: string) => {
-    return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
-  };
-
-  const getRatingByProductId = async (productId: string) => {
-    return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
-  };
-
-  const getAllPromotions = async () => {
-    let allPromotions = [];
-    await vtexPromotionsServices.getAllPromotions().then(async promotionsResponse => {
-      if (promotionsResponse) {
-        const { items } = promotionsResponse;
-        items.map(it => {
-          if (it.isActive == true) {
-            allPromotions.push(it);
-          }
-        });
-      }
-    });
-    return allPromotions;
-  };
-
-  const giftsPromotionsByCalculatorId = async (idCalculatorConfiguration: string) => {
-    let giftsList = [];
-    try {
-      await vtexPromotionsServices.getPromotionById(idCalculatorConfiguration).then(async promotionResponse => {
-        if (promotionResponse) {
-          if (promotionResponse.isActive) {
-            if (promotionResponse.type == 'regular' || promotionResponse.type == 'campaign') {
-              const { skus } = promotionResponse;
-              if (skus.length > 0) {
-                skus.map(skus => {
-                  giftsList.push({
-                    gift: skus.id,
-                    name: promotionResponse.name,
-                    type: promotionResponse.type,
-                    percentualDiscountValue: promotionResponse.percentualDiscountValue,
-                    maximumUnitPriceDiscount: promotionResponse.maximumUnitPriceDiscount
-                  });
-                });
-              }
-            } else if (promotionResponse.type == 'buyAndWin' || promotionResponse.type == 'forThePriceOf') {
-              if (promotionResponse.listSku1BuyTogether) {
-                const { listSku1BuyTogether } = promotionResponse;
-                if (listSku1BuyTogether.length > 0) {
-                  listSku1BuyTogether.map(listSku => {
-                    giftsList.push({
-                      gift: listSku.id,
-                      name: promotionResponse.name,
-                      type: promotionResponse.type,
-                      percentualDiscountValue: promotionResponse.percentualDiscountValue,
-                      maximumUnitPriceDiscount: promotionResponse.maximumUnitPriceDiscount
-                    });
-                  });
-                }
-              }
-            }
-          }
-        }
-      });
-    } catch (error) {
-      // console.log('FOUR', error);
-    }
-    return giftsList;
-  };
-
-  /**
-   * Returns the product price.
-   * @param productId
-   * @returns i.e: 1300
-   */
-  const getProductPriceById = async (productId: string) => {
-    let price = 0;
-    try {
-      await vtexProductsServices.getProductPriceByProductId(productId).then(async responsePrice => {
-        if (responsePrice) {
-          price = responsePrice.sellingPrice;
-        }
-      });
-    } catch (error) {
-      // console.log('SIX', error);
-    }
-    return price;
-  };
-
-  /**
-   * Return the product raiting.
-   * @param productId
-   * @returns ie: 3
-   */
-  const getProductRatingById = async (productId: string) => {
-    let rating = 0;
-    try {
-      await vtexProductsServices.getProductRatingByProductId(productId).then(async responseRating => {
-        if (responseRating) {
-          rating = responseRating.average;
-        }
-      });
-    } catch (error) {
-      // console.log('EIGHT', error);
-    }
-    return rating;
-  };
-
-  const getPictureByProductId = async (productId: string) => {
-    const imgRoot = PRODUCT_DETAIL_ASSETS;
-    let pics = DEFAULT_IMAGE_URL;
-    try {
-      await getSkuFilesById(productId).then(async responseSku => {
-        if (responseSku) {
-          if (responseSku.length > 0) {
-            pics = imgRoot + responseSku[0].ArchiveId + '-' + responseSku[0].Id + '-' + '300';
-          }
-        }
-      });
-    } catch (error) {
-      // console.warn(`ERROR in getPictureByProductId for productId: ${productId}`, error);
-    }
-    return pics;
-  };
-
-  const fetchPromotionData = useCallback(async () => {
-    let allPromotions = await getAllPromotions();
-    let productsBuilded = [];
-    let productPromosMap = new Map();
-    let testP = [];
-    try {
-      for (let i = 0; i < allPromotions.length; i++) {
-        testP[i] = await giftsPromotionsByCalculatorId(allPromotions[i].idCalculatorConfiguration);
-        if (testP[i].length > 0) {
-          for (let j = 0; j < testP[i].length; j++) {
-            let price = await getProductPriceById(testP[i][j].gift);
-            let rating = await getProductRatingById(testP[i][j].gift);
-            let image = await getPictureByProductId(testP[i][j].gift);
-            if (price && image) {
-              await getProductDetailById(testP[i][j].gift).then(responseProductDetail => {
-                if (responseProductDetail) {
-                  productPromosMap.set(testP[i][j].gift, {
-                    name: responseProductDetail.Name,
-                    percentualDiscountValue: testP[i][j].percentualDiscountValue,
-                    maximumUnitPriceDiscount: testP[i][j].maximumUnitPriceDiscount,
-                    productId: testP[i][j].gift,
-                    promotionName: testP[i][j].name,
-                    promotionType: testP[i][j].type,
-                    quantity: 1
-                  });
-                  productsBuilded.push({
-                    priceWithDiscount: 1,
-                    name: responseProductDetail.Name,
-                    price: price,
-                    productId: testP[i][j].gift,
-                    quantity: 0,
-                    rating: rating,
-                    image: image
-                  });
-                }
-              });
-            }
-          }
-        }
-      }
-    } catch (error) {
-      // console.log('ELEVEN', error);
-    }
-
-    dispatch(setProductVsPromotions(productPromosMap));
-    dispatch(setPromotions(productsBuilded));
-  }, []);
-
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[], collectionId: string) {
-    const arr: ProductResponseInterface[] | null | undefined = collectionId === RECOMMENDED_PRODUCTS ? products : otherProducts;
+    const arr: ProductInterface[] | null | undefined = collectionId === RECOMMENDED_PRODUCTS ? products : otherProducts;
     const homeProductsArr: ProductInterface[] | undefined = [];
     for (const product of arr) {
-      const price = await getPriceByProductId(product.ProductId);
-      const raiting = await getRatingByProductId(product.ProductId);
-      if (price && raiting) {
-        const newProduct: ProductInterface = {
-          productId: product.ProductId,
-          name: product.ProductName,
-          image: { uri: product.SkuImageUrl },
-          price: price.sellingPrice,
-          oldPrice: price.sellingPrice,
-          porcentDiscount: 0,
-          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.ProductId.toString())?.quantity : 0,
-          ratingValue: raiting.average
-        };
-        homeProductsArr.push(newProduct);
-      }
+      const newProduct: ProductInterface = {
+        ...product,
+        quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.productId.toString())?.quantity : 0
+      };
+      homeProductsArr.push(newProduct);
     }
     if (collectionId === RECOMMENDED_PRODUCTS) setHomeProducts(homeProductsArr);
     if (collectionId === OTHER_PRODUCTS) setHomeOtherProducts(homeProductsArr);
@@ -577,8 +391,20 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    * Also load home products again if user changes the default seller.
    */
   useEffect(() => {
-    fetchProducts(RECOMMENDED_PRODUCTS!);
-    fetchProducts(OTHER_PRODUCTS!);
+    const productOther: ProductsByCollectionInterface = {
+      collectionId: Number.parseInt(OTHER_PRODUCTS ? OTHER_PRODUCTS : '0'),
+      pageSize: 7,
+      pageNumber: 0,
+      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+    };
+    const productRecomended: ProductsByCollectionInterface = {
+      collectionId: Number.parseInt(RECOMMENDED_PRODUCTS ? RECOMMENDED_PRODUCTS : '0'),
+      pageSize: 7,
+      pageNumber: 0,
+      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+    };
+    fetchProducts(productOther);
+    fetchProducts(productRecomended);
   }, [cart, defaultSeller]);
 
   useEffect(() => {
