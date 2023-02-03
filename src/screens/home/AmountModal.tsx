@@ -5,6 +5,8 @@ import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from 'components/molecules';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { logEvent } from 'utils/analytics';
+import { RootState, useAppSelector } from 'rtk';
 
 interface AmountModalProps {
   visible: boolean;
@@ -100,6 +102,7 @@ const AmountModal: React.FC<AmountModalProps> = ({ visible, onPressOut, ammount,
   const insets = useSafeAreaInsets();
 
   const [current, setCurrent] = useState<Amount | null>(null);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     setCurrent(visible ? ammount : null);
@@ -154,6 +157,11 @@ const AmountModal: React.FC<AmountModalProps> = ({ visible, onPressOut, ammount,
                 onPress={() => {
                   handleAmount(current as Amount);
                   onPressOut();
+                  logEvent('invSelectInvoicingHistoryFilter', {
+                    id: user.id,
+                    description: 'Filtrar historial de facturas',
+                    filterType: 'Amount'
+                  });
                 }}
                 marginTop={28}
                 round

@@ -6,6 +6,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { DeliveryStatus, PackageVtex, RootState, setPackages, useAppDispatch, useAppSelector } from 'rtk';
 import { estafetaServices } from 'services/estafeta.services';
 import { vtexDocsServices } from 'services/vtexdocs.services';
+import { logEvent } from 'utils/analytics';
 import TrackingScreen from './TrackingScreen';
 
 const TrackingController: React.FC = () => {
@@ -35,9 +36,18 @@ const TrackingController: React.FC = () => {
 
   const onPressHelp = () => {
     navigate('PackageHelp');
+    logEvent('walEstafetaHelp', {
+      id: user.id,
+      description: 'Abrir ayuda de estafeta'
+    });
   };
 
   const onDelete = async (idPackage: string) => {
+    logEvent('walRemovePacket', {
+      id: user.id,
+      description: 'Eliminar paquete',
+      origin: 'list'
+    });
     alert.show(
       {
         title: 'Eliminar paquete',
@@ -48,11 +58,19 @@ const TrackingController: React.FC = () => {
         cancelTextColor: 'iconn_accent_secondary',
         onCancel() {
           alert.hide();
+          logEvent('walEstafetaCancel', {
+            id: user.id,
+            description: 'Botón de cancelar eliminar paquete'
+          });
         },
         async onAccept() {
           alert.hide();
           await vtexDocsServices.deleteDocByDocID('ET', idPackage);
           getPackages();
+          logEvent('walRemoveconfirmPacket', {
+            id: user.id,
+            description: 'Botón de confirmar eliminar paquete'
+          });
         }
       },
       'deleteCart',
@@ -64,6 +82,11 @@ const TrackingController: React.FC = () => {
 
   const OnPressDetail = async (waybill: string, packageVtex: PackageVtex) => {
     navigate('PackageDetail', { packageData: waybill, packageVtex });
+    logEvent('walOpenPacket', {
+      id: user.id,
+      description: 'Botón de añadir un paquete',
+      packetId: waybill
+    });
   };
 
   const onSubmit = async (barCodeFields: any) => {
@@ -75,6 +98,10 @@ const TrackingController: React.FC = () => {
     } else {
       await getTracking(barCodeFields.barcodeNumber);
     }
+    logEvent('walSavePacket', {
+      id: user.id,
+      description: 'Botón de añadir un paquete'
+    });
   };
 
   const onPressScan = () => {

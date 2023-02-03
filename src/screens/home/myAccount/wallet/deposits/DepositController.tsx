@@ -6,9 +6,11 @@ import { FieldValues } from 'react-hook-form';
 import { BeneficiaryInterface, RootState, setBeneficiaries, useAppDispatch, useAppSelector } from 'rtk';
 import DepositScreen from './DepositScreen';
 import uuid from 'react-native-uuid';
+import { logEvent } from 'utils/analytics';
 
 const DepositController: React.FC = () => {
   const { banks, beneficiaries } = useAppSelector((state: RootState) => state.wallet);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { reset } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
   const route = useRoute<RouteProp<WalletStackParams, 'DepositWallet'>>();
   const dispatch = useAppDispatch();
@@ -31,6 +33,11 @@ const DepositController: React.FC = () => {
         index: 0,
         routes: [{ name: 'ServicePaymentQRDetailDepositController', params: { beneficiary: data, toastState: 'edit' } }]
       });
+      logEvent('walEditDeposit', {
+        id: user.id,
+        description: 'Botón de editar un depósito',
+        depositId: data.accountCard
+      });
     } else {
       if (beneficiaries?.length) {
         const beneficiariesTem = beneficiaries.concat([]);
@@ -42,6 +49,11 @@ const DepositController: React.FC = () => {
       reset({
         index: 0,
         routes: [{ name: 'ServicePaymentQRDetailDepositController', params: { beneficiary: data, toastState: 'new' } }]
+      });
+      logEvent('walSaveDeposit', {
+        id: user.id,
+        description: 'Botón de guardar un depósito',
+        bankName: data.bank
       });
     }
   };

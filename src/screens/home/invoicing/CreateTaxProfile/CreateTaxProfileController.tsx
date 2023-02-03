@@ -8,6 +8,7 @@ import { HomeStackParams } from 'navigation/types';
 import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { setInvoicingProfilesList } from 'rtk/slices/invoicingSlice';
+import { logEvent } from 'utils/analytics';
 
 const CreateTaxProfileController: React.FC = () => {
   const alert = useAlert();
@@ -15,6 +16,7 @@ const CreateTaxProfileController: React.FC = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'CreateTaxProfile'>>();
   const toast = useToast();
   const { invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const [current, setCurrent] = useState<InvoicingProfileInterface | undefined>(undefined);
   const [resetFields, setResetFields] = useState<boolean>(false);
@@ -37,6 +39,10 @@ const CreateTaxProfileController: React.FC = () => {
         cancelTextColor: 'iconn_error',
         async onAccept() {
           alert.hide();
+          logEvent('invRemoveInvoicingProfileNo', {
+            id: user.id,
+            description: 'Remover perfil fiscal "No"'
+          });
         },
         async onCancel() {
           loader.show();
@@ -57,6 +63,10 @@ const CreateTaxProfileController: React.FC = () => {
           } finally {
             loader.hide();
           }
+          logEvent('invRemoveInvoicingProfileYes', {
+            id: user.id,
+            description: 'Remover perfil fiscal "Si"'
+          });
         }
       },
       'error'

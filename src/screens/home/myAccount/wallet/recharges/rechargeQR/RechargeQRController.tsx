@@ -3,8 +3,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAlert, useToast } from 'context';
 import { WalletStackParams } from 'navigation/types';
 import React from 'react';
-import { RechargeSupplier } from 'rtk';
+import { RechargeSupplier, RootState, useAppSelector } from 'rtk';
 import { vtexDocsServices } from 'services';
+import { logEvent } from 'utils/analytics';
 import RechargeQRScreen from './RechargeQRScreen';
 
 const RechargeQRController: React.FC = () => {
@@ -19,11 +20,20 @@ const RechargeQRController: React.FC = () => {
   const qrData = params?.qrData;
   const rechargeUser = params?.rechargeUser;
   const rechargeQRId = params?.rechargeQRId;
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const onEdit = () => {
     if (rechargeUser) {
       navigate('RechargeEdit', { amount: amount, rechargeUser: rechargeUser });
-    } else navigate('RechargeEdit', { amount: amount, supplierData: supplier, fields: fields, rechargeQRId: rechargeQRId });
+    } else {
+      navigate('RechargeEdit', { amount: amount, supplierData: supplier, fields: fields, rechargeQRId: rechargeQRId });
+    }
+
+    logEvent('walEditRecharge', {
+      id: user.id,
+      description: 'Botón de editar recarga',
+      rechargeId: supplier.supplierName
+    });
   };
 
   const onDelete = async () => {

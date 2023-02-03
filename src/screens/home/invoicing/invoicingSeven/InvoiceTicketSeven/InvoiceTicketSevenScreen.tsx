@@ -3,7 +3,7 @@ import { Image, Platform, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { TextContainer, Button, Container, CustomText, Touchable, ActionButton, Select, TaxInfoCard, ListSwipeableItem } from 'components';
 import theme from 'components/theme/theme';
-import { InvoicingSevenTicketResponseInterface, useAppDispatch, InvoicingProfileInterface } from 'rtk';
+import { InvoicingSevenTicketResponseInterface, useAppDispatch, InvoicingProfileInterface, useAppSelector, RootState } from 'rtk';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useForm } from 'react-hook-form';
 import Entypo from 'react-native-vector-icons/Entypo';
@@ -15,6 +15,7 @@ import InvoiceModal from 'screens/home/InvoiceModal';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   onSubmit: (cfdi: any, paymentMethod: string) => void;
@@ -46,6 +47,7 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
   const [Cfdi, setCfdi] = useState<any>('');
   const [PaymentMethod, setPaymentMethod] = useState<string>(paymentMethod);
   const [visible, setVisible] = useState(false);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const {
     control,
     formState: { isValid },
@@ -178,7 +180,14 @@ const InvoiceTicketSevenScreen: React.FC<Props> = ({
               round
               fontBold
               fontSize="h4"
-              onPress={() => onSubmit(Cfdi == '' ? defaultProfile?.Cfdi.c_use_cfdi : Cfdi, PaymentMethod)}
+              onPress={() => {
+                onSubmit(Cfdi == '' ? defaultProfile?.Cfdi.c_use_cfdi : Cfdi, PaymentMethod);
+                logEvent('invGenerateinvoice', {
+                  id: user.id,
+                  description: 'Facturar',
+                  invoincingProfileId: defaultProfile?.invoicing_profile_id
+                });
+              }}
               leftIcon={<Image source={ICONN_INVOICING_INVOICE} />}
             >
               Facturar
