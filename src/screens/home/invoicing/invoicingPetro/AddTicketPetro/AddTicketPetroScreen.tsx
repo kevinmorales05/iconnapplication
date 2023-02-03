@@ -11,7 +11,8 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import { alphaNumeric, date, numericWithSpecificLenght } from 'utils/rules';
 import { useIsFocused } from '@react-navigation/native';
-import { InvoicingPetroTicketResponseInterface } from 'rtk';
+import { InvoicingPetroTicketResponseInterface, RootState, useAppSelector } from 'rtk';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   onSubmit: (fields: any) => void;
@@ -34,6 +35,7 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
   const { closeContainer } = styles;
   const insets = useSafeAreaInsets();
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const {
     control,
@@ -111,7 +113,17 @@ const AddTicketPetroScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
       <Container style={{ marginTop: insets.top }} crossCenter>
         <CustomText text="Agregar Ticket" typography="h3" fontBold textAlign="center" />
         <Container style={closeContainer}>
-          <Touchable onPress={goBack} rounded>
+          <Touchable
+            onPress={() => {
+              goBack();
+              logEvent('invCloseNewInvoice', {
+                id: user.id,
+                description: 'Botón para cancelar el procedimiento de una nueva factura de 7Eleven',
+                type: 'Petro7'
+              });
+            }}
+            rounded
+          >
             <AntDesign name="close" size={24} color="black" />
           </Touchable>
         </Container>

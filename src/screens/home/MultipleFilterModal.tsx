@@ -1,43 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { ActionButton, Container, CustomModal, CustomText, Touchable } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button } from 'components/molecules';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-import AntDesign from 'react-native-vector-icons/AntDesign';
-
 import { ICONN_CALENDAR_YESTERDAY, ICONN_CALENDAR_WEEK, ICONN_CALENDAR_MONTH, ICONN_CALENDAR_CUSTOM } from 'assets/images';
-
-import { Range } from './RangeModal';
 import { EstablishmentFilter, Establishment } from './EstablishmentModal';
 import { AmountFilter, Amount } from './AmountModal';
 import { DateFilter, Period } from './DateModal';
-
-interface DateItemProps {
-  period: Period;
-  selected: boolean;
-  onPress: (period: Period) => void;
-}
-
-const DateItem = ({ period, selected, onPress }: DateItemProps) => {
-  return (
-    <Touchable
-      onPress={() => {
-        onPress(period);
-      }}
-    >
-      <Container style={{ marginVertical: 10, alignItems: 'center' }} row>
-        {period.icon}
-        <CustomText text={period.label as string} />
-        <View style={{ display: 'flex', alignItems: 'flex-end', flex: 1 }}>
-          {selected && <AntDesign style={{ marginHorizontal: 5 }} name="check" size={20} color="#34c28c" />}
-        </View>
-      </Container>
-    </Touchable>
-  );
-};
+import { logEvent } from 'utils/analytics';
+import { RootState, useAppSelector } from 'rtk';
 
 interface MultipleFilterModalProps {
   visible: boolean;
@@ -72,6 +45,7 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
   const insets = useSafeAreaInsets();
 
   const [current, setCurrent] = useState<Period | null>(null);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     setCurrent(visible ? period : null);
@@ -153,7 +127,7 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
   }, [current, currentA, currentE]);
 
   return (
-    <CustomModal visible={visible} onDismiss={onPressOut}>
+    <CustomModal visible={visible}>
       <Container flex alignment="end">
         <TouchableOpacity
           activeOpacity={1}
@@ -225,6 +199,11 @@ const MultipleFilterModal: React.FC<MultipleFilterModalProps> = ({
                 if (currentA) handleAmount(currentA);
 
                 onPressOut();
+                logEvent('invSelectInvoicingHistoryFilter', {
+                  id: user.id,
+                  description: 'Filtrar historial de facturas',
+                  filterType: 'Multiple'
+                });
               }}
               marginTop={28}
               round

@@ -7,6 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import { vtexServicesPayments } from 'services';
 import { WalletStackParams } from 'navigation/types';
 import theme from 'components/theme/theme';
+import { logEvent } from 'utils/analytics';
+import { useAppSelector, RootState } from 'rtk';
 
 /**
  * This component is used to show a QR preview.
@@ -21,9 +23,15 @@ const ServicePaymentQRDetailController: React.FC<any> = ({ route, navigation }: 
   // console.log(route.params.qrData);
   // console.log(route.params.servicePayment);
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const onPressEditButton = () => {
     navigate('ServicePaymentEdit', { qrData: route.params.qrData, servicePayment: route.params.servicePayment });
+    logEvent('walEditService', {
+      id: user.id,
+      description: 'Editar QR de servicio',
+      serviceProviderId: route.params.servicePayment.billerId
+    });
   };
 
   const deleteServicePayment = async () => {
@@ -39,6 +47,11 @@ const ServicePaymentQRDetailController: React.FC<any> = ({ route, navigation }: 
   const onPressDeleteButton = () => {
     loader.show();
     try {
+      logEvent('walDeleteService', {
+        id: user.id,
+        description: 'Borrar QR de servicio',
+        serviceProviderId: route.params.servicePayment.billerId
+      });
       alert.show(
         {
           title: 'Eliminar servicio',
@@ -49,10 +62,20 @@ const ServicePaymentQRDetailController: React.FC<any> = ({ route, navigation }: 
           cancelTextColor: 'iconn_dark_grey',
           onCancel() {
             alert.hide();
+            logEvent('walCancelDeleteService', {
+              id: user.id,
+              description: ' Cancelar borrar QR de servicio',
+              serviceProviderId: route.params.servicePayment.billerId
+            });
           },
           onAccept() {
             alert.hide();
             deleteServicePayment();
+            logEvent('walConfirmDeleteService', {
+              id: user.id,
+              description: 'Borrar QR de servicio',
+              serviceProviderId: route.params.servicePayment.billerId
+            });
           }
         },
         'deleteCart',

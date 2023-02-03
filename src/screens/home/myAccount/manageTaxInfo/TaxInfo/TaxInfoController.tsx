@@ -8,6 +8,7 @@ import theme from 'components/theme/theme';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { getInvoicingProfileListThunk } from 'rtk/thunks/invoicing.thunks';
 import { useLoading } from 'context';
+import { logEvent } from 'utils/analytics';
 
 const TaxInfoController: React.FC = () => {
   const { user } = useAppSelector((state: RootState) => state.auth);
@@ -16,7 +17,13 @@ const TaxInfoController: React.FC = () => {
   const loader = useLoading();
   const dispatch = useAppDispatch();
 
-  const goToAddRFC = () => navigate('AddRFC');
+  const goToAddRFC = () => {
+    navigate('AddRFC');
+    logEvent('invCreateInvoicingProfile', {
+      id: user.id,
+      description: 'Crear perfil de facturación'
+    });
+  };
 
   useEffect(() => {
     if (invoicingLoading === false) loader.hide();

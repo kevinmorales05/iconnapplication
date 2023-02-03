@@ -9,6 +9,7 @@ import { HomeStackParams } from 'navigation/types';
 import { useToast } from 'context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { logEvent } from 'utils/analytics';
 
 interface Props {}
 
@@ -25,6 +26,12 @@ const UpdatePaybackController: React.FC<Props> = () => {
     try {
       if (barcodeNumberToUpdate.length == 13) {
         await vtexDocsServices.updateDocByDocID('PC', params.cardIdToUpdate, paybackPointCardBody);
+        logEvent('walSaveCard', {
+          id: user.id,
+          description: 'Botón de editar un depósito',
+          cardType: 'PAYBACK',
+          cardId: params.cardIdToUpdate
+        });
       }
     } catch (error) {
       toast.show({
