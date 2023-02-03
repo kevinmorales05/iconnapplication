@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View, Image, ImageSourcePropType, Text } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Image, ImageSourcePropType } from 'react-native';
 import { ActionButton, Container, CustomModal, CustomText } from 'components/atoms';
 import theme from 'components/theme/theme';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,6 +7,8 @@ import { Button } from 'components/molecules';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { ICONN_CARD_PETRO, ICONN_CARD_SEVEN } from 'assets/images';
+import { logEvent } from 'utils/analytics';
+import { RootState, useAppSelector } from 'rtk';
 
 interface EstablishmentModalProps {
   visible: boolean;
@@ -68,6 +70,7 @@ const EstablishmentModal: React.FC<EstablishmentModalProps> = ({ visible, onPres
   const insets = useSafeAreaInsets();
 
   const [current, setCurrent] = useState<Establishment | null>(null);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     setCurrent(visible ? establishment : null);
@@ -122,6 +125,11 @@ const EstablishmentModal: React.FC<EstablishmentModalProps> = ({ visible, onPres
                 onPress={() => {
                   handleEstablishment(current as Establishment);
                   onPressOut();
+                  logEvent('invSelectInvoicingHistoryFilter', {
+                    id: user.id,
+                    description: 'Filtrar historial de facturas',
+                    filterType: 'Establishment'
+                  });
                 }}
                 marginTop={28}
                 round

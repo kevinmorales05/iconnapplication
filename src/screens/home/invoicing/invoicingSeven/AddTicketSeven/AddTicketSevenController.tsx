@@ -19,6 +19,7 @@ import {
   setInvoicingStoreForSevenTicketList
 } from 'rtk';
 import { getTicketThunk } from 'rtk/thunks/invoicing.thunks';
+import { logEvent } from 'utils/analytics';
 
 const AddTicketSevenController: React.FC<any> = ({ route }) => {
   const [Ticket, setTicket] = useState<InvoicingSevenTicketResponseInterface>();
@@ -39,6 +40,7 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
   const { loading, invoicingSevenTicketList, invoicingPaymentMethodForSevenTicketList, invoicingStoreForSevenTicketList } = useAppSelector(
     (state: RootState) => state.invoicing
   );
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (loading === false) {
@@ -83,21 +85,35 @@ const AddTicketSevenController: React.FC<any> = ({ route }) => {
       } else {
         toast.show({ message: `${response.responseMessage}`, type: 'error' });
       }
-    } catch (error) {
-      console.warn(error);
+    } catch (_error) {
+      // console.warn(error);
     }
   };
 
   const onPressHelpIcon = () => {
     setHelpVisible(true);
+    logEvent('invOpenHelp', {
+      id: user.id,
+      description: 'Facturar',
+      type: '7Eleven'
+    });
   };
 
   const onPressOut = () => {
     setHelpVisible(false);
+    logEvent('invCloseInvoicingHelp', {
+      id: user.id,
+      description: 'Facturar',
+      type: '7Eleven'
+    });
   };
 
   const onPressScan = () => {
-    navigate('CodeReader', {navigationDestiny: 'AddTicketSeven'});
+    navigate('CodeReader', { navigationDestiny: 'AddTicketSeven' });
+    logEvent('invScan7ElevenTicket', {
+      id: user.id,
+      description: 'Botón para escanear ticket'
+    });
   };
 
   return (

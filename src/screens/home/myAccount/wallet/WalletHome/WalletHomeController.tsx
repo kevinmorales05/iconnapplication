@@ -20,6 +20,7 @@ import { WalletStackParams } from 'navigation/types';
 import { useIsFocused } from '@react-navigation/native';
 import { useServicesPayments } from '../../hooks/usePaymentsServices';
 import { useToast } from 'context';
+import { logEvent } from 'utils/analytics';
 
 const WalletHomeController: React.FC = () => {
   const isFocused = useIsFocused();
@@ -56,29 +57,57 @@ const WalletHomeController: React.FC = () => {
     };
 
     navigate('ServicePaymentQRDetail', { qrData: QrData, servicePayment: findServiceProvider as ServicePaymentInterface });
+    logEvent('walQROpenSavedService', {
+      id: user.id,
+      description: 'Abrir un qr de pago de servicios anteriormente guardado',
+      QRId: QrData.billId
+    });
   };
 
   const servicesArr: ServiceType[] = [
     {
       icon: ICONN_DEPOSIT,
       serviceName: 'Depósitos',
-      onPressItem: () => navigate('DepositWallet')
+      onPressItem: () => {
+        navigate('DepositWallet');
+        logEvent('walOpenDeposits', {
+          id: user.id,
+          description: 'Botón para abrir la sección de depositos'
+        });
+      }
     },
     {
       icon: ICONN_SERVICE_PAYMENT,
       serviceName: 'Pago de servicios',
-      onPressItem: () => navigate('ServicePayment')
+      onPressItem: () => {
+        navigate('ServicePayment');
+        logEvent('walOpenServicesPayment', {
+          id: user.id,
+          description: 'Botón para abrir la sección de pago de servicios'
+        });
+      }
     },
     {
       icon: ICONN_MOBILE_RECHARGE,
       serviceName: 'Recargas',
-      //onPressItem: () => {}
-      onPressItem: () => navigate('Recharge')
+      onPressItem: () => {
+        navigate('Recharge');
+        logEvent('walOpenRecharge', {
+          id: user.id,
+          description: 'Botón para abrir la sección de recargas telefónicas'
+        });
+      }
     },
     {
       icon: ICONN_PACKAGES_SEARCH,
       serviceName: 'Rastreo de Paquetes',
-      onPressItem: () => navigate('Tracking')
+      onPressItem: () => {
+        navigate('Tracking');
+        logEvent('walOpenPacket', {
+          id: user.id,
+          description: 'Botón para abrir la sección de Rastreo Estafeta'
+        });
+      }
     }
   ];
 
@@ -204,6 +233,11 @@ const WalletHomeController: React.FC = () => {
 
   const goToDepositDetail = (beneficiary: BeneficiaryInterface) => {
     navigate('ServicePaymentQRDetailDepositController', { beneficiary: beneficiary, toastState: 'none' });
+    logEvent('walQROpenSavedRecipient', {
+      id: user.id,
+      description: 'Abrir un qr de depósitos anteriormente guardado',
+      QRId: beneficiary.accountCard
+    });
   };
 
   useEffect(() => {

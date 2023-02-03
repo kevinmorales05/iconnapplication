@@ -7,6 +7,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { QRDepositInterface, RootState, setBeneficiaries, useAppDispatch, useAppSelector } from 'rtk';
 import { useAlert, useToast } from 'context';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { logEvent } from 'utils/analytics';
 
 /**
  * This component is used to show a QR preview.
@@ -23,6 +24,7 @@ const ServicePaymentQRDetailController: React.FC<any> = () => {
   const toast = useToast();
   const alert = useAlert();
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     const prefixie = prefixes ? (prefixes.length ? prefixes?.filter(item => item.type === 'userDeposits') : []) : [];
@@ -59,6 +61,11 @@ const ServicePaymentQRDetailController: React.FC<any> = () => {
     reset({
       index: 0,
       routes: [{ name: 'WalletHome', params: { toastState: 'deleteDeposit' } }]
+    });
+    logEvent('walRemoveDeposit', {
+      id: user.id,
+      description: 'Botón para borrar un depósito',
+      depositId: beneficiary.accountCard
     });
   };
 

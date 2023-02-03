@@ -23,7 +23,7 @@ import { useAppSelector, RootState, InvoiceGeneratedResponseInterface } from 'rt
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
-import { print } from '@gorhom/bottom-sheet/lib/typescript/utilities/logger';
+import { logEvent } from 'utils/analytics';
 
 interface EstablishmentResult {
   establishment_id: number;
@@ -75,7 +75,6 @@ const FilterChip = ({ highlight = false, label, onPress, onReset }: FilterChipPr
 };
 
 const DateSeparator = ({ date }: { date: string }) => {
-  console.log("FECHA",date)
   return (
     <View style={{ marginTop: 10, marginLeft: 15 }}>
       <CustomText text={date} textColor={theme.fontColor.grey} fontBold />
@@ -83,13 +82,7 @@ const DateSeparator = ({ date }: { date: string }) => {
   );
 };
 
-export const InvoiceItem = ({
-  helpPointer = false,
-  invoice
-}: {
-  helpPointer?: boolean;
-  invoice: Result;
-}) => {
+export const InvoiceItem = ({ helpPointer = false, invoice }: { helpPointer?: boolean; invoice: Result }) => {
   return (
     <View
       style={{
@@ -104,7 +97,10 @@ export const InvoiceItem = ({
       }}
     >
       <View>
-        <Image style={{ width: moderateScale(38), height: moderateScale(48) }} source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL} />
+        <Image
+          style={{ width: moderateScale(38), height: moderateScale(48) }}
+          source={invoice?.Establishment?.establishment_id === 1 ? ICONN_PETRO_MINIMAL : ICONN_SEVEN_MINIMAL}
+        />
       </View>
       <View>
         <CustomText text={invoice?.Invoicing_Profile?.rfc ? invoice?.Invoicing_Profile?.rfc : ''} fontBold />
@@ -152,6 +148,7 @@ const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; 
   let row: Array<Swipeable | null> = [];
   let prevOpenedRow;
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   /**
    *
@@ -257,9 +254,15 @@ const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; 
                 navigate(item.Establishment.establishment_id === 1 ? 'ViewInvoiceGeneratedPetro' : 'ViewInvoiceGeneratedSeven', {
                   invoiceGenerated
                 });
+                logEvent('invShowInvoice', {
+                  id: user.id,
+                  description: 'Mostrar factura',
+                  invoiceId: invoiceGenerated.uuidInvoice,
+                  origin: 'history'
+                });
               },
               () => {
-                const { item, index } = v;
+                const { item } = v;
                 handleSend(item);
               }
             )
@@ -432,7 +435,6 @@ const InvoiceScreen: React.FC = () => {
             const { rows } = data;
 
             const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
-              console.log(`item factura ${b.created_At}`)
               return moment(a.emission_date).diff(b.emission_date);
             });
 
@@ -456,6 +458,10 @@ const InvoiceScreen: React.FC = () => {
             color="iconn_accent_secondary"
             onPress={() => {
               setSupporting(true);
+              logEvent('invHelpInvoicinHistoryFilters', {
+                id: user.id,
+                description: 'Botón de ayuda en historial de facturación'
+              });
             }}
             icon={<Entypo name="help" size={11} color={theme.fontColor.white} />}
           />
@@ -499,6 +505,10 @@ const InvoiceScreen: React.FC = () => {
                   <Touchable
                     onPress={() => {
                       setFilter(Filter.MULTIPLE);
+                      logEvent('invOpenInvoicingHistoryFilters', {
+                        id: user.id,
+                        description: 'Abrir filtros'
+                      });
                     }}
                   >
                     <View
@@ -553,6 +563,10 @@ const InvoiceScreen: React.FC = () => {
                       setEstablishment(null);
                       setAmount(null);
                       setDate(null);
+                      logEvent('invClearInvoicingHistoryFilters', {
+                        id: user.id,
+                        description: 'Filtrar historial de facturas'
+                      });
                     }}
                   >
                     <CustomText text="Limpiar todo" textColor={theme.fontColor.light_green} underline fontBold />
@@ -657,6 +671,10 @@ const InvoiceScreen: React.FC = () => {
             visible={filter === Filter.MULTIPLE}
             onPressOut={() => {
               setFilter(null);
+              logEvent('invCloseInvoicingHistoryFilters', {
+                id: user.id,
+                description: 'Cerrar historial de facturas'
+              });
             }}
             onClear={() => {
               setEstablishment(null);
