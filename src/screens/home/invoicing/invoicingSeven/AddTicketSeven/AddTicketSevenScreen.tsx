@@ -10,7 +10,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { useForm } from 'react-hook-form';
 import { numericWithSpecificLenght } from 'utils/rules';
 import { useIsFocused } from '@react-navigation/native';
-import { InvoicingSevenTicketResponseInterface } from 'rtk';
+import { InvoicingSevenTicketResponseInterface, RootState, useAppSelector } from 'rtk';
+import { logEvent } from 'utils/analytics';
 interface Props {
   onSubmit: (fields: any) => void;
   goBack: () => void;
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
 const AddTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuestionButton, onPressScan, ticket, position }) => {
   const { closeContainer } = styles;
   const insets = useSafeAreaInsets();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const {
     control,
     handleSubmit,
@@ -66,7 +68,17 @@ const AddTicketSevenScreen: React.FC<Props> = ({ onSubmit, goBack, onPressQuesti
       <Container style={{ marginTop: insets.top }} crossCenter>
         <CustomText text="Agregar Ticket" typography="h3" fontBold textAlign="center" />
         <Container style={closeContainer}>
-          <Touchable onPress={goBack} rounded>
+          <Touchable
+            onPress={() => {
+              goBack();
+              logEvent('invCloseNewInvoice', {
+                id: user.id,
+                description: 'Botón para cancelar el procedimiento de una nueva factura de 7Eleven',
+                type: '7Eleven'
+              });
+            }}
+            rounded
+          >
             <AntDesign name="close" size={24} color="black" />
           </Touchable>
         </Container>

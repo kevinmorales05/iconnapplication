@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TextContainer, Button, Container, CardBilling, TaxInfoCard, AnnounceItem, CardAction, SafeArea } from 'components';
+import { TextContainer, Button, Container, CardBilling, TaxInfoCard, AnnounceItem, CardAction } from 'components';
 import theme from 'components/theme/theme';
-import { InvoicingProfileInterface } from 'rtk';
+import { InvoicingProfileInterface, RootState, useAppSelector } from 'rtk';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import InvoiceModal from 'screens/home/InvoiceModal';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   onSubmit: () => void;
@@ -22,7 +23,7 @@ interface Props {
 const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaultProfile, resendEmail, goToAddTicketPetro, goToAddTicketSeven }) => {
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
-
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   return (
@@ -60,6 +61,10 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
               text="Historial de Facturas"
               onPress={() => {
                 navigate('InvoiceHistory');
+                logEvent('invOpenInvoicingHistory', {
+                  id: user.id,
+                  description: 'Abrir historial de facturas'
+                });
               }}
               icon={<AntDesign name="copy1" size={25} color={theme.brandColor.iconn_accent_secondary} />}
             />

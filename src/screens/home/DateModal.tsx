@@ -11,6 +11,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ICONN_CALENDAR_YESTERDAY, ICONN_CALENDAR_WEEK, ICONN_CALENDAR_MONTH, ICONN_CALENDAR_CUSTOM } from 'assets/images';
 
 import { Range } from './RangeModal';
+import { logEvent } from 'utils/analytics';
+import { RootState, useAppSelector } from 'rtk';
 
 export interface Period {
   id: number;
@@ -57,6 +59,7 @@ const DateModal: React.FC<DateModalProps> = ({ visible, onPressOut, period, hand
   const insets = useSafeAreaInsets();
 
   const [current, setCurrent] = useState<Period | null>(null);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     setCurrent(visible ? period : null);
@@ -164,6 +167,11 @@ const DateModal: React.FC<DateModalProps> = ({ visible, onPressOut, period, hand
                 onPress={() => {
                   handlePeriod(current as Period);
                   onPressOut();
+                  logEvent('invSelectInvoicingHistoryFilter', {
+                    id: user.id,
+                    description: 'Filtrar historial de facturas',
+                    filterType: 'Date'
+                  });
                 }}
                 marginTop={28}
                 round

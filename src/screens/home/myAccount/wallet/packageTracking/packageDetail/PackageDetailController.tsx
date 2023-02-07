@@ -3,10 +3,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAlert, useLoading } from 'context';
 import { WalletStackParams } from 'navigation/types';
 import React, { useEffect, useState } from 'react';
-import { PackageDetail, PackageVtex, TrackingHistory } from 'rtk';
+import { PackageDetail, PackageVtex, RootState, TrackingHistory, useAppSelector } from 'rtk';
 import { estafetaServices } from 'services/estafeta.services';
 import { vtexDocsServices } from 'services/vtexdocs.services';
 import PackageDetailScreen from './PackageDetailScreen';
+import { logEvent } from 'utils/analytics';
 
 const PackageDetailController: React.FC = () => {
   const loader = useLoading();
@@ -15,8 +16,14 @@ const PackageDetailController: React.FC = () => {
   const alert = useAlert();
   const { params } = route;
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const onDelete = async (id: string) => {
+    logEvent('walRemovePacket', {
+      id: user.id,
+      description: 'Eliminar paquete',
+      origin: 'detail'
+    });
     alert.show(
       {
         title: 'Eliminar paquete',
@@ -27,11 +34,19 @@ const PackageDetailController: React.FC = () => {
         cancelTextColor: 'iconn_accent_secondary',
         onCancel() {
           alert.hide();
+          logEvent('walEstafetaCancel', {
+            id: user.id,
+            description: 'Botón de cancelar eliminar paquete'
+          });
         },
         async onAccept() {
           alert.hide();
           await vtexDocsServices.deleteDocByDocID('ET', id);
           navigate('Tracking');
+          logEvent('walRemoveconfirmPacket', {
+            id: user.id,
+            description: 'Botón de confirmar eliminar paquete'
+          });
         }
       },
       'deleteCart',
