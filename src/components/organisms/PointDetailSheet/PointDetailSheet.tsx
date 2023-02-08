@@ -39,7 +39,6 @@ import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { Image } from 'react-native';
 import { PointInterface, TabItem } from 'rtk';
 import { TabTwoElements } from '../TabTwoElements';
-import Octicons from 'react-native-vector-icons/Octicons';
 import theme from 'components/theme/theme';
 
 interface Props {
@@ -194,8 +193,8 @@ const PointDetailSheet: React.FC<Props> = ({
       stackBehavior="push"
     >
       {pointDetailVisible && (
-        <Container row space="between" style={{ marginHorizontal: 16, height: 25 }} middle>
-          <Octicons name="share-android" size={theme.iconSize.small} color={theme.brandColor.iconn_white} />
+        <Container row space="between" style={{ marginHorizontal: 16, height: 25, top: 26, zIndex: 99 }} middle>
+          <Container />
           <Container row>
             <Touchable onPress={onPressShowLess}>
               <Container row middle>

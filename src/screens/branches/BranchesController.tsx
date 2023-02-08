@@ -380,7 +380,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
 
   // SnapPoints for PointDetailSheet
   const snapPoints = useMemo(
-    () => ['46%', Platform.OS === 'android' ? Dimensions.get('window').height - insets.top + 16 : Dimensions.get('window').height - insets.top],
+    () => ['46%', Platform.OS === 'android' ? Dimensions.get('window').height - (insets.top + 16) : Dimensions.get('window').height - insets.top],
     []
   );
 
