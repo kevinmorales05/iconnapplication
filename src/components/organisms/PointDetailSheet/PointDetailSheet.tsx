@@ -228,7 +228,7 @@ const PointDetailSheet: React.FC<Props> = ({
                 : undefined
             }
             style={{
-              width: marker ? (marker.type === 'binomial' ? 240 : 120) : undefined,
+              width: marker ? (marker.type === 'binomial' ? 220 : 120) : undefined,
               height: marker ? 40 : undefined
             }}
           />

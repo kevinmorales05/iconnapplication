@@ -13,10 +13,16 @@ export const useLocation = () => {
   useEffect(() => {
     if (permissions.locationStatus === 'granted') {
       dispatch(setAppInitialPreferences());
-      getCurrentLocation().then(location => {
-        setInitialUserLocation(location);
-        setUserLocation(location);
-      });
+      getCurrentLocation()
+        .then(location => {
+          setInitialUserLocation(location);
+          setUserLocation(location);
+        })
+        .catch(() => {
+          // IMPORTANT: If permission is "granted" but "gps" is off, then set default location (monterey). This occurs only on Android.
+          setInitialUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
+          setUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
+        });
     } else if (permissions.locationStatus === 'denied') {
       askLocationPermission();
     } else if (permissions.locationStatus === 'blocked' || permissions.locationStatus === 'unavailable') {
