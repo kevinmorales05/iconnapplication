@@ -5,7 +5,7 @@ import { CarouselItem, ProductInterface, RootState, useAppSelector } from 'rtk';
 import AnimatedItem from './AnimatedItem';
 import { CounterType } from 'components/types/counter-type';
 import Octicons from 'react-native-vector-icons/Octicons';
-import analytics from '@react-native-firebase/analytics';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   items?: CarouselItem[];
@@ -55,18 +55,13 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
               position={index}
               onPressItem={
                 banner
-                  ? async () => {
-                      try {
-                        await analytics().logEvent('hmPrincipalBanner', {
-                          id: user.id,
-                          description: 'Seleccionar un banner',
-                          bannerId: item.id
-                        });
-                        //console.log('succesfully added to firebase!');
-                      } catch (error) {
-                        //console.log(error);
-                      }
-                      onPressItem;
+                  ? () => {
+                      logEvent('hmPrincipalBanner', {
+                        id: user.id,
+                        description: 'Seleccionar un banner',
+                        bannerId: item.id
+                      });
+                      onPressItem(item);
                     }
                   : onPressItem
               }
