@@ -19,8 +19,6 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NotificationListener, requestUserPermission } from 'utils/notification-helper';
 
 enableLatestRenderer();
-// TODO: remove this:
-// console.log('Environment variables:', JSON.stringify(Config, null, 3));
 
 let persistor = persistStore(store);
 
