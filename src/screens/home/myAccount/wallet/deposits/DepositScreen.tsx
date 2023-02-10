@@ -27,7 +27,6 @@ const DepositScreen: React.FC<Props> = ({ onSubmit, banks, beneficiary }) => {
   } = useForm({
     mode: 'onChange'
   });
-
   const numberAccountRef = useRef<TextInput>(null);
   const nameRef = useRef<TextInput>(null);
   const tagRef = useRef<TextInput>(null);

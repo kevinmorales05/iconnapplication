@@ -1,28 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Dimensions, FlatList } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import theme from 'components/theme/theme';
-import { CustomText, Container, SearchBar, CardProduct } from 'components';
+import { CustomText, Container, SearchBar, CardProduct, CardProductSkeleton } from 'components';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
-import { RootState, useAppSelector, ExistingProductInCartInterface } from 'rtk';
+import {
+  RootState,
+  useAppSelector,
+  ExistingProductInCartInterface,
+  ProductInterface,
+  useAppDispatch,
+  getProductsByPromotionsItemsThunk,
+  ProductsByPromotionsRequestInterface
+} from 'rtk';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { useLoading } from 'context';
 import { logEvent } from 'utils/analytics';
+import { FlashList } from '@shopify/flash-list';
 
 const PromotionsScreen: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const loader = useLoading();
+
+  const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [productFromPromotion, setProductFromPromotion] = useState([]);
   const { promotions, productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
+  const [productsRender, setProductsRender] = useState<ProductInterface[]>([]);
+  const [itemToLoad, setItemToLoad] = useState<number>(0);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const [visible, setVisible] = useState<boolean>(false);
   const [productId, setProductId] = useState<string>();
-  const loader = useLoading();
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [isLoadingMore, setLoadingMore] = useState<boolean>(true);
+  const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState<boolean>(false);
 
   const hideModalForAdult = () => {
     setVisible(false);
@@ -48,40 +66,17 @@ const PromotionsScreen: React.FC = () => {
     }
   };
 
-  const onPressBack = () => {
-    navigate('SearchProducts');
-  };
+  useEffect(() => {
+    const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+    productsEffect(existingProducts);
+  }, []);
 
-  const fetchData = (existingProductsInCart: ExistingProductInCartInterface[]) => {
-    if (!!productVsPromotion && Object.keys(productVsPromotion).length) {
-      if (productVsPromotion.has('')) {
-        loader.show();
-      } else {
-        loader.hide();
-      }
-    } else {
-      loader.show();
+  useEffect(() => {
+    if (productsRender?.length! > 0) {
+      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+      updateQuantityProducts(existingProducts);
     }
-    let prodList = promotions;
-    let prodListWithQuantities = [];
-    if (prodList.length > 0) {
-      prodList.map(prod => {
-        const prodObj = {
-          priceWithDiscount: prod.priceWithDiscount,
-          name: prod.name,
-          oldPrice: prod.oldPrice,
-          price: prod.price,
-          productId: prod.productId,
-          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === prod.productId.toString())?.quantity : 0,
-          rating: prod.rating,
-          image: prod.image
-        };
-        prodListWithQuantities.push(prodObj);
-      });
-
-      setProductFromPromotion(prodListWithQuantities);
-    }
-  };
+  }, [cart]);
 
   const getExistingProductsInCart = () => {
     const { items } = cart;
@@ -97,23 +92,119 @@ const PromotionsScreen: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-    fetchData(existingProducts);
-  }, [cart, promotions]);
+  async function updateQuantityProducts(existingProductsInCart: ExistingProductInCartInterface[]) {
+    let productsToRender: ProductInterface[] = [];
+    productsToRender = productsRender.concat(productsToRender);
+    for (const p of productsToRender) {
+      p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
+    }
+    setProductsRender(productsToRender);
+    setRefreshing(false);
+  }
 
-  const _renderItem = ({ item }) => {
+  const productsEffect = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
+    loader.show();
+    setProductsRender([]);
+    const productsRequest = await getProducts(0);
+    if (productsRequest.responseCode === 603 && productsRequest.data) {
+      if (productsRequest.data.length) {
+        const productsTem: ProductInterface[] = productsRequest.data.map(product => {
+          return {
+            productId: product.products_id,
+            name: product.name,
+            image: { uri: product.image },
+            price: Number.parseFloat(product.selling_price),
+            oldPrice: Number.parseFloat(product.selling_price),
+            quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
+            ratingValue: 0,
+            promotionType: product.promotion && product.promotion.type,
+            promotionName: product.promotion && product.promotion.name,
+            percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
+            maximumUnitPriceDiscount: product.promotion && product.promotion.maximum_unit_price_discount,
+            costDiscountPrice: product.costDiscountPrice,
+            promotionId: product.promotion && product.promotion.promotionId
+          };
+        });
+        await setProductsRender(productsTem);
+        await setItemToLoad(1);
+        loader.hide();
+        setLoading(false);
+        setLoadingMore(true);
+        setRefreshing(false);
+      } else {
+        loader.hide();
+        setProductsRender([]);
+        setRefreshing(false);
+      }
+    } else {
+      loader.hide();
+      setLoading(false);
+      setLoadingMore(true);
+      setRefreshing(false);
+    }
+  };
+
+  const loadMoreProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
+    setLoading(true);
+    const productsRequest = await getProducts(itemToLoad + 1);
+    if (productsRequest.responseCode === 603) {
+      if (productsRequest.data.length) {
+        const productsTem: ProductInterface[] = productsRequest.data.map(product => {
+          return {
+            productId: product.products_id,
+            name: product.name,
+            image: { uri: product.image },
+            price: Number.parseFloat(product.selling_price),
+            oldPrice: Number.parseFloat(product.selling_price),
+            quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
+            ratingValue: 0,
+            promotionType: product.promotion && product.promotion.type,
+            promotionName: product.promotion && product.promotion.name,
+            percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
+            maximumUnitPriceDiscount: product.promotion && product.promotion.maximum_unit_price_discount,
+            costDiscountPrice: product.costDiscountPrice,
+            promotionId: product.promotion && product.promotion.promotionId
+          };
+        });
+        if (!productsRequest.data.length) {
+          setLoading(false);
+          setLoadingMore(false);
+        } else {
+          const productsToRender: ProductInterface[] = productsRender.concat(productsTem);
+          await setProductsRender(productsToRender);
+          await setItemToLoad(itemToLoad + 1);
+          setLoading(false);
+        }
+      }
+    }
+  };
+
+  const getProducts = async (itemToLoad: number) => {
+    const data: ProductsByPromotionsRequestInterface = {
+      storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
+      pageNumber: itemToLoad,
+      pageSize: 10
+    };
+    return await dispatch(getProductsByPromotionsItemsThunk(data)).unwrap();
+  };
+
+  const _renderItem = ({ item, index }: { item: ProductInterface; index: number }) => {
     return (
       <CardProduct
-        key={item.productId}
+        key={item.productId + item.promotionId}
         ratingValue={item.ratingValue}
-        price={item.price}
+        price={item.price ? item.price : 0}
         porcentDiscount={item.porcentDiscount}
-        name={item.name}
-        image={{ uri: item.image }}
-        quantity={item.quantity}
+        name={item.name ? item.name : ''}
+        image={item.image ? item.image : {}}
+        quantity={item.quantity ? item.quantity : 0}
         productId={item.productId}
         oldPrice={item.oldPrice}
+        index={index}
+        promotionType={item.promotionType}
+        percentualDiscountValue={item.percentualDiscountValue}
+        promotionName={item.promotionName}
+        costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
           updateShoppingCartProduct!('add', item.productId);
@@ -127,32 +218,84 @@ const PromotionsScreen: React.FC = () => {
           updateShoppingCartProduct!('substract', item.productId);
           logEvent('promoMinusProduct', { id: user.id, description: 'Restar un producto de la canasta', productId: item.productId.toString() });
         }}
+        onPressOut={hideModalForAdult}
         notNeedMarginLeft
-        productPromotions={new Map<string, Object>()}
-        onPressAnalytics={() => logEvent('promoOpenProduct', { id: user.id, description: 'Abrir producto', productId: item.productId.toString() })}
       />
     );
+  };
+
+  const _renderFooter = () => {
+    if (isLoading) {
+      const residuoOperation = productsRender.length % 2;
+      if (residuoOperation === 0) {
+        return (
+          <Container
+            style={{
+              justifyContent: 'space-between',
+              flexDirection: 'row',
+              width: Dimensions.get('screen').width,
+              paddingHorizontal: moderateScale(15),
+              left: -moderateScale(15)
+            }}
+          >
+            <CardProductSkeleton notMarinLeft />
+            <CardProductSkeleton notMarinLeft />
+          </Container>
+        );
+      } else {
+        return (
+          <Container row>
+            <CardProductSkeleton notMarinLeft />
+          </Container>
+        );
+      }
+    }
+    return <Container height={moderateScale(20)} />;
+  };
+
+  const loadMoreItem = () => {
+    if (!onEndReachedCalledDuringMomentum) {
+      if (!isLoading && isLoadingMore) {
+        const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+        loadMoreProducts(existingProducts);
+        setOnEndReachedCalledDuringMomentum(true);
+      }
+    }
+  };
+
+  const _onRefresh = () => {
+    setRefreshing(true);
+    const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+    productsEffect(existingProducts);
+  };
+
+  const onPressBack = () => {
+    navigate('SearchProducts');
   };
 
   return (
     <Container row space="between" width={'100%'} style={{ flexWrap: 'wrap', backgroundColor: theme.brandColor.iconn_background }}>
       <Container style={styles.containerHeader}>
         <SearchBar isButton onPressSearch={onPressBack} onChangeTextSearch={() => {}} />
-        <Container style={{ marginTop: moderateScale(10) }}></Container>
+        <Container style={{ marginTop: moderateScale(10) }} />
       </Container>
       <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
-        {productFromPromotion != undefined && productFromPromotion.length > 0 ? (
-          <Container height={verticalScale(540)} width={'100%'}>
-            <FlatList
-              data={productFromPromotion}
+        {productsRender.length ? (
+          <Container height={verticalScale(500)} width={'100%'}>
+            <FlashList
+              data={productsRender}
               renderItem={_renderItem}
-              refreshing={false}
-              contentContainerStyle={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between',
-                paddingBottom: moderateScale(50)
-              }}
+              onEndReachedThreshold={0}
+              onEndReached={loadMoreItem}
+              refreshing={refreshing}
+              removeClippedSubviews={true}
+              onRefresh={() => _onRefresh()}
+              onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+              keyExtractor={item => item.productId + item.promotionId}
+              numColumns={2}
+              estimatedItemSize={moderateScale(250)}
+              ListFooterComponent={_renderFooter}
+              ListFooterComponentStyle={{ width: '100%' }}
             />
           </Container>
         ) : (

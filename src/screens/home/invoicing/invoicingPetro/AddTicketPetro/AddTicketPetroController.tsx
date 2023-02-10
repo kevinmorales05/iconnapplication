@@ -21,6 +21,7 @@ import {
 import { getTicketThunk } from 'rtk/thunks/invoicing.thunks';
 import { formatDate } from 'utils/functions';
 import moment from 'moment';
+import { logEvent } from 'utils/analytics';
 
 const AddTicketPetroController: React.FC<any> = ({ route }) => {
   const [Ticket, setTicket] = useState<InvoicingPetroTicketResponseInterface>();
@@ -42,6 +43,7 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
   const { loading, invoicingPetroTicketList, invoicingPaymentMethodForPetroTicketList, invoicingStoreForPetroTicketList } = useAppSelector(
     (state: RootState) => state.invoicing
   );
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (loading === false) {
@@ -109,9 +111,23 @@ const AddTicketPetroController: React.FC<any> = ({ route }) => {
     }
   };
 
-  const onPressHelpIcon = () => setHelpVisible(true);
+  const onPressHelpIcon = () => {
+    setHelpVisible(true);
+    logEvent('invOpenHelp', {
+      id: user.id,
+      description: 'Facturar',
+      type: 'Petro7'
+    });
+  };
 
-  const onPressOut = () => setHelpVisible(false);
+  const onPressOut = () => {
+    setHelpVisible(false);
+    logEvent('invCloseInvoicingHelp', {
+      id: user.id,
+      description: 'Facturar',
+      type: 'Petro7'
+    });
+  };
 
   const onPressScan = () => {
     //console.log('onPressScan Petro...');

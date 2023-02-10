@@ -9,6 +9,7 @@ import { useLoading, useToast } from 'context';
 import { useNavigation } from '@react-navigation/native';
 import { vtexServicesPayments } from 'services';
 import { WalletStackParams } from 'navigation/types';
+import { logEvent } from 'utils/analytics';
 
 /**
  * This is a component with typing for route, this is the best way for this kind of typing.
@@ -27,6 +28,11 @@ const ServicePaymentAddController: React.FC<any> = ({ route }: NativeStackScreen
    */
   const onPressQuestionButton = () => {
     setHelpVisible(true);
+    logEvent('walServicesHelp', {
+      id: user.id,
+      description: 'Tocar el botón de ayuda al ingresar el número de servicio',
+      serviceProviderId: route.params.servicePayment.billerId
+    });
   };
 
   /**
@@ -74,6 +80,11 @@ const ServicePaymentAddController: React.FC<any> = ({ route }: NativeStackScreen
           id: vtexResponse.DocumentId
         };
         navigate('ServicePaymentQRDetail', { qrData: QrData, servicePayment: route.params.servicePayment });
+        logEvent('walSaveService', {
+          id: user.id,
+          description: 'Guardar un QR de servicio',
+          serviceProviderId: route.params.servicePayment.billerId
+        });
       }
     } catch (err: unknown | AxiosError) {
       let errMsg;

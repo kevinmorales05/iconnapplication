@@ -29,6 +29,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useToast } from 'context';
 import BranchesScreen from './BranchesScreen';
 import theme from 'components/theme/theme';
+import { logEvent } from 'utils/analytics';
 
 const BranchesController: React.FC<any> = ({ route }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<BranchesStackParams>>();
@@ -49,6 +50,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
     latitude: defaultLatitude,
     longitude: defaultLongitude
   } = useAppSelector((state: RootState) => state.app);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [radiusOfSearch, setRadiusOfSearch] = useState(1);
   const [latitudeDelta, setLatitudeDelta] = useState(0.04);
   const [visibleSearchByAreaButton, setVisibleSearchByAreaButton] = useState(false);
@@ -342,18 +344,35 @@ const BranchesController: React.FC<any> = ({ route }) => {
     } else {
       toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
     }
+    logEvent('SearchInThisArea', {
+      id: user.id,
+      description: 'Buscar en esta área'
+    });
   };
 
   /**
    * Set the current marker/point in the BottomModalSheet
    * @param point marker
    */
-  const onPressMarker = (point: PointInterface, _mode?: PointDisplayMode) => {
+  const onPressMarker = (point: PointInterface, mode?: PointDisplayMode) => {
     // TODO: increase gorhom library to 4.4.3 to fix expand() method of bottomSheet, in case of markers mode list.
     // console.log(JSON.stringify(point, null, 3));
     // console.log('mode', mode);
     bottomSheetRef.current?.present();
     setMarker(point);
+    if (mode === 'list') {
+      logEvent('sucSelectDetailsOnList', {
+        id: user.id,
+        description: 'Seleccionar detalle en lista',
+        shopId: point.shopNumber
+      });
+    } else {
+      logEvent('sucSelectPin', {
+        id: user.id,
+        description: 'Seleccionar un indicador del mapa interactivo',
+        shopId: point.shopNumber
+      });
+    }
   };
 
   // ref to PointDetailSheet
@@ -386,6 +405,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
    */
   const onPressShowMore = () => {
     bottomSheetRef.current?.snapToIndex(1);
+    logEvent('sucShowMore', {
+      id: user.id,
+      description: 'Tocar el Botón "Mostrar más" del modal (bottom shift) de información'
+    });
   };
 
   /**
@@ -393,6 +416,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
    */
   const onPressShowLess = () => {
     bottomSheetRef.current?.snapToIndex(0);
+    logEvent('sucShowLess', {
+      id: user.id,
+      description: 'Tocar el Botón "Mostrar menos" del modal (bottom shift) de información'
+    });
   };
 
   /**
@@ -417,6 +444,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
     setVisibleSearchByAreaButton(false);
     bottomSheetRef.current?.close();
     setPointDisplayMode('list');
+    logEvent('sucListView', {
+      id: user.id,
+      description: 'Botón de vista de lista'
+    });
   };
 
   /**
@@ -445,6 +476,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
       sourceLatitude: userLocation?.latitude,
       sourceLongitude: userLocation?.longitude
     });
+    logEvent('sucHowToGetThere', {
+      id: user.id,
+      description: 'Botón de cómo llegar'
+    });
   };
 
   /**
@@ -453,6 +488,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const onPressShowDetails = () => {
     bottomSheetRef.current?.close();
     navigate('ShowDetails');
+    logEvent('sucShowAnnotations', {
+      id: user.id,
+      description: 'Botón para configurar vista de anotaciones'
+    });
   };
 
   /**
@@ -461,6 +500,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const onPressShowFilters = () => {
     bottomSheetRef.current?.close();
     navigate('BranchesFilters', route.params ? route.params : undefined);
+    logEvent('sucOpenFilters', {
+      id: user.id,
+      description: 'Botón de abrir filtros'
+    });
   };
 
   /**
@@ -500,6 +543,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
     else if (km === 4) setLatitudeDelta(0.34);
     else if (km === 5) setLatitudeDelta(0.44);
     setRadiusOfSearch(km);
+    logEvent('changeSearchRatio', {
+      id: user.id,
+      description: 'swipe del radio de selección de distancia.'
+    });
   };
 
   /**
@@ -508,6 +555,10 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const onPressSearch = () => {
     setIsButtonSearchBar(false);
     bottomSheetRef.current?.close();
+    logEvent('sucSelectStoresUbicationSearchBar', {
+      id: user.id,
+      description: 'Seleccionar la barra de búsqueda de estaciones'
+    });
   };
 
   /**

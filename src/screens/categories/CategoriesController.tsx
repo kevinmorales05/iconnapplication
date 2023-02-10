@@ -49,15 +49,17 @@ const CategoriesController: React.FC = ({ navigation, route }: any) => {
   // TODO: relocate this url to .ENV
   const categoriesEffect = async () => {
     const categoriesRequest = await getCategoryItems();
-    categoriesRequest.forEach((c: CategoryInterface) => {
-      // TODO: link para traer las imagenes
-      c.image = `https://oneiconn.vtexassets.com/arquivos/${c.name
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/ /g, '_')}.png`;
-    });
-    const categoriesToRender = categoriesRequest.filter((c: CategoryInterface) => c.id !== 187 && c.id !== 184 && c.id !== 178 && c.id !== 152);
-    setCategories(categoriesToRender);
+    if (categoriesRequest.responseCode === 603) {
+      categoriesRequest.data.forEach((c: CategoryInterface) => {
+        // TODO: link para traer las imagenes
+        c.image = `https://oneiconn.vtexassets.com/arquivos/${c.name
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/ /g, '_')}.png`;
+      });
+      const categoriesToRender = categoriesRequest.data.filter((c: CategoryInterface) => c.id !== 187 && c.id !== 184 && c.id !== 178 && c.id !== 152);
+      setCategories(categoriesToRender);
+    }
   };
   const getCategoryItems = async () => {
     return await dispatch(getCategoryItemsThunk()).unwrap();

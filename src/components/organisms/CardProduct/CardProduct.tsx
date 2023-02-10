@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, ImageBackground, Image, ImageSourcePropType } from 'react-native';
+import React, { useCallback, useEffect, useState, memo } from 'react';
+import { StyleSheet, Image, ImageSourcePropType } from 'react-native';
 import theme from 'components/theme/theme';
 import { Button, FavoriteButton } from 'components/molecules';
 import { ICONN_REVERSE_BASKET } from 'assets/images';
@@ -29,6 +29,7 @@ import {
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import FastImage from 'react-native-fast-image';
 interface CardProductProps {
   price: number;
   name: string;
@@ -39,14 +40,18 @@ interface CardProductProps {
   onPressDeleteCart: () => void;
   onPressAddQuantity: () => void;
   onPressDecreaseQuantity: () => void;
-  oldPrice?: number;
   ratingValue?: number;
-  porcentDiscount?: number;
   notNeedMarginLeft?: boolean;
   isFavorite?: boolean;
   onPressAnalytics?: () => void;
   pressFavfromCategory?: () => void;
   pressNoFavfromCategory?: () => void;
+  promotionType?: string;
+  percentualDiscountValue?: number;
+  promotionName?: string;
+  costDiscountPrice?: string;
+  index?: number;
+  onPressOut: () => void;
 }
 
 const CardProduct: React.FC<CardProductProps> = ({
@@ -64,10 +69,13 @@ const CardProduct: React.FC<CardProductProps> = ({
   notNeedMarginLeft,
   onPressAnalytics,
   pressFavfromCategory,
-  pressNoFavfromCategory
+  pressNoFavfromCategory,
+  promotionType,
+  percentualDiscountValue,
+  promotionName,
+  costDiscountPrice,
+  index
 }: CardProductProps) => {
-  const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
-
   const validateCategoryForAddItem = () => {
     let isAdultInProductSpecification = false;
     getProductSpecification(productId).then(producSpecificationResponse => {
@@ -102,7 +110,6 @@ const CardProduct: React.FC<CardProductProps> = ({
   const [isFav, setIsFav] = useState<boolean>();
   const { favs, favsId, user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
-  //const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
 
   const getIsFavorite = () => {
     if (favs) {
@@ -167,7 +174,6 @@ const CardProduct: React.FC<CardProductProps> = ({
           ListItemsWrapper: [listItems]
         };
         updateFavorites(tryList, 'update');
-        //setFavList(newFavList);
         dispatch(setFav(newFavList));
         return newFavList;
       } else {
@@ -209,73 +215,63 @@ const CardProduct: React.FC<CardProductProps> = ({
   };
 
   return (
-    <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? 0 : 8) }]}>
+    <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? (index ? (index % 2 > 0 ? 8 : 0) : 0) : 8) }]}>
       <Container style={styles.subContainer}>
-        <ImageBackground style={styles.containerImage} resizeMode={'contain'} source={image}>
-          <Container row width={'100%'} space="between">
-            <Container flex width={'100%'}>
-              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId) ? (
-                productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
-                productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ||
-                productVsPromotion.get('' + productId).promotionType == 'campaign' ||
-                productVsPromotion.get('' + productId).promotionType == 'regular' ? (
-                  <Container
-                    style={
-                      productVsPromotion.get('' + productId).promotionType == 'campaign' || productVsPromotion.get('' + productId).promotionType == 'regular'
-                        ? productVsPromotion.get('' + productId).percentualDiscountValue > 0
-                          ? styles.containerPorcentDiscount
-                          : styles.containerPorcentDiscountCero
-                        : styles.containerPromotionName
-                    }
-                  >
-                    <CustomText
-                      fontSize={theme.fontSize.h6}
-                      textColor={theme.brandColor.iconn_green_original}
-                      fontWeight={'bold'}
-                      numberOfLines={1}
-                      text={
-                        !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId)
-                          ? productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
-                            productVsPromotion.get('' + productId).promotionType == 'forThePriceOf'
-                            ? splitText(productVsPromotion.get('' + productId).promotionName)
-                            : productVsPromotion.get('' + productId).promotionType == 'campaign' ||
-                              productVsPromotion.get('' + productId).promotionType == 'regular'
-                            ? '-' + productVsPromotion.get('' + productId).percentualDiscountValue + '%'
-                            : ''
+        <FastImage style={styles.containerImage} resizeMode={'contain'} source={image} />
+        <Container row width={'100%'} space="between" style={{ position: 'absolute' }}>
+          <Container flex width={'100%'}>
+            {promotionType ? (
+              promotionType == 'buyAndWin' || promotionType == 'forThePriceOf' || promotionType == 'campaign' || promotionType == 'regular' ? (
+                <Container
+                  style={
+                    promotionType == 'campaign' || promotionType == 'regular'
+                      ? percentualDiscountValue > 0
+                        ? styles.containerPorcentDiscount
+                        : styles.containerPorcentDiscountCero
+                      : styles.containerPromotionName
+                  }
+                >
+                  <CustomText
+                    fontSize={theme.fontSize.h6}
+                    textColor={theme.brandColor.iconn_green_original}
+                    fontWeight={'bold'}
+                    numberOfLines={1}
+                    text={
+                      promotionType
+                        ? promotionType == 'buyAndWin' || promotionType == 'forThePriceOf'
+                          ? splitText(promotionName)
+                          : promotionType == 'campaign' || promotionType == 'regular'
+                          ? '-' + percentualDiscountValue + '%'
                           : ''
-                      }
-                    />
-                  </Container>
-                ) : (
-                  <></>
-                )
-              ) : (
-                <></>
-              )}
-            </Container>
-            {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + productId) ? (
-              productVsPromotion.get('' + productId).promotionType == 'campaign' ||
-              productVsPromotion.get('' + productId).promotionType == 'regular' ||
-              productVsPromotion.get('' + productId).promotionType == 'buyAndWin' ||
-              productVsPromotion.get('' + productId).promotionType == 'forThePriceOf' ? (
-                <></>
-              ) : (
-                <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
-                  <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+                        : ''
+                    }
+                  />
                 </Container>
+              ) : (
+                <></>
               )
+            ) : (
+              <></>
+            )}
+          </Container>
+          {promotionType ? (
+            promotionType == 'campaign' || promotionType == 'regular' || promotionType == 'buyAndWin' || promotionType == 'forThePriceOf' ? (
+              <></>
             ) : (
               <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
                 <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
               </Container>
-            )}
-          </Container>
-        </ImageBackground>
+            )
+          ) : (
+            <Container flex width={'100%'} style={{ justifyContent: 'center', alignItems: 'flex-end', zIndex: 3, position: 'absolute' }}>
+              <FavoriteButton sizeIcon={moderateScale(24)} isFavorite={isFav as boolean} onPressItem={changeFavorite} />
+            </Container>
+          )}
+        </Container>
         <Container>
           <Touchable
             onPress={async () => {
               dispatch(setDetailSelected(productId));
-              //console.log('DETAILID', productId);
               navigate('ProductDetail', { productIdentifier: productId });
               if (onPressAnalytics) onPressAnalytics();
             }}
@@ -285,7 +281,7 @@ const CardProduct: React.FC<CardProductProps> = ({
             </Container>
             <Rating ratingValue={ratingValue} />
             <Container style={styles.containerPrice}>
-              <PriceWithDiscount price={price.toFixed(2)} oldPrice={oldPrice} productPromotions={productVsPromotion} productId={productId} />
+              <PriceWithDiscount price={price.toFixed(2)} promotionType={promotionType} costDiscountPrice={costDiscountPrice} />
             </Container>
           </Touchable>
         </Container>
@@ -319,7 +315,7 @@ const CardProduct: React.FC<CardProductProps> = ({
   );
 };
 
-export default CardProduct;
+export default memo(CardProduct);
 
 const styles = StyleSheet.create({
   container: {

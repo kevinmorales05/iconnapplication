@@ -9,10 +9,12 @@ import { InvoicingProfileInterface, RootState, useAppDispatch, useAppSelector } 
 import { FieldValues } from 'react-hook-form';
 import { useLoading, useToast, useAlert } from 'context';
 import { forwardInvoiceThunk } from 'rtk/thunks/invoicing.thunks';
+import { logEvent } from 'utils/analytics';
 
 const InvoiceGeneratedSevenController: React.FC<any> = ({ route }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { loading, invoicingProfileList } = useAppSelector((state: RootState) => state.invoicing);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [defaultProfile, setDefaultProfile] = useState<InvoicingProfileInterface | null>(null);
   const [resendInvoiceVisible, setResendInvoiceVisible] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -34,11 +36,41 @@ const InvoiceGeneratedSevenController: React.FC<any> = ({ route }) => {
     }
   }, [loading]);
 
-  const goToHome = () => navigate('Home', { paySuccess: false });;
+  const goToHome = () => {
+    navigate('Home', { paySuccess: false });
+    logEvent('invEndInvoiceProcess', {
+      id: user.id,
+      description: 'Facturar'
+    });
+  };
+
   const goToNewInvoice = () => navigate('AddTicketSeven', { ticket: undefined, position: undefined });
-  const goToViewerPDF = () => navigate('ViewInvoiceGeneratedSeven', { invoiceGenerated: route.params ? route.params.invoiceGenerated : undefined });
-  const onPressOut = () => setResendInvoiceVisible(false);
-  const onPressResend = () => setResendInvoiceVisible(true);
+  const goToViewerPDF = () => {
+    navigate('ViewInvoiceGeneratedSeven', { invoiceGenerated: route.params ? route.params.invoiceGenerated : undefined });
+    logEvent('invShowInvoice', {
+      id: user.id,
+      description: 'Mostrar factura',
+      invoiceId: route.params.invoiceGenerated.uuidInvoice,
+      origin: 'invoicingEnding'
+    });
+  };
+
+  const onPressOut = () => {
+    setResendInvoiceVisible(false);
+    logEvent('invCloseFordwardModal', {
+      id: user.id,
+      description: 'Facturar'
+    });
+  };
+
+  const onPressResend = () => {
+    setResendInvoiceVisible(true);
+    logEvent('invForwardInvoice', {
+      id: user.id,
+      description: 'Reenviar factura',
+      invoiceId: route.params.invoiceGenerated.uuidInvoice
+    });
+  };
 
   const resendGeneratedInvoice = async (fields: FieldValues) => {
     setResendInvoiceVisible(false);
@@ -65,8 +97,8 @@ const InvoiceGeneratedSevenController: React.FC<any> = ({ route }) => {
       } else {
         toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }
-    } catch (error) {
-      console.warn(error);
+    } catch (_error) {
+      // console.warn(error);
     }
   };
 
@@ -83,8 +115,8 @@ const InvoiceGeneratedSevenController: React.FC<any> = ({ route }) => {
       <ResendInvoice
         onPressOut={onPressOut}
         visible={resendInvoiceVisible}
-        message={`Reenviaremos esta factura a tu email registrado.`}
-        secondMessage={`Puedes agregar otros correos adicionales separándolos con un espacio.`}
+        message={'Reenviaremos esta factura a tu email registrado.'}
+        secondMessage={'Puedes agregar otros correos adicionales separándolos con un espacio.'}
         resend={resendGeneratedInvoice}
       />
     </SafeArea>

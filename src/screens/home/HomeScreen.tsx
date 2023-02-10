@@ -9,6 +9,8 @@ import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDrop
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
 import { logEvent } from 'utils/analytics';
+import analytics from '@react-native-firebase/analytics';
+
 interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;

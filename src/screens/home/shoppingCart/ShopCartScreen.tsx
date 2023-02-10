@@ -51,56 +51,57 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
 
   const fetchData = useCallback(async () => {
-    //console.log('fetchData...');
-    await getShoppingCart(cart.orderFormId).then(response => {
-      const { items, messages, totalizers } = response;
-      let orderItems = [];
-      //console.log({ items });
-      items.map((item, index) => {
-        orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
-      });
-      setRequestList(orderItems);
-      setMessages(messages);
-      //console.log({ messagesCar: messages });
-      setTotalizers(totalizers[0]);
-      setOrderFormId(cart.orderFormId);
-      let withoutStockM = new Map();
-      if (messages.length > 0) {
-        messages.map(value => {
-          // TODO: relocate message type to .ENV
-          if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code == 'withoutPriceFulfillment') {
-            withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
-          }
+    console.log('fetchData...');
+    await getShoppingCart(cart.orderFormId)
+      .then(response => {
+        const { items, messages, totalizers } = response;
+        let orderItems = [];
+        console.log({ items });
+        items.map((item, index) => {
+          orderItems.push({ id: item.productId, quantity: item.quantity, seller: item.seller, index: index });
         });
-        setWithoutStockMap(withoutStockM);
-      }
+        setRequestList(orderItems);
+        setMessages(messages);
+        console.log({ messagesCar: messages });
+        setTotalizers(totalizers[0]);
+        setOrderFormId(cart.orderFormId);
+        let withoutStockM = new Map();
+        if (messages.length > 0) {
+          messages.map(value => {
+            // TODO: relocate message type to .ENV
+            if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code == 'withoutPriceFulfillment') {
+              withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
+            }
+          });
+          setWithoutStockMap(withoutStockM);
+        }
 
-      let calculated = 0;
-      if (items.length > 0) {
-        items.map((value, index) => {
-          if (withoutStockM.get(index)) {
-            value.hasErrorMessage = true;
-            value.errorMessage = withoutStockM.get(index);
-          } else {
-            let priceDefinition = value.priceDefinition != undefined && value.priceDefinition.total != undefined ? value.priceDefinition.total : 0;
-            calculated = calculated + priceDefinition / 100;
-            value.hasErrorMessage = false;
-            value.errorMessage = '';
-          }
-        });
-        setSubTotalCalculated(calculated);
-      }
-      setProductList(items);
-      dispatch(updateShoppingCartItems(response));
-    });
-    //.catch(error => console.log(error));
+        let calculated = 0;
+        if (items.length > 0) {
+          items.map((value, index) => {
+            if (withoutStockM.get(index)) {
+              value.hasErrorMessage = true;
+              value.errorMessage = withoutStockM.get(index);
+            } else {
+              let priceDefinition = value.priceDefinition != undefined && value.priceDefinition.total != undefined ? value.priceDefinition.total : 0;
+              calculated = calculated + priceDefinition / 100;
+              value.hasErrorMessage = false;
+              value.errorMessage = '';
+            }
+          });
+          setSubTotalCalculated(calculated);
+        }
+        setProductList(items);
+        dispatch(updateShoppingCartItems(response));
+      })
+      .catch(error => console.log(error));
   }, []);
 
   useEffect(() => {
     if (routes.length) {
       if (routes[routes.length - 1].name === 'ShopCart') {
         fetchData();
-        //console.log({ routes });
+        console.log({ routes });
       }
     }
   }, [routes]);
@@ -161,7 +162,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     if (routes.length) {
       if (routes[routes.length - 1].name === 'ShopCart') {
         fetchData();
-        //console.log({ routes });
+        console.log({ routes });
       }
     }
   }, [routes]);
@@ -189,7 +190,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           const tam = messages.length;
           //console.log('tamaño mensajes: ', tam);
           if (tam > 0) {
-            //let unAvailableItemsNumber = 0;
+            let unAvailableItemsNumber = 0;
             messages.map(value => {
               // TODO: relocate message type to .ENV
               if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code == 'withoutPriceFulfillment') {
@@ -417,13 +418,13 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         </Container>
         <Container>
           <Container>
-            <CustomText text="" fontSize={7}></CustomText>
+            <CustomText text="" fontSize={7} />
           </Container>
           <Container>
-            <TextContainer text={item.quantity} textAlign="auto" fontSize={14}></TextContainer>
+            <TextContainer text={item.quantity} textAlign="auto" fontSize={14} />
           </Container>
           <Container>
-            <CustomText text="" fontSize={7}></CustomText>
+            <CustomText text="" fontSize={7} />
           </Container>
         </Container>
         <Container style={{ marginRight: 13 }}>
@@ -509,7 +510,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             textAlign="justify"
             marginBottom={8}
           />
-          <CustomText text=""></CustomText>
+          <CustomText text=""/>
         </Container>
       </Container>
     );
@@ -517,7 +518,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
 
   const Item: React.FC = ({ value, arrayIndex, orderForm }) => {
     const deleteShoppingCartItem = () => {
-      //console.log('***delete item: ' + value.id + ' arrayIndex: ' + arrayIndex);
       const orderItems = requestList;
       orderItems[arrayIndex].quantity = 0;
       try {
@@ -535,6 +535,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
       }
     };
 
+    const imageUrl: string = value.imageUrl.replace('-55-55', '-1000-1000');
     return (
       <Container
         row
@@ -557,7 +558,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               navigate('ProductDetail', { productIdentifier: value.id });
             }}
           >
-            <Image source={{ uri: value.imageUrl }} style={{ marginTop: 10, width: 80, height: 88 }} />
+            <Image source={{ uri: imageUrl }} style={{ marginTop: 10, width: 80, height: 88 }} />
           </Touchable>
         </Container>
         <Container space="between" style={{ marginTop: 10, width: '100%', height: 58 }}>
@@ -802,12 +803,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     <Container space="evenly" style={{ width: '100%', height: '25%', backgroundColor: theme.fontColor.white }}>
       <Container center style={{ paddingHorizontal: 0 }}>
         <Container row space="between" style={{ width: '90%' }}>
-          <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph} />
-          <CustomText text={'$' + subTotalCalculated.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'} fontSize={18} fontBold />
+          <TextContainer text="Subtotal:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+          <CustomText text={'$' + subTotalCalculated.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,') + ' MXN'} fontSize={18} fontBold></CustomText>
         </Container>
         <Container row space="between" style={{ marginTop: 10, width: '90%' }}>
-          <TextContainer text="Gastos de envío:" fontSize={14} textColor={theme.fontColor.paragraph} />
-          <TextContainer marginBottom={10} text="Por calcular" fontSize={14} textColor={theme.fontColor.paragraph} />
+          <TextContainer text="Gastos de envío:" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
+          <TextContainer marginBottom={10} text="Por calcular" fontSize={14} textColor={theme.fontColor.paragraph}></TextContainer>
         </Container>
       </Container>
       <Container center style={{ paddingHorizontal: 15 }}>

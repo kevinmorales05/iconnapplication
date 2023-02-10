@@ -16,11 +16,12 @@ interface Props {
 }
 
 const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, qualificationState, isQualified }) => {
-  const [qualificationStatus, setQualificationStatus] = useState(qualificationState);
+  const [qualificationStatus, setQualificationStatus] = useState<any[]>(qualificationState);
   const [currentQualification, setCurrentQualification] = useState(1);
   const insets = useSafeAreaInsets();
 
   const qualifyAndChangeColor = async (qualification: number) => {
+    const qualificationStatusTem = qualificationStatus.concat([]);
     if (isQualified) {
       updateQualify(qualification);
     } else {
@@ -28,14 +29,14 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
     }
 
     for (let i = 0; i < qualificationStatus.length; i++) {
-      if (qualificationStatus[i].qualificationValue == qualification) {
-        qualificationStatus[i].isQualified = true;
+      if (qualificationStatusTem[i].qualificationValue == qualification) {
+        qualificationStatusTem[i].isQualified = true;
       } else {
-        qualificationStatus[i].isQualified = false;
+        qualificationStatusTem[i].isQualified = false;
       }
     }
     setCurrentQualification(qualification);
-    setQualificationStatus(qualificationStatus);
+    setQualificationStatus(qualificationStatusTem);
   };
 
   useEffect(() => {}, [qualificationStatus, currentQualification]);
@@ -53,10 +54,10 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
             {stepsData.length > 0 ? (
               stepsData.map((step, index) => {
                 return (
-                  <Container key={index+'erCon'} style={{ width: '90%' }}>
-                    <Container row key={index+'erConRow'}>
-                      <TextContainer text={index + 1 + '.  '} fontBold key={index+'erText1'}/>
-                      <TextContainer text={step.description} fontSize={14} marginBottom={18} key={index+'erConText2'}/>
+                  <Container key={index + 'erCon'} style={{ width: '90%' }}>
+                    <Container row key={index + 'erConRow'}>
+                      <TextContainer text={index + 1 + '.  '} fontBold key={index + 'erText1'} />
+                      <TextContainer text={step.description} fontSize={14} marginBottom={18} key={index + 'erConText2'} />
                     </Container>
                     {step.importantMessage != null ? (
                       <Container
@@ -71,15 +72,21 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
                           paddingVertical: 15,
                           marginBottom: 20
                         }}
-                        key={index+'erConSt'}
+                        key={index + 'erConSt'}
                       >
-                        <Container row style={{ marginLeft: 7 }} key={index+'erConIc'}>
-                          <Container center space="around" style={{ marginLeft: 7, width: '10%' }} key={index+'erConIcon'}>
+                        <Container row style={{ marginLeft: 7 }} key={index + 'erConIc'}>
+                          <Container center space="around" style={{ marginLeft: 7, width: '10%' }} key={index + 'erConIcon'}>
                             <Octicons name="info" size={24} color={theme.fontColor.dark} />
                           </Container>
-                          <Container style={{ width: '90%' }} key={index+'erConSubT'}>
-                            <Container style={{ width: '90%', marginLeft: 8 }} key={index+'erContaImport'}>
-                              <TextContainer text={'Importante: ' + step.importantMessage} fontSize={12} numberOfLines={3} marginRight={4} key={index+'erTextImport'}/>
+                          <Container style={{ width: '90%' }} key={index + 'erConSubT'}>
+                            <Container style={{ width: '90%', marginLeft: 8 }} key={index + 'erContaImport'}>
+                              <TextContainer
+                                text={'Importante: ' + step.importantMessage}
+                                fontSize={12}
+                                numberOfLines={3}
+                                marginRight={4}
+                                key={index + 'erTextImport'}
+                              />
                             </Container>
                           </Container>
                         </Container>
@@ -108,11 +115,11 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
           <Container row space="evenly" style={{ width: '100%', marginTop: 15 }}>
             {qualificationStatus.map((qualification, index) => {
               return (
-                <Touchable onPress={() => qualifyAndChangeColor(qualification.qualificationValue)} key={index+'erTouch'}>
+                <Touchable onPress={() => qualifyAndChangeColor(qualification.qualificationValue)} key={index + 'erTouch'}>
                   <Image
                     source={qualification.img}
                     style={{ width: 40, height: 40, tintColor: qualification.isQualified ? qualification.color : theme.brandColor.iconn_grey_background }}
-                    key={index+'erImg'}
+                    key={index + 'erImg'}
                   />
                 </Touchable>
               );

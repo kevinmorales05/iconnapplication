@@ -16,6 +16,7 @@ import { HomeStackParams } from '../../../../navigation/types';
 import { numericWithSpecificLenght } from 'utils/rules';
 import { vtexDocsServices } from 'services';
 import Icon from 'react-native-vector-icons/AntDesign';
+import { useAppSelector, RootState } from 'rtk';
 
 interface Props {
   onPressScan: () => void;
@@ -26,10 +27,22 @@ interface Props {
   cardToUpdate: string;
   cardId: string;
   barcodeFromScan: string;
+  onPressSendAnalytics: (analyticsName: string, analyticsData: any) => void;
 }
 
-const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToShow, onSubmit, deleteCard, cardToUpdate, cardId, barcodeFromScan }) => {
+const PaybackScreen: React.FC<Props> = ({
+  onPressScan,
+  addOrShow,
+  cardNumberToShow,
+  onSubmit,
+  deleteCard,
+  cardToUpdate,
+  cardId,
+  barcodeFromScan,
+  onPressSendAnalytics
+}) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [paybackCard, setPaybackCard] = useState(barcodeFromScan != undefined ? barcodeFromScan : '0000000000');
   const toast = useToast();
   const [visible, setVisible] = useState<boolean>(false);
@@ -62,6 +75,12 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
 
   const editPaybackCard = () => {
     navigate('UpdatePayback', { cardIdToUpdate: cardToUpdate, paybackCard: paybackCard, cardId: cardId });
+    onPressSendAnalytics('walEditCard', {
+      id: user.id,
+      description: 'El usuario ingresa a la sección para editar una tarjeta de puntos',
+      cardType: 'PAYBACK',
+      cardId: cardId
+    });
   };
 
   const onPressScanButton = () => {
@@ -102,6 +121,12 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
   }, [isValid, cardNumberToShow, barcodeFromScan]);
 
   const showAlert = () => {
+    onPressSendAnalytics('walDeleteCard', {
+      id: user.id,
+      description: 'El usuario toca el botón de eliminar una tarjeta de puntos',
+      cardType: 'PAYBACK',
+      cardId: cardId
+    });
     alert.show(
       {
         title: 'Eliminar Monedero PAYBACK',
@@ -113,9 +138,21 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
         onAccept() {
           deletePointCard();
           alert.hide();
+          onPressSendAnalytics('walConfirmDeleteCard', {
+            id: user.id,
+            description: 'El usuario toca el botón de confirmar eliminación de una tarjeta de puntos',
+            cardType: 'PAYBACK',
+            cardId: cardId
+          });
         },
         onCancel() {
           alert.hide('cancelar');
+          onPressSendAnalytics('walCancelDeleteCard', {
+            id: user.id,
+            description: 'El usuario toca el botón de cancelar eliminación de una tarjeta de puntos',
+            cardType: 'PAYBACK',
+            cardId: cardId
+          });
         }
       },
       'deleteCart',
@@ -160,7 +197,16 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
       </Container>
       <Container center row style={{ marginTop: 40, width: '100%' }}>
         <TextContainer typography="h6" fontBold text={'Número de código de barras'} marginRight={8} marginTop={4} />
-        <Touchable onPress={goToModalHelp}>
+        <Touchable
+          onPress={() => {
+            onPressSendAnalytics('walHelpAddCard', {
+              id: user.id,
+              description: 'El usuario toca el botón de ayuda al ingresar una tarjeta de puntos',
+              cardType: 'ICONN'
+            });
+            goToModalHelp();
+          }}
+        >
           <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
         </Touchable>
       </Container>
@@ -196,7 +242,16 @@ const PaybackScreen: React.FC<Props> = ({ onPressScan, addOrShow, cardNumberToSh
     <Container>
       <Container space="evenly" center style={{ width: '100%', height: moderateScale(215) }}>
         <Image source={CARD_PETRO} style={{ width: moderateScale(264), height: moderateScale(164) }} />
-        <Touchable onPress={goToHelp}>
+        <Touchable
+          onPress={() => {
+            onPressSendAnalytics('walHelpCard', {
+              id: user.id,
+              description: 'El usuario toca el botón de ayuda de una tarjeta de puntos',
+              cardType: 'ICONN'
+            });
+            goToHelp();
+          }}
+        >
           <Icon name="questioncircle" size={20} color={theme.brandColor.iconn_green_original} />
         </Touchable>
       </Container>

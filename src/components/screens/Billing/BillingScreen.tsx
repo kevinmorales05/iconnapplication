@@ -16,6 +16,7 @@ import { HomeStackParams } from 'navigation/types';
 import { useAlert, useLoading } from 'context';
 import { AnnounceItem } from '../../atoms';
 import Feather from 'react-native-vector-icons/Feather';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   onSubmit: (data: any) => void;
@@ -232,6 +233,10 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current, isReset }
     };
 
     onSubmit(invoicingProfile);
+    logEvent('invSaveInvoicingProfile', {
+      id: user.id,
+      description: 'Guardar perfil fiscal'
+    });
   };
 
   return (
@@ -489,6 +494,10 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current, isReset }
                 onPress={() => {
                   if (!onDelete) return;
                   onDelete(current);
+                  logEvent('invRemoveInvoicingProfile', {
+                    id: user.id,
+                    description: 'Remover perfil fiscal '
+                  });
                 }}
                 fontSize="h3"
                 fontBold

@@ -2,14 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { Dimensions, StyleSheet, FlatList, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { AccordeonItemTypeProps } from 'components/types/Accordion';
 import {
   ExistingProductInCartInterface,
-  getProductPriceByProductIdThunk,
-  getProductRatingByProductIdThunk,
   getProductsByCategoryAndFiltersItemsThunk,
   ProductInterface,
+  ProductsBySubCategorieRequestInterface,
   RootState,
   TabItem,
   useAppDispatch,
@@ -18,7 +17,6 @@ import {
 import { AccordionFilter, Button, CardProduct, CardProductSkeleton, Container, CustomText, SafeArea, SearchBar, TabAnimatable } from 'components';
 import { DrawerLayout } from 'react-native-gesture-handler';
 import theme from 'components/theme/theme';
-import { ProductsByCategoryFilter } from 'rtk/types/category.types';
 import { FilterItemTypeProps } from 'components/types/FilterITem';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
@@ -26,6 +24,7 @@ import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { useLoading } from 'context';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { logEvent } from 'utils/analytics';
+import { FlashList } from '@shopify/flash-list';
 
 const ordenBy: FilterItemTypeProps[] = [
   {
@@ -68,15 +67,16 @@ const CategoryProductsScreen: React.FC = () => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
 
   const { category } = route.params;
 
   const [idCategorySelected, setIdCategorySelected] = useState<string>(category.id + '');
   const [categoriesBar, setCategoriesBar] = useState<TabItem[]>([]);
   const [productsRender, setProductsRender] = useState<ProductInterface[]>([]);
-  const [filterSelect, setFilterSelect] = useState<ProductsByCategoryFilter>('OrderByTopSaleDESC');
+  // const [filterSelect, setFilterSelect] = useState<ProductsByCategoryFilter>('OrderByTopSaleDESC');
   // const [selectBrand, setSelectBrand] = useState<string[]>([]);
-  const [itemToLoad, setItemToLoad] = useState<number>(1);
+  const [itemToLoad, setItemToLoad] = useState<number>(0);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   // const [ selectFilters, setSelectFilters] = useState({})
   const [visible, setVisible] = useState<boolean>(false);
@@ -84,6 +84,7 @@ const CategoryProductsScreen: React.FC = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isLoadingNewTab, setLoadingNewTab] = useState<boolean>(false);
   const [isLoadingMore, setLoadingMore] = useState<boolean>(true);
+  const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState<boolean>(false);
 
   const hideModalForAdult = () => {
     setVisible(false);
@@ -127,23 +128,24 @@ const CategoryProductsScreen: React.FC = () => {
     setOptions({
       title: category.name
     });
-    setIdCategorySelected(category.id + '');
+    // setIdCategorySelected(category.id + '');
   }, [category, route.params]);
 
   useEffect(() => {
-    if (category.children.length) {
+    if (category.subCategories.length) {
       const categoriesTab: TabItem[] = [
         {
           id: category.id + '',
           name: 'Todo'
         }
       ];
-      category.children.forEach(categoryFilter => {
+      category.subCategories.forEach(categoryFilter => {
         categoriesTab.push({
-          id: categoryFilter.id + '',
-          name: categoryFilter.Title
+          id: categoryFilter.sub_categories_id + '',
+          name: categoryFilter.title ? categoryFilter.title : ''
         });
       });
+      setIdCategorySelected(categoriesTab[0].id + '');
       setCategoriesBar(categoriesTab);
     }
   }, [category, route.params]);
@@ -191,90 +193,91 @@ const CategoryProductsScreen: React.FC = () => {
     setRefreshing(false);
   }
 
-  const getPriceByProductId = async (productId: string) => {
-    return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
-  };
-
-  const getRatingByProductId = async (productId: string) => {
-    return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
-  };
-
   const productsEffect = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     loader.show();
     setProductsRender([]);
-    const productsRequest: any[] = await getProducts(1);
-    if (productsRequest.length) {
-      const productsTem: ProductInterface[] = productsRequest.map(product => {
-        return {
-          name: product.productTitle,
-          image: { uri: product.items[0]?.images[0].imageUrl! },
-          quantity: 0,
-          productId: product.productId
-        };
-      });
-      let productsToRender: ProductInterface[] = [];
-      productsToRender = productsRender.concat(productsToRender);
-      for (const p of productsTem) {
-        const price = await getPriceByProductId(p.productId);
-        const raiting = await getRatingByProductId(p.productId);
-        if (price && raiting) {
-          p.oldPrice = price?.sellingPrice;
-          p.price = price?.sellingPrice;
-          p.ratingValue = raiting.average;
-          p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
-          productsToRender.push(p);
-        }
+    const productsRequest = await getProducts(0);
+    if (productsRequest.responseCode === 603 && productsRequest.data) {
+      if (productsRequest.data.products.length) {
+        const productsTem: ProductInterface[] = productsRequest.data.products.map(product => {
+          return {
+            productId: product.products_id,
+            name: product.name,
+            image: { uri: product.image },
+            price: Number.parseFloat(product.selling_price),
+            oldPrice: Number.parseFloat(product.selling_price),
+            quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
+            ratingValue: 0,
+            promotionType: product.promotions && product.promotions.type,
+            promotionName: product.promotions && product.promotions.name,
+            percentualDiscountValue: product.promotions && product.promotions.percentual_discount_value,
+            maximumUnitPriceDiscount: product.promotions && product.promotions.maximum_unit_price_discount,
+            costDiscountPrice: product.costDiscountPrice
+          };
+        });
+        await setProductsRender(productsTem);
+        await setItemToLoad(1);
+        loader.hide();
+        setLoading(false);
+        setLoadingMore(true);
+        setRefreshing(false);
+      } else {
+        loader.hide();
+        setProductsRender([]);
+        setRefreshing(false);
       }
-      await setProductsRender(productsToRender);
-      await setItemToLoad(itemToLoad + 10);
+      setLoadingNewTab(false);
+    } else {
       loader.hide();
       setLoading(false);
       setLoadingMore(true);
-    } else {
-      loader.hide();
-      setProductsRender([]);
+      setRefreshing(false);
     }
-    setLoadingNewTab(false);
   };
 
   const loadMoreProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     setLoading(true);
-    const productsRequest: any[] = await getProducts(itemToLoad + 10);
-    let productsTem: ProductInterface[] = productsRequest.map(product => {
-      return {
-        name: product.productTitle,
-        image: { uri: product.items[0]?.images[0].imageUrl! },
-        quantity: 0,
-        productId: product.productId
-      };
-    });
-    if (!productsRequest.length) {
-      setLoading(false);
-      setLoadingMore(false);
-    } else {
-      let productsToRender: ProductInterface[] = [];
-      productsToRender = productsRender.concat(productsToRender);
-      for (const p of productsTem) {
-        const price = await getPriceByProductId(p.productId);
-        const raiting = await getRatingByProductId(p.productId);
-        if (price && raiting) {
-          p.oldPrice = price?.sellingPrice;
-          p.price = price?.sellingPrice;
-          p.ratingValue = raiting.average;
-          p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
-          productsToRender.push(p);
+    const productsRequest = await getProducts(itemToLoad + 1);
+    if (productsRequest.responseCode === 603) {
+      if (productsRequest.data.products.length) {
+        const productsTem: ProductInterface[] = productsRequest.data.products.map(product => {
+          return {
+            productId: product.products_id,
+            name: product.name,
+            image: { uri: product.image },
+            price: Number.parseFloat(product.selling_price),
+            oldPrice: Number.parseFloat(product.selling_price),
+            quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
+            ratingValue: 0,
+            promotionType: product.promotions && product.promotions.type,
+            promotionName: product.promotions && product.promotions.name,
+            percentualDiscountValue: product.promotions && product.promotions.percentual_discount_value,
+            maximumUnitPriceDiscount: product.promotions && product.promotions.maximum_unit_price_discount,
+            costDiscountPrice: product.costDiscountPrice
+          };
+        });
+        if (!productsRequest.data.products.length) {
+          setLoading(false);
+          setLoadingMore(false);
+        } else {
+          const productsToRender: ProductInterface[] = productsRender.concat(productsTem);
+          await setProductsRender(productsToRender);
+          await setItemToLoad(itemToLoad + 1);
+          setLoading(false);
         }
       }
-      await setProductsRender(productsToRender);
-      await setItemToLoad(itemToLoad + 10);
-      setLoading(false);
     }
   };
 
   const getProducts = async (itemToLoad: number) => {
-    return await dispatch(
-      getProductsByCategoryAndFiltersItemsThunk({ filter: filterSelect, categoryId: category.id + '', subCategory: idCategorySelected, itemToLoad: itemToLoad })
-    ).unwrap();
+    const data: ProductsBySubCategorieRequestInterface = {
+      storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
+      subCategoryId: Number.parseInt(idCategorySelected),
+      categoryId: category.id ? Number.parseInt(category.id) : 0,
+      pageNumber: itemToLoad,
+      pageSize: 10
+    };
+    return await dispatch(getProductsByCategoryAndFiltersItemsThunk(data)).unwrap();
   };
 
   const onPressTab = (cateogry: TabItem) => {
@@ -292,12 +295,13 @@ const CategoryProductsScreen: React.FC = () => {
     }
   };
 
-  const onPressFilter = (filter: ProductsByCategoryFilter) => {
-    setFilterSelect(filter);
+  const onPressFilter = () => {
+    // filter: ProductsByCategoryFilter props
+    // setFilterSelect(filter);
   };
 
   const onPressCleanFilter = () => {
-    setFilterSelect('OrderByTopSaleDESC');
+    // setFilterSelect('OrderByTopSaleDESC');
   };
 
   const onPressSearch = () => {
@@ -357,9 +361,10 @@ const CategoryProductsScreen: React.FC = () => {
     );
   };
 
-  const _renderItem = ({ item }: { item: ProductInterface }) => {
+  const _renderItem = ({ item, index }: { item: ProductInterface; index: number }) => {
     return (
       <CardProduct
+        key={item.productId}
         ratingValue={item.ratingValue}
         price={item.price ? item.price : 0}
         porcentDiscount={item.porcentDiscount}
@@ -368,6 +373,11 @@ const CategoryProductsScreen: React.FC = () => {
         quantity={item.quantity ? item.quantity : 0}
         productId={item.productId}
         oldPrice={item.oldPrice}
+        index={index}
+        promotionType={item.promotionType}
+        percentualDiscountValue={item.percentualDiscountValue}
+        promotionName={item.promotionName}
+        costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
           updateShoppingCartProduct!('add', item.productId);
@@ -458,13 +468,16 @@ const CategoryProductsScreen: React.FC = () => {
         );
       }
     }
-    return null;
+    return <Container height={moderateScale(20)} />;
   };
 
-  const loadMoreItem = async () => {
-    if (!isLoading && isLoadingMore) {
-      const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
-      loadMoreProducts(existingProducts);
+  const loadMoreItem = () => {
+    if (!onEndReachedCalledDuringMomentum) {
+      if (!isLoading && isLoadingMore) {
+        const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
+        loadMoreProducts(existingProducts);
+        setOnEndReachedCalledDuringMomentum(true);
+      }
     }
   };
 
@@ -515,21 +528,19 @@ const CategoryProductsScreen: React.FC = () => {
                     fontSize={theme.fontSize.h6}
                   /> */}
                 </Container>
-                <Container height={verticalScale(540)} width={'100%'}>
-                  <FlatList
+                <Container height={verticalScale(520)} width={'100%'}>
+                  <FlashList
                     data={productsRender}
                     renderItem={_renderItem}
-                    onEndReachedThreshold={0.5}
+                    onEndReachedThreshold={0}
                     onEndReached={loadMoreItem}
                     refreshing={refreshing}
+                    removeClippedSubviews={true}
                     onRefresh={() => _onRefresh()}
+                    onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
                     keyExtractor={item => item.productId + ''}
-                    contentContainerStyle={{
-                      flexDirection: 'row',
-                      flexWrap: 'wrap',
-                      justifyContent: 'space-between',
-                      paddingBottom: moderateScale(50)
-                    }}
+                    numColumns={2}
+                    estimatedItemSize={moderateScale(250)}
                     ListFooterComponent={_renderFooter}
                     ListFooterComponentStyle={{ width: '100%' }}
                   />

@@ -19,8 +19,6 @@ const StepsController: React.FC<Props> = () => {
   const questionId = params?.questionId;
   const toast = useToast();
   const [helpSteps, setHelpSteps] = useState([]);
-  const [stepIdSaved, setStepIdSaved] = useState('');
-  const [stepReceived, setStepReceived] = useState(undefined);
   const [isQualified, setIsQualified] = useState(false);
   const [qualificationStatus, setQualificationStatus] = useState([
     { img: ICON_HELPSADSMILE, isQualified: false, qualificationValue: 0, color: theme.brandColor.iconn_red_original },
@@ -45,7 +43,6 @@ const StepsController: React.FC<Props> = () => {
           message: 'La pregunta ha sido calificada con éxito.',
           type: 'success'
         });
-        setStepIdSaved(newQualificationResponse.questions_qualifications_id);
       });
     } catch (error) {
       toast.show({
@@ -57,6 +54,7 @@ const StepsController: React.FC<Props> = () => {
 
   const updateQualify = async (qualification: number) => {
     try {
+      const qualificationStatusTem = qualificationStatus.concat([]);
       const toUpdate = {
         qualification: qualification,
         user_id: user.userId
@@ -68,14 +66,14 @@ const StepsController: React.FC<Props> = () => {
             type: 'success'
           });
 
-          for (let i = 0; i < qualificationStatus.length; i++) {
-            if (qualificationStatus[i].qualificationValue == qualification) {
-              qualificationStatus[i].isQualified = true;
+          for (let i = 0; i < qualificationStatusTem.length; i++) {
+            if (qualificationStatusTem[i].qualificationValue == qualification) {
+              qualificationStatusTem[i].isQualified = true;
             } else {
-              qualificationStatus[i].isQualified = false;
+              qualificationStatusTem[i].isQualified = false;
             }
           }
-          setQualificationStatus(qualificationStatus);
+          setQualificationStatus(qualificationStatusTem);
         }
       });
     } catch (error) {
@@ -88,6 +86,7 @@ const StepsController: React.FC<Props> = () => {
 
   const fetchData = useCallback(async () => {
     try {
+      const qualificationStatusTem = qualificationStatus.concat([]);
       let received;
       await helpCenterServices.getStepsListByQuestionId(parseInt(questionId)).then(async stepsResponse => {
         if (stepsResponse && stepsResponse.data.length > 0) {
@@ -103,14 +102,13 @@ const StepsController: React.FC<Props> = () => {
 
       if (received != undefined) {
         if (received.responseCode == 416) {
-          setStepIdSaved(received.data.questions_qualifications_id);
-          for (let i = 0; i < qualificationStatus.length; i++) {
-            if (qualificationStatus[i].qualificationValue == received.data.qualification) {
-              qualificationStatus[i].isQualified = true;
+          for (let i = 0; i < qualificationStatusTem.length; i++) {
+            if (qualificationStatusTem[i].qualificationValue == received.data.qualification) {
+              qualificationStatusTem[i].isQualified = true;
               setIsQualified(true);
             }
           }
-          setQualificationStatus(qualificationStatus);
+          setQualificationStatus(qualificationStatusTem);
         }
       }
     } catch (error) {
@@ -137,7 +135,6 @@ const StepsController: React.FC<Props> = () => {
         stepsData={helpSteps}
         qualify={qualify}
         updateQualify={updateQualify}
-        stepReceived={stepReceived}
         qualificationState={qualificationStatus}
         isQualified={isQualified}
       />

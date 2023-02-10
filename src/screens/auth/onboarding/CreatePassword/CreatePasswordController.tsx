@@ -1,26 +1,16 @@
 import React from 'react';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { AuthDataInterface, registerThunk, RootState, setAccountAuthCookie, setAuthCookie, setIsLogged, setUserId, useAppDispatch, useAppSelector } from 'rtk';
+import { authServices } from 'services';
+import { AuthStackParams } from 'navigation/types';
 import { AxiosError } from 'axios';
+import { FieldValues, FormProvider, useForm } from 'react-hook-form';
+import { logEvent } from 'utils/analytics';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useAlert, useLoading } from 'context';
-import { AuthStackParams } from 'navigation/types';
-import {
-  AuthDataInterface,
-  registerThunk,
-  RootState,
-  setAccountAuthCookie,
-  setAuthCookie,
-  setAuthInitialState,
-  setIsLogged,
-  setUserId,
-  useAppDispatch,
-  useAppSelector
-} from 'rtk';
-import { authServices } from 'services';
-import CreatePasswordScreen from './CreatePasswordScreen';
-import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
+import CreatePasswordScreen from './CreatePasswordScreen';
 
 const CreatePasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -102,13 +92,8 @@ const CreatePasswordController: React.FC = () => {
       }
 
       if (variant === 'recoverPassword') {
-        const { authStatus } = await authServices.createPassword(
-          password,
-          code,
-          user.email as string,
-          authenticationToken
-        );
-        if(authStatus === 'Success' ) {
+        const { authStatus } = await authServices.createPassword(password, code, user.email as string, authenticationToken);
+        if (authStatus === 'Success') {
           navigate('ChangedPassword', { authenticationToken, password });
         } else {
           alert.show(
@@ -125,7 +110,6 @@ const CreatePasswordController: React.FC = () => {
         }
       }
     } catch (error) {
-      console.log(error);
       const { response } = error as AxiosError;
       const data = response?.data as any;
       const { authStatus } = data;
@@ -139,7 +123,11 @@ const CreatePasswordController: React.FC = () => {
     } finally {
       loader.hide();
     }
-
+    logEvent('passwordNext', {
+      id: user.id,
+      description: 'Seleccionar botón de siguiente al crear nueva contraseña en el flujo de registrarse con email',
+      origin: variant === 'register' ? 'register' : 'recoveryPassword'
+    });
     return;
   };
 
