@@ -52,7 +52,7 @@ const InviteSignUpController: React.FC = () => {
 
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[]) {
     const response = await getProducts(favs);
-    if (response.responseCode === 603) {
+    if (response.responseCode === 603 && response.data) {
       const productsArr: ProductInterface[] = response.data.map((product: ProductResponseInterface) => ({
         productId: product.ProductId,
         name: product.ProductName,
@@ -79,7 +79,7 @@ const InviteSignUpController: React.FC = () => {
     if (favProductsArr) {
       const data: ProductListCacheRequestInterface = {
         storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
-        products: favProductsArr.map(item => item.Id + "")
+        products: favProductsArr.map(item => item.Id + '')
       };
       return await dispatch(getProductsListItemsThunk(data)).unwrap();
     }
