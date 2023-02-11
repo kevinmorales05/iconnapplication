@@ -24,6 +24,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { logEvent } from 'utils/analytics';
+import 'moment/locale/es';
 
 interface EstablishmentResult {
   establishment_id: number;
@@ -136,9 +137,10 @@ const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChil
 
     setSeparator(minDate.isSame(moment(invoice.emission_date)));
   }, [invoice, results]);
+  moment.locale('es');
   return (
     <>
-      {separator && <DateSeparator date={moment(invoice.emission_date).format('MMMM DD, YYYY')} />}
+      {separator && <DateSeparator date={moment(invoice.emission_date).format('MMMM DD, YYYY').toUpperCase()} />}
       {children}
     </>
   );
@@ -319,11 +321,6 @@ interface BodyParams {
   establishment?: number;
 }
 
-enum InvoiceScreenMode {
-  EMPTY,
-  FILLED
-}
-
 const InvoiceScreen: React.FC = () => {
   const [results, setResults] = useState<null | Result[]>(null);
   const [supporting, setSupporting] = useState(false);
@@ -437,11 +434,11 @@ const InvoiceScreen: React.FC = () => {
             const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
               return moment(a.emission_date).diff(b.emission_date);
             });
-
-            setResults(sortedArray);
+            setResults(sortedArray.reverse());
           }
         }
       } catch (e) {
+        // console.log()
       } finally {
         loader.hide();
       }
@@ -450,7 +447,7 @@ const InvoiceScreen: React.FC = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: props => {
+      headerRight: () => {
         return (
           <ActionButton
             circle
