@@ -12,9 +12,10 @@ import { logEvent } from 'utils/analytics';
 interface Props {
   questionsData: [];
   moduleId: string;
+  moduleName: string;
 }
 
-const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
+const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId, moduleName }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { user } = useAppSelector((state: RootState) => state.auth);
 
@@ -22,6 +23,7 @@ const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
 
   return (
     <Container style={{ backgroundColor: theme.brandColor.iconn_white, width: '100%', height: '100%' }}>
+      <TextContainer text={moduleName} fontBold fontSize={20} marginTop={23.5} marginLeft={16} marginBottom={24} />
       <Container style={{ marginLeft: 10 }}>
         {questionsData.length > 0 ? (
           questionsData.map((question, index) => {

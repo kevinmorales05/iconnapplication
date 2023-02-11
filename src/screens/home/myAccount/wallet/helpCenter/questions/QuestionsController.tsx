@@ -12,6 +12,7 @@ const QuestionsController: React.FC<Props> = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'HelpQuestions'>>();
   const { params } = route;
   const moduleId = params?.moduleId;
+  const moduleName = params?.moduleName;
   const [helpQuestions, setHelpQuestions] = useState([]);
 
   const fetchData = useCallback(async () => {
@@ -34,7 +35,7 @@ const QuestionsController: React.FC<Props> = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <QuestionsScreen questionsData={helpQuestions} moduleId={moduleId} />
+      <QuestionsScreen questionsData={helpQuestions as []} moduleId={moduleId as string} moduleName={moduleName as string} />
     </SafeArea>
   );
 };

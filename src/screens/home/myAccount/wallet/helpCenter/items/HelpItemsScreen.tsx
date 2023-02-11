@@ -60,7 +60,7 @@ const HelpItemsScreen: React.FC<Props> = ({ modulesData, icons }) => {
         navigate('VirtualTour', { step: 1 });
         break;
       default:
-        navigate('HelpQuestions', { moduleId: module.modules_cats_id, moduleName: module.description });
+        navigate('HelpQuestions', { moduleId: module.modules_cats_id, moduleName: module.name });
     }
     return flagHelp;
   };

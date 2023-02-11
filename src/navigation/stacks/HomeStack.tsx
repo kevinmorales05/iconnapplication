@@ -225,10 +225,20 @@ const HomeStack: React.FC = () => {
       />
       <Stack.Screen
         name="HelpQuestions"
-        options={({ route }) => ({ title: route.params.moduleName, headerBackTitleVisible: false })}
+        options={{
+          title: 'Ayuda',
+          headerBackTitleVisible: false
+        }}
         component={QuestionsController}
       />
-      <Stack.Screen name="HelpSteps" options={({ route }) => ({ title: route.params.question, headerBackTitleVisible: false })} component={StepsController} />
+      <Stack.Screen
+        name="HelpSteps"
+        options={{
+          title: 'Ayuda',
+          headerBackTitleVisible: false
+        }}
+        component={StepsController}
+      />
       <Stack.Screen
         options={{
           headerShown: true,
