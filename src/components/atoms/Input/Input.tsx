@@ -53,6 +53,8 @@ export interface Props {
   numeric?: boolean;
   boldLabel?: boolean;
   heightValue?: number;
+  multiline?: boolean;
+  centerText?: boolean;
 }
 
 const Input = forwardRef(
@@ -95,7 +97,9 @@ const Input = forwardRef(
       phone = false,
       numeric = false,
       boldLabel = false,
-      heightValue
+      heightValue,
+      multiline = false,
+      centerText = false
     }: Props,
     ref: ForwardedRef<any>
   ) => {
@@ -147,13 +151,14 @@ const Input = forwardRef(
         <Container flex row space="between" center>
           <Container
             row
-            center
-            height={hideLabel ? (heightValue ? heightValue : 68) : (heightValue ? heightValue : undefined)}
+            //center
+            height={hideLabel ? (heightValue ? heightValue : 68) : heightValue ? heightValue : undefined}
             style={{
               ...inputContainerStyle,
               borderColor,
               backgroundColor: !editable ? theme.brandColor.iconn_warm_grey : undefined,
-              width: sufixOutIcon ? '91%' : '100%'
+              width: sufixOutIcon ? '91%' : '100%',
+              justifyContent: centerText ? 'center' : 'flex-start'
             }}
           >
             {prefixImage && <Image testID={`${testID}-prefix-image`} source={prefixImage} style={prefixImageStyle} resizeMode="contain" />}
@@ -175,6 +180,7 @@ const Input = forwardRef(
                     <Container row center>
                       {phone && <CustomText text={`   +${placeholderBold}`} />}
                       <TextInput
+                        multiline={multiline}
                         pointerEvents={datePicker ? 'none' : 'auto'}
                         testID={`${testID}-input`}
                         ref={ref}
@@ -206,7 +212,7 @@ const Input = forwardRef(
               </Touchable>
             )}
             {scanIcon && (
-              <Container style={{marginRight: moderateScale(13)}}>
+              <Container style={{ marginRight: moderateScale(13) }}>
                 <Touchable onPress={onPressScan}>
                   <ScanBarCodeSvg size={moderateScale(24)} />
                 </Touchable>
