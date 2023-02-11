@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
+import { CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import theme from 'components/theme/theme';
-import { Dimensions, StyleSheet, FlatList } from 'react-native';
-import { moderateScale } from 'utils/scaleMetrics';
+import { StyleSheet, FlatList } from 'react-native';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
@@ -113,6 +113,7 @@ function RecommededForYouScreen() {
   }, [cart, products]);
 
   useEffect(() => {
+    loader.show();
     getCollection();
   }, []);
 
@@ -138,7 +139,7 @@ function RecommededForYouScreen() {
                   fontSize={theme.fontSize.h6}
                 />
               </Container>
-              <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
+              <Container height={verticalScale(540)} width={'100%'}>
                 <FlatList
                   data={productsList}
                   renderItem={_renderItem}
@@ -168,7 +169,7 @@ function RecommededForYouScreen() {
                   />
                 </Container>
               </Container>
-              <Container style={{ marginTop: moderateScale(200) }}>
+              {/* <Container style={{ marginTop: moderateScale(200) }}>
                 <Button
                   style={{ width: moderateScale(328) }}
                   size="small"
@@ -182,7 +183,7 @@ function RecommededForYouScreen() {
                 >
                   {'Limpiar'}
                 </Button>
-              </Container>
+              </Container> */}
             </Container>
           )}
         </Container>

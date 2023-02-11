@@ -7,35 +7,30 @@ import { moderateScale } from 'utils/scaleMetrics';
 
 interface PriceWithDiscountProps {
   price: number;
-  oldPrice?: number;
-  productPromotions: Object;
-  productId: string;
+  costDiscountPrice?: string;
+  promotionType?: string;
 }
 
-const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice, productPromotions, productId }: PriceWithDiscountProps) => {
+const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, costDiscountPrice, promotionType }: PriceWithDiscountProps) => {
   return (
     <Container>
       <Container row style={styles.container}>
-        {!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId) ? (
-          productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular' ? 
-          (
+        {promotionType ? (
+          promotionType == 'campaign' || promotionType == 'regular' ? (
             <Container style={{ marginRight: 15 }}>
               <CustomText
                 fontSize={theme.fontSize.h5}
                 fontWeight={'900'}
-                  text={
-                    !!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId)
-                      ? (
-                        productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular'
-                          ? ('$' + (productPromotions.get('' + productId).percentualDiscountValue > 0 ?
-                            (price - (parseInt(price) * productPromotions.get('' + productId).percentualDiscountValue) / 100) :
-                            productPromotions.get('' + productId).maximumUnitPriceDiscount
-                          ).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-                          )
-                          : ''
-                      )
+                text={
+                  promotionType
+                    ? promotionType == 'campaign' || promotionType == 'regular'
+                      ? '$' +
+                        Number.parseFloat(costDiscountPrice)
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                       : ''
-                  }
+                    : ''
+                }
               />
             </Container>
           ) : (
@@ -45,8 +40,8 @@ const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice, 
           <></>
         )}
 
-        {!!productPromotions && Object.keys(productPromotions).length && productPromotions.has('' + productId) ? (
-          productPromotions.get('' + productId).promotionType == 'campaign' || productPromotions.get('' + productId).promotionType == 'regular' ? (
+        {promotionType ? (
+          promotionType == 'campaign' || promotionType == 'regular' ? (
             <Text
               style={{
                 fontWeight: 'bold',
@@ -60,23 +55,11 @@ const PriceWithDiscount: React.FC<PriceWithDiscountProps> = ({ price, oldPrice, 
           ) : (
             <>
               <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
-              {oldPrice && oldPrice != price && (
-                <Container style={styles.containerText}>
-                  <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice}`} />
-                  <Container style={styles.containerLine} />
-                </Container>
-              )}
             </>
           )
         ) : (
           <>
             <CustomText fontSize={theme.fontSize.h5} fontWeight={'900'} text={`$${price}`} />
-            {oldPrice && oldPrice != price && (
-              <Container style={styles.containerText}>
-                <CustomText fontSize={theme.fontSize.h6} textColor={theme.fontColor.placeholder} text={`$${oldPrice}`} />
-                <Container style={styles.containerLine} />
-              </Container>
-            )}
           </>
         )}
       </Container>

@@ -33,6 +33,7 @@ import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 import Config from 'react-native-config';
 import { homeServices } from 'services/home-services';
+import { useLoading } from 'context';
 
 interface Props {
   itemId: string;
@@ -58,8 +59,8 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
   const [complementaryProducts, setComplementaryProducts] = useState<ProductInterface[]>([]);
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [cartItemQuantity, setCartItemQuantity] = useState(0);
-  const [productToUpdate, setProductToUpdate] = useState(Object);
   const [visible, setVisible] = useState<boolean>(false);
+  const [isLoader, setIsLoader] = useState<boolean>(false);
   const { detailSelected, cart } = useAppSelector((state: RootState) => state.cart);
   const [isFav, setIsFav] = useState<boolean>();
   const { favs, favsId, user } = useAppSelector((state: RootState) => state.auth);
@@ -67,10 +68,12 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const dispatch = useAppDispatch();
   const { COMPLEMENTRY_PRODUCTS } = Config;
+  const loader = useLoading();
 
   const itemId = detailSelected;
 
   const fetchDataProduct = useCallback(async () => {
+    loader.show();
     const productInfo: ProductCacheInterface = {
       store: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1], 10) : 0
     };
@@ -98,6 +101,8 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
       setCartItemQuantity(isProductIdInShoppingCart(itemId));
       setSkusForProductImages([image]);
     }
+    loader.hide();
+    setIsLoader(false);
   }, [cart, detailSelected]);
 
   const getComplementaryProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
@@ -195,9 +200,11 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
   };
 
   useEffect(() => {
-    fetchDataProduct();
-    setProductToUpdate(itemId);
-  }, [cart, complementaryProducts, itemId, productToUpdate, detailSelected]);
+    if (!isLoader) {
+      setIsLoader(true);
+      fetchDataProduct();
+    }
+  }, [cart, itemId, detailSelected]);
 
   useEffect(() => {
     const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
