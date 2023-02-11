@@ -121,14 +121,6 @@ export const TabNavigator = () => {
             );
           }
         }}
-        listeners={{
-          tabPress: () => {
-            logEvent('tabNavigationOpenStoreUbication', {
-              id: user.id,
-              description: 'Seleccionar ubicación de tiendas y estaciones del menú inferior'
-            });
-          }
-        }}
       />
       <Tab.Screen
         listeners={{
