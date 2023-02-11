@@ -191,7 +191,7 @@ const CategoryProductsScreen: React.FC = () => {
             price: Number.parseFloat(product.selling_price),
             oldPrice: Number.parseFloat(product.selling_price),
             quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
-            ratingValue: 0,
+            ratingValue: product.qualificationAverage,
             promotionType: product.promotions && product.promotions.type,
             promotionName: product.promotions && product.promotions.name,
             percentualDiscountValue: product.promotions && product.promotions.percentual_discount_value,
@@ -222,7 +222,7 @@ const CategoryProductsScreen: React.FC = () => {
   const loadMoreProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     setLoading(true);
     const productsRequest = await getProducts(itemToLoad + 1);
-    if (productsRequest.responseCode === 603) {
+    if (productsRequest.responseCode === 603 && productsRequest.data) {
       if (productsRequest.data.products.length) {
         const productsTem: ProductInterface[] = productsRequest.data.products.map(product => {
           return {
@@ -232,7 +232,7 @@ const CategoryProductsScreen: React.FC = () => {
             price: Number.parseFloat(product.selling_price),
             oldPrice: Number.parseFloat(product.selling_price),
             quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
-            ratingValue: 0,
+            ratingValue: product.qualificationAverage,
             promotionType: product.promotions && product.promotions.type,
             promotionName: product.promotions && product.promotions.name,
             percentualDiscountValue: product.promotions && product.promotions.percentual_discount_value,
