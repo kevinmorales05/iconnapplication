@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
+import { CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import theme from 'components/theme/theme';
 import { Dimensions, StyleSheet, FlatList } from 'react-native';
@@ -111,6 +111,7 @@ function OtherProductsScreen() {
   }, [otherProducts, cart]);
 
   useEffect(() => {
+    loader.show();
     getCollection();
   }, []);
 
@@ -166,7 +167,7 @@ function OtherProductsScreen() {
                   />
                 </Container>
               </Container>
-              <Container style={{ marginTop: moderateScale(200) }}>
+              {/* <Container style={{ marginTop: moderateScale(200) }}>
                 <Button
                   style={{ width: moderateScale(328) }}
                   size="small"
@@ -180,7 +181,7 @@ function OtherProductsScreen() {
                 >
                   {'Limpiar'}
                 </Button>
-              </Container>
+              </Container> */}
             </Container>
           )}
         </Container>
