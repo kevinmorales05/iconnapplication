@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Button, CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
+import { CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import theme from 'components/theme/theme';
-import { Dimensions, StyleSheet, FlatList } from 'react-native';
-import { moderateScale } from 'utils/scaleMetrics';
+import { StyleSheet, FlatList } from 'react-native';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
@@ -11,7 +11,6 @@ import { useNavigation } from '@react-navigation/native';
 import { ExistingProductInCartInterface, ProductInterface, ProductsByCollectionInterface, RootState, useAppSelector } from 'rtk';
 import Config from 'react-native-config';
 import { useLoading } from 'context';
-import analytics from '@react-native-firebase/analytics';
 import { logEvent } from 'utils/analytics';
 import { useProducts } from '../hooks/useProducts';
 
@@ -22,32 +21,7 @@ function RecommededForYouScreen() {
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const loader = useLoading();
-
-  const onPressSendAnalyticst = async (analyticsName: string, analyticsDecription: string, productId?: string) => {
-    try {
-      if (productId) {
-        await analytics().logEvent(analyticsName, {
-          id: user.id,
-          description: analyticsDecription,
-          productId: productId,
-          origin: 'collectionView',
-          collectionName: 'Reccommended for you'
-        });
-      } else {
-        await analytics().logEvent(analyticsName, {
-          id: user.id,
-          description: analyticsDecription,
-          origin: 'collectionView',
-          collectionName: 'Reccommended for you'
-        });
-      }
-    } catch (error) {
-      //console.log('succesfully added to firebase!');
-      //console.log(error);
-    }
-  };
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
-  
 
   const { fetchProducts, products } = useProducts();
 
@@ -181,6 +155,7 @@ function RecommededForYouScreen() {
   }, [cart, products]);
 
   useEffect(() => {
+    loader.show();
     getCollection();
   }, []);
 
@@ -206,7 +181,7 @@ function RecommededForYouScreen() {
                   fontSize={theme.fontSize.h6}
                 />
               </Container>
-              <Container height={Dimensions.get('window').height * 0.75} width={'100%'}>
+              <Container height={verticalScale(540)} width={'100%'}>
                 <FlatList
                   data={productsList}
                   renderItem={_renderItem}
@@ -236,7 +211,7 @@ function RecommededForYouScreen() {
                   />
                 </Container>
               </Container>
-              <Container style={{ marginTop: moderateScale(200) }}>
+              {/* <Container style={{ marginTop: moderateScale(200) }}>
                 <Button
                   style={{ width: moderateScale(328) }}
                   size="small"
@@ -250,7 +225,7 @@ function RecommededForYouScreen() {
                 >
                   {'Limpiar'}
                 </Button>
-              </Container>
+              </Container> */}
             </Container>
           )}
         </Container>

@@ -24,7 +24,9 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
   const { user } = useAppSelector((state: RootState) => state.auth);
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
-    setCurrentIndex(viewableItems[0].index);
+    if (viewableItems && viewableItems[0]) {
+      setCurrentIndex(viewableItems[0].index);
+    }
   }).current;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;

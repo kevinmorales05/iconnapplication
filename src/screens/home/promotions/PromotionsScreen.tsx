@@ -30,8 +30,6 @@ const PromotionsScreen: React.FC = () => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const [productFromPromotion, setProductFromPromotion] = useState([]);
-  const { promotions, productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const [productsRender, setProductsRender] = useState<ProductInterface[]>([]);
   const [itemToLoad, setItemToLoad] = useState<number>(0);
@@ -116,7 +114,7 @@ const PromotionsScreen: React.FC = () => {
             price: Number.parseFloat(product.selling_price),
             oldPrice: Number.parseFloat(product.selling_price),
             quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
-            ratingValue: 0,
+            ratingValue: product.qualificationAverage,
             promotionType: product.promotion && product.promotion.type,
             promotionName: product.promotion && product.promotion.name,
             percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
@@ -147,7 +145,7 @@ const PromotionsScreen: React.FC = () => {
   const loadMoreProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     setLoading(true);
     const productsRequest = await getProducts(itemToLoad + 1);
-    if (productsRequest.responseCode === 603) {
+    if (productsRequest.responseCode === 603 && productsRequest.data) {
       if (productsRequest.data.length) {
         const productsTem: ProductInterface[] = productsRequest.data.map(product => {
           return {
@@ -157,7 +155,7 @@ const PromotionsScreen: React.FC = () => {
             price: Number.parseFloat(product.selling_price),
             oldPrice: Number.parseFloat(product.selling_price),
             quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
-            ratingValue: 0,
+            ratingValue: product.qualificationAverage,
             promotionType: product.promotion && product.promotion.type,
             promotionName: product.promotion && product.promotion.name,
             percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
@@ -250,7 +248,7 @@ const PromotionsScreen: React.FC = () => {
         );
       }
     }
-    return <Container height={moderateScale(20)} />;
+    return <Container height={moderateScale(30)} />;
   };
 
   const loadMoreItem = () => {
@@ -281,7 +279,7 @@ const PromotionsScreen: React.FC = () => {
       </Container>
       <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
         {productsRender.length ? (
-          <Container height={verticalScale(500)} width={'100%'}>
+          <Container height={verticalScale(525)} width={'100%'}>
             <FlashList
               data={productsRender}
               renderItem={_renderItem}

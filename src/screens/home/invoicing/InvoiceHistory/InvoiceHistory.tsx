@@ -24,6 +24,7 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import moment from 'moment';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { logEvent } from 'utils/analytics';
+import 'moment/locale/es';
 
 interface EstablishmentResult {
   establishment_id: number;
@@ -136,9 +137,10 @@ const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChil
 
     setSeparator(minDate.isSame(moment(invoice.emission_date)));
   }, [invoice, results]);
+  moment.locale('es');
   return (
     <>
-      {separator && <DateSeparator date={moment(invoice.emission_date).format('MMMM DD, YYYY')} />}
+      {separator && <DateSeparator date={moment(invoice.emission_date).format('MMMM DD, YYYY').toUpperCase()} />}
       {children}
     </>
   );
@@ -301,12 +303,7 @@ const Empty = () => {
   );
 };
 
-enum Filter {
-  STORE,
-  DATE,
-  AMMOUNT,
-  MULTIPLE
-}
+type Filter = 'STORE' | 'DATE' | 'AMMOUNT' | 'MULTIPLE';
 
 interface BodyParams {
   userId: string;
@@ -317,11 +314,6 @@ interface BodyParams {
   yesterday?: boolean;
   amount?: Amount;
   establishment?: number;
-}
-
-enum InvoiceScreenMode {
-  EMPTY,
-  FILLED
 }
 
 const InvoiceScreen: React.FC = () => {
@@ -437,11 +429,11 @@ const InvoiceScreen: React.FC = () => {
             const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
               return moment(a.emission_date).diff(b.emission_date);
             });
-
-            setResults(sortedArray);
+            setResults(sortedArray.reverse());
           }
         }
       } catch (e) {
+        // console.log()
       } finally {
         loader.hide();
       }
@@ -450,7 +442,7 @@ const InvoiceScreen: React.FC = () => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: props => {
+      headerRight: () => {
         return (
           <ActionButton
             circle
@@ -504,7 +496,7 @@ const InvoiceScreen: React.FC = () => {
                 >
                   <Touchable
                     onPress={() => {
-                      setFilter(Filter.MULTIPLE);
+                      setFilter('MULTIPLE');
                       logEvent('invOpenInvoicingHistoryFilters', {
                         id: user.id,
                         description: 'Abrir filtros'
@@ -529,7 +521,7 @@ const InvoiceScreen: React.FC = () => {
                   label={date ? (date.label as string) : 'Fecha'}
                   name="date"
                   onPress={() => {
-                    setFilter(Filter.DATE);
+                    setFilter('DATE');
                   }}
                   onReset={() => {
                     setDate(null);
@@ -540,7 +532,7 @@ const InvoiceScreen: React.FC = () => {
                   label={establishment ? (establishment.name as string) : 'Establecimiento'}
                   name="date"
                   onPress={() => {
-                    setFilter(Filter.STORE);
+                    setFilter('STORE');
                   }}
                   onReset={() => {
                     setEstablishment(null);
@@ -551,7 +543,7 @@ const InvoiceScreen: React.FC = () => {
                   label={amount ? (amount.label as string) : 'Monto'}
                   name="date"
                   onPress={() => {
-                    setFilter(Filter.AMMOUNT);
+                    setFilter('AMMOUNT');
                   }}
                   onReset={() => {
                     setAmount(null);
@@ -610,7 +602,7 @@ const InvoiceScreen: React.FC = () => {
               setEstablishment(current);
             }}
             establishment={establishment}
-            visible={filter === Filter.STORE}
+            visible={filter === 'STORE'}
             onPressOut={() => {
               setFilter(null);
             }}
@@ -620,7 +612,7 @@ const InvoiceScreen: React.FC = () => {
             handleAmount={current => {
               setAmount(current);
             }}
-            visible={filter === Filter.AMMOUNT}
+            visible={filter === 'AMMOUNT'}
             onPressOut={() => {
               setFilter(null);
             }}
@@ -634,7 +626,7 @@ const InvoiceScreen: React.FC = () => {
               setVisible(true);
               setFilter(null);
             }}
-            visible={filter === Filter.DATE}
+            visible={filter === 'DATE'}
             onPressOut={() => {
               setFilter(null);
             }}
@@ -668,7 +660,7 @@ const InvoiceScreen: React.FC = () => {
               setVisible(true);
               setFilter(null);
             }}
-            visible={filter === Filter.MULTIPLE}
+            visible={filter === 'MULTIPLE'}
             onPressOut={() => {
               setFilter(null);
               logEvent('invCloseInvoicingHistoryFilters', {
