@@ -49,6 +49,9 @@ const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, go
           <Touchable
             onPress={() => {
               goBack();
+              if (filterObject === undefined) {
+                showResults();
+              }
               logEvent('sucCloseFilters', {
                 id: user.id,
                 description: 'Botón de cerrar filtros'
