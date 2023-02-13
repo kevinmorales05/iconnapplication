@@ -303,13 +303,13 @@ const BranchesController: React.FC<any> = ({ route }) => {
         }
       }
     } else if (permissions.locationStatus === 'granted') {
-      bottomSheetSMRef.current?.close();
+      bottomSheetSMRef.current?.forceClose();
       // There is a weird behavior in android when modal permissions appears and after appears the modal for state and municipality.
       // For that reason it is necessary to close and present consecutively.
       if (Platform.OS === 'android') {
         setTimeout(() => {
-          bottomSheetSMRef.current?.close();
-        }, 700);
+          bottomSheetSMRef.current?.forceClose();
+        }, 4000);
       }
     }
     // else {
@@ -380,7 +380,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
 
   // SnapPoints for PointDetailSheet
   const snapPoints = useMemo(
-    () => ['46%', Platform.OS === 'android' ? Dimensions.get('window').height - insets.top + 16 : Dimensions.get('window').height - insets.top],
+    () => ['46%', Platform.OS === 'android' ? Dimensions.get('window').height - (insets.top + 16) : Dimensions.get('window').height - insets.top],
     []
   );
 
@@ -398,7 +398,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
   /**
    * Hide StateMunicipalitySheet.
    */
-  const handleClosePressSM = () => bottomSheetSMRef.current?.close();
+  const handleClosePressSM = () => bottomSheetSMRef.current?.forceClose();
 
   /**
    * Expand the bottomSheet.
