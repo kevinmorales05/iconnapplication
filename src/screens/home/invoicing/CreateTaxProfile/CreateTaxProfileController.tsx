@@ -55,7 +55,7 @@ const CreateTaxProfileController: React.FC = () => {
             dispatch(setInvoicingProfilesList(newList));
             setResetFields(true);
             setCurrent(undefined);
-            navigate('TaxInfo');
+            navigate('Invoice');
             setResetFields(false);
             alert.hide();
           } catch (error) {
