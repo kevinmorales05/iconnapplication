@@ -14,6 +14,9 @@ import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
 import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 import { logEvent } from 'utils/analytics';
+import { getStatusModuleFather } from 'utils/modulesApp';
+import { modulesRemoteConfig } from '../common/modulesRemoteConfig';
+import DisableController from 'screens/home/disableScreen/DisableController';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -21,6 +24,10 @@ export const TabNavigator = () => {
   const { isGuest, user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
   const { paySuccess } = route.params;
+  const { appModules } = useAppSelector((state: RootState) => state.app);
+
+  //sucursales
+  const stores: boolean | undefined = getStatusModuleFather(appModules ? appModules : [], modulesRemoteConfig.helpCenter);
 
   return (
     <Tab.Navigator
@@ -85,18 +92,23 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         name="BranchesScreen"
-        component={isGuest ? InviteSignUpController : InConstructionController}
+        component={isGuest ? InviteSignUpController : stores ? InConstructionController : DisableController}
         // component={isGuest ? InviteSignUpController : BranchesStack}
         options={{
           unmountOnBlur: true,
           headerShown: false,
           title: 'Sucursales',
           headerTitle: 'Tiendas y estaciones',
+          tabBarItemStyle: { opacity: !stores ? 0.4 : 1 },
           tabBarIcon: ({ focused }) => {
             return (
               <Image
                 source={TAB_PIN_LOCATION}
-                style={{ tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height: 24, width: 24 }}
+                style={{
+                  tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`,
+                  height: 24,
+                  width: 24
+                }}
               />
             );
           }

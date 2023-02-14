@@ -183,6 +183,7 @@ import TAB_PIN_LOCATION from './tab_pin_location.webp';
 import TAB_PROMOS from './tab_promos.webp';
 import TAB_USER_PROFILE from './tab_user_profile.webp';
 import TELCEL_LOGO from './telcel_logo.png';
+import WARNING_ERROR from './warning_error.webp';
 
 export {
   ATT_LOGO,
@@ -369,5 +370,6 @@ export {
   TAB_PIN_LOCATION,
   TAB_PROMOS,
   TAB_USER_PROFILE,
-  TELCEL_LOGO
+  TELCEL_LOGO,
+  WARNING_ERROR
 };

@@ -13,9 +13,10 @@ interface Props {
   onPressProduct?: (type: CounterType, productId: string) => void;
   onPressOut: () => void;
   cards?: boolean;
+  pointsCardDisabled?: boolean;
 }
 
-const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut, cards }) => {
+const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut, cards, pointsCardDisabled }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -48,7 +49,9 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
       ) : items && items.length > 0 ? (
         <FlatList
           data={items}
-          renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={onPressItem} onPressOut={onPressOut} />}
+          renderItem={({ item, index }) => (
+            <AnimatedItem data={item} pointsCardDisabled={pointsCardDisabled} position={index} onPressItem={onPressItem} onPressOut={onPressOut} />
+          )}
           horizontal
           bounces={items!.length > 1 ? true : false}
           keyExtractor={item => item.id}

@@ -1,10 +1,11 @@
 import React, { useRef } from 'react';
 import { FlatList, Animated, ViewStyle, ImageStyle } from 'react-native';
+import { ServiceType } from 'rtk';
 import { Container } from '../../atoms';
 import AnimatedItemWithBorder from './AnimatedItemWithBorder';
 
 interface Props {
-  items?: any;
+  items?: ServiceType[];
   style?: ViewStyle;
   slug?: boolean;
   imgStyle?: ImageStyle;
@@ -29,6 +30,7 @@ const AnimatedCarouselWithBorder: React.FC<Props> = ({ items, style, slug = true
           <AnimatedItemWithBorder
             style={style}
             icon={item.icon}
+            disabled={item.disabled}
             serviceName={item.serviceName}
             onPressItem={item.onPressItem}
             slug={slug}

@@ -16,7 +16,9 @@ import {
   ShippingDataInfo,
   ShippingData,
   setDateSync,
-  ProductsByCollectionInterface
+  ProductsByCollectionInterface,
+  ModuleInterface,
+  setAppModules
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -34,6 +36,8 @@ import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
 import moment from 'moment';
+import remoteConfig from '@react-native-firebase/remote-config';
+import { envariomentState } from '../../common/modulesRemoteConfig';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -54,10 +58,14 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const inConstruction = useInConstruction();
   const { getFavorites } = useFavorites();
   const { email } = user;
-  const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS } = Config;
+  const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, ENV_STATE } = Config;
   const welcomeModal = useWelcomeModal();
   const [isChargin, setIsChargin] = useState(false);
   const { dateSync } = useAppSelector((state: RootState) => state.wallet);
+
+  useEffect(() => {
+    initRemoteConfig();
+  }, []);
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -99,6 +107,37 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       }, 250);
     }
   }, [user, isChargin]);
+
+  const initRemoteConfig = async () => {
+    await remoteConfig().setConfigSettings({
+      minimumFetchIntervalMillis: 30000
+    });
+    await remoteConfig()
+      .setDefaults({
+        prod_modules_config: ''
+      })
+      .then(() => remoteConfig().fetchAndActivate())
+      .then(() => {
+        getRemoteConfig();
+      });
+  };
+
+  const getRemoteConfig = async () => {
+    //Code to get All parameters from Firebase Remote config
+    const parameters = await remoteConfig().getAll();
+    if (parameters) {
+      const envConfig = envariomentState[ENV_STATE];
+      if (parameters[envConfig]) {
+        const parametersJSON: ModuleInterface[] = JSON.parse(parameters[envConfig]._value);
+        if (parametersJSON) {
+          dispatch(setAppModules({ appModules: parametersJSON }));
+        }
+      }
+    }
+    setTimeout(async () => {
+      await initRemoteConfig();
+    }, 300000);
+  };
 
   const addDirectionDefault = async () => {
     const selectedAddresses: ShippingDataAddress = {
