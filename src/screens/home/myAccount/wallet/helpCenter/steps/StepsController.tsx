@@ -32,24 +32,17 @@ const StepsController: React.FC<Props> = () => {
       description: 'Calificar información de respuesta',
       questionId: questionId
     });
-    try {
-      const newQualification = {
-        questions_cats_id: questionId,
-        qualification: qualification,
-        user_id: user.userId
-      };
-      helpCenterServices.qualifyByQuestionId(newQualification).then(() => {
-        toast.show({
-          message: 'La pregunta ha sido calificada con éxito.',
-          type: 'success'
-        });
-      });
-    } catch (error) {
+    const newQualification = {
+      questions_cats_id: questionId,
+      qualification: qualification,
+      user_id: user.userId
+    };
+    helpCenterServices.qualifyByQuestionId(newQualification).then(() => {
       toast.show({
-        message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
-        type: 'error'
+        message: 'La pregunta ha sido calificada con éxito.',
+        type: 'success'
       });
-    }
+    });
   };
 
   const updateQualify = async (qualification: number) => {
