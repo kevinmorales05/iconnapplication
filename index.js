@@ -13,7 +13,5 @@ Text.defaultProps = Text.defaultProps || {};
 Text.defaultProps.allowFontScaling = false;
 
 // Important setup. If you dont add this gestureHandlerRootHOC wrap to App, then gesture doesnt work for android.
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  //console.log('Message handled in the background!', remoteMessage);
-});
+messaging().setBackgroundMessageHandler(async remoteMessage => {});
 AppRegistry.registerComponent(appName, () => gestureHandlerRootHOC(App));

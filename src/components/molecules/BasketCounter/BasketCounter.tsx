@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { ICONN_BASKET, ICONN_REVERSE_BASKET } from 'assets/images';
 import { Container, CustomText, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import { useNavigation } from '@react-navigation/native';
@@ -9,7 +8,7 @@ import { HomeStackParams } from '../../../navigation/types';
 import { RootState, useAppSelector } from 'rtk';
 import { moderateScale } from 'utils/scaleMetrics';
 import { BasketSvg } from 'components/svgComponents';
-import analytics from '@react-native-firebase/analytics';
+import { logEvent } from 'utils/analytics';
 
 const BasketCounter = () => {
   const { cart } = useAppSelector((state: RootState) => state.cart);
@@ -18,15 +17,10 @@ const BasketCounter = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
   const openCart = async () => {
-    try {
-      await analytics().logEvent('hmOpenCart', {
-        id: user.id,
-        description: 'Abrir Mi canasta'
-      });
-      //console.log('succesfully added to firebase!');
-    } catch (error) {
-      //console.log(error);
-    }
+    logEvent('hmOpenCart', {
+      id: user.id,
+      description: 'Abrir Mi canasta'
+    });
   };
 
   const getCount = () => {
@@ -35,7 +29,6 @@ const BasketCounter = () => {
     if (messages) {
       if (messages.length > 0) {
         messages.map(value => {
-          // TODO: relocate message type to .ENV
           if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code == 'withoutPriceFulfillment') {
             withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
           }
