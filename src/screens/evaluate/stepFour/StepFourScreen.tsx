@@ -82,6 +82,7 @@ const StepFourScreen: React.FC<Props> = ({ onSubmit }) => {
           rules={alphabetRule(true)}
           error={errors.station?.message}
           heightValue={verticalScale(110)}
+          multiline={true}
         />
       </Container>
       <Container style={styles.containerButton}>

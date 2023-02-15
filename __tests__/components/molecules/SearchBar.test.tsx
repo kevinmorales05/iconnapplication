@@ -2,6 +2,8 @@ import React from 'react';
 import { SearchBar } from 'components';
 import renderer from 'react-test-renderer';
 
+const onPressDoNothing = () => {};
+
 jest.mock('react-native-device-info', () => {
   return {
     getVersion: () => 4,
@@ -28,10 +30,10 @@ describe('Testing on <SearchBar />', () => {
     const snap = renderer
       .create(
         <SearchBar
-          onChangeTextSearch={() => {}}
-          onPressSearch={() => {}}
+          onChangeTextSearch={onPressDoNothing}
+          onPressSearch={onPressDoNothing}
           isButton={false}
-          onEndWriting={() => {}}
+          onEndWriting={onPressDoNothing}
           textSearch="something"
           placeHolderText="placeholder"
         />
@@ -41,7 +43,7 @@ describe('Testing on <SearchBar />', () => {
     expect(snap).toMatchSnapshot();
   });
   test('should match with the snapshot as button', () => {
-    const snap = renderer.create(<SearchBar onChangeTextSearch={() => {}} onPressSearch={() => {}} isButton={true} />).toJSON();
+    const snap = renderer.create(<SearchBar onChangeTextSearch={onPressDoNothing} onPressSearch={onPressDoNothing} isButton={true} />).toJSON();
 
     expect(snap).toMatchSnapshot();
   });

@@ -3,6 +3,8 @@ import { PointItem } from 'components';
 import { PointInterface } from 'rtk';
 import renderer from 'react-test-renderer';
 
+const onPressNothing = () => {};
+
 jest.mock('react-native-device-info', () => {
   return {
     getVersion: () => 4,
@@ -29,7 +31,7 @@ describe('Testing on <PointItem />', () => {
     const snap = renderer
       .create(
         <PointItem
-          onPress={() => {}}
+          onPress={onPressNothing}
           point={
             {
               address: 'string',

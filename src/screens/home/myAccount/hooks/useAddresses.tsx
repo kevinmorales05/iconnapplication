@@ -19,6 +19,7 @@ import {
   saveUserAddressThunk,
   updateUserAddressThunk
 } from 'rtk/thunks/vtex-addresses.thunks';
+import { logEvent } from 'utils/analytics';
 
 export const useAddresses = () => {
   const { loading, user, isGuest } = useAppSelector((state: RootState) => state.auth);
@@ -71,6 +72,11 @@ export const useAddresses = () => {
   }, [user.addresses]);
 
   const editAddress: any = (address: Address, position: number) => {
+    logEvent('sdEditAddress', {
+      id: user.id,
+      description: 'Editar una dirección de la lista de direcciones agregadas',
+      addressId: address.id
+    });
     fetchAddressByPostalCode(address.postalCode!);
     setAddress(address);
     setPosition(position);
@@ -81,13 +87,22 @@ export const useAddresses = () => {
   };
 
   const onPressAddNewAddress = () => {
+    logEvent('sdAddAddress', {
+      id: user.id,
+      description: 'Seleccionar una dirección en el método de entrega a domicilio',
+      origin: 'AddressesList'
+    });
     if (isGuest) {
       enter.show({
-        secondaryMessage: 'Guarda tus direcciones de envío para hacer\npedidos más rápido, o continúa tu compra\ncomo invitado desde la canasta..'
+        secondaryMessage: 'Guarda tus direcciones de envío para hacer\npedidos más rápido, o continúa tu compra\ncomo invitado desde la canasta.'
       });
       return;
     }
 
+    logEvent('sdCloseDeliveryChoose', {
+      id: user.id,
+      description: 'Cerrar modal para seleccionar la lista de direcciones'
+    });
     setPostalCodeInfo(null);
     setAddress(null);
     setPosition(null);
@@ -103,6 +118,11 @@ export const useAddresses = () => {
   };
 
   const deleteAdress = async (address: Address, position: number) => {
+    logEvent('accDeleteAdddress', {
+      id: user.id,
+      description: 'Eliminar una dirección en el método de entrega a domicilio',
+      addressId: address.id
+    });
     try {
       const response = await dispatch(deleteUserAddressThunk(address.id!)).unwrap();
       if (!response) {
