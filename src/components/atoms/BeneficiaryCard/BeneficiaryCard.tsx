@@ -2,10 +2,9 @@ import { BeneficiaryInterface } from 'rtk';
 import React from 'react';
 import { ICONN_DOLLAR_CIRCLE } from 'assets/images';
 import { TextContainer } from 'components/molecules';
-import { Image, StyleSheet } from 'react-native';
+import { Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Container } from '../Container';
 import theme from 'components/theme/theme';
-import { TouchableOpacity } from 'react-native';
 import { moderateScale } from 'utils/scaleMetrics';
 
 interface BeneficiaryCardProps {

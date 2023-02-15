@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ExistingProductInCartInterface, ProductInterface, ProductsByCollectionInterface, RootState, useAppSelector } from 'rtk';
 import Config from 'react-native-config';
 import { useLoading } from 'context';
+import { logEvent } from 'utils/analytics';
 import { useProducts } from '../hooks/useProducts';
 
 function RecommededForYouScreen() {
@@ -18,12 +19,19 @@ function RecommededForYouScreen() {
   const { updateShoppingCartProduct } = useShoppingCart();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { cart } = useAppSelector((state: RootState) => state.cart);
-  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const loader = useLoading();
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
 
   const { fetchProducts, products } = useProducts();
 
   const onPressSearch = () => {
+    logEvent('SelectSearchBar', {
+      id: user.id,
+      description: 'Seleccionar barra de búsqueda de tienda',
+      origin: 'collectionView',
+      collectionName: 'Reccommended for you'
+    });
     navigate('SearchProducts');
   };
 
@@ -45,21 +53,55 @@ function RecommededForYouScreen() {
         promotionName={item.promotionName}
         costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={() => {
+          logEvent('addProduct', {
+            id: user.id,
+            description: 'Añadir un producto de la canasta en la colección',
+            origin: 'collectionView',
+            collectionName: 'Reccommended for you',
+            productId: item.productId
+          });
           updateShoppingCartProduct!('create', item.productId);
         }}
         onPressAddQuantity={() => {
+          logEvent('plusProduct', {
+            id: user.id,
+            description: 'Sumar uno a un producto en la canasta en la colección',
+            origin: 'collectionView',
+            collectionName: 'Reccommended for you',
+            productId: item.productId
+          });
           updateShoppingCartProduct!('add', item.productId);
         }}
         onPressDeleteCart={() => {
+          logEvent('removeProduct', {
+            id: user.id,
+            description: 'Sacar un producto de la canasta en la colección de recomendados para ti',
+            origin: 'collectionView',
+            collectionName: 'Reccommended for you',
+            productId: item.productId
+          });
           updateShoppingCartProduct!('remove', item.productId);
         }}
         onPressDecreaseQuantity={() => {
+          logEvent('minusProduct', {
+            id: user.id,
+            description: 'Restar uno a un producto en la canasta en la colección',
+            origin: 'collectionView',
+            collectionName: 'Reccommended for you',
+            productId: item.productId
+          });
           updateShoppingCartProduct!('substract', item.productId);
         }}
         notNeedMarginLeft
-        onPressOut={function (): void {
-          throw new Error('Function not implemented.');
-        }}
+        onPressAnalytics={async () =>
+          logEvent('openProduct', {
+            id: user.id,
+            description: 'Abrir un producto en una colección',
+            origin: 'collectionView',
+            collectionName: 'Reccommended for you',
+            productId: item.productId
+          })
+        }
       />
     );
   };

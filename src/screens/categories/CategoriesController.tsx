@@ -5,12 +5,14 @@ import theme from 'components/theme/theme';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { getCategoryItemsThunk, useAppDispatch } from 'rtk';
+import { getCategoryItemsThunk, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { CategoryInterface } from 'rtk/types/category.types';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
+import { logEvent } from 'utils/analytics';
 
 const CategoriesController: React.FC = ({ navigation, route }: any) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const dispatch = useAppDispatch();
 
@@ -64,10 +66,12 @@ const CategoriesController: React.FC = ({ navigation, route }: any) => {
   };
 
   const onPressCategory = (category: CategoryInterface) => {
+    logEvent('catSelectCategory', { id: user.id, description: 'Seleccionar categoría', selectedCategoryId: category.id.toString() });
     navigate('CategoryProducts', { category: category, categories: categories });
   };
 
   const onPressSearch = () => {
+    logEvent('SelectSearchBar', { id: user.id, description: 'Seleccionar la barra de búsqueda' });
     navigate('SearchProducts');
   };
 

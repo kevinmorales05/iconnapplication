@@ -61,11 +61,14 @@ import VirtualTourController from 'screens/home/myAccount/wallet/helpCenter/item
 import WalletStack from './nested/WalletStack';
 import EvaluateStack from './nested/EvaluateStack';
 import WhoWeAreController from 'screens/home/myAccount/aboutUs/About/WhoWeAreController';
+import analytics from '@react-native-firebase/analytics';
+import { RootState, useAppSelector } from 'rtk';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const Stack = createNativeStackNavigator<HomeStackParams>();
   const { goBack } = useNavigation<any>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const closeShoppingCart = () => {
     navigate('Home', { paySuccess: false });
@@ -143,7 +146,16 @@ const HomeStack: React.FC = () => {
           },
           headerRight: () => (
             <Touchable
-              onPress={() => {
+              onPress={async () => {
+                try {
+                  await analytics().logEvent('cartClose', {
+                    id: user.id,
+                    description: 'Cerrar canasta'
+                  });
+                  //console.log('succesfully added to firebase!');
+                } catch (error) {
+                  //console.log(error);
+                }
                 closeShoppingCart();
               }}
             >
@@ -213,10 +225,20 @@ const HomeStack: React.FC = () => {
       />
       <Stack.Screen
         name="HelpQuestions"
-        options={({ route }) => ({ title: route.params.moduleName, headerBackTitleVisible: false })}
+        options={{
+          title: 'Ayuda',
+          headerBackTitleVisible: false
+        }}
         component={QuestionsController}
       />
-      <Stack.Screen name="HelpSteps" options={({ route }) => ({ title: route.params.question, headerBackTitleVisible: false })} component={StepsController} />
+      <Stack.Screen
+        name="HelpSteps"
+        options={{
+          title: 'Ayuda',
+          headerBackTitleVisible: false
+        }}
+        component={StepsController}
+      />
       <Stack.Screen
         options={{
           headerShown: true,

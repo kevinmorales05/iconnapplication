@@ -3,30 +3,32 @@ import { storiesOf } from '@storybook/react-native';
 import React from 'react';
 import CheckBox from './CheckBox';
 
+const onPressDoNothing = () => {};
+
 storiesOf('Atoms/Checkbox', module)
   .addDecorator(BufferView)
   .add('Type', () => {
     return (
       <>
-        <CheckBox size="xxsmall" onPress={() => {}}>
+        <CheckBox size="xxsmall" onPress={onPressDoNothing}>
           Hello CheckBox
         </CheckBox>
-        <CheckBox size="xsmall" onPress={() => {}}>
+        <CheckBox size="xsmall" onPress={onPressDoNothing}>
           Hello CheckBox
         </CheckBox>
-        <CheckBox size="small" onPress={() => {}}>
+        <CheckBox size="small" onPress={onPressDoNothing}>
           Hello CheckBox
         </CheckBox>
-        <CheckBox size="medium" onPress={() => {}}>
+        <CheckBox size="medium" onPress={onPressDoNothing}>
           Hello CheckBox
         </CheckBox>
-        <CheckBox size="large" onPress={() => {}}>
+        <CheckBox size="large" onPress={onPressDoNothing}>
           Hello CheckBox
         </CheckBox>
-        <CheckBox size="xlarge" onPress={() => {}}>
+        <CheckBox size="xlarge" onPress={onPressDoNothing}>
           Hello CheckBox
         </CheckBox>
-        <CheckBox size="xxlarge" onPress={() => {}}>
+        <CheckBox size="xxlarge" onPress={onPressDoNothing}>
           Hello CheckBox
         </CheckBox>
       </>
@@ -35,7 +37,7 @@ storiesOf('Atoms/Checkbox', module)
   .add('Icon right', () => {
     return (
       <>
-        <CheckBox onPress={() => {}} iconRight>
+        <CheckBox onPress={onPressDoNothing} iconRight>
           Hello CheckBox
         </CheckBox>
       </>
@@ -44,7 +46,7 @@ storiesOf('Atoms/Checkbox', module)
   .add('Checked', () => {
     return (
       <>
-        <CheckBox checked onPress={() => {}}>
+        <CheckBox checked onPress={onPressDoNothing}>
           Hello CheckBox
         </CheckBox>
       </>
@@ -53,13 +55,13 @@ storiesOf('Atoms/Checkbox', module)
   .add('Color', () => {
     return (
       <>
-        <CheckBox onPress={() => {}} color="iconn_accent_principal">
+        <CheckBox onPress={onPressDoNothing} color="iconn_accent_principal">
           Hello CheckBox
         </CheckBox>
-        <CheckBox onPress={() => {}} color="iconn_accent_secondary">
+        <CheckBox onPress={onPressDoNothing} color="iconn_accent_secondary">
           Hello CheckBox
         </CheckBox>
-        <CheckBox onPress={() => {}} checked color="iconn_error">
+        <CheckBox onPress={onPressDoNothing} checked color="iconn_error">
           Hello CheckBox
         </CheckBox>
       </>
@@ -68,16 +70,16 @@ storiesOf('Atoms/Checkbox', module)
   .add('Text Color', () => {
     return (
       <>
-        <CheckBox onPress={() => {}} textColor="link">
+        <CheckBox onPress={onPressDoNothing} textColor="link">
           Hello CheckBox
         </CheckBox>
-        <CheckBox onPress={() => {}} textColor="medgrey">
+        <CheckBox onPress={onPressDoNothing} textColor="medgrey">
           Hello CheckBox
         </CheckBox>
-        <CheckBox onPress={() => {}} textColor="grey">
+        <CheckBox onPress={onPressDoNothing} textColor="grey">
           Hello CheckBox
         </CheckBox>
-        <CheckBox onPress={() => {}} textColor="paragraph">
+        <CheckBox onPress={onPressDoNothing} textColor="paragraph">
           Hello CheckBox
         </CheckBox>
       </>

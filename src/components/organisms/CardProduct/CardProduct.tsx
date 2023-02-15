@@ -43,6 +43,9 @@ interface CardProductProps {
   ratingValue?: number;
   notNeedMarginLeft?: boolean;
   isFavorite?: boolean;
+  onPressAnalytics?: () => void;
+  pressFavfromCategory?: () => void;
+  pressNoFavfromCategory?: () => void;
   promotionType?: string;
   percentualDiscountValue?: number;
   promotionName?: string;
@@ -54,6 +57,7 @@ interface CardProductProps {
 const CardProduct: React.FC<CardProductProps> = ({
   ratingValue,
   price,
+  oldPrice,
   name,
   image,
   quantity,
@@ -63,6 +67,9 @@ const CardProduct: React.FC<CardProductProps> = ({
   onPressAddQuantity,
   onPressDecreaseQuantity,
   notNeedMarginLeft,
+  onPressAnalytics,
+  pressFavfromCategory,
+  pressNoFavfromCategory,
   promotionType,
   percentualDiscountValue,
   promotionName,
@@ -194,6 +201,7 @@ const CardProduct: React.FC<CardProductProps> = ({
         Name: name
       };
       removeFavorite(productToRemove);
+      if (pressNoFavfromCategory) pressNoFavfromCategory();
     }
     if (!isFav) {
       const productToAdd: ItemsFavoritesInterface = {
@@ -201,6 +209,7 @@ const CardProduct: React.FC<CardProductProps> = ({
         Name: name
       };
       addFavorite1(productToAdd);
+      if (pressFavfromCategory) pressFavfromCategory();
     }
     setIsFav(!isFav);
   };
@@ -261,9 +270,10 @@ const CardProduct: React.FC<CardProductProps> = ({
         </Container>
         <Container>
           <Touchable
-            onPress={() => {
+            onPress={async () => {
               dispatch(setDetailSelected(productId));
               navigate('ProductDetail', { productIdentifier: productId });
+              if (onPressAnalytics) onPressAnalytics();
             }}
           >
             <Container style={styles.containerTitle}>
