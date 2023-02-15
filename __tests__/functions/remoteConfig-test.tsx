@@ -3,7 +3,6 @@
  */
 
 import 'react-native';
-// import { distanceInKmBetweenEarthCoordinates } from 'utils/geolocation';
 import { getStatusModuleFather } from 'utils/modulesApp';
 
 describe('test scan CodeBarFunction', () => {

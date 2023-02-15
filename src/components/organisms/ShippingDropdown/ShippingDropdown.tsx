@@ -234,9 +234,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
   }, [address, isAddressModalSelectionVisible]);
 
   const getPickUpPoints = async (cp: string) => {
-    //console.log({ getPickUpPoints: cp });
     const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
-    //console.log({ getPickUpPoints: pickUp });
     let isNear = false;
     if (pickUp.items.length) {
       pickUp.items.forEach(store => {
