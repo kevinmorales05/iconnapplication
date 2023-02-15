@@ -68,19 +68,23 @@ const InvoiceController: React.FC = () => {
   }, [defaultProfile]);
 
   useEffect(() => {
-    const tem: InvoicingProfileInterface | null =
-      invoicingProfileList.find(item => {
-        return item.default === true;
-      }) ?? null;
-    if (!tem?.rfc) {
-      if (invoicingProfileList.length) {
-        invoicingServices.selectDefault(invoicingProfileList[0].invoicing_profile_id);
-        setTimeout(() => {
-          fetchInvoicingProfileList();
-        }, 500);
+    if (invoicingProfileList && invoicingProfileList.length > 0) {
+      const tem: InvoicingProfileInterface | null =
+        invoicingProfileList.find(item => {
+          return item.default === true;
+        }) ?? null;
+      if (!tem?.rfc) {
+        if (invoicingProfileList.length) {
+          invoicingServices.selectDefault(invoicingProfileList[0].invoicing_profile_id);
+          setTimeout(() => {
+            fetchInvoicingProfileList();
+          }, 500);
+        }
+      } else {
+        setDefaultProfile(tem);
       }
     } else {
-      setDefaultProfile(tem);
+      setDefaultProfile(null);
     }
   }, [invoicingProfileList]);
 

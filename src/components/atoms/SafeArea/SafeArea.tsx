@@ -1,7 +1,5 @@
 import React, { ReactNode } from 'react';
-import {
-  View, SafeAreaView, StatusBar, StyleSheet, ViewStyle, StatusBarStyle, StyleProp
-} from 'react-native';
+import { View, SafeAreaView, StatusBar, StyleSheet, ViewStyle, StatusBarStyle, StyleProp } from 'react-native';
 import theme from 'components/theme/theme';
 
 type BarStyle = 'light' | 'dark';
@@ -28,8 +26,6 @@ const SafeArea: React.FC<Props> = ({
   children,
   barStyle,
   backgroundColor = theme.brandColor.iconn_white,
-  bottomBGColor,
-  topBGColor,
   statusBarColor,
   hiddenStatusBar,
   testID,
@@ -42,7 +38,7 @@ const SafeArea: React.FC<Props> = ({
   );
 
   const renderStatusBar = () => {
-    let barStyleValue: StatusBarStyle = 'default';
+    let barStyleValue = 'default';
 
     switch (barStyle) {
       case 'light':
@@ -51,7 +47,8 @@ const SafeArea: React.FC<Props> = ({
       case 'dark':
         barStyleValue = 'dark-content';
         break;
-      default: barStyleValue = 'default';
+      default:
+        barStyleValue = 'default';
         break;
     }
 
@@ -59,7 +56,7 @@ const SafeArea: React.FC<Props> = ({
       <StatusBar
         translucent={!topSafeArea}
         backgroundColor={!topSafeArea ? statusBarColor || 'transparent' : safeBGColor || theme.brandColor.iconn_white}
-        barStyle={barStyleValue}
+        barStyle={barStyleValue as StatusBarStyle}
         hidden={hiddenStatusBar}
       />
     );
@@ -78,9 +75,7 @@ const SafeArea: React.FC<Props> = ({
         <SafeAreaView
           testID={`${testID}-top`}
           style={{
-            backgroundColor: theme.brandColor.iconn_white
-          || safeBGColor
-          || backgroundColor
+            backgroundColor: theme.brandColor.iconn_white || safeBGColor || backgroundColor
           }}
         />
       )}
@@ -89,16 +84,18 @@ const SafeArea: React.FC<Props> = ({
         <SafeAreaView
           testID={`${testID}-bottom`}
           style={{
-            backgroundColor: theme.brandColor.iconn_white
-          || safeBGColor
-          || backgroundColor
+            backgroundColor: theme.brandColor.iconn_white || safeBGColor || backgroundColor
           }}
         />
       )}
     </View>
   );
 
-  return <View testID={testID} style={styles.flexStyle}>{renderContainer()}</View>;
+  return (
+    <View testID={testID} style={styles.flexStyle}>
+      {renderContainer()}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

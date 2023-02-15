@@ -3,12 +3,14 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useLoading } from 'context';
 import { HomeStackParams } from 'navigation/types';
 import React, { useEffect, useState } from 'react';
-import { SuggestionInterface } from 'rtk';
+import { RootState, SuggestionInterface, useAppSelector } from 'rtk';
 import { ratingServices } from 'services/rating-services';
 import RateOrderScreen from './RateOrderScreen';
+import { logEvent } from 'utils/analytics';
 
 const RateOrderController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'RateOrder'>>();
   const loader = useLoading();
   const { params } = route;
@@ -70,6 +72,7 @@ const RateOrderController: React.FC = () => {
   const onPressStar = (rating: number) => {
     setPressedRating(rating);
     setSelectsPills([]);
+    logEvent('starsQuantity', { id: user.id, description: 'Selección de estrellas para calificar', origin: 'ecommerce', number: rating });
   };
   return (
     <RateOrderScreen

@@ -12,6 +12,7 @@ import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
 import Octicons from 'react-native-vector-icons/Octicons';
 import sellers from 'assets/files/sellers.json';
 import theme from 'components/theme/theme';
+import analytics from '@react-native-firebase/analytics';
 
 /*regla de negocio:
   delivery hasta 7 km 
@@ -253,12 +254,33 @@ const SearchSellerScreen = () => {
           onEndEditing={() => {
             getPickUpPoints(value);
           }}
+          onPressIn={async () => {
+            try {
+              await analytics().logEvent('hmSelectSearchBar', {
+                id: user.id,
+                description: 'Seleccionar barra de búsqueda de tienda'
+              });
+              //console.log('succesfully added to firebase!');
+            } catch (error) {
+              //console.log(error);
+            }
+            getPickUpPoints(value);
+          }}
           value={value}
           style={{ marginLeft: 10, flex: 1, paddingVertical: 5, color: theme.fontColor.dark }}
         />
       </Container>
       <Touchable
         onPress={async () => {
+          try {
+            await analytics().logEvent('hmUseMyUbication', {
+              id: user.id,
+              description: 'Usar mi ubicación'
+            });
+            //console.log('succesfully added to firebase!');
+          } catch (error) {
+            //console.log(error);
+          }
           const hasPermission = await hasLocationPermission();
 
           if (!hasPermission) {
@@ -306,6 +328,16 @@ const SearchSellerScreen = () => {
                 seller={seller}
                 selected={Number(seller['# Tienda']) === Number(current?.['# Tienda'])}
                 onPress={async () => {
+                  try {
+                    await analytics().logEvent('hmSelectDeliveryChooseStoreFromList', {
+                      id: user.id,
+                      description: ' Seleccionar barra de búsqueda',
+                      storeId: `${seller['# Plaza']}${seller['# Tienda']}`
+                    });
+                    //console.log('succesfully added to firebase!');
+                  } catch (error) {
+                    //console.log(error);
+                  }
                   setCurrent(seller);
                 }}
               />

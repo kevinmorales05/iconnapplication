@@ -40,6 +40,11 @@ export const TabNavigator = () => {
       })}
     >
       <Tab.Screen
+        listeners={{
+          tabPress: () => {
+            logEvent('tabNavigationOpenHome', { id: user.id, description: 'Abrir inicio en el menú inferior' });
+          }
+        }}
         options={{
           headerShown: false,
           title: 'Inicio',
@@ -57,6 +62,11 @@ export const TabNavigator = () => {
         children={() => <HomeController paySuccess={paySuccess} />}
       />
       <Tab.Screen
+        listeners={{
+          tabPress: () => {
+            logEvent('tabNavigationOpenCategories', { id: user.id, description: 'Abir categorías desde el menú inferior' });
+          }
+        }}
         name="CategoriesScreen"
         component={CategoriesController}
         options={{
@@ -74,6 +84,11 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
+        listeners={{
+          tabPress: () => {
+            logEvent('tabNavigationOpenPromotions', { id: user.id, description: 'Abrir promociones del menú inferior' });
+          }
+        }}
         name="PromosScreen"
         component={PromotionsController}
         options={{
@@ -91,6 +106,11 @@ export const TabNavigator = () => {
         }}
       />
       <Tab.Screen
+        listeners={{
+          tabPress: () => {
+            logEvent('tabNavigationOpenStoreUbication', { id: user.id, description: 'Seleccionar ubicación de tiendas y estaciones del menú inferior' });
+          }
+        }}
         name="BranchesScreen"
         component={isGuest ? InviteSignUpController : stores ? InConstructionController : DisableController}
         // component={isGuest ? InviteSignUpController : BranchesStack}
@@ -113,16 +133,13 @@ export const TabNavigator = () => {
             );
           }
         }}
-        listeners={{
-          tabPress: () => {
-            logEvent('tabNavigationOpenStoreUbication', {
-              id: user.id,
-              description: 'Seleccionar ubicación de tiendas y estaciones del menú inferior'
-            });
-          }
-        }}
       />
       <Tab.Screen
+        listeners={{
+          tabPress: () => {
+            logEvent('tabNavigationAccount', { id: user.id, description: 'Crear cuenta desde menú de cuenta' });
+          }
+        }}
         name="MyAccountScreen"
         component={isGuest ? InviteSignUpController : MyAccountController}
         options={{

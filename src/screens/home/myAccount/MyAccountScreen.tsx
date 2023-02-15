@@ -4,7 +4,7 @@ import { Button, NavigationMenuItem, Container, TextContainer, Touchable } from 
 import { useNavigation } from '@react-navigation/native';
 import theme from 'components/theme/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams, HomeTabScreens } from 'navigation/types';
+import { HomeStackParams } from 'navigation/types';
 
 //import icons
 import ProfileSvg from 'components/svgComponents/ProfileSvg/ProfileSvg';
@@ -26,6 +26,8 @@ import { RootState, useAppSelector } from 'rtk';
 import { getStatusModuleFather } from 'utils/modulesApp';
 import { modulesRemoteConfig } from '../../../common/modulesRemoteConfig';
 import { useNotEnabledModal } from 'context/notEnabled.context';
+import analytics from '@react-native-firebase/analytics';
+import { logEvent } from 'utils/analytics';
 
 interface HomeScreenProps {
   logOut: () => void;
@@ -34,8 +36,8 @@ interface HomeScreenProps {
 }
 
 const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, app_version }) => {
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { navigate: navigateToTab } = useNavigation<NativeStackNavigationProp<HomeTabScreens>>();
   const { appModules } = useAppSelector((state: RootState) => state.app);
   const modalNotEnabled = useNotEnabledModal();
 
@@ -50,6 +52,13 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
 
   const inConstruction = useInConstruction();
 
+  const onPressSendAnalyticst = async (analyticsName: string, analyticsDecription: string) => {
+    await analytics().logEvent(analyticsName, {
+      id: user.id,
+      description: analyticsDecription
+    });
+  };
+
   return (
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
       <Container style={{ marginHorizontal: 8 }}>
@@ -58,6 +67,10 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<ProfileSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
+            logEvent('accProfile', {
+              id: user.id,
+              description: 'Abrir perfil desde el menú de cuenta'
+            });
             navigate('Profile');
           }}
         />
@@ -66,6 +79,10 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<PinMapSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
+            logEvent('accAddresses', {
+              id: user.id,
+              description: 'Abrir direcciones desde el menú de cuenta'
+            });
             navigate('Address');
           }}
         />
@@ -74,6 +91,10 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<ReceiptSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
+            logEvent('accProfileOrders', {
+              id: user.id,
+              description: 'Abrir historial de pedidos desde menú de cuenta'
+            });
             navigate('MyOrders');
           }}
         />
@@ -82,6 +103,10 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<HeartSvgOutline size={moderateScale(24)} color={theme.brandColor.iconn_dark_grey} />}
           onPressNavigateTo={() => {
+            logEvent('accFavorites', {
+              id: user.id,
+              description: 'Abrir favoritos desde menú de cuenta'
+            });
             navigate('FavoriteProducts');
           }}
         />
@@ -101,6 +126,10 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<DiscountSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
+            logEvent('accOffersPromotions', {
+              id: user.id,
+              description: 'Abrir promociones desde menú de cuenta'
+            });
             navigate('Promotions');
           }}
         />
@@ -110,6 +139,11 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           disable={false}
           icon={<CoffeSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
+            logEvent('accOffersCoupons', {
+              id: user.id,
+              description: 'Abrir cuponera desde menú de cuenta'
+            });
+            onPressSendAnalyticst('accOffersCoupons', 'Abrir cuponera desde menú de cuenta');
             inConstruction.show(true);
           }}
         />
@@ -130,10 +164,16 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<PlacesSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             if (stores) {
-              navigateToTab('BranchesScreen');
+              // navigateToTab('BranchesScreen');
+              inConstruction.show(true);
             } else {
               modalNotEnabled.show();
             }
+            logEvent('accServicesStoreUbications', {
+              id: user.id,
+              description: 'Abrir ubicación de tiendas y estaciones desde menú de cuenta'
+            });
+            //navigateToTab('BranchesScreen');
           }}
         />
         <NavigationMenuItem
@@ -142,10 +182,16 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<WalletSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             if (wallet) {
-              navigate('WalletStack');
+              // navigate('WalletStack');
+              inConstruction.show(true);
             } else {
               modalNotEnabled.show();
             }
+            //navigate('WalletStack');
+            logEvent('accServicesWallet', {
+              id: user.id,
+              description: 'Abrir wallet desde menú de cuenta'
+            });
           }}
         />
         <NavigationMenuItem
@@ -154,6 +200,10 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<DocumentCashSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             navigate('TaxInfo');
+            logEvent('accServicesInvoicingProfiles', {
+              id: user.id,
+              description: 'Abrir Información fiscal desde menú de cuenta'
+            });
             //inConstruction.show(true);
           }}
         />
@@ -161,7 +211,11 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           text="Facturación"
           disable={false}
           icon={<TargetSvg size={moderateScale(24)} />}
-          onPressNavigateTo={() => {
+          onPressNavigateTo={async () => {
+            logEvent('accServicesInvoicing', {
+              id: user.id,
+              description: 'Abrir facturación desde menú de cuenta'
+            });
             navigate('Invoice');
             //inConstruction.show(true);
           }}
@@ -183,6 +237,10 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<InfoSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             navigate('AboutUs');
+            logEvent('accInformationAboutUs', {
+              id: user.id,
+              description: 'Abrir Acerca de nosotros desde menú de cuenta'
+            });
             //inConstruction.show(true);
           }}
         />
@@ -193,9 +251,14 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           onPressNavigateTo={() => {
             if (helpCenter) {
               navigate('HelpItems');
+              //inConstruction.show(true);
             } else {
               modalNotEnabled.show();
             }
+            logEvent('accInformationHelpCenter', {
+              id: user.id,
+              description: 'Abrir centro de ayuda desde menú de cuenta'
+            });
           }}
         />
       </Container>
@@ -208,7 +271,13 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           fontBold
           fontSize="h4"
           color="iconn_dark_grey"
-          onPress={logOut}
+          onPress={() => {
+            logEvent('accLogOut', {
+              id: user.id,
+              description: 'Cerrar sesión'
+            });
+            logOut();
+          }}
           icon={<LogOutSvg size={moderateScale(24)} />}
         >
           Cerrar sesión

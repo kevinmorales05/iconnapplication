@@ -53,6 +53,8 @@ export interface Props {
   numeric?: boolean;
   boldLabel?: boolean;
   heightValue?: number;
+  multiline?: boolean;
+  centerText?: boolean;
 }
 
 const Input = forwardRef(
@@ -95,7 +97,9 @@ const Input = forwardRef(
       phone = false,
       numeric = false,
       boldLabel = false,
-      heightValue
+      heightValue,
+      multiline = false,
+      centerText = true
     }: Props,
     ref: ForwardedRef<any>
   ) => {
@@ -140,6 +144,8 @@ const Input = forwardRef(
     };
 
     const borderColor = error ? theme.brandColor.iconn_error : (focused && theme.fontColor.dark) || theme.brandColor.iconn_med_grey;
+    const hV = heightValue ? heightValue : 68;
+    const hVU = heightValue ? heightValue : undefined;
 
     return (
       <Container testID={testID} style={{ marginTop }}>
@@ -147,13 +153,14 @@ const Input = forwardRef(
         <Container flex row space="between" center>
           <Container
             row
-            center
-            height={hideLabel ? (heightValue ? heightValue : 68) : (heightValue ? heightValue : undefined)}
+            //center
+            height={hideLabel ? hV :  hVU }
             style={{
               ...inputContainerStyle,
               borderColor,
               backgroundColor: !editable ? theme.brandColor.iconn_warm_grey : undefined,
-              width: sufixOutIcon ? '91%' : '100%'
+              width: sufixOutIcon ? '91%' : '100%',
+              justifyContent: centerText ? 'center' : 'flex-start'
             }}
           >
             {prefixImage && <Image testID={`${testID}-prefix-image`} source={prefixImage} style={prefixImageStyle} resizeMode="contain" />}
@@ -175,6 +182,7 @@ const Input = forwardRef(
                     <Container row center>
                       {phone && <CustomText text={`   +${placeholderBold}`} />}
                       <TextInput
+                        multiline={multiline}
                         pointerEvents={datePicker ? 'none' : 'auto'}
                         testID={`${testID}-input`}
                         ref={ref}
@@ -206,7 +214,7 @@ const Input = forwardRef(
               </Touchable>
             )}
             {scanIcon && (
-              <Container style={{marginRight: moderateScale(13)}}>
+              <Container style={{ marginRight: moderateScale(13), marginTop: moderateScale(10) }}>
                 <Touchable onPress={onPressScan}>
                   <ScanBarCodeSvg size={moderateScale(24)} />
                 </Touchable>
@@ -217,7 +225,7 @@ const Input = forwardRef(
                 size="xsmall"
                 color=""
                 onPress={onPressDatePickerIcon!}
-                icon={<Image source={ICONN_CALENDAR} style={{ tintColor: `${theme.fontColor.grey}`, height: 24, width: 24 }} />}
+                icon={<Image source={ICONN_CALENDAR} style={{ tintColor: `${theme.fontColor.grey}`, height: 24, width: 24, marginTop: moderateScale(10) }} />}
               />
             )}
           </Container>

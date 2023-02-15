@@ -14,6 +14,7 @@ import { mobilePhoneRule, alphabetRule } from 'utils/rules';
 import { formatDate } from 'utils/functions';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../navigation/types';
+import { logEvent } from 'utils/analytics';
 
 type Props = {
   onSubmit: (data: FieldValues) => void;
@@ -222,6 +223,7 @@ const ProfileScreen: React.FC<Props> = ({ onSubmit, goToChangePwd }) => {
             style={{ marginTop: 8, marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
             onPress={() => {
               navigate('DeleteAccount');
+              logEvent('accProfileDeleteAccount', { id: user.id, description: 'Eliminar cuenta' });
             }}
           >
             Eliminar cuenta

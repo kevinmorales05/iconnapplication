@@ -9,7 +9,6 @@ import theme from '../../theme/theme';
 import { Container } from '../../atoms/Container';
 import { TouchableText } from '../../molecules/TouchableText';
 import Octicons from 'react-native-vector-icons/Octicons';
-import countries from 'assets/files/countries.json';
 
 interface Props {
   label?: string;

@@ -32,7 +32,8 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
   const {
     control,
     handleSubmit,
-    formState: { isValid }
+    formState: { isValid },
+    reset
   } = useForm({
     mode: 'onChange'
   });
@@ -63,6 +64,7 @@ const SendInvoiceModal: React.FC<SendInvoiceModalProps> = ({ visible, onPressOut
           },
           'success'
         );
+        reset({ emailsList: '' });
       } else {
         toast.show({ message: `Error ${response.responseCode} \n ${response.responseMessage}`, type: 'error' });
       }

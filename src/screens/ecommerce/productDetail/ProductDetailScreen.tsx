@@ -32,6 +32,7 @@ import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultA
 import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 import Config from 'react-native-config';
+import { logEvent } from 'utils/analytics';
 import { homeServices } from 'services/home-services';
 import { useLoading } from 'context';
 
@@ -154,6 +155,11 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
     if (isAdult) {
+      logEvent('addProduct', {
+        id: user.id,
+        description: 'Añadir un producto de la canasta en la colección',
+        productId: productId.toString()
+      });
       updateShoppingCartProduct!('create', productId);
     } else {
       showModalForAdult();
@@ -174,6 +180,11 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
               const { data } = userResponse;
               if (data[0].isAdult === true) {
                 updateShoppingCartProduct('create', itemId);
+                logEvent('pdAddProductProduct', {
+                  id: user.id,
+                  description: 'Añadir producto de la canasta en detalle de producto',
+                  productId: itemId.toString()
+                });
               } else {
                 showModalForAdult();
               }
@@ -181,9 +192,19 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
           });
         } else {
           updateShoppingCartProduct('create', itemId);
+          logEvent('pdAddProductProduct', {
+            id: user.id,
+            description: 'Añadir producto de la canasta en detalle de producto',
+            productId: itemId.toString()
+          });
         }
       } else {
         updateShoppingCartProduct('create', itemId);
+        logEvent('pdAddProductProduct', {
+          id: user.id,
+          description: 'Añadir producto de la canasta en detalle de producto',
+          productId: itemId.toString()
+        });
       }
     });
   };
@@ -292,6 +313,11 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
       };
       removeFavorite(productToRemove);
       setIsFav(!isFav);
+      logEvent('pdRemoveFavorite', {
+        id: user.id,
+        description: 'Remover favorito en detalle de producto',
+        productId: itemId.toString()
+      });
     }
     if (!isFav) {
       const productToAdd: ItemsFavoritesInterface = {
@@ -300,6 +326,11 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
       };
       addFavorite1(productToAdd);
       setIsFav(!isFav);
+      logEvent('pdAddFavorite', {
+        id: user.id,
+        description: 'Añadir favorito en detalle de producto',
+        productId: itemId.toString()
+      });
     }
   };
 
@@ -322,6 +353,14 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                 imageSize={240}
                 selectecPointColor={theme.brandColor.iconn_dark_grey}
                 generalPointsColor={theme.brandColor.iconn_grey}
+                //pay attention to this function
+                onPressZoom={() =>
+                  logEvent('pdOpenImage', {
+                    id: user.id,
+                    description: 'Abrir imagen de producto',
+                    productId: detailSelected.toString()
+                  })
+                }
               />
             </Container>
             <Container row space="between" style={{ marginTop: 16, width: '100%', paddingHorizontal: 10 }}>
@@ -473,6 +512,11 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
             <Touchable
               marginTop={16}
               onPress={() => {
+                logEvent('pdShowInformation', {
+                  id: user.id,
+                  description: 'Mostrar detalles del producto',
+                  productId: itemId.toString()
+                });
                 setShowAdditionalInfo(!showAdditionalInfo);
               }}
             >
@@ -526,15 +570,37 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                         quantity={prod.quantity!}
                         onPressAddCart={validateCategoryForAddItem}
                         onPressAddQuantity={() => {
+                          logEvent('plusProduct', {
+                            id: user.id,
+                            description: 'Sumar uno a un producto en la canasta en la colección',
+                            productId: prod.productId.toString()
+                          });
                           updateShoppingCartProduct('add', prod.productId);
                         }}
                         onPressDeleteCart={() => {
+                          logEvent('removeProduct', {
+                            id: user.id,
+                            description: 'Sacar un producto de la canasta en la colección de recomendados para ti',
+                            productId: prod.productId.toString()
+                          });
                           updateShoppingCartProduct('remove', prod.productId);
                         }}
                         onPressDecreaseQuantity={() => {
+                          logEvent('minusProduct', {
+                            id: user.id,
+                            description: 'Restar uno a un producto en la canasta en la colección',
+                            productId: prod.productId.toString()
+                          });
                           updateShoppingCartProduct('substract', prod.productId);
                         }}
                         onPressOut={hideModalForAdult}
+                        onPressAnalytics={async () =>
+                          logEvent('openProduct', {
+                            id: user.id,
+                            description: 'Abrir un producto en una colección',
+                            productId: prod.productId.toString()
+                          })
+                        }
                       />
                     );
                   })
@@ -575,14 +641,29 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                 let currentQuantity = cartItemQuantity + 1;
                 setCartItemQuantity(currentQuantity);
                 updateShoppingCartProduct('add', itemId);
+                logEvent('pdPlusProductProduct', {
+                  id: user.id,
+                  description: 'Sumar producto de la canasta en detalle de producto',
+                  productId: itemId.toString()
+                });
               }}
               onPressDeleteCart={() => {
                 updateShoppingCartProduct('remove', itemId);
+                logEvent('pdRemoveProductProduct', {
+                  id: user.id,
+                  description: 'Remover producto de la canasta en detalle de producto',
+                  productId: itemId.toString()
+                });
               }}
               onPressDecreaseQuantity={() => {
                 let currentQuantity = cartItemQuantity - 1;
                 setCartItemQuantity(currentQuantity);
                 updateShoppingCartProduct('substract', itemId);
+                logEvent('pdMinusProductProduct', {
+                  id: user.id,
+                  description: 'Restar producto de la canasta en detalle de producto',
+                  productId: itemId.toString()
+                });
               }}
             />
           </Container>

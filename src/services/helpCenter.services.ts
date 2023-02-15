@@ -24,7 +24,6 @@ import { HelpCenterApi } from '../http/api-helpCenter';
  * Function to get steps list by question identifier
  */
  async function getStepsListByQuestionId(questionId: number): Promise<any> {
-  console.log('questionId: ',questionId);
   const response = await HelpCenterApi.getInstance().getRequest(`steps/list/${questionId}`);
   if (response === undefined) return Promise.reject(new Error('getStepsListByQuestionId:steps/list/'));
   const { data } = response;
@@ -48,7 +47,7 @@ import { HelpCenterApi } from '../http/api-helpCenter';
   const response = await HelpCenterApi.getInstance().postRequest(`qualification/create`, questionBody);
   if (response === undefined) return Promise.reject(new Error('qualifyByQuestionId:qualification/create/'));
   const { data } = response;
-  return data;
+  return await data;
 }
 
 /**

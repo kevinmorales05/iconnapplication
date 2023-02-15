@@ -8,8 +8,7 @@ import { ICONN_STO, ICONN_SCOOT } from 'assets/images';
 import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDropdown';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
-import analytics from '@react-native-firebase/analytics';
-
+import { logEvent } from 'utils/analytics';
 interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
@@ -26,6 +25,9 @@ interface Props {
   updateShoppingCartProduct: (type: CounterType, productId: string) => void;
   onPressViewMore: (products: any) => void;
   isAddressModalSelectionVisible: boolean;
+  onPressSearch: any;
+  viewRecomendedProducts: any;
+  viewOtherProducts: any;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -49,6 +51,7 @@ const HomeScreen: React.FC<Props> = ({
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const onPressOut = () => {
     setVisible(!visible);
@@ -64,7 +67,12 @@ const HomeScreen: React.FC<Props> = ({
     <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%', backgroundColor: theme.brandColor.iconn_white }}>
       <View style={{ zIndex: 0, width: '100%' }}>
         <Touchable
-          onPress={() => {
+          onPress={async () => {
+            logEvent('hmOpenDeliveryMethods', {
+              id: user.id,
+              description: 'Abrir modal para elegir el método de entrega'
+            });
+            //console.log('succesfully added to firebase!');
             setToggle(current => {
               return !current;
             });
@@ -116,7 +124,7 @@ const HomeScreen: React.FC<Props> = ({
 
         <Container>
           <Container style={{ marginTop: 16 }}>
-            <AnimatedCarousel items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+            <AnimatedCarousel banner items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
           </Container>
           <Container style={{ marginTop: 16 }}>
             <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
@@ -133,15 +141,12 @@ const HomeScreen: React.FC<Props> = ({
                 text="Ver todo"
                 typography="h5"
                 fontBold
-                onPress={async () => {
-                  try {
-                    await analytics().logEvent('recomendedyou', {
-                      id: '1',
-                      name: 'recomendados para ti'
-                    });
-                  } catch (error) {
-                    // console.log(error);
-                  }
+                onPress={() => {
+                  logEvent('hmRcmdfycMoreButton', {
+                    id: user.id,
+                    name: 'Abrir el detalle de la colección de recomendados para ti'
+                  });
+                  //console.log('succesfully added to firebase!');
                   viewRecomendedProducts();
                 }}
               />
@@ -178,7 +183,14 @@ const HomeScreen: React.FC<Props> = ({
                 text="Ver todo"
                 typography="h5"
                 fontBold
-                onPress={() => viewOtherProducts()}
+                onPress={() => {
+                  logEvent('hmOpcMoreButton', {
+                    id: user.id,
+                    name: 'Abrir el detalle de la colección en otros productos'
+                  });
+                  //console.log('succesfully added to firebase!')
+                  viewOtherProducts();
+                }}
               />
             </Container>
             <Container style={{ position: 'absolute', top: 35 }}>
@@ -212,7 +224,12 @@ const HomeScreen: React.FC<Props> = ({
         <View style={{ zIndex: 2, position: 'absolute', top: 35, width: '100%' }}>
           <ShippingDropdown
             mode={mode}
-            handleMode={mode => {
+            handleMode={mode => () => {
+              logEvent(`select_delivery_method_${mode}`, {
+                id: user.id,
+                description: `Selección de ${mode} en método de entrega`
+              });
+              //console.log('succesfully added to firebase!')
               setMode(mode);
             }}
             onPressAddAddress={onPressAddNewAddress}
