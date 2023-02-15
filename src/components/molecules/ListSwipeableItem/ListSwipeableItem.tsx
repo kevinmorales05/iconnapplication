@@ -43,36 +43,6 @@ const ListSwipeableItem: React.FC<ListSwipeableItemProps> = ({
   const renderRightAction = (buttonType: string, backgroundColor: any) => {
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
-        {/* {buttonType === 'edit' ? (
-          <RectButton
-            style={[rightAction, { backgroundColor: backgroundColor }]}
-            onPress={() => {
-              closeRow(index);
-              onPressEdit(ticketSeven ? ticketSeven : ticketPetro, index);
-            }}
-          >
-            <Container middle>
-              <Octicons name="pencil" size={theme.iconSize.xsmall} color={theme.brandColor.iconn_white} />
-              <TextContainer fontBold text="Editar" textColor={theme.fontColor.white} fontSize={theme.fontSize.h6} marginTop={4} />
-            </Container>
-          </RectButton>
-        ) : (
-           <RectButton
-            style={[rightAction, { backgroundColor: backgroundColor }]}
-            onPress={() => {
-              closeRow(index);
-              setTimeout(() => {
-                onPressDelete(ticketSeven ? ticketSeven : ticketPetro, index);
-              }, 500);
-            }}
-          >
-            <Container middle>
-              <Ionicons name="md-trash-outline" size={theme.iconSize.xsmall} color={theme.brandColor.iconn_white} />
-              <TextContainer fontBold text="Borrar" textColor={theme.fontColor.white} fontSize={theme.fontSize.h6} marginTop={4} />
-            </Container>
-          </RectButton>
-        )} */}
-
         <RectButton
           style={[rightAction, { backgroundColor: backgroundColor }]}
           onPress={() => {

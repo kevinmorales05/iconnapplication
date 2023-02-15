@@ -7,6 +7,8 @@ import { ReviewModal } from 'components';
 import { useLoading, useToast } from 'context';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
+import { RootState, useAppSelector } from 'rtk';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   productIdentifier?: string;
@@ -16,6 +18,7 @@ interface Props {
 const ProductDetailController: React.FC<Props> = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'ProductDetail'>>();
   const { params } = route;
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [countUno, setCountUno] = useState(0);
   const [countDos, setCountDos] = useState(0);
   const [countTres, setCountTres] = useState(0);
@@ -44,7 +47,7 @@ const ProductDetailController: React.FC<Props> = () => {
     setCountFive(0);
 
     let variable = await Object.values(responseList.data);
-    variable.forEach((value, index) => {
+    variable.forEach(value => {
       if (value.rating === 1) {
         setCountUno(countUno => countUno + 1);
       } else if (value.rating === 2) {
@@ -56,16 +59,17 @@ const ProductDetailController: React.FC<Props> = () => {
       } else if (value.rating === 5) {
         setCountFive(countFive => countFive + 1);
       } else {
-        console.log(typeof value.rating);
+        //console.log(typeof value.rating);
       }
     });
   };
 
   const ratingCompleted = (rating: number) => {
     setRatingValue(rating);
+    logEvent('pdRate', { id: user.id, description: 'Calificar un producto, seleccionar estrellas', starNumber: rating });
   };
 
-  const postRating = () => {
+  const postRating = async () => {
     loader.show();
     try {
       let arregloInterfaz = [
@@ -83,13 +87,13 @@ const ProductDetailController: React.FC<Props> = () => {
       closeModal();
       setButtonReviewed(true);
       setTotalCount(totalCount => totalCount + 1);
+      logEvent('pdPublishRating', { id: user.id, description: 'Botón de publicar' });
       // loader.hide();
       toast.show({
         message: 'Calificación publicada\n exitosamente.',
         type: 'success'
       });
     } catch (error) {
-      console.log(error);
       toast.show({
         message: 'No fue posible publicar tu\n calificación. Intenta más tarde.',
         type: 'error'
@@ -103,6 +107,7 @@ const ProductDetailController: React.FC<Props> = () => {
     setModal(true);
   };
   const closeModal = () => {
+    logEvent('pdCloseRaiting', { id: user.id, description: 'Cerrar calificar un producto' });
     setModal(false);
   };
 

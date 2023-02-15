@@ -34,6 +34,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { HomeStackParams } from '../../../navigation/types';
 import { moderateScale } from 'utils/scaleMetrics';
+import { logEvent } from 'utils/analytics';
 import FastImage from 'react-native-fast-image';
 
 const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, routes, messageType, countProducts, cartItems }) => {
@@ -42,6 +43,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   const loader = useLoading();
   const { loading } = useAppSelector((state: RootState) => state.invoicing);
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { internetReachability } = useAppSelector((state: RootState) => state.app);
   const toast = useToast();
@@ -308,11 +310,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         cancelOutline: 'iconn_light_grey',
         cancelTextColor: 'iconn_dark_grey',
         onAccept() {
+          logEvent('cartEmpty', { id: user.id, description: 'Remover todos los productos de la canasta' });
           deleteUnavailableItems();
           alert.hide();
         },
         onCancel() {
-          alert.hide('cancelar');
+          alert.hide();
         }
       },
       'deleteCart',
@@ -438,7 +441,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         }}
       >
         <Container style={{ marginLeft: 13 }}>
-          <Touchable onPress={decreaseItem}>
+          <Touchable
+            onPress={() => {
+              logEvent('cartMinusProduct', { id: user.id, description: 'Quitar un producto de la canasta', productId: item.id });
+              decreaseItem();
+            }}
+          >
             <IconO name="minus" size={14} color={theme.brandColor.iconn_green_original} />
           </Touchable>
         </Container>
@@ -454,7 +462,12 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           </Container>
         </Container>
         <Container style={{ marginRight: 13 }}>
-          <Touchable onPress={increaseItem}>
+          <Touchable
+            onPress={() => {
+              logEvent('cartPlusProduct', { id: user.id, description: 'Añadir productos de la canasta', productId: item.id });
+              increaseItem();
+            }}
+          >
             <IconO name="plus" size={14} color={theme.brandColor.iconn_green_original} />
           </Touchable>
         </Container>
@@ -512,7 +525,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               length="long"
               style={{ borderColor: `${theme.brandColor.iconn_med_grey}`, justifyContent: 'center', paddingVertical: 1, borderRadius: 12, width: '100%' }}
               leftIcon={<Image source={ICONN_EMPTY_SHOPPING_CART} style={{ tintColor: 'red', height: 20, width: 20 }} />}
-              onPress={emptyShoppingCart}
+              onPress={() => {
+                logEvent('cartEmpty', { id: user.id, description: 'Remover todos los productos de la canasta' });
+                emptyShoppingCart();
+              }}
             >
               Vaciar canasta
             </Button>
@@ -542,7 +558,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         }
         updateShoppingCartQuantityServiceCall(orderForm, { orderItems }, 'delete', 'Se eliminó el artículo de la canasta.', arrayIndex);
       } catch (error) {
-        // console.log(error);
+        //console.log(error);
       } finally {
         //loader.hide();
       }
@@ -566,6 +582,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         <Container style={{ paddingHorizontal: 10 }}>
           <Touchable
             onPress={() => {
+              logEvent('cartOpenProduct', { id: user.id, description: 'Abrir detalle de producto', productId: value.id });
               dispatch(setDetailSelected(value.id));
               navigate('ProductDetail', { productIdentifier: value.id });
             }}
@@ -578,6 +595,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             <Container style={{ width: '70%' }}>
               <Touchable
                 onPress={() => {
+                  logEvent('cartOpenProduct', { id: user.id, description: 'Abrir detalle de producto', productId: value.id });
                   dispatch(setDetailSelected(value.id));
                   navigate('ProductDetail', { productIdentifier: value.id });
                 }}
@@ -658,7 +676,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
               color="iconn_red_original"
               size="xxsmall"
               marginRight={30}
-              onPress={deleteShoppingCartItem}
+              onPress={() => {
+                logEvent('cartRemoveProduct', { id: user.id, description: 'Quitar producto de la canasta', productId: value.id });
+                deleteShoppingCartItem();
+              }}
               transparent
               leftIcon={<Image source={ICONN_DELETE_SHOPPING_CART_ITEM} />}
             >
@@ -817,7 +838,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           round
           fontBold
           disabled={!subTotalCalculated}
-          onPress={onPressCheckout}
+          onPress={() => {
+            logEvent('cartContinueToCheckout', { id: user.id, description: 'Continuar al checkout' });
+            onPressCheckout();
+          }}
           borderColor={subTotalCalculated ? 'iconn_green_original' : 'iconn_green_original_med'}
           style={{
             marginBottom: 8,

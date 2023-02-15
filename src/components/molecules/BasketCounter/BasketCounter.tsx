@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { ICONN_BASKET, ICONN_REVERSE_BASKET } from 'assets/images';
 import { Container, CustomText, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import { useNavigation } from '@react-navigation/native';
@@ -9,11 +8,20 @@ import { HomeStackParams } from '../../../navigation/types';
 import { RootState, useAppSelector } from 'rtk';
 import { moderateScale } from 'utils/scaleMetrics';
 import { BasketSvg } from 'components/svgComponents';
+import { logEvent } from 'utils/analytics';
 
 const BasketCounter = () => {
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [counter, setCounter] = useState(0);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
+  const openCart = async () => {
+    logEvent('hmOpenCart', {
+      id: user.id,
+      description: 'Abrir Mi canasta'
+    });
+  };
 
   const getCount = () => {
     const { items, messages } = cart;
@@ -21,8 +29,7 @@ const BasketCounter = () => {
     if (messages) {
       if (messages.length > 0) {
         messages.map(value => {
-          // TODO: relocate message type to .ENV
-          if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code =='withoutPriceFulfillment') {
+          if (value.code == 'withoutStock' || value.code == 'cannotBeDelivered' || value.code == 'withoutPriceFulfillment') {
             withoutStockM.set(parseInt(value.fields.itemIndex), value.text);
           }
         });
@@ -49,6 +56,7 @@ const BasketCounter = () => {
   }, [cart]);
 
   const openShoppingCart = () => {
+    openCart();
     navigate('ShopCart');
   };
 
@@ -75,7 +83,7 @@ const BasketCounter = () => {
         {counter > 0 ? (
           <>
             <Container>
-              <BasketSvg size={moderateScale(24)} color={theme.brandColor.iconn_white}/>
+              <BasketSvg size={moderateScale(24)} color={theme.brandColor.iconn_white} />
             </Container>
             <Container style={{ marginHorizontal: 2, marginTop: 2 }}>
               <CustomText fontSize={17} alignSelf="center" textColor={theme.brandColor.iconn_white} text={String(counter)} fontBold />
@@ -84,7 +92,7 @@ const BasketCounter = () => {
         ) : (
           <>
             <Container center style={{ alignItems: 'flex-end' }} width={'100%'}>
-              <BasketSvg size={moderateScale(24)} color={theme.brandColor.iconn_accent_principal}/>
+              <BasketSvg size={moderateScale(24)} color={theme.brandColor.iconn_accent_principal} />
             </Container>
           </>
         )}

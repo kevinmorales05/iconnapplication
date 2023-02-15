@@ -5,6 +5,8 @@ import { EvaluateServiceInterface } from 'components/types/StepsWallet';
 import React, { useState } from 'react';
 import { ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { RootState, useAppSelector } from 'rtk';
+import { logEvent } from 'utils/analytics';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import StepOnePetro from '../stepOnePetro/StepOnePetro';
 import StepOneSeven from '../stepOneSeven/StepOneSeven';
@@ -19,6 +21,7 @@ interface Props {
 
 const StepOneScreen: React.FC<Props> = ({ onSubmit, onPressScan, barcodeProp }) => {
   const insets = useSafeAreaInsets();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [select, setSelect] = useState<string>('');
 
   const onPressButton = (option: string) => {
@@ -48,12 +51,22 @@ const StepOneScreen: React.FC<Props> = ({ onSubmit, onPressScan, barcodeProp }) 
         marginTop={verticalScale(30)}
       />
       <Container style={styles.containerLogos}>
-        <TouchableOpacity onPress={() => onPressButton('seven')}>
+        <TouchableOpacity
+          onPress={() => {
+            logEvent('stablishment', { id: user.id, description: 'Botón para seleccionar un tipo de establecimiento', origin: '7Eleven' });
+            onPressButton('seven');
+          }}
+        >
           <Container style={select === 'seven' ? styles.containerLogoSelect : styles.containerLogo}>
             <Image style={styles.image} source={SEVEN_LOGO} resizeMode={'contain'} />
           </Container>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onPressButton('petro')}>
+        <TouchableOpacity
+          onPress={() => {
+            logEvent('stablishment', { id: user.id, description: 'Botón para seleccionar un tipo de establecimiento', origin: 'Petro7' });
+            onPressButton('petro');
+          }}
+        >
           <Container style={select === 'petro' ? styles.containerLogoSelect : styles.containerLogo}>
             <Image style={styles.image} source={PETRO_LOGO} resizeMode={'contain'} />
           </Container>
@@ -61,7 +74,14 @@ const StepOneScreen: React.FC<Props> = ({ onSubmit, onPressScan, barcodeProp }) 
       </Container>
       {select === 'seven' ? (
         <Container style={styles.containerOptions}>
-          <StepOneSeven onSubmit={onSubmit} onPressScan={onPressScan} barcodeProp={barcodeProp} />
+          <StepOneSeven
+            onSubmit={onSubmit}
+            onPressScan={() => {
+              //logEvent('7ElevenScanTicket', { id: user.id, description: 'Botón para escanear ticket' });
+              onPressScan();
+            }}
+            barcodeProp={barcodeProp}
+          />
         </Container>
       ) : select === 'petro' ? (
         <Container style={styles.containerOptions}>

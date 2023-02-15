@@ -34,6 +34,7 @@ import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
 import moment from 'moment';
+import { logEvent } from 'utils/analytics';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -150,7 +151,11 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     await saveShippingData(cart.orderFormId, shippingAttachment);
   };
 
-  const onPressSearch = () => {
+  const onPressSearch = async () => {
+    logEvent('SelectSearchBar', {
+      id: user.id,
+      description: 'Seleccionar barra de búsqueda'
+    });
     navigate('SearchProducts');
   };
 
@@ -224,10 +229,46 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   }, [user.addresses]);
 
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
+    if (CarouselItem.promotion_type === 'second') {
+      logEvent('hmPetro7Banner', {
+        id: user.id,
+        description: 'Abrir el link del banner de Petro-7',
+        petroBannerID: CarouselItem.id
+      });
+    }
+    if (CarouselItem.promotion_type === 'day_promotion') {
+      logEvent('hmDayPromotionBanner', {
+        id: user.id,
+        description: 'Abrir el link de promoción del día'
+      });
+    }
+    if (CarouselItem.promotion_type === 'all_promotions') {
+      logEvent('hmAllPromotionsBanner', {
+        id: user.id,
+        description: 'Abrir el link de baner en la sección inferior de home en inicio',
+        petroBannerID: CarouselItem.id
+      });
+    }
     // If is not a guest and press "Petro" or "Acumula".
-    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3' || CarouselItem.id === '4')) {
-      inConstruction.show();
-      return;
+    if (!isGuest && (CarouselItem.id === '1' || CarouselItem.id === '3')) {
+      if (CarouselItem.id === '1') {
+        logEvent('hmOpenPetro7', {
+          id: user.id,
+          description: 'Abrir categorias Petro-7 desde home'
+        });
+        inConstruction.show();
+        return;
+      }
+      if (CarouselItem.id === '3') {
+        logEvent('hmOpenAccumulate', {
+          id: user.id,
+          description: 'Abrir Acumuladesde el botón de home'
+        });
+        inConstruction.show();
+        return;
+      }
+      /* inConstruction.show();
+      return; */
     }
 
     // If is a guest and press any option diferent to "Categories".
@@ -237,12 +278,40 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     }
 
     if (CarouselItem.navigateTo) {
+      if (CarouselItem.id === '2') {
+        logEvent('hmOpenFavorites', {
+          id: user.id,
+          description: 'Abrir favoritos desde home'
+        });
+        navigate(CarouselItem.navigateTo);
+        return;
+      }
+      if (CarouselItem.id === '4') {
+        logEvent('hmOpenWallet', {
+          id: user.id,
+          description: 'Abrir wallet desde home'
+        });
+        navigate(CarouselItem.navigateTo);
+        return;
+      }
+      if (CarouselItem.id === '5') {
+        logEvent('hmOpenOrders', {
+          id: user.id,
+          description: 'Abrir pedidos desde  home'
+        });
+        navigate(CarouselItem.navigateTo);
+        return;
+      }
       navigate(CarouselItem.navigateTo);
       return;
     }
 
     // If press "Categories"
     if (CarouselItem.id === '0') {
+      logEvent('hmOpenCategories', {
+        id: user.id,
+        description: 'Abrir categorias Seven desde home'
+      });
       navigate('CategoriesScreen');
       return;
     }
@@ -417,6 +486,11 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const onSubmitAddress = (address: Address) => {
     setShowShippingDropDown(false);
     onSubmit(address);
+    logEvent('sdSaveEditAddress', {
+      id: user.id,
+      description: 'Guardar una dirección de la lista de direcciones',
+      addressId: address.id
+    });
   };
 
   return (
@@ -428,8 +502,20 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       barStyle="dark"
     >
       <HomeScreen
-        onPressAddNewAddress={onPressAddNewAddress}
-        onPressShowAddressesModal={() => setAddressModalSelectionVisible(true)}
+        onPressAddNewAddress={async () => {
+          logEvent('hmSelectDeliveryMethodAddAddress', {
+            id: user.id,
+            description: 'Añadir una dirección en el método de entrega a domicilio'
+          });
+          onPressAddNewAddress();
+        }}
+        onPressShowAddressesModal={async () => {
+          logEvent('hmSelectDeliveryMethodChooseAddress', {
+            id: user.id,
+            description: 'Seleccionar una dirección en el método de entrega a domicilio'
+          });
+          setAddressModalSelectionVisible(true);
+        }}
         onPressSearch={onPressSearch}
         defaultAddress={defaultAddress!}
         showShippingDropDown={showShippingDropDown}

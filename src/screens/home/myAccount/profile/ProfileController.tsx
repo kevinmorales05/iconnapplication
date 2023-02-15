@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import moment from 'moment';
 import { formatDate } from 'utils/functions';
+import { logEvent } from 'utils/analytics';
 
 const ProfileController: React.FC = () => {
   const loader = useLoading();
@@ -66,7 +67,7 @@ const ProfileController: React.FC = () => {
           message: 'Datos guardados exitosamente.',
           type: 'success'
         });
-        console.log('resp', resp);
+        logEvent('accUpdateProfile', { id: user.id, description: 'Guardar información de perfil' });
       }
     } catch (error) {
       toast.show({

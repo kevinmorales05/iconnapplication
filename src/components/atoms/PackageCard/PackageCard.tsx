@@ -33,6 +33,9 @@ interface Props {
 }
 
 const PackageCard: React.FC<Props> = ({ onPressDetail, packageVtex, onPressDelete }) => {
+  const pacakgeImageNotDelivered = packageVtex.status === 'ON_TRANSIT' ? ICONN_TRACKING_INTRANSIT : ICONN_ESTAFETA_RETURN;
+  const packageStyleNotDelivered = packageVtex.status === 'ON_TRANSIT' ? styles.containerInTransit : styles.containerReturned;
+  const packageTextNotDelivered = packageVtex.status === 'ON_TRANSIT' ? 'En tránsito' : 'Devolución';
   return (
     <Swipeable renderRightActions={() => RightSwipeActions(() => onPressDelete(packageVtex.id))}>
       <Container
@@ -42,30 +45,13 @@ const PackageCard: React.FC<Props> = ({ onPressDetail, packageVtex, onPressDelet
         space="between"
       >
         <Container row>
-          <Image
-            source={
-              packageVtex.status === 'DELIVERED'
-                ? ICONN_TRACKING_DELIVERED
-                : packageVtex.status === 'ON_TRANSIT'
-                ? ICONN_TRACKING_INTRANSIT
-                : ICONN_ESTAFETA_RETURN
-            }
-            style={{ height: 32, width: 32 }}
-          />
+          <Image source={packageVtex.status === 'DELIVERED' ? ICONN_TRACKING_DELIVERED : pacakgeImageNotDelivered} style={{ height: 32, width: 32 }} />
           <Container>
             <TextContainer text="Número de guía" fontSize={12} marginLeft={16} textColor={theme.fontColor.placeholder} />
             <TextContainer text={packageVtex.waybill} fontBold fontSize={14} marginLeft={16} marginTop={2} textColor="#1F1E1F" />
-            <Container
-              style={
-                packageVtex.status === 'DELIVERED'
-                  ? styles.containerDelivered
-                  : packageVtex.status === 'ON_TRANSIT'
-                  ? styles.containerInTransit
-                  : styles.containerReturned
-              }
-            >
+            <Container style={packageVtex.status === 'DELIVERED' ? styles.containerDelivered : packageStyleNotDelivered}>
               <TextContainer
-                text={packageVtex.status === 'DELIVERED' ? 'Entregado' : packageVtex.status === 'ON_TRANSIT' ? 'En tránsito' : 'Devolución'}
+                text={packageVtex.status === 'DELIVERED' ? 'Entregado' : packageTextNotDelivered}
                 fontSize={12}
                 textColor={packageVtex.status === 'DELIVERED' ? theme.fontColor.white : theme.fontColor.paragraph}
                 textAlign="center"

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
-import { ConnectionItem } from 'components';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface ItemProps {
@@ -31,16 +30,9 @@ const EmptyMessage = () => {
     <View style={emptyMessageStyles.container}>
       <View>
         <View style={emptyMessageStyles.icon}>
-          <MaterialCommunityIcons
-            style={{ textAlign: 'center' }}
-            size={30}
-            name="map-marker-outline"
-            color={theme.brandColor.iconn_green_original}
-          />
+          <MaterialCommunityIcons style={{ textAlign: 'center' }} size={30} name="map-marker-outline" color={theme.brandColor.iconn_green_original} />
         </View>
-        <Text style={emptyMessageStyles.message}>
-          No tienes direcciones guardadas.
-        </Text>
+        <Text style={emptyMessageStyles.message}>No tienes direcciones guardadas.</Text>
       </View>
     </View>
   );
@@ -120,9 +112,7 @@ export default function AddressItems() {
               }}
             >
               <View style={styles.watchMore}>
-                <Text style={styles.text}>
-                  {visible ? 'VER MENOS' : 'VER TODAS'}
-                </Text>
+                <Text style={styles.text}>{visible ? 'VER MENOS' : 'VER TODAS'}</Text>
               </View>
             </TouchableOpacity>
           </View>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Touchable } from 'components/atoms';
-import { moderateScale } from 'utils/scaleMetrics';
 import { HeartSvg, HeartSvgOutline } from 'components/svgComponents';
 
 interface FavoriteButtonProps {

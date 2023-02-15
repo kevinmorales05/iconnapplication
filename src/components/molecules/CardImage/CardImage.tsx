@@ -28,7 +28,6 @@ const CardImage: React.FC<CardImageProps> = ({ servicePayment, onPress, position
     padding: 8
   };
 
-  // TODO: We can implement "onError" for Image, in case the image cannot be obtained.
   return (
     <Touchable onPress={onPress} disabled={!servicePayment.isActive} marginLeft={position % 2 !== 0 ? '4%' : 0} marginBottom={16} width={'48%'}>
       <Container row space="between" height={80} style={cardContainerStyle} crossCenter center>
