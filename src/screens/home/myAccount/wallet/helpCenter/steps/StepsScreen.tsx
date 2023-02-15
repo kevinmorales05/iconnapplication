@@ -13,9 +13,10 @@ interface Props {
   stepReceived: Object;
   qualificationState: [];
   isQualified: boolean;
+  question: string;
 }
 
-const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, qualificationState, isQualified }) => {
+const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, qualificationState, isQualified, question }) => {
   const [qualificationStatus, setQualificationStatus] = useState<any[]>(qualificationState);
   const [currentQualification, setCurrentQualification] = useState(1);
   const insets = useSafeAreaInsets();
@@ -44,6 +45,7 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
   return (
     <Container>
       <Container style={{ backgroundColor: theme.brandColor.iconn_white, width: '100%', height: '82%' }} height={Dimensions.get('window').height * 0.75}>
+        <TextContainer text={question} fontBold fontSize={20} marginTop={23.5} marginLeft={16} marginBottom={24} marginRight={16} />
         <ScrollView
           bounces={false}
           contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 }}

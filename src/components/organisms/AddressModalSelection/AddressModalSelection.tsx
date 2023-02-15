@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Image, Platform, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TextContainer, Button, AddressCard, TouchableText } from '../../molecules';
-import { CustomModal, Container, InfoCard, CustomText, ActionButton, Touchable } from '../../atoms';
+import { TextContainer, AddressCard, TouchableText } from '../../molecules';
+import { CustomModal, Container, InfoCard, CustomText, ActionButton } from '../../atoms';
 import { ICONN_HOME_LOCATION, ICONN_NO_ADDRESSES } from 'assets/images';
-import { Address } from 'rtk';
+import { Address, RootState, useAppSelector } from 'rtk';
 import NetInfo from '@react-native-community/netinfo';
 import theme from '../../theme/theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   visible: boolean;
@@ -22,6 +23,7 @@ interface Props {
 const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAddNewAddress, onPressEdit, onPressDelete, onPressClose, onPressSetDefault }) => {
   const insets = useSafeAreaInsets();
   const [isOnline, setIsOnline] = useState(false);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   NetInfo.fetch().then(state => {
     if (state.isInternetReachable) {
@@ -36,7 +38,17 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
   const { containerStyle } = styles;
 
   return (
-    <CustomModal visible={visible} onDismiss={onPressClose} animationType="slide">
+    <CustomModal
+      visible={visible}
+      onDismiss={() => {
+        logEvent('sdCloseDeliveryChoose', {
+          id: user.id,
+          description: 'Cerrar modal para seleccionar la lista de direcciones'
+        });
+        onPressClose();
+      }}
+      animationType="slide"
+    >
       <Container flex alignment="end">
         <TouchableOpacity
           activeOpacity={1}
@@ -71,12 +83,12 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
           >
             <Container flex space={addresses.length === 0 ? 'evenly' : undefined}>
               {!isOnline ? (
-                <InfoCard text={`No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.`} />
+                <InfoCard text={'No podemos cargar la información,\n revisa tu conexión a intenta mas tarde.'} />
               ) : addresses.length === 0 ? (
                 <Container center>
                   <Image source={ICONN_NO_ADDRESSES} style={{ width: 40, height: 40 }} />
                   <TextContainer text="Sin direcciones guardadas" fontBold marginTop={10} />
-                  <TextContainer text={`¡Aún no tienes ninguna\ndirección guardada!`} typography="description" textAlign="center" marginTop={11} />
+                  <TextContainer text={'¡Aún no tienes ninguna\ndirección guardada!'} typography="description" textAlign="center" marginTop={11} />
                 </Container>
               ) : (
                 addresses
@@ -84,9 +96,19 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
                     return (
                       <Container key={i} style={{ borderBottomWidth: 1, borderBottomColor: theme.brandColor.iconn_light_grey }}>
                         <AddressCard
-                          onPressSetDefault={() => onPressSetDefault(address, i)}
+                          onPressSetDefault={() => {
+                            logEvent('hmSelectAddress', {
+                              id: user.id,
+                              description: 'Seleccionar una tienda de la lista de tiendas disponibles'
+                            });
+                            onPressSetDefault(address, i);
+                          }}
                           address={address}
                           onPressEdit={() => {
+                            logEvent('sdEditAddress', {
+                              id: user.id,
+                              description: 'Editar una dirección de la lista de direcciones agregadas'
+                            });
                             onPressClose();
                             onPressEdit(address, i);
                           }}
@@ -106,7 +128,14 @@ const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAdd
                 text="Agregar nueva dirección"
                 typography="h4"
                 fontBold
-                onPress={onPressAddNewAddress}
+                onPress={() => {
+                  logEvent('sdAddAddress', {
+                    id: user.id,
+                    description: 'Seleccionar una dirección en el método de entrega a domicilio',
+                    origin: 'selectAddressModal'
+                  });
+                  onPressAddNewAddress();
+                }}
                 textAlign="center"
                 marginLeft={5}
               />

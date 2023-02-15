@@ -96,7 +96,6 @@ import ICONN_ESTAFETA_RETURN from './iconn-estafeta-return.webp';
 import ICONN_ESTAFETA_RETURNED from './iconn-estafeta-returned.webp';
 import ICONN_EYE_OFF from './iconn-eye-visible.webp';
 import ICONN_EYE_ON from './iconn-eye.webp';
-import ICONN_EYE_VISIBLE from './iconn-eye-visible.webp';
 import ICONN_FULL_EXPERIENCE from './iconn-invite-full-experience.webp';
 import ICONN_HELP_RECHARGE from './iconn-help-recharge.webp';
 import ICONN_HELP_STEP1 from './iconn-help-step1.webp';
@@ -283,7 +282,6 @@ export {
   ICONN_ESTAFETA_RETURNED,
   ICONN_EYE_OFF,
   ICONN_EYE_ON,
-  ICONN_EYE_VISIBLE,
   ICONN_FULL_EXPERIENCE,
   ICONN_HELP_RECHARGE,
   ICONN_HELP_STEP1,

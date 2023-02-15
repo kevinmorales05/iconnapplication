@@ -8,6 +8,8 @@ import { HomeStackParams } from 'navigation/types';
 import { useAppSelector, RootState } from 'rtk';
 import { ICON_HELPSADSMILE, ICON_HELPHAPPYSMILE, ICON_HELPVERYHAPPYSMILE } from 'assets/images';
 import { helpCenterServices } from 'services/helpCenter.services';
+import { logEvent } from 'utils/analytics';
+
 interface Props {}
 
 const StepsController: React.FC<Props> = () => {
@@ -24,25 +26,23 @@ const StepsController: React.FC<Props> = () => {
     { img: ICON_HELPVERYHAPPYSMILE, isQualified: false, qualificationValue: 10, color: theme.brandColor.iconn_green_original }
   ]);
 
-  const qualify = async (qualification: number) => {
-    try {
-      const newQualification = {
-        questions_cats_id: questionId,
-        qualification: qualification,
-        user_id: user.userId
-      };
-      await helpCenterServices.qualifyByQuestionId(newQualification).then(() => {
-        toast.show({
-          message: 'La pregunta ha sido calificada con éxito.',
-          type: 'success'
-        });
-      });
-    } catch (error) {
+  const qualify = (qualification: number) => {
+    logEvent('accRateInformation', {
+      id: user.id,
+      description: 'Calificar información de respuesta',
+      questionId: questionId
+    });
+    const newQualification = {
+      questions_cats_id: questionId,
+      qualification: qualification,
+      user_id: user.userId
+    };
+    helpCenterServices.qualifyByQuestionId(newQualification).then(() => {
       toast.show({
-        message: 'Hubo un error al guardar tus datos.\nIntenta mas tarde.',
-        type: 'error'
+        message: 'La pregunta ha sido calificada con éxito.',
+        type: 'success'
       });
-    }
+    });
   };
 
   const updateQualify = async (qualification: number) => {
@@ -130,6 +130,7 @@ const StepsController: React.FC<Props> = () => {
         updateQualify={updateQualify}
         qualificationState={qualificationStatus}
         isQualified={isQualified}
+        question={params?.question}
       />
     </SafeArea>
   );

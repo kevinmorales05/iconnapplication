@@ -19,6 +19,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { useLoading } from 'context';
+import { logEvent } from 'utils/analytics';
 import { FlashList } from '@shopify/flash-list';
 
 const PromotionsScreen: React.FC = () => {
@@ -28,6 +29,7 @@ const PromotionsScreen: React.FC = () => {
   const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const [productsRender, setProductsRender] = useState<ProductInterface[]>([]);
   const [itemToLoad, setItemToLoad] = useState<number>(0);
@@ -48,11 +50,13 @@ const PromotionsScreen: React.FC = () => {
 
   const userUpdated = (productId: string) => {
     updateShoppingCartProduct!('create', productId);
+    logEvent('promoAddProduct', { id: user.id, description: 'Añadir producto a la canasta', productId: productId.toString() });
     hideModalForAdult();
   };
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
     if (isAdult) {
+      logEvent('promoAddProduct', { id: user.id, description: 'Añadir producto a la canasta', productId: productId.toString() });
       updateShoppingCartProduct!('create', productId);
     } else {
       setProductId(productId);
@@ -202,12 +206,15 @@ const PromotionsScreen: React.FC = () => {
         onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
           updateShoppingCartProduct!('add', item.productId);
+          logEvent('promoAddProduct', { id: user.id, description: 'Sumar un producto a la canasta', productId: item.productId.toString() });
         }}
         onPressDeleteCart={() => {
           updateShoppingCartProduct!('remove', item.productId);
+          logEvent('promoDeleteProduct', { id: user.id, description: 'Eliminar un producto de la canasta', productId: item.productId.toString() });
         }}
         onPressDecreaseQuantity={() => {
           updateShoppingCartProduct!('substract', item.productId);
+          logEvent('promoMinusProduct', { id: user.id, description: 'Restar un producto de la canasta', productId: item.productId.toString() });
         }}
         onPressOut={hideModalForAdult}
         notNeedMarginLeft

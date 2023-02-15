@@ -4,7 +4,7 @@ import { ICONN_POSTAL_CODE_HEADER_ICON, ICONN_PIN_LOCATION } from 'assets/images
 import { Input, CustomText, TextContainer, Button, Container, Touchable } from 'components';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ScrollView, Image, Platform, PermissionsAndroid, ToastAndroid, Alert, Linking, Keyboard } from 'react-native';
-import { setDefaultSeller, setUserCP, setUserGeoPoint, useAppDispatch } from 'rtk';
+import { RootState, setDefaultSeller, setUserCP, setUserGeoPoint, useAppDispatch, useAppSelector } from 'rtk';
 import { useForm } from 'react-hook-form';
 import { useLoading, useAlert, useToast } from 'context';
 import { useNavigation } from '@react-navigation/native';
@@ -16,6 +16,7 @@ import config from 'react-native-config';
 import Geolocation from 'react-native-geolocation-service';
 import sellers from 'assets/files/sellers.json';
 import theme from 'components/theme/theme';
+import analytics from '@react-native-firebase/analytics';
 
 const PostalCodeScreen = () => {
   const {
@@ -28,10 +29,47 @@ const PostalCodeScreen = () => {
   const toast = useToast();
   const loader = useLoading();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
   const alert = useAlert();
   const [postalCode, setPostalCode] = useState<string>('');
   const { POSTAL_CODE_DEFAULT } = config;
+
+  const geoUseMyLocation = async () => {
+    try {
+      await analytics().logEvent('geoUseMyLocation', {
+        id: user.id,
+        description: 'Seleccionar "Usar mi ubicación actual"'
+      });
+      //console.log('succesfully added to firebase!');
+    } catch (error) {
+      //console.log(error);
+    }
+  };
+
+  const geoSearchButton = async () => {
+    try {
+      await analytics().logEvent('geoSearchButton', {
+        id: user.id,
+        description: 'Botón de buscar con código postal'
+      });
+      //console.log('succesfully added to firebase!');
+    } catch (error) {
+      //console.log(error);
+    }
+  };
+
+  const geoNotInThisMoment = async () => {
+    try {
+      await analytics().logEvent('geoNotInThisMoment', {
+        id: user.id,
+        description: 'Seleccionar "En otro momento"'
+      });
+      //console.log('succesfully added to firebase!');
+    } catch (error) {
+      //console.log(error);
+    }
+  };
 
   /*regla de negocio:
     delivery hasta 7 km 
@@ -327,6 +365,17 @@ const PostalCodeScreen = () => {
             onChangeText={text => {
               setPostalCode(text);
             }}
+            onFocus={async () => {
+              try {
+                await analytics().logEvent('geoEditPostalCode', {
+                  id: user.id,
+                  description: 'Ingresar código postal'
+                });
+                //console.log('succesfully added to firebase!');
+              } catch (error) {
+                //console.log(error);
+              }
+            }}
             onSubmitEditing={Keyboard.dismiss}
           />
         </Container>
@@ -337,13 +386,19 @@ const PostalCodeScreen = () => {
           fontSize="h3"
           leftIcon={<AntDesign name="search1" size={22} color={theme.brandColor.iconn_white} style={{ position: 'absolute', left: 24 }} />}
           onPress={() => {
+            geoSearchButton();
             getPickUpPoints(postalCode);
           }}
         >
           Buscar
         </Button>
       </Container>
-      <Touchable onPress={handleGeolocation}>
+      <Touchable
+        onPress={() => {
+          geoUseMyLocation();
+          handleGeolocation();
+        }}
+      >
         <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginVertical: 44 }}>
           <Image source={ICONN_PIN_LOCATION} style={{ height: 24, width: 24 }} />
           <Container style={{ marginLeft: 10 }}>
@@ -354,6 +409,7 @@ const PostalCodeScreen = () => {
       <Container style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: verticalScale(220) }}>
         <Touchable
           onPress={() => {
+            geoNotInThisMoment();
             getPickUpPoints(POSTAL_CODE_DEFAULT!);
           }}
         >
