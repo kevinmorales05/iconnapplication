@@ -3,10 +3,11 @@ import NetInfo from '@react-native-community/netinfo';
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { InvoicingProfileInterface } from 'rtk';
+import { InvoicingProfileInterface, RootState, useAppSelector } from 'rtk';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   addRFC: () => void;
@@ -22,6 +23,7 @@ const TaxInfoScreen: React.FC<Props> = ({ addRFC, invoicingProfileList }) => {
     }
   });
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const order = (a: any, b: any) => {
     return a < b ? -1 : a > b ? 1 : 0;
@@ -50,9 +52,23 @@ const TaxInfoScreen: React.FC<Props> = ({ addRFC, invoicingProfileList }) => {
           ) : (
             invoicingProfileList
               .map(function (profile, i) {
-                return <TaxInfoCard key={i} rfc={profile.rfc} name={profile.business_name} isDefault={profile.default} onPress={() => {
-                  navigate("CreateTaxProfile", profile )
-                }} />;
+                return (
+                  <TaxInfoCard
+                    key={i}
+                    rfc={profile.rfc}
+                    name={profile.business_name}
+                    isDefault={profile.default}
+                    onPress={() => {
+                      navigate('CreateTaxProfile', profile);
+                      logEvent('invSelectInvoicingProfile', {
+                        id: user.id,
+                        description: 'Seleccionar perfil fiscal',
+                        invoincingProfileId: profile.invoicing_profile_id,
+                        origin: 'newInvoicing'
+                      });
+                    }}
+                  />
+                );
               })
               .sort(order)
           )}

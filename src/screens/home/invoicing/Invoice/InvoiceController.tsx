@@ -9,10 +9,9 @@ import theme from 'components/theme/theme';
 import { getInvoicingProfileListThunk, resendVerificationEmailThunk } from 'rtk/thunks/invoicing.thunks';
 import { useAlert, useLoading, useToast } from 'context';
 import { invoicingServices } from 'services';
+import { logEvent } from 'utils/analytics';
 
 const InvoiceController: React.FC = () => {
-
-
   const { user } = useAppSelector((state: RootState) => state.auth);
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -23,9 +22,6 @@ const InvoiceController: React.FC = () => {
     invoicingPetroTicketList
   } = useAppSelector((state: RootState) => state.invoicing);
   const [intervalId, setIntervalId] = useState<any>();
-
-
-
 
   const alert = useAlert();
   const loader = useLoading();
@@ -49,7 +45,6 @@ const InvoiceController: React.FC = () => {
    */
   useEffect(() => {
     if (user.userId && invoicingProfileList.length === 0) fetchInvoicingProfileList();
-    
   }, [fetchInvoicingProfileList]);
 
   // Monitors if user has verified his email from web.
@@ -73,19 +68,23 @@ const InvoiceController: React.FC = () => {
   }, [defaultProfile]);
 
   useEffect(() => {
-    const tem: InvoicingProfileInterface | null =
-      invoicingProfileList.find(item => {
-        return item.default === true;
-      }) ?? null;
-    if (!tem?.rfc) {
-      if (invoicingProfileList.length) {
-        invoicingServices.selectDefault(invoicingProfileList[0].invoicing_profile_id);
-        setTimeout(() => {
-          fetchInvoicingProfileList();
-        }, 500);
+    if (invoicingProfileList && invoicingProfileList.length > 0) {
+      const tem: InvoicingProfileInterface | null =
+        invoicingProfileList.find(item => {
+          return item.default === true;
+        }) ?? null;
+      if (!tem?.rfc) {
+        if (invoicingProfileList.length) {
+          invoicingServices.selectDefault(invoicingProfileList[0].invoicing_profile_id);
+          setTimeout(() => {
+            fetchInvoicingProfileList();
+          }, 500);
+        }
+      } else {
+        setDefaultProfile(tem);
       }
     } else {
-      setDefaultProfile(tem);
+      setDefaultProfile(null);
     }
   }, [invoicingProfileList]);
 
@@ -100,10 +99,20 @@ const InvoiceController: React.FC = () => {
   const goToAddTicketPetro = async () => {
     if (invoicingPetroTicketList.length > 0) navigate('InvoiceTicketPetro');
     else navigate('AddTicketPetro', { ticket: undefined, position: undefined });
+    logEvent('invMakeInvoice', {
+      id: user.id,
+      description: 'Facturar',
+      type: 'petro7'
+    });
   };
   const goToAddTicketSeven = async () => {
     if (invoicingSevenTicketList.length > 0) navigate('InvoiceTicketSeven');
     else navigate('AddTicketSeven', { ticket: undefined, position: undefined });
+    logEvent('invMakeInvoice', {
+      id: user.id,
+      description: 'Facturar',
+      type: '7Eleven'
+    });
   };
 
   const showAlert = () => {

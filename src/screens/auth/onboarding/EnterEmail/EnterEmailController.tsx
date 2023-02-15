@@ -8,12 +8,13 @@ import { useLoading, useToast } from 'context';
 import { AuthDataInterface, RootState, useAppDispatch, useAppSelector } from 'rtk';
 import { setAuthEmail, setAuthenticationToken, setId, setUserId } from 'rtk/slices/authSlice';
 import { authServices } from 'services';
+import { logEvent } from 'utils/analytics';
 
 const EnterEmailController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const loader = useLoading();
   const dispatch = useAppDispatch();
-  const { loading } = useAppSelector((state: RootState) => state.auth);
+  const { loading, user } = useAppSelector((state: RootState) => state.auth);
   const toast = useToast();
 
   useEffect(() => {
@@ -40,6 +41,10 @@ const EnterEmailController: React.FC = () => {
           await authServices.sendAccessKey(email, authenticationToken);
           navigate('CreatePassword', { authenticationToken, variant: 'register' });
           loader.hide();
+          logEvent('loginEmailNext', {
+            id: user.id,
+            description: 'Seleccionar siguiente'
+          });
           return;
         } catch (error) {
           toast.show({
@@ -59,18 +64,28 @@ const EnterEmailController: React.FC = () => {
           dispatch(setAuthEmail({ email }));
           dispatch(setAuthenticationToken(authenticationToken));
           navigate('EnterPassword');
+          logEvent('loginEmailNext', {
+            id: user.id,
+            description: 'Seleccionar siguiente'
+          });
         } catch (error) {
-          console.log('LOGIN ERROR', error);
+          toast.show({
+            message: `Ocurrió un error en el login: ${error}`,
+            type: 'error'
+          });
         }
       }
     } catch (error) {
-      console.log('error');
+      toast.show({
+        message: `Ocurrió un error: ${error}`,
+        type: 'error'
+      });
     }
   };
 
   return (
     <SafeArea topSafeArea={true} bottomSafeArea={true} barStyle="dark">
-      <EnterEmailScreen title={`Ingresa tu dirección de \ncorreo electrónico`} goBack={goBack} onSubmit={createSession} />
+      <EnterEmailScreen title={'Ingresa tu dirección de\ncorreo electrónico'} goBack={goBack} onSubmit={createSession} />
     </SafeArea>
   );
 };

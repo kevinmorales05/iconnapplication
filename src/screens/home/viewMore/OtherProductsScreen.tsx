@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { vtexProductsServices } from 'services';
-import { Button, CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
+import { CardProduct, Container, CustomText, SafeArea, SearchBar } from 'components';
 import { useShoppingCart } from 'screens/home/hooks/useShoppingCart';
 import theme from 'components/theme/theme';
 import { Dimensions, StyleSheet, FlatList } from 'react-native';
@@ -9,35 +8,40 @@ import { SearchLoupeDeleteSvg } from 'components/svgComponents';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
-import { ExistingProductInCartInterface, ProductInterface, ProductResponseInterface, RootState, useAppSelector } from 'rtk';
+import { ExistingProductInCartInterface, ProductInterface, ProductsByCollectionInterface, RootState, useAppSelector } from 'rtk';
 import Config from 'react-native-config';
 import { useLoading } from 'context';
+import { useProducts } from '../hooks/useProducts';
 
 function OtherProductsScreen() {
   const [productsList, setProductsList] = useState<ProductInterface[]>();
-  const [size, setSize] = useState();
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const { updateShoppingCartProduct } = useShoppingCart();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const loader = useLoading();
+
+  const { fetchProducts, otherProducts } = useProducts();
 
   const onPressSearch = () => {
     navigate('SearchProducts');
   };
 
   //render item function
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({ item }: { item: ProductInterface }) => {
     return (
       <CardProduct
         key={item.productId}
         ratingValue={item.ratingValue}
         price={item.price}
-        porcentDiscount={item.porcentDiscount === 0 ? null : item.porcentDiscount}
         name={item.name}
         image={{ uri: item.image }}
         quantity={item.quantity}
         productId={item.productId}
-        oldPrice={item.oldPrice}
+        promotionType={item.promotionType}
+        percentualDiscountValue={item.percentualDiscountValue}
+        promotionName={item.promotionName}
+        costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={() => {
           updateShoppingCartProduct!('create', item.productId);
         }}
@@ -61,38 +65,28 @@ function OtherProductsScreen() {
   //Function to get collection of products
   const getCollection = async () => {
     const { OTHER_PRODUCTS } = Config;
-    let dataList: ProductResponseInterface[] = [];
-    const response = await vtexProductsServices.getProductsByCollectionId(OTHER_PRODUCTS!).then(res => {
-      const { Data, Size } = res;
-      dataList = Data;
-      setSize(Size);
-    });
-    return dataList;
+    const productOther: ProductsByCollectionInterface = {
+      collectionId: Number.parseInt(OTHER_PRODUCTS ? OTHER_PRODUCTS : '0'),
+      pageSize: 10,
+      pageNumber: 0,
+      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+    };
+    fetchProducts(productOther);
   };
 
   const getInfoProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
     loader.show();
-    const copyArray = await getCollection();
     const completeArray: ProductInterface[] = [];
-    for (const item of copyArray) {
-      const price = await vtexProductsServices.getProductPriceByProductId(item.ProductId);
-      const raiting = await vtexProductsServices.getProductRatingByProductId(item.ProductId);
-      if (price && raiting) {
+    if (otherProducts) {
+      for (const item of otherProducts) {
         const newProduct: ProductInterface = {
-          productId: item.ProductId,
-          name: item.ProductName,
-          image: item.SkuImageUrl,
-          price: price.sellingPrice,
-          oldPrice: price.sellingPrice,
-          porcentDiscount: 0,
-          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === item.ProductId.toString())?.quantity : 0,
-          ratingValue: raiting.average
+          ...item,
+          image: item.image.uri,
+          quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === item.productId.toString())?.quantity : 0
         };
         completeArray.push(newProduct);
       }
     }
-    console.log('this is the product list ', completeArray);
-
     setProductsList(completeArray);
     loader.hide();
   };
@@ -114,7 +108,12 @@ function OtherProductsScreen() {
   useEffect(() => {
     const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
     getInfoProducts(existingProducts);
-  }, [cart]);
+  }, [otherProducts, cart]);
+
+  useEffect(() => {
+    loader.show();
+    getCollection();
+  }, []);
 
   return (
     <SafeArea
@@ -168,7 +167,7 @@ function OtherProductsScreen() {
                   />
                 </Container>
               </Container>
-              <Container style={{ marginTop: moderateScale(200) }}>
+              {/* <Container style={{ marginTop: moderateScale(200) }}>
                 <Button
                   style={{ width: moderateScale(328) }}
                   size="small"
@@ -182,7 +181,7 @@ function OtherProductsScreen() {
                 >
                   {'Limpiar'}
                 </Button>
-              </Container>
+              </Container> */}
             </Container>
           )}
         </Container>

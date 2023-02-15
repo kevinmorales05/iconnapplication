@@ -5,6 +5,7 @@ import { WalletStackParams } from 'navigation/types';
 import React from 'react';
 import { RechargeSupplier, RechargeUser, RootState, useAppSelector } from 'rtk';
 import { vtexDocsServices } from 'services';
+import { logEvent } from 'utils/analytics';
 import RechargeOperatorSceen from './RechargeOperatorScreen';
 
 const RechargeOperatorController: React.FC = () => {
@@ -53,6 +54,12 @@ const RechargeOperatorController: React.FC = () => {
       userId: userId as string
     };
     saveRecharge(rechargeFields, qrData, newRecharge);
+    logEvent('walSaveReacharge', {
+      id: user.id,
+      description: 'Botón de guardar recarga',
+      rechargeId: supplier?.supplierName,
+      ammountId: amountSupplier?.ammount
+    });
   };
 
   const onPressAmount = () => {

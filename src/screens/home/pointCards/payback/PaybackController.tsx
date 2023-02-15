@@ -9,6 +9,7 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { logEvent } from 'utils/analytics';
 
 interface Props {}
 
@@ -29,6 +30,12 @@ const PaybackController: React.FC<Props> = () => {
         if (cardSaved) {
           //
           setPaybackCardToUpdate(cardSaved.DocumentId);
+          logEvent('walSaveCard', {
+            id: user.id,
+            description: 'Botón de editar un depósito',
+            cardType: 'PAYBACK',
+            cardId: cardSaved.Id
+          });
         }
       }
     } catch (error) {
@@ -64,6 +71,7 @@ const PaybackController: React.FC<Props> = () => {
         cardToUpdate={paybackCardToUpdate}
         cardId={params.cardId}
         barcodeFromScan={params.barcode}
+        onPressSendAnalytics={logEvent}
       />
     </SafeArea>
   );

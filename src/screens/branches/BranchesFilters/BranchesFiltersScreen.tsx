@@ -22,7 +22,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import theme from 'components/theme/theme';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import Icon from 'react-native-vector-icons/Entypo';
-import { PointFilteringDetailInterface } from 'rtk';
+import { PointFilteringDetailInterface, RootState, useAppSelector } from 'rtk';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   cleanFilters: () => void;
@@ -30,13 +31,13 @@ interface Props {
   goBack: () => void;
   setFiltering: (key: string, value: boolean) => void;
   showResults: () => void;
-  showResultsButtonEnabled: boolean;
 }
 
-const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, goBack, setFiltering, showResults, showResultsButtonEnabled }) => {
+const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, goBack, setFiltering, showResults }) => {
   const insets = useSafeAreaInsets();
   const [sevenToggled, setSevenToggled] = useState(true);
   const [petroToggled, setPetroToggled] = useState(true);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={true} barStyle="dark" childrenContainerStyle={{ paddingHorizontal: 0 }}>
@@ -45,7 +46,20 @@ const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, go
           <TextContainer text="Filtrar" fontSize={22} fontBold textAlign="center" />
         </Container>
         <Container style={{ position: 'absolute', right: 0 }}>
-          <Touchable onPress={goBack} rounded marginHorizontal={16}>
+          <Touchable
+            onPress={() => {
+              goBack();
+              if (filterObject === undefined) {
+                showResults();
+              }
+              logEvent('sucCloseFilters', {
+                id: user.id,
+                description: 'Botón de cerrar filtros'
+              });
+            }}
+            rounded
+            marginHorizontal={16}
+          >
             <AntDesign name="close" size={28} color="black" />
           </Touchable>
         </Container>
@@ -78,6 +92,19 @@ const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, go
             <Touchable
               onPress={() => {
                 setSevenToggled(sevenToggle => {
+                  if (!sevenToggle) {
+                    logEvent('sucOpenScrollFilters', {
+                      id: user.id,
+                      description: 'Botón de abrir filtros',
+                      type: 'seven'
+                    });
+                  } else {
+                    logEvent('sucCloseScrollFilters', {
+                      id: user.id,
+                      description: 'Botón de cerrar filtros',
+                      type: 'seven'
+                    });
+                  }
                   return !sevenToggle;
                 });
               }}
@@ -221,6 +248,19 @@ const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, go
             <Touchable
               onPress={() => {
                 setPetroToggled(petroToggle => {
+                  if (!petroToggle) {
+                    logEvent('sucOpenScrollFilters', {
+                      id: user.id,
+                      description: 'Botón de abrir filtros',
+                      type: 'petro'
+                    });
+                  } else {
+                    logEvent('sucCloseScrollFilters', {
+                      id: user.id,
+                      description: 'Botón de cerrar filtros',
+                      type: 'petro'
+                    });
+                  }
                   return !petroToggle;
                 });
               }}
@@ -438,7 +478,7 @@ const BranchesFiltersScreen: React.FC<Props> = ({ cleanFilters, filterObject, go
             </Button>
           </Container>
           <Container width={'54%'}>
-            <Button disabled={!showResultsButtonEnabled} length="long" round onPress={showResults} fontSize="h4" fontBold>
+            <Button length="long" round onPress={showResults} fontSize="h4" fontBold>
               Mostrar resultados
             </Button>
           </Container>

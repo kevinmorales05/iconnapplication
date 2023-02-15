@@ -78,7 +78,7 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
           markers.map((marker, index) => (
             <Marker
               tracksViewChanges={Platform.OS === 'android' ? false : true}
-              key={index}
+              key={index + marker.latitude}
               coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
               title={marker.shopName}
               onPress={() => {
@@ -99,7 +99,12 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
                     height: 60,
                     alignSelf: 'center',
                     borderRadius: 30,
-                    shadowColor: theme.brandColor.iconn_orange_original,
+                    shadowColor:
+                      marker.type === 'binomial'
+                        ? theme.brandColor.iconn_red_original
+                        : marker.type === 'petro'
+                        ? theme.brandColor.iconn_orange_original
+                        : theme.brandColor.iconn_green_original,
                     shadowOffset: {
                       width: 0,
                       height: 1
@@ -108,11 +113,24 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
                     shadowRadius: 16,
                     overflow: 'hidden',
                     borderWidth: 0.01,
-                    borderColor: theme.brandColor.iconn_orange_original
+                    borderColor:
+                      marker.type === 'binomial'
+                        ? theme.brandColor.iconn_red_original
+                        : marker.type === 'petro'
+                        ? theme.brandColor.iconn_orange_original
+                        : marker.type === '7eleven'
+                        ? theme.brandColor.iconn_green_original
+                        : undefined
                   }}
                   middle
                 >
-                  <Image source={ICONN_BRANCHES_LOCATION_PETRO} style={{ width: 44, height: 44 }} />
+                  {marker.type === 'binomial' ? (
+                    <Image source={ICONN_BRANCHES_LOCATION_BINOMIAL} style={{ width: 44, height: 44 }} />
+                  ) : marker.type === 'petro' ? (
+                    <Image source={ICONN_BRANCHES_LOCATION_PETRO} style={{ width: 44, height: 44 }} />
+                  ) : marker.type === '7eleven' ? (
+                    <Image source={ICONN_BRANCHES_LOCATION_SEVEN} style={{ width: 44, height: 44 }} />
+                  ) : undefined}
                 </Container>
               ) : (
                 <Image
@@ -121,7 +139,9 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
                       ? ICONN_BRANCHES_LOCATION_BINOMIAL
                       : marker.type === 'petro'
                       ? ICONN_BRANCHES_LOCATION_PETRO
-                      : ICONN_BRANCHES_LOCATION_SEVEN
+                      : marker.type === '7eleven'
+                      ? ICONN_BRANCHES_LOCATION_SEVEN
+                      : undefined
                   }
                   style={{ height: 36, width: 36 }}
                 />

@@ -4,7 +4,7 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AuthStackParams } from 'navigation/types';
-import { useLoading, useAlert } from 'context';
+import { useLoading, useAlert, useToast } from 'context';
 import { HttpClient } from '../../../../http/http-client';
 import { useOnboarding } from 'screens/auth/hooks/useOnboarding';
 
@@ -12,6 +12,7 @@ import { RootState, setIsLogged, useAppDispatch, useAppSelector, setAuthCookie, 
 
 import { authServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
+import { logEvent } from 'utils/analytics';
 
 const EnterPasswordController: React.FC = () => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
@@ -22,14 +23,12 @@ const EnterPasswordController: React.FC = () => {
   const alert = useAlert();
   const [accountError, setAccountError] = useState('');
   const authToken = HttpClient.accessToken;
-  const {getUser} = useOnboarding();
+  const { getUser } = useOnboarding();
+  const toast = useToast();
 
   const getFavorites = useCallback(async () => {
     const response = await vtexFavoriteServices.getFavoritesByUserEmail(email as string);
     const list = response[0].ListItemsWrapper[0].ListItems;
-    console.log('PRUEBA', list);
-    console.log('PRUEBA2', response[0].id);
-    console.log('PRUEBA4', response);
     dispatch(setFav(list));
     dispatch(setFavId(response[0].id));
   }, []);
@@ -56,10 +55,20 @@ const EnterPasswordController: React.FC = () => {
       } else if (response.authStatus == 'WrongCredentials') {
         setAccountError('Contraseña incorrecta');
       } else {
-        alert.show({ title: 'Cuenta temporalmente bloqueada', message: 'Has excedido la cantidad de intentos permitidos, tu cuenta ha sido bloqueada durante 1 hora.' });
+        alert.show({
+          title: 'Cuenta temporalmente bloqueada',
+          message: 'Has excedido la cantidad de intentos permitidos, tu cuenta ha sido bloqueada durante 1 hora.'
+        });
       }
+      logEvent('nextPassword', {
+        id: user.id,
+        description: 'Seleccionar botón de Ingresar con correo electrónico'
+      });
     } catch (error) {
-      console.log(error);
+      toast.show({
+        message: `Ocurrió un error en la autenticación: ${error}`,
+        type: 'error'
+      });
     }
   };
 

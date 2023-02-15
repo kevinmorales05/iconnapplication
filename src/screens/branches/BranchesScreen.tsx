@@ -1,6 +1,6 @@
 import React from 'react';
-import { BranchesState, Location, PointDisplayMode, PointInterface } from 'rtk';
-import { Button, Container, CustomMap, PointsFound, PointsList, SearchBranch, SearchBranchByState, TextContainer } from 'components';
+import { BranchesState, Location, PointDisplayMode, PointFilteringDetailInterface, PointInterface } from 'rtk';
+import { Button, Container, CustomMap, CustomText, PointsFound, PointsList, SearchBranch, SearchBranchByState, TextContainer } from 'components';
 import { Details, Region } from 'react-native-maps';
 import { ICONN_BRANCHES_FILTER_OPTION, ICONN_BRANCHES_LOCATION_BINOMIAL, ICONN_BRANCHES_LOCATION_PETRO, ICONN_BRANCHES_LOCATION_SEVEN } from 'assets/images';
 import { Image, Platform, ScrollView } from 'react-native';
@@ -12,6 +12,7 @@ import Slider from '@react-native-community/slider';
 import theme from 'components/theme/theme';
 
 interface Props {
+  filterObject: PointFilteringDetailInterface;
   isButtonSearchBar: boolean;
   latitudeDelta: number;
   markers: PointInterface[];
@@ -39,13 +40,14 @@ interface Props {
   searchArea?: Location;
   setMarkerFound: (marker: PointInterface, mode?: PointDisplayMode) => void;
   setSearch: (str: string) => void;
+  states: BranchesState[];
   visibleSearchByAreaButton: boolean;
   visibleSearchByDistance: boolean;
   visibleStoreSymbology: boolean;
-  states: BranchesState[];
 }
 
 const BranchesScreen: React.FC<Props> = ({
+  filterObject,
   isButtonSearchBar,
   latitudeDelta,
   markers,
@@ -73,11 +75,24 @@ const BranchesScreen: React.FC<Props> = ({
   searchArea,
   setMarkerFound,
   setSearch,
+  states,
   visibleSearchByAreaButton,
   visibleSearchByDistance,
-  visibleStoreSymbology,
-  states
+  visibleStoreSymbology
 }) => {
+  let nfilterObject: any = { ...filterObject };
+  if ('info_seven' in nfilterObject) {
+    delete nfilterObject.info_seven;
+  }
+  if ('info_petro' in nfilterObject) {
+    delete nfilterObject.info_petro;
+  }
+  if ('info_binomial' in nfilterObject) {
+    delete nfilterObject.info_binomial;
+  }
+
+  if (Object.keys(nfilterObject).length === 0) nfilterObject = undefined;
+
   return (
     <>
       {/* <TextContainer typography="paragraph" text={JSON.stringify(permissions)} marginTop={23} marginBottom={16} /> */}
@@ -138,17 +153,46 @@ const BranchesScreen: React.FC<Props> = ({
             <Button
               onPress={onPressShowFilters}
               color="iconn_white"
-              style={{ borderRadius: 4, borderWidth: 1, borderColor: theme.brandColor.iconn_med_grey }}
+              style={{ borderRadius: 4, borderWidth: 1, borderColor: nfilterObject ? theme.brandColor.iconn_green_original : theme.brandColor.iconn_med_grey }}
               size="xsmall"
               length="long"
               width="xxlarge"
-              fontColor="dark"
+              fontColor={nfilterObject ? 'light_green' : 'dark'}
               fontBold
               fontSize="label"
-              leftIcon={<Image source={ICONN_BRANCHES_FILTER_OPTION} style={{ left: 8, width: 24, height: 24 }} />}
+              leftIcon={
+                <Image
+                  source={ICONN_BRANCHES_FILTER_OPTION}
+                  style={{
+                    left: 8,
+                    width: 24,
+                    height: 24,
+                    tintColor: nfilterObject ? theme.brandColor.iconn_green_original : theme.brandColor.iconn_dark_grey
+                  }}
+                />
+              }
             >
               Filtrar
             </Button>
+            {nfilterObject && (
+              <Container
+                style={{
+                  position: 'absolute',
+                  right: -5,
+                  top: -5
+                }}
+              >
+                <Container style={{ backgroundColor: theme.brandColor.iconn_green_original, height: 24, width: 24, borderRadius: 12 }} middle>
+                  <CustomText
+                    fontSize={Object.keys(nfilterObject).length > 9 ? 12 : 16}
+                    alignSelf="center"
+                    textColor={theme.brandColor.iconn_white}
+                    text={String(Object.keys(nfilterObject).length)}
+                    fontBold
+                  />
+                </Container>
+              </Container>
+            )}
           </Container>
         </Container>
       )}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { StyleSheet, ScrollView, Image, Text, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, Image, Text } from 'react-native';
 import { CustomText, TextContainer, Container, Touchable, TouchableText, Button, ReviewPercentage, CardProductSkeleton } from 'components';
 import theme from 'components/theme/theme';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -8,23 +8,21 @@ import { ImagesCarusel } from 'components/molecules/ImagesCarusel';
 import { FavoriteButton } from 'components/molecules';
 import { CardProduct } from 'components/organisms/CardProduct';
 import { Rating } from 'components/molecules/Rating';
-import { getProductDetailById, getSkuFilesById, getProductSpecification } from 'services/vtexProduct.services';
+import { getProductSpecification } from 'services/vtexProduct.services';
 import { QuantityProduct } from 'components/molecules/QuantityProduct';
-import { vtexProductsServices } from 'services';
 import {
   addFav,
   ExistingProductInCartInterface,
-  FavoritesResponseInterface,
-  getProductPriceByProductIdThunk,
-  getProductRatingByProductIdThunk,
+  getProductsByCollectionIdThunk,
   ItemsFavoritesInterface,
-  ListItemsWrapperInterface,
-  NewFavoritesResponseInterface,
+  ProductCacheInterface,
+  ProductDeatilCacheInterface,
   ProductInterface,
+  ProductResponseInterface,
+  ProductsByCollectionInterface,
   RootState,
   setFav,
   setFavId,
-  UpdateType,
   useAppDispatch,
   useAppSelector
 } from 'rtk';
@@ -34,6 +32,8 @@ import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultA
 import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 import Config from 'react-native-config';
+import { homeServices } from 'services/home-services';
+import { useLoading } from 'context';
 
 interface Props {
   itemId: string;
@@ -50,129 +50,94 @@ interface Props {
   totalCount?: number;
   average?: number;
   isReviewed?: boolean;
-  prodId?: number;
 }
 
-const ProductDetailScreen: React.FC<Props> = ({
-  itemId,
-  fetchReviewData,
-  showModal,
-  star1,
-  star2,
-  star3,
-  star4,
-  star5,
-  totalCount,
-  average,
-  isReviewed,
-  prodId
-}) => {
+const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star1, star2, star3, star4, star5, totalCount, average, isReviewed }) => {
   const { updateShoppingCartProduct } = useShoppingCart();
-  const [productPrice, setProductPrice] = useState(0);
-  const [productDetail, setProductDetail] = useState(Object);
+  const [productDetail, setProductDetail] = useState<ProductDeatilCacheInterface>({});
   const [skusForProductImages, setSkusForProductImages] = useState([]);
   const [complementaryProducts, setComplementaryProducts] = useState<ProductInterface[]>([]);
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [cartItemQuantity, setCartItemQuantity] = useState(0);
-  const [productRating, setProductRating] = useState(Object);
-  const [productToUpdate, setProductToUpdate] = useState(Object);
   const [visible, setVisible] = useState<boolean>(false);
+  const [isLoader, setIsLoader] = useState<boolean>(false);
   const { detailSelected, cart } = useAppSelector((state: RootState) => state.cart);
   const [isFav, setIsFav] = useState<boolean>();
   const { favs, favsId, user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
-  const [favList, setFavList] = useState<ItemsFavoritesInterface[]>(favs);
-  const [productId, setProductId] = useState<string>();
-  const { productVsPromotion } = useAppSelector((state: RootState) => state.promotion);
+  const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const dispatch = useAppDispatch();
-  const { PRODUCT_DETAIL_ASSETS, COMPLEMENTRY_PRODUCTS } = Config;
+  const { COMPLEMENTRY_PRODUCTS } = Config;
+  const loader = useLoading();
 
-  itemId = detailSelected;
+  const itemId = detailSelected;
 
-  const fetchData = useCallback(async () => {
-    const imgRoot = PRODUCT_DETAIL_ASSETS;
-    await getSkuFilesById(itemId)
-      .then(async responseSku => {
-        let skuForImages = [];
-        if (responseSku) {
-          if (responseSku.length > 0) {
-            responseSku.map(sku => {
-              skuForImages.push({ skuId: sku.Id, name: sku.Name, isMain: sku.IsMain, label: sku.Label, url: imgRoot + sku.ArchiveId + '-' + sku.Id + '-' });
-            });
-            setSkusForProductImages(skuForImages);
-          }
-        }
-      })
-      .catch(error => console.log(error));
-
-    await getProductDetailById(itemId)
-      .then(async responseProductDetail => {
-        setProductDetail(responseProductDetail);
-      })
-      .catch(error => console.log(error));
-
-    await vtexProductsServices
-      .getProductPriceByProductId(itemId)
-      .then(async responsePrice => {
-        setProductPrice(responsePrice);
-      })
-      .catch(error => console.log(error));
-
-    await vtexProductsServices
-      .getProductRatingByProductId(itemId)
-      .then(async responseRating => {
-        setProductRating(responseRating);
-      })
-      .catch(error => console.log(error));
-
-    setCartItemQuantity(isProductIdInShoppingCart(itemId));
+  const fetchDataProduct = useCallback(async () => {
+    loader.show();
+    const productInfo: ProductCacheInterface = {
+      store: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1], 10) : 0
+    };
+    const response = await homeServices.getProductCacheDetailById(itemId, productInfo);
+    if (response.responseCode === 604) {
+      const productDeatil: ProductDeatilCacheInterface = {
+        Name: response.data.ProductName,
+        Title: response.data.Title ? response.data.Title : response.data.ProductName,
+        Description: response.data.Description,
+        DescriptionShort: response.data.DescriptionShort,
+        selling_price: response.data.selling_price,
+        promotionType: response.data.promotion ? response.data.promotion.type : undefined,
+        maximumUnitPriceDiscount: response.data.promotion ? response.data.promotion.maximum_unit_price_discount : undefined,
+        percentualDiscountValue: response.data.promotion ? response.data.promotion.percentualDiscountValue : undefined,
+        average: response.data.qualificationAverage,
+        totalCount: response.data.totalCount ? response.data.totalCount : 0,
+        costDiscountPrice: response.data.promotion ? response.data.promotion.costDiscountPrice : ''
+      };
+      // console.log({ response: productDeatil });
+      const image = {
+        url: response.data.SkuImageUrl,
+        isMain: true
+      };
+      setProductDetail(productDeatil);
+      setCartItemQuantity(isProductIdInShoppingCart(itemId));
+      setSkusForProductImages([image]);
+    }
+    loader.hide();
+    setIsLoader(false);
   }, [cart, detailSelected]);
 
   const getComplementaryProducts = async (existingProductsInCart: ExistingProductInCartInterface[]) => {
-    vtexProductsServices
-      .getProductsByCollectionId(COMPLEMENTRY_PRODUCTS!)
-      .then(responseCollection => {
-        const { Data } = responseCollection;
-        let complementaryList = [];
-        if (Data) {
-          if (Data.length) {
-            Data.map(product => {
-              complementaryList.push({
-                productId: product.ProductId,
-                name: product.ProductName,
-                image: { uri: product.SkuImageUrl }
-              });
-            });
-            refillProductsWithPrice(existingProductsInCart, complementaryList);
-          }
-        }
-      })
-      .catch(error => console.log(error));
+    const productComplementary: ProductsByCollectionInterface = {
+      collectionId: Number.parseInt(COMPLEMENTRY_PRODUCTS ? COMPLEMENTRY_PRODUCTS : '0', 10),
+      pageSize: 7,
+      pageNumber: 0,
+      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+    };
+    const response = await dispatch(getProductsByCollectionIdThunk(productComplementary)).unwrap();
+    if (response.responseCode === 603) {
+      const productsArr: ProductInterface[] = response.data.products.map(
+        ({ ProductId, ProductName, SkuImageUrl, qualificationAverage, sellingPrice }: ProductResponseInterface) => ({
+          productId: ProductId,
+          name: ProductName ? ProductName : '',
+          image: { uri: SkuImageUrl },
+          price: Number.parseFloat(sellingPrice),
+          oldPrice: Number.parseFloat(sellingPrice),
+          porcentDiscount: 0,
+          quantity: 0,
+          ratingValue: qualificationAverage
+        })
+      );
+      refillProductsWithPrice(existingProductsInCart, productsArr);
+    }
   };
 
   async function refillProductsWithPrice(existingProductsInCart: ExistingProductInCartInterface[], products: ProductInterface[]) {
     let productsToRender: ProductInterface[] = [];
     for (const p of products) {
-      const price = await getPriceByProductId(p.productId);
-      const raiting = await getRatingByProductId(p.productId);
-      if (price && raiting) {
-        p.oldPrice = price?.sellingPrice;
-        p.price = price?.sellingPrice;
-        p.ratingValue = raiting.average;
-        p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
-        productsToRender.push(p);
-      }
+      p.quantity = existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === p.productId.toString())?.quantity : 0;
+      productsToRender.push(p);
     }
     setComplementaryProducts(productsToRender);
   }
-
-  const getPriceByProductId = async (productId: string) => {
-    return await dispatch(getProductPriceByProductIdThunk(productId)).unwrap();
-  };
-
-  const getRatingByProductId = async (productId: string) => {
-    return await dispatch(getProductRatingByProductIdThunk(productId)).unwrap();
-  };
 
   const hideModalForAdult = () => {
     setVisible(false);
@@ -191,7 +156,6 @@ const ProductDetailScreen: React.FC<Props> = ({
     if (isAdult) {
       updateShoppingCartProduct!('create', productId);
     } else {
-      setProductId(productId);
       showModalForAdult();
     }
   };
@@ -236,9 +200,11 @@ const ProductDetailScreen: React.FC<Props> = ({
   };
 
   useEffect(() => {
-    fetchData();
-    setProductToUpdate(itemId);
-  }, [cart, complementaryProducts, itemId, productToUpdate, detailSelected]);
+    if (!isLoader) {
+      setIsLoader(true);
+      fetchDataProduct();
+    }
+  }, [cart, itemId, detailSelected]);
 
   useEffect(() => {
     const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
@@ -292,7 +258,7 @@ const ProductDetailScreen: React.FC<Props> = ({
       let copyFavs = favs;
       dispatch(addFav(newFav));
       let copycopy = copyFavs.concat(newFav);
-      const response = await uploadVtex(copycopy);
+      await uploadVtex(copycopy);
     }
   };
 
@@ -312,34 +278,11 @@ const ProductDetailScreen: React.FC<Props> = ({
     copyFavs.forEach(product => {
       if (product.Id == oldFav.Id) {
         const newFavList = copyFavs.filter(productf => productf.Id != oldFav.Id);
-        let listItems: ListItemsWrapperInterface = {
-          ListItems: newFavList,
-          IsPublic: true,
-          Name: 'Wishlist'
-        };
-        let tryList: FavoritesResponseInterface = {
-          id: favsId,
-          email: email as string,
-          ListItemsWrapper: [listItems]
-        };
-        const response = uploadVtex(newFavList);
-        setFavList(newFavList);
+        uploadVtex(newFavList);
         dispatch(setFav(newFavList));
       }
     });
   };
-
-  const updateFavorites = useCallback(async (updatedList: FavoritesResponseInterface | NewFavoritesResponseInterface, updateType: UpdateType) => {
-    if (updateType === 'new') {
-      const listNoId: NewFavoritesResponseInterface = {
-        email: email as string,
-        ListItemsWrapper: updatedList.ListItemsWrapper
-      };
-      const response = await vtexFavoriteServices.patchFavorites(email as string, listNoId);
-    } else {
-      const response = await vtexFavoriteServices.patchFavorites(email as string, updatedList);
-    }
-  }, []);
 
   const changeFavorite = () => {
     if (isFav) {
@@ -379,16 +322,16 @@ const ProductDetailScreen: React.FC<Props> = ({
                 imageSize={240}
                 selectecPointColor={theme.brandColor.iconn_dark_grey}
                 generalPointsColor={theme.brandColor.iconn_grey}
-              ></ImagesCarusel>
+              />
             </Container>
             <Container row space="between" style={{ marginTop: 16, width: '100%', paddingHorizontal: 10 }}>
               <Container row>
-                <Rating ratingValue={productRating.average} />
+                <Rating ratingValue={productDetail.average} />
                 <Container style={{ marginTop: -3.5, marginLeft: 2 }}>
                   <TouchableText
                     marginLeft={8}
                     textColor={theme.brandColor.iconn_accent_principal}
-                    text={productRating.totalCount + ' Calificaciones'}
+                    text={totalCount + ' Calificaciones'}
                     typography="h4"
                     fontBold
                     onPress={() => {}}
@@ -396,11 +339,11 @@ const ProductDetailScreen: React.FC<Props> = ({
                   />
                 </Container>
               </Container>
-              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
-                productVsPromotion.get('' + itemId).promotionType == 'campaign' ||
-                productVsPromotion.get('' + itemId).promotionType == 'regular' ||
-                productVsPromotion.get('' + itemId).promotionType == 'buyAndWin' ||
-                productVsPromotion.get('' + itemId).promotionType == 'forThePriceOf' ? (
+              {!!productDetail && productDetail.promotionType ? (
+                productDetail.promotionType == 'campaign' ||
+                productDetail.promotionType == 'regular' ||
+                productDetail.promotionType == 'buyAndWin' ||
+                productDetail.promotionType == 'forThePriceOf' ? (
                   <></>
                 ) : (
                   <Container>
@@ -423,30 +366,17 @@ const ProductDetailScreen: React.FC<Props> = ({
                   fontBold
                   fontSize={theme.fontSize.h1}
                   text={
-                    !!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
-                      ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
-                        ? '$' +
-                        (
-                          productVsPromotion.get('' + itemId).percentualDiscountValue > 0 ?
-                            (
-                              (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) -
-                              (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
-                                productVsPromotion.get('' + itemId).percentualDiscountValue) /
-                              100
-                            ) :
-                            (
-                              productVsPromotion.get('' + itemId).maximumUnitPriceDiscount != undefined ?
-                                productVsPromotion.get('' + itemId).maximumUnitPriceDiscount : 0
-                            )
-                        )
-                          .toFixed(2)
-                          .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                    !!productDetail && productDetail.promotionType
+                      ? (productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular') &&
+                        productDetail.percentualDiscountValue &&
+                        productDetail.percentualDiscountValue > 0
+                        ? '$' + productDetail.costDiscountPrice
                         : ''
                       : ''
                   }
-                ></TextContainer>
-                {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
-                  productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
+                />
+                {!!productDetail && productDetail.promotionType ? (
+                  productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular' ? (
                     <Container style={{ marginLeft: 15, marginTop: 1 }}>
                       <Text
                         style={{
@@ -458,7 +388,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                         }}
                       >
                         {'$' +
-                          (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0)
+                          Number.parseFloat(productDetail != undefined && productDetail.selling_price ? productDetail.selling_price : '0')
                             .toFixed(2)
                             .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                       </Text>
@@ -470,7 +400,9 @@ const ProductDetailScreen: React.FC<Props> = ({
                       fontSize={theme.fontSize.h1}
                       text={
                         '$' +
-                        (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                        Number.parseFloat(productDetail.selling_price ? productDetail.selling_price : '0')
+                          .toFixed(2)
+                          .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                       }
                     />
                   )
@@ -481,13 +413,15 @@ const ProductDetailScreen: React.FC<Props> = ({
                     fontSize={theme.fontSize.h1}
                     text={
                       '$' +
-                      (productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                      Number.parseFloat(productDetail.selling_price ? productDetail.selling_price : '')
+                        .toFixed(2)
+                        .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                     }
                   />
                 )}
               </Container>
-              {!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId) ? (
-                productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular' ? (
+              {!!productDetail && productDetail.promotionType ? (
+                productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular' ? (
                   <Container style={styles.containerPorcentDiscount}>
                     <CustomText
                       fontSize={theme.fontSize.h6}
@@ -495,29 +429,18 @@ const ProductDetailScreen: React.FC<Props> = ({
                       fontWeight={'bold'}
                       text={
                         'ahorra $' +
-                        (!!productVsPromotion && Object.keys(productVsPromotion).length && productVsPromotion.has('' + itemId)
-                          ? productVsPromotion.get('' + itemId).promotionType == 'campaign' || productVsPromotion.get('' + itemId).promotionType == 'regular'
-                            ? (
-                              productVsPromotion.get('' + itemId).percentualDiscountValue > 0 ?
-                                (
-                                  (
-                                    (parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0) *
-                                      productVsPromotion.get('' + itemId).percentualDiscountValue) /
-                                    100
-                                  )
-                                ) : (
-                                  (
-                                    (
-                                      parseInt(productPrice != undefined && productPrice.sellingPrice ? productPrice.sellingPrice : 0)
-                                    )
-                                  ) - (
-                                    productVsPromotion.get('' + itemId).maximumUnitPriceDiscount != undefined ?
-                                      productVsPromotion.get('' + itemId).maximumUnitPriceDiscount : 0
-                                  )
+                        (!!productDetail && productDetail.promotionType
+                          ? productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular'
+                            ? productDetail.costDiscountPrice
+                              ? Number.parseFloat(
+                                  productDetail.percentualDiscountValue > 0
+                                    ? productDetail.costDiscountPrice
+                                    : Number.parseFloat(productDetail.selling_price ? productDetail.selling_price : '0', 10) -
+                                        (productDetail.maximumUnitPriceDiscount != undefined ? productDetail.maximumUnitPriceDiscount : 0)
                                 )
-                            )
-                                .toFixed(2)
-                                .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                                  .toFixed(2)
+                                  .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                              : ''
                             : ''
                           : '')
                       }
@@ -561,13 +484,13 @@ const ProductDetailScreen: React.FC<Props> = ({
             {showAdditionalInfo ? (
               <Container style={{ marginTop: 10, paddingHorizontal: 10 }}>
                 <Container>
-                  <TextContainer text="Descripción del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
+                  <TextContainer text="Descripción del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold />
                   <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
                     {productDetail.Description}
                   </Text>
                 </Container>
                 <Container style={{ marginTop: 20 }}>
-                  <TextContainer text="Especificación del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold></TextContainer>
+                  <TextContainer text="Especificación del producto" fontSize={12} textColor={theme.fontColor.paragraph} fontBold />
                   <Text numberOfLines={5} style={{ color: 'black', width: '100%', textAlign: 'justify' }}>
                     {productDetail.Title}
                   </Text>
@@ -579,7 +502,7 @@ const ProductDetailScreen: React.FC<Props> = ({
           </Container>
 
           <Container style={{ paddingVertical: 10 }} backgroundColor={theme.brandColor.iconn_background}>
-            <TextContainer text={`¿Un último antojo?`} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
+            <TextContainer text={'¿Un último antojo?'} fontBold typography="h4" marginHorizontal={16} marginVertical={16} />
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <Container row style={{ width: '100%', marginBottom: 20, paddingLeft: 5, paddingRight: 30 }}>
                 {complementaryProducts.length === 0 ? (
@@ -594,6 +517,7 @@ const ProductDetailScreen: React.FC<Props> = ({
                   complementaryProducts.map((prod, index) => {
                     return (
                       <CardProduct
+                        key={prod.productId + index + 'detail'}
                         image={prod.image!}
                         name={prod.name!}
                         ratingValue={prod.ratingValue!}

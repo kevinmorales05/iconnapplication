@@ -7,6 +7,7 @@ import { RootState, useAppSelector } from 'rtk';
 import { useToast } from 'context';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
+import { logEvent } from 'utils/analytics';
 
 interface Props {}
 
@@ -25,6 +26,12 @@ const PreferredController: React.FC<Props> = () => {
         const cardSaved = await vtexDocsServices.createDoc('PC', preferentePointCardBody);
         if (cardSaved) {
           setPreferenteCardToUpdate(cardSaved.DocumentId);
+          logEvent('walSaveCard', {
+            id: user.id,
+            description: 'Botón de editar un depósito',
+            cardType: 'ICONN',
+            cardId: cardSaved.Id
+          });
         }
       }
     } catch (error) {
@@ -58,6 +65,7 @@ const PreferredController: React.FC<Props> = () => {
         deleteCard={deletePointCard}
         cardToUpdate={preferenteCardToUpdate}
         cardId={params.cardId}
+        onPressSendAnalytics={logEvent}
       />
     </SafeArea>
   );
