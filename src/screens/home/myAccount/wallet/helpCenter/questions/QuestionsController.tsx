@@ -5,17 +5,19 @@ import { SafeArea } from 'components';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { HomeStackParams } from 'navigation/types';
 import { helpCenterServices } from 'services/helpCenter.services';
+
 interface Props {}
 
 const QuestionsController: React.FC<Props> = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'HelpQuestions'>>();
   const { params } = route;
   const moduleId = params?.moduleId;
+  const moduleName = params?.moduleName;
   const [helpQuestions, setHelpQuestions] = useState([]);
 
   const fetchData = useCallback(async () => {
     await helpCenterServices.getQuestionsListByModuleId(moduleId).then(async questionsResponse => {
-      if (questionsResponse && questionsResponse.data.length>0) {
+      if (questionsResponse && questionsResponse.data.length > 0) {
         setHelpQuestions(questionsResponse.data);
       }
     });
@@ -33,7 +35,7 @@ const QuestionsController: React.FC<Props> = () => {
       backgroundColor={theme.brandColor.iconn_background}
       barStyle="dark"
     >
-      <QuestionsScreen questionsData={helpQuestions} moduleId={moduleId} />
+      <QuestionsScreen questionsData={helpQuestions as []} moduleId={moduleId as string} moduleName={moduleName as string} />
     </SafeArea>
   );
 };

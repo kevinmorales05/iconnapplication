@@ -15,16 +15,22 @@ import { Button } from 'components';
 import { HomeStackParams } from 'navigation/types';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { logEvent } from 'utils/analytics';
 
 const OrderCard = (props: OrderInterface) => {
   const { updateShoppingCartProduct } = useShoppingCart();
   const { navigate: navigation } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { status, creationDate, orderId, totalItems, totalValue, deliveryChannel, navigate, seeMore, qualified } = props;
   const { cart } = useAppSelector((state: RootState) => state.cart);
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const loader = useLoading();
 
   const toRate = () => {
     navigation('RateOrder', { orderId: orderId });
+    logEvent('ohRateOrder', {
+      id: user.id,
+      description: 'Calificar una orden'
+    });
   };
 
   const newDate = (date: string) => {
@@ -44,6 +50,10 @@ const OrderCard = (props: OrderInterface) => {
     const { items } = data;
     let isAdd = false;
     let isCreate = false;
+    logEvent('ohBuyAgain', {
+      id: user.id,
+      description: 'Botón de volver a comprar'
+    });
     items.forEach(async function (item) {
       if (itemsCart.length > 0) {
         itemsCart.forEach(async function (itemCart) {
@@ -152,7 +162,7 @@ const OrderCard = (props: OrderInterface) => {
             </Touchable>
             <Touchable
               onPress={() => {
-                seeMore(orderId);
+                if (seeMore) seeMore(orderId);
               }}
             >
               <Container row style={styles.contDetails}>
@@ -183,7 +193,7 @@ const OrderCard = (props: OrderInterface) => {
         <Container row alignment="end">
           <Touchable
             onPress={() => {
-              seeMore(orderId);
+              if (seeMore) seeMore(orderId);
             }}
           >
             <Container row style={styles.contDetails}>

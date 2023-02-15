@@ -6,29 +6,40 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from '../../../../../../navigation/types';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TextContainer } from 'components/molecules';
+import { RootState, useAppSelector } from 'rtk';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   questionsData: [];
   moduleId: string;
+  moduleName: string;
 }
 
-const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId }) => {
+const QuestionsScreen: React.FC<Props> = ({ questionsData, moduleId, moduleName }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
+
   useEffect(() => {}, []);
 
   return (
     <Container style={{ backgroundColor: theme.brandColor.iconn_white, width: '100%', height: '100%' }}>
+      <TextContainer text={moduleName} fontBold fontSize={20} marginTop={23.5} marginLeft={16} marginBottom={24} />
       <Container style={{ marginLeft: 10 }}>
         {questionsData.length > 0 ? (
           questionsData.map((question, index) => {
             return (
               <NavigationMenuItem
-                key={index+'nav'}
+                key={index + 'nav'}
                 text={question.description}
                 disable={false}
                 icon={<MaterialCommunityIcons style={{ textAlign: 'center' }} size={24} name="comment-question-outline" color={theme.fontColor.dark} />}
                 onPressNavigateTo={() => {
                   navigate('HelpSteps', { moduleId: moduleId, questionId: question.questions_cats_id, question: question.description });
+                  logEvent('accOpenQuestion', {
+                    id: user.id,
+                    description: 'Calificar información de respuesta',
+                    questionId: question.questions_cats_id
+                  });
                 }}
               />
             );

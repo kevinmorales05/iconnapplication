@@ -5,10 +5,11 @@ import { useToast } from 'context';
 import moment from 'moment';
 import { EvaluateStackParams } from 'navigation/types/EvaluateStackParams';
 import React, { useEffect, useState } from 'react';
-import { InvoicingPetroTicketRequestInterface, InvoicingSevenTicketRequestInterface } from 'rtk';
+import { InvoicingPetroTicketRequestInterface, InvoicingSevenTicketRequestInterface, RootState, useAppSelector } from 'rtk';
 import { evaluatedServices, invoicingServices } from 'services';
 import { formatDate } from 'utils/functions';
 import StepOneScreen from './StepOneScreen';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   barcode: string;
@@ -16,6 +17,7 @@ interface Props {
 
 const StepOneController: React.FC<Props> = ({ barcode }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<EvaluateStackParams>>();
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const toast = useToast();
   const [barcodeProp, setBarcodeProp] = useState<string>('');
 
@@ -25,8 +27,9 @@ const StepOneController: React.FC<Props> = ({ barcode }) => {
     }
   }, [barcode]);
 
-  const onPressScan = () => { 
+  const onPressScan = () => {
     navigate('CodeReader', { navigationDestiny: 'EvaluateStack' });
+    logEvent('7ElevenScanTicket', { id: user.id, description: 'Botón para escanear ticket' });
   };
 
   const onSubmit = async (data: EvaluateServiceInterface) => {
@@ -42,7 +45,7 @@ const StepOneController: React.FC<Props> = ({ barcode }) => {
         folio: data.folio,
         webId: data.webid,
         station: data.station,
-        date: formatDate(moment(data.date, 'DD/MM/YYYY').toDate(), "yyyy'-'MM'-'dd'T'HH':'mm':'ss"),
+        date: formatDate(moment(data.date, 'DD/MM/YYYY').toDate(), "yyyy'-'MM'-'dd'T'HH':'mm':'ss")
       };
     } else if (data.establishment_id === 2) {
       requestData = {

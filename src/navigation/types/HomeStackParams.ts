@@ -39,7 +39,7 @@ export type HomeStackParams = {
   RateOrder: { orderId: string };
   RecomendedForYou: undefined;
   SearchSeller: undefined;
-  HelpSteps: undefined | { moduleId?: string; questionId?: string; question?: string };
+  HelpSteps: undefined | { moduleId?: string; moduleName?: string; questionId?: string; question?: string };
   SeeMore: { products: any };
   CategoryProducts: { category: CategoryInterface; categories: CategoryInterface[] };
   SearchProducts: undefined;
@@ -56,7 +56,7 @@ export type HomeStackParams = {
   EvaluateStack: { barcode?: string };
   HelpItems: { flagError: string };
   VirtualTour: { step: number };
-  AboutOptions:undefined;
+  AboutOptions: undefined;
 };
 
 export type HomeTabScreens = {

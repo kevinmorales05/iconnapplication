@@ -10,6 +10,7 @@ import theme from 'components/theme/theme';
 import { liveStatusServices, vtexOrdersServices } from 'services';
 import { useLoading } from 'context';
 import { ratingServices } from 'services/rating-services';
+import { logEvent } from 'utils/analytics';
 
 const MyOrdersController: React.FC = () => {
   const isFocused = useIsFocused();
@@ -78,6 +79,10 @@ const MyOrdersController: React.FC = () => {
   const seeMore = async (orderId: string) => {
     const res = await liveStatusServices.getUrl(orderId);
     navigate('LiveStatusWidget', { urlLive: res.href + '&primaryColor=%23008060&secondaryColor=%23000000' });
+    logEvent('ohSeeDetails', {
+      id: user.id,
+      description: 'Ver detalles de un pedido'
+    });
   };
 
   return (

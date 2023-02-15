@@ -7,7 +7,8 @@ import { TextContainer, Button } from 'components/molecules';
 import { ICONN_BASKET_SHOPPING_CART } from 'assets/images';
 import { OrderCard } from 'components/molecules/OrderCard';
 import NetInfo from '@react-native-community/netinfo';
-import { OrderInterface } from 'rtk';
+import { OrderInterface, RootState, useAppSelector } from 'rtk';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   navigate: (screen: any, params: any) => void;
@@ -16,6 +17,7 @@ interface Props {
 }
 
 const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate, seeMore }) => {
+  const { user } = useAppSelector((state: RootState) => state.auth);
   const [isOnline, setIsOnline] = useState(false);
   NetInfo.fetch().then(state => {
     if (state.isInternetReachable) {
@@ -86,7 +88,20 @@ const MyOrdersScreen: React.FC<Props> = ({ officialOrderArray, navigate, seeMore
           </Container>
           <TextContainer marginTop={12.3} text={'No tienes pedidos'} textAlign="center" fontBold fontSize={16} />
           <TextContainer text="Aquí verás tus pedidos anteriores y pedidos en curso." textAlign="center" marginTop={11} />
-          <Button onPress={() => navigate('Home', { screen: 'CategoriesScreen' })} fontBold fontSize="h4" color="iconn_green_original" round marginTop={300}>
+          <Button
+            onPress={() => {
+              logEvent('ohGoCategories', {
+                id: user.id,
+                description: 'Ir a categorías (Aún no tienes pedidos en tu historial)'
+              });
+              navigate('Home', { screen: 'CategoriesScreen' });
+            }}
+            fontBold
+            fontSize="h4"
+            color="iconn_green_original"
+            round
+            marginTop={300}
+          >
             Ver artículos
           </Button>
         </Container>

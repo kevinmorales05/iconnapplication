@@ -1,10 +1,11 @@
 import React, { useState, useRef } from 'react';
 import { FlatList, Animated } from 'react-native';
 import { Container } from '../../atoms';
-import { CarouselItem, ProductInterface } from 'rtk';
+import { CarouselItem, ProductInterface, RootState, useAppSelector } from 'rtk';
 import AnimatedItem from './AnimatedItem';
 import { CounterType } from 'components/types/counter-type';
 import Octicons from 'react-native-vector-icons/Octicons';
+import { logEvent } from 'utils/analytics';
 
 interface Props {
   items?: CarouselItem[];
@@ -13,12 +14,14 @@ interface Props {
   onPressProduct?: (type: CounterType, productId: string) => void;
   onPressOut: () => void;
   cards?: boolean;
+  banner?: boolean;
 }
 
-const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut, cards }) => {
+const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut, cards, banner }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
+  const { user } = useAppSelector((state: RootState) => state.auth);
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     if (viewableItems && viewableItems[0]) {
@@ -48,7 +51,25 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
       ) : items && items.length > 0 ? (
         <FlatList
           data={items}
-          renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={onPressItem} onPressOut={onPressOut} />}
+          renderItem={({ item, index }) => (
+            <AnimatedItem
+              data={item}
+              position={index}
+              onPressItem={
+                banner
+                  ? () => {
+                      logEvent('hmPrincipalBanner', {
+                        id: user.id,
+                        description: 'Seleccionar un banner',
+                        bannerId: item.id
+                      });
+                      onPressItem(item);
+                    }
+                  : onPressItem
+              }
+              onPressOut={onPressOut}
+            />
+          )}
           horizontal
           bounces={items!.length > 1 ? true : false}
           keyExtractor={item => item.id}
