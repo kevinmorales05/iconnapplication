@@ -9,8 +9,6 @@ import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDrop
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
 import { logEvent } from 'utils/analytics';
-import analytics from '@react-native-firebase/analytics';
-
 interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
@@ -27,6 +25,9 @@ interface Props {
   updateShoppingCartProduct: (type: CounterType, productId: string) => void;
   onPressViewMore: (products: any) => void;
   isAddressModalSelectionVisible: boolean;
+  onPressSearch: any;
+  viewRecomendedProducts: any;
+  viewOtherProducts: any;
 }
 
 const HomeScreen: React.FC<Props> = ({

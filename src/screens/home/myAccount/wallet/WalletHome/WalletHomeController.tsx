@@ -21,6 +21,9 @@ import { useIsFocused } from '@react-navigation/native';
 import { useServicesPayments } from '../../hooks/usePaymentsServices';
 import { useToast } from 'context';
 import { logEvent } from 'utils/analytics';
+import { getStatusModule } from 'utils/modulesApp';
+import { modulesRemoteConfig, modulesServices, modulesWallet } from '../../../../../common/modulesRemoteConfig';
+import { useNotEnabledModal } from 'context/notEnabled.context';
 
 const WalletHomeController: React.FC = () => {
   const isFocused = useIsFocused();
@@ -38,6 +41,18 @@ const WalletHomeController: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<WalletStackParams>>();
   const { servicesPayments } = useServicesPayments();
   const toast = useToast();
+  const { appModules } = useAppSelector((state: RootState) => state.app);
+  const modalNotEnabled = useNotEnabledModal();
+
+  //wallet
+  const depositWallet: boolean | undefined = getStatusModule(appModules ? appModules : [], modulesRemoteConfig.myWallet, modulesWallet.depositWallet);
+  const timeRefillService: boolean | undefined = getStatusModule(appModules ? appModules : [], modulesRemoteConfig.services, modulesServices.timeRefillService);
+  const payServices: boolean | undefined = getStatusModule(appModules ? appModules : [], modulesRemoteConfig.services, modulesServices.payServices);
+  const trackingService: boolean | undefined = getStatusModule(
+    appModules ? appModules : [],
+    modulesRemoteConfig.services,
+    modulesServices.categoryTrackingService
+  );
 
   const getDataforServiceQR = async (service: ServiceQRType) => {
     const findServiceProvider = servicesPayments?.find(element => element.supplierName === service.type);
@@ -69,45 +84,65 @@ const WalletHomeController: React.FC = () => {
       icon: ICONN_DEPOSIT,
       serviceName: 'Depósitos',
       onPressItem: () => {
-        navigate('DepositWallet');
+        if (depositWallet) {
+          navigate('DepositWallet');
+        } else {
+          modalNotEnabled.show();
+        }
         logEvent('walOpenDeposits', {
           id: user.id,
           description: 'Botón para abrir la sección de depositos'
         });
-      }
+      },
+      disabled: !depositWallet
     },
     {
       icon: ICONN_SERVICE_PAYMENT,
       serviceName: 'Pago de servicios',
       onPressItem: () => {
-        navigate('ServicePayment');
+        if (payServices) {
+          navigate('ServicePayment');
+        } else {
+          modalNotEnabled.show();
+        }
         logEvent('walOpenServicesPayment', {
           id: user.id,
           description: 'Botón para abrir la sección de pago de servicios'
         });
-      }
+      },
+      disabled: !payServices
     },
     {
       icon: ICONN_MOBILE_RECHARGE,
       serviceName: 'Recargas',
       onPressItem: () => {
-        navigate('Recharge');
+        if (timeRefillService) {
+          navigate('Recharge');
+        } else {
+          modalNotEnabled.show();
+        }
         logEvent('walOpenRecharge', {
           id: user.id,
           description: 'Botón para abrir la sección de recargas telefónicas'
         });
-      }
+      },
+      disabled: !timeRefillService
     },
     {
       icon: ICONN_PACKAGES_SEARCH,
       serviceName: 'Rastreo de Paquetes',
       onPressItem: () => {
-        navigate('Tracking');
+        if (trackingService) {
+          navigate('Tracking');
+        } else {
+          modalNotEnabled.show();
+        }
         logEvent('walOpenPacket', {
           id: user.id,
           description: 'Botón para abrir la sección de Rastreo Estafeta'
         });
-      }
+      },
+      disabled: !trackingService
     }
   ];
 

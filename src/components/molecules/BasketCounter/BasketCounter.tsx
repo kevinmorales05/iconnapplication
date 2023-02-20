@@ -40,8 +40,7 @@ const BasketCounter = () => {
     if (items != undefined) {
       if (items.length > 0) {
         items.map((value, index) => {
-          if (withoutStockM.get(index)) {
-          } else {
+          if (!withoutStockM.get(index)) {
             totalItems = totalItems + value.quantity;
           }
         });

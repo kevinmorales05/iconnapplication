@@ -1,4 +1,4 @@
-import { ICONN_CREDIT_CARD } from 'assets/images';
+import { ICONN_CREDIT_CARD, WARNING_ERROR } from 'assets/images';
 import { TextContainer } from 'components/molecules';
 import theme from 'components/theme/theme';
 import React from 'react';
@@ -8,15 +8,22 @@ import { Touchable } from 'components';
 
 interface Props {
   showPointCardsModal: () => void;
+  pointsCard?: boolean;
 }
 
-const EmptyCardsCard: React.FC<Props> = ({ showPointCardsModal }) => {
+const EmptyCardsCard: React.FC<Props> = ({ showPointCardsModal, pointsCard }) => {
   return (
     <Container center crossCenter style={styles.containerCardDot}>
       <Touchable onPress={() => showPointCardsModal()}>
         <Container center>
-          <Image source={ICONN_CREDIT_CARD} style={styles.cardIcon} />
-          <TextContainer text="Agregar" fontBold fontSize={16} textColor={theme.fontColor.grey} />
+          <Image source={!pointsCard ? WARNING_ERROR : ICONN_CREDIT_CARD} style={styles.cardIcon} />
+          <TextContainer
+            text={!pointsCard ? 'Esta sección se encuentra temporalmente fuera de servicio.' : 'Agregar'}
+            fontBold
+            textAlign="center"
+            fontSize={16}
+            textColor={theme.fontColor.grey}
+          />
         </Container>
       </Touchable>
     </Container>

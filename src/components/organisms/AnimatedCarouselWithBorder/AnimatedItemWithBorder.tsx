@@ -10,9 +10,10 @@ interface Props {
   style?: ViewStyle;
   slug?: boolean;
   imgStyle?: ImageStyle;
+  disabled?: boolean;
 }
 
-const AnimatedItemWithBorder: React.FC<Props> = ({ icon, serviceName, onPressItem, style, slug = true, imgStyle }) => {
+const AnimatedItemWithBorder: React.FC<Props> = ({ icon, serviceName, onPressItem, style, slug = true, imgStyle, disabled }) => {
   return (
     <Touchable
       onPress={() => {
@@ -24,7 +25,7 @@ const AnimatedItemWithBorder: React.FC<Props> = ({ icon, serviceName, onPressIte
         height={136}
         center
         backgroundColor={theme.brandColor.iconn_white}
-        style={{ borderRadius: 8, paddingTop: 24, paddingBottom: 44, paddingHorizontal: 7, marginRight: 8, ...style }}
+        style={{ borderRadius: 8, paddingTop: 24, paddingBottom: 44, paddingHorizontal: 7, marginRight: 8, ...style, opacity: disabled ? 0.4 : 1 }}
       >
         <Image source={icon} style={{ width: 35, height: 35, resizeMode: 'contain', ...imgStyle }} />
         {slug && <TextContainer text={serviceName} marginTop={6} typography="h5" textAlign="center" />}
