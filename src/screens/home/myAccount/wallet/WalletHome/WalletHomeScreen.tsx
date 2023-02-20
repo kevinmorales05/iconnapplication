@@ -8,8 +8,11 @@ import { AnimatedCarouselWithBorder } from 'components/organisms/AnimatedCarouse
 import { AnimatedCarousel, TabTwoElements, TouchableText } from 'components';
 import Entypo from 'react-native-vector-icons/Entypo';
 import PointCardsModalController from '../../../pointCards/PointCardsModalController';
-import { BeneficiaryInterface, CarouselItem, ServiceQRType, TabItem } from 'rtk';
+import { BeneficiaryInterface, CarouselItem, RootState, ServiceQRType, TabItem, useAppSelector } from 'rtk';
 import BeneficiaryCard from 'components/atoms/BeneficiaryCard/BeneficiaryCard';
+import { getStatusModule } from 'utils/modulesApp';
+import { modulesRemoteConfig, modulesWallet } from '../../../../../common/modulesRemoteConfig';
+import { useNotEnabledModal } from 'context/notEnabled.context';
 
 const tabNames: TabItem[] = [
   {
@@ -39,6 +42,11 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
   const [allServicesQR, setAllServicesQR] = useState<ServiceQRType[]>();
   const [visiblePointCardModel, setVisiblePointCardModel] = useState<boolean>(false);
   const savedCards = cards;
+  const { appModules } = useAppSelector((state: RootState) => state.app);
+  const modalNotEnabled = useNotEnabledModal();
+
+  //wallet
+  const pointsCard: boolean | undefined = getStatusModule(appModules ? appModules : [], modulesRemoteConfig.myWallet, modulesWallet.cardsPointWallet);
 
   const joinServices = () => {
     let allServices: ServiceQRType[] = [];
@@ -53,7 +61,11 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
   };
 
   const showPointCardsModal = () => {
-    setVisiblePointCardModel(true);
+    if (pointsCard) {
+      setVisiblePointCardModel(true);
+    } else {
+      modalNotEnabled.show();
+    }
   };
 
   useEffect(() => {
@@ -92,9 +104,9 @@ const WalletHomeScreen: React.FC<Props> = ({ cards, serviceQRs, rechargeQR, serv
             )}
           </Container>
           {savedCards && savedCards.length === 0 ? (
-            <EmptyCardsCard showPointCardsModal={showPointCardsModal} />
+            <EmptyCardsCard pointsCard={pointsCard} showPointCardsModal={showPointCardsModal} />
           ) : (
-            <AnimatedCarousel cards items={savedCards} onPressItem={() => {}} onPressOut={() => {}} />
+            <AnimatedCarousel pointsCardDisabled={!pointsCard} cards items={savedCards} onPressItem={() => {}} onPressOut={() => {}} />
           )}
         </Container>
         <Container>

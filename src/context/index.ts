@@ -6,3 +6,4 @@ export * from './permissions.context';
 export * from './toast.context';
 export * from './Toast';
 export * from './welcome.context';
+export * from './notEnabled.context';
