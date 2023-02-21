@@ -3,12 +3,15 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 //estado inicial del carrito de compras
 const initialStateShoppingCart: any = {};
 
+const initiallLoadingItems: string[] = [];
+
 // creo slice de shopping cart
 const shoppingCartSlice = createSlice({
   name: 'shoppingCart',
   initialState: {
     detailSelected: '',
-    cart: initialStateShoppingCart
+    cart: initialStateShoppingCart,
+    loadingItems: initiallLoadingItems
   },
   reducers: {
     setShoppingCartInitialState(state) {
@@ -31,6 +34,9 @@ const shoppingCartSlice = createSlice({
     },
     createShoppingCart(state, action: PayloadAction<any>) {
       state.cart = action.payload;
+    },
+    updateItemsLoading(state, action: PayloadAction<string[]>) {
+      state.loadingItems = action.payload;
     }
   }
 });
@@ -42,6 +48,7 @@ export const {
   cleanShoppingCart,
   createShoppingCart,
   setOrderFormId,
-  setDetailSelected
+  setDetailSelected,
+  updateItemsLoading
 } = shoppingCartSlice.actions;
 export default shoppingCartSlice.reducer;
