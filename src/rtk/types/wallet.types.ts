@@ -12,6 +12,7 @@ export interface ServiceType {
   icon: any;
   serviceName: string;
   onPressItem: () => void;
+  disabled: boolean;
 }
 
 export type QRType = 'service' | 'air';
