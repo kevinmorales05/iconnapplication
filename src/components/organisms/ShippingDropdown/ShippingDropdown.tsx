@@ -54,9 +54,7 @@ const ShippingDropdown: React.FC<Props> = ({
   }, [address]);
 
   const getPickUpPoints = async (cp: string) => {
-    //console.log({ getPickUpPoints: cp });
     const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
-    //console.log({ getPickUpPoints: pickUp });
     let isNear = false;
     if (pickUp.items.length) {
       pickUp.items.forEach(store => {
@@ -69,8 +67,6 @@ const ShippingDropdown: React.FC<Props> = ({
     }
     return isNear;
   };
-
-  //console.log({ defaultSeller: !address });
 
   return (
     <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: theme.brandColor.iconn_white }}>
@@ -206,7 +202,6 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
       getPickUpPoints(address?.postalCode).then(isNear => {
         setNear(isNear);
         if (!isNear) {
-          //console.log('ShippingDropDown');
           alert.show(
             {
               title: 'Entrega a domicilio no disponible.',

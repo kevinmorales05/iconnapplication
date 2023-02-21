@@ -84,7 +84,3 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end'
   }
 });
-
-{
-  /* <AnimatedLottieView style={{ width: '100%', height: verticalScale(40) }} source={require('../../../assets/images/loading-dots-green.json')} autoPlay loop />; */
-}
