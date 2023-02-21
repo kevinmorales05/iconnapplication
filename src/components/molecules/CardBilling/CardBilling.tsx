@@ -30,16 +30,16 @@ const CardBilling: React.FC<CardBillingProps> = ({ text, disable = false, type, 
   };
 
   return (
-    <Touchable onPress={onPress} disabled={disable}>
-    <Container row space="between" height={86} style={cardBillingStyle} crossCenter center>
-      <Container width={'85%'} flex row center space="between">
-        <TextContainer text={text} marginLeft={24} />
-        <Image source={type === 'petro' ? ICONN_CARD_PETRO : ICONN_CARD_SEVEN} style={cardImageStyle} />
+    <Touchable onPress={onPress}>
+      <Container row space="between" height={86} style={cardBillingStyle} crossCenter center>
+        <Container width={'85%'} flex row center space="between">
+          <TextContainer text={text} marginLeft={24} />
+          <Image source={type === 'petro' ? ICONN_CARD_PETRO : ICONN_CARD_SEVEN} style={cardImageStyle} />
+        </Container>
+        <Container width={'15%'} crossAlignment="end" style={{ marginRight: 20 }}>
+          <Octicons name="chevron-right" size={24} color={theme.fontColor.dark} />
+        </Container>
       </Container>
-      <Container width={'15%'} crossAlignment="end" style={{marginRight:20}}>        
-        <Octicons name="chevron-right" size={24} color={theme.fontColor.dark} />        
-      </Container>
-    </Container>
     </Touchable>
   );
 };

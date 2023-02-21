@@ -20,7 +20,7 @@ interface Props {
   onPressSetDefault: (address: Address, position: number) => void;
 }
 
-const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAddNewAddress, onPressEdit, onPressDelete, onPressClose, onPressSetDefault }) => {
+const AddressModalSelection: React.FC<Props> = ({ visible, addresses, onPressAddNewAddress, onPressEdit, onPressClose, onPressSetDefault }) => {
   const insets = useSafeAreaInsets();
   const [isOnline, setIsOnline] = useState(false);
   const { user } = useAppSelector((state: RootState) => state.auth);

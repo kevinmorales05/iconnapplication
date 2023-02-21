@@ -57,7 +57,6 @@ interface CardProductProps {
 const CardProduct: React.FC<CardProductProps> = ({
   ratingValue,
   price,
-  oldPrice,
   name,
   image,
   quantity,
