@@ -13,6 +13,7 @@ abstract_target 'oh4y0CommonPods' do
   pod 'Permission-LocationAccuracy', :path => "#{permissions_path}/LocationAccuracy"
   pod 'Permission-LocationAlways', :path => "#{permissions_path}/LocationAlways"
   pod 'Permission-LocationWhenInUse', :path => "#{permissions_path}/LocationWhenInUse"
+  pod 'react-native-color-matrix-image-filters', :path => '../node_modules/react-native-color-matrix-image-filters/react-native-color-matrix-image-filters.podspec'
 
   # React Native Maps dependencies
   rn_maps_path = '../node_modules/react-native-maps'
