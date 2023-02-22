@@ -119,17 +119,17 @@ const StateMunicipalitySheet: React.FC<Props> = ({ bottomSheetRef, onPressClose,
               control={control}
               rules={openField(3)}
               options={municipalities ? municipalities : []}
-              optionsIdField="municipalityId"
+              optionsIdField="municipalityName"
               optionsValueField="municipalityName"
               onSelect={(value: number | string | BranchesMunicipality) => {
                 if (value !== 'Selección') {
                   if (typeof value === 'object') {
                     setValue(
                       'municipality',
-                      value && municipalities ? municipalities.find(i => i.municipalityId === value.municipalityId)!.municipalityName : ''
+                      value && municipalities ? municipalities.find(i => i.municipalityName === value.municipalityName)!.municipalityName : ''
                     );
                   } else {
-                    setValue('municipality', value && municipalities ? municipalities.find(i => i.municipalityId === value)!.municipalityName : '');
+                    setValue('municipality', value !== '' && municipalities ? municipalities.find(i => i.municipalityName === value)!.municipalityName : '');
                   }
                 } else {
                   setValue('municipality', '');

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState, useLayoutEffect } from
 import { ScrollView, TextInput, StyleSheet, View } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
-import { Input, Select, Touchable, Container, CustomText, BackButton } from '../../atoms';
+import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
 import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { emailRules, rfcRule } from 'utils/rules';
@@ -17,6 +17,8 @@ import { useAlert, useLoading } from 'context';
 import { AnnounceItem } from '../../atoms';
 import Feather from 'react-native-vector-icons/Feather';
 import { logEvent } from 'utils/analytics';
+import { HeaderBackButton } from '@react-navigation/elements';
+import { moderateScale } from 'utils/scaleMetrics';
 
 interface Props {
   onSubmit: (data: any) => void;
@@ -82,7 +84,7 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current, isReset }
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: props => {
-        return <BackButton {...props} onPress={onBack} />;
+        return <HeaderBackButton {...props} onPress={onBack} style={{ width: moderateScale(24), height: moderateScale(24), marginLeft: moderateScale(-8) }} />;
       }
     });
   }, [navigation, isDirty]);
@@ -104,13 +106,20 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current, isReset }
   }, [mandatoryFields, errors]);
 
   const rfcRef = useRef<TextInput>(null);
+  const businessNameRef = useRef<TextInput>(null);
   const emailRef = useRef<TextInput>(null);
+  const postalCodeRef = useRef<TextInput>(null);
+  const streetRef = useRef<TextInput>(null);
+  const ext_numRef = useRef<TextInput>(null);
+  const stateRef = useRef<TextInput>(null);
+  const cityRef = useRef<TextInput>(null);
 
   const [regimensList, setRegimensList] = useState([]);
   const [cfdiList, setCfdiList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [colonies, setColonies] = useState<Colony[] | null>(null);
   const [toggled, setToggled] = useState(false);
+  const [initialOffset, setInitialOffset] = useState(-100);
 
   const fetchCatalogs = useCallback(async () => {
     const { data: regimens } = await dispatch(getTaxRegimeListThunk()).unwrap();
@@ -239,277 +248,291 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current, isReset }
     });
   };
 
+  useEffect(() => {
+    if (rfcRef.current) {
+      rfcRef.current.focus();
+    }
+  }, []);
+
   return (
-    <ScrollView bounces={false} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-      <Container flex style={{ marginTop: 24 }}>
-        <Container style={styles.billingSection}>
-          {isGuest ? (
-            <AnnounceItem
-              icon={<Feather name="alert-triangle" size={25} color={theme.fontColor.white} />}
-              message={
-                <View style={{ marginVertical: 20 }}>
-                  <CustomText text="Como invitado, tus datos ficales no se guardarán para las siguientes facturas" />
-                  <View style={{ marginTop: 10 }}>
-                    <CustomText text="Registrarme" underline fontBold textColor={theme.fontColor.dark_orange} />
+    <Container flex useKeyboard keyboardVerticalOffset={initialOffset}>
+      <ScrollView bounces={true} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+        <Container>
+          <Container style={styles.billingSection}>
+            {isGuest ? (
+              <AnnounceItem
+                icon={<Feather name="alert-triangle" size={25} color={theme.fontColor.white} />}
+                message={
+                  <View style={{ marginVertical: 20 }}>
+                    <CustomText text="Como invitado, tus datos ficales no se guardarán para las siguientes facturas" />
+                    <View style={{ marginTop: 10 }}>
+                      <CustomText text="Registrarme" underline fontBold textColor={theme.fontColor.dark_orange} />
+                    </View>
                   </View>
-                </View>
-              }
+                }
+              />
+            ) : (
+              <TextContainer typography="paragraph" text="Crea un perfil fiscal para guardar tus datos de facturación." />
+            )}
+
+            <TextContainer textColor={theme.brandColor.iconn_grey} typography="description" text={'Todos los campos son obligatorios.'} marginTop={6} />
+            <TextContainer typography="h3" fontBold text={'Datos Fiscales'} marginTop={25} />
+            <TextContainer typography="h5" fontBold text={'RFC'} marginTop={13} />
+
+            <Input
+              {...register('rfc')}
+              ref={rfcRef}
+              name="rfc"
+              control={control}
+              keyboardType="email-address"
+              autoCapitalize="characters"
+              autoCorrect={false}
+              rules={rfcRule}
+              placeholder={'Escribe tu RFC con homoclave'}
+              blurOnSubmit={true}
+              onSubmitEditing={() => {
+                setInitialOffset(100);
+                businessNameRef.current?.focus();
+              }}
+              error={errors.rfc?.message}
+              maxLength={13}
+              marginTop={4}
             />
-          ) : (
-            <TextContainer typography="paragraph" text="Crea un perfil fiscal para guardar tus datos de facturación." />
-          )}
 
-          <TextContainer textColor={theme.brandColor.iconn_grey} typography="description" text={'Todos los campos son obligatorios.'} marginTop={6} />
-          <TextContainer typography="h3" fontBold text={'Datos Fiscales'} marginTop={25} />
-          <TextContainer typography="h5" fontBold text={'RFC'} marginTop={13} />
+            <TextContainer typography="h5" fontBold text={'Razón Social'} marginTop={21} />
+            <Input
+              {...register('businessName')}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Campo requerido.'
+                },
+                minLength: {
+                  value: 3,
+                  message: 'Mínimo 3 valores'
+                }
+              }}
+              name="businessName"
+              ref={businessNameRef}
+              control={control}
+              autoCorrect={false}
+              keyboardType="email-address"
+              placeholder={'Nombre completo o Razón Social'}
+              blurOnSubmit={false}
+              onSubmitEditing={() => emailRef.current?.focus()}
+              error={errors.businessName?.message}
+              maxLength={100}
+              marginTop={4}
+            />
 
-          <Input
-            {...register('rfc')}
-            ref={rfcRef}
-            name="rfc"
-            control={control}
-            keyboardType="default"
-            autoCapitalize="characters"
-            autoCorrect={false}
-            rules={rfcRule}
-            placeholder={'Escribe tu RFC con homoclave'}
-            blurOnSubmit={false}
-            error={errors.rfc?.message}
-            maxLength={13}
-            marginTop={4}
-          />
+            <TextContainer typography="h5" fontBold text={'Correo electrónico'} marginTop={21} />
+            <Input
+              {...register('email')}
+              ref={emailRef}
+              name="email"
+              control={control}
+              autoCorrect={false}
+              keyboardType="email-address"
+              placeholder={'a.ramirez.corp@hotmail.com'}
+              blurOnSubmit={false}
+              onSubmitEditing={() => postalCodeRef.current?.focus()}
+              rules={emailRules}
+              error={errors.email?.message}
+              maxLength={256}
+              marginTop={4}
+            />
 
-          <TextContainer typography="h5" fontBold text={'Razón Social'} marginTop={21} />
-          <Input
-            {...register('businessName')}
-            rules={{
-              required: {
-                value: true,
-                message: 'Campo requerido.'
-              },
-              minLength: {
-                value: 3,
-                message: 'Mínimo 3 valores'
-              }
-            }}
-            name="businessName"
-            control={control}
-            autoCorrect={false}
-            keyboardType="default"
-            placeholder={'Nombre completo o Razón Social'}
-            blurOnSubmit={false}
-            error={errors.businessName?.message}
-            maxLength={100}
-            marginTop={4}
-          />
+            <TextContainer typography="h5" fontBold text={'Régimen fiscal'} marginTop={21} />
+            <Select
+              name="regime"
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Campo requerido.'
+                }
+              }}
+              control={control}
+              options={regimensList.map(item => item.sat_tax_regime)}
+              onSelect={value => setValue('regime', value)}
+              androidMode="dialog"
+              label={'Régimen de Incorporación Fiscal'}
+              placeholder={'Seleccionar'}
+              error={errors.regime?.message}
+            />
 
-          <TextContainer typography="h5" fontBold text={'Correo electrónico'} marginTop={21} />
-          <Input
-            {...register('email')}
-            ref={emailRef}
-            name="email"
-            control={control}
-            autoCorrect={false}
-            keyboardType="email-address"
-            placeholder={'a.ramirez.corp@hotmail.com'}
-            blurOnSubmit={false}
-            rules={emailRules}
-            error={errors.email?.message}
-            maxLength={256}
-            marginTop={4}
-          />
+            <TextContainer typography="h5" fontBold text={'Uso de CFDI (Predeterminado)'} marginTop={21} />
+            <Select
+              name="cfdi"
+              control={control}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Campo requerido.'
+                }
+              }}
+              options={cfdiList.map(item => item.description)}
+              onSelect={value => setValue('cfdi', value)}
+              androidMode="dialog"
+              placeholder={'Seleccionar'}
+              error={errors.cfdi?.message}
+            />
 
-          <TextContainer typography="h5" fontBold text={'Régimen fiscal'} marginTop={21} />
-          <Select
-            name="regime"
-            rules={{
-              required: {
-                value: true,
-                message: 'Campo requerido.'
-              }
-            }}
-            control={control}
-            options={regimensList.map(item => item.sat_tax_regime)}
-            onSelect={value => setValue('regime', value)}
-            androidMode="dialog"
-            label={'Régimen de Incorporación Fiscal'}
-            placeholder={'Seleccionar'}
-            error={errors.regime?.message}
-          />
-
-          <TextContainer typography="h5" fontBold text={'Uso de CFDI (Predeterminado)'} marginTop={21} />
-          <Select
-            name="cfdi"
-            control={control}
-            rules={{
-              required: {
-                value: true,
-                message: 'Campo requerido.'
-              }
-            }}
-            options={cfdiList.map(item => item.description)}
-            onSelect={value => setValue('cfdi', value)}
-            androidMode="dialog"
-            placeholder={'Seleccionar'}
-            error={errors.cfdi?.message}
-          />
-
-          <TextContainer typography="h5" fontBold text={'Código Postal'} marginTop={21} />
-          <Input
-            {...register('postalCode')}
-            rules={{
-              required: {
-                value: true,
-                message: 'Campo requerido.'
-              }
-            }}
-            name="postalCode"
-            control={control}
-            autoCorrect={false}
-            keyboardType="numeric"
-            placeholder={'C.P'}
-            blurOnSubmit={false}
-            error={errors.postalCode?.message}
-            maxLength={5}
-            marginTop={4}
-            numeric
-          />
-          {loading && (
-            <Container row>
-              <Container flex row style={{ marginTop: 10 }} center>
-                <CustomText textColor={theme.fontColor.grey} text={'Validando...'} typography="h6" fontWeight="normal" />
+            <TextContainer typography="h5" fontBold text={'Código Postal'} marginTop={21} />
+            <Input
+              {...register('postalCode')}
+              rules={{
+                required: {
+                  value: true,
+                  message: 'Campo requerido.'
+                }
+              }}
+              name="postalCode"
+              ref={postalCodeRef}
+              control={control}
+              autoCorrect={false}
+              keyboardType="numbers-and-punctuation"
+              placeholder={'C.P'}
+              blurOnSubmit={true}
+              onSubmitEditing={() => streetRef.current?.focus()}
+              error={errors.postalCode?.message}
+              maxLength={5}
+              marginTop={4}
+              numeric
+            />
+            {loading && (
+              <Container row>
+                <Container flex row style={{ marginTop: 10 }} center>
+                  <CustomText textColor={theme.fontColor.grey} text={'Validando...'} typography="h6" fontWeight="normal" />
+                </Container>
               </Container>
-            </Container>
-          )}
-          {colonies?.length && !loading && (
-            <Container row>
-              <Container flex row style={{ marginTop: 10 }} center>
-                <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
-                <CustomText textColor={theme.brandColor.iconn_green_original} text={'Código postal válido'} typography="h6" fontWeight="normal" />
+            )}
+            {colonies?.length && !loading && (
+              <Container row>
+                <Container flex row style={{ marginTop: 10 }} center>
+                  <Icon name="checkcircle" size={18} color={theme.brandColor.iconn_success} style={{ marginRight: 5 }} />
+                  <CustomText textColor={theme.brandColor.iconn_green_original} text={'Código postal válido'} typography="h6" fontWeight="normal" />
+                </Container>
               </Container>
-            </Container>
-          )}
-        </Container>
-        <Touchable
-          onPress={() => {
-            setToggled(toggled1 => {
-              return !toggled1;
-            });
-          }}
-        >
-          <Container
-            backgroundColor={theme.brandColor.iconn_background}
-            style={{ marginVertical: 24, paddingVertical: 21, paddingHorizontal: theme.layoutSpace.medium }}
+            )}
+          </Container>
+          <Touchable
+            onPress={() => {
+              setToggled(toggled1 => {
+                return !toggled1;
+              });
+            }}
           >
-            <Container flex row>
-              <TextContainer textColor={theme.fontColor.dark} typography="h5" fontBold text={'Agregar un domicilio'} />
-              <TextContainer textColor={theme.fontColor.grey} typography="placeholder" text={' (Opcional)'} />
-              <Container flex style={{ flexDirection: 'row-reverse' }}>
-                {toggled ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
+            <Container
+              backgroundColor={theme.brandColor.iconn_background}
+              style={{ marginVertical: 24, paddingVertical: 21, paddingHorizontal: theme.layoutSpace.medium }}
+            >
+              <Container flex row>
+                <TextContainer textColor={theme.fontColor.dark} typography="h5" fontBold text={'Agregar un domicilio'} />
+                <TextContainer textColor={theme.fontColor.grey} typography="placeholder" text={' (Opcional)'} />
+                <Container flex style={{ flexDirection: 'row-reverse' }}>
+                  {toggled ? <Icon name="up" size={18} color={theme.fontColor.dark_grey} /> : <Icon name="down" size={18} color={theme.fontColor.dark_grey} />}
+                </Container>
               </Container>
             </Container>
-          </Container>
-        </Touchable>
-        <Container style={styles.billingSection}>
-          {colonies && toggled && (
-            <Container style={{ marginBottom: 25 }}>
-              <TextContainer typography="h6" fontBold text={'Calle'} marginTop={25} />
-              <Input
-                {...register('street')}
-                control={control}
-                autoCorrect
-                keyboardType="default"
-                placeholder={'Nombre de la calle'}
-                blurOnSubmit={false}
-                error={errors.street?.message}
-                maxLength={30}
-              />
-              <TextContainer typography="h6" fontBold text={'Número exterior'} marginTop={25} />
-              <Input
-                control={control}
-                {...register('ext_num')}
-                autoCorrect
-                keyboardType="default"
-                placeholder={'Número'}
-                blurOnSubmit={false}
-                error={errors.ext_num?.message}
-                maxLength={30}
-              />
-              <TextContainer typography="h6" fontBold text={'Estado'} marginTop={25} />
-              <View pointerEvents="none">
+          </Touchable>
+          <Container style={styles.billingSection}>
+            {colonies && toggled && (
+              <Container style={{ marginBottom: 25 }}>
+                <TextContainer typography="h6" fontBold text={'Calle'} marginTop={25} />
                 <Input
+                  {...register('street')}
+                  name="street"
+                  ref={streetRef}
                   control={control}
-                  {...register('state')}
-                  autoCorrect
-                  keyboardType="default"
-                  placeholder={'Estado'}
-                  blurOnSubmit={false}
-                  error={errors.state?.message}
+                  autoCorrect={false}
+                  keyboardType="email-address"
+                  placeholder={'Nombre de la calle'}
+                  blurOnSubmit={true}
+                  onSubmitEditing={() => ext_numRef.current?.focus()}
+                  error={errors.street?.message}
                   maxLength={30}
                 />
-              </View>
-              <TextContainer typography="h6" fontBold text={'Municipio, Cuidad o Delegación'} marginTop={25} />
-              <View pointerEvents="none">
+                <TextContainer typography="h6" fontBold text={'Número exterior'} marginTop={25} />
                 <Input
                   control={control}
-                  {...register('city')}
-                  autoCorrect
-                  keyboardType="default"
-                  placeholder={'Ciudad'}
-                  blurOnSubmit={false}
-                  error={errors.city?.message}
+                  {...register('ext_num')}
+                  name="ext_num"
+                  ref={ext_numRef}
+                  autoCorrect={false}
+                  keyboardType="email-address"
+                  placeholder={'Número'}
+                  blurOnSubmit={true}
+                  error={errors.ext_num?.message}
                   maxLength={30}
                 />
-              </View>
+                <TextContainer typography="h6" fontBold text={'Estado'} marginTop={25} />
+                <View pointerEvents="none">
+                  <Input
+                    control={control}
+                    {...register('state')}
+                    name="state"
+                    ref={stateRef}
+                    autoCorrect={false}
+                    keyboardType="email-address"
+                    placeholder={'Estado'}
+                    error={errors.state?.message}
+                    maxLength={30}
+                  />
+                </View>
+                <TextContainer typography="h6" fontBold text={'Municipio, Cuidad o Delegación'} marginTop={25} />
+                <View pointerEvents="none">
+                  <Input control={control} {...register('city')} name="city" ref={cityRef} placeholder={'Ciudad'} error={errors.city?.message} maxLength={30} />
+                </View>
 
-              <TextContainer typography="h6" fontBold text={'Colonia'} marginTop={25} />
-              <Select
-                name="colony"
-                control={control}
-                options={colonies.map((colony: Colony) => {
-                  return colony.name;
-                })}
-                onSelect={value => setValue('colony', value)}
-                androidMode="dialog"
-                label={'Colonia'}
-                placeholder={'Seleccionar'}
-                error={errors.colony?.message}
-              />
-            </Container>
-          )}
+                <TextContainer typography="h6" fontBold text={'Colonia'} marginTop={25} />
+                <Select
+                  name="colony"
+                  control={control}
+                  options={colonies.map((colony: Colony) => {
+                    return colony.name;
+                  })}
+                  onSelect={value => setValue('colony', value)}
+                  androidMode="dialog"
+                  label={'Colonia'}
+                  placeholder={'Seleccionar'}
+                  error={errors.colony?.message}
+                />
+              </Container>
+            )}
 
-          <Container style={{ marginBottom: current ? 0 : 40 }}>
-            <Button disabled={disabled || colonies === null} length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
-              Guardar
-            </Button>
-          </Container>
-
-          {current && (
-            <Container style={{ marginVertical: 20 }}>
-              <Button
-                color="iconn_light_grey"
-                fontColor="dark"
-                length="long"
-                round
-                onPress={() => {
-                  if (!onDelete) return;
-                  onDelete(current);
-                  logEvent('invRemoveInvoicingProfile', {
-                    id: user.id,
-                    description: 'Remover perfil fiscal '
-                  });
-                }}
-                fontSize="h3"
-                fontBold
-                leftIcon={<EvilIcons name="trash" size={22} color={theme.brandColor.iconn_error} style={{ left: 8 }} />}
-              >
-                Eliminar
+            <Container style={{ marginBottom: current ? 0 : 40 }}>
+              <Button disabled={disabled || colonies === null} length="long" round onPress={handleSubmit(submit)} fontSize="h3" fontBold>
+                Guardar
               </Button>
             </Container>
-          )}
+
+            {current && (
+              <Container style={{ marginVertical: 20 }}>
+                <Button
+                  color="iconn_light_grey"
+                  fontColor="dark"
+                  length="long"
+                  round
+                  onPress={() => {
+                    if (!onDelete) return;
+                    onDelete(current);
+                    logEvent('invRemoveInvoicingProfile', {
+                      id: user.id,
+                      description: 'Remover perfil fiscal '
+                    });
+                  }}
+                  fontSize="h3"
+                  fontBold
+                  leftIcon={<EvilIcons name="trash" size={22} color={theme.brandColor.iconn_error} style={{ left: 8 }} />}
+                >
+                  Eliminar
+                </Button>
+              </Container>
+            )}
+          </Container>
         </Container>
-      </Container>
-    </ScrollView>
+      </ScrollView>
+    </Container>
   );
 };
 
