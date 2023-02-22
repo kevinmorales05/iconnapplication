@@ -43,8 +43,8 @@ const NavigationMenuItem: React.FC<NavigationMenuItemProps> = ({
 }: NavigationMenuItemProps) => {
   const NavigationMenuItemStyle: StyleProp<ViewStyle> = {
     marginHorizontal: marginHorizontal != undefined ? marginHorizontal : 8,
-    opacity: disable ? 0.5 : 1,
-    backgroundColor: disable ? theme.brandColor.iconn_med_grey : color != undefined ? color : theme.brandColor.iconn_white,
+    opacity: disable ? 0.35 : 1,
+    backgroundColor: color != undefined ? color : theme.brandColor.iconn_white,
     paddingVertical: paddingVertical ? paddingVertical : 12,
     borderBottomWidth: 1,
     borderBottomColor: theme.brandColor.iconn_light_grey,
@@ -55,7 +55,7 @@ const NavigationMenuItem: React.FC<NavigationMenuItemProps> = ({
   };
 
   return (
-    <Touchable onPress={onPressNavigateTo} disabled={disable}>
+    <Touchable onPress={onPressNavigateTo}>
       <Container row space="between" style={NavigationMenuItemStyle} center>
         <Container width={'80%'} flex row center>
           {icon ? icon : null}

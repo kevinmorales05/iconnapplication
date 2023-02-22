@@ -326,7 +326,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
 
   const deleteUnavailableItems = () => {
     let orderItems = [];
-    withoutStockMap.forEach(key => {
+    withoutStockMap.forEach((value, key, map) => {
       orderItems.push({
         id: productList[key] !== undefined && productList[key].productId !== undefined ? productList[key].productId : 0,
         quantity: 0,

@@ -8,6 +8,7 @@ export interface AppInterface {
   municipality?: string;
   latitude?: number;
   longitude?: number;
+  appModules?: ModuleInterface[];
 }
 
 export type CarouselType = 'homeOptions' | 'principal' | 'second' | 'all_promotions' | 'day_promotion';
@@ -38,4 +39,18 @@ export interface TabItem {
 export interface Location {
   latitude: number;
   longitude: number;
+}
+
+export interface ModuleInterface {
+  id: string;
+  name: string;
+  enabled: boolean;
+  modules: SubModuleInterface[];
+}
+
+export interface SubModuleInterface {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
 }

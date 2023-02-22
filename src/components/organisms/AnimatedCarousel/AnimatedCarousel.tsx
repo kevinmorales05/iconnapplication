@@ -14,10 +14,11 @@ interface Props {
   onPressProduct?: (type: CounterType, productId: string) => void;
   onPressOut: () => void;
   cards?: boolean;
+  pointsCardDisabled?: boolean;
   banner?: boolean;
 }
 
-const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut, cards, banner }) => {
+const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut, cards, banner, pointsCardDisabled }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -54,6 +55,7 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
           renderItem={({ item, index }) => (
             <AnimatedItem
               data={item}
+              pointsCardDisabled={pointsCardDisabled}
               position={index}
               onPressItem={
                 banner
