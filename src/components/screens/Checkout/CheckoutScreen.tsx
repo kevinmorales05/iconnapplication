@@ -16,10 +16,6 @@ const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
   const dispatch = useAppDispatch();
   const { CHECKOUT_WEBVIEW } = config;
 
-  // function onMessage(data: any) {
-  //   toast.show({ message: `${data.nativeEvent.data}`, type: 'success' });
-  // }
-
   // TODO: relocate url to .ENV
 
   const evaluateAndroid = (url: string) => {
