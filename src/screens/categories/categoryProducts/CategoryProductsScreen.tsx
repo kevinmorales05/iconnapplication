@@ -216,7 +216,6 @@ const CategoryProductsScreen: React.FC = () => {
           };
         });
         await setProductsRender(productsTem);
-        await setItemToLoad(1);
         loader.hide();
         setLoading(false);
         setLoadingMore(true);

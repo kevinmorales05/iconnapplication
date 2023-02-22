@@ -27,7 +27,7 @@ import {
   useAppSelector
 } from 'rtk';
 import { useShoppingCart } from '../../home/hooks/useShoppingCart';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
@@ -91,7 +91,8 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
         percentualDiscountValue: response.data.promotion ? response.data.promotion.percentualDiscountValue : undefined,
         average: response.data.qualificationAverage,
         totalCount: response.data.totalCount ? response.data.totalCount : 0,
-        costDiscountPrice: response.data.promotion ? response.data.promotion.costDiscountPrice : ''
+        costDiscountPrice: response.data.promotion ? response.data.promotion.costDiscountPrice : '',
+        promotionName: response.data.promotion ? response.data.promotion.name : ''
       };
       // console.log({ response: productDeatil });
       const image = {
@@ -347,7 +348,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
       >
         <Container style={{ backgroundColor: theme.brandColor.white, width: '100%' }}>
           <Container backgroundColor="white">
-            <Container style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Container style={{ marginTop: moderateScale(10) }}>
               <ImagesCarusel
                 imagesList={skusForProductImages}
                 imageSize={240}
@@ -362,6 +363,23 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                   })
                 }
               />
+            </Container>
+            <Container style={{ position: 'absolute', marginTop: moderateScale(5), marginLeft: moderateScale(10) }}>
+              {!!productDetail &&
+                productDetail.promotionType &&
+                (productDetail.promotionType === 'buyAndWin' || productDetail.promotionType === 'forThePriceOf') && (
+                  <Container
+                    style={{
+                      paddingHorizontal: moderateScale(5),
+                      height: verticalScale(23),
+                      backgroundColor: theme.brandColor.iconn_green_discount,
+                      borderRadius: moderateScale(10),
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <CustomText textColor={theme.brandColor.iconn_accent_principal} fontBold fontSize={moderateScale(12)} text={productDetail.promotionName} />
+                  </Container>
+                )}
             </Container>
             <Container row space="between" style={{ marginTop: 16, width: '100%', paddingHorizontal: 10 }}>
               <Container row>
