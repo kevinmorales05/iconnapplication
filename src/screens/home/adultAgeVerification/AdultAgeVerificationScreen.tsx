@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, Linking, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import { CustomText, Button, Container, TextContainer } from 'components';
@@ -8,7 +8,7 @@ import { ActionButton } from '../../../components/atoms';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { vtexDocsServices } from 'services';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { RootState,useAppSelector } from 'rtk';
+import { RootState, updateItemsLoading, useAppDispatch, useAppSelector } from 'rtk';
 import { authServices } from 'services';
 import Config from 'react-native-config';
 
@@ -22,32 +22,36 @@ interface Props {
 const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, productId, userUpdated }) => {
   const { AGE_VERIFICATION_URL } = Config;
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const { loadingItems } = useAppSelector((state: RootState) => state.cart);
   const insets = useSafeAreaInsets();
+  const dispatch = useAppDispatch();
 
-  const updateUserAgeStatus = (async (adultStatus) => {
-    console.log(adultStatus);
+  const updateUserAgeStatus = async adultStatus => {
     if (user.userId) {
-      console.log('user.userId:::',user.userId);
-      let id = ''+user.userId;
       await authServices.getProfile(user.email).then(async profileReceived => {
-        if(profileReceived){
-          if(profileReceived.length>0){
+        if (profileReceived) {
+          if (profileReceived.length > 0) {
             // TODO: relocate entity name to .ENV
-            await vtexDocsServices.updateDocByDocIDForAgeStatus('CL', profileReceived[0].id, { isAdult: adultStatus })
-            .then(async updatedDoc => {
-              console.log(updatedDoc);
-              if (!adultStatus) {
-                Linking.openURL(AGE_VERIFICATION_URL!);
-                onPressClose();
-              } else {
-                userUpdated(productId,true);
-              }
-            }).catch((error) => console.log(error))
+            await vtexDocsServices
+              .updateDocByDocIDForAgeStatus('CL', profileReceived[0].id, { isAdult: adultStatus })
+              .then(async () => {
+                if (!adultStatus) {
+                  const loadingItemsTem = loadingItems.filter(id => productId !== id);
+                  dispatch(updateItemsLoading(loadingItemsTem));
+                  Linking.openURL(AGE_VERIFICATION_URL!);
+                  onPressClose();
+                } else {
+                  userUpdated(productId, true);
+                }
+              })
+              .catch(() => {
+                //
+              });
           }
         }
       });
     }
-  });
+  };
 
   const { containerStyle } = styles;
 
@@ -65,7 +69,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
           <Container row space="between" style={{ marginTop: 16, marginBottom: 16 }}>
             <Container />
             <Container>
-              <CustomText textColor={theme.brandColor.iconn_dark_grey} text='Verifica tu edad' typography="h3" fontBold />
+              <CustomText textColor={theme.brandColor.iconn_dark_grey} text="Verifica tu edad" typography="h3" fontBold />
             </Container>
             <Container>
               <ActionButton
@@ -73,14 +77,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
                 size="xxsmall"
                 onPress={onPressClose}
                 color="white"
-                icon={
-                  <Ionicons
-                    name="close"
-                    size={24}
-                    color={theme.fontColor.dark_grey}
-                  />
-                }
-
+                icon={<Ionicons name="close" size={24} color={theme.fontColor.dark_grey} />}
               />
             </Container>
           </Container>
@@ -100,18 +97,16 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
                       marginTop={15}
                       textAlign="justify"
                       marginBottom={8}
-                    ></TextContainer>
+                    />
                   </Container>
                   <Container style={{ marginTop: 20 }}>
                     <Button
                       length="long"
-                      fontColor='light_green'
+                      fontColor="light_green"
                       fontSize="h5"
                       round
                       fontBold
-                      onPress={() => updateUserAgeStatus(false)
-
-                      }
+                      onPress={() => updateUserAgeStatus(false)}
                       style={{ marginBottom: 5, backgroundColor: theme.brandColor.iconn_white, height: 50, borderRadius: 10 }}
                     >
                       Tengo menos de 18 años
@@ -129,20 +124,22 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
                       Confirmo que tengo 18 años o más
                     </Button>
                   </Container>
-                  <Container style={{
-                    borderLeftColor: '#f3d449',
-                    borderRightColor: '#f3d449',
-                    borderBottomColor: '#f3d449',
-                    borderTopColor: '#f3d449',
-                    borderWidth: 1,
-                    marginTop: 20,
-                    marginBottom: 0,
-                    backgroundColor: '#fffaed',
-                    borderRadius: 8,
-                    paddingVertical: 15
-                  }}>
+                  <Container
+                    style={{
+                      borderLeftColor: '#f3d449',
+                      borderRightColor: '#f3d449',
+                      borderBottomColor: '#f3d449',
+                      borderTopColor: '#f3d449',
+                      borderWidth: 1,
+                      marginTop: 20,
+                      marginBottom: 0,
+                      backgroundColor: '#fffaed',
+                      borderRadius: 8,
+                      paddingVertical: 15
+                    }}
+                  >
                     <Container row style={{ marginLeft: 4, width: '100%' }}>
-                      <Container center space='around' style={{ marginLeft: 4, width: '10%' }}>
+                      <Container center space="around" style={{ marginLeft: 4, width: '10%' }}>
                         <Octicons name="info" size={24} color={theme.fontColor.dark} />
                       </Container>
                       <Container style={{ width: '87%' }}>
@@ -152,7 +149,7 @@ const AdultAgeVerificationScreen: React.FC<Props> = ({ onPressClose, visible, pr
                             fontSize={12}
                             numberOfLines={3}
                             marginRight={4}
-                          ></TextContainer>
+                          />
                         </Container>
                       </Container>
                     </Container>
