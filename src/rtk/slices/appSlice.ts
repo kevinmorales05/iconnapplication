@@ -10,7 +10,8 @@ const initialState: AppInterface = {
   state: '',
   municipality: '',
   latitude: 0,
-  longitude: 0
+  longitude: 0,
+  appModules: []
 };
 
 const appSlice = createSlice({
@@ -50,6 +51,9 @@ const appSlice = createSlice({
       state.municipality = action.payload.municipality;
       state.latitude = action.payload.latitude;
       state.longitude = action.payload.longitude;
+    },
+    setAppModules(state, action: PayloadAction<AppInterface>) {
+      state.appModules = action.payload.appModules;
     }
   }
 });
@@ -62,6 +66,7 @@ export const {
   setAppInternetReachabilityReviewed,
   setAppStateAndMunicipality,
   setAppVisibleSearchByDistance,
-  setAppVisibleStoreSymbology
+  setAppVisibleStoreSymbology,
+  setAppModules
 } = appSlice.actions;
 export default appSlice.reducer;

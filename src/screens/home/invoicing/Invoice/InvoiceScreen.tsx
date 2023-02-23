@@ -10,6 +10,9 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { logEvent } from 'utils/analytics';
+import { modulesBilling, modulesRemoteConfig } from '../../../../common/modulesRemoteConfig';
+import { getStatusModule } from 'utils/modulesApp';
+import { useNotEnabledModal } from 'context/notEnabled.context';
 
 interface Props {
   onSubmit: () => void;
@@ -24,7 +27,16 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
   const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const { appModules } = useAppSelector((state: RootState) => state.app);
+
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const modalNotEnabled = useNotEnabledModal();
+
+  const petroFlag: boolean | undefined = getStatusModule(appModules ? appModules : [], modulesRemoteConfig.billing, modulesBilling.petroSevenBilling);
+  const sevenFlag: boolean | undefined = getStatusModule(appModules ? appModules : [], modulesRemoteConfig.billing, modulesBilling.sevenElevenBilling);
+
+  const sevenFlagDisable: boolean = sevenFlag ? invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false : true;
+  const petroFlagDisable: boolean = petroFlag ? invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false : true;
 
   return (
     <ScrollView
@@ -54,7 +66,7 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
               ActionButtonText="Enviar correo de verificación"
               icon={<AntDesign name="warning" size={25} color={theme.brandColor.iconn_white} />}
               onPressActionButton={resendEmail}
-            ></AnnounceItem>
+            />
           )}
           <Container style={{ marginTop: 36 }}>
             <CardAction
@@ -94,16 +106,16 @@ const InvoiceScreen: React.FC<Props> = ({ onSubmit, invoicingProfileList, defaul
         <CardBilling
           text="Facturar ticket"
           type="seven"
-          disable={invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false}
-          onPress={goToAddTicketSeven}
+          disable={sevenFlagDisable}
+          onPress={() => (sevenFlagDisable ? modalNotEnabled.show() : goToAddTicketSeven())}
         />
       </Container>
       <Container style={{ marginTop: 8 }}>
         <CardBilling
           text="Facturar ticket"
           type="petro"
-          disable={invoicingProfileList.length === 0 || defaultProfile?.verified_mail === false}
-          onPress={goToAddTicketPetro}
+          disable={petroFlagDisable}
+          onPress={() => (petroFlagDisable ? modalNotEnabled.show() : goToAddTicketPetro())}
         />
       </Container>
       <InvoiceModal

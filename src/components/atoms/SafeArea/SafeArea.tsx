@@ -26,8 +26,6 @@ const SafeArea: React.FC<Props> = ({
   children,
   barStyle,
   backgroundColor = theme.brandColor.iconn_white,
-  bottomBGColor,
-  topBGColor,
   statusBarColor,
   hiddenStatusBar,
   testID,

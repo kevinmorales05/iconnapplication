@@ -9,9 +9,11 @@ import {
 import { CardProduct, Container, CustomText, TextContainer, Touchable } from 'components';
 import theme from 'components/theme/theme';
 import { CounterType } from 'components/types/counter-type';
+import { useNotEnabledModal } from 'context/notEnabled.context';
 import React from 'react';
-import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle } from 'react-native';
+import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
+import { Grayscale } from 'react-native-color-matrix-image-filters';
 import { CarouselItem, ProductInterface } from 'rtk';
 import { navigate } from '../../../navigation/RootNavigation';
 
@@ -22,12 +24,14 @@ interface Props {
   onPressItem: (item: CarouselItem) => void;
   onPressProduct?: (type: CounterType, productId: string) => void;
   onPressOut: () => void;
+  pointsCardDisabled?: boolean;
 }
 
-const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, onPressProduct, onPressOut }) => {
+const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, onPressProduct, onPressOut, pointsCardDisabled = false }) => {
   const { width } = useWindowDimensions();
   const rightCardSpace = width * 0.08 * 2;
   position = position === 0 ? 16 : 8;
+  const modalNotEnabled = useNotEnabledModal();
 
   const containerStyle: StyleProp<ViewStyle> = {
     width: width - rightCardSpace,
@@ -81,22 +85,6 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
     resizeMode: 'stretch'
   };
 
-  const dayPromotionContainer: StyleProp<ViewStyle> = {
-    width: width - 32,
-    borderRadius: 8,
-    backgroundColor: theme.brandColor.iconn_white,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    margin: 8,
-    elevation: 3
-  };
-
-  const dayPromotionImageStyle: StyleProp<ImageStyle> = {
-    borderRadius: 8,
-    height: 172,
-    resizeMode: 'stretch'
-  };
-
   const dayPromotionFooterContainer: StyleProp<ViewStyle> = {
     height: 50,
     margin: 8
@@ -117,36 +105,51 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
     width: 160,
     resizeMode: 'stretch'
   };
-
-  {
-    return product ? (
-      <Container>
-        <CardProduct
-          image={product.image!}
-          name={product.name!}
-          price={product.price!}
-          productId={product.productId}
-          quantity={product.quantity!}
-          ratingValue={product.ratingValue}
-          promotionType={product.promotionType}
-          percentualDiscountValue={product.percentualDiscountValue}
-          promotionName={product.promotionName}
-          costDiscountPrice={product.costDiscountPrice}
-          onPressAddCart={() => {
-            onPressProduct!('create', product.productId);
-          }}
-          onPressAddQuantity={() => {
-            onPressProduct!('add', product.productId);
-          }}
-          onPressDeleteCart={() => {
-            onPressProduct!('remove', product.productId);
-          }}
-          onPressDecreaseQuantity={() => {
-            onPressProduct!('substract', product.productId);
-          }}
-          onPressOut={onPressOut}
-        />
+  return product ? (
+    <Container>
+      <CardProduct
+        image={product.image!}
+        name={product.name!}
+        price={product.price!}
+        productId={product.productId}
+        quantity={product.quantity!}
+        ratingValue={product.ratingValue}
+        promotionType={product.promotionType}
+        percentualDiscountValue={product.percentualDiscountValue}
+        promotionName={product.promotionName}
+        costDiscountPrice={product.costDiscountPrice}
+        onPressAddCart={() => {
+          onPressProduct!('create', product.productId);
+        }}
+        onPressAddQuantity={() => {
+          onPressProduct!('add', product.productId);
+        }}
+        onPressDeleteCart={() => {
+          onPressProduct!('remove', product.productId);
+        }}
+        onPressDecreaseQuantity={() => {
+          onPressProduct!('substract', product.productId);
+        }}
+        onPressOut={onPressOut}
+      />
+    </Container>
+  ) : data !== undefined && data.promotion_type === 'principal' ? (
+    <Touchable
+      onPress={() => {
+        onPressItem(data);
+      }}
+      marginLeft={position}
+    >
+      <Container style={containerStyle}>
+        <Container style={imageContainer}>
+          <FastImage source={{ uri: data.image }} style={image} />
+        </Container>
+        <Container flex space="evenly" style={footerContainer}>
+          <CustomText text={data.promotion_name} fontBold />
+          <TextContainer text={data.description} />
+        </Container>
       </Container>
+    </Touchable>
     ) : data !== undefined && data.promotion_type === 'principal' ? (
       <Touchable
         onPress={() => {
@@ -207,43 +210,41 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
       <Touchable
         onPress={() => {
           if (data.navigateTo?.length > 0) {
-            navigate(data.navigateTo, { addOrShow: 1, cardId: data.id, cardNumber: data.cardNumber });
+            if (!pointsCardDisabled) {
+              navigate(data.navigateTo, { addOrShow: 1, cardId: data.id, cardNumber: data.cardNumber });
+            } else {
+              modalNotEnabled.show();
+            }
           }
         }}
       >
         <Container center style={containerCard}>
-          <FastImage source={data.image} style={cardImageStyle} />
+          {pointsCardDisabled ? (
+            <Grayscale>
+              <FastImage source={data.image} style={cardImageStyle} />
+            </Grayscale>
+          ) : (
+            <FastImage source={data.image} style={cardImageStyle} />
+          )}
+          {pointsCardDisabled && <View style={{ width: '100%', height: '100%', position: 'absolute', backgroundColor: 'rgba(52, 52, 52, 0.4)' }} />}
         </Container>
-      </Touchable>
-    ) : data !== undefined && data.promotion_type === 'day_promotion' ? (
-      <Touchable
-        onPress={() => {
-          onPressItem(data);
-        }}
-      >
-        <Container style={dayPromotionContainer}>
-          <Container style={dayPromotionImageStyle}>
-            <FastImage source={{ uri: data.image }} style={image} />
-          </Container>
-          <Container flex space="evenly" style={dayPromotionFooterContainer}>
-            <CustomText text={data.promotion_name} fontBold />
-            <TextContainer text={data.description} />
-          </Container>
+        <Container flex space="evenly" style={dayPromotionFooterContainer}>
+          <CustomText text={data.promotion_name} fontBold />
+          <TextContainer text={data.description} />
         </Container>
-      </Touchable>
-    ) : data !== undefined && data.promotion_type === 'all_promotions' ? (
-      <Touchable
-        onPress={() => {
-          onPressItem(data);
-        }}
-        marginLeft={position}
-      >
-        <Container style={allPromotionsContainer}>
-          <FastImage source={{ uri: data.image }} style={allPromotionsImage} />
-        </Container>
-      </Touchable>
-    ) : null;
-  }
+    </Touchable>
+  ) : data !== undefined && data.promotion_type === 'all_promotions' ? (
+    <Touchable
+      onPress={() => {
+        onPressItem(data);
+      }}
+      marginLeft={position}
+    >
+      <Container style={allPromotionsContainer}>
+        <FastImage source={{ uri: data.image }} style={allPromotionsImage} />
+      </Container>
+    </Touchable>
+  ) : null;
 };
 
 export default AnimatedItem;

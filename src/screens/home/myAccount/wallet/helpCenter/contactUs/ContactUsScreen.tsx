@@ -1,13 +1,7 @@
 import React, { useEffect } from 'react';
 import { Container, NavigationMenuItem } from 'components';
 import theme from 'components/theme/theme';
-import { useToast, useAlert } from 'context';
 import { Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams } from '../../../../../../navigation/types';
-import analytics from '@react-native-firebase/analytics';
-import { RootState, useAppSelector } from 'rtk';
 
 interface Props {
   contactUsValues: [];
@@ -15,10 +9,6 @@ interface Props {
 }
 
 const ContactUsScreen: React.FC<Props> = ({ contactUsValues, onPressSendAnalytics }) => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { user } = useAppSelector((state: RootState) => state.auth);
-  const toast = useToast();
-  const alert = useAlert();
 
   useEffect(() => {}, [contactUsValues]);
 

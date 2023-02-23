@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container } from '../../atoms/Container';
 import { CustomText, Touchable } from 'components/atoms';
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import theme from '../../theme/theme';
 import Feather from 'react-native-vector-icons/Feather';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
@@ -24,13 +24,13 @@ const QuantityProduct: React.FC<QuantityProductProps> = ({
       <Container style={styles.containerDelete}>
         {quantity === 1 ? (
           <Touchable onPress={onPressDeleteCart}>
-            <Container style={styles.touchableContainerLeft}>
+            <Container>
               <Feather name="trash-2" size={theme.iconSize.small} color={theme.brandColor.iconn_red_original} />
             </Container>
           </Touchable>
         ) : (
           <Touchable onPress={onPressDecreaseQuantity}>
-            <Container style={styles.touchableContainerLeft}>
+            <Container>
               <Feather name="minus" size={theme.iconSize.small} color={theme.brandColor.iconn_green_original} />
             </Container>
           </Touchable>
@@ -41,10 +41,10 @@ const QuantityProduct: React.FC<QuantityProductProps> = ({
       </Container>
       <Container style={styles.containerAdd}>
         <Touchable onPress={onPressAddQuantity}>
-         <Container style={styles.touchableContainerRight}>
-           <Feather name="plus" size={theme.iconSize.small} color={theme.brandColor.iconn_green_original} />
+          <Container style={styles.touchableContainerRight}>
+            <Feather name="plus" size={theme.iconSize.small} color={theme.brandColor.iconn_green_original} />
           </Container>
-       </Touchable>
+        </Touchable>
       </Container>
     </Container>
   );
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: theme.brandColor.iconn_med_grey,
-    borderWidth: moderateScale(1), 
+    borderWidth: moderateScale(1),
     // flex: 1,
     height: verticalScale(40)
   },
@@ -80,9 +80,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     flex: 1
   },
-  touchableContainerLeft:{
-  },
-  touchableContainerRight:{
-    alignItems:'flex-end',
+  touchableContainerRight: {
+    alignItems: 'flex-end'
   }
 });

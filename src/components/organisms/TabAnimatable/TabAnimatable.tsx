@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { FlatList, Animated } from 'react-native';
 import { Container } from '../../atoms';
 import { TabItem } from 'rtk';
@@ -11,7 +11,6 @@ interface Props {
 }
 
 const TabAnimatable: React.FC<Props> = ({ items, idSelected, onPressItem }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
 

@@ -23,18 +23,6 @@ const getContainerStyle = (props: AvatarProps) => {
   return avatarStyle;
 };
 
-const getEditIconStyle = (size: SizeType | string) => {
-  const iconStyle = [
-    {
-      width: theme.avatarSize[size] / 2,
-      height: theme.avatarSize[size] / 2,
-      borderRadius: theme.avatarSize[size] / 4,
-      backgroundColor: theme.brandColor.iconn_white,
-      marginLeft: 14
-    }
-  ];
-  return iconStyle;
-};
 
 const getTitleStyle = (size: SizeType | string) => {
   return {
