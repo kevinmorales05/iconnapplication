@@ -372,12 +372,12 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                     style={{
                       paddingHorizontal: moderateScale(5),
                       height: verticalScale(23),
-                      backgroundColor: theme.brandColor.iconn_green_discount,
+                      backgroundColor: theme.brandColor.iconn_orange_original,
                       borderRadius: moderateScale(10),
                       justifyContent: 'center'
                     }}
                   >
-                    <CustomText textColor={theme.brandColor.iconn_accent_principal} fontBold fontSize={moderateScale(12)} text={productDetail.promotionName} />
+                    <CustomText textColor={theme.brandColor.iconn_white} fontBold fontSize={moderateScale(12)} text={productDetail.promotionName} />
                   </Container>
                 )}
             </Container>

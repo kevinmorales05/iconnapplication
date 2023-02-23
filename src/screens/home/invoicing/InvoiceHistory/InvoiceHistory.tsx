@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { ScrollView, Image, StyleSheet, View, FlatList } from 'react-native';
+import { ScrollView, Image, StyleSheet, View } from 'react-native';
 import { ActionButton, Container, CustomText, Touchable, SafeArea } from 'components';
 import theme from 'components/theme/theme';
-import { ICONN_INVOICE, ICONN_PETRO_MINIMAL, ICONN_NO_RESULTS, ICONN_SEVEN_MINIMAL } from 'assets/images';
+import { ICONN_INVOICE, ICONN_PETRO_MINIMAL, ICONN_SEVEN_MINIMAL } from 'assets/images';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { invoicingServices } from 'services';
 import { useNavigation } from '@react-navigation/native';
@@ -25,6 +25,7 @@ import moment from 'moment';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { logEvent } from 'utils/analytics';
 import 'moment/locale/es';
+import { FlashList } from '@shopify/flash-list';
 
 interface EstablishmentResult {
   establishment_id: number;
@@ -146,137 +147,44 @@ const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChil
   );
 };
 
-const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; results: Result[] }) => {
-  let row: Array<Swipeable | null> = [];
-  let prevOpenedRow;
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
-  const { user } = useAppSelector((state: RootState) => state.auth);
+// const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; results: Result[] }) => {
 
-  /**
-   *
-   */
-  const renderItem = ({ item, index }, onPreview, onSend) => {
-    const closeRow = index => {
-      if (prevOpenedRow && prevOpenedRow !== row[index]) {
-        prevOpenedRow.close();
-      }
-      prevOpenedRow = row[index];
-    };
+//   return (
+//     <View>
+//       {results.length === 0 ? (
+//         <Container style={styles.empty}>
+//           <Container center style={styles.content}>
+//             <Container center>
+//               <Image source={ICONN_NO_RESULTS} />
+//             </Container>
+//             <Container style={[styles.title, { maxWidth: 196 }]}>
+//               <CustomText
+//                 textAlign="center"
+//                 text="NO TIENES FACTURAS QUE COINCIDAN CON TU BÚSQUEDA"
+//                 alignSelf="center"
+//                 typography="h3"
+//                 fontBold
+//                 fontSize={12}
+//               />
+//             </Container>
+//             <Container style={styles.placeholder}>
+//               <CustomText
+//                 fontSize={12}
+//                 textAlign="center"
+//                 alignSelf="center"
+//                 textColor={theme.brandColor.iconn_grey}
+//                 text="Intenta con otros filtros"
+//                 typography="h3"
+//               />
+//             </Container>
+//           </Container>
+//         </Container>
+//       ) : (
 
-    const renderRightActions = (progress, dragX, onPreview, onSend) => {
-      const itemStyle = { height: '100%', display: 'flex', justifyContent: 'center', paddingHorizontal: 30, alignItems: 'center' };
-      return (
-        <View
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexDirection: 'row',
-            marginTop: 10
-          }}
-          key={index}
-        >
-          <Touchable onPress={onPreview}>
-            <View style={[{ backgroundColor: '#808386' }, itemStyle]}>
-              <Feather name="eye" size={moderateScale(22)} color={theme.brandColor.iconn_white} />
-              <CustomText text="Ver" textColor={'white'} fontBold />
-            </View>
-          </Touchable>
-          <Touchable onPress={onSend}>
-            <View style={[{ backgroundColor: '#406BA3' }, itemStyle]}>
-              <Feather name="send" size={moderateScale(22)} color={theme.brandColor.iconn_white} />
-              <CustomText text="Enviar" textColor={'white'} fontBold />
-            </View>
-          </Touchable>
-        </View>
-      );
-    };
-
-    return (
-      <ItemWrapper results={results} invoice={item}>
-        <Swipeable
-          key={index}
-          renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, onPreview, onSend)}
-          onSwipeableOpen={() => closeRow(index)}
-          ref={ref => (row[index] = ref)}
-          rightOpenValue={-100}
-        >
-          <InvoiceItem results={results} invoice={item} />
-        </Swipeable>
-      </ItemWrapper>
-    );
-  };
-
-  return (
-    <View>
-      {results.length === 0 ? (
-        <Container style={styles.empty}>
-          <Container center style={styles.content}>
-            <Container center>
-              <Image source={ICONN_NO_RESULTS} />
-            </Container>
-            <Container style={[styles.title, { maxWidth: 196 }]}>
-              <CustomText
-                textAlign="center"
-                text="NO TIENES FACTURAS QUE COINCIDAN CON TU BÚSQUEDA"
-                alignSelf="center"
-                typography="h3"
-                fontBold
-                fontSize={12}
-              />
-            </Container>
-            <Container style={styles.placeholder}>
-              <CustomText
-                fontSize={12}
-                textAlign="center"
-                alignSelf="center"
-                textColor={theme.brandColor.iconn_grey}
-                text="Intenta con otros filtros"
-                typography="h3"
-              />
-            </Container>
-          </Container>
-        </Container>
-      ) : (
-        <FlatList
-          style={{ maxHeight: '100%' }}
-          data={results}
-          renderItem={v =>
-            renderItem(
-              v,
-              () => {
-                const { item } = v;
-
-                const invoiceGenerated: InvoiceGeneratedResponseInterface = {
-                  uuidInvoice: item.invoice_uuid,
-                  emissionDate: item.emission_date,
-                  total: item.total,
-                  establishment: String(item.Establishment.establishment_id)
-                };
-
-                navigate(item.Establishment.establishment_id === 1 ? 'ViewInvoiceGeneratedPetro' : 'ViewInvoiceGeneratedSeven', {
-                  invoiceGenerated
-                });
-                logEvent('invShowInvoice', {
-                  id: user.id,
-                  description: 'Mostrar factura',
-                  invoiceId: invoiceGenerated.uuidInvoice,
-                  origin: 'history'
-                });
-              },
-              () => {
-                const { item } = v;
-                handleSend(item);
-              }
-            )
-          }
-          keyExtractor={(item, index) => {
-            return `${item.rfc}_${index}`;
-          }}
-        />
-      )}
-    </View>
-  );
-};
+//       )}
+//     </View>
+//   );
+// };
 
 const Empty = () => {
   return (
@@ -323,12 +231,74 @@ const InvoiceScreen: React.FC = () => {
   const [selected, setSelected] = useState<Result | null>(null);
 
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { user } = useAppSelector((state: RootState) => state.auth);
 
   const [establishment, setEstablishment] = useState<Establishment | null>(null);
   const [amount, setAmount] = useState<Amount | null>(null);
   const [date, setDate] = useState<Period | null>(null);
   const [visible, setVisible] = useState(false);
+  const [itemToLoad, setItemToLoad] = useState<number>(1);
+  const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  let row: Array<Swipeable | null> = [];
+  let prevOpenedRow;
+
+  /**
+   *
+   */
+  const renderItem = ({ item, index }, onPreview, onSend) => {
+    const closeRow = index => {
+      if (prevOpenedRow && prevOpenedRow !== row[index]) {
+        prevOpenedRow.close();
+      }
+      prevOpenedRow = row[index];
+    };
+
+    const renderRightActions = (onPreview, onSend) => {
+      const itemStyle = { height: '100%', display: 'flex', justifyContent: 'center', paddingHorizontal: 30, alignItems: 'center' };
+      return (
+        <View
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row',
+            marginTop: 10
+          }}
+          key={index}
+        >
+          <Touchable onPress={onPreview}>
+            <View style={[{ backgroundColor: '#808386' }, itemStyle]}>
+              <Feather name="eye" size={moderateScale(22)} color={theme.brandColor.iconn_white} />
+              <CustomText text="Ver" textColor={'white'} fontBold />
+            </View>
+          </Touchable>
+          <Touchable onPress={onSend}>
+            <View style={[{ backgroundColor: '#406BA3' }, itemStyle]}>
+              <Feather name="send" size={moderateScale(22)} color={theme.brandColor.iconn_white} />
+              <CustomText text="Enviar" textColor={'white'} fontBold />
+            </View>
+          </Touchable>
+        </View>
+      );
+    };
+
+    return (
+      <ItemWrapper results={results} invoice={item}>
+        <Swipeable
+          key={index}
+          renderRightActions={() => renderRightActions(onPreview, onSend)}
+          onSwipeableOpen={() => closeRow(index)}
+          ref={ref => (row[index] = ref)}
+          rightOpenValue={-100}
+        >
+          <InvoiceItem results={results} invoice={item} />
+        </Swipeable>
+      </ItemWrapper>
+    );
+  };
 
   // const [query, setQuery] = useState<BodyParams>({ userId: testUserId });
   const [query, setQuery] = useState<BodyParams>();
@@ -412,33 +382,79 @@ const InvoiceScreen: React.FC = () => {
   }, [date]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        loader.show();
-
-        const response = await invoicingServices.getInvoices(1, 10, query);
-
-        if (response?.responseCode === 200) {
-          const { data } = response;
-
-          if (data === null) {
-            setResults([]);
-          } else {
-            const { rows } = data;
-
-            const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
-              return moment(a.emission_date).diff(b.emission_date);
-            });
-            setResults(sortedArray.reverse());
-          }
-        }
-      } catch (e) {
-        // console.log()
-      } finally {
-        loader.hide();
-      }
-    })();
+    getLoadInvoices();
   }, [query]);
+
+  const getLoadInvoices = async () => {
+    try {
+      loader.show();
+
+      const response = await invoicingServices.getInvoices(1, 10, query);
+
+      if (response?.responseCode === 200) {
+        const { data } = response;
+
+        if (data === null) {
+          setResults([]);
+        } else {
+          const { rows } = data;
+
+          const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
+            return moment(a.emission_date).diff(b.emission_date);
+          });
+          setResults(sortedArray.reverse());
+          setItemToLoad(2);
+        }
+      }
+      setLoading(false);
+      setRefreshing(false);
+    } catch (e) {
+      setLoading(false);
+      setRefreshing(false);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+      loader.hide();
+    }
+  };
+
+  const loadMoreItem = () => {
+    if (!onEndReachedCalledDuringMomentum) {
+      if (!isLoading) {
+        loadMoreInvoices();
+        setOnEndReachedCalledDuringMomentum(true);
+      }
+    }
+  };
+
+  const loadMoreInvoices = async () => {
+    try {
+      const response = await invoicingServices.getInvoices(itemToLoad, 10, query);
+
+      if (response?.responseCode === 200) {
+        const { data } = response;
+
+        if (data === null) {
+          setResults([]);
+        } else {
+          const { rows } = data;
+
+          const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
+            return moment(a.emission_date).diff(b.emission_date);
+          });
+          const tem = results?.concat(sortedArray.reverse());
+          setResults(tem);
+          setItemToLoad(itemToLoad + 1);
+          setOnEndReachedCalledDuringMomentum(true);
+        }
+      }
+      setLoading(false);
+    } catch (e) {
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -461,6 +477,11 @@ const InvoiceScreen: React.FC = () => {
       }
     });
   }, [navigation]);
+
+  const _onRefresh = () => {
+    setRefreshing(true);
+    getLoadInvoices();
+  };
 
   const [seconds, setSeconds] = useState(0);
 
@@ -566,14 +587,52 @@ const InvoiceScreen: React.FC = () => {
                 </View>
               </ScrollView>
             </View>
-            <ScrollView contentContainerStyle={{ flexGrow: 1, height: '100%' }}>
-              <Results
-                results={results}
-                handleSend={(invoice: Result) => {
-                  setSelected(invoice);
+            <Container height={verticalScale(520)} width={'100%'}>
+              <FlashList
+                data={results}
+                renderItem={v =>
+                  renderItem(
+                    v,
+                    () => {
+                      const { item } = v;
+
+                      const invoiceGenerated: InvoiceGeneratedResponseInterface = {
+                        uuidInvoice: item.invoice_uuid,
+                        emissionDate: item.emission_date,
+                        total: item.total,
+                        establishment: String(item.Establishment.establishment_id)
+                      };
+
+                      navigate(item.Establishment.establishment_id === 1 ? 'ViewInvoiceGeneratedPetro' : 'ViewInvoiceGeneratedSeven', {
+                        invoiceGenerated
+                      });
+                      logEvent('invShowInvoice', {
+                        id: user.id,
+                        description: 'Mostrar factura',
+                        invoiceId: invoiceGenerated.uuidInvoice,
+                        origin: 'history'
+                      });
+                    },
+                    () => {
+                      const { item } = v;
+                      setSelected(item);
+                    }
+                  )
+                }
+                keyExtractor={(item, index) => {
+                  return `${item.rfc}_${index}`;
                 }}
+                onEndReachedThreshold={0}
+                onEndReached={loadMoreItem}
+                refreshing={refreshing}
+                removeClippedSubviews={true}
+                onRefresh={() => _onRefresh()}
+                onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+                estimatedItemSize={moderateScale(100)}
+                // ListFooterComponent={_renderFooter}
+                // ListFooterComponentStyle={{ width: '100%' }}
               />
-            </ScrollView>
+            </Container>
           </>
         )}
 
