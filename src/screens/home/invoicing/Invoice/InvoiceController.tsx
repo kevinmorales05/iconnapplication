@@ -49,20 +49,17 @@ const InvoiceController: React.FC = () => {
 
   // Monitors if user has verified his email from web.
   useEffect(() => {
-    let interval = setInterval(async () => {
-      await dispatch(getInvoicingProfileListThunk(user.userId!));
-    }, 10000);
+    if (defaultProfile?.verified_mail === false) {
+      let interval = setInterval(async () => {
+        await dispatch(getInvoicingProfileListThunk(user.userId!));
+      }, 10000);
 
-    setIntervalId(interval);
+      setIntervalId(interval);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-
-  // Clear interval
-  useEffect(() => {
-    if (defaultProfile?.verified_mail === true) {
+      return () => {
+        clearInterval(interval);
+      };
+    } else {
       clearInterval(intervalId);
     }
   }, [defaultProfile]);
