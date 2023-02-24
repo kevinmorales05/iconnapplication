@@ -40,16 +40,16 @@ const FavoriteScreen: React.FC<Props> = ({ completeList }) => {
         promotionName={item.promotionName}
         costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={() => {
-          updateShoppingCartProduct!('create', item.productId);
+          updateShoppingCartProduct('create', item.productId);
         }}
         onPressAddQuantity={() => {
-          updateShoppingCartProduct!('add', item.productId);
+          updateShoppingCartProduct('add', item.productId);
         }}
         onPressDeleteCart={() => {
-          updateShoppingCartProduct!('remove', item.productId);
+          updateShoppingCartProduct('remove', item.productId);
         }}
         onPressDecreaseQuantity={() => {
-          updateShoppingCartProduct!('substract', item.productId);
+          updateShoppingCartProduct('substract', item.productId);
         }}
         notNeedMarginLeft
         onPressOut={function (): void {
@@ -106,7 +106,7 @@ const FavoriteScreen: React.FC<Props> = ({ completeList }) => {
                   <CustomText text="No se encontraron productos en esta sección." fontSize={theme.fontSize.h6} fontWeight={'500'} textAlign={'center'} />
                 </Container>
               </Container>
-              <Container style={{ marginTop: moderateScale(200) }}></Container>
+              <Container style={{ marginTop: moderateScale(200) }} />
             </Container>
           )}
         </Container>

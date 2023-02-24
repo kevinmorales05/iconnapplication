@@ -1,6 +1,6 @@
 import { AddressModalScreen, SafeArea, AddressModalSelection } from 'components';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text } from 'react-native';
+import { Linking, Text } from 'react-native';
 import theme from 'components/theme/theme';
 import {
   RootState,
@@ -31,7 +31,7 @@ import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne, saveShippingData } from 'services/vtexShoppingCar.services';
-import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
+import { setDetailSelected, updateShoppingCartItems } from 'rtk/slices/cartSlice';
 import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
@@ -267,7 +267,22 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     );
   }, [user.addresses]);
 
+  const onNavigateBanner = (carouselItem: CarouselItem) => {
+    if (carouselItem.navigation_type === 'external') {
+      Linking.openURL(carouselItem.link);
+    } else if (carouselItem.navigation_type === 'internal') {
+      if (carouselItem.products_id) {
+        dispatch(setDetailSelected(carouselItem.products_id + ''));
+        navigate('ProductDetail', { productIdentifier: carouselItem.products_id + '' });
+      } else if (carouselItem.collections_id) {
+        const titleView: string = carouselItem.promotion_title ? carouselItem.promotion_title : carouselItem.promotion_name ? carouselItem.promotion_name : '';
+        navigate('CollectionsProducts', { collectionId: carouselItem.collections_id, title: titleView });
+      }
+    }
+  };
+
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
+    onNavigateBanner(CarouselItem);
     if (CarouselItem.promotion_type === 'second') {
       logEvent('hmPetro7Banner', {
         id: user.id,

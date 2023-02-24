@@ -23,22 +23,24 @@ const Rating: React.FC<RatingProps> = ({ ratingValue, ratingComponent, starSize 
         <Container row>
           {arr.map((value, idx) => {
             return (
-              <Container key={idx + ""} style={{ marginRight: moderateScale(2) }}>
-                <StarSvg size={starSize ? starSize : theme.iconSize.xsmall} color={value <= ratingToFill ? theme.brandColor.yellow_star : theme.brandColor.iconn_light_grey} />
+              <Container key={idx + ''} style={{ marginRight: moderateScale(2) }}>
+                <StarSvg
+                  size={starSize ? starSize : theme.iconSize.xsmall}
+                  color={value <= ratingToFill ? theme.brandColor.yellow_star : theme.brandColor.iconn_light_grey}
+                />
               </Container>
             );
           })}
         </Container>
         {ratingComponent ? (
-        <>
-        </>
-      ) : (
-        <>
-        <Container style={styles.containerText}>
-          <CustomText fontSize={theme.fontSize.h5} text={`${rating}`} />
-        </Container>
-        </>
-      )}
+          <></>
+        ) : (
+          <>
+            <Container style={styles.containerText}>
+              <CustomText fontSize={theme.fontSize.h5} text={`${rating}`} />
+            </Container>
+          </>
+        )}
       </Container>
     </Container>
   );
