@@ -13,7 +13,7 @@ import { invoicingServices } from 'services';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useAlert, useLoading } from 'context';
+import { useAlert } from 'context';
 import { AnnounceItem } from '../../atoms';
 import Feather from 'react-native-vector-icons/Feather';
 import { logEvent } from 'utils/analytics';
@@ -44,7 +44,6 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current, isReset }
   const { user } = useAppSelector((state: RootState) => state.auth);
   const [disabled, setDisabled] = useState(false);
   const { isGuest } = useAppSelector((state: RootState) => state.auth);
-  const loader = useLoading();
 
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams, 'CreateTaxProfile'>>();
   const alert = useAlert();
@@ -190,25 +189,19 @@ const BillingScreen: React.FC<Props> = ({ onSubmit, onDelete, current, isReset }
   };
 
   useEffect(() => {
-    loader.show();
-    setTimeout(async () => {
-      if (current?.Cfdi) {
-        await getColonies(current.zip_code);
-        await setValue('rfc', current.rfc);
-        await setValue('cfdi', current.Cfdi.description);
-        await setValue('email', current.email);
-        await setValue('regime', current.Tax_Regime.sat_tax_regime);
-        await setValue('postalCode', current.zip_code);
-        await setValue('businessName', current.business_name);
-        await setValue('street', current.Address.street);
-        await setValue('city', current.Address.city);
-        await setValue('state', current.Address.state);
-        await setValue('ext_num', current.Address.ext_num);
-        loader.hide();
-      } else {
-        loader.hide();
-      }
-    }, 100);
+    if (current?.Cfdi) {
+      getColonies(current.zip_code);
+      setValue('rfc', current.rfc);
+      setValue('cfdi', current.Cfdi.description);
+      setValue('email', current.email);
+      setValue('regime', current.Tax_Regime.sat_tax_regime);
+      setValue('postalCode', current.zip_code);
+      setValue('businessName', current.business_name);
+      setValue('street', current.Address.street);
+      setValue('city', current.Address.city);
+      setValue('state', current.Address.state);
+      setValue('ext_num', current.Address.ext_num);
+    }
   }, [current]);
 
   const submit = (fields: any) => {
