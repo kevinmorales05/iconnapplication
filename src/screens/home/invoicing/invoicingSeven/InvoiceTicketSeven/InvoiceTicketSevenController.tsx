@@ -149,7 +149,7 @@ const InvoiceTicketSevenController: React.FC = () => {
   return (
     <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
       <InvoiceTicketSevenScreen
-        invoicingProfileList={invoicingProfileList}
+        invoicingProfileList={invoicingProfileList.filter(profile => profile.verified_mail === true)}
         defaultProfile={defaultProfile!}
         ticketsList={invoicingSevenTicketList}
         onPressEditTicket={editTicket}

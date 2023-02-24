@@ -148,7 +148,7 @@ const InvoiceTicketPetroController: React.FC = () => {
   return (
     <SafeArea childrenContainerStyle={{ paddingHorizontal: 0 }} topSafeArea={false} bottomSafeArea barStyle="dark">
       <InvoiceTicketPetroScreen
-        invoicingProfileList={invoicingProfileList}
+        invoicingProfileList={invoicingProfileList.filter(profile => profile.verified_mail === true)}
         defaultProfile={defaultProfile!}
         ticketsList={invoicingPetroTicketList}
         onPressEditTicket={editTicket}
