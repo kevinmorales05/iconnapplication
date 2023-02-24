@@ -150,88 +150,88 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
         </Container>
       </Container>
     </Touchable>
-    ) : data !== undefined && data.promotion_type === 'principal' ? (
-      <Touchable
-        onPress={() => {
-          onPressItem(data);
-        }}
-        marginLeft={position}
-      >
-        <Container style={containerStyle}>
-          <Container style={imageContainer}>
-            <FastImage source={{ uri: data.image }} style={image} />
-          </Container>
-          <Container flex space="evenly" style={footerContainer}>
-            <CustomText text={data.promotion_name} fontBold />
-            <TextContainer text={data.description} />
-          </Container>
+  ) : data !== undefined && data.promotion_type === 'principal' ? (
+    <Touchable
+      onPress={() => {
+        onPressItem(data);
+      }}
+      marginLeft={position}
+    >
+      <Container style={containerStyle}>
+        <Container style={imageContainer}>
+          <FastImage source={{ uri: data.image }} style={image} />
         </Container>
-      </Touchable>
-    ) : data !== undefined && data.promotion_type === 'homeOptions' ? (
-      <Touchable
-        onPress={() => {
-          onPressItem(data);
-        }}
-        marginLeft={position}
-      >
-        <Container width={72} center>
-          <Image
-            source={
-              data.id === '0'
-                ? ICONN_HOME_OPTION_SEVEN
-                : data.id === '1'
-                ? ICONN_HOME_OPTION_PETRO
-                : data.id === '2'
-                ? ICONN_HOME_OPTION_HEART
-                : data.id === '3'
-                ? ICONN_HOME_OPTION_ACUMMULATE
-                : data.id === '4'
-                ? ICONN_HOME_OPTION_WALLET
-                : data.id === '5'
-                ? ICONN_HOME_OPTION_ORDERS
-                : null
-            }
-            style={{ width: 35, height: 35, resizeMode: 'contain' }}
-          />
-          <TextContainer text={data.description} marginTop={6} typography="h5" />
-        </Container>
-      </Touchable>
-    ) : data !== undefined && data.promotion_type === 'second' ? (
-      <Touchable
-        onPress={() => {
-          onPressItem(data);
-        }}
-      >
-        <Container style={containerSecond}>
-          <FastImage source={{ uri: data.image }} style={secondImageStyle} />
-        </Container>
-      </Touchable>
-    ) : data !== undefined && data.promotion_type === 'cards' ? (
-      <Touchable
-        onPress={() => {
-          if (data.navigateTo?.length > 0) {
-            if (!pointsCardDisabled) {
-              navigate(data.navigateTo, { addOrShow: 1, cardId: data.id, cardNumber: data.cardNumber });
-            } else {
-              modalNotEnabled.show();
-            }
-          }
-        }}
-      >
-        <Container center style={containerCard}>
-          {pointsCardDisabled ? (
-            <Grayscale>
-              <FastImage source={data.image} style={cardImageStyle} />
-            </Grayscale>
-          ) : (
-            <FastImage source={data.image} style={cardImageStyle} />
-          )}
-          {pointsCardDisabled && <View style={{ width: '100%', height: '100%', position: 'absolute', backgroundColor: 'rgba(52, 52, 52, 0.4)' }} />}
-        </Container>
-        <Container flex space="evenly" style={dayPromotionFooterContainer}>
+        <Container flex space="evenly" style={footerContainer}>
           <CustomText text={data.promotion_name} fontBold />
           <TextContainer text={data.description} />
         </Container>
+      </Container>
+    </Touchable>
+  ) : data !== undefined && data.promotion_type === 'homeOptions' ? (
+    <Touchable
+      onPress={() => {
+        onPressItem(data);
+      }}
+      marginLeft={position}
+    >
+      <Container width={72} center>
+        <Image
+          source={
+            data.id === '0'
+              ? ICONN_HOME_OPTION_SEVEN
+              : data.id === '1'
+              ? ICONN_HOME_OPTION_PETRO
+              : data.id === '2'
+              ? ICONN_HOME_OPTION_HEART
+              : data.id === '3'
+              ? ICONN_HOME_OPTION_ACUMMULATE
+              : data.id === '4'
+              ? ICONN_HOME_OPTION_WALLET
+              : data.id === '5'
+              ? ICONN_HOME_OPTION_ORDERS
+              : null
+          }
+          style={{ width: 35, height: 35, resizeMode: 'contain' }}
+        />
+        <TextContainer text={data.description} marginTop={6} typography="h5" />
+      </Container>
+    </Touchable>
+  ) : data !== undefined && data.promotion_type === 'second' ? (
+    <Touchable
+      onPress={() => {
+        onPressItem(data);
+      }}
+    >
+      <Container style={containerSecond}>
+        <FastImage source={{ uri: data.image }} style={secondImageStyle} />
+      </Container>
+    </Touchable>
+  ) : data !== undefined && data.promotion_type === 'cards' ? (
+    <Touchable
+      onPress={() => {
+        if (data.navigateTo?.length > 0) {
+          if (!pointsCardDisabled) {
+            navigate(data.navigateTo, { addOrShow: 1, cardId: data.id, cardNumber: data.cardNumber });
+          } else {
+            modalNotEnabled.show();
+          }
+        }
+      }}
+    >
+      <Container center style={containerCard}>
+        {pointsCardDisabled ? (
+          <Grayscale>
+            <FastImage source={data.image} style={cardImageStyle} />
+          </Grayscale>
+        ) : (
+          <FastImage source={data.image} style={cardImageStyle} />
+        )}
+        {pointsCardDisabled && <View style={{ width: '100%', height: '100%', position: 'absolute', backgroundColor: 'rgba(52, 52, 52, 0.4)' }} />}
+      </Container>
+      <Container flex space="evenly" style={dayPromotionFooterContainer}>
+        <CustomText text={data.promotion_name} fontBold />
+        <TextContainer text={data.description} />
+      </Container>
     </Touchable>
   ) : data !== undefined && data.promotion_type === 'all_promotions' ? (
     <Touchable
