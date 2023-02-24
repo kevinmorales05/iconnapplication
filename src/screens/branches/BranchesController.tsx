@@ -388,7 +388,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const bottomSheetSMRef = useRef<BottomSheetModal>(null);
 
   // SnapPoints for PointDetailSheet
-  const snapPointsSM = useMemo(() => [Platform.OS === 'android' ? '45%' : '40%', Platform.OS === 'android' ? '45%' : '40%'], []);
+  const snapPointsSM = useMemo(() => [Platform.OS === 'android' ? '50%' : '40%', Platform.OS === 'android' ? '50%' : '40%'], []);
 
   /**
    * Hide PointDetailSheet.
