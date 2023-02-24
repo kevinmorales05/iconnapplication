@@ -183,6 +183,9 @@ const PromotionsScreen: React.FC = () => {
         setLoading(false);
         setLoadingMore(false);
       }
+    } else {
+      setLoading(false);
+      setLoadingMore(false);
     }
   };
 
