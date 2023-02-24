@@ -147,45 +147,6 @@ const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChil
   );
 };
 
-// const Results = ({ handleSend, results }: { handleSend: (item: Result) => void; results: Result[] }) => {
-
-//   return (
-//     <View>
-//       {results.length === 0 ? (
-//         <Container style={styles.empty}>
-//           <Container center style={styles.content}>
-//             <Container center>
-//               <Image source={ICONN_NO_RESULTS} />
-//             </Container>
-//             <Container style={[styles.title, { maxWidth: 196 }]}>
-//               <CustomText
-//                 textAlign="center"
-//                 text="NO TIENES FACTURAS QUE COINCIDAN CON TU BÚSQUEDA"
-//                 alignSelf="center"
-//                 typography="h3"
-//                 fontBold
-//                 fontSize={12}
-//               />
-//             </Container>
-//             <Container style={styles.placeholder}>
-//               <CustomText
-//                 fontSize={12}
-//                 textAlign="center"
-//                 alignSelf="center"
-//                 textColor={theme.brandColor.iconn_grey}
-//                 text="Intenta con otros filtros"
-//                 typography="h3"
-//               />
-//             </Container>
-//           </Container>
-//         </Container>
-//       ) : (
-
-//       )}
-//     </View>
-//   );
-// };
-
 const Empty = () => {
   return (
     <Container style={styles.empty}>

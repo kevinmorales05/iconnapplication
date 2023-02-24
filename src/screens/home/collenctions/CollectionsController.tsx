@@ -56,7 +56,7 @@ const PromotionsScreen: React.FC = () => {
   }, [title]);
 
   const userUpdated = (productId: string) => {
-    updateShoppingCartProduct!('create', productId);
+    updateShoppingCartProduct('create', productId);
     logEvent('promoAddProduct', { id: user.id, description: 'Añadir producto a la canasta', productId: productId.toString() });
     hideModalForAdult();
   };
@@ -64,7 +64,7 @@ const PromotionsScreen: React.FC = () => {
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
     if (isAdult) {
       logEvent('promoAddProduct', { id: user.id, description: 'Añadir producto a la canasta', productId: productId.toString() });
-      updateShoppingCartProduct!('create', productId);
+      updateShoppingCartProduct('create', productId);
     } else {
       setProductId(productId);
       showModalForAdult();
@@ -77,7 +77,7 @@ const PromotionsScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (productsRender?.length! > 0) {
+    if (productsRender?.length > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       updateQuantityProducts(existingProducts);
     }
@@ -130,7 +130,7 @@ const PromotionsScreen: React.FC = () => {
             promotionId: product.promotion && product.promotion.promotionId
           };
         });
-        await setProductsRender(productsTem);
+        setProductsRender(productsTem);
         loader.hide();
         setLoading(false);
         setLoadingMore(true);
@@ -175,8 +175,8 @@ const PromotionsScreen: React.FC = () => {
           setLoadingMore(false);
         } else {
           const productsToRender: ProductInterface[] = productsRender.concat(productsTem);
-          await setProductsRender(productsToRender);
-          await setItemToLoad(itemToLoad + 1);
+          setProductsRender(productsToRender);
+          setItemToLoad(itemToLoad + 1);
           setLoading(false);
         }
       } else {
@@ -215,15 +215,15 @@ const PromotionsScreen: React.FC = () => {
         costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
-          updateShoppingCartProduct!('add', item.productId);
+          updateShoppingCartProduct('add', item.productId);
           logEvent('promoAddProduct', { id: user.id, description: 'Sumar un producto a la canasta', productId: item.productId.toString() });
         }}
         onPressDeleteCart={() => {
-          updateShoppingCartProduct!('remove', item.productId);
+          updateShoppingCartProduct('remove', item.productId);
           logEvent('promoDeleteProduct', { id: user.id, description: 'Eliminar un producto de la canasta', productId: item.productId.toString() });
         }}
         onPressDecreaseQuantity={() => {
-          updateShoppingCartProduct!('substract', item.productId);
+          updateShoppingCartProduct('substract', item.productId);
           logEvent('promoMinusProduct', { id: user.id, description: 'Restar un producto de la canasta', productId: item.productId.toString() });
         }}
         onPressOut={hideModalForAdult}

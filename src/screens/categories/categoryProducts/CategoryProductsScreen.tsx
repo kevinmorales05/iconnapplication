@@ -95,7 +95,7 @@ const CategoryProductsScreen: React.FC = () => {
   };
 
   const userUpdated = (productId: string) => {
-    updateShoppingCartProduct!('create', productId);
+    updateShoppingCartProduct('create', productId);
     logEvent('catAddProduct', {
       id: user.id,
       description: 'Añadir producto a la canasta desde sección de categorías',
@@ -108,7 +108,7 @@ const CategoryProductsScreen: React.FC = () => {
 
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
     if (isAdult) {
-      updateShoppingCartProduct!('create', productId);
+      updateShoppingCartProduct('create', productId);
       logEvent('catAddProduct', {
         id: user.id,
         description: 'Añadir producto a la canasta desde sección de categorías',
@@ -379,7 +379,7 @@ const CategoryProductsScreen: React.FC = () => {
         costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
-          updateShoppingCartProduct!('add', item.productId);
+          updateShoppingCartProduct('add', item.productId);
           logEvent('catPlusProduct', {
             id: user.id,
             description: 'Sumar un producto en la canasta desde categorías',
@@ -389,7 +389,7 @@ const CategoryProductsScreen: React.FC = () => {
           });
         }}
         onPressDeleteCart={() => {
-          updateShoppingCartProduct!('remove', item.productId);
+          updateShoppingCartProduct('remove', item.productId);
           logEvent('catRemoveProduct', {
             id: user.id,
             description: 'Eliminar un producto en la canasta desde categorías',
@@ -399,7 +399,7 @@ const CategoryProductsScreen: React.FC = () => {
           });
         }}
         onPressDecreaseQuantity={() => {
-          updateShoppingCartProduct!('substract', item.productId);
+          updateShoppingCartProduct('substract', item.productId);
           logEvent('catMinusProduct', {
             id: user.id,
             description: 'Restar un producto en la canasta desde categorías',
