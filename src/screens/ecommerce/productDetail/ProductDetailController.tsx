@@ -5,10 +5,10 @@ import { HomeStackParams } from 'navigation/types';
 import { vtexReviewsRatings } from 'services';
 import { ReviewModal } from 'components';
 import { useLoading, useToast } from 'context';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import theme from 'components/theme/theme';
 import { RootState, useAppSelector } from 'rtk';
 import { logEvent } from 'utils/analytics';
+import { View } from 'react-native';
 
 interface Props {
   productIdentifier?: string;
@@ -114,7 +114,7 @@ const ProductDetailController: React.FC<Props> = () => {
   useEffect(() => {}, [productIdentifier]);
 
   return (
-    <SafeAreaView style={{ backgroundColor: theme.brandColor.iconn_white, paddingBottom: 70 }}>
+    <View style={{ backgroundColor: theme.brandColor.iconn_white, paddingBottom: 70 }}>
       <ProductDetailScreen
         itemId={productIdentifier}
         fetchReviewData={fetchReviewData}
@@ -131,7 +131,7 @@ const ProductDetailController: React.FC<Props> = () => {
       />
 
       <ReviewModal visible={modal} closeModal={closeModal} postRating={postRating} ratingCompleted={ratingCompleted} />
-    </SafeAreaView>
+    </View>
   );
 };
 

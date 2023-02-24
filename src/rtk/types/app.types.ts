@@ -25,6 +25,10 @@ export interface CarouselItem {
   promotion_type: string;
   status: string;
   navigateTo?: string;
+  promotion_title?: string;
+  navigation_type?: NavigationType;
+  collections_id?: number;
+  products_id?: number;
 }
 
 export interface TabItem {

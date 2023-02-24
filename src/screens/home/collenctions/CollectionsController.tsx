@@ -11,10 +11,10 @@ import {
   ExistingProductInCartInterface,
   ProductInterface,
   useAppDispatch,
-  getProductsByPromotionsItemsThunk,
-  ProductsByPromotionsRequestInterface
+  getProductsByCollectionIdThunk,
+  ProductsByCollectionInterface
 } from 'rtk';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
@@ -23,9 +23,9 @@ import { logEvent } from 'utils/analytics';
 import { FlashList } from '@shopify/flash-list';
 
 const PromotionsScreen: React.FC = () => {
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate, setOptions } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const loader = useLoading();
-
+  const route = useRoute<RouteProp<HomeStackParams, 'CollectionsProducts'>>();
   const dispatch = useAppDispatch();
   const { updateShoppingCartProduct } = useShoppingCart();
   const { cart } = useAppSelector((state: RootState) => state.cart);
@@ -39,6 +39,7 @@ const PromotionsScreen: React.FC = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [isLoadingMore, setLoadingMore] = useState<boolean>(true);
   const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState<boolean>(false);
+  const { title, collectionId } = route.params;
 
   const hideModalForAdult = () => {
     setVisible(false);
@@ -47,6 +48,12 @@ const PromotionsScreen: React.FC = () => {
   const showModalForAdult = () => {
     setVisible(true);
   };
+
+  useEffect(() => {
+    setOptions({
+      title: title
+    });
+  }, [title]);
 
   const userUpdated = (productId: string) => {
     updateShoppingCartProduct('create', productId);
@@ -70,7 +77,7 @@ const PromotionsScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (productsRender?.length! > 0) {
+    if (productsRender?.length > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       updateQuantityProducts(existingProducts);
     }
@@ -105,15 +112,15 @@ const PromotionsScreen: React.FC = () => {
     setProductsRender([]);
     const productsRequest = await getProducts(0);
     if (productsRequest.responseCode === 603 && productsRequest.data) {
-      if (productsRequest.data.length) {
-        const productsTem: ProductInterface[] = productsRequest.data.map(product => {
+      if (productsRequest.data.products.length) {
+        const productsTem: ProductInterface[] = productsRequest.data.products.map(product => {
           return {
-            productId: product.products_id,
-            name: product.name,
-            image: { uri: product.image },
-            price: Number.parseFloat(product.selling_price),
-            oldPrice: Number.parseFloat(product.selling_price),
-            quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
+            productId: product.ProductId,
+            name: product.ProductName,
+            image: { uri: product.SkuImageUrl },
+            price: Number.parseFloat(product.sellingPrice),
+            oldPrice: Number.parseFloat(product.sellingPrice),
+            quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.ProductId.toString())?.quantity : 0,
             ratingValue: product.qualificationAverage,
             promotionType: product.promotion && product.promotion.type,
             promotionName: product.promotion && product.promotion.name,
@@ -123,7 +130,7 @@ const PromotionsScreen: React.FC = () => {
             promotionId: product.promotion && product.promotion.promotionId
           };
         });
-        await setProductsRender(productsTem);
+        setProductsRender(productsTem);
         loader.hide();
         setLoading(false);
         setLoadingMore(true);
@@ -145,15 +152,15 @@ const PromotionsScreen: React.FC = () => {
     setLoading(true);
     const productsRequest = await getProducts(itemToLoad + 1);
     if (productsRequest.responseCode === 603 && productsRequest.data) {
-      if (productsRequest.data.length) {
-        const productsTem: ProductInterface[] = productsRequest.data.map(product => {
+      if (productsRequest.data.products.length) {
+        const productsTem: ProductInterface[] = productsRequest.data.products.map(product => {
           return {
-            productId: product.products_id,
-            name: product.name,
-            image: { uri: product.image },
-            price: Number.parseFloat(product.selling_price),
-            oldPrice: Number.parseFloat(product.selling_price),
-            quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
+            productId: product.ProductId,
+            name: product.ProductName,
+            image: { uri: product.SkuImageUrl },
+            price: Number.parseFloat(product.sellingPrice),
+            oldPrice: Number.parseFloat(product.sellingPrice),
+            quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.ProductId.toString())?.quantity : 0,
             ratingValue: product.qualificationAverage,
             promotionType: product.promotion && product.promotion.type,
             promotionName: product.promotion && product.promotion.name,
@@ -163,29 +170,33 @@ const PromotionsScreen: React.FC = () => {
             promotionId: product.promotion && product.promotion.promotionId
           };
         });
-        if (!productsRequest.data.length) {
+        if (!productsRequest.data.products.length) {
           setLoading(false);
           setLoadingMore(false);
         } else {
           const productsToRender: ProductInterface[] = productsRender.concat(productsTem);
-          await setProductsRender(productsToRender);
-          await setItemToLoad(itemToLoad + 1);
+          setProductsRender(productsToRender);
+          setItemToLoad(itemToLoad + 1);
           setLoading(false);
         }
       } else {
         setLoading(false);
         setLoadingMore(false);
       }
+    } else {
+      setLoading(false);
+      setLoadingMore(false);
     }
   };
 
   const getProducts = async (itemToLoad: number) => {
-    const data: ProductsByPromotionsRequestInterface = {
-      storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
+    const collectionData: ProductsByCollectionInterface = {
+      collectionId: collectionId,
+      pageSize: 10,
       pageNumber: itemToLoad,
-      pageSize: 10
+      selectedStore: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1], 10) : 0
     };
-    return await dispatch(getProductsByPromotionsItemsThunk(data)).unwrap();
+    return await dispatch(getProductsByCollectionIdThunk(collectionData)).unwrap();
   };
 
   const _renderItem = ({ item, index }: { item: ProductInterface; index: number }) => {
@@ -281,7 +292,7 @@ const PromotionsScreen: React.FC = () => {
       </Container>
       <Container width={'100%'} style={{ paddingHorizontal: moderateScale(15) }}>
         {productsRender.length ? (
-          <Container height={verticalScale(525)} width={'100%'}>
+          <Container height={verticalScale(560)} width={'100%'}>
             <FlashList
               data={productsRender}
               renderItem={_renderItem}

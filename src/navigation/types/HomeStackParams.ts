@@ -57,6 +57,7 @@ export type HomeStackParams = {
   HelpItems: { flagError: string };
   VirtualTour: { step: number };
   AboutOptions: undefined;
+  CollectionsProducts: { collectionId: number; title: string };
 };
 
 export type HomeTabScreens = {

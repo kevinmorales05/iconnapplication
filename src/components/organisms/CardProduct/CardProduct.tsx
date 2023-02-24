@@ -242,7 +242,7 @@ const CardProduct: React.FC<CardProductProps> = ({
                 >
                   <CustomText
                     fontSize={theme.fontSize.h6}
-                    textColor={theme.brandColor.iconn_green_original}
+                    textColor={theme.brandColor.iconn_white}
                     fontWeight={'bold'}
                     numberOfLines={1}
                     text={
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     width: moderateScale(103),
     height: moderateScale(23),
     borderRadius: moderateScale(12),
-    backgroundColor: theme.brandColor.iconn_green_discount,
+    backgroundColor: theme.brandColor.iconn_orange_original,
     justifyContent: 'center',
     alignItems: 'center'
   },
