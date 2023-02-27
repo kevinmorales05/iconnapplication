@@ -5,6 +5,7 @@ import theme from 'components/theme/theme';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 
 interface Props {
   stepsData: [];
@@ -45,24 +46,37 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
   return (
     <Container>
       <Container
-        style={{ backgroundColor: theme.brandColor.iconn_white, width: '100%', height: '82%', paddingLeft: 13, paddingRight: 23 }}
+        style={{
+          backgroundColor: theme.brandColor.iconn_white,
+          width: '100%',
+          height: verticalScale(510),
+          paddingLeft: moderateScale(13),
+          paddingRight: moderateScale(23)
+        }}
         height={Dimensions.get('window').height * 0.75}
       >
-        <TextContainer text={question} fontBold fontSize={20} marginTop={23.5} marginLeft={16} marginBottom={24} marginRight={16} />
+        <TextContainer text={question} fontBold fontSize={20} marginTop={23.5} marginLeft={moderateScale(10)} marginBottom={24} marginRight={16} />
         <ScrollView
           bounces={false}
           contentContainerStyle={Platform.OS === 'android' ? { flexGrow: 1, marginBottom: insets.bottom + 16 } : { flexGrow: 1 }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
-          <Container center style={{ width: '97%', marginTop: 25 }}>
+          <Container center style={{ marginTop: 25, marginLeft: moderateScale(65), marginRight: moderateScale(40) }}>
             {stepsData.length > 0 ? (
               stepsData.map((step, index) => {
                 return (
-                  <Container key={index + 'erCon'} style={{ width: '90%' }}>
+                  <Container key={index + 'erCon'} style={{ width: moderateScale(300), marginRight: moderateScale(30) }}>
                     <Container row key={index + 'erConRow'}>
                       <TextContainer text={index + 1 + '.  '} fontBold key={index + 'erText1'} />
-                      <TextContainer text={step.description} fontSize={14} marginBottom={18} key={index + 'erConText2'} />
+                      <TextContainer
+                        text={step.description}
+                        fontSize={14}
+                        marginBottom={18}
+                        key={index + 'erConText2'}
+                        textAlign={'justify'}
+                        marginRight={moderateScale(10)}
+                      />
                     </Container>
                     {step.importantMessage != null ? (
                       <Container
@@ -74,8 +88,9 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
                           borderWidth: 1,
                           backgroundColor: '#fffaed',
                           borderRadius: 8,
-                          paddingVertical: 15,
-                          marginBottom: 20
+                          paddingVertical: moderateScale(15),
+                          marginBottom: 20,
+                          marginLeft: moderateScale(15)
                         }}
                         key={index + 'erConSt'}
                       >
@@ -104,9 +119,13 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
               })
             ) : (
               <Container center>
-                <Container center style={{ width: '70%', height: '100%', marginTop: 100 }}>
+                <Container center style={{ width: '90%', height: '100%', marginTop: 100 }}>
                   <MaterialCommunityIcons size={60} name="alert" color={theme.fontColor.grey} />
-                  <TextContainer text="Información no disponible por el momento. Disculpe las molestias" textColor={theme.fontColor.grey} />
+                  <TextContainer
+                    text="Información no disponible por el momento. Disculpe las molestias"
+                    textColor={theme.fontColor.grey}
+                    textAlign={'center'}
+                  />
                 </Container>
               </Container>
             )}
