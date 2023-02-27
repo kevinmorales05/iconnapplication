@@ -44,7 +44,10 @@ const StepsScreen: React.FC<Props> = ({ stepsData, qualify, updateQualify, quali
 
   return (
     <Container>
-      <Container style={{ backgroundColor: theme.brandColor.iconn_white, width: '100%', height: '82%' }} height={Dimensions.get('window').height * 0.75}>
+      <Container
+        style={{ backgroundColor: theme.brandColor.iconn_white, width: '100%', height: '82%', paddingLeft: 13, paddingRight: 23 }}
+        height={Dimensions.get('window').height * 0.75}
+      >
         <TextContainer text={question} fontBold fontSize={20} marginTop={23.5} marginLeft={16} marginBottom={24} marginRight={16} />
         <ScrollView
           bounces={false}
