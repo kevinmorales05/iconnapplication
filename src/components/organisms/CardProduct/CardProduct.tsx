@@ -10,7 +10,7 @@ import { Container, CustomText } from 'components/atoms';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { Touchable } from 'components';
 import { useNavigation } from '@react-navigation/native';
-import { setDetailSelected } from 'rtk/slices/cartSlice';
+import { setDetailSelected, updateItemsLoading } from 'rtk/slices/cartSlice';
 import { getProductSpecification } from 'services/vtexProduct.services';
 import { vtexUserServices } from 'services';
 import {
@@ -30,6 +30,7 @@ import { vtexFavoriteServices } from 'services/vtex-favorite-services';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import FastImage from 'react-native-fast-image';
+import ProductAddLoading from 'components/molecules/ProductAddLoading/ProductAddLoading';
 interface CardProductProps {
   price: number;
   name: string;
@@ -75,6 +76,8 @@ const CardProduct: React.FC<CardProductProps> = ({
   costDiscountPrice,
   index
 }: CardProductProps) => {
+  const { loadingItems } = useAppSelector((state: RootState) => state.cart);
+
   const validateCategoryForAddItem = () => {
     let isAdultInProductSpecification = false;
     getProductSpecification(productId).then(producSpecificationResponse => {
@@ -212,10 +215,17 @@ const CardProduct: React.FC<CardProductProps> = ({
     }
     setIsFav(!isFav);
   };
+  const isLoading = !!loadingItems.filter(id => id === productId).length;
+
+  const addLoader = () => {
+    const loadingItemsTem = loadingItems.concat([]);
+    loadingItemsTem.push(productId);
+    dispatch(updateItemsLoading(loadingItemsTem));
+  };
 
   return (
     <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? (index ? (index % 2 > 0 ? 8 : 0) : 0) : 8) }]}>
-      <Container style={styles.subContainer}>
+      <Container style={[styles.subContainer, { opacity: isLoading ? 0.4 : 1 }]}>
         <FastImage style={styles.containerImage} resizeMode={'contain'} source={image} />
         <Container row width={'100%'} space="between" style={{ position: 'absolute' }}>
           <Container flex width={'100%'}>
@@ -232,7 +242,7 @@ const CardProduct: React.FC<CardProductProps> = ({
                 >
                   <CustomText
                     fontSize={theme.fontSize.h6}
-                    textColor={theme.brandColor.iconn_green_original}
+                    textColor={theme.brandColor.iconn_white}
                     fontWeight={'bold'}
                     numberOfLines={1}
                     text={
@@ -286,12 +296,23 @@ const CardProduct: React.FC<CardProductProps> = ({
         </Container>
       </Container>
       <Container style={styles.containerButton}>
-        {quantity ? (
+        {isLoading ? (
+          <ProductAddLoading isWhite={!!quantity} />
+        ) : quantity ? (
           <QuantityProduct
             quantity={quantity}
-            onPressAddQuantity={onPressAddQuantity}
-            onPressDeleteCart={onPressDeleteCart}
-            onPressDecreaseQuantity={onPressDecreaseQuantity}
+            onPressAddQuantity={() => {
+              addLoader();
+              onPressAddQuantity();
+            }}
+            onPressDeleteCart={() => {
+              addLoader();
+              onPressDeleteCart();
+            }}
+            onPressDecreaseQuantity={() => {
+              addLoader();
+              onPressDecreaseQuantity();
+            }}
           />
         ) : (
           <Button
@@ -299,6 +320,7 @@ const CardProduct: React.FC<CardProductProps> = ({
             round
             size={'xxxsmall'}
             onPress={() => {
+              addLoader();
               validateCategoryForAddItem();
             }}
             fontSize="h4"
@@ -346,7 +368,7 @@ const styles = StyleSheet.create({
     width: moderateScale(103),
     height: moderateScale(23),
     borderRadius: moderateScale(12),
-    backgroundColor: theme.brandColor.iconn_green_discount,
+    backgroundColor: theme.brandColor.iconn_orange_original,
     justifyContent: 'center',
     alignItems: 'center'
   },

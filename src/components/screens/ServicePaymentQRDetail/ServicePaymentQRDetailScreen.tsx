@@ -27,15 +27,11 @@ const ServicePaymentQRDetailScreen: React.FC<Props> = ({ onPressEditButton, onPr
   const { user } = useAppSelector((state: RootState) => state.auth);
 
   const subStrUser = user.id?.substring(0, 7);
-  // console.log('Los 7 digitos del id de usuario:', subStrUser);
 
   const fullUserName = `${user.name}${user.lastName}${user.secondLastName}`;
-  // console.log('fullUserName:', fullUserName);
 
   const fullUserNameWithoutSpaces = fullUserName.replace(/\s/g, '');
-  // console.log('fullUserName sin espacios:', fullUserNameWithoutSpaces);
 
-  // console.log('fullUserName longitud sin espacios:', fullUserNameWithoutSpaces.length);
   let subStrUserName = '';
   if (fullUserNameWithoutSpaces.length === 0) {
     subStrUserName = 'unknown';
