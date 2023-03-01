@@ -9,6 +9,7 @@ import { ShippingMode } from 'components/organisms/ShippingDropdown/ShippingDrop
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { CounterType } from 'components/types/counter-type';
 import { logEvent } from 'utils/analytics';
+import { BannerSkeleton } from 'components/organisms/BannerSkeleton';
 interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
@@ -28,6 +29,7 @@ interface Props {
   onPressSearch: any;
   viewRecomendedProducts: any;
   viewOtherProducts: any;
+  isLoadBanners: boolean;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -47,7 +49,8 @@ const HomeScreen: React.FC<Props> = ({
   updateShoppingCartProduct,
   viewRecomendedProducts,
   viewOtherProducts,
-  isAddressModalSelectionVisible
+  isAddressModalSelectionVisible,
+  isLoadBanners
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
@@ -124,13 +127,21 @@ const HomeScreen: React.FC<Props> = ({
 
           <Container>
             <Container style={{ marginTop: 16 }}>
-              <AnimatedCarousel banner items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+              {principalItems ? (
+                <AnimatedCarousel banner items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+              ) : (
+                <BannerSkeleton notMarinLeft={true} />
+              )}
             </Container>
             <Container style={{ marginTop: 16 }}>
               <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
             </Container>
             <Container style={{ marginTop: 16 }}>
-              <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+              {secondItems ? (
+                <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+              ) : (
+                <BannerSkeleton notMarinLeft={true} />
+              )}
             </Container>
             <Container height={367} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
               <Container row space="between" style={{ margin: 16 }}>
@@ -172,7 +183,11 @@ const HomeScreen: React.FC<Props> = ({
             </Container>
             <Container style={{ marginTop: 16, marginBottom: 16 }}>
               <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
-              <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+              {dayPromotionItems ? (
+                <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+              ) : (
+                <BannerSkeleton notMarinLeft={true} />
+              )}
             </Container>
             <Container height={367} style={{ marginTop: 0 }} backgroundColor={theme.brandColor.iconn_background}>
               <Container row space="between" style={{ margin: 16 }}>
@@ -214,7 +229,11 @@ const HomeScreen: React.FC<Props> = ({
             </Container>
             <Container style={{ marginTop: 16, marginBottom: 16 }}>
               <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
-              <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+              {allPromotionsItems ? (
+                <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+              ) : (
+                <BannerSkeleton notMarinLeft={true} />
+              )}
             </Container>
           </Container>
           <AdultAgeVerificationScreen onPressClose={onPressOut} visible={visible} />

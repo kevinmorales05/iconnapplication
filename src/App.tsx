@@ -18,8 +18,11 @@ import { enableLatestRenderer } from 'react-native-maps';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NotificationListener, requestUserPermission } from 'utils/notification-helper';
 import { NotEnabledModalContextProvider } from 'context/notEnabled.context';
+import { LogBox } from 'react-native';
 
 enableLatestRenderer();
+
+LogBox.ignoreAllLogs();
 
 let persistor = persistStore(store);
 
