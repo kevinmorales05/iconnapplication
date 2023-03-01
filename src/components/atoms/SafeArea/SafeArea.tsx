@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   childrenContainerStyle: {
     flex: 1,
-    paddingHorizontal: theme.layoutSpace.medium // TODO: Validate if is convenient keep this padding. medium = 16
+    paddingHorizontal: theme.layoutSpace.medium
   }
 });
 
