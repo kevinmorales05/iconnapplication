@@ -61,7 +61,7 @@ const CardProductSkeleton = ({ notMarinLeft }: CardSkeletonProps) => (
         alignSelf: 'flex-start'
       }
     ]}
-  ></SkeletonContent>
+  />
 );
 
 export default CardProductSkeleton;

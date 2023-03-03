@@ -9,7 +9,6 @@ import {
   Address,
   setAddressDefault,
   CarouselItem,
-  getHomeItemsThunk,
   ProductInterface,
   ExistingProductInCartInterface,
   ShippingDataAddress,
@@ -39,6 +38,7 @@ import moment from 'moment';
 import remoteConfig from '@react-native-firebase/remote-config';
 import { envariomentState } from '../../common/modulesRemoteConfig';
 import { logEvent } from 'utils/analytics';
+import { homeServices } from 'services';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -63,6 +63,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const welcomeModal = useWelcomeModal();
   const [isChargin, setIsChargin] = useState(false);
   const { dateSync } = useAppSelector((state: RootState) => state.wallet);
+  const [isLoadBanners, setIsLoadBanners] = useState<boolean>(true);
 
   useEffect(() => {
     initRemoteConfig();
@@ -382,10 +383,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    * Load home items list (banners, promotions, options menu).
    */
   const fetchHomeItems = useCallback(async () => {
-    loader.show();
-    const homeItems = await dispatch(getHomeItemsThunk()).unwrap();
+    // loader.show();
+    const homeItems = await homeServices.getHomeItems();
     if (homeItems.responseCode === 603) {
       setHomeItems(homeItems.data);
+    } else {
+      setIsLoadBanners(false);
     }
   }, []);
 
@@ -400,7 +403,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    */
   useEffect(() => {
     fetchHomeItems();
-  }, [fetchHomeItems]);
+  }, []);
 
   useEffect(() => {
     if (homeItems) {
@@ -411,6 +414,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       setAll_promotions(homeItems!.filter(item => item.promotion_type === 'all_promotions'));
     }
   }, [homeItems]);
+
+  useEffect(() => {
+    setIsLoadBanners(false);
+  }, [all_promotions]);
 
   const { fetchProducts, products, otherProducts } = useProducts();
   const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
@@ -585,6 +592,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         viewRecomendedProducts={viewRecomendedProducts}
         viewOtherProducts={viewOtherProducts}
         isAddressModalSelectionVisible={addressModalSelectionVisible}
+        isLoadBanners={isLoadBanners}
       />
       <AddressModalSelection
         visible={addressModalSelectionVisible}

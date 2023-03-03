@@ -23,6 +23,7 @@ import {
   RootState,
   setFav,
   setFavId,
+  updateItemsLoading,
   useAppDispatch,
   useAppSelector
 } from 'rtk';
@@ -35,6 +36,7 @@ import Config from 'react-native-config';
 import { logEvent } from 'utils/analytics';
 import { homeServices } from 'services/home-services';
 import { useLoading } from 'context';
+import { ProductAddLoading } from 'components/molecules/ProductAddLoading';
 
 interface Props {
   itemId: string;
@@ -70,11 +72,17 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
   const dispatch = useAppDispatch();
   const { COMPLEMENTRY_PRODUCTS } = Config;
   const loader = useLoading();
+  const { loadingItems } = useAppSelector((state: RootState) => state.cart);
+  const isLoadingProduct = !!loadingItems.filter(id => id === detailSelected).length;
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const itemId = detailSelected;
 
   const fetchDataProduct = useCallback(async () => {
-    loader.show();
+    if (isFirstLoad) {
+      loader.show();
+      setIsFirstLoad(false);
+    }
     const productInfo: ProductCacheInterface = {
       store: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1], 10) : 0
     };
@@ -181,6 +189,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
               const { data } = userResponse;
               if (data[0].isAdult === true) {
                 updateShoppingCartProduct('create', itemId);
+                addLoader();
                 logEvent('pdAddProductProduct', {
                   id: user.id,
                   description: 'Añadir producto de la canasta en detalle de producto',
@@ -193,6 +202,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
           });
         } else {
           updateShoppingCartProduct('create', itemId);
+          addLoader();
           logEvent('pdAddProductProduct', {
             id: user.id,
             description: 'Añadir producto de la canasta en detalle de producto',
@@ -201,6 +211,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
         }
       } else {
         updateShoppingCartProduct('create', itemId);
+        addLoader();
         logEvent('pdAddProductProduct', {
           id: user.id,
           description: 'Añadir producto de la canasta en detalle de producto',
@@ -333,6 +344,12 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
         productId: itemId.toString()
       });
     }
+  };
+
+  const addLoader = () => {
+    const loadingItemsTem = loadingItems.concat([]);
+    loadingItemsTem.push(itemId);
+    dispatch(updateItemsLoading(loadingItemsTem));
   };
 
   return (
@@ -653,37 +670,44 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
       <Container style={{ marginBottom: 20, paddingHorizontal: 16, paddingTop: 10, height: '15%' }}>
         {cartItemQuantity > 0 ? (
           <Container style={{ height: 50, alignItems: 'stretch' }}>
-            <QuantityProduct
-              quantity={cartItemQuantity}
-              onPressAddQuantity={() => {
-                let currentQuantity = cartItemQuantity + 1;
-                setCartItemQuantity(currentQuantity);
-                updateShoppingCartProduct('add', itemId);
-                logEvent('pdPlusProductProduct', {
-                  id: user.id,
-                  description: 'Sumar producto de la canasta en detalle de producto',
-                  productId: itemId.toString()
-                });
-              }}
-              onPressDeleteCart={() => {
-                updateShoppingCartProduct('remove', itemId);
-                logEvent('pdRemoveProductProduct', {
-                  id: user.id,
-                  description: 'Remover producto de la canasta en detalle de producto',
-                  productId: itemId.toString()
-                });
-              }}
-              onPressDecreaseQuantity={() => {
-                let currentQuantity = cartItemQuantity - 1;
-                setCartItemQuantity(currentQuantity);
-                updateShoppingCartProduct('substract', itemId);
-                logEvent('pdMinusProductProduct', {
-                  id: user.id,
-                  description: 'Restar producto de la canasta en detalle de producto',
-                  productId: itemId.toString()
-                });
-              }}
-            />
+            {isLoadingProduct ? (
+              <ProductAddLoading isWhite={!!cartItemQuantity} />
+            ) : (
+              <QuantityProduct
+                quantity={cartItemQuantity}
+                onPressAddQuantity={() => {
+                  let currentQuantity = cartItemQuantity + 1;
+                  setCartItemQuantity(currentQuantity);
+                  addLoader();
+                  updateShoppingCartProduct('add', itemId);
+                  logEvent('pdPlusProductProduct', {
+                    id: user.id,
+                    description: 'Sumar producto de la canasta en detalle de producto',
+                    productId: itemId.toString()
+                  });
+                }}
+                onPressDeleteCart={() => {
+                  updateShoppingCartProduct('remove', itemId);
+                  addLoader();
+                  logEvent('pdRemoveProductProduct', {
+                    id: user.id,
+                    description: 'Remover producto de la canasta en detalle de producto',
+                    productId: itemId.toString()
+                  });
+                }}
+                onPressDecreaseQuantity={() => {
+                  let currentQuantity = cartItemQuantity - 1;
+                  setCartItemQuantity(currentQuantity);
+                  addLoader();
+                  updateShoppingCartProduct('substract', itemId);
+                  logEvent('pdMinusProductProduct', {
+                    id: user.id,
+                    description: 'Restar producto de la canasta en detalle de producto',
+                    productId: itemId.toString()
+                  });
+                }}
+              />
+            )}
           </Container>
         ) : (
           <Button
