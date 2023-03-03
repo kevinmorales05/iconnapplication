@@ -9,7 +9,6 @@ interface Props {
 }
 
 const ContactUsScreen: React.FC<Props> = ({ contactUsValues, onPressSendAnalytics }) => {
-
   useEffect(() => {}, [contactUsValues]);
 
   return (
