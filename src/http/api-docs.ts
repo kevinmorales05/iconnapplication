@@ -13,7 +13,7 @@ export class DocsApi extends HttpClient {
 
   private constructor() {
     if (global.showLogs__api_docs) {
-      // console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docs'), null, 3));
+
     }
 
     super(VTEXApiConfig('docs'));
@@ -61,7 +61,6 @@ export class DocsApi extends HttpClient {
 
     this.instance.interceptors.response.use(
       (response: any) => {
-        // const { data, config } = response;
         if (global.showLogs__api_docs) {
           // console.log(
           //   `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,

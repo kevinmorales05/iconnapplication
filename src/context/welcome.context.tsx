@@ -46,7 +46,7 @@ export const WelcomeModalContextProvider = ({ children }: Props) => {
         setImagesToRender(imagesTem);
       }
     } catch {
-      // onPressOut();
+
     }
   };
 

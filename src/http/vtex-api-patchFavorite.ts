@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
 import { VTEXApiFavConfig} from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
