@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
     width: moderateScale(44),
     height: moderateScale(23),
     borderRadius: moderateScale(12),
-    backgroundColor: theme.brandColor.iconn_green_discount,
+    backgroundColor: theme.brandColor.iconn_orange_original,
     justifyContent: 'center',
     alignItems: 'center'
   },
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     width: moderateScale(0),
     height: moderateScale(0),
     borderRadius: moderateScale(0),
-    backgroundColor: theme.brandColor.iconn_green_discount,
+    backgroundColor: theme.brandColor.iconn_orange_original,
     justifyContent: 'center',
     alignItems: 'center'
   },

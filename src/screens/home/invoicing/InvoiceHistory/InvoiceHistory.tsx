@@ -134,9 +134,9 @@ const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChil
       return moment(d.emission_date);
     });
 
-    const minDate = moment.min(moments);
+    const minDate = moment.max(moments);
 
-    setSeparator(minDate.isSame(moment(invoice.emission_date)));
+    setSeparator(minDate.isSameOrBefore(moment(invoice.emission_date)));
   }, [invoice, results]);
   moment.locale('es');
   return (

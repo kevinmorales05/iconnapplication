@@ -1,7 +1,6 @@
 import React, { ReactNode, useMemo, useState } from 'react';
 import { LoadingInterface } from 'components/organisms/Loading';
-import { StyleSheet, View, Image } from 'react-native';
-import { ICONN_LOADER_ECOMMERCE } from 'assets/images';
+import { StyleSheet, View } from 'react-native';
 import { CustomText } from 'components';
 import LottieView from 'lottie-react-native'
 

@@ -21,9 +21,6 @@ export class Reviews extends HttpClient {
     // https://github.com/svrcekmichal/redux-axios-middleware/issues/83
     this.instance.interceptors.request.use(
       (request: any) => {
-        const {
-          headers, baseURL, method, url, data
-        } = request;
         // console.log(
         //   'INTERCEPTOR - Starting Request ===> \n\n',
         //   JSON.stringify(headers, null, 3),

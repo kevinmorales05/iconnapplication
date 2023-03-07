@@ -296,20 +296,13 @@
 			},
 			{
 				"municipalityId": 24,
-				"municipalityName": "Garc\u00eda",
-				"neighborhood": "",
-				"latitude": 25.8010311126709,
-				"longitude": -100.58619689941406
-			},
-			{
-				"municipalityId": 25,
 				"municipalityName": "MAR\u00cdN",
 				"neighborhood": "Mar\u00edn",
 				"latitude": 25.87652015686035,
 				"longitude": -100.02753448486328
 			},
 			{
-				"municipalityId": 26,
+				"municipalityId": 25,
 				"municipalityName": "CADEREYTA JIM\u00c9NEZ",
 				"neighborhood": "SIN NOMBRE",
 				"latitude": 25.5416,
@@ -753,43 +746,6 @@
 				"neighborhood": "Akumal",
 				"latitude": 20.395973205566406,
 				"longitude": -87.31590270996094
-			}
-		]
-	},
-	{
-		"stateId": 16,
-		"stateName": "Yucat\u00e1n",
-		"postalCode": "97259",
-		"type": "7eleven",
-		"municipalities": [
-			{
-				"municipalityId": 1,
-				"municipalityName": "M\u00c9RIDA",
-				"neighborhood": "Itzaez",
-				"latitude": 20.978790283203125,
-				"longitude": -89.64178466796875
-			},
-			{
-				"municipalityId": 2,
-				"municipalityName": "KANAS\u00cdN",
-				"neighborhood": "Privada del Sol::Las Palmeras::Jardines de San Pedro Noh Pat::Leona Vicario II::Reparto Las Granjas::Los Encinos::Ampliaci\u00f3n Hector Victoria::Flor de Mayo::Privada los Naranjos::Bosques de Kanas\u00edn::Brisas del Mayab::Santa Cecilia::Valle Azul::Arecas::Puerta del Sol::Los Pinos de Mulchechen::Jardines de Mulchechen::Brisas de Oriente::Las Flores::::Valle Oriente::Las Palmas Yucat\u00e1n::Ampliaci\u00f3n Xelpac::San Pedro Oriente::Colibr\u00ed::Pedregales de Mulchechen Kanas\u00edn::San \u00c1ngel::Montecarlos::Los Robles III::La Joya::Fontana I::Pedregales del Oriente::::::Amalia Solorzano II::Amalia Sol\u00f3rzano III::::Privada Lomas Campestre::Los Almendros::Los Tulipanes::Villas Turquesa::Cuauht\u00e9moc::Puerta Esmeralda::::Kanas\u00edn Centro::San Antonio Kaua III::Los Arcos de Kanas\u00edn::Las Haciendas::Palmas San Pedro::Girasoles::San Haroldo San Jos\u00e9 Tzal::Pedregales de Kanas\u00edn II::CROC::::Jardines de Kanas\u00edn::Villas del Oriente::Cecilio Chi::\u00c1lamos de Oriente::La Ceiba::Francisco Villa Oriente::Pablo Moreno::San Camilo",
-				"latitude": 20.930389404296875,
-				"longitude": -89.58773040771484
-			}
-		]
-	},
-	{
-		"stateId": 17,
-		"stateName": "Chihuahua",
-		"postalCode": "31137",
-		"type": "petro",
-		"municipalities": [
-			{
-				"municipalityId": 1,
-				"municipalityName": "CHIHUAHUA",
-				"neighborhood": "Vida Digna::Vicente Guereca::El Porvenir I::Puerta Real::Francisco Ruiz Massieu::Los Portales::Rodolfo Fierro::Luis Fuentes Mares::Antorcha Popular::Colonial de Minas::Juan Guereca::Ni\u00f1os H\u00e9roes::Tarahumara::Villa del Real I, II, III, IV y V::Luis Fuentes Mares::Villas del Norte::Condominos Comerciales Dumas I y II::Villa Bonita::San Pedro de Jes\u00fas Maldonado::Fuentes de Chihuahua::Jos\u00e9 Vasconcelos::Pozos del Valle::Real de Santa Eulalia::El Porvenir II::Los Arcos::Inti Peredo::Laderas::Miguel Sigala::Santa Cecilia::Vicente Guereca::Plaza los Nogales::Constituyentes::Marielena Hernandez::Solidaridad Popular::Atanacio Ortega::Progreso Nacional::Sahuaros I, II y III::20 Aniversario::20 Aniversario::Juan Guereca::Magisterial Solidaridad::Pedro Dom\u00ednguez::Luis Donaldo Colosio::El Porvenir III",
-				"latitude": 28.731201171875,
-				"longitude": -106.12814331054688
 			}
 		]
 	}

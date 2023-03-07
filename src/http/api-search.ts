@@ -12,8 +12,6 @@ export class SearchApi extends HttpClient {
 
     this.instance.interceptors.request.use(
       (request: any) => {
-        const { headers, baseURL, method, url, data } = request;
-
         return request;
       },
       (error: any) => console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3))
