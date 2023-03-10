@@ -38,7 +38,7 @@ const ShippingDropdown: React.FC<Props> = ({
   onPressShowAddressesModal,
   mode,
   handleMode,
-  isAddressModalSelectionVisible,
+  isAddressModalSelectionVisible
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [near, setNear] = useState<boolean>(false);
@@ -328,12 +328,6 @@ const ShippingOption = ({
   onPress: () => void;
   unmark: () => void;
 }) => {
-  const highlight: ViewStyle = {
-    backgroundColor: '#E7F3EE',
-    borderWidth: 2,
-    borderColor: theme.brandColor.iconn_green_original
-  };
-
   return (
     <Container style={styles.content}>
       {selected && (
