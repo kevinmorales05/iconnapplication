@@ -2,7 +2,7 @@ import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { ScrollView, Image, StyleSheet, View } from 'react-native';
 import { ActionButton, Container, CustomText, Touchable, SafeArea } from 'components';
 import theme from 'components/theme/theme';
-import { ICONN_INVOICE, ICONN_PETRO_MINIMAL, ICONN_SEVEN_MINIMAL } from 'assets/images';
+import { ICONN_INVOICE, ICONN_PETRO_MINIMAL, ICONN_SEVEN_MINIMAL, ICONN_NO_RESULTS } from 'assets/images';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { invoicingServices } from 'services';
 import { useNavigation } from '@react-navigation/native';
@@ -147,6 +147,31 @@ const ItemWrapper = ({ children, results, invoice }: { children: React.ReactChil
   );
 };
 
+const NoFilterMatch = () => {
+  return (
+    <Container style={styles.empty}>
+      <Container center style={styles.content}>
+        <Container center>
+          <Image source={ICONN_NO_RESULTS} />
+        </Container>
+        <Container style={styles.titleFilter}>
+          <CustomText textAlign="center" text="NO TIENES FACTURAS QUE COINCIDAN CON TU BÚSQUEDA" alignSelf="center" typography="h3" fontBold fontSize={12} />
+        </Container>
+        <Container style={styles.placeholder}>
+          <CustomText
+            fontSize={12}
+            textAlign="center"
+            alignSelf="center"
+            textColor={theme.brandColor.iconn_grey}
+            text="Intenta con otros filtros"
+            typography="h3"
+          />
+        </Container>
+      </Container>
+    </Container>
+  );
+};
+
 const Empty = () => {
   return (
     <Container style={styles.empty}>
@@ -190,6 +215,7 @@ const InvoiceScreen: React.FC = () => {
   const [supporting, setSupporting] = useState(false);
   const [filter, setFilter] = useState<Filter | null>(null);
   const [selected, setSelected] = useState<Result | null>(null);
+  const [noResults, setNoResults] = useState(true);
 
   const navigation = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -359,12 +385,12 @@ const InvoiceScreen: React.FC = () => {
           setResults([]);
         } else {
           const { rows } = data;
-
           const sortedArray: Result[] = rows.sort((a: Result, b: Result) => {
             return moment(a.emission_date).diff(b.emission_date);
           });
           setResults(sortedArray.reverse());
           setItemToLoad(2);
+          setNoResults(false);
         }
       }
       setLoading(false);
@@ -463,7 +489,7 @@ const InvoiceScreen: React.FC = () => {
   return (
     <>
       <View style={styles.container}>
-        {results === null ? (
+        {results === null || noResults ? (
           <Empty />
         ) : (
           <>
@@ -512,7 +538,7 @@ const InvoiceScreen: React.FC = () => {
                 <FilterChip
                   highlight={!!establishment}
                   label={establishment ? (establishment.name as string) : 'Establecimiento'}
-                  name="date"
+                  name="store"
                   onPress={() => {
                     setFilter('STORE');
                   }}
@@ -549,50 +575,54 @@ const InvoiceScreen: React.FC = () => {
               </ScrollView>
             </View>
             <Container height={verticalScale(520)} width={'100%'}>
-              <FlashList
-                data={results}
-                renderItem={v =>
-                  renderItem(
-                    v,
-                    () => {
-                      const { item } = v;
+              {results?.length === 0 && (date || amount || establishment) ? (
+                <NoFilterMatch />
+              ) : (
+                <FlashList
+                  data={results}
+                  renderItem={v =>
+                    renderItem(
+                      v,
+                      () => {
+                        const { item } = v;
 
-                      const invoiceGenerated: InvoiceGeneratedResponseInterface = {
-                        uuidInvoice: item.invoice_uuid,
-                        emissionDate: item.emission_date,
-                        total: item.total,
-                        establishment: String(item.Establishment.establishment_id)
-                      };
+                        const invoiceGenerated: InvoiceGeneratedResponseInterface = {
+                          uuidInvoice: item.invoice_uuid,
+                          emissionDate: item.emission_date,
+                          total: item.total,
+                          establishment: String(item.Establishment.establishment_id)
+                        };
 
-                      navigate(item.Establishment.establishment_id === 1 ? 'ViewInvoiceGeneratedPetro' : 'ViewInvoiceGeneratedSeven', {
-                        invoiceGenerated
-                      });
-                      logEvent('invShowInvoice', {
-                        id: user.id,
-                        description: 'Mostrar factura',
-                        invoiceId: invoiceGenerated.uuidInvoice,
-                        origin: 'history'
-                      });
-                    },
-                    () => {
-                      const { item } = v;
-                      setSelected(item);
-                    }
-                  )
-                }
-                keyExtractor={(item, index) => {
-                  return `${item.rfc}_${index}`;
-                }}
-                onEndReachedThreshold={0}
-                onEndReached={loadMoreItem}
-                refreshing={refreshing}
-                removeClippedSubviews={true}
-                onRefresh={() => _onRefresh()}
-                onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
-                estimatedItemSize={moderateScale(100)}
-                // ListFooterComponent={_renderFooter}
-                // ListFooterComponentStyle={{ width: '100%' }}
-              />
+                        navigate(item.Establishment.establishment_id === 1 ? 'ViewInvoiceGeneratedPetro' : 'ViewInvoiceGeneratedSeven', {
+                          invoiceGenerated
+                        });
+                        logEvent('invShowInvoice', {
+                          id: user.id,
+                          description: 'Mostrar factura',
+                          invoiceId: invoiceGenerated.uuidInvoice,
+                          origin: 'history'
+                        });
+                      },
+                      () => {
+                        const { item } = v;
+                        setSelected(item);
+                      }
+                    )
+                  }
+                  keyExtractor={(item, index) => {
+                    return `${item.rfc}_${index}`;
+                  }}
+                  onEndReachedThreshold={0}
+                  onEndReached={loadMoreItem}
+                  refreshing={refreshing}
+                  removeClippedSubviews={true}
+                  onRefresh={() => _onRefresh()}
+                  onMomentumScrollBegin={() => setOnEndReachedCalledDuringMomentum(false)}
+                  estimatedItemSize={moderateScale(100)}
+                  // ListFooterComponent={_renderFooter}
+                  // ListFooterComponentStyle={{ width: '100%' }}
+                />
+              )}
             </Container>
           </>
         )}
@@ -707,6 +737,7 @@ const styles = StyleSheet.create({
   empty: { height: '100%', marginTop: 100 },
   content: {},
   title: { marginTop: 20 },
+  titleFilter: { marginHorizontal: 80, marginTop: 20 },
   placeholder: { marginTop: 15, width: 235 },
   filters: { paddingTop: 20, paddingBottom: 20, display: 'flex', flexDirection: 'row', alignItems: 'center' }
 });
