@@ -38,12 +38,13 @@ const ShippingDropdown: React.FC<Props> = ({
   onPressShowAddressesModal,
   mode,
   handleMode,
-  isAddressModalSelectionVisible
+  isAddressModalSelectionVisible,
 }) => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [near, setNear] = useState<boolean>(false);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const [selectedDelivery, setSelectedDelivery] = useState(false); //provitional
 
   useEffect(() => {
     if (address?.postalCode) {
@@ -72,13 +73,14 @@ const ShippingDropdown: React.FC<Props> = ({
     <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: theme.brandColor.iconn_white }}>
       <Container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ShippingOption
-          selected={mode === ShippingMode.DELIVERY}
+          selected={selectedDelivery}
           mode={ShippingMode.DELIVERY}
           icon={ICONN_SCOOTER}
           disable={!address || !near}
           text={'A domicilio'}
           onPress={() => {
             handleMode(ShippingMode.DELIVERY);
+            setSelectedDelivery(!selectedDelivery); //provitional
           }}
           unmark={() => {
             handleMode(null);
@@ -342,21 +344,13 @@ const ShippingOption = ({
         </Container>
       )}
       <Container>
-        <Touchable disabled={disable} onPress={onPress}>
-          <Container
-            style={[
-              {
-                backgroundColor: '#F5F5F2',
-                width: 100,
-                height: 100,
-                borderRadius: 100,
-                marginVertical: 20,
-                justifyContent: 'center',
-                alignItems: 'center'
-              },
-              selected && highlight
-            ]}
-          >
+        <Touchable
+          disabled={disable}
+          onPress={() => {
+            onPress();
+          }}
+        >
+          <Container style={selected ? styles.optionSelected : styles.optionCircle}>
             <Image
               source={icon}
               style={{
@@ -406,5 +400,25 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     paddingVertical: 10,
     paddingHorizontal: 10
+  },
+  optionCircle: {
+    backgroundColor: '#F5F5F2',
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    marginVertical: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  optionSelected: {
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    marginVertical: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E7F3EE',
+    borderWidth: 2,
+    borderColor: theme.brandColor.iconn_green_original
   }
 });
