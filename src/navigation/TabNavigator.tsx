@@ -12,11 +12,11 @@ import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpContro
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
-import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 import { logEvent } from 'utils/analytics';
 import { getStatusModuleFather } from 'utils/modulesApp';
 import { modulesRemoteConfig } from '../common/modulesRemoteConfig';
 import DisableController from 'screens/home/disableScreen/DisableController';
+import BranchesStack from './stacks/nested/BranchesStack';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -112,7 +112,7 @@ export const TabNavigator = () => {
           }
         }}
         name="BranchesScreen"
-        component={isGuest ? InviteSignUpController : stores ? InConstructionController : DisableController}
+        component={isGuest ? InviteSignUpController : stores ? BranchesStack : DisableController}
         // component={isGuest ? InviteSignUpController : BranchesStack}
         options={{
           unmountOnBlur: true,
