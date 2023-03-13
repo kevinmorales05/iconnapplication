@@ -12,10 +12,6 @@ export class DocsApi extends HttpClient {
   static classInstance?: DocsApi;
 
   private constructor() {
-    if (global.showLogs__api_docs) {
-
-    }
-
     super(VTEXApiConfig('docs'));
 
     // Interceptors (only for debug purpose), please do not remove the "return" line,

@@ -44,28 +44,24 @@ const EnterEmailController: React.FC = () => {
 
   const onSubmit = async (email: string) => {
     loader.show();
-    try {
-      const { payload } = await dispatch(validateUserThunk(email));
-      if (payload.responseCode === 200) {
-        if (!payload.data.isRegistered && payload.data.signMode === 0) {
-          const { payload } = await dispatch(preSignUpThunk(email));
-          if (payload.responseCode === 201) {
-            navigate('EnterOtp', { email });
-          }
-        } else if (payload.data.isRegistered) {
-          if (payload.data.signMode === 1) {
-            showAlert();
-          } else if (payload.data.signMode === 2) {
-            showAlert();
-          } else if (payload.data.signMode === 3) {
-            showAlert();
-          } else if (payload.data.signMode === 4) {
-            showAlert();
-          }
+    const { payload } = await dispatch(validateUserThunk(email));
+    if (payload.responseCode === 200) {
+      if (!payload.data.isRegistered && payload.data.signMode === 0) {
+        const { payload } = await dispatch(preSignUpThunk(email));
+        if (payload.responseCode === 201) {
+          navigate('EnterOtp', { email });
+        }
+      } else if (payload.data.isRegistered) {
+        if (payload.data.signMode === 1) {
+          showAlert();
+        } else if (payload.data.signMode === 2) {
+          showAlert();
+        } else if (payload.data.signMode === 3) {
+          showAlert();
+        } else if (payload.data.signMode === 4) {
+          showAlert();
         }
       }
-    } catch (error) {
-      //console.error('Unknow Error', error);
     }
   };
 

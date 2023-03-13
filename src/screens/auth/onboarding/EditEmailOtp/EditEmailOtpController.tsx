@@ -58,15 +58,11 @@ const EditEmailOtpController = () => {
 
   const onSubmit = async (code: string) => {
     loader.show();
-    try {
-      const { payload } = await dispatch(validateOtpThunk({ email, code }));
-      if (payload.responseCode === 201 && !payload.data.isValid) {
-        setWrongCode(true);
-      } else if (payload.responseCode === 201 && payload.data.isValid) {
-        updateEmail(email);
-      }
-    } catch (error) {
-      //console.error('Unknow Error', error);
+    const { payload } = await dispatch(validateOtpThunk({ email, code }));
+    if (payload.responseCode === 201 && !payload.data.isValid) {
+      setWrongCode(true);
+    } else if (payload.responseCode === 201 && payload.data.isValid) {
+      updateEmail(email);
     }
   };
 

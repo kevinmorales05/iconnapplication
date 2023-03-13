@@ -212,7 +212,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchAddresses = useCallback(async () => {
     loader.show();
     if (user.id) {
-      await dispatch(getUserAddressesThunk(user.id!));
+      await dispatch(getUserAddressesThunk(user.id));
     }
   }, []);
 
@@ -408,10 +408,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   useEffect(() => {
     if (homeItems) {
       setHomeOptions(HOME_OPTIONS);
-      setPrincipal(homeItems!.filter(item => item.promotion_type === 'principal'));
-      setSecond(homeItems!.filter(item => item.promotion_type === 'second'));
-      setDay_promotion(homeItems!.filter(item => item.promotion_type === 'day_promotion'));
-      setAll_promotions(homeItems!.filter(item => item.promotion_type === 'all_promotions'));
+      setPrincipal(homeItems.filter(item => item.promotion_type === 'principal'));
+      setSecond(homeItems.filter(item => item.promotion_type === 'second'));
+      setDay_promotion(homeItems.filter(item => item.promotion_type === 'day_promotion'));
+      setAll_promotions(homeItems.filter(item => item.promotion_type === 'all_promotions'));
     }
   }, [homeItems]);
 
