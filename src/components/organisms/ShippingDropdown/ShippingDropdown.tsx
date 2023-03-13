@@ -1,6 +1,6 @@
 import { CustomText } from 'components/atoms';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, ViewStyle } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import { ImageSource } from 'react-native-vector-icons/Icon';
 import theme from 'components/theme/theme';
 import { Button, Touchable, Container } from 'components';

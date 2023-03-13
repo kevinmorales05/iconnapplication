@@ -8,33 +8,20 @@ export class BEApi extends HttpClient {
   static classInstance?: BEApi;
 
   private constructor() {
-    if (global.showLogs__api_invoicing) {
-
-    }
-
     super(ApiConfig('be'));
 
     // Interceptors (only for debug purpose), please do not remove the "return" line,
     // is  necessary to prevent a very confusing error and spend sometime to debug it.
     // https://github.com/svrcekmichal/redux-axios-middleware/issues/83
     this.instance.interceptors.request.use((request: any) => {
-      if (global.showLogs__api_invoicing) {
-
-      }
       return request;
     });
 
     this.instance.interceptors.response.use(
       (response: any) => {
-        if (global.showLogs__api_invoicing) {
-
-        }
         return response;
       },
       (error: any) => {
-        if (global.showLogs__api_invoicing) {
-
-        }
         this.handlerError(error);
         return Promise.reject(error);
       }

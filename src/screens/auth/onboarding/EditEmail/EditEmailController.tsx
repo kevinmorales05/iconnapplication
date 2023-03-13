@@ -10,8 +10,7 @@ import { preSignUpThunk, validateUserThunk } from 'rtk/thunks/auth.thunks';
 import { RootState, useAppDispatch, useAppSelector } from 'rtk';
 
 const EnterEmailController: React.FC = () => {
-  const { goBack, navigate } =
-    useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { goBack, navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const [aboutEmailVisible, setAboutEmailVisible] = useState<boolean>(false);
   const loader = useLoading();
   const dispatch = useAppDispatch();
@@ -66,23 +65,14 @@ const EnterEmailController: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('Unknow Error', error);
+      //console.error('Unknow Error', error);
     }
   };
 
   return (
     <SafeArea topSafeArea={false} bottomSafeArea={false} barStyle="dark">
-      <EnterEmailScreen
-        title={'Ingresa tu nueva dirección\n de correo electrónico'}
-        goBack={goBack}
-        onSubmit={onSubmit}
-        onPressInfo={onPressEmailInfo}
-      />
-      <AboutEmail
-        visible={aboutEmailVisible}
-        onUnderstood={onPressOut}
-        onPressOut={onPressOut}
-      />
+      <EnterEmailScreen title={'Ingresa tu nueva dirección\n de correo electrónico'} goBack={goBack} onSubmit={onSubmit} onPressInfo={onPressEmailInfo} />
+      <AboutEmail visible={aboutEmailVisible} onUnderstood={onPressOut} onPressOut={onPressOut} />
     </SafeArea>
   );
 };

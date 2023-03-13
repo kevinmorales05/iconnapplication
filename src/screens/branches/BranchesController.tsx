@@ -24,9 +24,8 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { showLocation } from 'react-native-map-link';
 import { useLocation } from 'hooks/useLocation';
 import { useNavigation } from '@react-navigation/native';
-import { usePermissions } from 'context';
+import { usePermissions, useToast } from 'context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useToast } from 'context';
 import BranchesScreen from './BranchesScreen';
 import theme from 'components/theme/theme';
 import { logEvent } from 'utils/analytics';
@@ -246,7 +245,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
               }
             });
 
-            newMarkersWithAvailableServices = newMarkersWithAvailableServices!.concat(filteredMarkers!);
+            newMarkersWithAvailableServices = newMarkersWithAvailableServices.concat(filteredMarkers);
           }
 
           // Filter by uniques Ids.
@@ -277,7 +276,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
    */
   useEffect(() => {
     if (userLocation && radiusOfSearch) {
-      const nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], POINTS as PointInterface[], radiusOfSearch);
+      const nearbyMarkers = getNearbyPoints([userLocation?.latitude, userLocation?.longitude], POINTS as PointInterface[], radiusOfSearch);
       if (nearbyMarkers.length === 0) {
         toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
       }

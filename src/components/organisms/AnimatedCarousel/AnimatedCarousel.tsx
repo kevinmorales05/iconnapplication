@@ -87,7 +87,7 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
           data={items}
           renderItem={({ item, index }) => <AnimatedItem data={item} position={index} onPressItem={() => {}} onPressOut={() => {}} />}
           horizontal
-          bounces={items && items!.length > 1 ? true : false}
+          bounces={items && items.length > 1 ? true : false}
           keyExtractor={item => item.id}
           onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
           scrollEventThrottle={32}

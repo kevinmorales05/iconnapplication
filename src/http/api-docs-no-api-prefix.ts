@@ -2,15 +2,15 @@ import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
 import { VTEXApiConfig } from './vtex-api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
-import { DeviceEventEmitter, AsyncStorage } from 'react-native';
+import { DeviceEventEmitter } from 'react-native';
 
 export class DocsNoPrefixApi extends HttpClient {
   static classInstance?: DocsNoPrefixApi;
 
   private constructor() {
-    if (global.showLogs__api_docs_no_api_prefix) {
+    /* if (global.showLogs__api_docs_no_api_prefix) {
       console.log('AxiosRequestConfig ===> VTEXApiConfig ===> \n\n', JSON.stringify(VTEXApiConfig('docsNoApiPrefix'), null, 3));
-    }
+    } */
 
     super(VTEXApiConfig('docsNoApiPrefix'));
 
@@ -19,7 +19,7 @@ export class DocsNoPrefixApi extends HttpClient {
     // https://github.com/svrcekmichal/redux-axios-middleware/issues/83
     this.instance.interceptors.request.use(
       (request: any) => {
-        const { headers, baseURL, method, url, data } = request;
+        /* const { headers, baseURL, method, url, data } = request;
         if (global.showLogs__api_docs_no_api_prefix) {
           console.log(
             'INTERCEPTOR - Starting Request ===> \n\n',
@@ -33,32 +33,32 @@ export class DocsNoPrefixApi extends HttpClient {
             '\n',
             `data: ${JSON.stringify(data, null, 3)}`
           );
-        }
+        } */
 
         return request;
-      },
-      (error: any) => {
+      }
+      /* (error: any) => {
         if (global.showLogs__api_docs_no_api_prefix) {
           console.log('INTERCEPTOR Request Error ===> \n\n', JSON.stringify(error, null, 3));
         }
-      }
+      } */
     );
 
     this.instance.interceptors.response.use(
       (response: any) => {
-        const { data, config } = response;
+        /* const { data, config } = response;
         if (global.showLogs__api_docs_no_api_prefix) {
           console.log(
             `INTERCEPTOR - \nThe Response of METHOD: ${config.method} \nENDPOINT: ${config.baseURL}/${config.url} is ===> \n\n`,
             JSON.stringify(data, null, 3)
           );
-        }
+        } */
         return response;
       },
       (error: any) => {
-        if (global.showLogs__api_docs_no_api_prefix) {
+        /* if (global.showLogs__api_docs_no_api_prefix) {
           console.log('INTERCEPTOR Response Error ===> \n\n', JSON.stringify(error, null, 3));
-        }
+        } */
         this.handlerError(error);
         return Promise.reject(error);
       }
@@ -96,7 +96,7 @@ export class DocsNoPrefixApi extends HttpClient {
     if (axios.isAxiosError(err)) {
       let problem: GeneralApiProblem;
       problem = getGeneralApiProblem(err.response._response || err.response.status);
-      console.error('GLOBAL EXCEPCIÓN ===> ', problem);
+      //console.error('GLOBAL EXCEPCIÓN ===> ', problem);
       if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
     } else {
       DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');

@@ -4,10 +4,9 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import EnterOtpScreen from 'screens/auth/onboarding/EnterOtp/EnterOtpScreen';
 import { SafeArea } from 'components/atoms/SafeArea';
-import { useLoading } from 'context';
+import { useLoading, useToast } from 'context';
 import { RootState, useAppDispatch, useAppSelector, AuthDataInterface, setAuthEmail } from 'rtk';
 import { validateOtpThunk } from 'rtk/thunks/auth.thunks';
-import { useToast } from 'context';
 import { authServices } from 'services';
 
 const EditEmailOtpController = () => {
@@ -64,10 +63,10 @@ const EditEmailOtpController = () => {
       if (payload.responseCode === 201 && !payload.data.isValid) {
         setWrongCode(true);
       } else if (payload.responseCode === 201 && payload.data.isValid) {
-        updateEmail(email as string);
+        updateEmail(email);
       }
     } catch (error) {
-      console.error('Unknow Error', error);
+      //console.error('Unknow Error', error);
     }
   };
 

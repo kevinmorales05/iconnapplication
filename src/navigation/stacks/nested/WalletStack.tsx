@@ -1,8 +1,6 @@
 import React from 'react';
-import { BackButton, PackageHelpScreen, RechargeHelpScreen } from 'components';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Touchable } from 'components';
+import { BackButton, PackageHelpScreen, RechargeHelpScreen, Touchable } from 'components';
+import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import { WalletStackParams } from 'navigation/types';
 import Icon from 'react-native-vector-icons/AntDesign';

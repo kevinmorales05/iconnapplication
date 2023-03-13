@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParams, HomeStackParams } from 'navigation/types';
+import { AuthStackParams } from 'navigation/types';
 import EnterOtpScreen from './EnterOtpScreen';
-import { StyleSheet } from 'react-native';
 import { SafeArea } from 'components/atoms/SafeArea';
 import { useLoading } from 'context';
-import { RootState, useAppDispatch, useAppSelector, setSecretKey } from 'rtk';
-import { validateOtpThunk } from 'rtk/thunks/auth.thunks';
+import { RootState, useAppSelector } from 'rtk';
 
 interface EnterOtpControllerProps {
   handleSubmit?: (email: string) => void;
@@ -16,7 +14,6 @@ interface EnterOtpControllerProps {
 const EnterOtpController = ({ handleSubmit }: EnterOtpControllerProps) => {
   const { goBack, navigate } = useNavigation<NativeStackNavigationProp<AuthStackParams>>();
   const loader = useLoading();
-  const dispatch = useAppDispatch();
 
   const { loading, user } = useAppSelector((state: RootState) => state.auth);
   const { email } = user;
@@ -27,7 +24,8 @@ const EnterOtpController = ({ handleSubmit }: EnterOtpControllerProps) => {
     }
   }, [loading]);
 
-  const [wrongCode, setWrongCode] = useState(false);
+  // this is never being reasigned
+  const wrongCode = false;
 
   const route = useRoute<RouteProp<AuthStackParams, 'EnterOtp'>>();
 
@@ -46,7 +44,6 @@ const EnterOtpController = ({ handleSubmit }: EnterOtpControllerProps) => {
 
     if (variant === 'recoverPassword') {
       navigate('CreatePassword', { accessKey: code, authenticationToken, variant: 'recoverPassword' });
-      return;
     }
   };
 
@@ -56,12 +53,5 @@ const EnterOtpController = ({ handleSubmit }: EnterOtpControllerProps) => {
     </SafeArea>
   );
 };
-
-const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'cover'
-  }
-});
 
 export default EnterOtpController;
