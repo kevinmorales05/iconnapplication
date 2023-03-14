@@ -15,11 +15,10 @@ interface Props {
 }
 
 const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode }) => {
-
   const insets = useSafeAreaInsets();
   const [code, setCode] = useState('');
   const [isCodeError, setIsCodeError] = useState(false);
-  
+
   const codding = (c: string) => {
     setCode(c);
   };
@@ -27,11 +26,11 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
   const { handleSubmit } = useForm();
 
   useEffect(() => {
-    if (wrongCode === true) {      
-      setIsCodeError(true);      
-    }    
-  }, [wrongCode])
-  
+    if (wrongCode === true) {
+      setIsCodeError(true);
+    }
+  }, [wrongCode]);
+
   const submit: SubmitHandler<FieldValues> = () => {
     onSubmit(code);
   };
@@ -49,55 +48,29 @@ const EnterOtpScreen: React.FC<Props> = ({ onSubmit, goBack, email, wrongCode })
       showsVerticalScrollIndicator={false}
     >
       <Container>
-        <TextContainer
-          typography="h1"
-          fontBold
-          text={`Ingresa el código de 6 \ndígitos que enviamos a:`}
-          marginTop={34}
-          marginBottom={11}
-        />
+        <TextContainer typography="h1" fontBold text={`Ingresa el código de 6 \ndígitos que enviamos a:`} marginTop={34} marginBottom={11} />
 
         <Container flex row>
-          <Image
-            source={ICONN_EMAIL}
-            resizeMode="center"
-            style={{ width: 28, height: 28, marginRight: 8 }}
-          />
-          <TextContainer
-            typography="h4"
-            fontBold
-            text={email}
-            textColor={theme.brandColor.iconn_green_original}
-          ></TextContainer>
+          <Image source={ICONN_EMAIL} resizeMode="center" style={{ width: 28, height: 28, marginRight: 8 }} />
+          <TextContainer typography="h4" fontBold text={email} textColor={theme.brandColor.iconn_green_original}></TextContainer>
         </Container>
 
         <Container>
-        <Code
-          label=""
-          error={isCodeError}
-          caption="Código incorrecto"
-          disable={false}
-          lengthInput={6}
-          secureTextEntry={false}
-          onChangeText={c => codding(c)}
-          newCode={""}
-        />
+          <Code
+            label=""
+            error={isCodeError}
+            caption="Código incorrecto"
+            disable={false}
+            lengthInput={6}
+            secureTextEntry={false}
+            onChangeText={c => codding(c)}
+            newCode={''}
+          />
         </Container>
       </Container>
 
       <Container flex row crossAlignment="end" space="between">
-        <ActionButton
-          size="large"
-          onPress={goBack}
-          color="iconn_med_grey"
-          icon={
-            <AntDesign
-              name="arrowleft"
-              size={24}
-              color={theme.fontColor.dark}
-            />
-          }
-        />
+        <ActionButton size="large" onPress={goBack} color="iconn_med_grey" icon={<AntDesign name="arrowleft" size={24} color={theme.fontColor.dark} />} />
 
         <Button
           length="short"

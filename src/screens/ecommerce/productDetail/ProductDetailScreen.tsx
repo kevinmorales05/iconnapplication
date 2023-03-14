@@ -158,7 +158,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
   };
 
   const userUpdated = (productId: string) => {
-    updateShoppingCartProduct!('create', productId);
+    updateShoppingCartProduct('create', productId);
     hideModalForAdult();
   };
 
@@ -169,7 +169,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
         description: 'Añadir un producto de la canasta en la colección',
         productId: productId.toString()
       });
-      updateShoppingCartProduct!('create', productId);
+      updateShoppingCartProduct('create', productId);
     } else {
       showModalForAdult();
     }
@@ -434,29 +434,29 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
             <Container style={{ marginTop: 16, paddingHorizontal: 10 }}>
               <TextContainer fontBold fontSize={theme.fontSize.h2} text={productDetail.Name} />
               <Container row>
-              <TextContainer
+                <TextContainer
                   marginTop={8}
                   marginRight={0}
                   fontBold
                   fontSize={theme.fontSize.h1}
                   text={
                     !!productDetail && productDetail.promotionType
-                      ? (
-                        (
-                          (productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular') ? (
-                            productDetail.percentualDiscountValue &&
-                            productDetail.percentualDiscountValue > 0
-                            ? '$' + Number(productDetail.costDiscountPrice).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-                            : '$' + Number(productDetail.maximumUnitPriceDiscount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
-                        )
+                      ? productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular'
+                        ? productDetail.percentualDiscountValue && productDetail.percentualDiscountValue > 0
+                          ? '$' +
+                            Number(productDetail.costDiscountPrice)
+                              .toFixed(2)
+                              .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                          : '$' +
+                            Number(productDetail.maximumUnitPriceDiscount)
+                              .toFixed(2)
+                              .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                         : ''
-                        )
-                      )
                       : ''
                   }
                 />
                 {!!productDetail && productDetail.promotionType ? (
-                  productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular' ? ( 
+                  productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular' ? (
                     <Container style={{ marginLeft: 15, marginTop: 1 }}>
                       <Text
                         style={{
@@ -468,8 +468,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                         }}
                       >
                         {'$' +
-                          Number.parseFloat(productDetail != undefined && productDetail.selling_price ? 
-                            productDetail.selling_price :'0')
+                          Number.parseFloat(productDetail != undefined && productDetail.selling_price ? productDetail.selling_price : '0')
                             .toFixed(2)
                             .replace(/\d(?=(\d{3})+\.)/g, '$&,')}
                       </Text>
@@ -521,8 +520,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                                 )
                                   .toFixed(2)
                                   .replace(/\d(?=(\d{3})+\.)/g, '$&,')
-                              : (productDetail.selling_price-productDetail.maximumUnitPriceDiscount).toFixed(2)
-                              .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                              : (productDetail.selling_price - productDetail.maximumUnitPriceDiscount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
                             : ''
                           : '')
                       }
@@ -607,10 +605,10 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                         key={prod.productId + index + 'detail'}
                         image={prod.image!}
                         name={prod.name!}
-                        ratingValue={prod.ratingValue!}
+                        ratingValue={prod.ratingValue}
                         price={prod.price!}
                         productId={prod.productId}
-                        quantity={prod.quantity!}
+                        quantity={prod.quantity}
                         onPressAddCart={validateCategoryForAddItem}
                         onPressAddQuantity={() => {
                           logEvent('plusProduct', {

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useRef, useState, useLayoutEffect } from
 import { ScrollView, TextInput, StyleSheet, View } from 'react-native';
 import theme from 'components/theme/theme';
 import { useForm } from 'react-hook-form';
-import { Input, Select, Touchable, Container, CustomText } from '../../atoms';
+import { Input, Select, Touchable, Container, CustomText, AnnounceItem } from '../../atoms';
 import Icon from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import { emailRules, rfcRule } from 'utils/rules';
@@ -14,7 +14,6 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { useAlert } from 'context';
-import { AnnounceItem } from '../../atoms';
 import Feather from 'react-native-vector-icons/Feather';
 import { logEvent } from 'utils/analytics';
 import { HeaderBackButton } from '@react-navigation/elements';

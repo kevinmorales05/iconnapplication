@@ -163,7 +163,7 @@ const CategoryProductsScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (productsRender?.length! > 0) {
+    if (productsRender?.length > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       updateQuantityProducts(existingProducts);
     }

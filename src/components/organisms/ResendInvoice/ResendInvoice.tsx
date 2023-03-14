@@ -89,7 +89,7 @@ const ResendInvoice: React.FC<Props> = ({ visible, message, secondMessage, onPre
                   size="medium"
                   marginTop={8}
                   fontColor="dark"
-                  disabled={!true}
+                  disabled={false}
                   onPress={onPressOut}
                   color="iconn_light_grey"
                 >

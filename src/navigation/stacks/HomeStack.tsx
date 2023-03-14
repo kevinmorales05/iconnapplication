@@ -1,8 +1,7 @@
 import React from 'react';
 import { BasketCounter, EcommerceHeader, InConstructionScreen } from 'components';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabNavigator } from 'navigation/TabNavigator';
 import { Touchable } from '../../components';
 import { useNavigation } from '@react-navigation/native';

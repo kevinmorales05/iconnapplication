@@ -10,10 +10,10 @@ import {
   setAppError,
   setAppInitialState,
   setAppInternetReachability,
-  setAppInternetReachabilityReviewed
+  setAppInternetReachabilityReviewed,
+  store
 } from 'rtk';
 import NetInfo from '@react-native-community/netinfo';
-import { store } from 'rtk';
 import HomeStack from './stacks/HomeStack';
 
 const Stack = createNativeStackNavigator<any>();
