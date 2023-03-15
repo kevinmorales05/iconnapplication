@@ -67,7 +67,7 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, viewGen
           size="medium"
           marginTop={8}
           fontColor="dark"
-          disabled={!true}
+          disabled={false}
           onPress={newInvoice}
           color="iconn_light_grey"
         >
@@ -81,7 +81,7 @@ const InvoiceGeneratedScreen: React.FC<Props> = ({ finalize, newInvoice, viewGen
           size="medium"
           marginTop={8}
           length="short"
-          disabled={!true}
+          disabled={false}
           fontColor="white"
           onPress={finalize}
           color="iconn_accent_principal"

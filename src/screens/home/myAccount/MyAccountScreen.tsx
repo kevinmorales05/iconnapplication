@@ -4,7 +4,7 @@ import { Button, NavigationMenuItem, Container, TextContainer, Touchable } from 
 import { useNavigation } from '@react-navigation/native';
 import theme from 'components/theme/theme';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { HomeStackParams, HomeTabScreens } from 'navigation/types';
+import { HomeStackParams } from 'navigation/types';
 
 //import icons
 import ProfileSvg from 'components/svgComponents/ProfileSvg/ProfileSvg';
@@ -22,8 +22,11 @@ import { InfoSvg } from 'components/svgComponents/InfoSvg';
 import { HelpSupportSvg } from 'components/svgComponents/HelpSupportSvg';
 import { LogOutSvg } from 'components/svgComponents/LogOutSvg';
 import { useInConstruction } from 'context';
-import analytics from '@react-native-firebase/analytics';
 import { RootState, useAppSelector } from 'rtk';
+import { getStatusModuleFather } from 'utils/modulesApp';
+import { modulesRemoteConfig } from '../../../common/modulesRemoteConfig';
+import { useNotEnabledModal } from 'context/notEnabled.context';
+import analytics from '@react-native-firebase/analytics';
 import { logEvent } from 'utils/analytics';
 
 interface HomeScreenProps {
@@ -35,6 +38,18 @@ interface HomeScreenProps {
 const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, app_version }) => {
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { appModules } = useAppSelector((state: RootState) => state.app);
+  const modalNotEnabled = useNotEnabledModal();
+
+  //helpCenter
+  const helpCenter: boolean | undefined = getStatusModuleFather(appModules ? appModules : [], modulesRemoteConfig.helpCenter);
+
+  //sucursales
+  const stores: boolean | undefined = getStatusModuleFather(appModules ? appModules : [], modulesRemoteConfig.helpCenter);
+
+  //wallet
+  const wallet: boolean | undefined = getStatusModuleFather(appModules ? appModules : [], modulesRemoteConfig.myWallet || modulesRemoteConfig.services);
+
   const inConstruction = useInConstruction();
 
   const onPressSendAnalyticst = async (analyticsName: string, analyticsDecription: string) => {
@@ -145,10 +160,15 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
 
         <NavigationMenuItem
           text="Sucursales"
-          disable={false}
+          disable={!stores}
           icon={<PlacesSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            inConstruction.show(true);
+            if (stores) {
+              navigate('BranchesScreen');
+              //inConstruction.show(true);
+            } else {
+              modalNotEnabled.show();
+            }
             logEvent('accServicesStoreUbications', {
               id: user.id,
               description: 'Abrir ubicación de tiendas y estaciones desde menú de cuenta'
@@ -158,15 +178,20 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
         />
         <NavigationMenuItem
           text="Wallet"
-          disable={false}
+          disable={!wallet}
           icon={<WalletSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
+            if (wallet) {
+              navigate('WalletStack');
+              //inConstruction.show(true);
+            } else {
+              modalNotEnabled.show();
+            }
             //navigate('WalletStack');
             logEvent('accServicesWallet', {
               id: user.id,
               description: 'Abrir wallet desde menú de cuenta'
             });
-            inConstruction.show(true);
           }}
         />
         <NavigationMenuItem
@@ -221,11 +246,15 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
         />
         <NavigationMenuItem
           text="Centro de ayuda"
-          disable={false}
+          disable={!helpCenter}
           icon={<HelpSupportSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
-            //inConstruction.show(true);
-            navigate('HelpItems');
+            if (helpCenter) {
+              navigate('HelpItems');
+              //inConstruction.show(true);
+            } else {
+              modalNotEnabled.show();
+            }
             logEvent('accInformationHelpCenter', {
               id: user.id,
               description: 'Abrir centro de ayuda desde menú de cuenta'

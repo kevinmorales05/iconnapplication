@@ -17,8 +17,12 @@ import { PermissionsProvider } from 'context/permissions.context';
 import { enableLatestRenderer } from 'react-native-maps';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NotificationListener, requestUserPermission } from 'utils/notification-helper';
+import { NotEnabledModalContextProvider } from 'context/notEnabled.context';
+import { LogBox } from 'react-native';
 
 enableLatestRenderer();
+
+LogBox.ignoreAllLogs();
 
 let persistor = persistStore(store);
 
@@ -34,19 +38,21 @@ const App: React.FC = () => {
         <PermissionsProvider>
           <ToastContextProvider>
             <Toast />
-            <LoadingContextProvider>
-              <EnterModalContextProvider>
-                <WelcomeModalContextProvider>
-                  <InConstructionContextProvider>
-                    <AlertContextProvider>
-                      <BottomSheetModalProvider>
-                        <NavContainer />
-                      </BottomSheetModalProvider>
-                    </AlertContextProvider>
-                  </InConstructionContextProvider>
-                </WelcomeModalContextProvider>
-              </EnterModalContextProvider>
-            </LoadingContextProvider>
+            <NotEnabledModalContextProvider>
+              <LoadingContextProvider>
+                <EnterModalContextProvider>
+                  <WelcomeModalContextProvider>
+                    <InConstructionContextProvider>
+                      <AlertContextProvider>
+                        <BottomSheetModalProvider>
+                          <NavContainer />
+                        </BottomSheetModalProvider>
+                      </AlertContextProvider>
+                    </InConstructionContextProvider>
+                  </WelcomeModalContextProvider>
+                </EnterModalContextProvider>
+              </LoadingContextProvider>
+            </NotEnabledModalContextProvider>
           </ToastContextProvider>
         </PermissionsProvider>
       </PersistGate>

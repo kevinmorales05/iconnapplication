@@ -12,8 +12,11 @@ import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpContro
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
-import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 import { logEvent } from 'utils/analytics';
+import { getStatusModuleFather } from 'utils/modulesApp';
+import { modulesRemoteConfig } from '../common/modulesRemoteConfig';
+import DisableController from 'screens/home/disableScreen/DisableController';
+import BranchesStack from './stacks/nested/BranchesStack';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -21,6 +24,10 @@ export const TabNavigator = () => {
   const { isGuest, user } = useAppSelector((state: RootState) => state.auth);
   const route = useRoute<RouteProp<HomeStackParams, 'Home'>>();
   const { paySuccess } = route.params;
+  const { appModules } = useAppSelector((state: RootState) => state.app);
+
+  //sucursales
+  const stores: boolean | undefined = getStatusModuleFather(appModules ? appModules : [], modulesRemoteConfig.helpCenter);
 
   return (
     <Tab.Navigator
@@ -34,7 +41,7 @@ export const TabNavigator = () => {
     >
       <Tab.Screen
         listeners={{
-          tabPress: e => {
+          tabPress: () => {
             logEvent('tabNavigationOpenHome', { id: user.id, description: 'Abrir inicio en el menú inferior' });
           }
         }}
@@ -56,7 +63,7 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         listeners={{
-          tabPress: e => {
+          tabPress: () => {
             logEvent('tabNavigationOpenCategories', { id: user.id, description: 'Abir categorías desde el menú inferior' });
           }
         }}
@@ -78,7 +85,7 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         listeners={{
-          tabPress: e => {
+          tabPress: () => {
             logEvent('tabNavigationOpenPromotions', { id: user.id, description: 'Abrir promociones del menú inferior' });
           }
         }}
@@ -100,23 +107,28 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         listeners={{
-          tabPress: e => {
+          tabPress: () => {
             logEvent('tabNavigationOpenStoreUbication', { id: user.id, description: 'Seleccionar ubicación de tiendas y estaciones del menú inferior' });
           }
         }}
         name="BranchesScreen"
-        component={isGuest ? InviteSignUpController : InConstructionController}
+        component={isGuest ? InviteSignUpController : stores ? BranchesStack : DisableController}
         // component={isGuest ? InviteSignUpController : BranchesStack}
         options={{
           unmountOnBlur: true,
           headerShown: false,
           title: 'Sucursales',
           headerTitle: 'Tiendas y estaciones',
+          tabBarItemStyle: { opacity: !stores ? 0.4 : 1 },
           tabBarIcon: ({ focused }) => {
             return (
               <Image
                 source={TAB_PIN_LOCATION}
-                style={{ tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`, height: 24, width: 24 }}
+                style={{
+                  tintColor: `${focused ? theme.brandColor.iconn_green_original : theme.fontColor.placeholder}`,
+                  height: 24,
+                  width: 24
+                }}
               />
             );
           }
@@ -124,7 +136,7 @@ export const TabNavigator = () => {
       />
       <Tab.Screen
         listeners={{
-          tabPress: e => {
+          tabPress: () => {
             logEvent('tabNavigationAccount', { id: user.id, description: 'Crear cuenta desde menú de cuenta' });
           }
         }}

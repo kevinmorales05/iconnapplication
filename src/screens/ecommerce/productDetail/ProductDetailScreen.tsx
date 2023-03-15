@@ -23,11 +23,12 @@ import {
   RootState,
   setFav,
   setFavId,
+  updateItemsLoading,
   useAppDispatch,
   useAppSelector
 } from 'rtk';
 import { useShoppingCart } from '../../home/hooks/useShoppingCart';
-import { moderateScale } from 'utils/scaleMetrics';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultAgeVerificationScreen';
 import { vtexUserServices } from 'services';
 import { vtexFavoriteServices } from 'services/vtex-favorite-services';
@@ -35,6 +36,7 @@ import Config from 'react-native-config';
 import { logEvent } from 'utils/analytics';
 import { homeServices } from 'services/home-services';
 import { useLoading } from 'context';
+import { ProductAddLoading } from 'components/molecules/ProductAddLoading';
 
 interface Props {
   itemId: string;
@@ -70,11 +72,17 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
   const dispatch = useAppDispatch();
   const { COMPLEMENTRY_PRODUCTS } = Config;
   const loader = useLoading();
+  const { loadingItems } = useAppSelector((state: RootState) => state.cart);
+  const isLoadingProduct = !!loadingItems.filter(id => id === detailSelected).length;
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const itemId = detailSelected;
 
   const fetchDataProduct = useCallback(async () => {
-    loader.show();
+    if (isFirstLoad) {
+      loader.show();
+      setIsFirstLoad(false);
+    }
     const productInfo: ProductCacheInterface = {
       store: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1], 10) : 0
     };
@@ -88,10 +96,11 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
         selling_price: response.data.selling_price,
         promotionType: response.data.promotion ? response.data.promotion.type : undefined,
         maximumUnitPriceDiscount: response.data.promotion ? response.data.promotion.maximum_unit_price_discount : undefined,
-        percentualDiscountValue: response.data.promotion ? response.data.promotion.percentualDiscountValue : undefined,
+        percentualDiscountValue: response.data.promotion ? response.data.promotion.percentual_discount_value : undefined,
         average: response.data.qualificationAverage,
         totalCount: response.data.totalCount ? response.data.totalCount : 0,
-        costDiscountPrice: response.data.promotion ? response.data.promotion.costDiscountPrice : ''
+        costDiscountPrice: response.data.promotion ? response.data.costDiscountPrice : '',
+        promotionName: response.data.promotion ? response.data.promotion.name : ''
       };
       // console.log({ response: productDeatil });
       const image = {
@@ -149,7 +158,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
   };
 
   const userUpdated = (productId: string) => {
-    updateShoppingCartProduct!('create', productId);
+    updateShoppingCartProduct('create', productId);
     hideModalForAdult();
   };
 
@@ -160,7 +169,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
         description: 'Añadir un producto de la canasta en la colección',
         productId: productId.toString()
       });
-      updateShoppingCartProduct!('create', productId);
+      updateShoppingCartProduct('create', productId);
     } else {
       showModalForAdult();
     }
@@ -180,6 +189,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
               const { data } = userResponse;
               if (data[0].isAdult === true) {
                 updateShoppingCartProduct('create', itemId);
+                addLoader();
                 logEvent('pdAddProductProduct', {
                   id: user.id,
                   description: 'Añadir producto de la canasta en detalle de producto',
@@ -192,6 +202,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
           });
         } else {
           updateShoppingCartProduct('create', itemId);
+          addLoader();
           logEvent('pdAddProductProduct', {
             id: user.id,
             description: 'Añadir producto de la canasta en detalle de producto',
@@ -200,6 +211,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
         }
       } else {
         updateShoppingCartProduct('create', itemId);
+        addLoader();
         logEvent('pdAddProductProduct', {
           id: user.id,
           description: 'Añadir producto de la canasta en detalle de producto',
@@ -334,6 +346,12 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
     }
   };
 
+  const addLoader = () => {
+    const loadingItemsTem = loadingItems.concat([]);
+    loadingItemsTem.push(itemId);
+    dispatch(updateItemsLoading(loadingItemsTem));
+  };
+
   return (
     <>
       <ScrollView
@@ -347,7 +365,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
       >
         <Container style={{ backgroundColor: theme.brandColor.white, width: '100%' }}>
           <Container backgroundColor="white">
-            <Container style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Container style={{ marginTop: moderateScale(10) }}>
               <ImagesCarusel
                 imagesList={skusForProductImages}
                 imageSize={240}
@@ -362,6 +380,23 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                   })
                 }
               />
+            </Container>
+            <Container style={{ position: 'absolute', marginTop: moderateScale(5), marginLeft: moderateScale(10) }}>
+              {!!productDetail &&
+                productDetail.promotionType &&
+                (productDetail.promotionType === 'buyAndWin' || productDetail.promotionType === 'forThePriceOf') && (
+                  <Container
+                    style={{
+                      paddingHorizontal: moderateScale(5),
+                      height: verticalScale(23),
+                      backgroundColor: theme.brandColor.iconn_orange_original,
+                      borderRadius: moderateScale(10),
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <CustomText textColor={theme.brandColor.iconn_white} fontBold fontSize={moderateScale(12)} text={productDetail.promotionName} />
+                  </Container>
+                )}
             </Container>
             <Container row space="between" style={{ marginTop: 16, width: '100%', paddingHorizontal: 10 }}>
               <Container row>
@@ -406,10 +441,16 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                   fontSize={theme.fontSize.h1}
                   text={
                     !!productDetail && productDetail.promotionType
-                      ? (productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular') &&
-                        productDetail.percentualDiscountValue &&
-                        productDetail.percentualDiscountValue > 0
-                        ? '$' + productDetail.costDiscountPrice
+                      ? productDetail.promotionType == 'campaign' || productDetail.promotionType == 'regular'
+                        ? productDetail.percentualDiscountValue && productDetail.percentualDiscountValue > 0
+                          ? '$' +
+                            Number(productDetail.costDiscountPrice)
+                              .toFixed(2)
+                              .replace(/\d(?=(\d{3})+\.)/g, '$&,')
+                          : '$' +
+                            Number(productDetail.maximumUnitPriceDiscount)
+                              .toFixed(2)
+                              .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                         : ''
                       : ''
                   }
@@ -439,7 +480,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                       fontSize={theme.fontSize.h1}
                       text={
                         '$' +
-                        Number.parseFloat(productDetail.selling_price ? productDetail.selling_price : '0')
+                        Number(productDetail.selling_price ? productDetail.selling_price : '0')
                           .toFixed(2)
                           .replace(/\d(?=(\d{3})+\.)/g, '$&,')
                       }
@@ -473,13 +514,13 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                             ? productDetail.costDiscountPrice
                               ? Number.parseFloat(
                                   productDetail.percentualDiscountValue > 0
-                                    ? productDetail.costDiscountPrice
+                                    ? productDetail.selling_price - productDetail.costDiscountPrice
                                     : Number.parseFloat(productDetail.selling_price ? productDetail.selling_price : '0', 10) -
                                         (productDetail.maximumUnitPriceDiscount != undefined ? productDetail.maximumUnitPriceDiscount : 0)
                                 )
                                   .toFixed(2)
                                   .replace(/\d(?=(\d{3})+\.)/g, '$&,')
-                              : ''
+                              : (productDetail.selling_price - productDetail.maximumUnitPriceDiscount).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
                             : ''
                           : '')
                       }
@@ -564,10 +605,10 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
                         key={prod.productId + index + 'detail'}
                         image={prod.image!}
                         name={prod.name!}
-                        ratingValue={prod.ratingValue!}
+                        ratingValue={prod.ratingValue}
                         price={prod.price!}
                         productId={prod.productId}
-                        quantity={prod.quantity!}
+                        quantity={prod.quantity}
                         onPressAddCart={validateCategoryForAddItem}
                         onPressAddQuantity={() => {
                           logEvent('plusProduct', {
@@ -635,37 +676,44 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
       <Container style={{ marginBottom: 20, paddingHorizontal: 16, paddingTop: 10, height: '15%' }}>
         {cartItemQuantity > 0 ? (
           <Container style={{ height: 50, alignItems: 'stretch' }}>
-            <QuantityProduct
-              quantity={cartItemQuantity}
-              onPressAddQuantity={() => {
-                let currentQuantity = cartItemQuantity + 1;
-                setCartItemQuantity(currentQuantity);
-                updateShoppingCartProduct('add', itemId);
-                logEvent('pdPlusProductProduct', {
-                  id: user.id,
-                  description: 'Sumar producto de la canasta en detalle de producto',
-                  productId: itemId.toString()
-                });
-              }}
-              onPressDeleteCart={() => {
-                updateShoppingCartProduct('remove', itemId);
-                logEvent('pdRemoveProductProduct', {
-                  id: user.id,
-                  description: 'Remover producto de la canasta en detalle de producto',
-                  productId: itemId.toString()
-                });
-              }}
-              onPressDecreaseQuantity={() => {
-                let currentQuantity = cartItemQuantity - 1;
-                setCartItemQuantity(currentQuantity);
-                updateShoppingCartProduct('substract', itemId);
-                logEvent('pdMinusProductProduct', {
-                  id: user.id,
-                  description: 'Restar producto de la canasta en detalle de producto',
-                  productId: itemId.toString()
-                });
-              }}
-            />
+            {isLoadingProduct ? (
+              <ProductAddLoading isWhite={!!cartItemQuantity} />
+            ) : (
+              <QuantityProduct
+                quantity={cartItemQuantity}
+                onPressAddQuantity={() => {
+                  let currentQuantity = cartItemQuantity + 1;
+                  setCartItemQuantity(currentQuantity);
+                  addLoader();
+                  updateShoppingCartProduct('add', itemId);
+                  logEvent('pdPlusProductProduct', {
+                    id: user.id,
+                    description: 'Sumar producto de la canasta en detalle de producto',
+                    productId: itemId.toString()
+                  });
+                }}
+                onPressDeleteCart={() => {
+                  updateShoppingCartProduct('remove', itemId);
+                  addLoader();
+                  logEvent('pdRemoveProductProduct', {
+                    id: user.id,
+                    description: 'Remover producto de la canasta en detalle de producto',
+                    productId: itemId.toString()
+                  });
+                }}
+                onPressDecreaseQuantity={() => {
+                  let currentQuantity = cartItemQuantity - 1;
+                  setCartItemQuantity(currentQuantity);
+                  addLoader();
+                  updateShoppingCartProduct('substract', itemId);
+                  logEvent('pdMinusProductProduct', {
+                    id: user.id,
+                    description: 'Restar producto de la canasta en detalle de producto',
+                    productId: itemId.toString()
+                  });
+                }}
+              />
+            )}
           </Container>
         ) : (
           <Button

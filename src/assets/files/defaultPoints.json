@@ -1,810 +1,752 @@
 [
-  {
-    "stateId": 1,
-    "stateName": "Baja California",
-    "postalCode": "22564",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "TIJUANA",
-        "neighborhood": "Urbi Quinta del Cedro::Lomas del Mar::Urbi Quinta del Cedro Segunda Secci\u00f3n",
-        "latitude": 32.44021987915039,
-        "longitude": -117.05757904052734
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "MEXICALI",
-        "neighborhood": "Bellavista::San Isidro::Cachanilla::H\u00e9ctor Corella::Eguia::Pasadina::Villas California::Jabonera::Zona Industrial::Villas del Sol::Mexicali Tianguis::Barrio \u00c1lamo",
-        "latitude": 32.65571975708008,
-        "longitude": -115.48104095458984
-      },
-      {
-        "municipalityId": 2,
-        "municipalityName": "PLAYAS DE ROSARITO",
-        "neighborhood": "Cantamar::Popotla::La Cascada::Venustiano Carranza::El Ma\u00f1ana::Villa Mar::Camino Alegre::Playa Hermosa::Cuenca Lechera",
-        "latitude": 32.30181884765625,
-        "longitude": -117.0418930053711
-      },
-      {
-        "municipalityId": 3,
-        "municipalityName": "ENSENADA",
-        "neighborhood": "Secci\u00f3n Primera",
-        "latitude": 31.856246948242188,
-        "longitude": -116.61141204833984
-      }
-    ]
-  },
-  {
-    "stateId": 2,
-    "stateName": "Ciudad de M\u00e9xico",
-    "postalCode": "03100",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "BENITO JU\u00c1REZ",
-        "neighborhood": "Del Valle Centro::Insurgentes San Borja",
-        "latitude": 19.367185592651367,
-        "longitude": -99.16242980957031
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "CUAUHT\u00c9MOC",
-        "neighborhood": "Ju\u00e1rez",
-        "latitude": 19.4267520904541,
-        "longitude": -99.1618423461914
-      },
-      {
-        "municipalityId": 2,
-        "municipalityName": "Azcapotzalco",
-        "neighborhood": "Claver\u00eda::Sector Naval",
-        "latitude": 19.464927673339844,
-        "longitude": -99.18021392822266
-      },
-      {
-        "municipalityId": 3,
-        "municipalityName": "MIGUEL HIDALGO",
-        "neighborhood": "Lomas Hermosa::Lomas de Sotelo",
-        "latitude": 19.446331024169922,
-        "longitude": -99.21275329589844
-      },
-      {
-        "municipalityId": 4,
-        "municipalityName": "TLALPAN",
-        "neighborhood": "Toriello Guerra",
-        "latitude": 19.29475975036621,
-        "longitude": -99.16637420654297
-      },
-      {
-        "municipalityId": 5,
-        "municipalityName": "VENUSTIANO CARRANZA",
-        "neighborhood": "Pe\u00f1\u00f3n de los Ba\u00f1os",
-        "latitude": 19.439645767211914,
-        "longitude": -99.08267974853516
-      },
-      {
-        "municipalityId": 6,
-        "municipalityName": "LA MAGDALENA CONTRERAS",
-        "neighborhood": "San Jer\u00f3nimo L\u00eddice",
-        "latitude": 19.327167510986328,
-        "longitude": -99.22452545166016
-      },
-      {
-        "municipalityId": 7,
-        "municipalityName": "XOCHIMILCO",
-        "neighborhood": "San Gregorio Atlapulco",
-        "latitude": 19.253156661987305,
-        "longitude": -99.05572509765625
-      },
-      {
-        "municipalityId": 8,
-        "municipalityName": "CUAUHT\u00c9MOC",
-        "neighborhood": "Centro (\u00c1rea 5)",
-        "latitude": 19.436161041259766,
-        "longitude": -99.13731384277344
-      },
-      {
-        "municipalityId": 9,
-        "municipalityName": "\u00c1LVARO OBREG\u00d3N",
-        "neighborhood": "Paseo de las Lomas",
-        "latitude": 19.372528076171875,
-        "longitude": -99.26643371582031
-      },
-      {
-        "municipalityId": 10,
-        "municipalityName": "COYOAC\u00c1N",
-        "neighborhood": "Churubusco Country Club",
-        "latitude": 19.35198211669922,
-        "longitude": -99.14146423339844
-      },
-      {
-        "municipalityId": 11,
-        "municipalityName": "GUSTAVO A. MADERO",
-        "neighborhood": "Lindavista Norte::Lindavista Sur",
-        "latitude": 19.49003028869629,
-        "longitude": -99.1331787109375
-      }
-    ]
-  },
-  {
-    "stateId": 3,
-    "stateName": "Nuevo Le\u00f3n",
-    "postalCode": "64700",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "MONTERREY",
-        "neighborhood": "Roma Sur::Nuevo Repueblo::Roma::Tecnol\u00f3gico",
-        "latitude": 25.64616584777832,
-        "longitude": -100.29857635498047
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "SAN PEDRO GARZA GARC\u00cdA",
-        "neighborhood": "Santa Engracia",
-        "latitude": 25.65632438659668,
-        "longitude": -100.3511962890625
-      },
-      {
-        "municipalityId": 2,
-        "municipalityName": "SAN NICOL\u00c1S DE LOS GARZA",
-        "neighborhood": "Viejo An\u00e1huac::Lomas del Roble Sector 2::Cuauht\u00e9moc Sector 2::Cuauht\u00e9moc::Chapultepec::Lomas del Roble Sector 1::Avita Anahuac::Pedregal de An\u00e1huac 1 Sector::El Roble Sector 2::An\u00e1huac::El Roble::Valle de An\u00e1huac::Prival de Anahuac::Cuauht\u00e9moc Sector 3::Pedregal de An\u00e1huac 2 Sector",
-        "latitude": 25.754480361938477,
-        "longitude": -100.3075180053711
-      },
-      {
-        "municipalityId": 3,
-        "municipalityName": "GUADALUPE",
-        "neighborhood": "Rio::La Joya Infonavit 5o Sect::Riberas Del Rio Sector 2::Riberas Del Rio Sector 5::Uni\u00f3n Modelo::Vicente Guerrero::Riberas Del Rio Sector 4::Riberas Del Rio Sector 6::Hacienda de los Lemas 1er Sector::Portal de la Hacienda::La Joya Infonavit 3er Sect::Modelo::Riveras Del R\u00edo::Valle Hermoso::Riberas Del Rio Sector 7::Orizaba::Riberas Del Rio Sect 8::21 de Enero::Rinc\u00f3n de La Hacienda::La Joya Infonavit 2o Sect::La Joya Infonavit 4o Sect::Ignacio Zaragoza::La Joya Infonavit 1er Sect::San Agustin::Riberas Del Rio Sector 3",
-        "latitude": 25.677597045898438,
-        "longitude": -100.21997833251953
-      },
-      {
-        "municipalityId": 4,
-        "municipalityName": "LINARES",
-        "neighborhood": "Moderna",
-        "latitude": 24.862186431884766,
-        "longitude": -99.5777816772461
-      },
-      {
-        "municipalityId": 5,
-        "municipalityName": "SANTA CATARINA",
-        "neighborhood": "San Gilberto::Las Sombrillas::Las Almenas::Misi\u00f3n de las Villas::Visi\u00f3n de La Huasteca 1 Sector::Lomas del Pte",
-        "latitude": 25.70659065246582,
-        "longitude": -100.455810546875
-      },
-      {
-        "municipalityId": 6,
-        "municipalityName": "APODACA",
-        "neighborhood": "Fresnos III::Magnolias II::Nueva Democracia::Villa Luz::Los Robles::Valle de las Palmas I::Paseo Palmas I::Portal An\u00e1huac::Villa Sol::Hacienda las Palmas II::Enramada VII::Enramada III::Enramada II::Enramada VI::Praderas II::Pinos III::Jardines de La Enramada::Paseo Palmas IV::Paseo Palmas III::Magnolias::Enramada IV::Praderas I::Hacienda las Palmas::Cortijo las Palmas::Hacienda los Encinos::Fresnos II::Jardines de Apodaca::Enramada I::Enramada V::Mujeres Ilustres::Paseo Palmas II::Hacienda los Pinos III::Fresnos I::Praderas de La Enramada::Privadas Sendero An\u00e1huac",
-        "latitude": 25.76166343688965,
-        "longitude": -100.25563049316406
-      },
-      {
-        "municipalityId": 7,
-        "municipalityName": "GRAL. ESCOBEDO",
-        "neighborhood": "Joyas de An\u00e1huac::Felipe Carrillo Puerto::Roble Nuevo::Felipe Carrillo Puerto IV::Nexxus Residencial Sector Diamante::Nexxus Residencial Sector Esmeralda::Haciendas de An\u00e1huac I::California Fraccionamiento Primer Sector::Haciendas de An\u00e1huac II::Insurgentes Infonavit::Topo Grande IV::Celestino Gasca::Nexxus Residencial Sector Rub\u00ed::California 2do Sector::Jolla de An\u00e1huac Sector N\u00e1poles::L\u00e1zaro C\u00e1rdenas Ampliaci\u00f3n::Felipe Carrillo Puerto II::Joyas de An\u00e1huac Sector Florencia::Jolla de An\u00e1huac Sector Venecia::Nexxus Residencial Sector Cristal::Residencial Pinos::Privadas Bougambilias::Los Pinos::Felipe Carrillo Puerto III::Privada Del Angel::Nexxus Residencial Sector Platino::Nexxus Residencial Sector Zafiro::Villas Del Parque::Villas de Escobedo II::Parque Industrial Nexxus XXI",
-        "latitude": 19.580333709716797,
-        "longitude": -88.04409790039062
-      },
-      {
-        "municipalityId": 8,
-        "municipalityName": "SANTIAGO",
-        "neighborhood": "El Barro::El Cerrito::San Andres::El Ranchito::El Barrial",
-        "latitude": 25.517505645751953,
-        "longitude": -100.21678161621094
-      },
-      {
-        "municipalityId": 9,
-        "municipalityName": "Salinas Victoria",
-        "neighborhood": "",
-        "latitude": 25.966211318969727,
-        "longitude": -100.29086303710938
-      },
-      {
-        "municipalityId": 10,
-        "municipalityName": "JU\u00c1REZ",
-        "neighborhood": "Las Sabinitas::Quintas las Sabinas::Residencial Punta Esmeralda::Valle las Sabinas::Monte Verde::Colinas Del Sol::Valle Del Virrey::Calder\u00f3n::Gardenias 5 Etapa::Coahuila::Reforma Guadalupe::Paseo del Sabinal::Las \u00c1guilas::Reforma::Las Sabinas::Santa Lucia",
-        "latitude": 25.660022735595703,
-        "longitude": -100.12621307373047
-      },
-      {
-        "municipalityId": 11,
-        "municipalityName": "CI\u00c9NEGA DE FLORES",
-        "neighborhood": "Ci\u00e9nega de Flores Centro",
-        "latitude": 25.954395294189453,
-        "longitude": -100.16633605957031
-      },
-      {
-        "municipalityId": 12,
-        "municipalityName": "ALLENDE",
-        "neighborhood": "La Colmena de Arriba::Las Boquillas::La Colmena de Abajo",
-        "latitude": 25.276647567749023,
-        "longitude": -100.03662109375
-      },
-      {
-        "municipalityId": 13,
-        "municipalityName": "CADEREYTA JIM\u00c9NEZ",
-        "neighborhood": "Valle del Roble::San Bartolo::San Bartolo::Chihuahua::El Castillo",
-        "latitude": 25.67172622680664,
-        "longitude": -100.47337341308594
-      },
-      {
-        "municipalityId": 14,
-        "municipalityName": "MONTEMORELOS",
-        "neighborhood": "Loma Prieta::Canoas",
-        "latitude": 25.25861167907715,
-        "longitude": -99.99055480957031
-      },
-      {
-        "municipalityId": 15,
-        "municipalityName": "GARC\u00cdA",
-        "neighborhood": "Ciudad Industrial Mitras::Mitras Poniente Sector Jordan::Arco Vial::Mitras Poniente Sector Bolivar::Misi\u00f3n San Juan::Paraje San Jos\u00e9::Mitras Poniente Bicentenario::Lincoln Poniente::Paraje San Jos\u00e9 Sector las Monta\u00f1as::Valle de Lincoln Sector San Jos\u00e9::Villas Del Poniente::Lomas de Garcia::Mitras Poniente Sector Sacramento::Mitras Poniente Ajusco::Mitras Poniente::Mitras Poniente Sector Salvatierra::Valle de Lincoln Sector San Agust\u00edn::Paraje San Jos\u00e9 Sector Las Aves::Mitras Poniente Sector Jerez::Rancho Mitras::Mitras Poniente Sector Granada::Paraje de San Jos\u00e9 Sector las Flores::Mitras Poniente Sector Leones::Paraje San Jos\u00e9 Sector los Lagos::Mitras Poniente Sector Urdiales::Mitras Poniente Sector Cedral::Paraje San Jos\u00e9 Sector los Bosques::Mitras Poniente Ensenada::Paraje San Jos\u00e9 Sector R\u00edos::Mitras Poniente Sector Guadalcazar::Los Parques Residencial",
-        "latitude": 25.778827667236328,
-        "longitude": -100.42764282226562
-      },
-      {
-        "municipalityId": 16,
-        "municipalityName": "Pesquer\u00eda",
-        "neighborhood": "Las Aves Residencial and Golf Resort",
-        "latitude": 25.7587890625,
-        "longitude": -100.03992462158203
-      },
-      {
-        "municipalityId": 17,
-        "municipalityName": "GRAL. TREVI\u00d1O",
-        "neighborhood": "General Trevi\u00f1o::La Laguna",
-        "latitude": 26.222984313964844,
-        "longitude": -99.48381805419922
-      },
-      {
-        "municipalityId": 18,
-        "municipalityName": "PESQUER\u00cdA",
-        "neighborhood": "Dulces Nombres::Las Escobas::Las \u00c1guilas::Misi\u00f3n Dulces Nombres::Valle de Santa Mar\u00eda",
-        "latitude": 25.7277774810791,
-        "longitude": -100.08416748046875
-      },
-      {
-        "municipalityId": 19,
-        "municipalityName": "CARMEN",
-        "neighborhood": "El Jaral",
-        "latitude": 25.92243003845215,
-        "longitude": -100.3511962890625
-      },
-      {
-        "municipalityId": 20,
-        "municipalityName": "Ju\u00e1rez",
-        "neighborhood": "Anzures",
-        "latitude": 25.696502685546875,
-        "longitude": -100.1148452758789
-      },
-      {
-        "municipalityId": 21,
-        "municipalityName": "Guadalupe",
-        "neighborhood": "",
-        "latitude": 25.67755889892578,
-        "longitude": -100.25969696044922
-      },
-      {
-        "municipalityId": 22,
-        "municipalityName": "GRAL. ZUAZUA",
-        "neighborhood": "Gral. Zuazua",
-        "latitude": 25.890796661376953,
-        "longitude": -100.11711883544922
-      },
-      {
-        "municipalityId": 23,
-        "municipalityName": "Monterrey",
-        "neighborhood": "Cumbre Allegro",
-        "latitude": 25.745929718017578,
-        "longitude": -100.4271011352539
-      },
-      {
-        "municipalityId": 24,
-        "municipalityName": "Garc\u00eda",
-        "neighborhood": "",
-        "latitude": 25.8010311126709,
-        "longitude": -100.58619689941406
-      },
-      {
-        "municipalityId": 25,
-        "municipalityName": "Apodaca",
-        "neighborhood": "Privalia Concordia",
-        "latitude": 25.77729034423828,
-        "longitude": -100.21391296386719
-      },
-      {
-        "municipalityId": 26,
-        "municipalityName": "MAR\u00cdN",
-        "neighborhood": "Mar\u00edn",
-        "latitude": 25.87652015686035,
-        "longitude": -100.02753448486328
-      },
-      {
-        "municipalityId": 27,
-        "municipalityName": "CADEREYTA JIMÉNEZ",
-        "neighborhood": "SIN NOMBRE",
-        "latitude": 25.5416,
-        "longitude": -100.0501
-      }
-    ]
-  },
-  {
-    "stateId": 4,
-    "stateName": "M\u00e9xico",
-    "postalCode": "53040",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "NAUCALPAN DE JU\u00c1REZ",
-        "neighborhood": "Las Am\u00e9ricas",
-        "latitude": 19.476696014404297,
-        "longitude": -99.23837280273438
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "TLALNEPANTLA DE BAZ",
-        "neighborhood": "Magisterial Vista Bella::Ex-Hacienda de Santa M\u00f3nica::Jacarandas::Bosques de M\u00e9xico::Jacarandas Ampliaci\u00f3n::Margaritas Ampliaci\u00f3n::Las Margaritas::Jardines de Santa M\u00f3nica",
-        "latitude": 19.533828735351562,
-        "longitude": -99.22787475585938
-      },
-      {
-        "municipalityId": 2,
-        "municipalityName": "HUIXQUILUCAN",
-        "neighborhood": "Hacienda de las Palmas::Villa Florence",
-        "latitude": 19.38654327392578,
-        "longitude": -99.28756713867188
-      },
-      {
-        "municipalityId": 3,
-        "municipalityName": "CUAUTITL\u00c1N IZCALLI",
-        "neighborhood": "Lago de Guadalupe::Rinc\u00f3n del Bosque::Bosques de Morelos::Tres de Mayo::Plan de Guadalupe::Halc\u00f3n Oriente",
-        "latitude": 19.632658004760742,
-        "longitude": -99.24266052246094
-      },
-      {
-        "municipalityId": 4,
-        "municipalityName": "ECATEPEC DE MORELOS",
-        "neighborhood": "Real de Santa Clara::Santa Clara Coatitla::Rinconada de Santa Clara",
-        "latitude": 19.53913688659668,
-        "longitude": -99.0669937133789
-      },
-      {
-        "municipalityId": 5,
-        "municipalityName": "TULTITL\u00c1N",
-        "neighborhood": "La Concepci\u00f3n::Nativitas::Tultitl\u00e1n de Mariano Escobedo Centro::Los Reyes::Santiaguito::Bel\u00e9m::Residencial los Reyes::San Bartolo::San Juan",
-        "latitude": 19.63448715209961,
-        "longitude": -99.17086791992188
-      },
-      {
-        "municipalityId": 6,
-        "municipalityName": "COACALCO DE BERRIOZ\u00c1BAL",
-        "neighborhood": "Villa de las Flores 1a Secci\u00f3n (Unidad Coacalco)::Residencial Las Dalias I::II::III Y IV::Arcos las Torres::Secci\u00f3n Jard\u00edn \"Las Plazas\" (Unidad Coacalco)::Las Rosas::Rancho la Providencia::Villa de las Flores 2a Secci\u00f3n (Unidad Coacalco)",
-        "latitude": 19.64288902282715,
-        "longitude": -99.10017395019531
-      },
-      {
-        "municipalityId": 7,
-        "municipalityName": "TOLUCA",
-        "neighborhood": "San Crist\u00f3bal Huichochitl\u00e1n::San Andr\u00e9s Cuexcontitl\u00e1n::La Trinidad::Armando Neyra Chavez::Paseos del Pilar::San Salvador::Barrio San Gabriel",
-        "latitude": 19.339813232421875,
-        "longitude": -99.65955352783203
-      },
-      {
-        "municipalityId": 8,
-        "municipalityName": "NEZAHUALC\u00d3YOTL",
-        "neighborhood": "Tamaulipas Secci\u00f3n Virgencitas::Tamaulipas",
-        "latitude": 19.42037582397461,
-        "longitude": -99.02601623535156
-      },
-      {
-        "municipalityId": 9,
-        "municipalityName": "CUAUTITL\u00c1N",
-        "neighborhood": "Paseo de Santa Mar\u00eda::Misiones II::Los Morales 1a Secci\u00f3n::El Nopalito::Cuautitl\u00e1n Centro::Romita::San Juan",
-        "latitude": 19.66887664794922,
-        "longitude": -99.1627197265625
-      },
-      {
-        "municipalityId": 10,
-        "municipalityName": "LERMA",
-        "neighborhood": "San Lorenzo Huitzizilapan::El Espino Peralta::Casa Blanca (Tierras Nuevas)",
-        "latitude": 19.385133743286133,
-        "longitude": -99.54646301269531
-      },
-      {
-        "municipalityId": 11,
-        "municipalityName": "SAN MATEO ATENCO",
-        "neighborhood": "San Mateo Atenco Centro",
-        "latitude": 19.263002395629883,
-        "longitude": -99.53243255615234
-      },
-      {
-        "municipalityId": 12,
-        "municipalityName": "LA PAZ",
-        "neighborhood": "Ampliaci\u00f3n Tecamachalco::San Salvador Tecamachalco",
-        "latitude": 19.36296844482422,
-        "longitude": -98.96231842041016
-      },
-      {
-        "municipalityId": 13,
-        "municipalityName": "METEPEC",
-        "neighborhood": "San Salvador::San Salvador Tizatlalli::Esperanza L\u00f3pez Mateos::San Antonio::H\u00e1bitat Metepec::Quintas de San Jer\u00f3nimo::\u00c1rbol de la Vida::Santa Rita::Alsacia::Aquitania::Real de Azaleas III::Altavista::Rancho San Lucas::Santa Teresa::Santa Cecilia I::La Capilla::Explanada del Parque::Azaleas I y II::El Pueblito I::Santa Cecilia III::Real de Azaleas I::Palma Real III::Azaleas::Normand\u00eda::Sur de La Hacienda::Tizatlalli::Agr\u00edcola Francisco I. Madero::Santa Mar\u00eda Regla::Villa los Arrayanes II::Los Cisnes::El Pueblito II::Bellavista::Gal\u00e1pagos::Villa los Arrayanes I::Palma Real II::ISSEMYM la Providencia::Lorena::Los Sauces::La Asunci\u00f3n::San Luis::Villas Kent Secci\u00f3n el Nevado::Santa Cecilia II::Estrella::Santa Elena::Country::Rinconada Mexicana::Rinconada la Concordia::Villas Kent Secci\u00f3n Guadalupe::San Miguel::El Pirul::Palma Real I",
-        "latitude": 19.25716209411621,
-        "longitude": -99.57515716552734
-      },
-      {
-        "municipalityId": 14,
-        "municipalityName": "ATIZAP\u00c1N DE ZARAGOZA",
-        "neighborhood": "14 de Diciembre::Lomas de Atizap\u00e1n::Lomas de Atizap\u00e1n II",
-        "latitude": 19.552021026611328,
-        "longitude": -99.26331329345703
-      }
-    ]
-  },
-  {
-    "stateId": 5,
-    "stateName": "Tamaulipas",
-    "postalCode": "88740",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "REYNOSA",
-        "neighborhood": "Cumbres::Las Fuentes (secci\u00f3n L\u00e1zaro C\u00e1rdenas)::Modulo Habitacional FOVISSSTE::Cumbres Ampliaci\u00f3n::Aztl\u00e1n::Garcia Rojas::Villa las Fuentes",
-        "latitude": 26.071331024169922,
-        "longitude": -98.32422637939453
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "R\u00cdO BRAVO",
-        "neighborhood": "78 80::R\u00edo Bravo 1::Cuauht\u00e9moc",
-        "latitude": 25.981386184692383,
-        "longitude": -98.09815216064453
-      },
-      {
-        "municipalityId": 2,
-        "municipalityName": "MATAMOROS",
-        "neighborhood": "Nuevo Renacimiento::Praxedis Balboa::Casa Colorada",
-        "latitude": 25.85982894897461,
-        "longitude": -97.46614837646484
-      }
-    ]
-  },
-  {
-    "stateId": 6,
-    "stateName": "Jalisco",
-    "postalCode": "45130",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "ZAPOPAN",
-        "neighborhood": "Casa Grande::Real del Camichin::Villas de Zapopan::Zapopan Industrial Norte::Francisco Villa::Rinconadas de las Palmas::Altagracia::Arcos de Zapopan 2a. Secci\u00f3n::Colinas Del Rey::San Francisco::Lomas de San Isidro::Bosque Valdepe\u00f1as::Bosques de Zapopan::Ca\u00f1adas de San Lorenzo::Lomas de Zapopan::Magisterial Mirador de San Isidro::Real de Valdepe\u00f1as::Hacienda del Sol::Arcos de Zapopan 1a. Secci\u00f3n::Villas de Torremolinos::Real Del Bosque::Punta Valdepe\u00f1as 2::Punta Valdepe\u00f1as 1",
-        "latitude": 20.74610137939453,
-        "longitude": -103.40205383300781
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "GUADALAJARA",
-        "neighborhood": "Terrazas Monraz::Monraz::Lomas del Valle::Eulogio Parra::Prados de Providencia",
-        "latitude": 20.68311309814453,
-        "longitude": -103.39654541015625
-      },
-      {
-        "municipalityId": 2,
-        "municipalityName": "TLAJOMULCO DE Z\u00da\u00d1IGA",
-        "neighborhood": "Cuatro Camichines de La Tijera::Las Amapas::La Tijera::Jard\u00edn de Las Moras::Hacienda La Tijera::Villas de La Tijera::Tulipanes::Las Moras",
-        "latitude": 20.578210830688477,
-        "longitude": -103.43707275390625
-      },
-      {
-        "municipalityId": 3,
-        "municipalityName": "TLAQUEPAQUE",
-        "neighborhood": "ITESO",
-        "latitude": 20.607210159301758,
-        "longitude": -103.41554260253906
-      },
-      {
-        "municipalityId": 4,
-        "municipalityName": "TONAL\u00c1",
-        "neighborhood": "Potrero de Jauja::Los Amiales::Encinos::El Arenal::Gallo Colorado::Rancho S\u00e1nchez::Mismaloya (Pedregal de Santa Martha)::Colinas Tonal\u00e1::Ocotillo::Lomas de San Miguel::La Loma::Vistas del Pedregal",
-        "latitude": -11.780623435974121,
-        "longitude": -75.48690032958984
-      },
-      {
-        "municipalityId": 5,
-        "municipalityName": "EL SALTO",
-        "neighborhood": "Del Carmen::Las Pintitas Centro::Club de Golf Atlas::Lomas del Aeropuerto::Baja California::Ermita",
-        "latitude": 20.5567684173584,
-        "longitude": -103.31180572509766
-      },
-      {
-        "municipalityId": 6,
-        "municipalityName": "CHAPALA",
-        "neighborhood": "Chapala Centro",
-        "latitude": 20.305156707763672,
-        "longitude": -103.18460083007812
-      },
-      {
-        "municipalityId": 7,
-        "municipalityName": "EL ARENAL",
-        "neighborhood": "El Arenal",
-        "latitude": 20.775697708129883,
-        "longitude": -103.69515228271484
-      }
-    ]
-  },
-  {
-    "stateId": 7,
-    "stateName": "Coahuila de Zaragoza",
-    "postalCode": "25198",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "SALTILLO",
-        "neighborhood": "Los Pinos",
-        "latitude": 25.40601348876953,
-        "longitude": -101.02698516845703
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "GENERAL CEPEDA",
-        "neighborhood": "Rinc\u00f3n Colorado::La Rosa",
-        "latitude": 25.505720138549805,
-        "longitude": -101.34607696533203
-      },
-      {
-        "municipalityId": 2,
-        "municipalityName": "RAMOS ARIZPE",
-        "neighborhood": "Ramos Arizpe Centro",
-        "latitude": 25.541149139404297,
-        "longitude": -100.94831085205078
-      },
-      {
-        "municipalityId": 3,
-        "municipalityName": "ARTEAGA",
-        "neighborhood": "Arteaga Centro",
-        "latitude": 25.45467185974121,
-        "longitude": -100.85079193115234
-      },
-      {
-        "municipalityId": 4,
-        "municipalityName": "TORRE\u00d3N",
-        "neighborhood": "Torre\u00f3n Centro::Jardines Reforma",
-        "latitude": 25.550260543823242,
-        "longitude": -103.44094848632812
-      },
-      {
-        "municipalityId": 5,
-        "municipalityName": "Torre\u00f3n",
-        "neighborhood": "",
-        "latitude": 25.542844772338867,
-        "longitude": -103.40678405761719
-      },
-      {
-        "municipalityId": 6,
-        "municipalityName": "Saltillo",
-        "neighborhood": "Valencia",
-        "latitude": 25.48042869567871,
-        "longitude": -101.0238037109375
-      }
-    ]
-  },
-  {
-    "stateId": 8,
-    "stateName": "Michoac\u00e1n de Ocampo",
-    "postalCode": "61790",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "M\u00daGICA",
-        "neighborhood": "G\u00e1mbara",
-        "latitude": 18.93383026123047,
-        "longitude": -102.11398315429688
-      }
-    ]
-  },
-  {
-    "stateId": 9,
-    "stateName": "Oaxaca",
-    "postalCode": "68925",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "SANTIAGO JOCOTEPEC",
-        "neighborhood": "Piedra de Parroqu\u00edn::Bailey::Plan de San Luis::La Isla::Plan Mart\u00edn Chino::Soledad Vista Hermosa",
-        "latitude": 22.156469345092773,
-        "longitude": -100.98554229736328
-      }
-    ]
-  },
-  {
-    "stateId": 10,
-    "stateName": "Chiapas",
-    "postalCode": "29000",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "TUXTLA GUTI\u00c9RREZ",
-        "neighborhood": "Guadalupe::El Magueyito::Santo Domingo::Tuxtla Guti\u00e9rrez Centro::San Jacinto",
-        "latitude": 16.75611686706543,
-        "longitude": -93.1174087524414
-      }
-    ]
-  },
-  {
-    "stateId": 11,
-    "stateName": "Durango",
-    "postalCode": "35077",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "G\u00d3MEZ PALACIO",
-        "neighborhood": "Francisco P\u00e9rez R\u00edos::Parque Industrial Lagunero",
-        "latitude": 25.55036735534668,
-        "longitude": -103.4710464477539
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "MAPIM\u00cd",
-        "neighborhood": "Ceballos",
-        "latitude": 26.52522087097168,
-        "longitude": -104.132080078125
-      }
-    ]
-  },
-  {
-    "stateId": 12,
-    "stateName": "Sonora",
-    "postalCode": "83294",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "HERMOSILLO",
-        "neighborhood": "Rinc\u00f3n Del Marquez::Los \u00c1lamos::Perisur::Valle del Marquez::Cuauht\u00e9moc",
-        "latitude": 29.026573181152344,
-        "longitude": -110.94377136230469
-      }
-    ]
-  },
-  {
-    "stateId": 13,
-    "stateName": "Morelos",
-    "postalCode": "62140",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "CUERNAVACA",
-        "neighborhood": "Bellavista",
-        "latitude": 18.955242156982422,
-        "longitude": -99.2439193725586
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "JIUTEPEC",
-        "neighborhood": "El Zapote::Roberto Osorio Sosa::Valle de las Fuentes::Centro Jiutepec::Los Almendros",
-        "latitude": 18.885440826416016,
-        "longitude": -99.17338562011719
-      },
-      {
-        "municipalityId": 2,
-        "municipalityName": "TEMIXCO",
-        "neighborhood": "Los Presidentes::Rinconada los Sauces::Lomas del Carril::Quetzal::Lomas de Guadalupe::Alta Palmira::Las \u00c1nimas",
-        "latitude": 18.86961555480957,
-        "longitude": -99.23177337646484
-      }
-    ]
-  },
-  {
-    "stateId": 14,
-    "stateName": "Puebla",
-    "postalCode": "72000",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "PUEBLA",
-        "neighborhood": "Centro::San Francisco",
-        "latitude": 19.047163009643555,
-        "longitude": -98.189208984375
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "SAN ANDR\u00c9S CHOLULA",
-        "neighborhood": "Santa Mar\u00eda::Reserva Territorial Atlixcayotl::San Bernardino Tlaxcalancingo::Xinacatla::San Bernardino la Trinidad::Ciudad Judicial::Rinc\u00f3n de Atlixcayotl",
-        "latitude": 18.982757568359375,
-        "longitude": -98.3188705444336
-      }
-    ]
-  },
-  {
-    "stateId": 15,
-    "stateName": "Quintana Roo",
-    "postalCode": "77500",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "BENITO JU\u00c1REZ",
-        "neighborhood": "Supermanzana 20 Centro::Supermanzana 2a Centro::Supermanzana 52::Ju\u00e1rez::Canc\u00fan Centro::Supermanzana 5 Centro::Supermanzana 22 Centro::Supermanzana 3 Centro::Villas Tropicales::Supermanzana 4 Centro::Supermanzana 23 Centro::Zona Hotelera::Supermanzana 2 Centro::Supermanzana 4 A::Supermanzana 1 Centro",
-        "latitude": 21.16058349609375,
-        "longitude": -86.82485961914062
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "COZUMEL",
-        "neighborhood": "Cozumel Centro",
-        "latitude": 20.509925842285156,
-        "longitude": -86.94639587402344
-      },
-      {
-        "municipalityId": 2,
-        "municipalityName": "ISLA MUJERES",
-        "neighborhood": "Isla Blanca::Isla Mujeres::Miraflores::23 de Noviembre::Caridad del Cobre::La Gloria::Lolbe::Santa Rosa::El Ca\u00f1otal::Salina Grande::Ampliaci\u00f3n la Gloria::Isla Mujeres Centro::Metereol\u00f3gico::Salina Chica::Punta Gaviota",
-        "latitude": 21.222774505615234,
-        "longitude": -86.72825622558594
-      },
-      {
-        "municipalityId": 3,
-        "municipalityName": "SOLIDARIDAD",
-        "neighborhood": "Playa del Carmen Centro::::Calica",
-        "latitude": 20.6315975189209,
-        "longitude": -87.07819366455078
-      },
-      {
-        "municipalityId": 4,
-        "municipalityName": "TULUM",
-        "neighborhood": "Akumal",
-        "latitude": 20.395973205566406,
-        "longitude": -87.31590270996094
-      }
-    ]
-  },
-  {
-    "stateId": 16,
-    "stateName": "Yucat\u00e1n",
-    "postalCode": "97259",
-    "type": "7eleven",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "M\u00c9RIDA",
-        "neighborhood": "Itzaez",
-        "latitude": 20.978790283203125,
-        "longitude": -89.64178466796875
-      },
-      {
-        "municipalityId": 1,
-        "municipalityName": "KANAS\u00cdN",
-        "neighborhood": "Privada del Sol::Las Palmeras::Jardines de San Pedro Noh Pat::Leona Vicario II::Reparto Las Granjas::Los Encinos::Ampliaci\u00f3n Hector Victoria::Flor de Mayo::Privada los Naranjos::Bosques de Kanas\u00edn::Brisas del Mayab::Santa Cecilia::Valle Azul::Arecas::Puerta del Sol::Los Pinos de Mulchechen::Jardines de Mulchechen::Brisas de Oriente::Las Flores::::Valle Oriente::Las Palmas Yucat\u00e1n::Ampliaci\u00f3n Xelpac::San Pedro Oriente::Colibr\u00ed::Pedregales de Mulchechen Kanas\u00edn::San \u00c1ngel::Montecarlos::Los Robles III::La Joya::Fontana I::Pedregales del Oriente::::::Amalia Solorzano II::Amalia Sol\u00f3rzano III::::Privada Lomas Campestre::Los Almendros::Los Tulipanes::Villas Turquesa::Cuauht\u00e9moc::Puerta Esmeralda::::Kanas\u00edn Centro::San Antonio Kaua III::Los Arcos de Kanas\u00edn::Las Haciendas::Palmas San Pedro::Girasoles::San Haroldo San Jos\u00e9 Tzal::Pedregales de Kanas\u00edn II::CROC::::Jardines de Kanas\u00edn::Villas del Oriente::Cecilio Chi::\u00c1lamos de Oriente::La Ceiba::Francisco Villa Oriente::Pablo Moreno::San Camilo",
-        "latitude": 20.930389404296875,
-        "longitude": -89.58773040771484
-      }
-    ]
-  },
-  {
-    "stateId": 17,
-    "stateName": "Chihuahua",
-    "postalCode": "31137",
-    "type": "petro",
-    "municipalities": [
-      {
-        "municipalityId": 0,
-        "municipalityName": "CHIHUAHUA",
-        "neighborhood": "Vida Digna::Vicente Guereca::El Porvenir I::Puerta Real::Francisco Ruiz Massieu::Los Portales::Rodolfo Fierro::Luis Fuentes Mares::Antorcha Popular::Colonial de Minas::Juan Guereca::Ni\u00f1os H\u00e9roes::Tarahumara::Villa del Real I, II, III, IV y V::Luis Fuentes Mares::Villas del Norte::Condominos Comerciales Dumas I y II::Villa Bonita::San Pedro de Jes\u00fas Maldonado::Fuentes de Chihuahua::Jos\u00e9 Vasconcelos::Pozos del Valle::Real de Santa Eulalia::El Porvenir II::Los Arcos::Inti Peredo::Laderas::Miguel Sigala::Santa Cecilia::Vicente Guereca::Plaza los Nogales::Constituyentes::Marielena Hernandez::Solidaridad Popular::Atanacio Ortega::Progreso Nacional::Sahuaros I, II y III::20 Aniversario::20 Aniversario::Juan Guereca::Magisterial Solidaridad::Pedro Dom\u00ednguez::Luis Donaldo Colosio::El Porvenir III",
-        "latitude": 28.731201171875,
-        "longitude": -106.12814331054688
-      }
-    ]
-  }
+	{
+		"stateId": 1,
+		"stateName": "Baja California",
+		"postalCode": "22564",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "TIJUANA",
+				"neighborhood": "Urbi Quinta del Cedro::Lomas del Mar::Urbi Quinta del Cedro Segunda Secci\u00f3n",
+				"latitude": 32.44021987915039,
+				"longitude": -117.05757904052734
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "MEXICALI",
+				"neighborhood": "Bellavista::San Isidro::Cachanilla::H\u00e9ctor Corella::Eguia::Pasadina::Villas California::Jabonera::Zona Industrial::Villas del Sol::Mexicali Tianguis::Barrio \u00c1lamo",
+				"latitude": 32.65571975708008,
+				"longitude": -115.48104095458984
+			},
+			{
+				"municipalityId": 3,
+				"municipalityName": "PLAYAS DE ROSARITO",
+				"neighborhood": "Cantamar::Popotla::La Cascada::Venustiano Carranza::El Ma\u00f1ana::Villa Mar::Camino Alegre::Playa Hermosa::Cuenca Lechera",
+				"latitude": 32.30181884765625,
+				"longitude": -117.0418930053711
+			},
+			{
+				"municipalityId": 4,
+				"municipalityName": "ENSENADA",
+				"neighborhood": "Secci\u00f3n Primera",
+				"latitude": 31.856246948242188,
+				"longitude": -116.61141204833984
+			}
+		]
+	},
+	{
+		"stateId": 2,
+		"stateName": "Ciudad de M\u00e9xico",
+		"postalCode": "03100",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "BENITO JU\u00c1REZ",
+				"neighborhood": "Del Valle Centro::Insurgentes San Borja",
+				"latitude": 19.367185592651367,
+				"longitude": -99.16242980957031
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "CUAUHT\u00c9MOC",
+				"neighborhood": "Ju\u00e1rez",
+				"latitude": 19.4267520904541,
+				"longitude": -99.1618423461914
+			},
+			{
+				"municipalityId": 3,
+				"municipalityName": "Azcapotzalco",
+				"neighborhood": "Claver\u00eda::Sector Naval",
+				"latitude": 19.464927673339844,
+				"longitude": -99.18021392822266
+			},
+			{
+				"municipalityId": 4,
+				"municipalityName": "MIGUEL HIDALGO",
+				"neighborhood": "Lomas Hermosa::Lomas de Sotelo",
+				"latitude": 19.446331024169922,
+				"longitude": -99.21275329589844
+			},
+			{
+				"municipalityId": 5,
+				"municipalityName": "TLALPAN",
+				"neighborhood": "Toriello Guerra",
+				"latitude": 19.29475975036621,
+				"longitude": -99.16637420654297
+			},
+			{
+				"municipalityId": 6,
+				"municipalityName": "VENUSTIANO CARRANZA",
+				"neighborhood": "Pe\u00f1\u00f3n de los Ba\u00f1os",
+				"latitude": 19.439645767211914,
+				"longitude": -99.08267974853516
+			},
+			{
+				"municipalityId": 7,
+				"municipalityName": "LA MAGDALENA CONTRERAS",
+				"neighborhood": "San Jer\u00f3nimo L\u00eddice",
+				"latitude": 19.327167510986328,
+				"longitude": -99.22452545166016
+			},
+			{
+				"municipalityId": 8,
+				"municipalityName": "XOCHIMILCO",
+				"neighborhood": "San Gregorio Atlapulco",
+				"latitude": 19.253156661987305,
+				"longitude": -99.05572509765625
+			},
+			{
+				"municipalityId": 9,
+				"municipalityName": "CUAUHT\u00c9MOC",
+				"neighborhood": "Centro (\u00c1rea 5)",
+				"latitude": 19.436161041259766,
+				"longitude": -99.13731384277344
+			},
+			{
+				"municipalityId": 10,
+				"municipalityName": "\u00c1LVARO OBREG\u00d3N",
+				"neighborhood": "Paseo de las Lomas",
+				"latitude": 19.372528076171875,
+				"longitude": -99.26643371582031
+			},
+			{
+				"municipalityId": 11,
+				"municipalityName": "COYOAC\u00c1N",
+				"neighborhood": "Churubusco Country Club",
+				"latitude": 19.35198211669922,
+				"longitude": -99.14146423339844
+			},
+			{
+				"municipalityId": 12,
+				"municipalityName": "GUSTAVO A. MADERO",
+				"neighborhood": "Lindavista Norte::Lindavista Sur",
+				"latitude": 19.49003028869629,
+				"longitude": -99.1331787109375
+			}
+		]
+	},
+	{
+		"stateId": 3,
+		"stateName": "Nuevo Le\u00f3n",
+		"postalCode": "64700",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "MONTERREY",
+				"neighborhood": "Roma Sur::Nuevo Repueblo::Roma::Tecnol\u00f3gico::Cumbre Allegro",
+				"latitude": 25.64616584777832,
+				"longitude": -100.29857635498047
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "SAN PEDRO GARZA GARC\u00cdA",
+				"neighborhood": "Santa Engracia",
+				"latitude": 25.65632438659668,
+				"longitude": -100.3511962890625
+			},
+			{
+				"municipalityId": 3,
+				"municipalityName": "SAN NICOL\u00c1S DE LOS GARZA",
+				"neighborhood": "Viejo An\u00e1huac::Lomas del Roble Sector 2::Cuauht\u00e9moc Sector 2::Cuauht\u00e9moc::Chapultepec::Lomas del Roble Sector 1::Avita Anahuac::Pedregal de An\u00e1huac 1 Sector::El Roble Sector 2::An\u00e1huac::El Roble::Valle de An\u00e1huac::Prival de Anahuac::Cuauht\u00e9moc Sector 3::Pedregal de An\u00e1huac 2 Sector",
+				"latitude": 25.754480361938477,
+				"longitude": -100.3075180053711
+			},
+			{
+				"municipalityId": 4,
+				"municipalityName": "GUADALUPE",
+				"neighborhood": "Rio::La Joya Infonavit 5o Sect::Riberas Del Rio Sector 2::Riberas Del Rio Sector 5::Uni\u00f3n Modelo::Vicente Guerrero::Riberas Del Rio Sector 4::Riberas Del Rio Sector 6::Hacienda de los Lemas 1er Sector::Portal de la Hacienda::La Joya Infonavit 3er Sect::Modelo::Riveras Del R\u00edo::Valle Hermoso::Riberas Del Rio Sector 7::Orizaba::Riberas Del Rio Sect 8::21 de Enero::Rinc\u00f3n de La Hacienda::La Joya Infonavit 2o Sect::La Joya Infonavit 4o Sect::Ignacio Zaragoza::La Joya Infonavit 1er Sect::San Agustin::Riberas Del Rio Sector 3",
+				"latitude": 25.677597045898438,
+				"longitude": -100.21997833251953
+			},
+			{
+				"municipalityId": 5,
+				"municipalityName": "LINARES",
+				"neighborhood": "Moderna",
+				"latitude": 24.862186431884766,
+				"longitude": -99.5777816772461
+			},
+			{
+				"municipalityId": 6,
+				"municipalityName": "SANTA CATARINA",
+				"neighborhood": "San Gilberto::Las Sombrillas::Las Almenas::Misi\u00f3n de las Villas::Visi\u00f3n de La Huasteca 1 Sector::Lomas del Pte",
+				"latitude": 25.70659065246582,
+				"longitude": -100.455810546875
+			},
+			{
+				"municipalityId": 7,
+				"municipalityName": "APODACA",
+				"neighborhood": "Fresnos III::Magnolias II::Nueva Democracia::Villa Luz::Los Robles::Valle de las Palmas I::Paseo Palmas I::Portal An\u00e1huac::Villa Sol::Hacienda las Palmas II::Enramada VII::Enramada III::Enramada II::Enramada VI::Praderas II::Pinos III::Jardines de La Enramada::Paseo Palmas IV::Paseo Palmas III::Magnolias::Enramada IV::Praderas I::Hacienda las Palmas::Cortijo las Palmas::Hacienda los Encinos::Fresnos II::Jardines de Apodaca::Enramada I::Enramada V::Mujeres Ilustres::Paseo Palmas II::Hacienda los Pinos III::Fresnos I::Praderas de La Enramada::Privadas Sendero An\u00e1huac::Privalia Concordia",
+				"latitude": 25.76166343688965,
+				"longitude": -100.25563049316406
+			},
+			{
+				"municipalityId": 8,
+				"municipalityName": "GRAL. ESCOBEDO",
+				"neighborhood": "Joyas de An\u00e1huac::Felipe Carrillo Puerto::Roble Nuevo::Felipe Carrillo Puerto IV::Nexxus Residencial Sector Diamante::Nexxus Residencial Sector Esmeralda::Haciendas de An\u00e1huac I::California Fraccionamiento Primer Sector::Haciendas de An\u00e1huac II::Insurgentes Infonavit::Topo Grande IV::Celestino Gasca::Nexxus Residencial Sector Rub\u00ed::California 2do Sector::Jolla de An\u00e1huac Sector N\u00e1poles::L\u00e1zaro C\u00e1rdenas Ampliaci\u00f3n::Felipe Carrillo Puerto II::Joyas de An\u00e1huac Sector Florencia::Jolla de An\u00e1huac Sector Venecia::Nexxus Residencial Sector Cristal::Residencial Pinos::Privadas Bougambilias::Los Pinos::Felipe Carrillo Puerto III::Privada Del Angel::Nexxus Residencial Sector Platino::Nexxus Residencial Sector Zafiro::Villas Del Parque::Villas de Escobedo II::Parque Industrial Nexxus XXI",
+				"latitude": 19.580333709716797,
+				"longitude": -88.04409790039062
+			},
+			{
+				"municipalityId": 9,
+				"municipalityName": "SANTIAGO",
+				"neighborhood": "El Barro::El Cerrito::San Andres::El Ranchito::El Barrial",
+				"latitude": 25.517505645751953,
+				"longitude": -100.21678161621094
+			},
+			{
+				"municipalityId": 10,
+				"municipalityName": "Salinas Victoria",
+				"neighborhood": "",
+				"latitude": 25.966211318969727,
+				"longitude": -100.29086303710938
+			},
+			{
+				"municipalityId": 11,
+				"municipalityName": "JU\u00c1REZ",
+				"neighborhood": "Las Sabinitas::Quintas las Sabinas::Residencial Punta Esmeralda::Valle las Sabinas::Monte Verde::Colinas Del Sol::Valle Del Virrey::Calder\u00f3n::Gardenias 5 Etapa::Coahuila::Reforma Guadalupe::Paseo del Sabinal::Las \u00c1guilas::Reforma::Las Sabinas::Santa Lucia",
+				"latitude": 25.660022735595703,
+				"longitude": -100.12621307373047
+			},
+			{
+				"municipalityId": 12,
+				"municipalityName": "CI\u00c9NEGA DE FLORES",
+				"neighborhood": "Ci\u00e9nega de Flores Centro",
+				"latitude": 25.954395294189453,
+				"longitude": -100.16633605957031
+			},
+			{
+				"municipalityId": 13,
+				"municipalityName": "ALLENDE",
+				"neighborhood": "La Colmena de Arriba::Las Boquillas::La Colmena de Abajo",
+				"latitude": 25.276647567749023,
+				"longitude": -100.03662109375
+			},
+			{
+				"municipalityId": 14,
+				"municipalityName": "CADEREYTA JIM\u00c9NEZ",
+				"neighborhood": "Valle del Roble::San Bartolo::San Bartolo::Chihuahua::El Castillo",
+				"latitude": 25.67172622680664,
+				"longitude": -100.47337341308594
+			},
+			{
+				"municipalityId": 15,
+				"municipalityName": "MONTEMORELOS",
+				"neighborhood": "Loma Prieta::Canoas",
+				"latitude": 25.25861167907715,
+				"longitude": -99.99055480957031
+			},
+			{
+				"municipalityId": 16,
+				"municipalityName": "GARC\u00cdA",
+				"neighborhood": "Ciudad Industrial Mitras::Mitras Poniente Sector Jordan::Arco Vial::Mitras Poniente Sector Bolivar::Misi\u00f3n San Juan::Paraje San Jos\u00e9::Mitras Poniente Bicentenario::Lincoln Poniente::Paraje San Jos\u00e9 Sector las Monta\u00f1as::Valle de Lincoln Sector San Jos\u00e9::Villas Del Poniente::Lomas de Garcia::Mitras Poniente Sector Sacramento::Mitras Poniente Ajusco::Mitras Poniente::Mitras Poniente Sector Salvatierra::Valle de Lincoln Sector San Agust\u00edn::Paraje San Jos\u00e9 Sector Las Aves::Mitras Poniente Sector Jerez::Rancho Mitras::Mitras Poniente Sector Granada::Paraje de San Jos\u00e9 Sector las Flores::Mitras Poniente Sector Leones::Paraje San Jos\u00e9 Sector los Lagos::Mitras Poniente Sector Urdiales::Mitras Poniente Sector Cedral::Paraje San Jos\u00e9 Sector los Bosques::Mitras Poniente Ensenada::Paraje San Jos\u00e9 Sector R\u00edos::Mitras Poniente Sector Guadalcazar::Los Parques Residencial",
+				"latitude": 25.778827667236328,
+				"longitude": -100.42764282226562
+			},
+			{
+				"municipalityId": 17,
+				"municipalityName": "Pesquer\u00eda",
+				"neighborhood": "Las Aves Residencial and Golf Resort",
+				"latitude": 25.7587890625,
+				"longitude": -100.03992462158203
+			},
+			{
+				"municipalityId": 18,
+				"municipalityName": "GRAL. TREVI\u00d1O",
+				"neighborhood": "General Trevi\u00f1o::La Laguna",
+				"latitude": 26.222984313964844,
+				"longitude": -99.48381805419922
+			},
+			{
+				"municipalityId": 19,
+				"municipalityName": "PESQUER\u00cdA",
+				"neighborhood": "Dulces Nombres::Las Escobas::Las \u00c1guilas::Misi\u00f3n Dulces Nombres::Valle de Santa Mar\u00eda",
+				"latitude": 25.7277774810791,
+				"longitude": -100.08416748046875
+			},
+			{
+				"municipalityId": 20,
+				"municipalityName": "CARMEN",
+				"neighborhood": "El Jaral",
+				"latitude": 25.92243003845215,
+				"longitude": -100.3511962890625
+			},
+			{
+				"municipalityId": 21,
+				"municipalityName": "Ju\u00e1rez",
+				"neighborhood": "Anzures",
+				"latitude": 25.696502685546875,
+				"longitude": -100.1148452758789
+			},
+			{
+				"municipalityId": 22,
+				"municipalityName": "Guadalupe",
+				"neighborhood": "",
+				"latitude": 25.67755889892578,
+				"longitude": -100.25969696044922
+			},
+			{
+				"municipalityId": 23,
+				"municipalityName": "GRAL. ZUAZUA",
+				"neighborhood": "Gral. Zuazua",
+				"latitude": 25.890796661376953,
+				"longitude": -100.11711883544922
+			},
+			{
+				"municipalityId": 24,
+				"municipalityName": "MAR\u00cdN",
+				"neighborhood": "Mar\u00edn",
+				"latitude": 25.87652015686035,
+				"longitude": -100.02753448486328
+			},
+			{
+				"municipalityId": 25,
+				"municipalityName": "CADEREYTA JIM\u00c9NEZ",
+				"neighborhood": "SIN NOMBRE",
+				"latitude": 25.5416,
+				"longitude": -100.0501
+			}
+		]
+	},
+	{
+		"stateId": 4,
+		"stateName": "M\u00e9xico",
+		"postalCode": "53040",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "NAUCALPAN DE JU\u00c1REZ",
+				"neighborhood": "Las Am\u00e9ricas",
+				"latitude": 19.476696014404297,
+				"longitude": -99.23837280273438
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "TLALNEPANTLA DE BAZ",
+				"neighborhood": "Magisterial Vista Bella::Ex-Hacienda de Santa M\u00f3nica::Jacarandas::Bosques de M\u00e9xico::Jacarandas Ampliaci\u00f3n::Margaritas Ampliaci\u00f3n::Las Margaritas::Jardines de Santa M\u00f3nica",
+				"latitude": 19.533828735351562,
+				"longitude": -99.22787475585938
+			},
+			{
+				"municipalityId": 3,
+				"municipalityName": "HUIXQUILUCAN",
+				"neighborhood": "Hacienda de las Palmas::Villa Florence",
+				"latitude": 19.38654327392578,
+				"longitude": -99.28756713867188
+			},
+			{
+				"municipalityId": 4,
+				"municipalityName": "CUAUTITL\u00c1N IZCALLI",
+				"neighborhood": "Lago de Guadalupe::Rinc\u00f3n del Bosque::Bosques de Morelos::Tres de Mayo::Plan de Guadalupe::Halc\u00f3n Oriente",
+				"latitude": 19.632658004760742,
+				"longitude": -99.24266052246094
+			},
+			{
+				"municipalityId": 5,
+				"municipalityName": "ECATEPEC DE MORELOS",
+				"neighborhood": "Real de Santa Clara::Santa Clara Coatitla::Rinconada de Santa Clara",
+				"latitude": 19.53913688659668,
+				"longitude": -99.0669937133789
+			},
+			{
+				"municipalityId": 6,
+				"municipalityName": "TULTITL\u00c1N",
+				"neighborhood": "La Concepci\u00f3n::Nativitas::Tultitl\u00e1n de Mariano Escobedo Centro::Los Reyes::Santiaguito::Bel\u00e9m::Residencial los Reyes::San Bartolo::San Juan",
+				"latitude": 19.63448715209961,
+				"longitude": -99.17086791992188
+			},
+			{
+				"municipalityId": 7,
+				"municipalityName": "COACALCO DE BERRIOZ\u00c1BAL",
+				"neighborhood": "Villa de las Flores 1a Secci\u00f3n (Unidad Coacalco)::Residencial Las Dalias I::II::III Y IV::Arcos las Torres::Secci\u00f3n Jard\u00edn \"Las Plazas\" (Unidad Coacalco)::Las Rosas::Rancho la Providencia::Villa de las Flores 2a Secci\u00f3n (Unidad Coacalco)",
+				"latitude": 19.64288902282715,
+				"longitude": -99.10017395019531
+			},
+			{
+				"municipalityId": 8,
+				"municipalityName": "TOLUCA",
+				"neighborhood": "San Crist\u00f3bal Huichochitl\u00e1n::San Andr\u00e9s Cuexcontitl\u00e1n::La Trinidad::Armando Neyra Chavez::Paseos del Pilar::San Salvador::Barrio San Gabriel",
+				"latitude": 19.339813232421875,
+				"longitude": -99.65955352783203
+			},
+			{
+				"municipalityId": 9,
+				"municipalityName": "NEZAHUALC\u00d3YOTL",
+				"neighborhood": "Tamaulipas Secci\u00f3n Virgencitas::Tamaulipas",
+				"latitude": 19.42037582397461,
+				"longitude": -99.02601623535156
+			},
+			{
+				"municipalityId": 10,
+				"municipalityName": "CUAUTITL\u00c1N",
+				"neighborhood": "Paseo de Santa Mar\u00eda::Misiones II::Los Morales 1a Secci\u00f3n::El Nopalito::Cuautitl\u00e1n Centro::Romita::San Juan",
+				"latitude": 19.66887664794922,
+				"longitude": -99.1627197265625
+			},
+			{
+				"municipalityId": 11,
+				"municipalityName": "LERMA",
+				"neighborhood": "San Lorenzo Huitzizilapan::El Espino Peralta::Casa Blanca (Tierras Nuevas)",
+				"latitude": 19.385133743286133,
+				"longitude": -99.54646301269531
+			},
+			{
+				"municipalityId": 12,
+				"municipalityName": "SAN MATEO ATENCO",
+				"neighborhood": "San Mateo Atenco Centro",
+				"latitude": 19.263002395629883,
+				"longitude": -99.53243255615234
+			},
+			{
+				"municipalityId": 13,
+				"municipalityName": "LA PAZ",
+				"neighborhood": "Ampliaci\u00f3n Tecamachalco::San Salvador Tecamachalco",
+				"latitude": 19.36296844482422,
+				"longitude": -98.96231842041016
+			},
+			{
+				"municipalityId": 14,
+				"municipalityName": "METEPEC",
+				"neighborhood": "San Salvador::San Salvador Tizatlalli::Esperanza L\u00f3pez Mateos::San Antonio::H\u00e1bitat Metepec::Quintas de San Jer\u00f3nimo::\u00c1rbol de la Vida::Santa Rita::Alsacia::Aquitania::Real de Azaleas III::Altavista::Rancho San Lucas::Santa Teresa::Santa Cecilia I::La Capilla::Explanada del Parque::Azaleas I y II::El Pueblito I::Santa Cecilia III::Real de Azaleas I::Palma Real III::Azaleas::Normand\u00eda::Sur de La Hacienda::Tizatlalli::Agr\u00edcola Francisco I. Madero::Santa Mar\u00eda Regla::Villa los Arrayanes II::Los Cisnes::El Pueblito II::Bellavista::Gal\u00e1pagos::Villa los Arrayanes I::Palma Real II::ISSEMYM la Providencia::Lorena::Los Sauces::La Asunci\u00f3n::San Luis::Villas Kent Secci\u00f3n el Nevado::Santa Cecilia II::Estrella::Santa Elena::Country::Rinconada Mexicana::Rinconada la Concordia::Villas Kent Secci\u00f3n Guadalupe::San Miguel::El Pirul::Palma Real I",
+				"latitude": 19.25716209411621,
+				"longitude": -99.57515716552734
+			},
+			{
+				"municipalityId": 15,
+				"municipalityName": "ATIZAP\u00c1N DE ZARAGOZA",
+				"neighborhood": "14 de Diciembre::Lomas de Atizap\u00e1n::Lomas de Atizap\u00e1n II",
+				"latitude": 19.552021026611328,
+				"longitude": -99.26331329345703
+			}
+		]
+	},
+	{
+		"stateId": 5,
+		"stateName": "Tamaulipas",
+		"postalCode": "88740",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "REYNOSA",
+				"neighborhood": "Cumbres::Las Fuentes (secci\u00f3n L\u00e1zaro C\u00e1rdenas)::Modulo Habitacional FOVISSSTE::Cumbres Ampliaci\u00f3n::Aztl\u00e1n::Garcia Rojas::Villa las Fuentes",
+				"latitude": 26.071331024169922,
+				"longitude": -98.32422637939453
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "R\u00cdO BRAVO",
+				"neighborhood": "78 80::R\u00edo Bravo 1::Cuauht\u00e9moc",
+				"latitude": 25.981386184692383,
+				"longitude": -98.09815216064453
+			},
+			{
+				"municipalityId": 3,
+				"municipalityName": "MATAMOROS",
+				"neighborhood": "Nuevo Renacimiento::Praxedis Balboa::Casa Colorada",
+				"latitude": 25.85982894897461,
+				"longitude": -97.46614837646484
+			}
+		]
+	},
+	{
+		"stateId": 6,
+		"stateName": "Jalisco",
+		"postalCode": "45130",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "ZAPOPAN",
+				"neighborhood": "Casa Grande::Real del Camichin::Villas de Zapopan::Zapopan Industrial Norte::Francisco Villa::Rinconadas de las Palmas::Altagracia::Arcos de Zapopan 2a. Secci\u00f3n::Colinas Del Rey::San Francisco::Lomas de San Isidro::Bosque Valdepe\u00f1as::Bosques de Zapopan::Ca\u00f1adas de San Lorenzo::Lomas de Zapopan::Magisterial Mirador de San Isidro::Real de Valdepe\u00f1as::Hacienda del Sol::Arcos de Zapopan 1a. Secci\u00f3n::Villas de Torremolinos::Real Del Bosque::Punta Valdepe\u00f1as 2::Punta Valdepe\u00f1as 1",
+				"latitude": 20.74610137939453,
+				"longitude": -103.40205383300781
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "GUADALAJARA",
+				"neighborhood": "Terrazas Monraz::Monraz::Lomas del Valle::Eulogio Parra::Prados de Providencia",
+				"latitude": 20.68311309814453,
+				"longitude": -103.39654541015625
+			},
+			{
+				"municipalityId": 3,
+				"municipalityName": "TLAJOMULCO DE Z\u00da\u00d1IGA",
+				"neighborhood": "Cuatro Camichines de La Tijera::Las Amapas::La Tijera::Jard\u00edn de Las Moras::Hacienda La Tijera::Villas de La Tijera::Tulipanes::Las Moras",
+				"latitude": 20.578210830688477,
+				"longitude": -103.43707275390625
+			},
+			{
+				"municipalityId": 4,
+				"municipalityName": "TLAQUEPAQUE",
+				"neighborhood": "ITESO",
+				"latitude": 20.607210159301758,
+				"longitude": -103.41554260253906
+			},
+			{
+				"municipalityId": 5,
+				"municipalityName": "TONAL\u00c1",
+				"neighborhood": "Potrero de Jauja::Los Amiales::Encinos::El Arenal::Gallo Colorado::Rancho S\u00e1nchez::Mismaloya (Pedregal de Santa Martha)::Colinas Tonal\u00e1::Ocotillo::Lomas de San Miguel::La Loma::Vistas del Pedregal",
+				"latitude": -11.780623435974121,
+				"longitude": -75.48690032958984
+			},
+			{
+				"municipalityId": 6,
+				"municipalityName": "EL SALTO",
+				"neighborhood": "Del Carmen::Las Pintitas Centro::Club de Golf Atlas::Lomas del Aeropuerto::Baja California::Ermita",
+				"latitude": 20.5567684173584,
+				"longitude": -103.31180572509766
+			},
+			{
+				"municipalityId": 7,
+				"municipalityName": "CHAPALA",
+				"neighborhood": "Chapala Centro",
+				"latitude": 20.305156707763672,
+				"longitude": -103.18460083007812
+			},
+			{
+				"municipalityId": 8,
+				"municipalityName": "EL ARENAL",
+				"neighborhood": "El Arenal",
+				"latitude": 20.775697708129883,
+				"longitude": -103.69515228271484
+			}
+		]
+	},
+	{
+		"stateId": 7,
+		"stateName": "Coahuila de Zaragoza",
+		"postalCode": "25198",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "SALTILLO",
+				"neighborhood": "Los Pinos",
+				"latitude": 25.40601348876953,
+				"longitude": -101.02698516845703
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "GENERAL CEPEDA",
+				"neighborhood": "Rinc\u00f3n Colorado::La Rosa",
+				"latitude": 25.505720138549805,
+				"longitude": -101.34607696533203
+			},
+			{
+				"municipalityId": 3,
+				"municipalityName": "RAMOS ARIZPE",
+				"neighborhood": "Ramos Arizpe Centro",
+				"latitude": 25.541149139404297,
+				"longitude": -100.94831085205078
+			},
+			{
+				"municipalityId": 4,
+				"municipalityName": "ARTEAGA",
+				"neighborhood": "Arteaga Centro",
+				"latitude": 25.45467185974121,
+				"longitude": -100.85079193115234
+			},
+			{
+				"municipalityId": 5,
+				"municipalityName": "TORRE\u00d3N",
+				"neighborhood": "Torre\u00f3n Centro::Jardines Reforma",
+				"latitude": 25.550260543823242,
+				"longitude": -103.44094848632812
+			},
+			{
+				"municipalityId": 6,
+				"municipalityName": "Torre\u00f3n",
+				"neighborhood": "",
+				"latitude": 25.542844772338867,
+				"longitude": -103.40678405761719
+			},
+			{
+				"municipalityId": 7,
+				"municipalityName": "Saltillo",
+				"neighborhood": "Valencia",
+				"latitude": 25.48042869567871,
+				"longitude": -101.0238037109375
+			}
+		]
+	},
+	{
+		"stateId": 8,
+		"stateName": "Michoac\u00e1n de Ocampo",
+		"postalCode": "61790",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "M\u00daGICA",
+				"neighborhood": "G\u00e1mbara",
+				"latitude": 18.93383026123047,
+				"longitude": -102.11398315429688
+			}
+		]
+	},
+	{
+		"stateId": 9,
+		"stateName": "Oaxaca",
+		"postalCode": "68925",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "SANTIAGO JOCOTEPEC",
+				"neighborhood": "Piedra de Parroqu\u00edn::Bailey::Plan de San Luis::La Isla::Plan Mart\u00edn Chino::Soledad Vista Hermosa",
+				"latitude": 22.156469345092773,
+				"longitude": -100.98554229736328
+			}
+		]
+	},
+	{
+		"stateId": 10,
+		"stateName": "Chiapas",
+		"postalCode": "29000",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "TUXTLA GUTI\u00c9RREZ",
+				"neighborhood": "Guadalupe::El Magueyito::Santo Domingo::Tuxtla Guti\u00e9rrez Centro::San Jacinto",
+				"latitude": 16.75611686706543,
+				"longitude": -93.1174087524414
+			}
+		]
+	},
+	{
+		"stateId": 11,
+		"stateName": "Durango",
+		"postalCode": "35077",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "G\u00d3MEZ PALACIO",
+				"neighborhood": "Francisco P\u00e9rez R\u00edos::Parque Industrial Lagunero",
+				"latitude": 25.55036735534668,
+				"longitude": -103.4710464477539
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "MAPIM\u00cd",
+				"neighborhood": "Ceballos",
+				"latitude": 26.52522087097168,
+				"longitude": -104.132080078125
+			}
+		]
+	},
+	{
+		"stateId": 12,
+		"stateName": "Sonora",
+		"postalCode": "83294",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "HERMOSILLO",
+				"neighborhood": "Rinc\u00f3n Del Marquez::Los \u00c1lamos::Perisur::Valle del Marquez::Cuauht\u00e9moc",
+				"latitude": 29.026573181152344,
+				"longitude": -110.94377136230469
+			}
+		]
+	},
+	{
+		"stateId": 13,
+		"stateName": "Morelos",
+		"postalCode": "62140",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "CUERNAVACA",
+				"neighborhood": "Bellavista",
+				"latitude": 18.955242156982422,
+				"longitude": -99.2439193725586
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "JIUTEPEC",
+				"neighborhood": "El Zapote::Roberto Osorio Sosa::Valle de las Fuentes::Centro Jiutepec::Los Almendros",
+				"latitude": 18.885440826416016,
+				"longitude": -99.17338562011719
+			},
+			{
+				"municipalityId": 3,
+				"municipalityName": "TEMIXCO",
+				"neighborhood": "Los Presidentes::Rinconada los Sauces::Lomas del Carril::Quetzal::Lomas de Guadalupe::Alta Palmira::Las \u00c1nimas",
+				"latitude": 18.86961555480957,
+				"longitude": -99.23177337646484
+			}
+		]
+	},
+	{
+		"stateId": 14,
+		"stateName": "Puebla",
+		"postalCode": "72000",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "PUEBLA",
+				"neighborhood": "Centro::San Francisco",
+				"latitude": 19.047163009643555,
+				"longitude": -98.189208984375
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "SAN ANDR\u00c9S CHOLULA",
+				"neighborhood": "Santa Mar\u00eda::Reserva Territorial Atlixcayotl::San Bernardino Tlaxcalancingo::Xinacatla::San Bernardino la Trinidad::Ciudad Judicial::Rinc\u00f3n de Atlixcayotl",
+				"latitude": 18.982757568359375,
+				"longitude": -98.3188705444336
+			}
+		]
+	},
+	{
+		"stateId": 15,
+		"stateName": "Quintana Roo",
+		"postalCode": "77500",
+		"type": "7eleven",
+		"municipalities": [
+			{
+				"municipalityId": 1,
+				"municipalityName": "BENITO JU\u00c1REZ",
+				"neighborhood": "Supermanzana 20 Centro::Supermanzana 2a Centro::Supermanzana 52::Ju\u00e1rez::Canc\u00fan Centro::Supermanzana 5 Centro::Supermanzana 22 Centro::Supermanzana 3 Centro::Villas Tropicales::Supermanzana 4 Centro::Supermanzana 23 Centro::Zona Hotelera::Supermanzana 2 Centro::Supermanzana 4 A::Supermanzana 1 Centro",
+				"latitude": 21.16058349609375,
+				"longitude": -86.82485961914062
+			},
+			{
+				"municipalityId": 2,
+				"municipalityName": "COZUMEL",
+				"neighborhood": "Cozumel Centro",
+				"latitude": 20.509925842285156,
+				"longitude": -86.94639587402344
+			},
+			{
+				"municipalityId": 3,
+				"municipalityName": "ISLA MUJERES",
+				"neighborhood": "Isla Blanca::Isla Mujeres::Miraflores::23 de Noviembre::Caridad del Cobre::La Gloria::Lolbe::Santa Rosa::El Ca\u00f1otal::Salina Grande::Ampliaci\u00f3n la Gloria::Isla Mujeres Centro::Metereol\u00f3gico::Salina Chica::Punta Gaviota",
+				"latitude": 21.222774505615234,
+				"longitude": -86.72825622558594
+			},
+			{
+				"municipalityId": 4,
+				"municipalityName": "SOLIDARIDAD",
+				"neighborhood": "Playa del Carmen Centro::::Calica",
+				"latitude": 20.6315975189209,
+				"longitude": -87.07819366455078
+			},
+			{
+				"municipalityId": 5,
+				"municipalityName": "TULUM",
+				"neighborhood": "Akumal",
+				"latitude": 20.395973205566406,
+				"longitude": -87.31590270996094
+			}
+		]
+	}
 ]

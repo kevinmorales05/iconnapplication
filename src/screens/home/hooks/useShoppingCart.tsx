@@ -1,7 +1,7 @@
 import { CounterType } from 'components/types/counter-type';
 import { useCallback } from 'react';
 import { cartItemInterface, cartItemsRequestInterface, useAppDispatch } from 'rtk';
-import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
+import { updateItemsLoading, updateShoppingCartItems } from 'rtk/slices/cartSlice';
 import { updateShoppingCart, clearShoppingCartMessages } from 'services';
 import { store } from 'rtk';
 
@@ -74,10 +74,14 @@ export const useShoppingCart = () => {
   };
 
   const updateShoppingCartProduct = useCallback(async (type: CounterType, productId: string) => {
+    const { loadingItems } = store.getState().cart;
+    let loadingItemsTem = loadingItems ? loadingItems.concat([]) : [];
     const { orderFormId } = store.getState().cart.cart;
     const newCartItemsRequest = buildNewCartItems(type, productId, orderFormId);
     const response = await updateShoppingCart(orderFormId, newCartItemsRequest);
+    loadingItemsTem = loadingItemsTem.filter(id => productId != id);
     dispatch(updateShoppingCartItems(response));
+    setTimeout(() => dispatch(updateItemsLoading(loadingItemsTem)), 350);
   }, []);
 
   const migrateCartToAnotherBranch = useCallback(async (seller: string) => {

@@ -24,9 +24,8 @@ import { SafeArea } from 'components/atoms/SafeArea';
 import { showLocation } from 'react-native-map-link';
 import { useLocation } from 'hooks/useLocation';
 import { useNavigation } from '@react-navigation/native';
-import { usePermissions } from 'context';
+import { usePermissions, useToast } from 'context';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useToast } from 'context';
 import BranchesScreen from './BranchesScreen';
 import theme from 'components/theme/theme';
 import { logEvent } from 'utils/analytics';
@@ -246,7 +245,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
               }
             });
 
-            newMarkersWithAvailableServices = newMarkersWithAvailableServices!.concat(filteredMarkers!);
+            newMarkersWithAvailableServices = newMarkersWithAvailableServices.concat(filteredMarkers);
           }
 
           // Filter by uniques Ids.
@@ -277,7 +276,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
    */
   useEffect(() => {
     if (userLocation && radiusOfSearch) {
-      const nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], POINTS as PointInterface[], radiusOfSearch);
+      const nearbyMarkers = getNearbyPoints([userLocation?.latitude, userLocation?.longitude], POINTS as PointInterface[], radiusOfSearch);
       if (nearbyMarkers.length === 0) {
         toast.show({ message: 'No hay resultados. Aumenta la distancia de búsqueda o limpia los filtros.', type: 'error' });
       }
@@ -331,13 +330,13 @@ const BranchesController: React.FC<any> = ({ route }) => {
     ); // After this line we use 100000 as search radius.
     if (nearbyMarkers.length > 0) {
       // We obtain the distance between the real location of the user and each of the new points in the new zone.
-      nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], nearbyMarkers as PointInterface[], 100000);
+      nearbyMarkers = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], nearbyMarkers, 100000);
       // We join the markers close to the real location of the user, plus those of the new search area.
       const allMarkers = markers?.concat(nearbyMarkers);
       // In case the user hasn't scrolled too much on the map, we make sure that the new markers of the new area are not the same as the actual location. We prevent duplication.
       let uniquePoints: PointInterface[] = allMarkers!.filter((v, i, a) => a.findIndex(v2 => v2.id === v.id) === i);
       // Finally we make sure to recalculate the distance between each of all the points and the actual location of the user, in addition MAINLY to ORDERING them by proximity.
-      uniquePoints = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], uniquePoints as PointInterface[], 100000);
+      uniquePoints = getNearbyPoints([userLocation?.latitude!, userLocation?.longitude!], uniquePoints, 100000);
       // Please note that in this function only we use 100000 as the "search radius" to ensure that we are not discriminating against any marker and to get
       // the total distance of each marker from the actual location of the user.
       setMarkers(uniquePoints);
@@ -388,7 +387,7 @@ const BranchesController: React.FC<any> = ({ route }) => {
   const bottomSheetSMRef = useRef<BottomSheetModal>(null);
 
   // SnapPoints for PointDetailSheet
-  const snapPointsSM = useMemo(() => [Platform.OS === 'android' ? '45%' : '40%', Platform.OS === 'android' ? '45%' : '40%'], []);
+  const snapPointsSM = useMemo(() => [Platform.OS === 'android' ? '50%' : '40%', Platform.OS === 'android' ? '50%' : '40%'], []);
 
   /**
    * Hide PointDetailSheet.

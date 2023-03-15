@@ -1,6 +1,6 @@
 import { AddressModalScreen, SafeArea, AddressModalSelection } from 'components';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Text } from 'react-native';
+import { Linking, Text } from 'react-native';
 import theme from 'components/theme/theme';
 import {
   RootState,
@@ -9,14 +9,15 @@ import {
   Address,
   setAddressDefault,
   CarouselItem,
-  getHomeItemsThunk,
   ProductInterface,
   ExistingProductInCartInterface,
   ShippingDataAddress,
   ShippingDataInfo,
   ShippingData,
   setDateSync,
-  ProductsByCollectionInterface
+  ProductsByCollectionInterface,
+  ModuleInterface,
+  setAppModules
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -29,12 +30,15 @@ import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
 import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne, saveShippingData } from 'services/vtexShoppingCar.services';
-import { updateShoppingCartItems } from 'rtk/slices/cartSlice';
+import { setDetailSelected, updateShoppingCartItems } from 'rtk/slices/cartSlice';
 import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
 import moment from 'moment';
+import remoteConfig from '@react-native-firebase/remote-config';
+import { envariomentState } from '../../common/modulesRemoteConfig';
 import { logEvent } from 'utils/analytics';
+import { homeServices } from 'services';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -55,10 +59,15 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const inConstruction = useInConstruction();
   const { getFavorites } = useFavorites();
   const { email } = user;
-  const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS } = Config;
+  const { RECOMMENDED_PRODUCTS, OTHER_PRODUCTS, ENV_STATE } = Config;
   const welcomeModal = useWelcomeModal();
   const [isChargin, setIsChargin] = useState(false);
   const { dateSync } = useAppSelector((state: RootState) => state.wallet);
+  const [isLoadBanners, setIsLoadBanners] = useState<boolean>(true);
+
+  useEffect(() => {
+    initRemoteConfig();
+  }, []);
 
   useEffect(() => {
     if (authLoading === false) loader.hide();
@@ -100,6 +109,37 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       }, 250);
     }
   }, [user, isChargin]);
+
+  const initRemoteConfig = async () => {
+    await remoteConfig().setConfigSettings({
+      minimumFetchIntervalMillis: 30000
+    });
+    await remoteConfig()
+      .setDefaults({
+        prod_modules_config: ''
+      })
+      .then(() => remoteConfig().fetchAndActivate())
+      .then(() => {
+        getRemoteConfig();
+      });
+  };
+
+  const getRemoteConfig = async () => {
+    //Code to get All parameters from Firebase Remote config
+    const parameters = await remoteConfig().getAll();
+    if (parameters) {
+      const envConfig = envariomentState[ENV_STATE];
+      if (parameters[envConfig]) {
+        const parametersJSON: ModuleInterface[] = JSON.parse(parameters[envConfig]._value);
+        if (parametersJSON) {
+          dispatch(setAppModules({ appModules: parametersJSON }));
+        }
+      }
+    }
+    setTimeout(async () => {
+      await initRemoteConfig();
+    }, 300000);
+  };
 
   const addDirectionDefault = async () => {
     const selectedAddresses: ShippingDataAddress = {
@@ -172,7 +212,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchAddresses = useCallback(async () => {
     loader.show();
     if (user.id) {
-      await dispatch(getUserAddressesThunk(user.id!));
+      await dispatch(getUserAddressesThunk(user.id));
     }
   }, []);
 
@@ -228,7 +268,22 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     );
   }, [user.addresses]);
 
+  const onNavigateBanner = (carouselItem: CarouselItem) => {
+    if (carouselItem.navigation_type === 'external') {
+      Linking.openURL(carouselItem.link);
+    } else if (carouselItem.navigation_type === 'internal') {
+      if (carouselItem.products_id) {
+        dispatch(setDetailSelected(carouselItem.products_id + ''));
+        navigate('ProductDetail', { productIdentifier: carouselItem.products_id + '' });
+      } else if (carouselItem.collections_id) {
+        const titleView: string = carouselItem.promotion_title ? carouselItem.promotion_title : carouselItem.promotion_name ? carouselItem.promotion_name : '';
+        navigate('CollectionsProducts', { collectionId: carouselItem.collections_id, title: titleView });
+      }
+    }
+  };
+
   const onPressCarouselItem = (CarouselItem: CarouselItem) => {
+    onNavigateBanner(CarouselItem);
     if (CarouselItem.promotion_type === 'second') {
       logEvent('hmPetro7Banner', {
         id: user.id,
@@ -328,10 +383,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    * Load home items list (banners, promotions, options menu).
    */
   const fetchHomeItems = useCallback(async () => {
-    loader.show();
-    const homeItems = await dispatch(getHomeItemsThunk()).unwrap();
+    // loader.show();
+    const homeItems = await homeServices.getHomeItems();
     if (homeItems.responseCode === 603) {
       setHomeItems(homeItems.data);
+    } else {
+      setIsLoadBanners(false);
     }
   }, []);
 
@@ -346,17 +403,21 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
    */
   useEffect(() => {
     fetchHomeItems();
-  }, [fetchHomeItems]);
+  }, []);
 
   useEffect(() => {
     if (homeItems) {
       setHomeOptions(HOME_OPTIONS);
-      setPrincipal(homeItems!.filter(item => item.promotion_type === 'principal'));
-      setSecond(homeItems!.filter(item => item.promotion_type === 'second'));
-      setDay_promotion(homeItems!.filter(item => item.promotion_type === 'day_promotion'));
-      setAll_promotions(homeItems!.filter(item => item.promotion_type === 'all_promotions'));
+      setPrincipal(homeItems.filter(item => item.promotion_type === 'principal'));
+      setSecond(homeItems.filter(item => item.promotion_type === 'second'));
+      setDay_promotion(homeItems.filter(item => item.promotion_type === 'day_promotion'));
+      setAll_promotions(homeItems.filter(item => item.promotion_type === 'all_promotions'));
     }
   }, [homeItems]);
+
+  useEffect(() => {
+    setIsLoadBanners(false);
+  }, [all_promotions]);
 
   const { fetchProducts, products, otherProducts } = useProducts();
   const [homeProducts, setHomeProducts] = useState<ProductInterface[] | null>();
@@ -531,6 +592,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         viewRecomendedProducts={viewRecomendedProducts}
         viewOtherProducts={viewOtherProducts}
         isAddressModalSelectionVisible={addressModalSelectionVisible}
+        isLoadBanners={isLoadBanners}
       />
       <AddressModalSelection
         visible={addressModalSelectionVisible}

@@ -8,6 +8,7 @@ export interface AppInterface {
   municipality?: string;
   latitude?: number;
   longitude?: number;
+  appModules?: ModuleInterface[];
 }
 
 export type CarouselType = 'homeOptions' | 'principal' | 'second' | 'all_promotions' | 'day_promotion';
@@ -24,6 +25,10 @@ export interface CarouselItem {
   promotion_type: string;
   status: string;
   navigateTo?: string;
+  promotion_title?: string;
+  navigation_type?: NavigationType;
+  collections_id?: number;
+  products_id?: number;
 }
 
 export interface TabItem {
@@ -34,4 +39,18 @@ export interface TabItem {
 export interface Location {
   latitude: number;
   longitude: number;
+}
+
+export interface ModuleInterface {
+  id: string;
+  name: string;
+  enabled: boolean;
+  modules: SubModuleInterface[];
+}
+
+export interface SubModuleInterface {
+  id: string;
+  name: string;
+  description: string;
+  enabled: boolean;
 }

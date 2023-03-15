@@ -58,7 +58,7 @@ function OtherProductsScreen() {
             collectionName: 'Other Products',
             productId: item.productId
           });
-          updateShoppingCartProduct!('create', item.productId);
+          updateShoppingCartProduct('create', item.productId);
         }}
         onPressAddQuantity={() => {
           logEvent('plusProduct', {
@@ -68,7 +68,7 @@ function OtherProductsScreen() {
             collectionName: 'Other Products',
             productId: item.productId
           });
-          updateShoppingCartProduct!('add', item.productId);
+          updateShoppingCartProduct('add', item.productId);
         }}
         onPressDeleteCart={() => {
           logEvent('removeProduct', {
@@ -78,7 +78,7 @@ function OtherProductsScreen() {
             collectionName: 'Other Products',
             productId: item.productId
           });
-          updateShoppingCartProduct!('remove', item.productId);
+          updateShoppingCartProduct('remove', item.productId);
         }}
         onPressDecreaseQuantity={() => {
           logEvent('minusProduct', {
@@ -88,7 +88,7 @@ function OtherProductsScreen() {
             collectionName: 'Other Products',
             productId: item.productId
           });
-          updateShoppingCartProduct!('substract', item.productId);
+          updateShoppingCartProduct('substract', item.productId);
         }}
         notNeedMarginLeft
         onPressOut={function (): void {

@@ -9,7 +9,7 @@ import { getShoppingCart, emptyShoppingCar, updateShoppingCart, clearShoppingCar
 import IconO from 'react-native-vector-icons/FontAwesome5';
 import { ConnectionItem } from 'components/organisms/ConnectionItem';
 import { useAlert, useLoading, useToast } from 'context';
-import { updateShoppingCartItems, setDetailSelected } from 'rtk/slices/cartSlice';
+import { updateShoppingCartItems, setDetailSelected, updateItemsLoading } from 'rtk/slices/cartSlice';
 
 interface Props {
   routes: any;
@@ -36,16 +36,17 @@ import { HomeStackParams } from '../../../navigation/types';
 import { moderateScale } from 'utils/scaleMetrics';
 import { logEvent } from 'utils/analytics';
 import FastImage from 'react-native-fast-image';
+import { ProductAddLoading } from 'components/molecules/ProductAddLoading';
 
 const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, routes, messageType, countProducts, cartItems }) => {
   const insets = useSafeAreaInsets();
   const dispatch = useAppDispatch();
   const loader = useLoading();
-  const { loading } = useAppSelector((state: RootState) => state.invoicing);
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { internetReachability } = useAppSelector((state: RootState) => state.app);
+  const { loadingItems } = useAppSelector((state: RootState) => state.cart);
   const toast = useToast();
   const alert = useAlert();
   const [inter, setInter] = useState(true);
@@ -59,6 +60,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
 
   const fetchData = useCallback(async () => {
+    loader.show();
     await getShoppingCart(cart.orderFormId)
       .then(response => {
         const { items, messages } = response;
@@ -95,11 +97,16 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           });
           setSubTotalCalculated(calculated);
         }
-        getProductsInfo(items);
+        if (items.length) {
+          getProductsInfo(items);
+        } else {
+          loader.hide();
+        }
         dispatch(updateShoppingCartItems(response));
       })
       .catch(() => {
         // console.log(error
+        loader.hide();
       });
   }, []);
 
@@ -163,14 +170,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
     }
   }, [messageType, messages]);
 
-  useEffect(() => {
-    if (routes.length) {
-      if (routes[routes.length - 1].name === 'ShopCart') {
-        fetchData();
-      }
-    }
-  }, [routes]);
-
   const getProducts = async (products: any[]) => {
     if (products) {
       const data: ProductListCacheRequestInterface = {
@@ -210,9 +209,10 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
       }
       setProductList(productTem);
     }
+    loader.hide();
   }
 
-  const updateShoppingCartQuantityServiceCall = useCallback(async (orderFormId, request, operation, msgOperation, updatedIndex) => {
+  const updateShoppingCartQuantityServiceCall = useCallback(async (orderFormId, request, operation, msgOperation, updatedIndex, productId) => {
     try {
       let oldQuantity = request.orderItems[updatedIndex].quantity;
       await clearShoppingCartMessages(orderFormId, request);
@@ -266,7 +266,11 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
             setProductList(undefined);
           }
           dispatch(updateShoppingCartItems(response));
-
+          if (productId) {
+            let loadingItemsTem = loadingItems ? loadingItems.concat([]) : [];
+            loadingItemsTem = loadingItemsTem.filter(id => productId != id);
+            setTimeout(() => dispatch(updateItemsLoading(loadingItemsTem)), 350);
+          }
           if (operation === 'increase') {
             toastFunction(
               hasAvailableMessage ? 'addingProductError' : operation,
@@ -326,7 +330,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
 
   const deleteUnavailableItems = () => {
     let orderItems = [];
-    withoutStockMap.forEach(key => {
+    withoutStockMap.forEach((value, key, map) => {
       orderItems.push({
         id: productList[key] !== undefined && productList[key].productId !== undefined ? productList[key].productId : 0,
         quantity: 0,
@@ -353,12 +357,6 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
       if (internetReachability === 2) setInter(false);
     }
   }, [internetReachability]);
-
-  useEffect(() => {
-    if (loading === false) {
-      loader.hide();
-    }
-  }, [loading]);
 
   function toastFunction(tag, msg) {
     if (tag === 'decrease' || tag === 'increase') {
@@ -390,14 +388,22 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   }
 
   const Counter: React.FC = ({ orderFormId, item, itemIndex }) => {
+    const isLoadProduct = !!loadingItems.filter(id => id === item.productId).length;
+
+    const addLoader = () => {
+      const loadingItemsTem = loadingItems.concat([]);
+      loadingItemsTem.push(item.productId);
+      dispatch(updateItemsLoading(loadingItemsTem));
+    };
     const decreaseItem = () => {
       try {
         let itemQuantityReceived = parseInt(item.quantity);
         itemQuantityReceived--;
         let orderItems = requestList;
         orderItems[itemIndex].quantity = itemQuantityReceived;
+        addLoader();
         //loader.show();
-        updateShoppingCartQuantityServiceCall(orderFormId, { orderItems }, 'decrease', 'Se actualizó el artículo en la canasta.', itemIndex);
+        updateShoppingCartQuantityServiceCall(orderFormId, { orderItems }, 'decrease', 'Se actualizó el artículo en la canasta.', itemIndex, item.productId);
       } catch (error) {
         // console.log(error);
       } finally {
@@ -411,8 +417,9 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         itemQuantityReceived++;
         const orderItems = requestList;
         orderItems[itemIndex].quantity = itemQuantityReceived;
+        addLoader();
         //loader.show();
-        updateShoppingCartQuantityServiceCall(orderFormId, { orderItems }, 'increase', 'Se actualizó el artículo en la canasta.', itemIndex);
+        updateShoppingCartQuantityServiceCall(orderFormId, { orderItems }, 'increase', 'Se actualizó el artículo en la canasta.', itemIndex, item.productId);
       } catch (error) {
         // console.log(error);
       } finally {
@@ -440,37 +447,43 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           height: 31
         }}
       >
-        <Container style={{ marginLeft: 13 }}>
-          <Touchable
-            onPress={() => {
-              logEvent('cartMinusProduct', { id: user.id, description: 'Quitar un producto de la canasta', productId: item.id });
-              decreaseItem();
-            }}
-          >
-            <IconO name="minus" size={14} color={theme.brandColor.iconn_green_original} />
-          </Touchable>
-        </Container>
-        <Container>
-          <Container>
-            <CustomText text="" fontSize={7} />
-          </Container>
-          <Container>
-            <TextContainer text={item.quantity} textAlign="auto" fontSize={14} />
-          </Container>
-          <Container>
-            <CustomText text="" fontSize={7} />
-          </Container>
-        </Container>
-        <Container style={{ marginRight: 13 }}>
-          <Touchable
-            onPress={() => {
-              logEvent('cartPlusProduct', { id: user.id, description: 'Añadir productos de la canasta', productId: item.id });
-              increaseItem();
-            }}
-          >
-            <IconO name="plus" size={14} color={theme.brandColor.iconn_green_original} />
-          </Touchable>
-        </Container>
+        {isLoadProduct ? (
+          <ProductAddLoading isWhite={!!item.quantity} />
+        ) : (
+          <>
+            <Container style={{ marginLeft: 13 }}>
+              <Touchable
+                onPress={() => {
+                  logEvent('cartMinusProduct', { id: user.id, description: 'Quitar un producto de la canasta', productId: item.id });
+                  decreaseItem();
+                }}
+              >
+                <IconO name="minus" size={14} color={theme.brandColor.iconn_green_original} />
+              </Touchable>
+            </Container>
+            <Container>
+              <Container>
+                <CustomText text="" fontSize={7} />
+              </Container>
+              <Container>
+                <TextContainer text={item.quantity} textAlign="auto" fontSize={14} />
+              </Container>
+              <Container>
+                <CustomText text="" fontSize={7} />
+              </Container>
+            </Container>
+            <Container style={{ marginRight: 13 }}>
+              <Touchable
+                onPress={() => {
+                  logEvent('cartPlusProduct', { id: user.id, description: 'Añadir productos de la canasta', productId: item.id });
+                  increaseItem();
+                }}
+              >
+                <IconO name="plus" size={14} color={theme.brandColor.iconn_green_original} />
+              </Touchable>
+            </Container>
+          </>
+        )}
       </Container>
     );
   };
@@ -556,7 +569,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
         if (value.hasErrorMessage && withoutStockMap.size === 1) {
           setWithoutStockMap(undefined);
         }
-        updateShoppingCartQuantityServiceCall(orderForm, { orderItems }, 'delete', 'Se eliminó el artículo de la canasta.', arrayIndex);
+        updateShoppingCartQuantityServiceCall(orderForm, { orderItems }, 'delete', 'Se eliminó el artículo de la canasta.', arrayIndex, value.id);
       } catch (error) {
         //console.log(error);
       } finally {

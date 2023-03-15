@@ -50,7 +50,7 @@ const Code: FunctionComponent<Props> = ({
 
   useEffect(() => {
     let newFullcode = '';
-    for (let letter: number = 0; letter < code.length; letter++) {
+    for (let letter of code) {
       newFullcode += code[letter];
     }
     setFullCode(newFullcode);

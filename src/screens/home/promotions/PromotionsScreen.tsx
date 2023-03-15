@@ -49,7 +49,7 @@ const PromotionsScreen: React.FC = () => {
   };
 
   const userUpdated = (productId: string) => {
-    updateShoppingCartProduct!('create', productId);
+    updateShoppingCartProduct('create', productId);
     logEvent('promoAddProduct', { id: user.id, description: 'Añadir producto a la canasta', productId: productId.toString() });
     hideModalForAdult();
   };
@@ -57,7 +57,7 @@ const PromotionsScreen: React.FC = () => {
   const validateCategoryForAddItem = (isAdult: boolean, productId: string) => {
     if (isAdult) {
       logEvent('promoAddProduct', { id: user.id, description: 'Añadir producto a la canasta', productId: productId.toString() });
-      updateShoppingCartProduct!('create', productId);
+      updateShoppingCartProduct('create', productId);
     } else {
       setProductId(productId);
       showModalForAdult();
@@ -114,7 +114,7 @@ const PromotionsScreen: React.FC = () => {
             price: Number.parseFloat(product.selling_price),
             oldPrice: Number.parseFloat(product.selling_price),
             quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
-            ratingValue: product.qualificationAverage,
+            ratingValue: product.average,
             promotionType: product.promotion && product.promotion.type,
             promotionName: product.promotion && product.promotion.name,
             percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
@@ -124,7 +124,6 @@ const PromotionsScreen: React.FC = () => {
           };
         });
         await setProductsRender(productsTem);
-        await setItemToLoad(1);
         loader.hide();
         setLoading(false);
         setLoadingMore(true);
@@ -155,7 +154,7 @@ const PromotionsScreen: React.FC = () => {
             price: Number.parseFloat(product.selling_price),
             oldPrice: Number.parseFloat(product.selling_price),
             quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
-            ratingValue: product.qualificationAverage,
+            ratingValue: product.average,
             promotionType: product.promotion && product.promotion.type,
             promotionName: product.promotion && product.promotion.name,
             percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
@@ -173,6 +172,9 @@ const PromotionsScreen: React.FC = () => {
           await setItemToLoad(itemToLoad + 1);
           setLoading(false);
         }
+      } else {
+        setLoading(false);
+        setLoadingMore(false);
       }
     }
   };
@@ -205,15 +207,15 @@ const PromotionsScreen: React.FC = () => {
         costDiscountPrice={item.costDiscountPrice}
         onPressAddCart={validateCategoryForAddItem}
         onPressAddQuantity={() => {
-          updateShoppingCartProduct!('add', item.productId);
+          updateShoppingCartProduct('add', item.productId);
           logEvent('promoAddProduct', { id: user.id, description: 'Sumar un producto a la canasta', productId: item.productId.toString() });
         }}
         onPressDeleteCart={() => {
-          updateShoppingCartProduct!('remove', item.productId);
+          updateShoppingCartProduct('remove', item.productId);
           logEvent('promoDeleteProduct', { id: user.id, description: 'Eliminar un producto de la canasta', productId: item.productId.toString() });
         }}
         onPressDecreaseQuantity={() => {
-          updateShoppingCartProduct!('substract', item.productId);
+          updateShoppingCartProduct('substract', item.productId);
           logEvent('promoMinusProduct', { id: user.id, description: 'Restar un producto de la canasta', productId: item.productId.toString() });
         }}
         onPressOut={hideModalForAdult}
@@ -248,7 +250,7 @@ const PromotionsScreen: React.FC = () => {
         );
       }
     }
-    return <Container height={moderateScale(30)} />;
+    return <Container height={moderateScale(60)} />;
   };
 
   const loadMoreItem = () => {

@@ -1,8 +1,7 @@
 import React from 'react';
 import { BasketCounter, EcommerceHeader, InConstructionScreen } from 'components';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { TabNavigator } from 'navigation/TabNavigator';
 import { Touchable } from '../../components';
 import { useNavigation } from '@react-navigation/native';
@@ -60,6 +59,7 @@ import ViewInvoiceGeneratedSevenController from 'screens/home/invoicing/invoicin
 import VirtualTourController from 'screens/home/myAccount/wallet/helpCenter/items/VirtualTour/VirtualTourController';
 import WalletStack from './nested/WalletStack';
 import EvaluateStack from './nested/EvaluateStack';
+import CollectionsProducts from 'screens/home/collenctions/CollectionsController';
 import WhoWeAreController from 'screens/home/myAccount/aboutUs/About/WhoWeAreController';
 import analytics from '@react-native-firebase/analytics';
 import { RootState, useAppSelector } from 'rtk';
@@ -325,6 +325,14 @@ const HomeStack: React.FC = () => {
         component={LiveStatusWidgetController}
       />
       <Stack.Screen name="EvaluateStack" options={{ headerShown: false }} component={EvaluateStack} />
+      <Stack.Screen
+        options={{
+          title: '',
+          headerRight: () => <BasketCounter />
+        }}
+        name="CollectionsProducts"
+        component={CollectionsProducts}
+      />
     </Stack.Navigator>
   );
 };

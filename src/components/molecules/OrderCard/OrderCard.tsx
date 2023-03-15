@@ -80,7 +80,6 @@ const OrderCard = (props: OrderInterface) => {
       });
       loader.hide();
     }, 3000);
-    // toast.show({ message: 'Se añadieron los productos al carrito', type: 'success' });
   };
 
   return (

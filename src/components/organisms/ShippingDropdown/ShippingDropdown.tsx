@@ -1,6 +1,6 @@
 import { CustomText } from 'components/atoms';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, ViewStyle } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import { ImageSource } from 'react-native-vector-icons/Icon';
 import theme from 'components/theme/theme';
 import { Button, Touchable, Container } from 'components';
@@ -14,7 +14,6 @@ import { HomeStackParams } from 'navigation/types';
 import Entypo from 'react-native-vector-icons/Entypo';
 import { vtexPickUpPoints } from 'services';
 import { useAlert } from 'context';
-import analytics from '@react-native-firebase/analytics';
 import { logEvent } from 'utils/analytics';
 
 interface Props {
@@ -45,6 +44,7 @@ const ShippingDropdown: React.FC<Props> = ({
   const [near, setNear] = useState<boolean>(false);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const [selectedDelivery, setSelectedDelivery] = useState(false); //provitional
 
   useEffect(() => {
     if (address?.postalCode) {
@@ -55,9 +55,7 @@ const ShippingDropdown: React.FC<Props> = ({
   }, [address]);
 
   const getPickUpPoints = async (cp: string) => {
-    //console.log({ getPickUpPoints: cp });
     const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
-    //console.log({ getPickUpPoints: pickUp });
     let isNear = false;
     if (pickUp.items.length) {
       pickUp.items.forEach(store => {
@@ -71,19 +69,18 @@ const ShippingDropdown: React.FC<Props> = ({
     return isNear;
   };
 
-  //console.log({ defaultSeller: !address });
-
   return (
     <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: theme.brandColor.iconn_white }}>
       <Container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ShippingOption
-          selected={mode === ShippingMode.DELIVERY}
+          selected={selectedDelivery}
           mode={ShippingMode.DELIVERY}
           icon={ICONN_SCOOTER}
           disable={!address || !near}
           text={'A domicilio'}
           onPress={() => {
             handleMode(ShippingMode.DELIVERY);
+            setSelectedDelivery(!selectedDelivery); //provitional
           }}
           unmark={() => {
             handleMode(null);
@@ -207,7 +204,6 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
       getPickUpPoints(address?.postalCode).then(isNear => {
         setNear(isNear);
         if (!isNear) {
-          //console.log('ShippingDropDown');
           alert.show(
             {
               title: 'Entrega a domicilio no disponible.',
@@ -235,9 +231,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
   }, [address, isAddressModalSelectionVisible]);
 
   const getPickUpPoints = async (cp: string) => {
-    //console.log({ getPickUpPoints: cp });
     const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
-    //console.log({ getPickUpPoints: pickUp });
     let isNear = false;
     if (pickUp.items.length) {
       pickUp.items.forEach(store => {
@@ -334,12 +328,6 @@ const ShippingOption = ({
   onPress: () => void;
   unmark: () => void;
 }) => {
-  const highlight: ViewStyle = {
-    backgroundColor: '#E7F3EE',
-    borderWidth: 2,
-    borderColor: theme.brandColor.iconn_green_original
-  };
-
   return (
     <Container style={styles.content}>
       {selected && (
@@ -350,21 +338,13 @@ const ShippingOption = ({
         </Container>
       )}
       <Container>
-        <Touchable disabled={disable} onPress={onPress}>
-          <Container
-            style={[
-              {
-                backgroundColor: '#F5F5F2',
-                width: 100,
-                height: 100,
-                borderRadius: 100,
-                marginVertical: 20,
-                justifyContent: 'center',
-                alignItems: 'center'
-              },
-              selected && highlight
-            ]}
-          >
+        <Touchable
+          disabled={disable}
+          onPress={() => {
+            onPress();
+          }}
+        >
+          <Container style={selected ? styles.optionSelected : styles.optionCircle}>
             <Image
               source={icon}
               style={{
@@ -414,5 +394,25 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     paddingVertical: 10,
     paddingHorizontal: 10
+  },
+  optionCircle: {
+    backgroundColor: '#F5F5F2',
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    marginVertical: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  optionSelected: {
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    marginVertical: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E7F3EE',
+    borderWidth: 2,
+    borderColor: theme.brandColor.iconn_green_original
   }
 });

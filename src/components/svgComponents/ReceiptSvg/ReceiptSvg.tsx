@@ -1,8 +1,8 @@
 import { SvgProps } from 'components/types/Svg';
 import * as React from 'react';
-import Svg, { Path, G } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
-const ReceiptSvg: React.FC<SvgProps> = ({ size, color }) => (
+const ReceiptSvg: React.FC<SvgProps> = ({ size }) => (
   <Svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24">
     <Path fill="none" d="M0 0h24v24H0z" />
     <Path

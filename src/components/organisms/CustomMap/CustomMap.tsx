@@ -48,17 +48,17 @@ const CustomMap: React.FC<Props> = ({ latitudeDelta, markers, onChangeRegionComp
         region={{
           latitude:
             markers && markers.length === 1 && oneMarker === true
-              ? markers![0].latitude
+              ? markers[0].latitude
               : markers?.length! > 1 && searchArea
-              ? searchArea!.latitude
+              ? searchArea.latitude
               : userLocation
               ? userLocation.latitude
               : 0,
           longitude:
             markers && markers.length === 1 && oneMarker === true
-              ? markers![0].longitude
+              ? markers[0].longitude
               : markers?.length! > 1 && searchArea
-              ? searchArea!.longitude
+              ? searchArea.longitude
               : userLocation
               ? userLocation.longitude
               : 0,
