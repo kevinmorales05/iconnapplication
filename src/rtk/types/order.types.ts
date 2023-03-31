@@ -47,3 +47,14 @@ export interface RatingOrderInterface {
   score: number;
   comment: string;
 }
+
+export interface OrderWidgetInterface {
+  id?: string;
+  email: string;
+  userId: string;
+  orderFormId: string;
+  orderId?: string;
+  createdDate?: string;
+  updatedDate?: string;
+  widgetUrl?: string;
+}

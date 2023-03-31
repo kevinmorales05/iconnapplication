@@ -16,8 +16,6 @@ const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
   const dispatch = useAppDispatch();
   const { CHECKOUT_WEBVIEW } = config;
 
-  // TODO: relocate url to .ENV
-
   const evaluateAndroid = (url: string) => {
     const paramsQuery = url.split('/');
     if (paramsQuery.some(param => param === 'checkout') && paramsQuery.some(param => param === 'orderPlaced')) {
@@ -57,7 +55,6 @@ const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
     }
   };
 
-  // TODO: relocate url to .ENV
   return (
     <WebView
       onNavigationStateChange={onNavigationStateChange.bind(this)}
@@ -69,49 +66,7 @@ const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
       }}
       bounces={false}
     />
-    //     <WebView
-    //         scalesPageToFit={false}
-    //         mixedContentMode="compatibility"
-    //         onMessage={onMessage}
-    //         source={{
-    //           html: `
-    //           <html>
-    //           <head>
-    //             <meta name="viewport" content="width=device-width, initial-scale=1" />
-    //           </head>
-    //           <body
-    //             style="
-    //               display: flex;
-    //               justify-content: center;
-    //               flex-direction: column;
-    //               align-items: center;
-    //             "
-    //           >
-    //             <button
-    //             onclick="sendDataToReactNativeApp()"
-    //               style="
-    //                 padding: 20;
-    //                 width: 200;
-    //                 font-size: 20;
-    //                 color: white;
-    //                 background-color: #6751ff;
-    //               "
-    //             >
-    //               Send Data To React Native App
-    //             </button>
-    //             <script>
-    //               const sendDataToReactNativeApp = async () => {
-    //                 window.ReactNativeWebView.postMessage('Hello!!! Data from WebView / Website');
-    //               };
-    //             </script>
-    //           </body>
-    //         </html>
-    // `,
-    //         }}
-    //       />
   );
-
-  // https://nttdev--oneiconn.myvtex.com/_v/segment/admin-login/v1/login?returnUrl=%2F%3F
 };
 
 export default CheckoutScreen;
