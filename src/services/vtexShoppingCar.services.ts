@@ -14,6 +14,16 @@ async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
 }
 
 /**
+ * Function to create a shoppingCart
+ */
+async function forceToCreateNewShoppingCart(): Promise<any> {
+  const response = await ShoppingCarCreation.getInstance().getRequest('/orderForm/?forceNewCart=true');
+  if (response === undefined) return Promise.reject(new Error('forceToCreateNewShoppingCart'));
+  const { data } = response;
+  return data;
+}
+
+/**
  * Function to get shoppingCartById
  * shoppingCartId is the shopping cart identifier.
  */
@@ -96,5 +106,6 @@ export {
   clearShoppingCartMessages,
   saveClientProfileData,
   saveShippingData,
-  setCustomValues
+  setCustomValues,
+  forceToCreateNewShoppingCart
 };

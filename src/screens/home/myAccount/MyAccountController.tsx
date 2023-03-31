@@ -18,6 +18,7 @@ import {
 import { authServices } from 'services';
 import { version as app_version } from './../../../../package.json';
 import MyAccountScreen from './MyAccountScreen';
+import { store } from 'rtk';
 
 const MyAccountController: React.FC = ({ navigation, route }: any) => {
   const dispatch = useAppDispatch();
@@ -52,7 +53,7 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
   }, [navigation, route]);
 
   useEffect(() => {
-    if (countVersion === 15) {
+    if (countVersion === 10) {
       showVersion();
     } else if (!countBack) {
       countBackTimer();
@@ -60,7 +61,7 @@ const MyAccountController: React.FC = ({ navigation, route }: any) => {
   }, [countVersion]);
 
   const showVersion = () => {
-    Alert.alert('Informacion', `OrderForm: ${cart.orderFormId}`);
+    Alert.alert('Informacion', `OrderForm: ${store.getState().cart.cart.orderFormId}`);
   };
 
   const onPressVersion = () => {

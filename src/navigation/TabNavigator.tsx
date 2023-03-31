@@ -46,6 +46,7 @@ export const TabNavigator = () => {
           }
         }}
         options={{
+          unmountOnBlur: true,
           headerShown: false,
           title: 'Inicio',
           tabBarIcon: ({ focused }) => {

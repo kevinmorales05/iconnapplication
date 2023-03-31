@@ -47,7 +47,6 @@ const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
       isSuccess = evaluateiOS(navState.url);
     }
     if (isSuccess) {
-      dispatch(setShoppingCartInitialState());
       reset({
         index: 0,
         routes: [{ name: 'Home', params: { paySuccess: true } }]

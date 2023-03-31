@@ -20,8 +20,8 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NotificationListener, requestUserPermission } from 'utils/notification-helper';
 import { NotEnabledModalContextProvider } from 'context/notEnabled.context';
 import { LogBox } from 'react-native';
-import Config from 'react-native-config';
-console.log('Environment variables:', JSON.stringify(Config, null, 3));
+// import Config from 'react-native-config';
+// console.log('Environment variables:', JSON.stringify(Config, null, 3));
 
 enableLatestRenderer();
 
