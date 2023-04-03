@@ -6,6 +6,8 @@ import { AuthUserSocial } from '../http/api-authUserSocial';
 import { UsersApi } from '../http/api-users';
 import { HttpClient } from '../http/http-client';
 import Config from 'react-native-config';
+import config from 'react-native-config';
+const {ACCOUNT_NAME} = config;
 
 // TODO: relocate the headers to api-config file.
 async function newUser(userEmail: AuthDataInterface): Promise<any> {
@@ -49,7 +51,7 @@ async function logOutUser(): Promise<any> {
 async function startAuthentication(email: string): Promise<any> {
   const { API_VTEX_AUTH } = Config;
   const response = await OnboardingApi.getInstance().getRequest(
-    `/vtexid/pub/authentication/start?callbackUrl=${API_VTEX_AUTH}/vtexid/pub/authentication/finish&scope=oneiconn&user=${email}&locale=MX&accountName=oneiconn&returnUrl=/&appStart=true`
+    `/vtexid/pub/authentication/start?callbackUrl=${API_VTEX_AUTH}/vtexid/pub/authentication/finish&scope=oneiconn&user=${email}&locale=MX&accountName=${ACCOUNT_NAME}&returnUrl=/&appStart=true`
   );
   if (response === undefined) return Promise.reject(new Error('startAuthentication:vtexid/pub/authentication/finish'));
   console.log('Aqui termina el start Authentication');
@@ -262,7 +264,7 @@ async function sendEmailtoRecoverPassword(user: AuthDataInterface): Promise<any>
 
 async function getLoginProviders(): Promise<any> {
   const response = await OnboardingApi.getInstance().getRequest(
-    `/vtexid/pub/authentication/start?callbackUrl=oneiconn.vtexcommercestable.com.br/api/vtexid/pub/authentication/finish&scope=oneiconn&locale=MX&accountName=oneiconn&returnUrl=/&appStart=true`
+    `/vtexid/pub/authentication/start?callbackUrl=oneiconn.vtexcommercestable.com.br/api/vtexid/pub/authentication/finish&scope=oneiconn&locale=MX&accountName=${ACCOUNT_NAME}&returnUrl=/&appStart=true`
   );
   const { data } = response;
   return data;
