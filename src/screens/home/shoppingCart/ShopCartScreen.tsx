@@ -852,7 +852,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           fontBold
           disabled={!subTotalCalculated}
           onPress={() => {
-            logEvent('cartContinueToCheckout', { id: user.id, description: 'Continuar al checkout' });
+            //logEvent('cartContinueToCheckout', { id: user.id, description: 'Continuar al checkout' });
             onPressCheckout();
           }}
           borderColor={subTotalCalculated ? 'iconn_green_original' : 'iconn_green_original_med'}

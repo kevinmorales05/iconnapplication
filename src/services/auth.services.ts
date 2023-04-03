@@ -14,7 +14,7 @@ async function newUser(userEmail: AuthDataInterface): Promise<any> {
   const response = await OnboardingApi.getInstance().postRequest(`/dataentities/CL/documents`, userEmail, {
     headers: { Accept: 'application/json', 'Content-type': 'application/json' }
   });
-  if (response === undefined) return Promise.reject(new Error(`/vtexid/pub/authentication/logout?scope=oneiconn`));
+  if (response === undefined) return Promise.reject(new Error(`/vtexid/pub/authentication/logout?scope=${ACCOUNT_NAME}`));
   const { data } = response;
   console.log('NEW USER', data);
   return data;
@@ -41,8 +41,8 @@ async function login(email: string, password: string, authenticationToken: strin
  * Function to logout
  */
 async function logOutUser(): Promise<any> {
-  const response = await OnboardingApi.getInstance().getRequest(`/vtexid/pub/authentication/logout?scope=oneiconn`);
-  if (response === undefined) return Promise.reject(new Error(`/vtexid/pub/authentication/logout?scope=oneiconn`));
+  const response = await OnboardingApi.getInstance().getRequest(`/vtexid/pub/authentication/logout?scope=${ACCOUNT_NAME}`);
+  if (response === undefined) return Promise.reject(new Error(`/vtexid/pub/authentication/logout?scope=${ACCOUNT_NAME}`));
   const { data } = response;
   console.log('LOGOUT', data);
   return data;
@@ -51,7 +51,7 @@ async function logOutUser(): Promise<any> {
 async function startAuthentication(email: string): Promise<any> {
   const { API_VTEX_AUTH } = Config;
   const response = await OnboardingApi.getInstance().getRequest(
-    `/vtexid/pub/authentication/start?callbackUrl=${API_VTEX_AUTH}/vtexid/pub/authentication/finish&scope=oneiconn&user=${email}&locale=MX&accountName=${ACCOUNT_NAME}&returnUrl=/&appStart=true`
+    `/vtexid/pub/authentication/start?callbackUrl=${API_VTEX_AUTH}/vtexid/pub/authentication/finish&scope=${ACCOUNT_NAME}&user=${email}&locale=MX&accountName=${ACCOUNT_NAME}&returnUrl=/&appStart=true`
   );
   if (response === undefined) return Promise.reject(new Error('startAuthentication:vtexid/pub/authentication/finish'));
   console.log('Aqui termina el start Authentication');
@@ -85,7 +85,7 @@ async function createPassword(newPassword: string, accesskey: string, email: str
   formData.append('email', email);
   formData.append('authenticationToken', authenticationToken);
 
-  const response = await OnboardingApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/setpassword?scope=oneiconn&locale=MX`, formData, {
+  const response = await OnboardingApi.getInstance().postRequest(`/vtexid/pub/authentication/classic/setpassword?scope=${ACCOUNT_NAME}&locale=MX`, formData, {
     headers: {
       Accept: 'application/json'
     }
@@ -264,7 +264,7 @@ async function sendEmailtoRecoverPassword(user: AuthDataInterface): Promise<any>
 
 async function getLoginProviders(): Promise<any> {
   const response = await OnboardingApi.getInstance().getRequest(
-    `/vtexid/pub/authentication/start?callbackUrl=oneiconn.vtexcommercestable.com.br/api/vtexid/pub/authentication/finish&scope=oneiconn&locale=MX&accountName=${ACCOUNT_NAME}&returnUrl=/&appStart=true`
+    `/vtexid/pub/authentication/start?callbackUrl=oneiconn.vtexcommercestable.com.br/api/vtexid/pub/authentication/finish&scope=${ACCOUNT_NAME}&locale=MX&accountName=${ACCOUNT_NAME}&returnUrl=/&appStart=true`
   );
   const { data } = response;
   return data;

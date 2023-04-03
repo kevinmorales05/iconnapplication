@@ -10,6 +10,7 @@ import invoicingReducer from '../slices/invoicingSlice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from 'react-native-config';
 
 const reducers = combineReducers({
   auth: authReducer,
@@ -22,6 +23,8 @@ const reducers = combineReducers({
   wallet: walletReducer
 });
 
+const { ENV_STATE } = Config;
+
 const persistConfig = {
   key: 'root',
   version: 1,
@@ -32,6 +35,7 @@ const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
   reducer: persistedReducer,
+  devTools: (ENV_STATE !== 'production') === true,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false

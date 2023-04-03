@@ -54,6 +54,11 @@ const CheckoutScreen: React.FC<Props> = ({ reset, user, orderFormId }) => {
     }
   };
 
+  console.log('authcookie ', user?.authCookie?.Name);
+  console.log('authcookie value ', user?.authCookie?.Value);
+  console.log('account authcookie ', user?.accountAuthCookie?.Name);
+  console.log('account authcookie value ', user?.accountAuthCookie?.Value);
+
   return (
     <WebView
       onNavigationStateChange={onNavigationStateChange.bind(this)}
