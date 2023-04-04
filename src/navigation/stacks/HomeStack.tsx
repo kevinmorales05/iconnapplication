@@ -64,6 +64,13 @@ import CollectionsProducts from 'screens/home/collenctions/CollectionsController
 import WhoWeAreController from 'screens/home/myAccount/aboutUs/About/WhoWeAreController';
 import analytics from '@react-native-firebase/analytics';
 import { RootState, useAppSelector } from 'rtk';
+import AccumulateCoffeeController from 'screens/home/myAccount/accumulateCoffee/AccumulateCoffeeController';
+import AccumulateLitresControlller from 'screens/home/myAccount/accumulateLitres/AccumulateLitresController';
+import PromoDetailController from 'screens/home/myAccount/accumulateLitres/PromoDetailController';
+import AddTicketLitresController from 'screens/home/myAccount/accumulateLitres/addTicket/AddTicketLitresController';
+import CouponsController from 'screens/home/myAccount/coupons/CouponsController';
+import CouponDetail from 'screens/home/myAccount/coupons/CouponDetail';
+import ActivatedCoupon from 'screens/home/myAccount/coupons/ActivatedCoupon';
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -137,6 +144,53 @@ const HomeStack: React.FC = () => {
       <Stack.Screen options={{ headerShown: false }} name="ViewInvoiceGeneratedSeven" component={ViewInvoiceGeneratedSevenController} />
       <Stack.Screen options={{ headerShown: false }} name="CodeReader" component={CodeReaderController} />
       <Stack.Screen options={{ headerShown: true, title: 'Direcciones', headerBackTitle: '' }} name="Address" component={AddressesController} />
+      <Stack.Screen options={{ headerShown: true, title: 'Cupones', headerBackTitle: '' }} name="Coupons" component={CouponsController} />
+      <Stack.Screen
+        options={({ route }) => ({
+          headerShown: true,
+          title: route.params?.couponInfo.name,
+          headerBackVisible: false,
+          headerLeft: () => {
+            return <></>;
+          },
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                goBack();
+              }}
+            >
+              <Icon name="close" size={20} />
+            </Touchable>
+          )
+        })}
+        name="CouponDetail"
+        component={CouponDetail}
+      />
+      <Stack.Screen
+        options={({ route }) => ({
+          headerShown: true,
+          title: route.params.couponInfo.name,
+          headerBackVisible: false,
+          headerLeft: () => {
+            return <></>;
+          },
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                if (route.params.origin === 'Coupons') {
+                  navigate('Coupons');
+                } else if (route.params.origin === 'Home') {
+                  navigate('Home');
+                }
+              }}
+            >
+              <Icon name="close" size={20} />
+            </Touchable>
+          )
+        })}
+        name="ActivatedCoupon"
+        component={ActivatedCoupon}
+      />
       <Stack.Screen
         options={{
           headerShown: true,
@@ -333,6 +387,50 @@ const HomeStack: React.FC = () => {
         }}
         name="CollectionsProducts"
         component={CollectionsProducts}
+      />
+      <Stack.Screen name="AccumulateCoffee" options={{ title: 'Acumula café' }} component={AccumulateCoffeeController} />
+      <Stack.Screen name="AccumulateLitres" options={{ title: 'Acumula litros' }} component={AccumulateLitresControlller} />
+      <Stack.Screen
+        options={({ route }) => ({
+          headerShown: true,
+          title: route.params.promo.name,
+          headerBackVisible: false,
+          headerLeft: () => {
+            return <></>;
+          },
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                goBack();
+              }}
+            >
+              <Icon name="close" size={20} />
+            </Touchable>
+          )
+        })}
+        name="PromoDetailLitres"
+        component={PromoDetailController}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: 'Registrar ticket',
+          headerBackVisible: false,
+          headerLeft: () => {
+            return <></>;
+          },
+          headerRight: () => (
+            <Touchable
+              onPress={() => {
+                goBack();
+              }}
+            >
+              <Icon name="close" size={20} />
+            </Touchable>
+          )
+        }}
+        name="AddTicketLitres"
+        component={AddTicketLitresController}
       />
     </Stack.Navigator>
   );

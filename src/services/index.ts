@@ -14,3 +14,4 @@ export * from './vtexuser.services';
 export * from './liveStatus.services';
 export * from './evaluate.services';
 export * from './home-services';
+export * from './google.services';

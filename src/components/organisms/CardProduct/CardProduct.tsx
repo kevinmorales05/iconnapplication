@@ -226,7 +226,20 @@ const CardProduct: React.FC<CardProductProps> = ({
   return (
     <Container style={[styles.container, { marginLeft: moderateScale(notNeedMarginLeft ? (index ? (index % 2 > 0 ? 8 : 0) : 0) : 8) }]}>
       <Container style={[styles.subContainer, { opacity: isLoading ? 0.4 : 1 }]}>
-        <FastImage style={styles.containerImage} resizeMode={'contain'} source={image} />
+        <Container style={{ zIndex: 1, marginTop: verticalScale(15) }}>
+          <Touchable
+            onPress={async () => {
+              dispatch(setDetailSelected(productId));
+              navigate('ProductDetail', { productIdentifier: productId });
+              if (onPressAnalytics) onPressAnalytics();
+            }}
+            marginLeft={moderateScale(5)}
+            marginRight={moderateScale(10)}
+            width={'90%'}
+          >
+            <FastImage style={styles.containerImage} resizeMode={'contain'} source={image} />
+          </Touchable>
+        </Container>
         <Container row width={'100%'} space="between" style={{ position: 'absolute' }}>
           <Container flex width={'100%'}>
             {promotionType ? (
@@ -250,7 +263,7 @@ const CardProduct: React.FC<CardProductProps> = ({
                         ? promotionType == 'buyAndWin' || promotionType == 'forThePriceOf'
                           ? splitText(promotionName)
                           : promotionType == 'campaign' || promotionType == 'regular'
-                          ? '-' + percentualDiscountValue + '%'
+                          ? '' + percentualDiscountValue + '%'
                           : ''
                         : ''
                     }
@@ -341,7 +354,7 @@ export default memo(CardProduct);
 const styles = StyleSheet.create({
   container: {
     width: moderateScale(160),
-    height: moderateScale(274),
+    height: moderateScale(287),
     backgroundColor: theme.brandColor.iconn_white,
     marginTop: moderateScale(16),
     borderRadius: moderateScale(10),

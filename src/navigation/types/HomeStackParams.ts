@@ -1,10 +1,15 @@
 import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface, messageType, ProductSearchItemInterface, SuggestionInterface } from 'rtk';
+import { LitresPromoInterface } from 'rtk/types/accumulate.types';
 import { CategoryInterface } from 'rtk/types/category.types';
+import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
 
 export type HomeStackParams = {
   AboutUs: undefined;
+  AccumulateCoffee: undefined;
+  AccumulateLitres: undefined;
   Address: undefined;
   AddRFC: undefined;
+  AddTicketLitres: undefined;
   AddTicketPetro: { ticket?: any; position?: number };
   AddTicketSeven: { ticket?: any; position?: number };
   ChangePassword: { authenticationToken: string; variant?: 'register' | 'recoverPassword' };
@@ -36,6 +41,7 @@ export type HomeStackParams = {
   PostalCode: undefined;
   ProductDetail: undefined | { productIdentifier?: string };
   Profile: undefined;
+  PromoDetailLitres: { promo: LitresPromoInterface };
   RateOrder: { orderId: string };
   RecomendedForYou: undefined;
   SearchSeller: undefined;
@@ -58,6 +64,9 @@ export type HomeStackParams = {
   VirtualTour: { step: number };
   AboutOptions: undefined;
   CollectionsProducts: { collectionId: number; title: string };
+  Coupons: undefined;
+  CouponDetail: { couponInfo: CouponInterface; origin: 'Home' | 'Coupons' };
+  ActivatedCoupon: { couponInfo: UserCouponInterface; couponActivatedData: any; origin: 'Home' | 'Coupons' };
 };
 
 export type HomeTabScreens = {

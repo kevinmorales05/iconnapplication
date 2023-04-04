@@ -54,3 +54,19 @@ export interface SubModuleInterface {
   description: string;
   enabled: boolean;
 }
+
+export interface AddressComponent {
+  long_name: string;
+  short_name: string;
+  types: string[];
+}
+
+export interface GeographicLocation {
+  administrative_area_level_1: string;
+  country: string;
+  locality: string;
+  political: string;
+  postal_code: string;
+  route: string;
+  street_number: string;
+}

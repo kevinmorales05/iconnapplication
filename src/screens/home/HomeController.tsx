@@ -22,7 +22,7 @@ import {
 import HomeScreen from './HomeScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useEnterModal, useInConstruction, useLoading, useToast, useWelcomeModal } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
@@ -39,6 +39,9 @@ import remoteConfig from '@react-native-firebase/remote-config';
 import { envariomentState } from '../../common/modulesRemoteConfig';
 import { logEvent } from 'utils/analytics';
 import { homeServices } from 'services';
+import { citiCouponsServices } from 'services/coupons.services';
+import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
+import { useLocation } from 'hooks/useLocation';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -48,6 +51,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
+  const { completeGeolocation, getCurrentLocation } = useLocation();
+  const isFocused = useIsFocused();
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const loader = useLoading();
@@ -64,6 +69,40 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [isChargin, setIsChargin] = useState(false);
   const { dateSync } = useAppSelector((state: RootState) => state.wallet);
   const [isLoadBanners, setIsLoadBanners] = useState<boolean>(true);
+  const [coupons, setCoupons] = useState<CouponInterface[]>([]);
+  const [userCoupons, setUserCoupons] = useState<UserCouponInterface[]>([]);
+  const [userMunicipality, setUserMunicipality] = useState('none');
+  const [userState, setUserState] = useState('none');
+
+  const getStateMuni = async () => {
+    await getCurrentLocation();
+    //console.log('plsHelp', plsHelp);
+    //console.log('completeGeolocation', JSON.stringify(completeGeolocation, null, 3));
+    setUserMunicipality(completeGeolocation.results[0].address_components[3].long_name);
+    setUserState(completeGeolocation.results[0].address_components[4].long_name);
+  };
+  useEffect(() => {
+    getStateMuni();
+  }, [getStateMuni]);
+
+  const getCoupons = async (pageNumber: number) => {
+    const coupons = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber);
+    console.log('coupons', JSON.stringify(coupons, null, 3));
+    //return coupons;
+    const { data } = coupons;
+    setCoupons(data);
+  };
+  useEffect(() => {
+    loader.show();
+    const getUserCoupons = async () => {
+      const userCoupons = await citiCouponsServices.getUserCoupons(user.userId as string, userState, userMunicipality);
+      const { data } = userCoupons;
+      setUserCoupons(data);
+      loader.hide();
+    };
+    getCoupons(0);
+    getUserCoupons();
+  }, [isFocused, userState, userMunicipality]);
 
   useEffect(() => {
     initRemoteConfig();
@@ -554,6 +593,23 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     });
   };
 
+  const onPressViewMoreCoupons = () => {
+    navigate('Coupons');
+  };
+
+  const onPressCouponDetail = (item: CouponInterface) => {
+    function verifyIfActivated(coupon: UserCouponInterface) {
+      return coupon.promotionid === item.promotionid;
+    }
+    const activatedPromotion = userCoupons.find(verifyIfActivated);
+
+    if (activatedPromotion !== undefined) {
+      navigate('ActivatedCoupon', { couponInfo: activatedPromotion, couponActivatedData: activatedPromotion.code, origin: 'Home' });
+    } else {
+      navigate('CouponDetail', { couponInfo: item, origin: 'Home' });
+    }
+  };
+
   return (
     <SafeArea
       childrenContainerStyle={{ paddingHorizontal: 0 }}
@@ -593,6 +649,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         viewOtherProducts={viewOtherProducts}
         isAddressModalSelectionVisible={addressModalSelectionVisible}
         isLoadBanners={isLoadBanners}
+        coupons={coupons}
+        userCoupons={userCoupons}
+        onPressViewMoreCoupons={onPressViewMoreCoupons}
+        onPressCoupon={onPressCouponDetail}
       />
       <AddressModalSelection
         visible={addressModalSelectionVisible}

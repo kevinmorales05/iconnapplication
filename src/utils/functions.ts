@@ -9,7 +9,7 @@ export function formatDate(date: Date, dateFormat: string = 'P'): string {
   try {
     return format(date, dateFormat, { locale: localeEs });
   } catch (error) {
-    console.warn(error);
+    //console.warn(error);
     return '';
   }
 }

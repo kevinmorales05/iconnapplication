@@ -17,6 +17,7 @@ import { logEvent } from 'utils/analytics';
 import { getStatusModuleFather } from 'utils/modulesApp';
 import { modulesRemoteConfig } from '../common/modulesRemoteConfig';
 import DisableController from 'screens/home/disableScreen/DisableController';
+import BranchesStack from './stacks/nested/BranchesStack';
 
 const Tab = createBottomTabNavigator<HomeTabScreens>();
 
@@ -112,8 +113,8 @@ export const TabNavigator = () => {
           }
         }}
         name="BranchesScreen"
-        component={isGuest ? InviteSignUpController : stores ? InConstructionController : DisableController}
-        // component={isGuest ? InviteSignUpController : BranchesStack}
+        //component={isGuest ? InviteSignUpController : stores ? InConstructionController : DisableController}
+        component={isGuest ? InviteSignUpController : BranchesStack}
         options={{
           unmountOnBlur: true,
           headerShown: false,

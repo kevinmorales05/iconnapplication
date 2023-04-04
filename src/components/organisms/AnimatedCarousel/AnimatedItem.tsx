@@ -16,6 +16,8 @@ import FastImage from 'react-native-fast-image';
 import { Grayscale } from 'react-native-color-matrix-image-filters';
 import { CarouselItem, ProductInterface } from 'rtk';
 import { navigate } from '../../../navigation/RootNavigation';
+import { CouponInterface } from 'rtk/types/coupons.types';
+import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 
 interface Props {
   data?: CarouselItem;
@@ -25,9 +27,21 @@ interface Props {
   onPressProduct?: (type: CounterType, productId: string) => void;
   onPressOut: () => void;
   pointsCardDisabled?: boolean;
+  coupon?: CouponInterface;
+  onPressCoupon?: (coupon: CouponInterface) => void;
 }
 
-const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, onPressProduct, onPressOut, pointsCardDisabled = false }) => {
+const AnimatedItem: React.FC<Props> = ({
+  data,
+  product,
+  position,
+  onPressItem,
+  onPressProduct,
+  onPressOut,
+  pointsCardDisabled = false,
+  coupon,
+  onPressCoupon
+}) => {
   const { width } = useWindowDimensions();
   const rightCardSpace = width * 0.08 * 2;
   position = position === 0 ? 16 : 8;
@@ -244,6 +258,16 @@ const AnimatedItem: React.FC<Props> = ({ data, product, position, onPressItem, o
         <FastImage source={{ uri: data.image }} style={allPromotionsImage} />
       </Container>
     </Touchable>
+  ) : coupon && onPressCoupon ? (
+    <Container backgroundColor={'grey'} style={{ borderRadius: 8, marginHorizontal: moderateScale(7) }} height={verticalScale(134)} width={moderateScale(156)}>
+      <Touchable onPress={() => onPressCoupon(coupon)}>
+        <Image
+          source={{ uri: coupon.listviewimage }}
+          style={{ height: verticalScale(134), width: moderateScale(156), borderRadius: 8 }}
+          resizeMode={'contain'}
+        />
+      </Touchable>
+    </Container>
   ) : null;
 };
 
