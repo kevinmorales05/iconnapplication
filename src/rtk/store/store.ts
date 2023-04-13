@@ -12,6 +12,8 @@ import { persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from 'react-native-config';
 
+import createDebugger from 'redux-flipper';
+
 const reducers = combineReducers({
   auth: authReducer,
   app: appReducer,
@@ -35,11 +37,12 @@ const persistedReducer = persistReducer(persistConfig, reducers);
 
 export const store = configureStore({
   reducer: persistedReducer,
-  devTools: (ENV_STATE !== 'production') === true,
+  // devTools: (ENV_STATE !== 'production') === true,
+  devTools: true,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false
-    })
+    }).concat(createDebugger())
 });
 
 export type AppDispatch = typeof store.dispatch;

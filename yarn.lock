@@ -5270,6 +5270,11 @@ csstype@^3.0.2:
   resolved "https://repo.huaweicloud.com/repository/npm/csstype/-/csstype-3.1.0.tgz"
   integrity sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==
 
+cycle@^1.0.3:
+  version "1.0.3"
+  resolved "https://repo.huaweicloud.com/repository/npm/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
+  integrity sha512-TVF6svNzeQCOpjCqsy0/CSy8VgObG3wXusJ73xW2GbG5rGx7lC8zxDSURicsXI2UsGdi2L0QNRCi745/wUDvsA==
+
 cyclist@^1.0.1:
   version "1.0.1"
   resolved "https://repo.huaweicloud.com/repository/npm/cyclist/-/cyclist-1.0.1.tgz"
@@ -5293,6 +5298,11 @@ dayjs@^1.8.15:
   version "1.11.5"
   resolved "https://repo.huaweicloud.com/repository/npm/dayjs/-/dayjs-1.11.5.tgz"
   integrity sha512-CAdX5Q3YW3Gclyo5Vpqkgpj8fSdLQcRuzfX6mC6Phy0nfJ0eGYOeS7m4mt2plDWLAtA4TqTakvbboHvUxfe4iA==
+
+dayjs@^1.8.29:
+  version "1.11.7"
+  resolved "https://repo.huaweicloud.com/repository/npm/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
+  integrity sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0:
   version "2.6.9"
@@ -11285,6 +11295,11 @@ react-native-fbsdk-next@^10.0.0:
     "@expo/config-plugins" "^4.1.5"
     xml2js "^0.4.23"
 
+react-native-flipper@^0.189.0:
+  version "0.189.0"
+  resolved "https://repo.huaweicloud.com/repository/npm/react-native-flipper/-/react-native-flipper-0.189.0.tgz#b052832cc89694e828d43b3a09d6f59a57544eac"
+  integrity sha512-hV3Omq0wPCwGp6A61PHzh9QLw18pgfgxo74cYxTfOCfEQd0UbvMvEmfpWxiMCFLQ/3UWBylcRC2eu0bKQcKFdQ==
+
 react-native-geolocation-service@^5.3.0:
   version "5.3.0"
   resolved "https://repo.huaweicloud.com/repository/npm/react-native-geolocation-service/-/react-native-geolocation-service-5.3.0.tgz"
@@ -11859,6 +11874,14 @@ redux-devtools-instrument@^1.9.4:
   dependencies:
     lodash "^4.17.19"
     symbol-observable "^1.2.0"
+
+redux-flipper@^2.0.2:
+  version "2.0.2"
+  resolved "https://repo.huaweicloud.com/repository/npm/redux-flipper/-/redux-flipper-2.0.2.tgz#5deca22ef81e71253912fdf8a403f272db9ed27f"
+  integrity sha512-X6OD3+Ok8g0SunzrwS5OtbE735eBDxLz3uuK4fdJSwbAzskqOS3SWc+rKuOpqmLkt8pN+Szp7Nof9Etm75B1Rg==
+  dependencies:
+    cycle "^1.0.3"
+    dayjs "^1.8.29"
 
 redux-persist@^6.0.0:
   version "6.0.0"
