@@ -5,7 +5,7 @@ import { OrdersApi } from '../http/api-orders';
  * Function to register a new Orderwidget
  */
 async function registerOrderWidget(orderWidget: OrderWidgetInterface): Promise<any> {
-  const response = await OrdersApi.getInstance().postRequest('/orders', orderWidget);
+  const response = await OrdersApi.getInstance().postRequest('/orders/create', orderWidget);
   if (response === undefined) return Promise.reject(new Error('registerOrderWidget:/orders'));
   const { data } = response;
   return data;
