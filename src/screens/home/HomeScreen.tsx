@@ -10,7 +10,7 @@ import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultA
 import { CounterType } from 'components/types/counter-type';
 import { logEvent } from 'utils/analytics';
 import { BannerSkeleton } from 'components/organisms/BannerSkeleton';
-import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
+import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
 interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
@@ -32,9 +32,11 @@ interface Props {
   viewOtherProducts: any;
   isLoadBanners: boolean;
   coupons: CouponInterface[];
+  mixedCoupons: UserCouponInterface[];
   userCoupons: UserCouponInterface[];
   onPressViewMoreCoupons: () => void;
   onPressCoupon: (item: CouponInterface) => void;
+  getCouponStat: (coup: string) => number;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -57,13 +59,15 @@ const HomeScreen: React.FC<Props> = ({
   isAddressModalSelectionVisible,
   isLoadBanners,
   coupons,
+  mixedCoupons,
   userCoupons,
   onPressViewMoreCoupons,
-  onPressCoupon
+  onPressCoupon,
+  getCouponStat
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { user, isGuest } = useAppSelector((state: RootState) => state.auth);
 
   const onPressOut = () => {
     setVisible(!visible);
@@ -145,7 +149,9 @@ const HomeScreen: React.FC<Props> = ({
             <Container style={{ marginTop: 16 }}>
               <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
             </Container>
-            {coupons.length > 0 ? (
+            {isGuest ? (
+              <></>
+            ) : /* coupons.length > 0 && */ coupons.length > 0 ? (
               <Container>
                 <Container row space="between" style={{ margin: 16 }}>
                   <TextContainer text="Cupones" fontBold typography="h4" />
@@ -160,10 +166,21 @@ const HomeScreen: React.FC<Props> = ({
                     }}
                   />
                 </Container>
-                <AnimatedCarousel coupons={coupons} onPressItem={() => {}} onPressOut={() => {}} onPressCoupon={onPressCoupon} />
+                <AnimatedCarousel
+                  coupons={coupons}
+                  onPressItem={() => {}}
+                  onPressOut={() => {}}
+                  onPressCoupon={onPressCoupon}
+                  couponStat={getCouponStat}
+                  userCoupons={userCoupons}
+                />
               </Container>
             ) : (
-              <></>
+              <Container flex row style={{ marginLeft: 8 }}>
+                <CardProductSkeleton />
+                <CardProductSkeleton />
+                <CardProductSkeleton />
+              </Container>
             )}
             <Container height={367} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
               <Container row space="between" style={{ margin: 16 }}>

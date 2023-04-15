@@ -65,7 +65,7 @@ export type HomeStackParams = {
   AboutOptions: undefined;
   CollectionsProducts: { collectionId: number; title: string };
   Coupons: undefined;
-  CouponDetail: { couponInfo: CouponInterface; origin: 'Home' | 'Coupons' };
+  CouponDetail: { couponInfo: UserCouponInterface; origin: 'Home' | 'Coupons' };
   ActivatedCoupon: { couponInfo: UserCouponInterface; couponActivatedData: any; origin: 'Home' | 'Coupons' };
 };
 

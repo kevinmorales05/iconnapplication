@@ -6,7 +6,7 @@ import AnimatedItem from './AnimatedItem';
 import { CounterType } from 'components/types/counter-type';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { logEvent } from 'utils/analytics';
-import { CouponInterface } from 'rtk/types/coupons.types';
+import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
 
 interface Props {
   items?: CarouselItem[];
@@ -17,8 +17,9 @@ interface Props {
   cards?: boolean;
   pointsCardDisabled?: boolean;
   banner?: boolean;
-  coupons?: CouponInterface[];
+  coupons?: UserCouponInterface[];
   onPressCoupon?: (coupon: CouponInterface) => void;
+  userCoupons?: UserCouponInterface[];
 }
 
 const AnimatedCarousel: React.FC<Props> = ({
@@ -31,7 +32,8 @@ const AnimatedCarousel: React.FC<Props> = ({
   banner,
   pointsCardDisabled,
   coupons,
-  onPressCoupon
+  onPressCoupon,
+  userCoupons
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -126,7 +128,7 @@ const AnimatedCarousel: React.FC<Props> = ({
         <FlatList
           data={coupons}
           renderItem={({ item, index }) => (
-            <AnimatedItem coupon={item} position={index} onPressItem={() => {}} onPressOut={() => {}} onPressCoupon={onPressCoupon} />
+            <AnimatedItem coupon={item} position={index} onPressItem={() => {}} onPressOut={() => {}} onPressCoupon={onPressCoupon} userCoupons={userCoupons} />
           )}
           horizontal
           bounces={coupons?.length > 1 ? true : false}

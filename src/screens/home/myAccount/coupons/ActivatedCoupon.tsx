@@ -1,6 +1,6 @@
 import { Container, CustomModal, TextContainer, Touchable } from 'components';
 import theme from 'components/theme/theme';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Platform, TouchableOpacity, Image, PermissionsAndroid } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { verticalScale, moderateScale } from 'utils/scaleMetrics';
@@ -10,7 +10,11 @@ import { HomeStackParams } from 'navigation/types';
 import QRCode from 'react-native-qrcode-svg';
 import RNQRGenerator from 'rn-qr-generator';
 import { CameraRoll } from '@react-native-camera-roll/camera-roll';
-import { useToast } from 'context';
+import { useLoading, useToast } from 'context';
+import { citiCouponsServices } from 'services/coupons.services';
+import AnimatedLottieView from 'lottie-react-native';
+import redeemedAnimation from '../../../../assets/images/success-redeemed.json';
+import { formatDate } from 'utils/functions';
 
 interface ModalProps {
   visible: boolean;
@@ -66,10 +70,33 @@ const ActivatedCoupon: React.FC = () => {
   const toast = useToast();
   const [modalVisible, setModalVisible] = useState(false);
   const [qrImage, setQrImage] = useState('');
+  const [cs, setCS] = useState<number>();
+  const [rd, setRD] = useState<string>();
   const route = useRoute<RouteProp<HomeStackParams, 'ActivatedCoupon'>>();
   const { params } = route;
+  const loader = useLoading();
+  loader.hide();
 
-  console.log('params Activated', params);
+  //console.log('params Activated', params);
+
+  const getCouponStatus = async (couponId: string) => {
+    const status = await citiCouponsServices.getCoupon(couponId);
+    const { data } = status;
+    console.log('FML', status);
+    return data;
+  };
+
+  const couponStatus = async () => {
+    const statusCoupon = await getCouponStatus(params.couponActivatedData);
+    const d1 = new Date(statusCoupon.redemptionDate);
+    const dRedeemed = formatDate(d1);
+    console.log('PINA', statusCoupon);
+    setCS(statusCoupon.coupons_status_id);
+    setRD(dRedeemed);
+  };
+  useEffect(() => {
+    couponStatus();
+  }, []);
 
   RNQRGenerator.generate({
     value: params.couponActivatedData,
@@ -140,8 +167,8 @@ const ActivatedCoupon: React.FC = () => {
             <TextContainer
               text={params.couponInfo.name}
               marginTop={verticalScale(22.5)}
-              marginLeft={moderateScale(16)}
-              marginRight={moderateScale(200)}
+              marginLeft={moderateScale(10)}
+              marginRight={moderateScale(150)}
               fontSize={14}
               numberOfLines={2}
             />
@@ -152,7 +179,7 @@ const ActivatedCoupon: React.FC = () => {
                 underline
                 textColor={theme.fontColor.light_green}
                 marginTop={verticalScale(14)}
-                marginLeft={moderateScale(16)}
+                marginLeft={moderateScale(10)}
                 marginRight={moderateScale(36)}
                 fontSize={14}
               />
@@ -160,36 +187,70 @@ const ActivatedCoupon: React.FC = () => {
           </Container>
         </Container>
         <Container center>
-          <TextContainer text="Escanea este código en tienda" fontBold fontSize={18} marginTop={verticalScale(30)} />
-          <TextContainer text="para hacer válido tu cupón" fontSize={14} marginTop={verticalScale(4)} />
+          {cs === 2 ? (
+            <Container style={{ marginTop: verticalScale(50) }} />
+          ) : (
+            <Container>
+              <TextContainer text="Escanea este código en tienda" fontBold fontSize={18} marginTop={verticalScale(30)} />
+              <TextContainer text="para hacer válido tu cupón" fontSize={14} marginTop={verticalScale(4)} textAlign="center" />
+            </Container>
+          )}
           <Container
             center
             style={{
               height: verticalScale(200),
               width: moderateScale(200),
-              marginTop: verticalScale(23),
+              marginTop: verticalScale(15),
               marginBottom: verticalScale(26)
             }}
           >
-            <QRCode value={params.couponActivatedData} size={200} />
+            {cs === 2 ? (
+              <Container style={{ justifyContent: 'center' }}>
+                <AnimatedLottieView
+                  style={{
+                    width: moderateScale(80),
+                    height: verticalScale(80),
+                    zIndex: 2,
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    position: 'absolute'
+                  }}
+                  source={redeemedAnimation}
+                  autoPlay
+                  loop={false}
+                />
+                <Container style={{ zIndex: 1, opacity: 0.25, justifyContent: 'center', alignSelf: 'center' }}>
+                  <QRCode value={params.couponActivatedData} size={210} />
+                </Container>
+              </Container>
+            ) : (
+              <QRCode value={params.couponActivatedData} size={210} />
+            )}
           </Container>
-          <Touchable onPress={savePicture}>
-            <Container
-              row
-              style={{
-                marginBottom: verticalScale(100),
-                paddingLeft: moderateScale(4),
-                paddingRight: moderateScale(8),
-                paddingVertical: verticalScale(8),
-                borderColor: theme.brandColor.iconn_med_grey,
-                borderWidth: 1,
-                borderRadius: 8
-              }}
-            >
-              <AntDesign name="download" size={moderateScale(20)} />
-              <TextContainer text="Descargar" marginLeft={moderateScale(4)} />
+          {cs === 2 ? (
+            <Container>
+              <TextContainer text="¡Cupón redimido exitosamente!" fontBold fontSize={18} />
+              <TextContainer text={rd as string} textAlign="center" fontSize={14} marginTop={12} />
             </Container>
-          </Touchable>
+          ) : (
+            <Touchable onPress={savePicture}>
+              <Container
+                row
+                style={{
+                  marginBottom: verticalScale(100),
+                  paddingLeft: moderateScale(4),
+                  paddingRight: moderateScale(8),
+                  paddingVertical: verticalScale(8),
+                  borderColor: theme.brandColor.iconn_med_grey,
+                  borderWidth: 1,
+                  borderRadius: 8
+                }}
+              >
+                <AntDesign name="download" size={moderateScale(20)} />
+                <TextContainer text="Descargar" marginLeft={moderateScale(4)} />
+              </Container>
+            </Touchable>
+          )}
         </Container>
       </Container>
       <MoreDetailModal visible={modalVisible} onPressClose={onPressClose} />

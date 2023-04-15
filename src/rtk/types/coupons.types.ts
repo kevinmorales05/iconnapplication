@@ -39,6 +39,27 @@ export interface UserCouponInterface {
   descriptiontyc: string;
   descriptiontitle: string;
   descriptionsubtitle: string;
+  updatedat: Date;
+  coupons_status_id: number;
+  redemptionDate: Date;
+}
+
+export interface UserCouponWithStateInterface {
+  promotionid: number;
+  description: string;
+  name: string;
+  code: string;
+  state: number;
+  imageurl: string;
+  activecouponimage: string;
+  listviewimage: string;
+  startdate: Date;
+  enddate: Date;
+  establishment: 'Petro7' | '7Eleven';
+  type: string;
+  descriptiontyc: string;
+  descriptiontitle: string;
+  descriptionsubtitle: string;
 }
 
 export interface StateInterface {

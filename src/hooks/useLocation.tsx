@@ -44,12 +44,15 @@ export const useLocation = () => {
         }
       });
       return geographicLocationInfo;
+    } else if (geocodingResponse.status === 'ZERO_RESULTS') {
+      toast.hide();
+      return null;
     } else {
       let msg: string = '';
       switch (geocodingResponse.status) {
-        case 'ZERO_RESULTS':
+        /* case 'ZERO_RESULTS':
           msg = 'No se encontró la ubicación en el mapa :(';
-          break;
+          break; */
         case 'OVER_QUERY_LIMIT':
           msg = 'Has superado la cuota de peticiones';
           break;

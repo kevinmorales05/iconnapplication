@@ -26,3 +26,12 @@ export function formatDate2(date: Date, dateFormat: string = 'PPP'): string {
     return '';
   }
 }
+
+export function formatDate3(date: Date): string {
+  try {
+    return format(date, 'dd/MM/yy', { locale: localeEs });
+  } catch (error) {
+    //console.warn(error);
+    return '';
+  }
+}

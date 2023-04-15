@@ -1,4 +1,5 @@
 import {
+  ICONN_ACCOUNT_COUPON,
   ICONN_HOME_OPTION_ACUMMULATE,
   ICONN_HOME_OPTION_HEART,
   ICONN_HOME_OPTION_ORDERS,
@@ -10,13 +11,13 @@ import { CardProduct, Container, CustomText, TextContainer, Touchable } from 'co
 import theme from 'components/theme/theme';
 import { CounterType } from 'components/types/counter-type';
 import { useNotEnabledModal } from 'context/notEnabled.context';
-import React from 'react';
+import React, { useState } from 'react';
 import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Grayscale } from 'react-native-color-matrix-image-filters';
 import { CarouselItem, ProductInterface } from 'rtk';
 import { navigate } from '../../../navigation/RootNavigation';
-import { CouponInterface } from 'rtk/types/coupons.types';
+import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 
 interface Props {
@@ -27,8 +28,9 @@ interface Props {
   onPressProduct?: (type: CounterType, productId: string) => void;
   onPressOut: () => void;
   pointsCardDisabled?: boolean;
-  coupon?: CouponInterface;
-  onPressCoupon?: (coupon: CouponInterface) => void;
+  coupon?: UserCouponInterface;
+  onPressCoupon?: (coupon: UserCouponInterface) => void;
+  userCoupons?: UserCouponInterface[];
 }
 
 const AnimatedItem: React.FC<Props> = ({
@@ -40,13 +42,13 @@ const AnimatedItem: React.FC<Props> = ({
   onPressOut,
   pointsCardDisabled = false,
   coupon,
-  onPressCoupon
+  onPressCoupon,
+  userCoupons
 }) => {
   const { width } = useWindowDimensions();
   const rightCardSpace = width * 0.08 * 2;
   position = position === 0 ? 16 : 8;
   const modalNotEnabled = useNotEnabledModal();
-
   const containerStyle: StyleProp<ViewStyle> = {
     width: width - rightCardSpace,
     borderRadius: 8,
@@ -119,6 +121,12 @@ const AnimatedItem: React.FC<Props> = ({
     width: 160,
     resizeMode: 'stretch'
   };
+
+  function verifyIfActivated(item: UserCouponInterface) {
+    return coupon?.promotionid === item.promotionid;
+  }
+  const activatedPromotion = userCoupons?.find(verifyIfActivated);
+
   return product ? (
     <Container>
       <CardProduct
@@ -198,7 +206,7 @@ const AnimatedItem: React.FC<Props> = ({
               : data.id === '2'
               ? ICONN_HOME_OPTION_HEART
               : data.id === '3'
-              ? ICONN_HOME_OPTION_ACUMMULATE
+              ? ICONN_ACCOUNT_COUPON
               : data.id === '4'
               ? ICONN_HOME_OPTION_WALLET
               : data.id === '5'
@@ -259,15 +267,24 @@ const AnimatedItem: React.FC<Props> = ({
       </Container>
     </Touchable>
   ) : coupon && onPressCoupon ? (
-    <Container backgroundColor={'grey'} style={{ borderRadius: 8, marginHorizontal: moderateScale(7) }} height={verticalScale(134)} width={moderateScale(156)}>
-      <Touchable onPress={() => onPressCoupon(coupon)}>
-        <Image
-          source={{ uri: coupon.listviewimage }}
-          style={{ height: verticalScale(134), width: moderateScale(156), borderRadius: 8 }}
-          resizeMode={'contain'}
-        />
-      </Touchable>
-    </Container>
+    activatedPromotion?.coupons_status_id === 2 ? (
+      <></>
+    ) : (
+      <Container
+        backgroundColor={'grey'}
+        style={{ borderRadius: 8, marginHorizontal: moderateScale(7) }}
+        height={verticalScale(134)}
+        width={moderateScale(156)}
+      >
+        <Touchable onPress={() => onPressCoupon(coupon)}>
+          <Image
+            source={{ uri: coupon.listviewimage }}
+            style={{ height: verticalScale(134), width: moderateScale(156), borderRadius: 8 }}
+            resizeMode={'contain'}
+          />
+        </Touchable>
+      </Container>
+    )
   ) : null;
 };
 

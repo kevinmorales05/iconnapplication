@@ -40,7 +40,7 @@ import { envariomentState } from '../../common/modulesRemoteConfig';
 import { logEvent } from 'utils/analytics';
 import { homeServices } from 'services';
 import { citiCouponsServices } from 'services/coupons.services';
-import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
+import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
 import { useLocation } from 'hooks/useLocation';
 interface PropsController {
   paySuccess: boolean;
@@ -73,36 +73,138 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [userCoupons, setUserCoupons] = useState<UserCouponInterface[]>([]);
   const [userMunicipality, setUserMunicipality] = useState('none');
   const [userState, setUserState] = useState('none');
+  const [couponsWithState, setCouponsWithState] = useState<UserCouponWithStateInterface[]>();
+  const [cIDAndState, setCIdAndState] = useState<UserCouponWithStateInterface[]>();
+  const [mixedCoupons, setMixedCoupons] = useState<UserCouponInterface[]>([]);
+
+  console.log('ABRIL', mixedCoupons);
 
   const getStateMuni = async () => {
-    await getCurrentLocation();
-    //console.log('plsHelp', plsHelp);
-    //console.log('completeGeolocation', JSON.stringify(completeGeolocation, null, 3));
-    setUserMunicipality(completeGeolocation.results[0].address_components[3].long_name);
-    setUserState(completeGeolocation.results[0].address_components[4].long_name);
+    if (!isGuest) {
+      await getCurrentLocation();
+      //console.log('plsHelp', plsHelp);
+      console.log('completeGeolocation', JSON.stringify(completeGeolocation, null, 3));
+      setUserMunicipality(completeGeolocation.results[0].address_components[3].short_name);
+      setUserState(completeGeolocation.results[0].address_components[4].long_name);
+    }
   };
+
+  //console.log('userState HOME', userState);
+  //console.log('userMunicipality HOME', userMunicipality);
   useEffect(() => {
     getStateMuni();
   }, [getStateMuni]);
 
   const getCoupons = async (pageNumber: number) => {
-    const coupons = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber);
-    console.log('coupons', JSON.stringify(coupons, null, 3));
+    if (!isGuest) {
+      if (userState !== ' ' && userMunicipality !== ' ') {
+        const couponsHome = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
+        if (couponsHome.responseCode === 6004) {
+          setCoupons([]);
+        } else if (couponsHome.responseCode === 6003) {
+          const { data } = couponsHome;
+          setCoupons(data);
+        }
+      } else if (userState === ' ' && userMunicipality === ' ') {
+        const couponsHome = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
+        if (couponsHome.responseCode === 6004) {
+          setCoupons([]);
+        } else if (couponsHome.responseCode === 6003) {
+          const { data } = couponsHome;
+          setCoupons(data);
+        }
+      } else if (userState === ' ' && userMunicipality !== ' ') {
+        setCoupons([]);
+      }
+    } else {
+      setCoupons([]);
+    }
+    //console.log('coupons Home', JSON.stringify(couponsHome, null, 3));
     //return coupons;
-    const { data } = coupons;
-    setCoupons(data);
+  };
+
+  function compareFn(a: UserCouponInterface, b: UserCouponInterface) {
+    if (a.coupons_status_id === 2 && b.coupons_status_id !== 2) {
+      return 1;
+    }
+    if (a.coupons_status_id !== 2 && b.coupons_status_id === 2) {
+      return -1;
+    }
+    return 0;
+  }
+
+  console.log('userId AQUI', user.userId);
+  //console.log('coupons Home SET', userMunicipality, userState, JSON.stringify(coupons, null, 3));
+
+  const getCouponsMixed = () => {
+    if (coupons.length > 0 && userCoupons.length > 0) {
+      const mixed: UserCouponInterface[] = [];
+      coupons.forEach(coupon => {
+        const couponfound = userCoupons.find(userCoupon => userCoupon.promotionid === coupon.promotionid);
+        if (couponfound !== undefined) {
+          mixed.push(couponfound);
+        } else if (couponfound === undefined) {
+          const searchList: UserCouponInterface = mixed.find(mix => mix.promotionid === coupon.promotionid) as UserCouponInterface;
+          if (searchList === undefined) {
+            const newCoup: UserCouponInterface = {
+              activecouponimage: coupon.activecouponimage,
+              code: '',
+              coupons_status_id: 0,
+              description: coupon.descriptionc,
+              descriptionsubtitle: coupon.descriptionsubtitle,
+              descriptiontitle: coupon.descriptiontitle,
+              descriptiontyc: coupon.descriptiontyc,
+              enddate: coupon.enddate,
+              establishment: coupon.establishment,
+              imageurl: coupon.imageurl,
+              listviewimage: coupon.listviewimage,
+              name: coupon.name,
+              promotionid: coupon.promotionid,
+              startdate: coupon.startdate,
+              type: coupon.type,
+              updatedat: null
+            };
+            mixed.push(newCoup);
+            console.log('murcielago', newCoup);
+          } else {
+            console.log('Ya estaba');
+          }
+        }
+      });
+      mixed.sort(compareFn);
+      setMixedCoupons(mixed);
+      console.log('ALPACA', mixed);
+    }
   };
   useEffect(() => {
-    loader.show();
+    //loader.show();
     const getUserCoupons = async () => {
-      const userCoupons = await citiCouponsServices.getUserCoupons(user.userId as string, userState, userMunicipality);
-      const { data } = userCoupons;
-      setUserCoupons(data);
-      loader.hide();
+      if (!isGuest) {
+        const userCoupons = await citiCouponsServices.getUserCoupons(user.userId as string, userState, userMunicipality);
+        const { data } = userCoupons;
+        setUserCoupons(data);
+        //loader.hide();
+        return data;
+      } else {
+        setUserCoupons([]);
+      }
     };
     getCoupons(0);
     getUserCoupons();
+/*     if (coupons.length > 0 && userCoupons.length > 0) {
+      getCouponsMixed();
+    } */
   }, [isFocused, userState, userMunicipality]);
+
+  console.log('SANDIA', couponsWithState);
+  console.log('MANZANA', cIDAndState);
+
+  const getCouponStatus = async (couponId: string) => {
+    const status = await citiCouponsServices.getCoupon(couponId);
+    const { data } = status;
+    //console.log('FML', data.coupons_status_id, couponId);
+    return data.coupons_status_id as number;
+  };
 
   useEffect(() => {
     initRemoteConfig();
@@ -358,7 +460,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
           id: user.id,
           description: 'Abrir Acumuladesde el botón de home'
         });
-        inConstruction.show();
+        navigate('Coupons');
         return;
       }
       /* inConstruction.show();
@@ -597,14 +699,16 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     navigate('Coupons');
   };
 
-  const onPressCouponDetail = (item: CouponInterface) => {
+  const onPressCouponDetail = (item: UserCouponInterface) => {
     function verifyIfActivated(coupon: UserCouponInterface) {
       return coupon.promotionid === item.promotionid;
     }
     const activatedPromotion = userCoupons.find(verifyIfActivated);
 
-    if (activatedPromotion !== undefined) {
-      navigate('ActivatedCoupon', { couponInfo: activatedPromotion, couponActivatedData: activatedPromotion.code, origin: 'Home' });
+    if (item.type === 'Accumulation') {
+      inConstruction.show();
+    } else if (activatedPromotion?.coupons_status_id === 2 && item.type !== 'Accumulation') {
+      navigate('ActivatedCoupon', { couponInfo: item, couponActivatedData: item.code, origin: 'Home' });
     } else {
       navigate('CouponDetail', { couponInfo: item, origin: 'Home' });
     }
@@ -651,8 +755,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         isLoadBanners={isLoadBanners}
         coupons={coupons}
         userCoupons={userCoupons}
+        mixedCoupons={mixedCoupons}
         onPressViewMoreCoupons={onPressViewMoreCoupons}
         onPressCoupon={onPressCouponDetail}
+        getCouponStat={getCouponStatus}
       />
       <AddressModalSelection
         visible={addressModalSelectionVisible}

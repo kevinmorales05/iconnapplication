@@ -2,7 +2,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Button, Container, TextContainer } from 'components';
 import theme from 'components/theme/theme';
-import { useToast } from 'context';
+import { useLoading, useToast } from 'context';
 import { HomeStackParams } from 'navigation/types';
 import React from 'react';
 import { Image, Platform } from 'react-native';
@@ -19,14 +19,16 @@ const CouponDetail: React.FC = () => {
   const route = useRoute<RouteProp<HomeStackParams, 'CouponDetail'>>();
   const { params } = route;
   const toast = useToast();
+  const loader = useLoading();
+  loader.hide();
 
-  console.log('params.couponInfo', JSON.stringify(params.couponInfo, null, 3));
+  console.log('params.couponInfo', JSON.stringify(params.couponInfo, null, 3), user.userId);
   console.log('HALP', params.couponInfo.promotionid);
 
   const activateCoupon = async () => {
     const couponActivated = await citiCouponsServices.postAssignCouponUser(params.couponInfo.promotionid, user.userId as string);
     console.log('couponActivated', couponActivated.data);
-    if (couponActivated.data !== null) {
+    if (couponActivated.data !== null && couponActivated.data !== undefined) {
       toast.show({
         message: '¡Se ha activado tu cupón con éxito!',
         type: 'success'
@@ -56,7 +58,7 @@ const CouponDetail: React.FC = () => {
           <Image source={{ uri: params.couponInfo.imageurl }} style={{ height: verticalScale(160), width: '100%' }} resizeMode="cover" />
         </Container>
         <Container>
-          <TextContainer text={params.couponInfo.descriptiontitle} fontBold fontSize={16} marginTop={verticalScale(10)} marginLeft={moderateScale(32)} />
+          <TextContainer text={params.couponInfo.descriptiontitle} fontBold fontSize={16} marginTop={verticalScale(10)} marginHorizontal={moderateScale(32)} />
           <TextContainer
             text={params.couponInfo.descriptionsubtitle}
             fontBold
