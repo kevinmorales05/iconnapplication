@@ -194,7 +194,7 @@ const PromotionsScreen: React.FC = () => {
       collectionId: collectionId,
       pageSize: 10,
       pageNumber: itemToLoad,
-      selectedStore: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1], 10) : 0
+      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 0
     };
     return await dispatch(getProductsByCollectionIdThunk(collectionData)).unwrap();
   };

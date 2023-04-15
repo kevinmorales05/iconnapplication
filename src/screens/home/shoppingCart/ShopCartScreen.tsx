@@ -173,7 +173,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   const getProducts = async (products: any[]) => {
     if (products) {
       const data: ProductListCacheRequestInterface = {
-        storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1], 10) : 0,
+        storeId: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005,
         products: products.map(item => item.id + '')
       };
       return await dispatch(getProductsListItemsThunk(data)).unwrap();

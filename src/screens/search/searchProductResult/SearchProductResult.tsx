@@ -101,7 +101,7 @@ const SearchProductResult: React.FC = () => {
   const getProducts = async (favProductsArr: ProductSearchItemInterface[] | null | undefined) => {
     if (favProductsArr) {
       const data: ProductListCacheRequestInterface = {
-        storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
+        storeId: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005,
         products: favProductsArr.map(item => item.productId)
       };
       return await dispatch(getProductsListItemsThunk(data)).unwrap();

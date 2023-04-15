@@ -113,7 +113,7 @@ function RecommededForYouScreen() {
       collectionId: Number.parseInt(RECOMMENDED_PRODUCTS ? RECOMMENDED_PRODUCTS : '0'),
       pageSize: 10,
       pageNumber: 0,
-      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : undefined
     };
     fetchProducts(productOther);
   };
@@ -211,21 +211,6 @@ function RecommededForYouScreen() {
                   />
                 </Container>
               </Container>
-              {/* <Container style={{ marginTop: moderateScale(200) }}>
-                <Button
-                  style={{ width: moderateScale(328) }}
-                  size="small"
-                  borderColor="iconn_green_original"
-                  fontSize="h3"
-                  fontBold
-                  color="iconn_green_original"
-                  round
-                  onPress={() => {}}
-                  length="short"
-                >
-                  {'Limpiar'}
-                </Button>
-              </Container> */}
             </Container>
           )}
         </Container>

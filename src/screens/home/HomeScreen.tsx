@@ -144,7 +144,7 @@ const HomeScreen: React.FC<Props> = ({
                 <Image style={styles.image} source={ICONN_STO} />
                 <CustomText fontSize={16} text={'Tienda: '} fontBold />
                 <Container>
-                  <CustomText text={defaultSeller.Tienda as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+                  <CustomText text={defaultSeller.pickupPoint.friendlyName as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
                 </Container>
               </Container>
             )}

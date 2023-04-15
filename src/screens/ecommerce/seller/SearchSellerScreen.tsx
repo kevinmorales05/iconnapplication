@@ -21,8 +21,8 @@ import analytics from '@react-native-firebase/analytics';
 
 const SearchSellerScreen = () => {
   const [value, onChangeText] = useState('');
-  const [current, setCurrent] = useState<SellerInterface | null>(null);
-  const [sellersToRender, setSellers] = useState<SellerInterface[]>([]);
+  const [current, setCurrent] = useState<any | null>(null);
+  const [sellersToRender, setSellers] = useState<any[]>([]);
   const { user } = useAppSelector((state: RootState) => state.auth);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
 
@@ -52,8 +52,8 @@ const SearchSellerScreen = () => {
     }
   };
 
-  const SellerItem = ({ selected, onPress, seller }: { selected: boolean; onPress: () => void; seller: SellerInterface }) => {
-    const { Tienda, distance } = seller;
+  const SellerItem = ({ selected, onPress, seller }: { selected: boolean; onPress: () => void; seller: any }) => {
+    const { distance } = seller;
 
     return (
       <Touchable onPress={onPress}>
@@ -75,14 +75,26 @@ const SearchSellerScreen = () => {
             <Container style={{ width: '100%' }}>
               <Container flex row style={{ flex: 1 }}>
                 <Container flex={3} style={{ paddingRight: 15 }}>
-                  <CustomText numberOfLines={1} fontSize={16} text={Tienda as string} fontBold />
+                  <CustomText fontSize={16} text={'7-Eleven ' + seller.pickupPoint.friendlyName} fontBold />
+                  <CustomText
+                    numberOfLines={3}
+                    fontSize={16}
+                    text={
+                      seller.pickupPoint.address.street +
+                      ' ' +
+                      seller.pickupPoint.address.number +
+                      ', ' +
+                      seller.pickupPoint.address.postalCode +
+                      ' ' +
+                      seller.pickupPoint.address.city +
+                      ', ' +
+                      seller.pickupPoint.address.state
+                    }
+                  />
                 </Container>
                 <Container style={{ marginRight: 10 }}>
                   <CustomText fontSize={16} text={distance ? format(distance) : ''} fontBold />
                 </Container>
-              </Container>
-              <Container style={{ marginVertical: 5 }}>
-                <CustomText fontSize={16} text={seller.Domicilio} />
               </Container>
             </Container>
           </Container>
@@ -178,13 +190,12 @@ const SearchSellerScreen = () => {
   const getPickUpPoints = async (cp: string) => {
     if (cp.length === 5) {
       const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
-      const temSellers: SellerInterface[] = [];
+      const temSellers: any[] = [];
       if (pickUp.items.length) {
-        sellers.forEach(seller => {
+        pickUp.items.forEach(store => {
           // console.log({ temSellers: pickUp.items });
-          const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
           if (store.distance < 20) {
-            temSellers.push(seller);
+            temSellers.push(store);
           }
         });
       }
@@ -319,40 +330,41 @@ const SearchSellerScreen = () => {
           </Container>
         </Container>
       </Touchable>
-      <Container width={'100%'} height={verticalScale(390)}>
+      <Container width={'100%'} height={verticalScale(430)}>
         <ScrollView>
           {sellersToRender.slice(0, 5).map((seller, index) => {
             return (
               <SellerItem
                 key={index}
                 seller={seller}
-                selected={Number(seller['# Tienda']) === Number(current?.['# Tienda'])}
+                selected={Number(seller.pickupPoint.address.addressId) === Number(current?.pickupPoint.address.addressId)}
                 onPress={async () => {
                   try {
                     await analytics().logEvent('hmSelectDeliveryChooseStoreFromList', {
                       id: user.id,
                       description: ' Seleccionar barra de búsqueda',
-                      storeId: `${seller['# Plaza']}${seller['# Tienda']}`
+                      storeId: `${seller.pickupPoint.address.addressId}`
                     });
                     //console.log('succesfully added to firebase!');
                   } catch (error) {
                     //console.log(error);
                   }
                   setCurrent(seller);
+                  console.log("thi is the current ",JSON.stringify(current));
                 }}
               />
             );
           })}
         </ScrollView>
       </Container>
-      <Container width={'100%'} style={{ alignItems: 'center' }}>
+      {/* <Container width={'100%'} style={{ alignItems: 'center' }}>
         <Container style={styles.containerInfo}>
           <Octicons name="info" size={theme.iconSize.large} color={theme.brandColor.iconn_accent_secondary} />
           <Container style={{ marginLeft: moderateScale(10) }}>
             <CustomText text={'Por el momento solo podrás disfrutar de dos tiendas.'} fontSize={theme.fontSize.h6} />
           </Container>
         </Container>
-      </Container>
+      </Container> */}
     </Container>
   );
 };

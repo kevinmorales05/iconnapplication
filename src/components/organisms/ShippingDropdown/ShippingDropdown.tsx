@@ -59,7 +59,7 @@ const ShippingDropdown: React.FC<Props> = ({
     let isNear = false;
     if (pickUp.items.length) {
       pickUp.items.forEach(store => {
-        if (store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`) {
+        if (store.pickupPoint.address.addressId === defaultSeller.pickupPoint.address.addressId) {
           if (store.distance < 7) {
             isNear = true;
           }
@@ -145,11 +145,21 @@ const DefaultSeller = ({ onPress }: { onPress: () => void }) => {
                   <Container style={{ flexDirection: 'row' }}>
                     <CustomText fontSize={16} text={'Tienda: '} fontBold />
                     <Container>
-                      <CustomText text={defaultSeller.Tienda as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+                      <CustomText
+                        text={defaultSeller.pickupPoint.friendlyName as string}
+                        fontSize={16}
+                        fontBold
+                        underline
+                        textColor={theme.brandColor.iconn_green_original}
+                      />
                     </Container>
                   </Container>
                   <Container style={{ flexDirection: 'row', marginVertical: 5, paddingRight: 30 }}>
-                    <CustomText lineHeight={22} fontSize={16} text={`${defaultSeller.Domicilio} `} />
+                    <CustomText
+                      lineHeight={22}
+                      fontSize={16}
+                      text={`${defaultSeller.pickupPoint.address.street} ${defaultSeller.pickupPoint.address.number}, ${defaultSeller.pickupPoint.address.postalCode} ${defaultSeller.pickupPoint.address.city},  ${defaultSeller.pickupPoint.address.state}, `}
+                    />
                   </Container>
                   <Container row center>
                     <Ionicons name="close-outline" size={24} color={theme.brandColor.iconn_error} />
@@ -235,7 +245,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
     let isNear = false;
     if (pickUp.items.length) {
       pickUp.items.forEach(store => {
-        if (store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`) {
+        if (store.pickupPoint.address.addressId === defaultSeller.pickupPoint.address.addressId) {
           if (store.distance < 7) {
             isNear = true;
           }

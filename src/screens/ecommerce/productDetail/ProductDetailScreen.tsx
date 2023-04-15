@@ -84,7 +84,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
       setIsFirstLoad(false);
     }
     const productInfo: ProductCacheInterface = {
-      store: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1], 10) : 0
+      store: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`)  : 5005
     };
     const response = await homeServices.getProductCacheDetailById(itemId, productInfo);
     if (response.responseCode === 604) {
@@ -120,7 +120,7 @@ const ProductDetailScreen: React.FC<Props> = ({ fetchReviewData, showModal, star
       collectionId: Number.parseInt(COMPLEMENTRY_PRODUCTS ? COMPLEMENTRY_PRODUCTS : '0', 10),
       pageSize: 7,
       pageNumber: 0,
-      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005
     };
     const response = await dispatch(getProductsByCollectionIdThunk(productComplementary)).unwrap();
     if (response.responseCode === 603) {

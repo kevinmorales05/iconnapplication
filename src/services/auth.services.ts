@@ -264,7 +264,7 @@ async function sendEmailtoRecoverPassword(user: AuthDataInterface): Promise<any>
 
 async function getLoginProviders(): Promise<any> {
   const response = await OnboardingApi.getInstance().getRequest(
-    `/vtexid/pub/authentication/start?callbackUrl=oneiconn.vtexcommercestable.com.br/api/vtexid/pub/authentication/finish&scope=${ACCOUNT_NAME}&locale=MX&accountName=${ACCOUNT_NAME}&returnUrl=/&appStart=true`
+    `/vtexid/pub/authentication/start?callbackUrl=${ACCOUNT_NAME}.vtexcommercestable.com.br/api/vtexid/pub/authentication/finish&scope=${ACCOUNT_NAME}&locale=MX&accountName=${ACCOUNT_NAME}&returnUrl=/&appStart=true`
   );
   const { data } = response;
   return data;

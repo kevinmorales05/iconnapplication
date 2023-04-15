@@ -123,14 +123,22 @@ const PostalCodeScreen = () => {
   // }, [position]);
 
   const getPickUpPoints = async (cp: string) => {
+    console.log('aqui vamos al pick up points');
+
     if (cp.length === 5) {
       const pickUp = await vtexPickUpPoints.getPickUpPointsByCP(cp);
+      
       let item;
       if (pickUp.items.length) {
-        sellers.forEach(seller => {
-          const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+        // sellers.forEach(seller => {
+        //   const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+        //   if (store.distance < 20) {
+        //     return (item = seller);
+        //   }
+        // });
+        pickUp.items.forEach(store => {
           if (store.distance < 20) {
-            return (item = seller);
+            return (item = store);
           }
         });
         if (item) {
@@ -154,10 +162,9 @@ const PostalCodeScreen = () => {
       const pickUp = await vtexPickUpPoints.getPickUpPointsByAddress(position?.coords.longitude, position?.coords.latitude);
       let item;
       if (pickUp.items.length) {
-        sellers.forEach(seller => {
-          const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
+        pickUp.items.forEach(store => {
           if (store.distance < 20) {
-            return (item = seller);
+            return (item = store);
           }
         });
         if (item) {

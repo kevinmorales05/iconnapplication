@@ -181,7 +181,7 @@ const PromotionsScreen: React.FC = () => {
 
   const getProducts = async (itemToLoad: number) => {
     const data: ProductsByPromotionsRequestInterface = {
-      storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
+      storeId: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005,
       pageNumber: itemToLoad,
       pageSize: 10
     };
