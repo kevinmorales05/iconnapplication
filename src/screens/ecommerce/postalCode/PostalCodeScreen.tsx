@@ -14,7 +14,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import appConfig from '../../../../app.json';
 import config from 'react-native-config';
 import Geolocation from 'react-native-geolocation-service';
-import sellers from 'assets/files/sellers.json';
 import theme from 'components/theme/theme';
 import analytics from '@react-native-firebase/analytics';
 
@@ -71,56 +70,6 @@ const PostalCodeScreen = () => {
     }
   };
 
-  /*regla de negocio:
-    delivery hasta 7 km 
-    pickup hasta 20 km
-  */
-
-  //useEffect to get geopoint of user before render
-
-  // // Redirect to home if permissions are granted
-  // useEffect(() => {
-  //   (async () => {
-  //     loader.show('', 'ecommerce');
-  //     const hasPermission = await hasLocationPermission();
-
-  //     if (!hasPermission) {
-  //       loader.hide();
-  //       return;
-  //     }
-
-  //     Geolocation.getCurrentPosition(
-  //       position => {
-  //         getPickUpPointsByAddress(position);
-  //       },
-  //       error => {
-  //         loader.hide();
-  //       },
-  //       {
-  //         accuracy: {
-  //           android: 'high',
-  //           ios: 'best'
-  //         },
-  //         enableHighAccuracy: true,
-  //         timeout: 15000,
-  //         maximumAge: 10000,
-  //         distanceFilter: 0,
-  //         forceRequestLocation: true,
-  //         forceLocationManager: true,
-  //         showLocationDialog: true
-  //       }
-  //     );
-  //   })();
-  // }, []);
-
-  // useEffect(() => {
-  //   if (position) {
-  //     const sorted = sortByDistance([position.coords.longitude, position.coords.latitude], sellers);
-  //     dispatch(setDefaultSeller({ defaultSeller: sorted[0] }));
-  //     loader.hide();
-  //     navigate('Home');
-  //   }
-  // }, [position]);
 
   const getPickUpPoints = async (cp: string) => {
     console.log('aqui vamos al pick up points');
@@ -130,12 +79,6 @@ const PostalCodeScreen = () => {
       
       let item;
       if (pickUp.items.length) {
-        // sellers.forEach(seller => {
-        //   const store = pickUp.items.find(store => `${seller.seller}_${seller['# Tienda']}` === store.pickupPoint.id);
-        //   if (store.distance < 20) {
-        //     return (item = seller);
-        //   }
-        // });
         pickUp.items.forEach(store => {
           if (store.distance < 20) {
             return (item = store);
@@ -340,20 +283,7 @@ const PostalCodeScreen = () => {
               },
               validate: (value: string) => {
                 if (value.length === 5) {
-                  const input = Number(value);
-
-                  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-                  const found = sellers.find(item => {
-                    const current = Number(item['Código postal']);
-                    return current === input;
-                  });
-                  // if (found) {
-                  //   dispatch(setDefaultSeller({ defaultSeller: found }));
-                  // }
-                  // if (!found) {
-                  //   return 'Código Postal no encontrado';
-                  //   //return true;
-                  // }
+                  return true;
                 }
 
                 return true;

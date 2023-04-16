@@ -9,8 +9,6 @@ import { vtexPickUpPoints } from 'services';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import appConfig from '../../../../app.json';
 import Geolocation, { GeoCoordinates } from 'react-native-geolocation-service';
-import Octicons from 'react-native-vector-icons/Octicons';
-import sellers from 'assets/files/sellers.json';
 import theme from 'components/theme/theme';
 import analytics from '@react-native-firebase/analytics';
 
@@ -357,14 +355,6 @@ const SearchSellerScreen = () => {
           })}
         </ScrollView>
       </Container>
-      {/* <Container width={'100%'} style={{ alignItems: 'center' }}>
-        <Container style={styles.containerInfo}>
-          <Octicons name="info" size={theme.iconSize.large} color={theme.brandColor.iconn_accent_secondary} />
-          <Container style={{ marginLeft: moderateScale(10) }}>
-            <CustomText text={'Por el momento solo podrás disfrutar de dos tiendas.'} fontSize={theme.fontSize.h6} />
-          </Container>
-        </Container>
-      </Container> */}
     </Container>
   );
 };
