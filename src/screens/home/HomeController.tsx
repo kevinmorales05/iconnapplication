@@ -17,7 +17,8 @@ import {
   setDateSync,
   ProductsByCollectionInterface,
   ModuleInterface,
-  setAppModules
+  setAppModules,
+  store
 } from 'rtk';
 import HomeScreen from './HomeScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -29,8 +30,8 @@ import { useAddresses } from './myAccount/hooks/useAddresses';
 import { HOME_OPTIONS } from 'assets/files';
 import { useProducts } from './hooks/useProducts';
 import { useShoppingCart } from './hooks/useShoppingCart';
-import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne, saveShippingData } from 'services/vtexShoppingCar.services';
-import { setDetailSelected, updateShoppingCartItems } from 'rtk/slices/cartSlice';
+import { getShoppingCart, getCurrentShoppingCartOrCreateNewOne, saveShippingData, forceToCreateNewShoppingCart } from 'services/vtexShoppingCar.services';
+import { setDetailSelected, setShoppingCartInitialState, updateShoppingCartItems } from 'rtk/slices/cartSlice';
 import { useFavorites } from 'screens/auth/hooks/useFavorites';
 import Config from 'react-native-config';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
@@ -42,6 +43,8 @@ import { homeServices } from 'services';
 import { citiCouponsServices } from 'services/coupons.services';
 import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
 import { useLocation } from 'hooks/useLocation';
+import { useOrders } from 'screens/home/hooks/useOrders';
+import { useOrdersMonitor } from 'context/ordersMonitor.context';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -54,7 +57,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { completeGeolocation, getCurrentLocation } = useLocation();
   const isFocused = useIsFocused();
   const dispatch = useAppDispatch();
-  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+  const { navigate, reset } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const loader = useLoading();
   const [addressModalSelectionVisible, setAddressModalSelectionVisible] = useState(false);
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
@@ -205,6 +208,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     //console.log('FML', data.coupons_status_id, couponId);
     return data.coupons_status_id as number;
   };
+  const { registerEmptyOrder } = useOrders();
+  const monitor = useOrdersMonitor();
 
   useEffect(() => {
     initRemoteConfig();
@@ -353,7 +358,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const fetchAddresses = useCallback(async () => {
     loader.show();
     if (user.id) {
-      await dispatch(getUserAddressesThunk(user.id!));
+      await dispatch(getUserAddressesThunk(user.id));
     }
   }, []);
 
@@ -549,10 +554,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   useEffect(() => {
     if (homeItems) {
       setHomeOptions(HOME_OPTIONS);
-      setPrincipal(homeItems!.filter(item => item.promotion_type === 'principal'));
-      setSecond(homeItems!.filter(item => item.promotion_type === 'second'));
-      setDay_promotion(homeItems!.filter(item => item.promotion_type === 'day_promotion'));
-      setAll_promotions(homeItems!.filter(item => item.promotion_type === 'all_promotions'));
+      setPrincipal(homeItems.filter(item => item.promotion_type === 'principal'));
+      setSecond(homeItems.filter(item => item.promotion_type === 'second'));
+      setDay_promotion(homeItems.filter(item => item.promotion_type === 'day_promotion'));
+      setAll_promotions(homeItems.filter(item => item.promotion_type === 'all_promotions'));
     }
   }, [homeItems]);
 
@@ -568,52 +573,76 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   /**
    * Get the current shoppingCart for the logged user, if it doesn't exist, create one.
    */
-  const fetchData = useCallback(async () => {
-    const { userId } = user;
-    if (userId === cart.userProfileId) {
-      // console.log('usuario igual...');
+  const fetchData = async () => {
+    if (paySuccess === true) {
+      if (paySuccess === true && !isGuest) {
+        toast.show({
+          message: (
+            <Text>
+              {'¡Muchas gracias por tu compra! Para más detalles en: Cuenta -> '}
+              <Text
+                style={{ fontWeight: 'bold' }}
+                onPress={() => {
+                  navigate('MyOrders');
+                }}
+              >
+                Pedidos
+              </Text>{' '}
+            </Text>
+          ),
+          type: 'limited',
+          timeToShow: 10000
+        });
+      } else if (paySuccess && isGuest) {
+        toast.show({
+          message: 'Más detalles sobre el pedido en tu correo electrónico',
+          type: 'limited',
+          timeToShow: 10000
+        });
+      }
+
+      reset({
+        index: 0,
+        routes: [{ name: 'Home', params: { paySuccess: false } }]
+      });
+
+      // Obtenemos el orderFormId que se acaba de pagar para enviarlo a la BD en tabla "order".
+      const currentOrderFormId = store.getState().cart.cart.orderFormId;
+      console.log('FINAL:', currentOrderFormId);
+      const res = await registerEmptyOrder(currentOrderFormId);
+
+      if (res) {
+        console.log('RESPONSE DE REGISTER_EMPTY_ORDER EN HOME', res);
+        setTimeout(() => {
+          monitor.start();
+        }, 5000);
+      }
+
+      // Limpiamos cart en redux despues de un checkout existoso.
+      dispatch(setShoppingCartInitialState());
+
+      // Forzamos a vtex a generarnos un nuevo orderFormId despues de haber concluido un checkout exitosamente.
+      forceToCreateNewShoppingCart().then(newCart => {
+        getShoppingCart(newCart.orderFormId).then(async response => {
+          dispatch(updateShoppingCartItems(response));
+          setIsChargin(true);
+          console.log('ORDER_FORM_ID RECIEN CREADO FORZADO (2):', newCart.orderFormId);
+        });
+      });
     } else {
       getCurrentShoppingCartOrCreateNewOne().then(newCart => {
+        console.log('ORDER_FORM_ID RECIEN CREADO EN CARGA SIMPLE DEL HOME (1):', newCart.orderFormId);
         getShoppingCart(newCart.orderFormId).then(response => {
           dispatch(updateShoppingCartItems(response));
           setIsChargin(true);
         });
       });
     }
-  }, []);
+  };
 
   useEffect(() => {
     fetchData();
   }, []);
-
-  useEffect(() => {
-    if (paySuccess && !isGuest) {
-      fetchData();
-      toast.show({
-        message: (
-          <Text>
-            {'¡Muchas gracias por tu compra! Para más detalles en: Cuenta -> '}
-            <Text
-              style={{ fontWeight: 'bold' }}
-              onPress={() => {
-                navigate('MyOrders');
-              }}
-            >
-              Pedidos
-            </Text>{' '}
-          </Text>
-        ),
-        type: 'limited',
-        timeToShow: 10000
-      });
-    } else if (paySuccess && isGuest) {
-      toast.show({
-        message: 'Más detalles sobre el pedido en tu correo electrónico',
-        type: 'limited',
-        timeToShow: 10000
-      });
-    }
-  }, [paySuccess]);
 
   async function getProductsInfo(existingProductsInCart: ExistingProductInCartInterface[], collectionId: string) {
     const arr: ProductInterface[] | null | undefined = collectionId === RECOMMENDED_PRODUCTS ? products : otherProducts;
@@ -666,13 +695,13 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       collectionId: Number.parseInt(OTHER_PRODUCTS ? OTHER_PRODUCTS : '0'),
       pageSize: 7,
       pageNumber: 0,
-      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`)  : 5005
     };
     const productRecomended: ProductsByCollectionInterface = {
       collectionId: Number.parseInt(RECOMMENDED_PRODUCTS ? RECOMMENDED_PRODUCTS : '0'),
       pageSize: 7,
       pageNumber: 0,
-      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005
     };
     fetchProducts(productOther);
     fetchProducts(productRecomended);

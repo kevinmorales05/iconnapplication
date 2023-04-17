@@ -163,7 +163,7 @@ const CategoryProductsScreen: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (productsRender?.length! > 0) {
+    if (productsRender?.length > 0) {
       const existingProducts: ExistingProductInCartInterface[] = getExistingProductsInCart()!;
       updateQuantityProducts(existingProducts);
     }
@@ -270,7 +270,7 @@ const CategoryProductsScreen: React.FC = () => {
 
   const getProducts = async (itemToLoad: number) => {
     const data: ProductsBySubCategorieRequestInterface = {
-      storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
+      storeId: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005,
       subCategoryId: Number.parseInt(idCategorySelected),
       categoryId: category.id ? Number.parseInt(category.id) : 0,
       pageNumber: itemToLoad,

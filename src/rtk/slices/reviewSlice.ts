@@ -1,22 +1,12 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {
-  postReviewThunk,
-  getReviewByProductIDThunk,
-  getReviewListThunk
-} from '../thunks/vtex-reviews.thunks';
-import {
-  ReviewInterface
-} from '../types';
-
+import { createSlice } from '@reduxjs/toolkit';
+import { postReviewThunk, getReviewByProductIDThunk, getReviewListThunk } from '../thunks/vtex-reviews.thunks';
 
 const reviewSlice = createSlice({
   name: 'review',
   initialState: {
-    loading:false
+    loading: false
   },
-  reducers: {
-    
-  },
+  reducers: {},
   extraReducers: builder => {
     builder.addCase(getReviewByProductIDThunk.pending, state => {
       state.loading = true;
@@ -47,6 +37,5 @@ const reviewSlice = createSlice({
     });
   }
 });
-
 
 export default reviewSlice.reducer;

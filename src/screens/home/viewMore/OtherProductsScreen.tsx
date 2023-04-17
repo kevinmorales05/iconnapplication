@@ -114,7 +114,7 @@ function OtherProductsScreen() {
       collectionId: Number.parseInt(OTHER_PRODUCTS ? OTHER_PRODUCTS : '0'),
       pageSize: 10,
       pageNumber: 0,
-      selectedStore: defaultSeller?.Campo ? defaultSeller.seller.split('oneiconntienda')[1] : undefined
+      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005
     };
     fetchProducts(productOther);
   };

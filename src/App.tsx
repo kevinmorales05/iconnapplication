@@ -9,7 +9,8 @@ import {
   LoadingContextProvider,
   ToastContextProvider,
   WelcomeModalContextProvider,
-  Toast
+  Toast,
+  OrdersMonitorContextProvider
 } from 'context';
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -19,6 +20,8 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { NotificationListener, requestUserPermission } from 'utils/notification-helper';
 import { NotEnabledModalContextProvider } from 'context/notEnabled.context';
 import { LogBox } from 'react-native';
+// import Config from 'react-native-config';
+// console.log('Environment variables:', JSON.stringify(Config, null, 3));
 
 enableLatestRenderer();
 
@@ -45,7 +48,9 @@ const App: React.FC = () => {
                     <InConstructionContextProvider>
                       <AlertContextProvider>
                         <BottomSheetModalProvider>
-                          <NavContainer />
+                          <OrdersMonitorContextProvider>
+                            <NavContainer />
+                          </OrdersMonitorContextProvider>
                         </BottomSheetModalProvider>
                       </AlertContextProvider>
                     </InConstructionContextProvider>

@@ -20,19 +20,19 @@ export class VtexFavoritesApi extends HttpClient {
     // https://github.com/svrcekmichal/redux-axios-middleware/issues/83
     this.instance.interceptors.request.use(
       (request: any) => {
-        const { headers, baseURL, method, url, data } = request;
-        console.log(
-          'INTERCEPTOR - Starting FAVORITES Request ===> \n\n',
-          JSON.stringify(headers, null, 3),
-          '\n',
-          `baseURL: ${baseURL}`,
-          '\n',
-          `url: ${url}`,
-          '\n',
-          `method: ${method}`,
-          '\n',
-          `data: ${JSON.stringify(data, null, 3)}`
-        );
+        // const { headers, baseURL, method, url, data } = request;
+        // console.log(
+        //   'INTERCEPTOR - Starting FAVORITES Request ===> \n\n',
+        //   JSON.stringify(headers, null, 3),
+        //   '\n',
+        //   `baseURL: ${baseURL}`,
+        //   '\n',
+        //   `url: ${url}`,
+        //   '\n',
+        //   `method: ${method}`,
+        //   '\n',
+        //   `data: ${JSON.stringify(data, null, 3)}`
+        // );
 
         return request;
       },

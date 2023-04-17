@@ -26,25 +26,15 @@ const PointItem: React.FC<PointItemProps> = ({ onPress, point, pointFound = fals
     right: 8,
     top: point.type === 'binomial' ? 10 : 0
   };
+  const pointIconTernary = point.type === 'petro' ? ICONN_BRANCHES_ICON_PETRO : ICONN_ERROR_CROSS;
+  const pointIcon = point.type === '7eleven' ? ICONN_BRANCHES_ICON_7ELEVEN : pointIconTernary;
 
   return (
     <Touchable onPress={() => onPress(point, pointFound ? 'map' : 'list')}>
       <Container style={{ height: 85, paddingHorizontal: 16, paddingTop: 14 }}>
         <Container row space="between" center height={'60%'}>
           <Container width={'15%'} center>
-            <Image
-              source={
-                point.type === 'binomial'
-                  ? ICONN_BRANCHES_ICON_BINOMIAL
-                  : point.type === '7eleven'
-                  ? ICONN_BRANCHES_ICON_7ELEVEN
-                  : point.type === 'petro'
-                  ? ICONN_BRANCHES_ICON_PETRO
-                  : ICONN_ERROR_CROSS
-              }
-              style={cardImageStyle}
-              resizeMode="contain"
-            />
+            <Image source={point.type === 'binomial' ? ICONN_BRANCHES_ICON_BINOMIAL : pointIcon} style={cardImageStyle} resizeMode="contain" />
           </Container>
           {/* TODO: DT Alex. Alex should provide a new version of json markers, this version should have shopName property for gas stations. */}
           <Container width={pointFound ? '75%' : '60%'} flex style={{ left: -8 }}>

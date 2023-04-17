@@ -14,6 +14,16 @@ async function getCurrentShoppingCartOrCreateNewOne(): Promise<any> {
 }
 
 /**
+ * Function to create a shoppingCart
+ */
+async function forceToCreateNewShoppingCart(): Promise<any> {
+  const response = await ShoppingCarCreation.getInstance().getRequest('/orderForm/?forceNewCart=true');
+  if (response === undefined) return Promise.reject(new Error('forceToCreateNewShoppingCart'));
+  const { data } = response;
+  return data;
+}
+
+/**
  * Function to get shoppingCartById
  * shoppingCartId is the shopping cart identifier.
  */
@@ -40,10 +50,52 @@ async function emptyShoppingCar(shoppingCartId: string, doc: any): Promise<any> 
  * shoppingCartId is the Cart identififer to update.
  */
 async function updateShoppingCart(shoppingCartId: string, doc: any): Promise<any> {
-  const response = await ShoppingCar.getInstance().patchRequest(`/${shoppingCartId}/items`, doc);
-  if (response === undefined) return Promise.reject(new Error('updateShoppingCart'));
-  const { data } = response;
-  return data;
+  console.log('*****************************************************inicio');
+  console.log('shoppingCartId: ' + shoppingCartId);
+  console.log(doc.orderItems);
+  //console.log(JSON.stringify(doc,null,4));
+  console.log('*****************************************************fin');
+
+  let itemsN = 0;
+  await getShoppingCart(shoppingCartId).then(response => {
+    const { items, messages } = response;
+    itemsN = items.length;
+  });
+
+  console.log('numero de items: ' + itemsN);
+  let dataR;
+  if (itemsN == 0) {
+    if (doc.orderItems.length > 0) {
+      let quantities = 0;
+      for (let itm of doc.orderItems) {
+        if (itm.quantity > 0) {
+          quantities = quantities + 1;
+        }
+      }
+      if (quantities > 0) {
+        console.log('quiantity mayor a cero');
+        const response = await ShoppingCar.getInstance().postRequest(`/${shoppingCartId}/items`, doc);
+        if (response === undefined) return Promise.reject(new Error('updateShoppingCart'));
+        console.log();
+        const { data } = response;
+        dataR = data;
+      }
+    } else {
+      console.log('vacia carrito');
+      await emptyShoppingCar(shoppingCartId, {}).then(async response => {
+        dataR = response;
+      });
+    }
+    console.log('cero items');
+  } else {
+    console.log('items mayor a cero');
+    const response = await ShoppingCar.getInstance().patchRequest(`/${shoppingCartId}/items`, doc);
+    if (response === undefined) return Promise.reject(new Error('updateShoppingCart'));
+    const { data } = response;
+    dataR = data;
+  }
+
+  return dataR;
 }
 
 /**
@@ -96,5 +148,6 @@ export {
   clearShoppingCartMessages,
   saveClientProfileData,
   saveShippingData,
-  setCustomValues
+  setCustomValues,
+  forceToCreateNewShoppingCart
 };

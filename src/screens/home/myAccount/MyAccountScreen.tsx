@@ -184,8 +184,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<PlacesSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             if (stores) {
-              // navigateToTab('BranchesScreen');
-              inConstruction.show(true);
+              navigate('BranchesScreen');
+              //inConstruction.show(true);
             } else {
               modalNotEnabled.show();
             }
@@ -202,8 +202,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
           icon={<WalletSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             if (wallet) {
-              // navigate('WalletStack');
-              inConstruction.show(true);
+              navigate('WalletStack');
+              //inConstruction.show(true);
             } else {
               modalNotEnabled.show();
             }

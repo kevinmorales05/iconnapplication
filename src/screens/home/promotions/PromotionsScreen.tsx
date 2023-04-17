@@ -114,7 +114,7 @@ const PromotionsScreen: React.FC = () => {
             price: Number.parseFloat(product.selling_price),
             oldPrice: Number.parseFloat(product.selling_price),
             quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
-            ratingValue: product.qualificationAverage,
+            ratingValue: product.average,
             promotionType: product.promotion && product.promotion.type,
             promotionName: product.promotion && product.promotion.name,
             percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
@@ -154,7 +154,7 @@ const PromotionsScreen: React.FC = () => {
             price: Number.parseFloat(product.selling_price),
             oldPrice: Number.parseFloat(product.selling_price),
             quantity: existingProductsInCart ? existingProductsInCart.find(eP => eP.itemId === product.products_id.toString())?.quantity : 0,
-            ratingValue: product.qualificationAverage,
+            ratingValue: product.average,
             promotionType: product.promotion && product.promotion.type,
             promotionName: product.promotion && product.promotion.name,
             percentualDiscountValue: product.promotion && product.promotion.percentual_discount_value,
@@ -181,7 +181,7 @@ const PromotionsScreen: React.FC = () => {
 
   const getProducts = async (itemToLoad: number) => {
     const data: ProductsByPromotionsRequestInterface = {
-      storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1]) : 0,
+      storeId: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005,
       pageNumber: itemToLoad,
       pageSize: 10
     };

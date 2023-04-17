@@ -1,11 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-//import the thunks
-import { getShoppingCartThunk, emptyShoppingCartThunk, updateShoppingCartThunk } from '../thunks/vtex-shoppingCart.thunks';
-
-//importo interfaz de carrito de compras
-import { ShoppingCartInteface, updateShoppingCartInterface } from '../types';
-
 //estado inicial del promociones
 const initialStatePromotions: any = [];
 const initialStateProductPromotions: any = Map<string, Object>;
@@ -15,7 +9,7 @@ const promotionsSlice = createSlice({
   name: 'promotions',
   initialState: {
     productVsPromotion: initialStateProductPromotions,
-    promotions: initialStatePromotions,
+    promotions: initialStatePromotions
   },
   reducers: {
     setPromotionsInitialState(state) {

@@ -1,21 +1,21 @@
 import axios, { AxiosError } from 'axios';
 import { HttpClient } from './http-client';
-import { VTEXApiConfig } from './vtex-api-config';
+import { ApiConfig } from './api-config';
 import { GeneralApiProblem, getGeneralApiProblem } from './api-errors';
 import { DeviceEventEmitter } from 'react-native';
 
-export class DocsNoPrefixApi extends HttpClient {
-  static classInstance?: DocsNoPrefixApi;
+export class OrdersApi extends HttpClient {
+  static classInstance?: OrdersApi;
 
   private constructor() {
-    super(VTEXApiConfig('docsNoApiPrefix'));
+    super(ApiConfig('orders'));
 
-    // Interceptors (only for debug purpose), please do not remove the "return" line,
-    // is  necessary to prevent a very confusing error and spend sometime to debug it.
-    // https://github.com/svrcekmichal/redux-axios-middleware/issues/83
-    this.instance.interceptors.request.use((request: any) => {
-      return request;
-    });
+    this.instance.interceptors.request.use(
+      (request: any) => {
+        return request;
+      },
+      (_error: any) => {}
+    );
 
     this.instance.interceptors.response.use(
       (response: any) => {
@@ -30,7 +30,7 @@ export class DocsNoPrefixApi extends HttpClient {
 
   public static getInstance() {
     if (!this.classInstance) {
-      this.classInstance = new DocsNoPrefixApi();
+      this.classInstance = new OrdersApi();
     }
 
     return this.classInstance;
@@ -44,24 +44,22 @@ export class DocsNoPrefixApi extends HttpClient {
     return this.instance.put(path, payload);
   }
 
-  async getRequest(path: string, payload?: any) {
-    return this.instance.get(path, payload);
+  async getRequest(path: string) {
+    return this.instance.get(path);
   }
 
   async deleteRequest(path: string, payload?: any) {
-    return this.instance.delete(path, payload);
-  }
-  async patchRequest(path: string, payload?: any) {
     return this.instance.get(path, payload);
   }
 
   private handlerError = (err: Error | AxiosError) => {
     if (axios.isAxiosError(err)) {
+      if (err.response?.data) return;
       let problem: GeneralApiProblem;
-      problem = getGeneralApiProblem(err.response._response || err.response.status);
+      problem = getGeneralApiProblem(err.response!.status);
       if (problem) DeviceEventEmitter.emit('error', problem.kind.toString());
     } else {
-      DeviceEventEmitter.emit('error', 'UNKNOWN ERROR');
+      DeviceEventEmitter.emit('error', `Error: ${err.name}\nMessage: ${err.message}`);
     }
   };
 }

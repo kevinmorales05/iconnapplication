@@ -44,6 +44,7 @@ async function getProductsByPromotions(filter: ProductsByPromotionsRequestInterf
  * Function to get products by ids.
  */
 async function getProductsList(filter: ProductListCacheRequestInterface): Promise<any> {
+  console.log("this is the filter", JSON.stringify(filter));
   const response = await BEApi.getInstance().postRequest(`cache/products/list?selectedStore=${filter.storeId}`, filter.products);
   const { data } = response;
   return data;

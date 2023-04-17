@@ -1,6 +1,6 @@
 {
   "name": "oh4y0",
-  "version": "1.10.34",
+  "version": "1.10.46",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -22,7 +22,8 @@
     "ios:staging": "react-native run-ios --scheme oh4y0Stg --configuration Debug",
     "ios:staging-release": "react-native run-ios --scheme oh4y0Stg --configuration Release",
     "ios:prod": "react-native run-ios --scheme oh4y0 --configuration Debug",
-    "ios:prod-release": "react-native run-ios --scheme oh4y0 --configuration Release"
+    "ios:prod-release": "react-native run-ios --scheme oh4y0 --configuration Release",
+    "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=8081'"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -78,6 +79,7 @@
     "react-native-device-info": "^10.3.0",
     "react-native-fast-image": "^8.6.3",
     "react-native-fbsdk-next": "^10.0.0",
+    "react-native-flipper": "^0.189.0",
     "react-native-geolocation-service": "^5.3.0",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-image-picker": "^4.8.4",
@@ -104,8 +106,11 @@
     "react-native-vision-camera": "2.15.2",
     "react-native-webview": "^11.23.1",
     "react-redux": "^8.0.2",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-flipper": "^2.0.2",
     "redux-persist": "^6.0.0",
     "rn-qr-generator": "^1.3.1",
+    "remote-redux-devtools": "^0.5.16",
     "stream": "^0.0.2",
     "timers": "^0.1.1",
     "ts-jest": "26.5.6",

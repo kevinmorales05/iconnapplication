@@ -1,6 +1,6 @@
 import { CustomText } from 'components/atoms';
 import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, ViewStyle } from 'react-native';
+import { Image, StyleSheet } from 'react-native';
 import { ImageSource } from 'react-native-vector-icons/Icon';
 import theme from 'components/theme/theme';
 import { Button, Touchable, Container } from 'components';
@@ -44,6 +44,7 @@ const ShippingDropdown: React.FC<Props> = ({
   const [near, setNear] = useState<boolean>(false);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const { user } = useAppSelector((state: RootState) => state.auth);
+  const [selectedDelivery, setSelectedDelivery] = useState(false); //provitional
 
   useEffect(() => {
     if (address?.postalCode) {
@@ -58,7 +59,7 @@ const ShippingDropdown: React.FC<Props> = ({
     let isNear = false;
     if (pickUp.items.length) {
       pickUp.items.forEach(store => {
-        if (store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`) {
+        if (store.pickupPoint.address.addressId === defaultSeller.pickupPoint.address.addressId) {
           if (store.distance < 7) {
             isNear = true;
           }
@@ -72,13 +73,14 @@ const ShippingDropdown: React.FC<Props> = ({
     <Container style={{ borderBottomLeftRadius: 24, borderBottomRightRadius: 24, backgroundColor: theme.brandColor.iconn_white }}>
       <Container style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
         <ShippingOption
-          selected={mode === ShippingMode.DELIVERY}
+          selected={selectedDelivery}
           mode={ShippingMode.DELIVERY}
           icon={ICONN_SCOOTER}
           disable={!address || !near}
           text={'A domicilio'}
           onPress={() => {
             handleMode(ShippingMode.DELIVERY);
+            setSelectedDelivery(!selectedDelivery); //provitional
           }}
           unmark={() => {
             handleMode(null);
@@ -143,11 +145,21 @@ const DefaultSeller = ({ onPress }: { onPress: () => void }) => {
                   <Container style={{ flexDirection: 'row' }}>
                     <CustomText fontSize={16} text={'Tienda: '} fontBold />
                     <Container>
-                      <CustomText text={defaultSeller.Tienda as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+                      <CustomText
+                        text={defaultSeller.pickupPoint.friendlyName as string}
+                        fontSize={16}
+                        fontBold
+                        underline
+                        textColor={theme.brandColor.iconn_green_original}
+                      />
                     </Container>
                   </Container>
                   <Container style={{ flexDirection: 'row', marginVertical: 5, paddingRight: 30 }}>
-                    <CustomText lineHeight={22} fontSize={16} text={`${defaultSeller.Domicilio} `} />
+                    <CustomText
+                      lineHeight={22}
+                      fontSize={16}
+                      text={`${defaultSeller.pickupPoint.address.street} ${defaultSeller.pickupPoint.address.number}, ${defaultSeller.pickupPoint.address.postalCode} ${defaultSeller.pickupPoint.address.city},  ${defaultSeller.pickupPoint.address.state}, `}
+                    />
                   </Container>
                   <Container row center>
                     <Ionicons name="close-outline" size={24} color={theme.brandColor.iconn_error} />
@@ -233,7 +245,7 @@ const DefaultItem: React.FC<DefaultItemProps> = ({ onPressAddAddress, address, o
     let isNear = false;
     if (pickUp.items.length) {
       pickUp.items.forEach(store => {
-        if (store.pickupPoint.id === `${defaultSeller.seller}_${defaultSeller['# Tienda']}`) {
+        if (store.pickupPoint.address.addressId === defaultSeller.pickupPoint.address.addressId) {
           if (store.distance < 7) {
             isNear = true;
           }
@@ -326,12 +338,6 @@ const ShippingOption = ({
   onPress: () => void;
   unmark: () => void;
 }) => {
-  const highlight: ViewStyle = {
-    backgroundColor: '#E7F3EE',
-    borderWidth: 2,
-    borderColor: theme.brandColor.iconn_green_original
-  };
-
   return (
     <Container style={styles.content}>
       {selected && (
@@ -342,21 +348,13 @@ const ShippingOption = ({
         </Container>
       )}
       <Container>
-        <Touchable disabled={disable} onPress={onPress}>
-          <Container
-            style={[
-              {
-                backgroundColor: '#F5F5F2',
-                width: 100,
-                height: 100,
-                borderRadius: 100,
-                marginVertical: 20,
-                justifyContent: 'center',
-                alignItems: 'center'
-              },
-              selected && highlight
-            ]}
-          >
+        <Touchable
+          disabled={disable}
+          onPress={() => {
+            onPress();
+          }}
+        >
+          <Container style={selected ? styles.optionSelected : styles.optionCircle}>
             <Image
               source={icon}
               style={{
@@ -406,5 +404,25 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     paddingVertical: 10,
     paddingHorizontal: 10
+  },
+  optionCircle: {
+    backgroundColor: '#F5F5F2',
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    marginVertical: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  optionSelected: {
+    width: 100,
+    height: 100,
+    borderRadius: 100,
+    marginVertical: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#E7F3EE',
+    borderWidth: 2,
+    borderColor: theme.brandColor.iconn_green_original
   }
 });

@@ -115,6 +115,22 @@ const AnimatedItem: React.FC<Props> = ({
     elevation: 3
   };
 
+  const dayPromotionContainer: StyleProp<ViewStyle> = {
+    width: width - 32,
+    borderRadius: 8,
+    backgroundColor: theme.brandColor.iconn_white,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    margin: 8,
+    elevation: 3
+  };
+
+  const dayPromotionImageStyle: StyleProp<ImageStyle> = {
+    borderRadius: 8,
+    height: 172,
+    resizeMode: 'stretch'
+  };
+
   const allPromotionsImage: StyleProp<ImageStyle> = {
     borderRadius: 8,
     height: 160,
@@ -250,10 +266,6 @@ const AnimatedItem: React.FC<Props> = ({
         )}
         {pointsCardDisabled && <View style={{ width: '100%', height: '100%', position: 'absolute', backgroundColor: 'rgba(52, 52, 52, 0.4)' }} />}
       </Container>
-      <Container flex space="evenly" style={dayPromotionFooterContainer}>
-        <CustomText text={data.promotion_name} fontBold />
-        <TextContainer text={data.description} />
-      </Container>
     </Touchable>
   ) : data !== undefined && data.promotion_type === 'all_promotions' ? (
     <Touchable
@@ -285,6 +297,22 @@ const AnimatedItem: React.FC<Props> = ({
         </Touchable>
       </Container>
     )
+  ) : data !== undefined && data.promotion_type === 'day_promotion' ? (
+    <Touchable
+      onPress={() => {
+        onPressItem(data);
+      }}
+    >
+      <Container style={dayPromotionContainer}>
+        <Container style={dayPromotionImageStyle}>
+          <FastImage source={{ uri: data.image }} style={image} />
+        </Container>
+        <Container flex space="evenly" style={dayPromotionFooterContainer}>
+          <CustomText text={data.promotion_name} fontBold />
+          <TextContainer text={data.description} />
+        </Container>
+      </Container>
+    </Touchable>
   ) : null;
 };
 

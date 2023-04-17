@@ -12,7 +12,6 @@ import InviteSignUpController from 'screens/home/inviteSignUp/InviteSignUpContro
 import MyAccountController from 'screens/home/myAccount/MyAccountController';
 import PromotionsController from 'screens/home/promotions/PromotionsController';
 import theme from 'components/theme/theme';
-import InConstructionController from 'components/screens/InConstruction/InConstructionController';
 import { logEvent } from 'utils/analytics';
 import { getStatusModuleFather } from 'utils/modulesApp';
 import { modulesRemoteConfig } from '../common/modulesRemoteConfig';
@@ -47,6 +46,7 @@ export const TabNavigator = () => {
           }
         }}
         options={{
+          unmountOnBlur: true,
           headerShown: false,
           title: 'Inicio',
           tabBarIcon: ({ focused }) => {
@@ -113,8 +113,8 @@ export const TabNavigator = () => {
           }
         }}
         name="BranchesScreen"
-        //component={isGuest ? InviteSignUpController : stores ? InConstructionController : DisableController}
-        component={isGuest ? InviteSignUpController : BranchesStack}
+        component={isGuest ? InviteSignUpController : stores ? BranchesStack : DisableController}
+        // component={isGuest ? InviteSignUpController : BranchesStack}
         options={{
           unmountOnBlur: true,
           headerShown: false,

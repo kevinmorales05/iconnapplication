@@ -18,8 +18,10 @@ interface Props extends CustomModalProps {
 
 const ModalCard: React.FC<Props> = ({ visible, children, onDismiss, type = 'warning', isAddressModal }: Props) => {
   const { modalCenterCardStyle, closeContainer } = styles;
+  const isTypeError = type === 'deleteCart' ? ['#D91212', '#D91212'] : ['#34c28c', '#319f72'];
+  const iconImage = type === 'error' ? ICONN_ERROR_CROSS : ICONN_SUCCESS;
 
-  const isError = type === 'error' ? ['#D91212', '#D91212'] : type === 'deleteCart' ? ['#D91212', '#D91212'] : ['#34c28c', '#319f72'];
+  const isError = type === 'error' ? ['#D91212', '#D91212'] : isTypeError;
 
   return (
     <CustomModal visible={visible} onDismiss={onDismiss}>
@@ -33,7 +35,7 @@ const ModalCard: React.FC<Props> = ({ visible, children, onDismiss, type = 'warn
             {type !== 'deleteCart' && (
               <Container style={{ backgroundColor: 'transparent', borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
                 <Image
-                  source={type === 'warning' ? ICONN_WARNING_MARK : type === 'error' ? ICONN_ERROR_CROSS : ICONN_SUCCESS}
+                  source={type === 'warning' ? ICONN_WARNING_MARK : iconImage}
                   style={{ alignSelf: 'center', marginTop: '15%', height: 56, top: 16 }}
                   resizeMode="contain"
                 />

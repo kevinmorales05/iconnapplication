@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Image, View, StyleSheet, ScrollView } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Image, View, StyleSheet, ScrollView, FlatList, Text } from 'react-native';
 import theme from 'components/theme/theme';
 import { CustomText, Container, Touchable, ShippingDropdown, AnimatedCarousel, TextContainer, TouchableText, SearchBar, CardProductSkeleton } from 'components';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -10,7 +10,15 @@ import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultA
 import { CounterType } from 'components/types/counter-type';
 import { logEvent } from 'utils/analytics';
 import { BannerSkeleton } from 'components/organisms/BannerSkeleton';
-import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
+import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
+import WebView from 'react-native-webview';
+import Octicons from 'react-native-vector-icons/Octicons';
+import { useOrdersMonitor } from 'context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { HomeStackParams } from 'navigation/types';
+import LottieView from 'lottie-react-native';
+
 interface Props {
   onPressShowAddressesModal: () => void;
   onPressAddNewAddress: () => void;
@@ -68,6 +76,32 @@ const HomeScreen: React.FC<Props> = ({
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
   const { user, isGuest } = useAppSelector((state: RootState) => state.auth);
+  const monitor = useOrdersMonitor();
+  const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
+
+  /**
+   * A monitor that check in DB if there is a checkout started before either in this or another device. Also if is not guest.
+   */
+  useEffect(() => {
+    if (!isGuest) {
+      monitor.start();
+    }
+  }, []);
+
+  /**
+   * While some order not have orderId then we keep monitoring them.
+   */
+  useEffect(() => {
+    if (monitor.ordersWidgets) {
+      console.log('las monitor.ordersWidgets', JSON.stringify(monitor.ordersWidgets, null, 3));
+      const someOrderWithOrderIdNull = monitor.ordersWidgets.some(e => !e.orderId); // Si alguna de las ordenes trae orderId null o '' devuelve true.
+      console.log('el listado tiene algun orderId null...', someOrderWithOrderIdNull);
+      if (monitor.ordersWidgets.length === 0 || someOrderWithOrderIdNull === false) {
+        console.log('se detiene monitor; significa que no hay ninguna orden que le falte orderId');
+        monitor.stop();
+      }
+    }
+  }, [monitor.ordersWidgets]);
 
   const onPressOut = () => {
     setVisible(!visible);
@@ -78,6 +112,18 @@ const HomeScreen: React.FC<Props> = ({
   }, [showShippingDropDown]);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
   const [mode, setMode] = useState<null | ShippingMode>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const viewabilityConfig = {
+    waitForInteraction: true,
+    viewAreaCoveragePercentThreshold: 50
+  };
+
+  const handleViewableItemsChanged = useCallback(info => {
+    if (info.viewableItems && info.viewableItems.length > 0) {
+      setCurrentIndex(info.viewableItems[0].index);
+    }
+  }, []);
 
   return (
     <View style={{ position: 'absolute', width: '100%', display: 'flex', alignItems: 'center', height: '100%', backgroundColor: theme.brandColor.iconn_white }}>
@@ -111,7 +157,7 @@ const HomeScreen: React.FC<Props> = ({
                 <Image style={styles.image} source={ICONN_STO} />
                 <CustomText fontSize={16} text={'Tienda: '} fontBold />
                 <Container>
-                  <CustomText text={defaultSeller.Tienda as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+                  <CustomText text={defaultSeller.pickupPoint.friendlyName as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
                 </Container>
               </Container>
             )}
@@ -137,7 +183,77 @@ const HomeScreen: React.FC<Props> = ({
           <Container style={{ marginHorizontal: 16, marginTop: 10 }}>
             <SearchBar isButton onPressSearch={onPressSearch} onChangeTextSearch={() => {}} placeHolderText={'Busca en 7-Eleven'} />
           </Container>
-
+          {monitor.ordersWidgets && monitor.ordersWidgets.length > 0 && (
+            <Container style={{ marginTop: 16, marginLeft: 16, padding: 0, borderWidth: 0, borderRadius: 8 }}>
+              <FlatList
+                style={{ width: '100%' }}
+                data={monitor.ordersWidgets}
+                renderItem={({ item, index }) =>
+                  item.orderId ? (
+                    <Touchable
+                      onPress={() => {
+                        navigate('LiveStatusWidget', { urlLive: item.widgetUrl + '&primaryColor=%23008060&secondaryColor=%23000000' });
+                      }}
+                    >
+                      <Container style={{ width: 355, marginRight: 8 }} height={145}>
+                        <WebView
+                          key={index}
+                          style={{ borderRadius: 8, borderWidth: 0 }}
+                          source={{
+                            uri: item.widgetUrl! + '&primaryColor=%23008060&secondaryColor=%23000000&showOnly=steps&stepViewTitle=Envio%20a%20domicilio'
+                          }}
+                        />
+                      </Container>
+                    </Touchable>
+                  ) : (
+                    <Container
+                      style={{
+                        width: 355,
+                        height: 145,
+                        borderRadius: 8,
+                        borderWidth: 0,
+                        padding: 16,
+                        marginRight: 8
+                      }}
+                      height={116}
+                      backgroundColor={theme.brandColor.iconn_background}
+                    >
+                      <TextContainer text="Orden en proceso" fontBold typography="h4" />
+                      <TextContainer text="Tu orden está en proceso de confirmación." typography="h5" marginTop={10} />
+                      <Container flex>
+                        <LottieView
+                          source={require('../../assets/files/loader-lsw-orange.json')}
+                          autoPlay
+                          loop
+                          resizeMode="center"
+                          style={{ paddingHorizontal: 8, marginTop: 8 }}
+                        />
+                      </Container>
+                    </Container>
+                  )
+                }
+                horizontal
+                bounces={monitor.ordersWidgets?.length > 1 ? true : false}
+                scrollEventThrottle={32}
+                showsHorizontalScrollIndicator={false}
+                viewabilityConfig={viewabilityConfig}
+                onViewableItemsChanged={handleViewableItemsChanged}
+              />
+              <Container center>
+                {monitor.ordersWidgets && monitor.ordersWidgets.length > 1 && (
+                  <FlatList
+                    data={monitor.ordersWidgets}
+                    renderItem={({ index }) => (
+                      <Container style={{ marginRight: 8, marginTop: 12 }}>
+                        <Octicons size={20} name="dot-fill" color={index === currentIndex ? '#008060' : '#dadadb'} />
+                      </Container>
+                    )}
+                    horizontal
+                  />
+                )}
+              </Container>
+            </Container>
+          )}
           <Container>
             <Container style={{ marginTop: 16 }}>
               {principalItems ? (

@@ -173,7 +173,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
   const getProducts = async (products: any[]) => {
     if (products) {
       const data: ProductListCacheRequestInterface = {
-        storeId: defaultSeller?.Campo ? Number.parseInt(defaultSeller.seller.split('oneiconntienda')[1], 10) : 0,
+        storeId: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005,
         products: products.map(item => item.id + '')
       };
       return await dispatch(getProductsListItemsThunk(data)).unwrap();
@@ -852,7 +852,7 @@ const ShopCartScreen: React.FC<Props> = ({ onPressSeeMore, onPressCheckout, rout
           fontBold
           disabled={!subTotalCalculated}
           onPress={() => {
-            logEvent('cartContinueToCheckout', { id: user.id, description: 'Continuar al checkout' });
+            //logEvent('cartContinueToCheckout', { id: user.id, description: 'Continuar al checkout' });
             onPressCheckout();
           }}
           borderColor={subTotalCalculated ? 'iconn_green_original' : 'iconn_green_original_med'}

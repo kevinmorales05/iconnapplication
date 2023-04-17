@@ -1,7 +1,6 @@
-import theme from 'components/theme/theme';
 import { SvgProps } from 'components/types/Svg';
 import * as React from 'react';
-import Svg, { Path, G } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
 const HeartSvg: React.FC<SvgProps> = ({ size }) => (
   <Svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24">
