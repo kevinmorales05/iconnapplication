@@ -69,7 +69,7 @@ const CouponDetail: React.FC = () => {
             marginRight={moderateScale(32)}
           />
         </Container>
-        <TextContainer text={params.couponInfo.descriptionc} fontSize={14} marginTop={verticalScale(16)} marginHorizontal={moderateScale(32)} />
+        <TextContainer text={params.couponInfo.description} fontSize={14} marginTop={verticalScale(16)} marginHorizontal={moderateScale(32)} />
         <TextContainer text={params.couponInfo.descriptiontyc} fontSize={12} marginTop={verticalScale(24)} marginHorizontal={moderateScale(32)} />
         <Container style={{ marginBottom: verticalScale(30) }}>
           <Button onPress={activateCoupon} round fontBold fontSize="h4" marginLeft={moderateScale(16)} marginRight={moderateScale(16)}>

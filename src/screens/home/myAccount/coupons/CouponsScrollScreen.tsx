@@ -49,12 +49,12 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const inConstruction = useInConstruction();
 
-  //console.log('MARTILLO', item);
+  console.log('MARTILLO', item);
 
   //console.log('amarillo', cs, itemUser?.name);
   //console.log('AQUI', userCoupons);
   function verifyIfActivated(coupon: UserCouponInterface) {
-    return coupon.promotionid === item?.promotionid;
+    return coupon.value.promotionid === item?.value.promotionid;
   }
 
   if (item) {
@@ -67,30 +67,30 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
     };
     const coupStat = couponStat(); */
     //console.log('activatedPromotion', activatedPromotion);
-    const d1 = new Date(item.startdate);
+    const d1 = new Date(item.value.startdate);
     const dFrom = formatDate3(d1);
-    const d2 = new Date(item.enddate);
+    const d2 = new Date(item.value.enddate);
     const dTo = formatDate3(d2);
-    if (activatedPromotion?.coupons_status_id === 2) {
-      const fromIndex = coupons.indexOf(item);
+    if (activatedPromotion?.value.coupons_status_id === 2) {
+      const fromIndex = coupons.indexOf(item.value);
       const toIndex = coupons.length - 1;
       const splice = coupons.splice(fromIndex, 1)[0];
       coupons.splice(toIndex, 0, splice);
       return (
         <Touchable
           onPress={() => {
-            if (item.type === 'Accumulation') {
+            if (item.value.type === 'Accumulation') {
               inConstruction.show(true);
-            } else if (activatedPromotion !== undefined) {
-              navigate('ActivatedCoupon', { couponInfo: activatedPromotion, couponActivatedData: activatedPromotion.code, origin: 'Coupons' });
+            } else if (activatedPromotion.value !== undefined) {
+              navigate('ActivatedCoupon', { couponInfo: activatedPromotion.value, couponActivatedData: activatedPromotion.value.code, origin: 'Coupons' });
             } else {
-              navigate('CouponDetail', { couponInfo: item, origin: 'Coupons' });
+              navigate('CouponDetail', { couponInfo: item.value, origin: 'Coupons' });
             }
           }}
         >
           <Container style={{ marginLeft: moderateScale(5), marginRight: moderateScale(5), marginTop: verticalScale(16), paddingLeft: moderateScale(3) }}>
             <Image
-              source={{ uri: item.listviewimage }}
+              source={{ uri: item.value.listviewimage }}
               style={{ width: moderateScale(156), height: verticalScale(134), borderTopRightRadius: 8, borderTopLeftRadius: 8, opacity: 0.4 }}
               resizeMode="cover"
             />
@@ -107,8 +107,8 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
                 <TextContainer fontSize={8} text="Cupón redimido" fontBold marginTop={verticalScale(3)} marginLeft={moderateScale(4)} />
               </Container>
               <Image
-                source={item.establishment === '7Eleven' ? ICONN_CARD_SEVEN : ICONN_CARD_PETRO}
-                style={item.establishment === '7Eleven' ? styles.sevenEleven : styles.petroSeven}
+                source={item.value.establishment === '7Eleven' ? ICONN_CARD_SEVEN : ICONN_CARD_PETRO}
+                style={item.value.establishment === '7Eleven' ? styles.sevenEleven : styles.petroSeven}
                 resizeMode="center"
               />
             </Container>
@@ -119,18 +119,18 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
       return (
         <Touchable
           onPress={() => {
-            if (item.type === 'Accumulation') {
+            if (item.value.type === 'Accumulation') {
               inConstruction.show(true);
             } else if (activatedPromotion !== undefined) {
-              navigate('ActivatedCoupon', { couponInfo: activatedPromotion, couponActivatedData: activatedPromotion.code, origin: 'Coupons' });
+              navigate('ActivatedCoupon', { couponInfo: activatedPromotion.value, couponActivatedData: activatedPromotion.value.code, origin: 'Coupons' });
             } else {
-              navigate('CouponDetail', { couponInfo: item, origin: 'Coupons' });
+              navigate('CouponDetail', { couponInfo: item.value, origin: 'Coupons' });
             }
           }}
         >
           <Container style={{ marginLeft: moderateScale(5), marginRight: moderateScale(5), marginTop: verticalScale(16), paddingLeft: moderateScale(3) }}>
             <Image
-              source={{ uri: item.listviewimage }}
+              source={{ uri: item.value.listviewimage }}
               style={{ width: moderateScale(156), height: verticalScale(134), borderTopRightRadius: 8, borderTopLeftRadius: 8 }}
               resizeMode="cover"
             />
@@ -144,8 +144,8 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
                 <Container row space="between">
                   <TextContainer fontSize={12} text="Vigencia" />
                   <Image
-                    source={item.establishment === '7Eleven' ? ICONN_CARD_SEVEN : ICONN_CARD_PETRO}
-                    style={item.establishment === '7Eleven' ? styles.sevenEleven : styles.petroSeven}
+                    source={item.value.establishment === '7Eleven' ? ICONN_CARD_SEVEN : ICONN_CARD_PETRO}
+                    style={item.value.establishment === '7Eleven' ? styles.sevenEleven : styles.petroSeven}
                     resizeMode="center"
                   />
                 </Container>
@@ -157,17 +157,17 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
       );
     }
   } else if (itemUser) {
-    const d1 = new Date(itemUser.startdate);
+    const d1 = new Date(itemUser.value.startdate);
     const dFrom = formatDate3(d1);
-    const d2 = new Date(itemUser.enddate);
+    const d2 = new Date(itemUser.value.enddate);
     const dTo = formatDate3(d2);
-    if (itemUser.coupons_status_id === 2) {
+    if (itemUser.value.coupons_status_id === 2) {
       return (
-        <Touchable onPress={() => navigate('ActivatedCoupon', { couponInfo: itemUser, couponActivatedData: itemUser.code, origin: 'Coupons' })}>
+        <Touchable onPress={() => navigate('ActivatedCoupon', { couponInfo: itemUser.value, couponActivatedData: itemUser.value.code, origin: 'Coupons' })}>
           <Container style={{ marginLeft: moderateScale(8), marginTop: verticalScale(16), paddingLeft: moderateScale(3) }}>
             <Container backgroundColor={'transparent'}>
               <Image
-                source={{ uri: itemUser.listviewimage }}
+                source={{ uri: itemUser.value.listviewimage }}
                 style={{ width: moderateScale(156), height: verticalScale(144), borderTopRightRadius: 8, borderTopLeftRadius: 8, opacity: 0.4 }}
                 resizeMode="stretch"
               />
@@ -185,8 +185,8 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
                 <TextContainer fontSize={8} text="Cupón redimido" fontBold marginTop={verticalScale(3)} marginLeft={moderateScale(4)} />
               </Container>
               <Image
-                source={itemUser.establishment === '7Eleven' ? ICONN_CARD_SEVEN : ICONN_CARD_PETRO}
-                style={itemUser.establishment === '7Eleven' ? styles.sevenEleven : styles.petroSeven}
+                source={itemUser.value.establishment === '7Eleven' ? ICONN_CARD_SEVEN : ICONN_CARD_PETRO}
+                style={itemUser.value.establishment === '7Eleven' ? styles.sevenEleven : styles.petroSeven}
                 resizeMode="center"
               />
             </Container>
@@ -195,10 +195,10 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
       );
     } else {
       return (
-        <Touchable onPress={() => navigate('ActivatedCoupon', { couponInfo: itemUser, couponActivatedData: itemUser.code, origin: 'Coupons' })}>
+        <Touchable onPress={() => navigate('ActivatedCoupon', { couponInfo: itemUser.value, couponActivatedData: itemUser.value.code, origin: 'Coupons' })}>
           <Container style={{ marginLeft: moderateScale(8), marginTop: verticalScale(16), paddingLeft: moderateScale(3) }}>
             <Image
-              source={{ uri: itemUser.listviewimage }}
+              source={{ uri: itemUser.value.listviewimage }}
               style={{ width: moderateScale(156), height: verticalScale(144), borderTopRightRadius: 8, borderTopLeftRadius: 8 }}
               resizeMode="stretch"
             />
@@ -212,8 +212,8 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
                 <Container row space="between">
                   <TextContainer fontSize={12} text="Vigencia" />
                   <Image
-                    source={itemUser.establishment === '7Eleven' ? ICONN_CARD_SEVEN : ICONN_CARD_PETRO}
-                    style={itemUser.establishment === '7Eleven' ? styles.sevenEleven : styles.petroSeven}
+                    source={itemUser.value.establishment === '7Eleven' ? ICONN_CARD_SEVEN : ICONN_CARD_PETRO}
+                    style={itemUser.value.establishment === '7Eleven' ? styles.sevenEleven : styles.petroSeven}
                     resizeMode="center"
                   />
                 </Container>
@@ -245,7 +245,7 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
   //console.log('USER COUPONS LENGHT', userCoupons.length);
   const [idCouponTab, setIdCouponTab] = useState<string>('1');
 
-  console.log('coupons from Screen', JSON.stringify(coupons, null, 3), coupons.length);
+  //console.log('coupons from Screen', JSON.stringify(coupons, null, 3), coupons.length);
 
   const couponsTab: TabItem[] = [
     {
@@ -271,10 +271,10 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
   };
 
   function compareFn(a: UserCouponInterface, b: UserCouponInterface) {
-    if (a.coupons_status_id === 2 && b.coupons_status_id === 1) {
+    if (a.value.coupons_status_id === 2 && b.value.coupons_status_id === 1) {
       return 1;
     }
-    if (a.coupons_status_id === 1 && b.coupons_status_id === 2) {
+    if (a.value.coupons_status_id === 1 && b.value.coupons_status_id === 2) {
       return -1;
     }
     return 0;
@@ -282,6 +282,10 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
 
   const orderedCoupons = userCoupons ? userCoupons.sort(compareFn) : [];
   console.log('orderedCoupons', orderedCoupons);
+/*   console.log(
+    'AMARILLO',
+    coupons.filter(coupon => coupon.value.establishment === '7Eleven')
+  ); */
 
   const skeletor = [1, 2, 3, 4, 5, 6];
 
@@ -325,7 +329,7 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
         </Container>
       </Container>
       <Container style={{ marginBottom: verticalScale(100) }} backgroundColor={theme.brandColor.iconn_background}>
-        {coupons.length === 0 ? (
+        {coupons === undefined ? (
           <FlatList
             numColumns={2}
             data={skeletor}
@@ -337,9 +341,9 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
           />
         ) : idCouponTab === '1' && coupons.length === 0 ? (
           <NoCoupons />
-        ) : idCouponTab === '2' && coupons.filter(coupon => coupon.establishment === '7Eleven').length === 0 ? (
+        ) : idCouponTab === '2' && coupons.filter(coupon => coupon.value.establishment === '7Eleven').length === 0 ? (
           <NoCoupons />
-        ) : idCouponTab === '3' && coupons.filter(coupon => coupon.establishment === 'Petro7').length === 0 ? (
+        ) : idCouponTab === '3' && coupons.filter(coupon => coupon.value.establishment === 'Petro7').length === 0 ? (
           <NoCoupons />
         ) : idCouponTab === '1' && coupons.length > 0 ? (
           <FlatList
@@ -354,7 +358,7 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
         ) : idCouponTab === '2' && coupons.length > 0 ? (
           <FlatList
             numColumns={2}
-            data={coupons.filter(coupon => coupon.establishment === '7Eleven')}
+            data={coupons.filter(coupon => coupon.value.establishment === '7Eleven')}
             renderItem={({ item }) => <CouponCard item={item} userCoupons={userCoupons} coupons={coupons} />}
             /*             ListFooterComponent={_renderFooter}
              */ onEndReachedThreshold={0}
@@ -364,7 +368,7 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
         ) : idCouponTab === '3' && coupons.length > 0 ? (
           <FlatList
             numColumns={2}
-            data={coupons.filter(coupon => coupon.establishment === 'Petro7')}
+            data={coupons.filter(coupon => coupon.value.establishment === 'Petro7')}
             renderItem={({ item }) => <CouponCard item={item} userCoupons={userCoupons} coupons={coupons} />}
             /*             ListFooterComponent={_renderFooter}
              */ onEndReachedThreshold={0}

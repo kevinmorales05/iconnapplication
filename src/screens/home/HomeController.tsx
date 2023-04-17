@@ -45,6 +45,7 @@ import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } fr
 import { useLocation } from 'hooks/useLocation';
 import { useOrders } from 'screens/home/hooks/useOrders';
 import { useOrdersMonitor } from 'context/ordersMonitor.context';
+import ActivatedCoupon from './myAccount/coupons/ActivatedCoupon';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -72,7 +73,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [isChargin, setIsChargin] = useState(false);
   const { dateSync } = useAppSelector((state: RootState) => state.wallet);
   const [isLoadBanners, setIsLoadBanners] = useState<boolean>(true);
-  const [coupons, setCoupons] = useState<CouponInterface[]>([]);
+  const [coupons, setCoupons] = useState<CouponInterface[]>();
   const [userCoupons, setUserCoupons] = useState<UserCouponInterface[]>([]);
   const [userMunicipality, setUserMunicipality] = useState('none');
   const [userState, setUserState] = useState('none');
@@ -86,9 +87,16 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     if (!isGuest) {
       await getCurrentLocation();
       //console.log('plsHelp', plsHelp);
+      const googleLocation = completeGeolocation.plus_code.compound_code.split(',');
+      const googleState = completeGeolocation.plus_code.compound_code.split(',')[1];
+      const googleM = completeGeolocation.plus_code.compound_code.trim().split(' ')[1];
+      const googleMunicipality = googleM.replace(',', '');
       console.log('completeGeolocation', JSON.stringify(completeGeolocation, null, 3));
-      setUserMunicipality(completeGeolocation.results[0].address_components[3].short_name);
-      setUserState(completeGeolocation.results[0].address_components[4].long_name);
+      console.log('BONES', googleLocation, googleState, googleMunicipality);
+      setUserMunicipality(googleMunicipality);
+      setUserState(googleState);
+      //setUserMunicipality(completeGeolocation.results[0].address_components[3].short_name);
+      //setUserState(completeGeolocation.results[0].address_components[4].long_name);
     }
   };
 
@@ -100,30 +108,20 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const getCoupons = async (pageNumber: number) => {
     if (!isGuest) {
-      if (userState !== ' ' && userMunicipality !== ' ') {
+      if (userState !== 'none' && userMunicipality !== 'none') {
         const couponsHome = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
-        if (couponsHome.responseCode === 6004) {
-          setCoupons([]);
-        } else if (couponsHome.responseCode === 6003) {
-          const { data } = couponsHome;
-          setCoupons(data);
-        }
-      } else if (userState === ' ' && userMunicipality === ' ') {
+        const { data } = couponsHome;
+        setCoupons(data);
+      } else if (userState === 'none' && userMunicipality === 'none') {
         const couponsHome = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
-        if (couponsHome.responseCode === 6004) {
-          setCoupons([]);
-        } else if (couponsHome.responseCode === 6003) {
-          const { data } = couponsHome;
-          setCoupons(data);
-        }
+        const { data } = couponsHome;
+        setCoupons(data);
       } else if (userState === ' ' && userMunicipality !== ' ') {
         setCoupons([]);
       }
     } else {
       setCoupons([]);
     }
-    //console.log('coupons Home', JSON.stringify(couponsHome, null, 3));
-    //return coupons;
   };
 
   function compareFn(a: UserCouponInterface, b: UserCouponInterface) {
@@ -136,8 +134,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     return 0;
   }
 
-  console.log('userId AQUI', user.userId);
-  //console.log('coupons Home SET', userMunicipality, userState, JSON.stringify(coupons, null, 3));
+  //console.log('userId AQUI', user.userId);
+  console.log('coupons Home SET', userMunicipality, userState, JSON.stringify(coupons, null, 3));
 
   const getCouponsMixed = () => {
     if (coupons.length > 0 && userCoupons.length > 0) {
@@ -179,6 +177,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       console.log('ALPACA', mixed);
     }
   };
+
   useEffect(() => {
     //loader.show();
     const getUserCoupons = async () => {
@@ -194,7 +193,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     };
     getCoupons(0);
     getUserCoupons();
-/*     if (coupons.length > 0 && userCoupons.length > 0) {
+    /*     if (coupons.length > 0 && userCoupons.length > 0) {
       getCouponsMixed();
     } */
   }, [isFocused, userState, userMunicipality]);
@@ -695,7 +694,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       collectionId: Number.parseInt(OTHER_PRODUCTS ? OTHER_PRODUCTS : '0'),
       pageSize: 7,
       pageNumber: 0,
-      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`)  : 5005
+      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005
     };
     const productRecomended: ProductsByCollectionInterface = {
       collectionId: Number.parseInt(RECOMMENDED_PRODUCTS ? RECOMMENDED_PRODUCTS : '0'),
@@ -730,14 +729,16 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCouponDetail = (item: UserCouponInterface) => {
     function verifyIfActivated(coupon: UserCouponInterface) {
-      return coupon.promotionid === item.promotionid;
+      console.log('Canguro cupon', coupon.value.promotionid, item.promotionid);
+      return coupon.value.promotionid === item.promotionid;
     }
     const activatedPromotion = userCoupons.find(verifyIfActivated);
+    console.log('Canguro', item, 'PAPAS', activatedPromotion);
 
     if (item.type === 'Accumulation') {
       inConstruction.show();
-    } else if (activatedPromotion?.coupons_status_id === 2 && item.type !== 'Accumulation') {
-      navigate('ActivatedCoupon', { couponInfo: item, couponActivatedData: item.code, origin: 'Home' });
+    } else if (activatedPromotion?.value.coupons_status_id === 1 && item.type !== 'Accumulation') {
+      navigate('ActivatedCoupon', { couponInfo: item, couponActivatedData: activatedPromotion.value.code, origin: 'Home' });
     } else {
       navigate('CouponDetail', { couponInfo: item, origin: 'Home' });
     }

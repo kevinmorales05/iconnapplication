@@ -139,7 +139,8 @@ const AnimatedItem: React.FC<Props> = ({
   };
 
   function verifyIfActivated(item: UserCouponInterface) {
-    return coupon?.promotionid === item.promotionid;
+    console.log('carnero', item, coupon);
+    return coupon?.value.promotionid === item.value.promotionid;
   }
   const activatedPromotion = userCoupons?.find(verifyIfActivated);
 
@@ -279,7 +280,7 @@ const AnimatedItem: React.FC<Props> = ({
       </Container>
     </Touchable>
   ) : coupon && onPressCoupon ? (
-    activatedPromotion?.coupons_status_id === 2 ? (
+    activatedPromotion?.value.coupons_status_id === 2 ? (
       <></>
     ) : (
       <Container
@@ -288,9 +289,9 @@ const AnimatedItem: React.FC<Props> = ({
         height={verticalScale(134)}
         width={moderateScale(156)}
       >
-        <Touchable onPress={() => onPressCoupon(coupon)}>
+        <Touchable onPress={() => onPressCoupon(coupon.value)}>
           <Image
-            source={{ uri: coupon.listviewimage }}
+            source={{ uri: coupon.value.listviewimage }}
             style={{ height: verticalScale(134), width: moderateScale(156), borderRadius: 8 }}
             resizeMode={'contain'}
           />

@@ -354,7 +354,7 @@ export default memo(CardProduct);
 const styles = StyleSheet.create({
   container: {
     width: moderateScale(160),
-    height: moderateScale(287),
+    height: moderateScale(295),
     backgroundColor: theme.brandColor.iconn_white,
     marginTop: moderateScale(16),
     borderRadius: moderateScale(10),
@@ -367,7 +367,8 @@ const styles = StyleSheet.create({
   containerImage: {
     width: '100%',
     height: moderateScale(90),
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    marginTop: verticalScale(5)
   },
   containerPorcentDiscount: {
     width: moderateScale(44),
@@ -415,6 +416,8 @@ const styles = StyleSheet.create({
   },
   buttonAddProduct: {
     borderRadius: moderateScale(10),
-    height: verticalScale(40)
+    height: verticalScale(40),
+    marginTop: verticalScale(5),
+    marginBottom: verticalScale(5)
   }
 });

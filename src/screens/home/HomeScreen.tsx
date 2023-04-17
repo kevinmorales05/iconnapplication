@@ -157,7 +157,13 @@ const HomeScreen: React.FC<Props> = ({
                 <Image style={styles.image} source={ICONN_STO} />
                 <CustomText fontSize={16} text={'Tienda: '} fontBold />
                 <Container>
-                  <CustomText text={defaultSeller.pickupPoint.friendlyName as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+                  <CustomText
+                    text={defaultSeller.pickupPoint.friendlyName as string}
+                    fontSize={16}
+                    fontBold
+                    underline
+                    textColor={theme.brandColor.iconn_green_original}
+                  />
                 </Container>
               </Container>
             )}
@@ -267,7 +273,13 @@ const HomeScreen: React.FC<Props> = ({
             </Container>
             {isGuest ? (
               <></>
-            ) : /* coupons.length > 0 && */ coupons.length > 0 ? (
+            ) : coupons === undefined ? (
+              <Container flex row style={{ marginLeft: 8 }}>
+                <CardProductSkeleton />
+                <CardProductSkeleton />
+                <CardProductSkeleton />
+              </Container>
+            ) : coupons && coupons.length > 0 ? (
               <Container>
                 <Container row space="between" style={{ margin: 16 }}>
                   <TextContainer text="Cupones" fontBold typography="h4" />
@@ -292,11 +304,7 @@ const HomeScreen: React.FC<Props> = ({
                 />
               </Container>
             ) : (
-              <Container flex row style={{ marginLeft: 8 }}>
-                <CardProductSkeleton />
-                <CardProductSkeleton />
-                <CardProductSkeleton />
-              </Container>
+              <></>
             )}
             <Container height={367} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
               <Container row space="between" style={{ margin: 16 }}>

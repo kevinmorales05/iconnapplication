@@ -13,7 +13,7 @@ const CouponsController: React.FC = () => {
   const { completeGeolocation, getCurrentLocation } = useLocation();
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const { user } = useAppSelector((state: RootState) => state.auth);
-  const [coupons, setCoupons] = useState<CouponInterface[]>([]);
+  const [coupons, setCoupons] = useState<CouponInterface[]>();
   const [userCoupons, setUserCoupons] = useState<UserCouponInterface[]>([]);
   const [userMunicipality, setUserMunicipality] = useState('none');
   const [userState, setUserState] = useState('none');
@@ -36,43 +36,45 @@ const CouponsController: React.FC = () => {
   }
 
   const getCouponsMixed = () => {
-    if (coupons.length > 0 && userCoupons.length > 0) {
-      const mixed: UserCouponInterface[] = [];
-      coupons.forEach(coupon => {
-        const couponfound = userCoupons.find(userCoupon => userCoupon.promotionid === coupon.promotionid);
-        if (couponfound !== undefined) {
-          mixed.push(couponfound);
-        } else if (couponfound === undefined) {
-          const searchList: UserCouponInterface = mixed.find(mix => mix.promotionid === coupon.promotionid) as UserCouponInterface;
-          if (searchList === undefined) {
-            const newCoup: UserCouponInterface = {
-              activecouponimage: coupon.activecouponimage,
-              code: '',
-              coupons_status_id: 0,
-              description: coupon.descriptionc,
-              descriptionsubtitle: coupon.descriptionsubtitle,
-              descriptiontitle: coupon.descriptiontitle,
-              descriptiontyc: coupon.descriptiontyc,
-              enddate: coupon.enddate,
-              establishment: coupon.establishment,
-              imageurl: coupon.imageurl,
-              listviewimage: coupon.listviewimage,
-              name: coupon.name,
-              promotionid: coupon.promotionid,
-              startdate: coupon.startdate,
-              type: coupon.type,
-              updatedat: null
-            };
-            mixed.push(newCoup);
-            console.log('murcielago', newCoup);
-          } else {
-            console.log('Ya estaba');
+    if (coupons && userCoupons) {
+      if (coupons.length > 0 && userCoupons.length > 0) {
+        const mixed: UserCouponInterface[] = [];
+        coupons.forEach(coupon => {
+          const couponfound = userCoupons.find(userCoupon => userCoupon.promotionid === coupon.promotionid);
+          if (couponfound !== undefined) {
+            mixed.push(couponfound);
+          } else if (couponfound === undefined) {
+            const searchList: UserCouponInterface = mixed.find(mix => mix.promotionid === coupon.promotionid) as UserCouponInterface;
+            if (searchList === undefined) {
+              const newCoup: UserCouponInterface = {
+                activecouponimage: coupon.activecouponimage,
+                code: '',
+                coupons_status_id: 0,
+                description: coupon.descriptionc,
+                descriptionsubtitle: coupon.descriptionsubtitle,
+                descriptiontitle: coupon.descriptiontitle,
+                descriptiontyc: coupon.descriptiontyc,
+                enddate: coupon.enddate,
+                establishment: coupon.establishment,
+                imageurl: coupon.imageurl,
+                listviewimage: coupon.listviewimage,
+                name: coupon.name,
+                promotionid: coupon.promotionid,
+                startdate: coupon.startdate,
+                type: coupon.type,
+                updatedat: null
+              };
+              mixed.push(newCoup);
+              console.log('murcielago', newCoup);
+            } else {
+              console.log('Ya estaba');
+            }
           }
-        }
-      });
-      mixed.sort(compareFn);
-      setMixedCoupons(mixed);
-      console.log('ALPACA', mixed);
+        });
+        mixed.sort(compareFn);
+        setMixedCoupons(mixed);
+        console.log('ALPACA', mixed);
+      }
     }
   };
 
@@ -80,11 +82,18 @@ const CouponsController: React.FC = () => {
   //console.log('MANGO', cIDAndState);
   //console.log('BANANA', mixedCoupons);
   const halp = async () => {
-    const plsHelp = await getCurrentLocation();
+    await getCurrentLocation();
     //console.log('plsHelp', plsHelp);
-    ///console.log('completeGeolocation', JSON.stringify(completeGeolocation, null, 3));
-    setUserMunicipality(completeGeolocation.results[0].address_components[3].short_name);
-    setUserState(completeGeolocation.results[0].address_components[4].long_name);
+    const googleLocation = completeGeolocation.plus_code.compound_code.split(',');
+    const googleState = completeGeolocation.plus_code.compound_code.split(',')[1];
+    const googleM = completeGeolocation.plus_code.compound_code.trim().split(' ')[1];
+    const googleMunicipality = googleM.replace(',', '');
+    console.log('completeGeolocation', JSON.stringify(completeGeolocation, null, 3));
+    console.log('BONES', googleLocation, googleState, googleMunicipality);
+    setUserMunicipality(googleMunicipality);
+    setUserState(googleState);
+    //setUserMunicipality(completeGeolocation.results[0].address_components[3].short_name);
+    //setUserState(completeGeolocation.results[0].address_components[4].long_name);
   };
   useEffect(() => {
     halp();
@@ -133,24 +142,13 @@ const CouponsController: React.FC = () => {
 
   const getCoupons = async (pageNumber: number) => {
     //loader.show();
-   if (userState !== ' ' && userMunicipality !== ' ') {
-      const couponsHome = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
-      if (couponsHome.responseCode === 6004) {
-        setCoupons([]);
-      } else if (couponsHome.responseCode === 6003) {
-        const { data } = couponsHome;
-        setCoupons(data);
-      }
-    } else if (userState === ' ' && userMunicipality=== ' ') {
-      const couponsHome = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
-      if (couponsHome.responseCode === 6004) {
-        setCoupons([]);
-      } else if (couponsHome.responseCode === 6003) {
-        const { data } = couponsHome;
-        setCoupons(data);
-      }
-    } else if (userState === ' ' && userMunicipality !== ' ' ) {
+    const couponsGot = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
+    console.log('coupons papas', JSON.stringify(couponsGot, null, 3));
+    if (couponsGot.responseCode === 6004) {
       setCoupons([]);
+    } else if (couponsGot.responseCode === 6003) {
+      const { data } = couponsGot;
+      setCoupons(data);
     }
     //return coupons;
   };
@@ -160,7 +158,7 @@ const CouponsController: React.FC = () => {
       const userCoupons = await citiCouponsServices.getUserCoupons(user.userId as string, userState, userMunicipality);
       const { data } = userCoupons;
       setUserCoupons(data);
-      //console.log('usercoupons', JSON.stringify(userCoupons.data, null, 3));
+      console.log('usercoupons papas', JSON.stringify(userCoupons.data, null, 3));
       //loader.hide();
       return data as UserCouponInterface[];
     };
