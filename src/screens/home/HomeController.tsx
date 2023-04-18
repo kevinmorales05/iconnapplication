@@ -86,22 +86,15 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const getStateMuni = async () => {
     if (!isGuest) {
       await getCurrentLocation();
-      //console.log('plsHelp', plsHelp);
       const googleLocation = completeGeolocation.plus_code.compound_code.split(',');
       const googleState = completeGeolocation.plus_code.compound_code.split(',')[1];
       const googleM = completeGeolocation.plus_code.compound_code.trim().split(' ')[1];
       const googleMunicipality = googleM.replace(',', '');
-      console.log('completeGeolocation', JSON.stringify(completeGeolocation, null, 3));
-      console.log('BONES', googleLocation, googleState, googleMunicipality);
       setUserMunicipality(googleMunicipality);
       setUserState(googleState);
-      //setUserMunicipality(completeGeolocation.results[0].address_components[3].short_name);
-      //setUserState(completeGeolocation.results[0].address_components[4].long_name);
     }
   };
 
-  //console.log('userState HOME', userState);
-  //console.log('userMunicipality HOME', userMunicipality);
   useEffect(() => {
     getStateMuni();
   }, [getStateMuni]);
@@ -134,9 +127,6 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     return 0;
   }
 
-  //console.log('userId AQUI', user.userId);
-  console.log('coupons Home SET', userMunicipality, userState, JSON.stringify(coupons, null, 3));
-
   const getCouponsMixed = () => {
     if (coupons.length > 0 && userCoupons.length > 0) {
       const mixed: UserCouponInterface[] = [];
@@ -166,26 +156,20 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
               updatedat: null
             };
             mixed.push(newCoup);
-            console.log('murcielago', newCoup);
-          } else {
-            console.log('Ya estaba');
           }
         }
       });
       mixed.sort(compareFn);
       setMixedCoupons(mixed);
-      console.log('ALPACA', mixed);
     }
   };
 
   useEffect(() => {
-    //loader.show();
     const getUserCoupons = async () => {
       if (!isGuest) {
         const userCoupons = await citiCouponsServices.getUserCoupons(user.userId as string, userState, userMunicipality);
         const { data } = userCoupons;
         setUserCoupons(data);
-        //loader.hide();
         return data;
       } else {
         setUserCoupons([]);
@@ -193,18 +177,11 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     };
     getCoupons(0);
     getUserCoupons();
-    /*     if (coupons.length > 0 && userCoupons.length > 0) {
-      getCouponsMixed();
-    } */
   }, [isFocused, userState, userMunicipality]);
-
-  console.log('SANDIA', couponsWithState);
-  console.log('MANZANA', cIDAndState);
 
   const getCouponStatus = async (couponId: string) => {
     const status = await citiCouponsServices.getCoupon(couponId);
     const { data } = status;
-    //console.log('FML', data.coupons_status_id, couponId);
     return data.coupons_status_id as number;
   };
   const { registerEmptyOrder } = useOrders();
@@ -729,11 +706,9 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
 
   const onPressCouponDetail = (item: UserCouponInterface) => {
     function verifyIfActivated(coupon: UserCouponInterface) {
-      console.log('Canguro cupon', coupon.value.promotionid, item.promotionid);
       return coupon.value.promotionid === item.promotionid;
     }
     const activatedPromotion = userCoupons.find(verifyIfActivated);
-    console.log('Canguro', item, 'PAPAS', activatedPromotion);
 
     if (item.type === 'Accumulation') {
       inConstruction.show();

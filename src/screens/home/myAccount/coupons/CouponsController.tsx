@@ -1,6 +1,5 @@
-import { useLoading } from 'context';
 import React, { useEffect, useState } from 'react';
-import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
+import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
 import { citiCouponsServices } from 'services/coupons.services';
 import { useLocation } from 'hooks/useLocation';
 import { RootState, useAppSelector } from 'rtk';
@@ -22,7 +21,6 @@ const CouponsController: React.FC = () => {
   const [pageCoupon, setPageCoupon] = useState(0);
   const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState<boolean>(false);
   const [mixedCoupons, setMixedCoupons] = useState<UserCouponInterface[]>([]);
-  const loader = useLoading();
   const isFocused = useIsFocused();
 
   function compareFn(a: UserCouponInterface, b: UserCouponInterface) {
@@ -65,25 +63,17 @@ const CouponsController: React.FC = () => {
                 updatedat: null
               };
               mixed.push(newCoup);
-              console.log('murcielago', newCoup);
-            } else {
-              console.log('Ya estaba');
             }
           }
         });
         mixed.sort(compareFn);
         setMixedCoupons(mixed);
-        console.log('ALPACA', mixed);
       }
     }
   };
 
-  //console.log('PERA', couponsWithState);
-  //console.log('MANGO', cIDAndState);
-  //console.log('BANANA', mixedCoupons);
   const halp = async () => {
     await getCurrentLocation();
-    //console.log('plsHelp', plsHelp);
     const googleLocation = completeGeolocation.plus_code.compound_code.split(',');
     const googleState = completeGeolocation.plus_code.compound_code.split(',')[1];
     const googleM = completeGeolocation.plus_code.compound_code.trim().split(' ')[1];
@@ -92,15 +82,10 @@ const CouponsController: React.FC = () => {
     console.log('BONES', googleLocation, googleState, googleMunicipality);
     setUserMunicipality(googleMunicipality);
     setUserState(googleState);
-    //setUserMunicipality(completeGeolocation.results[0].address_components[3].short_name);
-    //setUserState(completeGeolocation.results[0].address_components[4].long_name);
   };
   useEffect(() => {
     halp();
   }, [halp]);
-  console.log('userMunicipality', userMunicipality);
-  console.log('userState', userState);
-  //console.log('location', userLocation);
 
   const loadMoreCoupons = async () => {
     setLoading(true);
@@ -128,7 +113,6 @@ const CouponsController: React.FC = () => {
 
   const loadMoreItem = () => {
     if (!onEndReachedCalledDuringMomentum) {
-      //console.log('llego aqui');
       if (!isLoading && isLoadingMore) {
         loadMoreCoupons();
         setOnEndReachedCalledDuringMomentum(true);
@@ -136,21 +120,14 @@ const CouponsController: React.FC = () => {
     }
   };
 
-  /*   useEffect(() => {
-    getCoupons(pageCoupon);
-  }, []); */
-
   const getCoupons = async (pageNumber: number) => {
-    //loader.show();
     const couponsGot = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
-    console.log('coupons papas', JSON.stringify(couponsGot, null, 3));
     if (couponsGot.responseCode === 6004) {
       setCoupons([]);
     } else if (couponsGot.responseCode === 6003) {
       const { data } = couponsGot;
       setCoupons(data);
     }
-    //return coupons;
   };
 
   useEffect(() => {
@@ -158,11 +135,8 @@ const CouponsController: React.FC = () => {
       const userCoupons = await citiCouponsServices.getUserCoupons(user.userId as string, userState, userMunicipality);
       const { data } = userCoupons;
       setUserCoupons(data);
-      console.log('usercoupons papas', JSON.stringify(userCoupons.data, null, 3));
-      //loader.hide();
       return data as UserCouponInterface[];
     };
-    //getCoupons(0);
     getCoupons(pageCoupon);
     getUserCoupons();
     getCouponsMixed();
@@ -182,7 +156,6 @@ const CouponsController: React.FC = () => {
       isLoading={isLoading}
     />
   );
-  //<CouponsScreen coupons={coupons} userCoupons={userCoupons} />;
 };
 
 export default CouponsController;

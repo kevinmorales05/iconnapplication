@@ -1,6 +1,5 @@
 import {
   ICONN_ACCOUNT_COUPON,
-  ICONN_HOME_OPTION_ACUMMULATE,
   ICONN_HOME_OPTION_HEART,
   ICONN_HOME_OPTION_ORDERS,
   ICONN_HOME_OPTION_PETRO,
@@ -11,13 +10,13 @@ import { CardProduct, Container, CustomText, TextContainer, Touchable } from 'co
 import theme from 'components/theme/theme';
 import { CounterType } from 'components/types/counter-type';
 import { useNotEnabledModal } from 'context/notEnabled.context';
-import React, { useState } from 'react';
+import React from 'react';
 import { Image, ImageStyle, StyleProp, useWindowDimensions, ViewStyle, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { Grayscale } from 'react-native-color-matrix-image-filters';
 import { CarouselItem, ProductInterface } from 'rtk';
 import { navigate } from '../../../navigation/RootNavigation';
-import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
+import { UserCouponInterface } from 'rtk/types/coupons.types';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 
 interface Props {
@@ -139,7 +138,6 @@ const AnimatedItem: React.FC<Props> = ({
   };
 
   function verifyIfActivated(item: UserCouponInterface) {
-    console.log('carnero', item, coupon);
     return coupon?.value.promotionid === item.value.promotionid;
   }
   const activatedPromotion = userCoupons?.find(verifyIfActivated);

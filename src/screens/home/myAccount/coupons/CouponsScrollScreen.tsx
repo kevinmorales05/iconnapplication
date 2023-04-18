@@ -1,15 +1,15 @@
 import { ICONN_ACCOUNT_COUPON, ICONN_CARD_PETRO, ICONN_CARD_SEVEN, ICONN_COUPON_NOCOUPON } from 'assets/images';
 import { CardProductSkeleton, Container, SafeArea, SearchBar, TabAnimatable, TextContainer, Touchable } from 'components';
-import { Dimensions, FlatList, Image, StyleSheet } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { FlatList, Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
 import { TabItem } from 'rtk';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import theme from 'components/theme/theme';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
-import { formatDate, formatDate3 } from 'utils/functions';
+import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
+import { formatDate3 } from 'utils/functions';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { useInConstruction } from 'context';
 
@@ -49,24 +49,12 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const inConstruction = useInConstruction();
 
-  console.log('MARTILLO', item);
-
-  //console.log('amarillo', cs, itemUser?.name);
-  //console.log('AQUI', userCoupons);
   function verifyIfActivated(coupon: UserCouponInterface) {
     return coupon.value.promotionid === item?.value.promotionid;
   }
 
   if (item) {
     const activatedPromotion = userCoupons ? userCoupons.find(verifyIfActivated) : undefined;
-    /*  const couponStat = async () => {
-      const statusCoupon = await getCouponStatus(activatedPromotion?.code as string);
-      //console.log('SANDIA', statusCoupon);
-      setCs(statusCoupon);
-      return statusCoupon;
-    };
-    const coupStat = couponStat(); */
-    //console.log('activatedPromotion', activatedPromotion);
     const d1 = new Date(item.value.startdate);
     const dFrom = formatDate3(d1);
     const d2 = new Date(item.value.enddate);
@@ -224,8 +212,6 @@ const CouponCard: React.FC<CouponCardProps> = ({ item, itemUser, userCoupons, co
         </Touchable>
       );
     }
-    //console.log('Fechas', d1, dFrom, d2, dTo);
-    //console.log('itemUser.Promotions_Cupon.start_date', itemUser.Promotions_Cupon.start_date);
   } else {
     return <></>;
   }
@@ -241,11 +227,7 @@ interface Props {
 }
 
 const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreItem, onPressSearch, isLoading, couponsMixed }) => {
-  //console.log('usercoupons Screen', JSON.stringify(userCoupons, null, 3));
-  //console.log('USER COUPONS LENGHT', userCoupons.length);
   const [idCouponTab, setIdCouponTab] = useState<string>('1');
-
-  //console.log('coupons from Screen', JSON.stringify(coupons, null, 3), coupons.length);
 
   const couponsTab: TabItem[] = [
     {
@@ -281,42 +263,8 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
   }
 
   const orderedCoupons = userCoupons ? userCoupons.sort(compareFn) : [];
-  console.log('orderedCoupons', orderedCoupons);
-/*   console.log(
-    'AMARILLO',
-    coupons.filter(coupon => coupon.value.establishment === '7Eleven')
-  ); */
 
   const skeletor = [1, 2, 3, 4, 5, 6];
-
-  const _renderFooter = () => {
-    if (isLoading) {
-      const residuoOperation = coupons.length % 2;
-      if (residuoOperation === 0) {
-        return (
-          <Container
-            style={{
-              justifyContent: 'space-between',
-              flexDirection: 'row',
-              width: Dimensions.get('screen').width,
-              paddingHorizontal: moderateScale(15),
-              left: -moderateScale(15)
-            }}
-          >
-            <CardProductSkeleton notMarinLeft />
-            <CardProductSkeleton notMarinLeft />
-          </Container>
-        );
-      } else {
-        return (
-          <Container row>
-            <CardProductSkeleton notMarinLeft />
-          </Container>
-        );
-      }
-    }
-    return <Container height={moderateScale(60)} />;
-  };
 
   return (
     <SafeArea backgroundColor={theme.brandColor.iconn_background}>
@@ -334,9 +282,7 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
             numColumns={2}
             data={skeletor}
             renderItem={({ item }) => <CardProductSkeleton notMarinLeft={false} />}
-            //ListFooterComponent={_renderFooter}
             onEndReachedThreshold={1}
-            /* onEndReached={loadMoreItem} */
             showsVerticalScrollIndicator={false}
           />
         ) : idCouponTab === '1' && coupons.length === 0 ? (
@@ -350,9 +296,7 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
             numColumns={2}
             data={coupons}
             renderItem={({ item }) => <CouponCard item={item} userCoupons={userCoupons} coupons={coupons} />}
-            //ListFooterComponent={_renderFooter}
             onEndReachedThreshold={1}
-            /* onEndReached={loadMoreItem} */
             showsVerticalScrollIndicator={false}
           />
         ) : idCouponTab === '2' && coupons.length > 0 ? (
@@ -360,9 +304,7 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
             numColumns={2}
             data={coupons.filter(coupon => coupon.value.establishment === '7Eleven')}
             renderItem={({ item }) => <CouponCard item={item} userCoupons={userCoupons} coupons={coupons} />}
-            /*             ListFooterComponent={_renderFooter}
-             */ onEndReachedThreshold={0}
-            /* onEndReached={loadMoreItem} */
+            onEndReachedThreshold={0}
             showsVerticalScrollIndicator={false}
           />
         ) : idCouponTab === '3' && coupons.length > 0 ? (
@@ -370,9 +312,7 @@ const CouponsScrollScreen: React.FC<Props> = ({ coupons, userCoupons, loadMoreIt
             numColumns={2}
             data={coupons.filter(coupon => coupon.value.establishment === 'Petro7')}
             renderItem={({ item }) => <CouponCard item={item} userCoupons={userCoupons} coupons={coupons} />}
-            /*             ListFooterComponent={_renderFooter}
-             */ onEndReachedThreshold={0}
-            /* onEndReached={loadMoreItem} */
+            onEndReachedThreshold={0}
             showsVerticalScrollIndicator={false}
           />
         ) : idCouponTab === '4' && userCoupons.length === 0 ? (

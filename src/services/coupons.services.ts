@@ -3,8 +3,6 @@ import { CouponsApi } from '../http/api-coupons';
 async function getPromotionsCoupons(state: string, municipality: string, page: number, numItems: number): Promise<any> {
   const response = await CouponsApi.getInstance().getRequest(`/promotions/list/${state}/none/${page}/${numItems}`);
   //const response = await CouponsApi.getInstance().getRequest(`/promotions/list/none/none/${page}/${numItems}`);
-  console.log('esta mandando', state, municipality, page);
-  console.log('response', JSON.stringify(response, null, 3));
   const { data } = response;
   return data;
 }

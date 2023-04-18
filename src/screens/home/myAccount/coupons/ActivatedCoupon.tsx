@@ -82,7 +82,6 @@ const ActivatedCoupon: React.FC = () => {
   const getCouponStatus = async (couponId: string) => {
     const status = await citiCouponsServices.getCoupon(couponId);
     const { data } = status;
-    console.log('FML', status);
     return data;
   };
 
@@ -90,7 +89,6 @@ const ActivatedCoupon: React.FC = () => {
     const statusCoupon = await getCouponStatus(params.couponActivatedData);
     const d1 = new Date(statusCoupon.redemptionDate);
     const dRedeemed = formatDate(d1);
-    console.log('PINA', statusCoupon);
     setCS(statusCoupon.coupons_status_id);
     setRD(dRedeemed);
   };
@@ -136,7 +134,6 @@ const ActivatedCoupon: React.FC = () => {
 
   const onPressOpen = () => {
     setModalVisible(true);
-    console.log('params Activated', params);
   };
 
   const onPressClose = () => {

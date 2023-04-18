@@ -6,7 +6,7 @@ import AnimatedItem from './AnimatedItem';
 import { CounterType } from 'components/types/counter-type';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { logEvent } from 'utils/analytics';
-import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
+import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
 
 interface Props {
   items?: CarouselItem[];

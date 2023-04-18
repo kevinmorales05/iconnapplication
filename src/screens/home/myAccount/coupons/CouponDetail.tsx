@@ -22,12 +22,8 @@ const CouponDetail: React.FC = () => {
   const loader = useLoading();
   loader.hide();
 
-  console.log('params.couponInfo', JSON.stringify(params.couponInfo, null, 3), user.userId);
-  console.log('HALP', params.couponInfo.promotionid);
-
   const activateCoupon = async () => {
     const couponActivated = await citiCouponsServices.postAssignCouponUser(params.couponInfo.promotionid, user.userId as string);
-    console.log('couponActivated', couponActivated.data);
     if (couponActivated.data !== null && couponActivated.data !== undefined) {
       toast.show({
         message: '¡Se ha activado tu cupón con éxito!',
