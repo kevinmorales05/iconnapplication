@@ -47,6 +47,8 @@ import { HelpCenterApi } from '../http/api-helpCenter';
   const response = await HelpCenterApi.getInstance().postRequest(`qualification/create`, questionBody);
   if (response === undefined) return Promise.reject(new Error('qualifyByQuestionId:qualification/create/'));
   const { data } = response;
+  console.log('questionBody', questionBody);
+  console.log('qualify response', response);
   return await data;
 }
 

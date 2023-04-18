@@ -9,7 +9,7 @@ export function formatDate(date: Date, dateFormat: string = 'P'): string {
   try {
     return format(date, dateFormat, { locale: localeEs });
   } catch (error) {
-    console.warn(error);
+    //console.warn(error);
     return '';
   }
 }
@@ -23,6 +23,15 @@ export function formatDate2(date: Date, dateFormat: string = 'PPP'): string {
     return format(date, dateFormat, { locale: localeEs });
   } catch (error) {
     console.warn(error);
+    return '';
+  }
+}
+
+export function formatDate3(date: Date): string {
+  try {
+    return format(date, 'dd/MM/yy', { locale: localeEs });
+  } catch (error) {
+    //console.warn(error);
     return '';
   }
 }

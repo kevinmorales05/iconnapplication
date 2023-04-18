@@ -20,6 +20,7 @@ export * from './OrderCard';
 export * from './PackCard';
 export * from './PointItem';
 export * from './PriceWithDiscount';
+export * from './PromoCard';
 export * from './QuantityProduct';
 export * from './RadioButton';
 export * from './Rating';

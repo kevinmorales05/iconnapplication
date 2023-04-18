@@ -10,6 +10,7 @@ import AdultAgeVerificationScreen from 'screens/home/adultAgeVerification/AdultA
 import { CounterType } from 'components/types/counter-type';
 import { logEvent } from 'utils/analytics';
 import { BannerSkeleton } from 'components/organisms/BannerSkeleton';
+import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
 import WebView from 'react-native-webview';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { useOrdersMonitor } from 'context';
@@ -38,6 +39,12 @@ interface Props {
   viewRecomendedProducts: any;
   viewOtherProducts: any;
   isLoadBanners: boolean;
+  coupons: CouponInterface[];
+  mixedCoupons: UserCouponInterface[];
+  userCoupons: UserCouponInterface[];
+  onPressViewMoreCoupons: () => void;
+  onPressCoupon: (item: CouponInterface) => void;
+  getCouponStat: (coup: string) => number;
 }
 
 const HomeScreen: React.FC<Props> = ({
@@ -58,7 +65,13 @@ const HomeScreen: React.FC<Props> = ({
   viewRecomendedProducts,
   viewOtherProducts,
   isAddressModalSelectionVisible,
-  isLoadBanners
+  isLoadBanners,
+  coupons,
+  mixedCoupons,
+  userCoupons,
+  onPressViewMoreCoupons,
+  onPressCoupon,
+  getCouponStat
 }) => {
   const [toggle, setToggle] = useState(showShippingDropDown);
   const [visible, setVisible] = useState<boolean>(false);
@@ -144,7 +157,13 @@ const HomeScreen: React.FC<Props> = ({
                 <Image style={styles.image} source={ICONN_STO} />
                 <CustomText fontSize={16} text={'Tienda: '} fontBold />
                 <Container>
-                  <CustomText text={defaultSeller.pickupPoint.friendlyName as string} fontSize={16} fontBold underline textColor={theme.brandColor.iconn_green_original} />
+                  <CustomText
+                    text={defaultSeller.pickupPoint.friendlyName as string}
+                    fontSize={16}
+                    fontBold
+                    underline
+                    textColor={theme.brandColor.iconn_green_original}
+                  />
                 </Container>
               </Container>
             )}
@@ -252,13 +271,41 @@ const HomeScreen: React.FC<Props> = ({
             <Container style={{ marginTop: 16 }}>
               <AnimatedCarousel items={homeOptions} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
             </Container>
-            <Container style={{ marginTop: 16 }}>
-              {secondItems ? (
-                <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
-              ) : (
-                <BannerSkeleton notMarinLeft={true} />
-              )}
-            </Container>
+            {isGuest ? (
+              <></>
+            ) : coupons === undefined ? (
+              <Container flex row style={{ marginLeft: 8 }}>
+                <CardProductSkeleton />
+                <CardProductSkeleton />
+                <CardProductSkeleton />
+              </Container>
+            ) : coupons && coupons.length > 0 ? (
+              <Container>
+                <Container row space="between" style={{ margin: 16 }}>
+                  <TextContainer text="Cupones" fontBold typography="h4" />
+                  <TouchableText
+                    underline
+                    textColor={theme.brandColor.iconn_accent_principal}
+                    text="Ver todo"
+                    typography="h5"
+                    fontBold
+                    onPress={() => {
+                      onPressViewMoreCoupons();
+                    }}
+                  />
+                </Container>
+                <AnimatedCarousel
+                  coupons={coupons}
+                  onPressItem={() => {}}
+                  onPressOut={() => {}}
+                  onPressCoupon={onPressCoupon}
+                  couponStat={getCouponStat}
+                  userCoupons={userCoupons}
+                />
+              </Container>
+            ) : (
+              <></>
+            )}
             <Container height={367} style={{ marginTop: 16 }} backgroundColor={theme.brandColor.iconn_background}>
               <Container row space="between" style={{ margin: 16 }}>
                 <TextContainer text="Recomendados para ti" fontBold typography="h4" />
@@ -298,13 +345,20 @@ const HomeScreen: React.FC<Props> = ({
               </Container>
             </Container>
             <Container style={{ marginTop: 16, marginBottom: 16 }}>
+              {secondItems ? (
+                <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
+              ) : (
+                <BannerSkeleton notMarinLeft={true} />
+              )}
+            </Container>
+            {/*  <Container style={{ marginTop: 16, marginBottom: 16 }}>
               <TextContainer text="Promoción del día" marginLeft={16} fontBold typography="h4" />
               {dayPromotionItems ? (
                 <AnimatedCarousel items={dayPromotionItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
               ) : (
                 <BannerSkeleton notMarinLeft={true} />
               )}
-            </Container>
+            </Container> */}
             <Container height={367} style={{ marginTop: 0 }} backgroundColor={theme.brandColor.iconn_background}>
               <Container row space="between" style={{ margin: 16 }}>
                 <TextContainer text={'Otros productos'} fontBold typography="h4" />
@@ -343,7 +397,7 @@ const HomeScreen: React.FC<Props> = ({
                 )}
               </Container>
             </Container>
-            <Container style={{ marginTop: 16, marginBottom: 16 }}>
+            <Container style={{ marginTop: 16, marginBottom: 50 }}>
               <TextContainer text="Promociones" marginLeft={16} fontBold typography="h4" />
               {allPromotionsItems ? (
                 <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
