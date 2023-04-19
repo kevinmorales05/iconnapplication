@@ -19,7 +19,7 @@
     "promotion_type": "homeOptions",
     "status": "active"
   },
-  { 
+  {
     "id": "2",
     "description": "Favoritos",
     "image": "iconn-home-option-orders.png",
@@ -32,7 +32,7 @@
   },
   {
     "id": "3",
-    "description": "Acumula",
+    "description": "Cuponera",
     "image": "iconn-home-option-orders.png",
     "link": "https://www.7-eleven.com.mx/",
     "navigationType": "external",

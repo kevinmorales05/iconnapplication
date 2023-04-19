@@ -1,32 +1,95 @@
-import { Location, setAppInitialPreferences, useAppDispatch } from 'rtk';
+import { AddressComponent, GeographicLocation, Location, setAppInitialPreferences, useAppDispatch } from 'rtk';
 import { useEffect, useRef, useState } from 'react';
 import { usePermissions } from 'context';
 import Geolocation from 'react-native-geolocation-service';
+import { useToast } from 'context';
+import { GoogleMapsServices } from 'services';
 
 export const useLocation = () => {
   const { permissions, askLocationPermission } = usePermissions();
-  const [initialUserLocation, setInitialUserLocation] = useState<Location>();
   const [userLocation, setUserLocation] = useState<Location>();
+  const [completeGeolocation, setCompleteGeolocation] = useState();
   const watchId = useRef<number>();
+  const [geographicLocation, setGeographicLocation] = useState<GeographicLocation | null>();
   const dispatch = useAppDispatch();
+  const toast = useToast();
+
+  const remapGeocodingResponse = (geocodingResponse: any) => {
+    if (geocodingResponse.status === 'OK') {
+      let geographicLocationInfo = {} as GeographicLocation;
+      geocodingResponse.results[0].address_components.forEach((address_component: AddressComponent) => {
+        const propKey = address_component.types[0];
+        switch (propKey) {
+          case 'street_number':
+            geographicLocationInfo.street_number = address_component.short_name;
+            break;
+          case 'route':
+            geographicLocationInfo.route = address_component.short_name;
+            break;
+          case 'political':
+            geographicLocationInfo.political = address_component.short_name;
+            break;
+          case 'locality':
+            geographicLocationInfo.locality = address_component.short_name;
+            break;
+          case 'administrative_area_level_1':
+            geographicLocationInfo.administrative_area_level_1 = address_component.short_name;
+            break;
+          case 'country':
+            geographicLocationInfo.country = address_component.short_name;
+            break;
+          case 'postal_code':
+            geographicLocationInfo.postal_code = address_component.short_name;
+            break;
+        }
+      });
+      return geographicLocationInfo;
+    } else if (geocodingResponse.status === 'ZERO_RESULTS') {
+      toast.hide();
+      return null;
+    } else {
+      let msg: string = '';
+      switch (geocodingResponse.status) {
+        /* case 'ZERO_RESULTS':
+          msg = 'No se encontró la ubicación en el mapa :(';
+          break; */
+        case 'OVER_QUERY_LIMIT':
+          msg = 'Has superado la cuota de peticiones';
+          break;
+        case 'REQUEST_DENIED':
+          msg = 'Api invalida :(';
+          break;
+        case 'INVALID_REQUEST':
+          msg = 'La solicitud esta mal formada';
+          break;
+        case 'UNKNOWN_ERROR':
+          msg = 'Error desconocido :(';
+          break;
+      }
+      toast.show({ message: msg, type: 'warning' });
+      return null;
+    }
+  };
 
   useEffect(() => {
     if (permissions.locationStatus === 'granted') {
       dispatch(setAppInitialPreferences());
       getCurrentLocation()
-        .then(location => {
-          setInitialUserLocation(location);
+        .then(async location => {
           setUserLocation(location);
+          const userGeographicLocation = await GoogleMapsServices.getGeographicLocationByLatLng(location);
+          setCompleteGeolocation(userGeographicLocation);
+          console.log('Geocoding sin remapear', userGeographicLocation);
+          console.log('geocoding remapeada => ', JSON.stringify(remapGeocodingResponse(userGeographicLocation), null, 3));
+          console.log('La geolocalización exacta es ===>', location);
         })
         .catch(() => {
           // IMPORTANT: If permission is "granted" but "gps" is off, then set default location (monterey). This occurs only on Android.
-          setInitialUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
           setUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
         });
     } else if (permissions.locationStatus === 'denied') {
       askLocationPermission();
     } else if (permissions.locationStatus === 'blocked' || permissions.locationStatus === 'unavailable') {
-      setInitialUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
       setUserLocation({ latitude: 25.675365, longitude: -100.3119196 }); // downtown monterey coordinates
     }
   }, [permissions.locationStatus]);
@@ -77,5 +140,5 @@ export const useLocation = () => {
     setUserLocation(location);
   };
 
-  return { initialUserLocation, getCurrentLocation, followUserLocation, userLocation, stopTrackingUserLocation, setLocationByMunicipality };
+  return { getCurrentLocation, followUserLocation, userLocation, stopTrackingUserLocation, setLocationByMunicipality, completeGeolocation };
 };

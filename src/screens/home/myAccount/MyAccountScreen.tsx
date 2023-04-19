@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { Image, ScrollView } from 'react-native';
 import { Button, NavigationMenuItem, Container, TextContainer, Touchable } from 'components';
 import { useNavigation } from '@react-navigation/native';
 import theme from 'components/theme/theme';
@@ -28,6 +28,7 @@ import { modulesRemoteConfig } from '../../../common/modulesRemoteConfig';
 import { useNotEnabledModal } from 'context/notEnabled.context';
 import analytics from '@react-native-firebase/analytics';
 import { logEvent } from 'utils/analytics';
+import { ICONN_ACCOUNT_COUPON, ICONN_HOME_OPTION_LITRES } from 'assets/images';
 
 interface HomeScreenProps {
   logOut: () => void;
@@ -137,6 +138,15 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
         <NavigationMenuItem
           text="Cuponera"
           disable={false}
+          icon={<Image source={ICONN_ACCOUNT_COUPON} style={{ height: moderateScale(24), width: moderateScale(24) }} />}
+          onPressNavigateTo={() => {
+            navigate('Coupons');
+          }}
+        />
+
+        <NavigationMenuItem
+          text="Acumula café"
+          disable={false}
           icon={<CoffeSvg size={moderateScale(24)} />}
           onPressNavigateTo={() => {
             logEvent('accOffersCoupons', {
@@ -145,6 +155,16 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
             });
             onPressSendAnalyticst('accOffersCoupons', 'Abrir cuponera desde menú de cuenta');
             inConstruction.show(true);
+            navigate('AccumulateCoffee');
+          }}
+        />
+
+        <NavigationMenuItem
+          text="Acumula litros"
+          disable={false}
+          icon={<Image source={ICONN_HOME_OPTION_LITRES} style={{ marginLeft: 2, height: moderateScale(23), width: moderateScale(23) }} />}
+          onPressNavigateTo={() => {
+            navigate('AccumulateLitres');
           }}
         />
 
@@ -192,6 +212,8 @@ const MyAccountScreen: React.FC<HomeScreenProps> = ({ logOut, onPressVersion, ap
               id: user.id,
               description: 'Abrir wallet desde menú de cuenta'
             });
+            navigate('WalletStack');
+            //inConstruction.show(true);
           }}
         />
         <NavigationMenuItem

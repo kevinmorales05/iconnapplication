@@ -10,5 +10,6 @@ export type AuthStackParams = {
   CreatePassword: { authenticationToken: string; variant?: 'register' | 'recoverPassword' };
   EnterFullName: undefined;
   ChangedPassword: { authenticationToken: string; password: string };
-  LoginWhitSocialNetwork: { authenticationToken: string; providerLogin: string}
+  LoginWhitSocialNetwork: { authenticationToken: string; providerLogin: string };
+  Coupons: undefined;
 };
