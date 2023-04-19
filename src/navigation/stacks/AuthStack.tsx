@@ -11,6 +11,7 @@ import EnterFullNameController from 'screens/auth/onboarding/EnterFullName/Enter
 import EnterPasswordController from 'screens/auth/onboarding/EnterPassword/EnterPasswordController';
 import ForgotPasswordController from 'screens/auth/onboarding/ForgotPassword/ForgotPasswordController';
 import LoginWhitSocialNetwork from 'screens/auth/onboarding/LoginWhitSocialNetwork/LoginWhitSocialNetWorkController'
+import CouponsController from 'screens/home/myAccount/coupons/CouponsController';
 
 const Stack = createNativeStackNavigator<AuthStackParams>();
 
@@ -26,6 +27,7 @@ const AuthStack: React.FC = () => (
     <Stack.Screen name="EnterFullName" component={EnterFullNameController} />
     <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
     <Stack.Screen name="LoginWhitSocialNetwork" component={LoginWhitSocialNetwork} />
+    <Stack.Screen name="Coupons" component={CouponsController} />
   </Stack.Navigator>
 );
 

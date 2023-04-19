@@ -37,6 +37,7 @@ const StepsController: React.FC<Props> = () => {
       qualification: qualification,
       user_id: user.userId
     };
+    console.log('newQualification', newQualification);
     helpCenterServices.qualifyByQuestionId(newQualification).then(() => {
       toast.show({
         message: 'La pregunta ha sido calificada con éxito.',

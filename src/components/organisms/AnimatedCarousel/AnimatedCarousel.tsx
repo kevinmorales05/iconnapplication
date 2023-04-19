@@ -6,6 +6,7 @@ import AnimatedItem from './AnimatedItem';
 import { CounterType } from 'components/types/counter-type';
 import Octicons from 'react-native-vector-icons/Octicons';
 import { logEvent } from 'utils/analytics';
+import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
 
 interface Props {
   items?: CarouselItem[];
@@ -16,9 +17,24 @@ interface Props {
   cards?: boolean;
   pointsCardDisabled?: boolean;
   banner?: boolean;
+  coupons?: UserCouponInterface[];
+  onPressCoupon?: (coupon: CouponInterface) => void;
+  userCoupons?: UserCouponInterface[];
 }
 
-const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPressProduct, onPressOut, cards, banner, pointsCardDisabled }) => {
+const AnimatedCarousel: React.FC<Props> = ({
+  items,
+  products,
+  onPressItem,
+  onPressProduct,
+  onPressOut,
+  cards,
+  banner,
+  pointsCardDisabled,
+  coupons,
+  onPressCoupon,
+  userCoupons
+}) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
@@ -106,6 +122,22 @@ const AnimatedCarousel: React.FC<Props> = ({ items, products, onPressItem, onPre
             </Container>
           )}
           horizontal
+        />
+      ) : null}
+      {coupons && coupons.length > 0 ? (
+        <FlatList
+          data={coupons}
+          renderItem={({ item, index }) => (
+            <AnimatedItem coupon={item} position={index} onPressItem={() => {}} onPressOut={() => {}} onPressCoupon={onPressCoupon} userCoupons={userCoupons} />
+          )}
+          horizontal
+          bounces={coupons?.length > 1 ? true : false}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { x: scrollX } } }], { useNativeDriver: false })}
+          scrollEventThrottle={32}
+          onViewableItemsChanged={viewableItemsChanged}
+          viewabilityConfig={viewConfig}
+          ref={slidesRef}
+          showsHorizontalScrollIndicator={false}
         />
       ) : null}
     </Container>

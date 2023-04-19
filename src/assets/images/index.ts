@@ -22,6 +22,12 @@ import ICON_HELPPURCHASESANDORDERS from './helpPurchasesAndOrders.webp';
 import ICON_HELPREWARDS from './helpRewards.webp';
 import ICON_HELPSADSMILE from './helpSadSmile.webp';
 import ICON_HELPVERYHAPPYSMILE from './helpVeryHappySmile.webp';
+import ICONN_ACCOUNT_COUPON from './iconn-account-coupon.webp';
+import ICONN_ACCUMULATE_COFFEE from './iconn-accumulate-coffee.webp';
+import ICONN_ACCUMULATE_COFFEE_FILL from './iconn-accumulate-coffee-fill.webp';
+import ICONN_ACCUMULATE_COFFEE_TRANSPARENT from './iconn-accumulate-coffe-transparent.webp';
+import ICONN_ACCUMULATE_LITRES_LOGO from './iconn-accumulate-litres-logo.webp';
+import ICONN_ACCUMULATE_LITRES_NOPROMOS from './iconn-accumulate-litres-nopromos.webp';
 import ICONN_ADDRESS_FIND from './iconn-address-find.png';
 import ICONN_BACKGROUND_IMAGE from './iconn-background-image.webp';
 import ICONN_BASKET from './iconn-basket.webp';
@@ -79,6 +85,12 @@ import ICONN_CARD_SEVEN from './iconn-card-seven.webp';
 import ICONN_CHANGE from './iconn-change.webp';
 import ICONN_CHECK_PWD from './iconn-check-pwd.webp';
 import ICONN_COFFEE from './iconn-coffee.webp';
+import ICONN_COUPON_CHEESE from './iconn-coupon-cheese.webp';
+import ICONN_COUPON_COFFEE from './iconn-coupon-coffee.webp';
+import ICONN_COUPON_MONDAY from './iconn-coupon-monday.webp';
+import ICONN_COUPON_NOCOUPON from './iconn-coupons-noCoupons.webp';
+import ICONN_COUPON_OCEAN from './iconn-coupon-ocean.webp';
+import ICONN_COUPON_PETRO from './iconn-coupon-petro.webp';
 import ICONN_CREDIT_CARD from './credit-card.webp';
 import ICONN_DELETE_SHOPPING_CART_ITEM from './trash_delete_bin.png';
 import ICONN_DEPOSIT from './iconn-deposit.webp';
@@ -110,6 +122,7 @@ import ICONN_HELP_TOUR from './iconn-help-tour.webp';
 import ICONN_HOME_LOCATION from './iconn-home-location.png';
 import ICONN_HOME_OPTION_ACUMMULATE from './iconn-home-option-acummulate.png';
 import ICONN_HOME_OPTION_HEART from './iconn-home-option-heart.webp';
+import ICONN_HOME_OPTION_LITRES from './iconn-home-option-litres.webp';
 import ICONN_HOME_OPTION_ORDERS from './iconn-home-option-orders.png';
 import ICONN_HOME_OPTION_PETRO from './iconn-home-option-petro.png';
 import ICONN_HOME_OPTION_SEVEN from './iconn-home-option-seven.png';
@@ -183,6 +196,9 @@ import TAB_PROMOS from './tab_promos.webp';
 import TAB_USER_PROFILE from './tab_user_profile.webp';
 import TELCEL_LOGO from './telcel_logo.png';
 import WARNING_ERROR from './warning_error.webp';
+import PROMO1 from './promo1.webp';
+import PROMO2 from './promo2.webp';
+import PROMO3 from './promo3.webp';
 
 export {
   ATT_LOGO,
@@ -209,6 +225,12 @@ export {
   ICON_HELPREWARDS,
   ICON_HELPSADSMILE,
   ICON_HELPVERYHAPPYSMILE,
+  ICONN_ACCOUNT_COUPON,
+  ICONN_ACCUMULATE_COFFEE,
+  ICONN_ACCUMULATE_COFFEE_FILL,
+  ICONN_ACCUMULATE_COFFEE_TRANSPARENT,
+  ICONN_ACCUMULATE_LITRES_LOGO,
+  ICONN_ACCUMULATE_LITRES_NOPROMOS,
   ICONN_ADDRESS_FIND,
   ICONN_BACKGROUND_IMAGE,
   ICONN_BASKET_SHOPPING_CART,
@@ -266,6 +288,12 @@ export {
   ICONN_CHANGE,
   ICONN_CHECK_PWD,
   ICONN_COFFEE,
+  ICONN_COUPON_CHEESE,
+  ICONN_COUPON_COFFEE,
+  ICONN_COUPON_MONDAY,
+  ICONN_COUPON_NOCOUPON,
+  ICONN_COUPON_OCEAN,
+  ICONN_COUPON_PETRO,
   ICONN_CREDIT_CARD,
   ICONN_DELETE_SHOPPING_CART_ITEM,
   ICONN_DEPOSIT,
@@ -297,6 +325,7 @@ export {
   ICONN_HOME_LOCATION,
   ICONN_HOME_OPTION_ACUMMULATE,
   ICONN_HOME_OPTION_HEART,
+  ICONN_HOME_OPTION_LITRES,
   ICONN_HOME_OPTION_ORDERS,
   ICONN_HOME_OPTION_PETRO,
   ICONN_HOME_OPTION_SEVEN,
@@ -369,5 +398,8 @@ export {
   TAB_PROMOS,
   TAB_USER_PROFILE,
   TELCEL_LOGO,
-  WARNING_ERROR
+  WARNING_ERROR,
+  PROMO1,
+  PROMO2,
+  PROMO3
 };

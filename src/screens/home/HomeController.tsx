@@ -23,7 +23,7 @@ import {
 import HomeScreen from './HomeScreen';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { getUserAddressesThunk } from 'rtk/thunks/vtex-addresses.thunks';
 import { useEnterModal, useInConstruction, useLoading, useToast, useWelcomeModal } from 'context';
 import { useAddresses } from './myAccount/hooks/useAddresses';
@@ -40,8 +40,12 @@ import remoteConfig from '@react-native-firebase/remote-config';
 import { envariomentState } from '../../common/modulesRemoteConfig';
 import { logEvent } from 'utils/analytics';
 import { homeServices } from 'services';
+import { citiCouponsServices } from 'services/coupons.services';
+import { CouponInterface, UserCouponInterface, UserCouponWithStateInterface } from 'rtk/types/coupons.types';
+import { useLocation } from 'hooks/useLocation';
 import { useOrders } from 'screens/home/hooks/useOrders';
 import { useOrdersMonitor } from 'context/ordersMonitor.context';
+import ActivatedCoupon from './myAccount/coupons/ActivatedCoupon';
 interface PropsController {
   paySuccess: boolean;
 }
@@ -51,6 +55,8 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const { loading: authLoading } = useAppSelector((state: RootState) => state.auth);
   const { cart } = useAppSelector((state: RootState) => state.cart);
   const { defaultSeller } = useAppSelector((state: RootState) => state.seller);
+  const { completeGeolocation, getCurrentLocation } = useLocation();
+  const isFocused = useIsFocused();
   const dispatch = useAppDispatch();
   const { navigate, reset } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
   const loader = useLoading();
@@ -67,6 +73,117 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
   const [isChargin, setIsChargin] = useState(false);
   const { dateSync } = useAppSelector((state: RootState) => state.wallet);
   const [isLoadBanners, setIsLoadBanners] = useState<boolean>(true);
+  const [coupons, setCoupons] = useState<CouponInterface[]>();
+  const [userCoupons, setUserCoupons] = useState<UserCouponInterface[]>([]);
+  const [userMunicipality, setUserMunicipality] = useState('none');
+  const [userState, setUserState] = useState('none');
+  const [couponsWithState, setCouponsWithState] = useState<UserCouponWithStateInterface[]>();
+  const [cIDAndState, setCIdAndState] = useState<UserCouponWithStateInterface[]>();
+  const [mixedCoupons, setMixedCoupons] = useState<UserCouponInterface[]>([]);
+
+  console.log('ABRIL', mixedCoupons);
+
+  const getStateMuni = async () => {
+    if (!isGuest) {
+      await getCurrentLocation();
+      const googleLocation = completeGeolocation.plus_code.compound_code.split(',');
+      const googleState = completeGeolocation.plus_code.compound_code.split(',')[1];
+      const googleM = completeGeolocation.plus_code.compound_code.trim().split(' ')[1];
+      const googleMunicipality = googleM.replace(',', '');
+      setUserMunicipality(googleMunicipality);
+      setUserState(googleState);
+    }
+  };
+
+  useEffect(() => {
+    getStateMuni();
+  }, [getStateMuni]);
+
+  const getCoupons = async (pageNumber: number) => {
+    if (!isGuest) {
+      if (userState !== 'none' && userMunicipality !== 'none') {
+        const couponsHome = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
+        const { data } = couponsHome;
+        setCoupons(data);
+      } else if (userState === 'none' && userMunicipality === 'none') {
+        const couponsHome = await citiCouponsServices.getPromotionsCoupons(userState, userMunicipality, pageNumber, 20);
+        const { data } = couponsHome;
+        setCoupons(data);
+      } else if (userState === ' ' && userMunicipality !== ' ') {
+        setCoupons([]);
+      }
+    } else {
+      setCoupons([]);
+    }
+  };
+
+  function compareFn(a: UserCouponInterface, b: UserCouponInterface) {
+    if (a.coupons_status_id === 2 && b.coupons_status_id !== 2) {
+      return 1;
+    }
+    if (a.coupons_status_id !== 2 && b.coupons_status_id === 2) {
+      return -1;
+    }
+    return 0;
+  }
+
+  const getCouponsMixed = () => {
+    if (coupons.length > 0 && userCoupons.length > 0) {
+      const mixed: UserCouponInterface[] = [];
+      coupons.forEach(coupon => {
+        const couponfound = userCoupons.find(userCoupon => userCoupon.promotionid === coupon.promotionid);
+        if (couponfound !== undefined) {
+          mixed.push(couponfound);
+        } else if (couponfound === undefined) {
+          const searchList: UserCouponInterface = mixed.find(mix => mix.promotionid === coupon.promotionid) as UserCouponInterface;
+          if (searchList === undefined) {
+            const newCoup: UserCouponInterface = {
+              activecouponimage: coupon.activecouponimage,
+              code: '',
+              coupons_status_id: 0,
+              description: coupon.descriptionc,
+              descriptionsubtitle: coupon.descriptionsubtitle,
+              descriptiontitle: coupon.descriptiontitle,
+              descriptiontyc: coupon.descriptiontyc,
+              enddate: coupon.enddate,
+              establishment: coupon.establishment,
+              imageurl: coupon.imageurl,
+              listviewimage: coupon.listviewimage,
+              name: coupon.name,
+              promotionid: coupon.promotionid,
+              startdate: coupon.startdate,
+              type: coupon.type,
+              updatedat: null
+            };
+            mixed.push(newCoup);
+          }
+        }
+      });
+      mixed.sort(compareFn);
+      setMixedCoupons(mixed);
+    }
+  };
+
+  useEffect(() => {
+    const getUserCoupons = async () => {
+      if (!isGuest) {
+        const userCoupons = await citiCouponsServices.getUserCoupons(user.userId as string, userState, userMunicipality);
+        const { data } = userCoupons;
+        setUserCoupons(data);
+        return data;
+      } else {
+        setUserCoupons([]);
+      }
+    };
+    getCoupons(0);
+    getUserCoupons();
+  }, [isFocused, userState, userMunicipality]);
+
+  const getCouponStatus = async (couponId: string) => {
+    const status = await citiCouponsServices.getCoupon(couponId);
+    const { data } = status;
+    return data.coupons_status_id as number;
+  };
   const { registerEmptyOrder } = useOrders();
   const monitor = useOrdersMonitor();
 
@@ -324,7 +441,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
           id: user.id,
           description: 'Abrir Acumuladesde el botón de home'
         });
-        inConstruction.show();
+        navigate('Coupons');
         return;
       }
       /* inConstruction.show();
@@ -554,7 +671,7 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       collectionId: Number.parseInt(OTHER_PRODUCTS ? OTHER_PRODUCTS : '0'),
       pageSize: 7,
       pageNumber: 0,
-      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`)  : 5005
+      selectedStore: defaultSeller?.pickupPoint.address.addressId ? Number.parseInt(`500${defaultSeller?.pickupPoint.address.addressId}`) : 5005
     };
     const productRecomended: ProductsByCollectionInterface = {
       collectionId: Number.parseInt(RECOMMENDED_PRODUCTS ? RECOMMENDED_PRODUCTS : '0'),
@@ -581,6 +698,25 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
       description: 'Guardar una dirección de la lista de direcciones',
       addressId: address.id
     });
+  };
+
+  const onPressViewMoreCoupons = () => {
+    navigate('Coupons');
+  };
+
+  const onPressCouponDetail = (item: UserCouponInterface) => {
+    function verifyIfActivated(coupon: UserCouponInterface) {
+      return coupon.value.promotionid === item.promotionid;
+    }
+    const activatedPromotion = userCoupons.find(verifyIfActivated);
+
+    if (item.type === 'Accumulation') {
+      inConstruction.show();
+    } else if (activatedPromotion?.value.coupons_status_id === 1 && item.type !== 'Accumulation') {
+      navigate('ActivatedCoupon', { couponInfo: item, couponActivatedData: activatedPromotion.value.code, origin: 'Home' });
+    } else {
+      navigate('CouponDetail', { couponInfo: item, origin: 'Home' });
+    }
   };
 
   return (
@@ -622,6 +758,12 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
         viewOtherProducts={viewOtherProducts}
         isAddressModalSelectionVisible={addressModalSelectionVisible}
         isLoadBanners={isLoadBanners}
+        coupons={coupons}
+        userCoupons={userCoupons}
+        mixedCoupons={mixedCoupons}
+        onPressViewMoreCoupons={onPressViewMoreCoupons}
+        onPressCoupon={onPressCouponDetail}
+        getCouponStat={getCouponStatus}
       />
       <AddressModalSelection
         visible={addressModalSelectionVisible}
