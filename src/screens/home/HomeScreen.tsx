@@ -201,7 +201,7 @@ const HomeScreen: React.FC<Props> = ({
                         navigate('LiveStatusWidget', { urlLive: item.widgetUrl + '&primaryColor=%23008060&secondaryColor=%23000000' });
                       }}
                     >
-                      <Container style={{ width: 355, marginRight: 8 }} height={145}>
+                      <Container style={{ width: 355, marginRight: 8 }} height={160}>
                         <WebView
                           key={index}
                           style={{ borderRadius: 8, borderWidth: 0 }}
