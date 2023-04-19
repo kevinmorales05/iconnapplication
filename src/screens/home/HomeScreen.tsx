@@ -206,7 +206,7 @@ const HomeScreen: React.FC<Props> = ({
                           key={index}
                           style={{ borderRadius: 8, borderWidth: 0 }}
                           source={{
-                            uri: item.widgetUrl! + '&primaryColor=%23008060&secondaryColor=%23000000&showOnly=steps&stepViewTitle=Envio%20a%20domicilio'
+                            uri: item.widgetUrl! + '&primaryColor=%23008060&secondaryColor=%23000000&showOnly=steps&stepViewTitle=Envio%20a%20domicilio&language=es'
                           }}
                         />
                       </Container>

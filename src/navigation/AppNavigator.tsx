@@ -31,7 +31,14 @@ const AppNavigator: any = () => {
    */
   useEffect(() => {
     if (error !== '') {
-      alert.show({ message: error }, 'error');
+      if (error === '0') {
+        /*
+        TO DO: Research about the error in deep
+        */
+        console.log('Alert error 0 ', error);
+      } else {
+        alert.show({ message: error }, 'error');
+      }
       loader.hide();
       dispatch(setAppError({ error: '' }));
     }
