@@ -28,3 +28,5 @@ This project uses:
  - npx uri-scheme open "iconn://iconn/invoice" --android
 
  - npx uri-scheme open "iconn://iconn/invoice" --ios
+
+ # this version is for Juan Pablo Larios 
