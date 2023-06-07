@@ -1,12 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getBanksWalletThunk, getWalletPrefixesThunk } from 'rtk/thunks/wallet.thunks';
-import { BeneficiaryInterface, WalletSliceInterface } from 'rtk/types';
+import { BeneficiaryInterface, HistoryServices, WalletFav, WalletSliceInterface } from 'rtk/types';
 
 const initialState: WalletSliceInterface = {
   prefixes: [],
   banks: [],
   beneficiaries: [],
-  dateSync: undefined
+  dateSync: undefined,
+  amountOfRecharge: '',
+  numberRecharge: '',
+  tagName: '',
+  favs: [],
+  history: []
 };
 
 const walletSlice = createSlice({
@@ -18,12 +23,32 @@ const walletSlice = createSlice({
       state.banks = [];
       state.beneficiaries = [];
       state.dateSync = undefined;
+      state.amountOfRecharge = '';
+      state.numberRecharge = '';
+      state.tagName = '';
+      state.favs = [];
+      state.history = [];
     },
     setBeneficiaries(state, action: PayloadAction<BeneficiaryInterface[]>) {
       state.beneficiaries = action.payload;
     },
     setDateSync(state, action: PayloadAction<Date>) {
       state.dateSync = action.payload;
+    },
+    setAmountOfRecharge(state, action: PayloadAction<string>) {
+      state.amountOfRecharge = action.payload;
+    },
+    setNumberRecharge(state, action: PayloadAction<string>) {
+      state.numberRecharge = action.payload;
+    },
+    setTagName(state, action: PayloadAction<string>) {
+      state.tagName = action.payload;
+    },
+    setFavs(state, action: PayloadAction<WalletFav[]>) {
+      state.favs = action.payload;
+    },
+    setHistory(state, action: PayloadAction<HistoryServices[]>) {
+      state.history = action.payload;
     }
   },
   extraReducers: builder => {
@@ -44,5 +69,5 @@ const walletSlice = createSlice({
   }
 });
 
-export const { setWalletInitialState, setBeneficiaries, setDateSync } = walletSlice.actions;
+export const { setWalletInitialState, setBeneficiaries, setDateSync, setAmountOfRecharge, setNumberRecharge, setTagName, setFavs, setHistory } = walletSlice.actions;
 export default walletSlice.reducer;

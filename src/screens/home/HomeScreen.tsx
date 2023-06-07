@@ -265,7 +265,8 @@ const HomeScreen: React.FC<Props> = ({
               {principalItems ? (
                 <AnimatedCarousel banner items={principalItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
               ) : (
-                <BannerSkeleton notMarinLeft={true} />
+                // <BannerSkeleton notMarinLeft={true} />
+                null
               )}
             </Container>
             <Container style={{ marginTop: 16 }}>
@@ -275,9 +276,9 @@ const HomeScreen: React.FC<Props> = ({
               <></>
             ) : coupons === undefined ? (
               <Container flex row style={{ marginLeft: 8 }}>
+                {/* <CardProductSkeleton />
                 <CardProductSkeleton />
-                <CardProductSkeleton />
-                <CardProductSkeleton />
+                <CardProductSkeleton /> */}
               </Container>
             ) : coupons && coupons.length > 0 ? (
               <Container>
@@ -329,9 +330,9 @@ const HomeScreen: React.FC<Props> = ({
                 {!homeProducts ? (
                   <>
                     <Container flex row style={{ marginLeft: 8 }}>
+                      {/* <CardProductSkeleton />
                       <CardProductSkeleton />
-                      <CardProductSkeleton />
-                      <CardProductSkeleton />
+                      <CardProductSkeleton /> */}
                     </Container>
                   </>
                 ) : (
@@ -348,7 +349,8 @@ const HomeScreen: React.FC<Props> = ({
               {secondItems ? (
                 <AnimatedCarousel items={secondItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
               ) : (
-                <BannerSkeleton notMarinLeft={true} />
+                // <BannerSkeleton notMarinLeft={true} />
+                null
               )}
             </Container>
             {/*  <Container style={{ marginTop: 16, marginBottom: 16 }}>
@@ -382,9 +384,9 @@ const HomeScreen: React.FC<Props> = ({
                 {!homeOtherProducts ? (
                   <>
                     <Container flex row style={{ marginLeft: 8 }}>
+                      {/* <CardProductSkeleton />
                       <CardProductSkeleton />
-                      <CardProductSkeleton />
-                      <CardProductSkeleton />
+                      <CardProductSkeleton /> */}
                     </Container>
                   </>
                 ) : (
@@ -402,7 +404,8 @@ const HomeScreen: React.FC<Props> = ({
               {allPromotionsItems ? (
                 <AnimatedCarousel items={allPromotionsItems} onPressItem={onPressCarouselItem} onPressOut={onPressOut} />
               ) : (
-                <BannerSkeleton notMarinLeft={true} />
+                // <BannerSkeleton notMarinLeft={true} />
+                null
               )}
             </Container>
           </Container>

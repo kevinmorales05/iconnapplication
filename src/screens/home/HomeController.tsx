@@ -449,10 +449,10 @@ const HomeController: React.FC<PropsController> = ({ paySuccess }) => {
     }
 
     // If is a guest and press any option diferent to "Categories".
-    if (isGuest && CarouselItem.id !== '0') {
-      enter.show();
-      return;
-    }
+    // if (isGuest && CarouselItem.id !== '0') {
+    //   enter.show();
+    //   return;
+    // }
 
     if (CarouselItem.navigateTo) {
       if (CarouselItem.id === '2') {

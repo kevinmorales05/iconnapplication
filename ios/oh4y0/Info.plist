@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key></key>
+	<string></string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -83,8 +85,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCalendarsUsageDescription</key>
+	<string>$(PRODUCT_NAME) Advertisement would like to create a calendar event.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) would like to use your camera</string>
+	<key>NSContactsUsageDescription</key>
+	<string>$(PRODUCT_NAME) Advertisement would like to create a calendar event.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>0. Esto nos ayudará a mejorar tu experiencia al mostrarte sucursales y servicios cerca de ti, calcular costos de envío y realizar entregas más precisas.</string>
 	<key>NSLocationAlwaysUsageDescription</key>

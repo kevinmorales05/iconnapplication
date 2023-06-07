@@ -1,4 +1,4 @@
-import { InvoiceGeneratedResponseInterface, InvoicingProfileInterface, messageType, ProductSearchItemInterface, SuggestionInterface } from 'rtk';
+import { HistoryServices, InvoiceGeneratedResponseInterface, InvoicingProfileInterface, messageType, ProductSearchItemInterface, SuggestionInterface } from 'rtk';
 import { LitresPromoInterface } from 'rtk/types/accumulate.types';
 import { CategoryInterface } from 'rtk/types/category.types';
 import { CouponInterface, UserCouponInterface } from 'rtk/types/coupons.types';
@@ -67,7 +67,18 @@ export type HomeStackParams = {
   Coupons: undefined;
   CouponDetail: { couponInfo: UserCouponInterface; origin: 'Home' | 'Coupons' };
   ActivatedCoupon: { couponInfo: UserCouponInterface; couponActivatedData: any; origin: 'Home' | 'Coupons' };
+  HomeServices: undefined;
+  ServicesCategories: undefined;
+  SearchScreenService: { type: SearchServicesType };
+  PayRecharge: undefined;
+  AmountRecharge: undefined;
+  OptionsPay: undefined;
+  ConfirmPay: undefined;
+  SuccesPay: undefined;
+  TicketPay: { service?: HistoryServices };
 };
+
+export type SearchServicesType = 'services' | 'recharge' | 'others'
 
 export type HomeTabScreens = {
   BranchesScreen: undefined;

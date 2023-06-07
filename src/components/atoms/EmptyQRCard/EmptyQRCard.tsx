@@ -5,9 +5,13 @@ import React from 'react';
 import { Image } from 'react-native';
 import { Container } from '../Container';
 
-const EmptyQRCard: React.FC = () => {
+type Props = {
+  height?: number
+}
+
+const EmptyQRCard: React.FC<Props> = ({height}) => {
   return (
-    <Container center style={{ marginTop: 50, paddingHorizontal: 40, paddingBottom: 65 }}>
+    <Container center style={{ marginTop: 50, paddingHorizontal: 40, paddingBottom: 65, height: height ? height : 'auto' }}>
       <Image source={ICONN_QR_CODE} style={{ height: 40, width: 40 }} />
       <TextContainer
         text="Aquí verás tus códigos QR para pagar más rápido en tienda."

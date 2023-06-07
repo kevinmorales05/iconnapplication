@@ -70,6 +70,16 @@ import AddTicketLitresController from 'screens/home/myAccount/accumulateLitres/a
 import CouponsController from 'screens/home/myAccount/coupons/CouponsController';
 import CouponDetail from 'screens/home/myAccount/coupons/CouponDetail';
 import ActivatedCoupon from 'screens/home/myAccount/coupons/ActivatedCoupon';
+import HomeServices from 'screens/home/demoServices'
+import HeaderCheckSvg from 'components/svgComponents/HeaderCheckSvg';
+import ServicesCategories from 'screens/home/demoServices/CategoriesServices';
+import SearchScreenService from 'screens/home/demoServices/SearchScreenService';
+import PayRecharge from 'screens/home/demoServices/PayRecharge';
+import AmountRecharge from 'screens/home/demoServices/AmountRecharge';
+import OptionsPay from 'screens/home/demoServices/OptionsPay';
+import ConfirmPay from 'screens/home/demoServices/ConfirmPay';
+import SuccesPay from 'screens/home/demoServices/SuccesPay'
+import TicketPay from 'screens/home/demoServices/TicketPay'
 
 const HomeStack: React.FC = () => {
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
@@ -430,6 +440,78 @@ const HomeStack: React.FC = () => {
         }}
         name="AddTicketLitres"
         component={AddTicketLitresController}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Pago de servicios',
+          headerRight: () => <HeaderCheckSvg size={24} />,
+          headerBackTitleVisible: false
+        }}
+        name="HomeServices"
+        component={HomeServices}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Categorías',
+          headerBackTitleVisible: false
+        }}
+        name="ServicesCategories"
+        component={ServicesCategories}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false
+        }}
+        name="SearchScreenService"
+        component={SearchScreenService}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Telcel',
+          headerBackTitleVisible: false
+        }}
+        name="PayRecharge"
+        component={PayRecharge}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Monto de recarga',
+          headerBackTitleVisible: false
+        }}
+        name="AmountRecharge"
+        component={AmountRecharge}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Método de pago',
+          headerBackTitleVisible: false
+        }}
+        name="OptionsPay"
+        component={OptionsPay}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Confirmar y pagar',
+          headerBackTitleVisible: false
+        }}
+        name="ConfirmPay"
+        component={ConfirmPay}
+      />
+      <Stack.Screen
+        options={{
+          headerShown: false,
+          headerBackTitleVisible: false
+        }}
+        name="SuccesPay"
+        component={SuccesPay}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Recibo',
+          headerBackTitleVisible: false
+        }}
+        name="TicketPay"
+        component={TicketPay}
       />
     </Stack.Navigator>
   );

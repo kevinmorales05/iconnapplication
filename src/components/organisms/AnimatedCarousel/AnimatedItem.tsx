@@ -18,6 +18,7 @@ import { CarouselItem, ProductInterface } from 'rtk';
 import { navigate } from '../../../navigation/RootNavigation';
 import { UserCouponInterface } from 'rtk/types/coupons.types';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
+import { PayServiceSvg } from 'components/svgComponents/PayServicesSvg';
 
 interface Props {
   data?: CarouselItem;
@@ -212,24 +213,29 @@ const AnimatedItem: React.FC<Props> = ({
       marginLeft={position}
     >
       <Container width={72} center>
-        <Image
-          source={
-            data.id === '0'
-              ? ICONN_HOME_OPTION_SEVEN
-              : data.id === '1'
-              ? ICONN_HOME_OPTION_PETRO
-              : data.id === '2'
-              ? ICONN_HOME_OPTION_HEART
-              : data.id === '3'
-              ? ICONN_ACCOUNT_COUPON
-              : data.id === '4'
-              ? ICONN_HOME_OPTION_WALLET
-              : data.id === '5'
-              ? ICONN_HOME_OPTION_ORDERS
-              : null
-          }
-          style={{ width: 35, height: 35, resizeMode: 'contain' }}
-        />
+        {
+          data.id === '6' ?
+            <PayServiceSvg size={moderateScale(35)}/>
+          :
+            <Image
+              source={
+                data.id === '0'
+                  ? ICONN_HOME_OPTION_SEVEN
+                  : data.id === '1'
+                  ? ICONN_HOME_OPTION_PETRO
+                  : data.id === '2'
+                  ? ICONN_HOME_OPTION_HEART
+                  : data.id === '3'
+                  ? ICONN_ACCOUNT_COUPON
+                  : data.id === '4'
+                  ? ICONN_HOME_OPTION_WALLET
+                  : data.id === '5'
+                  ? ICONN_HOME_OPTION_ORDERS
+                  : null
+              }
+              style={{ width: 35, height: 35, resizeMode: 'contain' }}
+            />
+        }
         <TextContainer text={data.description} marginTop={6} typography="h5" />
       </Container>
     </Touchable>

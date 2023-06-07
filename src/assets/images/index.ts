@@ -199,6 +199,30 @@ import WARNING_ERROR from './warning_error.webp';
 import PROMO1 from './promo1.webp';
 import PROMO2 from './promo2.webp';
 import PROMO3 from './promo3.webp';
+import ABIB from './demo/abib.png';
+import Acuario from './demo/acuario-inbursa.png';
+import Aguakan from './demo/aguakan.png';
+import Agua from './demo/aguas-de-saltillo.png';
+import Amazon from './demo/amazon.png';
+import AmeShop from './demo/ame-shop.png';
+import Arabela from './demo/arabela.png';
+import Blizzard from './demo/blizzard.png';
+import Movistar from './demo/movistar.png';
+import VIRGIN from './demo/VIRGIN_MOBILE.png';
+import UNEFON from './demo/UNEFON_LOGO.png';
+import SEVEN_MINI_LOGO from './demo/SEVEN_MINI_LOGO.png';
+import AMIGO_RECHARGE from './demo/AMIGO_RECHARGE.png';
+import AMIGO_SIN_RECHARGE from './demo/AMIGO_SIN_RECHARGE.png';
+import AMIGO_SIN_RECHARGE_LARGE from './demo/AMIGO_SIN_RECHARGE_LARGE.png';
+import MASTER_CARD from './demo/MASTER_CARD.png';
+import VISA from './demo/VISA.png';
+import QR_CODE_ICON from './demo/QR_CODE_ICON.png' ;
+import CREDIT_CARDS_ICON from './demo/CREDIT_CARDS_ICON.png' ;
+import PAYPAL_LOGO from './demo/PAYPAL_LOGO.png' ;
+import BACKGROUND_SUCCESS from './demo/BACKGROUND_SUCCESS.png';
+import DELETE_DEMO from './demo/DELETE_DEMO.png';
+import QR_DEMO from './demo/QR_DEMO.png';
+import PAY_DEMO from './demo/PAY_DEMO.png';
 
 export {
   ATT_LOGO,
@@ -401,5 +425,29 @@ export {
   WARNING_ERROR,
   PROMO1,
   PROMO2,
-  PROMO3
+  PROMO3,
+  ABIB,
+  Acuario, 
+  Aguakan,
+  Agua,
+  Amazon,
+  Arabela,
+  Blizzard, 
+  Movistar,
+  AmeShop,
+  VIRGIN,
+  UNEFON,
+  SEVEN_MINI_LOGO,
+  AMIGO_RECHARGE,
+  AMIGO_SIN_RECHARGE,
+  AMIGO_SIN_RECHARGE_LARGE,
+  MASTER_CARD,
+  VISA,
+  QR_CODE_ICON,
+  CREDIT_CARDS_ICON,
+  PAYPAL_LOGO,
+  BACKGROUND_SUCCESS,
+  DELETE_DEMO,
+  QR_DEMO,
+  PAY_DEMO
 };

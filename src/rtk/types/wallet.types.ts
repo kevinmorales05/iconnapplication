@@ -70,8 +70,24 @@ export interface WalletSliceInterface {
   banks?: BankInterface[];
   beneficiaries?: BeneficiaryInterface[];
   dateSync?: Date;
+  amountOfRecharge?: string;
+  numberRecharge?: string;
+  tagName?: string;
+  favs?: WalletFav[];
+  history?: HistoryServices[];
+}
+export interface WalletFav {
+  tagName: string;
+  company: string;
+  reference: string;
 }
 
+export interface HistoryServices {
+  amount: string;
+  company: string;
+  reference: string;
+  date: Date;
+}
 export interface PrefixesInterface {
   id: string;
   prefixe: string | null | undefined;

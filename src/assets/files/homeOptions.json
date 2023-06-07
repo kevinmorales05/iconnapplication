@@ -20,6 +20,17 @@
     "status": "active"
   },
   {
+    "id": "6",
+    "description": "Pago de\nservicios",
+    "image": "iconn-home-option-orders.png",
+    "link": "https://www.7-eleven.com.mx/",
+    "navigationType": "external",
+    "promotion_name": "regreso_a_clases",
+    "promotion_type": "homeOptions",
+    "status": "active",
+    "navigateTo": "HomeServices"
+  },
+  {
     "id": "2",
     "description": "Favoritos",
     "image": "iconn-home-option-orders.png",
