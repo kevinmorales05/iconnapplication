@@ -5,7 +5,7 @@ import { Image, ScrollView, StyleSheet, TextInput } from 'react-native';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { SEVEN_MINI_LOGO, TELCEL_LOGO } from 'assets/images';
 import { useForm } from 'react-hook-form';
-import { alphaNumeric, onlyNumericWithSpecificLenght } from 'utils/rules';
+import { openField, onlyNumericWithSpecificLenght } from 'utils/rules';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MaterialICons from 'react-native-vector-icons/MaterialIcons' 
 import { OptionsModal } from 'components/organisms/OptionsModal';
@@ -106,7 +106,7 @@ const PayRecharge = () => {
                     label='Alias'
                     boldLabel
                     blurOnSubmit={true}
-                    rules={alphaNumeric(5)}
+                    rules={openField(5)}
                     error={errors.tag?.message}
                     marginTop={verticalScale(24)}
                     // onSubmitEditing={() => surnameRef.current?.focus()}

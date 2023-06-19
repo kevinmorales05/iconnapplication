@@ -43,11 +43,11 @@ const styles = StyleSheet.create({
         marginTop: moderateScale(8)
     },
     cardVertical: {
-        width: moderateScale(166),
+        width: moderateScale(160),
         height: verticalScale(75),
         borderRadius: moderateScale(10),
         backgroundColor: theme.brandColor.iconn_white,
-        paddingHorizontal: moderateScale(12),
+        paddingHorizontal: moderateScale(8),
         paddingVertical: moderateScale(8),
         marginTop: moderateScale(8)
     },

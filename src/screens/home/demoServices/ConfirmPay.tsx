@@ -77,7 +77,7 @@ const ConfirmPay: React.FC = () => {
             </Container>
         </Container>
         <Container style={styles.containerSchedule}>
-          <TextContainer text="Resume" fontBold typography="h6" marginTop={moderateScale(24)}/> 
+          <TextContainer text="Resumen" fontBold typography="h6" marginTop={moderateScale(24)}/> 
           <Container row style={{justifyContent: 'space-between', width: '100%', marginTop: moderateScale(16)}} >
             <TextContainer text="Importe" typography="h5" /> 
             <TextContainer text={`$${amountOfRecharge ? amountOfRecharge : ''}.00`} typography="h5" /> 

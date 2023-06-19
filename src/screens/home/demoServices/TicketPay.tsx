@@ -6,7 +6,7 @@ import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { HomeStackParams } from 'navigation/types';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { TELCEL_LOGO } from 'assets/images';
-import { Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, PermissionsAndroid, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import CalendarCheck from 'components/svgComponents/CalendarCheck';
 import { HistoryServices } from 'rtk';
 import { formatDate2 } from 'utils/functions';
@@ -22,42 +22,72 @@ const ConfirmPay: React.FC = () => {
   const toast = useToast();
 
   useEffect(() => {
-    if(route.params.service){
-      setService(route.params.service)
-    }
+    try{
+      if(route.params.service){
+        setService(route.params.service)
+      }
+    }catch{}
   }, [route.params]);
 
   useEffect(()=>{
-    checkPermissionIos();
+    if(Platform.OS === 'android'){
+      requestCalendarPermissions();
+    } else{
+      checkPermissionIos();
+    }
   }, []);
 
   const checkPermissionIos = () => {
-    ReactNativeCalendarEvents.requestPermissions().then((res)=>{
+    ReactNativeCalendarEvents.requestPermissions(false).then((res)=>{
+      console.log({res})
       if(res === 'authorized'){
         setPermiss(true);
       }
     })
   }
 
+  async function requestCalendarPermissions() {
+    try {
+      const granted = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.READ_CALENDAR,
+        PermissionsAndroid.PERMISSIONS.WRITE_CALENDAR,
+      ]);
+  
+      if (granted['android.permission.READ_CALENDAR'] === 'granted' &&
+          granted['android.permission.WRITE_CALENDAR'] === 'granted') {
+            setPermiss(true);
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
   const createEvent = () => {
     if(permiss){
       const date = new Date();
-      date.setHours(date.getHours() + 23);
+      date.setHours(date.getHours() + 58);
       const newDate = new Date();
-      newDate.setHours(newDate.getHours() + 24);
+      newDate.setHours(newDate.getHours() + 59);
   
       ReactNativeCalendarEvents.saveEvent('Recarga Telcel',{
-        calendarId: service?.reference + '',
+        calendarId: service ? service.reference + '2342342' : '63463', //tiene que ser numerico
         startDate: date.toISOString(),
         endDate: newDate.toISOString()
-      }).then(() => {
+      }).then((e) => {
+        console.log({e})
         toast.show({
           message: 'Evento creado correctamente',
           type: 'success'
         });
+      }).catch((e)=>{
+        console.log({e})
       })
     } else {
-      checkPermissionIos();
+      if(Platform.OS === 'android'){
+        requestCalendarPermissions();
+      } else{
+        checkPermissionIos();
+      }
     }
   }
 
