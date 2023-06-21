@@ -70,7 +70,7 @@ const ConfirmPay: React.FC = () => {
       newDate.setHours(newDate.getHours() + 59);
   
       ReactNativeCalendarEvents.saveEvent('Recarga Telcel',{
-        calendarId: service ? service.reference + '2342342' : '63463', //tiene que ser numerico
+        calendarId: service ? '63' : '63463', //tiene que ser numerico
         startDate: date.toISOString(),
         endDate: newDate.toISOString()
       }).then((e) => {
