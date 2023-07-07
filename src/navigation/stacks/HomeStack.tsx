@@ -1,5 +1,5 @@
 import React from 'react';
-import { BasketCounter, EcommerceHeader, InConstructionScreen } from 'components';
+import { BackButton, BasketCounter, EcommerceHeader, InConstructionScreen } from 'components';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
 import { TabNavigator } from 'navigation/TabNavigator';
@@ -506,10 +506,12 @@ const HomeStack: React.FC = () => {
         component={SuccesPay}
       />
       <Stack.Screen
-        options={{
+        options={({ navigation }) => ({
           title: 'Recibo',
-          headerBackTitleVisible: false
-        }}
+          headerBackTitleVisible: false,
+          headerBackVisible: false,
+          headerLeft: () => <BackButton isReset={true} navigation={navigation} />
+        })}
         name="TicketPay"
         component={TicketPay}
       />

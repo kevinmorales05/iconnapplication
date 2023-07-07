@@ -1,14 +1,40 @@
 import React from 'react';
 import { Image } from 'react-native';
 import { Touchable } from '../Touchable';
-import { useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation } from '@react-navigation/native';
 import { moderateScale } from 'utils/scaleMetrics';
+import { setAmountOfRecharge, setNumberRecharge, setTagName, useAppDispatch } from 'rtk';
 
-const BackButton: React.FC<any> = () => {
+interface Props {
+  isReset?: boolean;
+  navigation?: any;
+}
+
+const BackButton: React.FC<Props> = ({isReset, navigation}) => {
   const { goBack } = useNavigation<any>();
+  const dispatch = useAppDispatch();
 
+  const resetStack = () => {
+    dispatch(setTagName(''));
+    dispatch(setNumberRecharge(''));
+    dispatch(setAmountOfRecharge(''));
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [
+          {
+            name: 'Home',
+          },
+          {
+            name: 'HomeServices'
+          }
+        ]
+      })
+    );
+
+  }
   return (
-    <Touchable onPress={() => goBack()}>
+    <Touchable onPress={() => isReset ? resetStack() : goBack()}>
       <Image
         style={{
           width: moderateScale(24),

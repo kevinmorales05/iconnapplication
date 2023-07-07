@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Container, TextContainer } from 'components';
 import theme from 'components/theme/theme';
 import Share from 'react-native-share';
 import { moderateScale, verticalScale } from 'utils/scaleMetrics';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { HomeStackParams } from 'navigation/types';
-import { useNavigation, useFocusEffect, CommonActions } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, CommonActions, useIsFocused } from '@react-navigation/native';
 import { BACKGROUND_SUCCESS } from 'assets/images';
 import { Animated, Modal, StyleSheet, View, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -28,6 +28,8 @@ const SuccesPay: React.FC<Props> = ({ navigation }) => {
 
   const { navigate } = useNavigation<NativeStackNavigationProp<HomeStackParams>>();
 
+  const isFocused = useIsFocused();
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const fadeIn = () => {
@@ -39,10 +41,12 @@ const SuccesPay: React.FC<Props> = ({ navigation }) => {
     }).start();
   };
 
-  useFocusEffect(()=>{
-    setTimeout(()=>fadeIn(), 500)
-    setTimeout(()=>setShowModal(true), 2200)
-  });
+  useEffect(()=>{
+    if(isFocused){
+      setTimeout(()=>fadeIn(), 500);
+      setTimeout(()=>setShowModal(true), 2200);
+    }
+  }, [isFocused]);
 
   const shareDoc = () => {
     Share.open({
